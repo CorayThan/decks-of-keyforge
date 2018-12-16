@@ -1,0 +1,22 @@
+
+server:
+  port: 6060
+
+spring:
+  application:
+    name: keyswap
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+  datasource:
+    platform: POSTGRESQL
+    url: jdbc:postgresql://127.0.0.1:5432/keyswap
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
