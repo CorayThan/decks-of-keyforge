@@ -6,6 +6,7 @@
     "jsRules": {},
     "rules": {
         "eofline": false,
+        "max-classes-per-file": false,
         "member-access": [true, "no-public"],
         "no-any": true,
         "no-var-requires": false,

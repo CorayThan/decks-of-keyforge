@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "allowJs": true,
+    "lib": ["es6", "dom"],
+    "allowJs": false,
     "skipLibCheck": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

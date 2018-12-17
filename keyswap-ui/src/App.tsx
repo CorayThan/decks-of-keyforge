@@ -1,29 +1,14 @@
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
 import * as React from "react"
-import "./App.css"
+import { muiTheme } from "./config/MuiConfig"
+import { KeyRouter } from "./config/Routes"
 
-const logo = require("./logo.svg")
-
-class App extends React.Component {
+export class App extends React.Component {
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
-                </header>
-            </div>
+            <MuiThemeProvider theme={muiTheme}>
+                <KeyRouter/>
+            </MuiThemeProvider>
         )
     }
 }
-
-export default App
