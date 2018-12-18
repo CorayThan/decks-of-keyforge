@@ -1,14 +1,14 @@
 import { createMuiTheme } from "@material-ui/core"
-import deepPurple from "@material-ui/core/colors/deepPurple"
-import teal from "@material-ui/core/colors/teal"
+import amber from "@material-ui/core/colors/amber"
+import red from "@material-ui/core/colors/red"
 import { TextConfig } from "./TextConfig"
 
 export const spacing = (spacingValue = 1) => spacingValue * 8
 
 export const muiTheme = createMuiTheme({
     palette: {
-        primary: teal,
-        secondary: deepPurple,
+        primary: amber,
+        secondary: red,
     },
     typography: {
         useNextVariants: true,

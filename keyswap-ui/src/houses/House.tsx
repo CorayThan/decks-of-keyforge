@@ -1,0 +1,72 @@
+import Typography from "@material-ui/core/Typography/Typography"
+import * as React from "react"
+import { spacing } from "../config/MuiConfig"
+import brobnarImg from "./imgs/brobnar.png"
+import disImg from "./imgs/dis.png"
+import logosImg from "./imgs/logos.png"
+import marsImg from "./imgs/mars.png"
+import sanctumImg from "./imgs/sanctum.png"
+import shadowsImg from "./imgs/shadows.png"
+import untamedImg from "./imgs/untamed.png"
+
+export enum House {
+    Brobnar = "Brobnar",
+    Dis = "Dis",
+    Logos = "Logos",
+    Mars = "Mars",
+    Sanctum = "Sanctum",
+    Shadows = "Shadows",
+    Untamed = "Untamed"
+}
+
+export interface HouseValue {
+    house: House
+    img: string
+    label?: React.ReactNode
+}
+
+const HouseLabel = (props: { name: string, img: string }) => (
+    <div style={{display: "flex", alignItems: "center"}}>
+        <img src={props.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
+        <Typography>{props.name}</Typography>
+    </div>
+)
+
+export const houseValuesArray: HouseValue[] = [
+    {
+        house: House.Brobnar,
+        img: brobnarImg,
+    },
+    {
+        house: House.Dis,
+        img: disImg
+    },
+    {
+        house: House.Logos,
+        img: logosImg
+    },
+    {
+        house: House.Mars,
+        img: marsImg
+    },
+    {
+        house: House.Sanctum,
+        img: sanctumImg
+    },
+    {
+        house: House.Shadows,
+        img: shadowsImg
+    },
+    {
+        house: House.Untamed,
+        img: untamedImg
+    },
+]
+
+houseValuesArray.forEach((houseValue) => {
+    houseValue.label = <HouseLabel name={houseValue.house} img={houseValue.img}/>
+})
+
+export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(houseValue => (
+    [houseValue.house, houseValue] as [House, HouseValue]
+)))

@@ -1,9 +1,10 @@
 package coraythan.keyswap.cards
 
 import com.querydsl.core.BooleanBuilder
-import coraythan.keyswap.decks.Deck
-import coraythan.keyswap.decks.KeyforgeApi
+import coraythan.keyswap.KeyforgeApi
+import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
@@ -26,28 +27,40 @@ class CardService(
         val cardQ = QCard.card
         val predicate = BooleanBuilder()
 
-        if (!filters.includeMavericks) predicate.and(cardQ.is_maverick.isFalse)
-        if (filters.rarities != null) predicate.and(cardQ.rarity.`in`(filters.rarities))
-        if (filters.types != null) predicate.and(cardQ.card_type.`in`(filters.types))
-        if (filters.houses != null) predicate.and(cardQ.house.`in`(filters.houses))
-        if (filters.title != null) predicate.and(cardQ.card_title.likeIgnoreCase("%${filters.title}%"))
+        if (!filters.includeMavericks) predicate.and(cardQ.isMaverick.isFalse)
+        if (filters.rarities.isNotEmpty()) predicate.and(cardQ.rarity.`in`(filters.rarities))
+        if (filters.types.isNotEmpty()) predicate.and(cardQ.cardType.`in`(filters.types))
+        if (filters.houses.isNotEmpty()) predicate.and(cardQ.house.`in`(filters.houses))
+        if (filters.ambers.isNotEmpty()) predicate.and(cardQ.amber.`in`(filters.ambers))
+        if (filters.powers.isNotEmpty()) predicate.and(cardQ.power.`in`(filters.powers))
+        if (filters.armors.isNotEmpty()) predicate.and(cardQ.armor.`in`(filters.armors))
 
-        if (filters.amberMax != null) predicate.and(cardQ.amber.lt(filters.amberMax + 1))
-        if (filters.amberMin != null) predicate.and(cardQ.amber.gt(filters.amberMin - 1))
-        if (filters.powerMax != null) predicate.and(cardQ.power.lt(filters.powerMax + 1))
-        if (filters.powerMin != null) predicate.and(cardQ.power.gt(filters.powerMin - 1))
-        if (filters.armorMax != null) predicate.and(cardQ.armor.lt(filters.armorMax + 1))
-        if (filters.armorMin != null) predicate.and(cardQ.armor.gt(filters.armorMin - 1))
+        if (filters.title.isNotBlank()) predicate.and(cardQ.cardTitle.likeIgnoreCase("%${filters.title}%"))
+        if (filters.description.isNotBlank()) predicate.and(cardQ.cardText.likeIgnoreCase("%${filters.description}%"))
 
-        return cardRepo.findAll(predicate)
+        val sortProperty = when (filters.sort) {
+            CardSortOptions.SET_NUMBER -> "cardNumber"
+            CardSortOptions.CARD_NAME -> "cardTitle"
+            CardSortOptions.AMBER -> "amber"
+            CardSortOptions.POWER -> {
+                predicate.and(cardQ.cardType.`in`(CardType.Creature))
+                "power"
+            }
+            CardSortOptions.ARMOR -> {
+                predicate.and(cardQ.cardType.`in`(CardType.Creature))
+                "armor"
+            }
+        }
+
+        return cardRepo.findAll(predicate, Sort.by(filters.sortDirection.direction, sortProperty))
     }
 
-    fun importNewCards(decks: List<Deck>) {
+    fun importNewCards(decks: List<KeyforgeDeck>) {
         this.loadCachedCards()
         decks.forEach { deck ->
             if (deck.cards?.any { !cachedCards.keys.contains(it) } == true) {
                 keyforgeApi.findDeck(deck.id)?._linked?.cards?.forEach {
-                    if (!cachedCards.keys.contains(it.id)) cardRepo.save(it.toSaveable())
+                    if (!cachedCards.keys.contains(it.id)) cardRepo.save(it.toCard())
                 }
                 this.loadCachedCards()
                 log.info("Loaded cards from deck.")

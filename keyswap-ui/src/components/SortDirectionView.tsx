@@ -1,0 +1,26 @@
+import IconButton from "@material-ui/core/IconButton/IconButton"
+import { ArrowDownward, ArrowUpward } from "@material-ui/icons"
+import { observable } from "mobx"
+import { observer } from "mobx-react"
+import * as React from "react"
+
+@observer
+export class SortDirectionView extends React.Component<{ sortDirectionController: SortDirectionController }> {
+    render() {
+        const icon = this.props.sortDirectionController.direction === "ASC" ? <ArrowUpward/> : <ArrowDownward/>
+        return (
+            <IconButton
+                onClick={() => this.props.sortDirectionController.switch()}
+            >
+                {icon}
+            </IconButton>
+        )
+    }
+}
+
+export class SortDirectionController {
+    @observable
+    direction: "ASC" | "DESC" = "ASC"
+
+    switch = () => this.direction = this.direction === "ASC" ? "DESC" : "ASC"
+}

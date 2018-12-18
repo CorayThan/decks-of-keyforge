@@ -8,7 +8,7 @@ export class TextConfig {
     static loadFonts = () => {
 
         // Fonts we use get loaded here.
-        WebFont.load(<WebFont.Config>{
+        WebFont.load({
             google: {
                 families: [TextConfig.TITLE, TextConfig.BODY]
             },

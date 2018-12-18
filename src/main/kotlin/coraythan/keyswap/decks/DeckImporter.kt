@@ -1,5 +1,6 @@
 package coraythan.keyswap.decks
 
+import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.cards.CardService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -47,9 +48,11 @@ class DeckImporter(
         }
     }
 
-    private fun saveDecks(deck: List<Deck>) {
+    private fun saveDecks(deck: List<KeyforgeDeck>) {
         val saveableDecks = deck.map {
-            val saveable = it.copy(
+
+            val saveable = it.toDeck()
+                    .copy(
                     cardInstances = it.cards?.mapNotNull { cardService.cachedCards[it] }
                             ?: throw IllegalStateException("Can't have a deck with no cards deck: $deck"),
                     houses = it._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")

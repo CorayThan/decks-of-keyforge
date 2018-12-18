@@ -1,7 +1,7 @@
-package coraythan.keyswap.decks
+package coraythan.keyswap
 
-import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.KeyforgeCard
+import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate
 
 data class KeyforgeDecksPageDto(
         val count: Int,
-        val data: List<Deck>
+        val data: List<KeyforgeDeck>
 )
 
 data class KeyforgeDeckLinks(
@@ -21,11 +21,11 @@ data class KeyforgeDeckLinks(
 
 data class KeyforgeDeckLinksFullCards(
         val houses: Set<KeyforgeHouse>?,
-        val cards: List<Card>?
+        val cards: List<KeyforgeCard>?
 )
 
 data class KeyforgeDeckDto(
-        val data: Deck,
+        val data: KeyforgeDeck,
         val _linked: KeyforgeDeckLinksFullCards
 )
 
@@ -50,7 +50,7 @@ class KeyforgeApi(
         }
         val decks = keyforgeGetRequest(
                 KeyforgeDecksPageDto::class.java,
-                "decks/?page=$page&page_size=$pageSize&search=&power_level=0,11&chains=0,24&ordering=date"
+                "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=date"
         )
         // log.info("Found decks from api: $decks")
         return decks

@@ -7,30 +7,48 @@ import javax.persistence.*
 data class Card(
         @Id
         val id: String,
-        val card_title: String,
+        val cardTitle: String,
         @Enumerated(EnumType.STRING)
         val house: House,
         @Enumerated(EnumType.STRING)
-        val card_type: CardType,
-        val front_image: String,
-        val card_text: String,
-        @ElementCollection
-        @Enumerated(EnumType.STRING)
-        val traitsEnum: Set<CardTrait> = setOf(),
+        val cardType: CardType,
+        val frontImage: String,
+        val cardText: String,
         val amber: Int,
         val power: Int,
         val armor: Int,
         @Enumerated(EnumType.STRING)
         val rarity: Rarity,
+        val flavorText: String? = null,
+        val cardNumber: Int,
+        val expansion: Int,
+        val isMaverick: Boolean,
+
+        @ElementCollection
+        @Enumerated(EnumType.STRING)
+        val traits: Set<CardTrait> = setOf()
+        )
+
+data class KeyforgeCard(
+        val id: String,
+        val card_title: String,
+        val house: House,
+        val card_type: CardType,
+        val front_image: String,
+        val card_text: String,
+        val amber: Int,
+        val power: Int,
+        val armor: Int,
+        val rarity: Rarity,
         val flavor_text: String? = null,
         val card_number: Int,
         val expansion: Int,
         val is_maverick: Boolean,
-
-        @Transient
         val traits: String? = null
 ) {
-    fun toSaveable() = copy(traitsEnum = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
+    fun toCard() =
+            Card(id, card_title, house, card_type, front_image, card_text, amber, power, armor, rarity, flavor_text, card_number, expansion, is_maverick,
+                    traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
 }
 
 enum class CardTrait {

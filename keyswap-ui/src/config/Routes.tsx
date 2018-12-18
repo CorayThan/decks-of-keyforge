@@ -2,7 +2,6 @@ import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { CardsPage } from "../cards/CardsPage"
 import { DecksPage } from "../decks/DecksPage"
-import { KeyTopBar } from "../top-bar/KeyTopBar"
 
 export {
     Routes,
@@ -19,7 +18,6 @@ class KeyRouter extends React.Component {
         return (
             <BrowserRouter>
                 <div>
-                    <KeyTopBar/>
                     <Switch>
                         <Route
                             path={Routes.cards}
@@ -27,6 +25,9 @@ class KeyRouter extends React.Component {
                         />
                         <Route
                             path={Routes.decks}
+                            component={DecksPage}
+                        />
+                        <Route
                             component={DecksPage}
                         />
                     </Switch>
