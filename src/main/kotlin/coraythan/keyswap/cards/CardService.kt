@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
+import javax.transaction.Transactional
 
+@Transactional
 @Service
 class CardService(
         val cardRepo: CardRepo,
@@ -27,7 +29,7 @@ class CardService(
         val cardQ = QCard.card
         val predicate = BooleanBuilder()
 
-        if (!filters.includeMavericks) predicate.and(cardQ.isMaverick.isFalse)
+        if (!filters.includeMavericks) predicate.and(cardQ.maverick.isFalse)
         if (filters.rarities.isNotEmpty()) predicate.and(cardQ.rarity.`in`(filters.rarities))
         if (filters.types.isNotEmpty()) predicate.and(cardQ.cardType.`in`(filters.types))
         if (filters.houses.isNotEmpty()) predicate.and(cardQ.house.`in`(filters.houses))

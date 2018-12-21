@@ -53,11 +53,11 @@ class DeckImporter(
 
             val saveable = it.toDeck()
                     .copy(
-                    cardInstances = it.cards?.mapNotNull { cardService.cachedCards[it] }
+                    cards = it.cards?.mapNotNull { cardService.cachedCards[it] }
                             ?: throw IllegalStateException("Can't have a deck with no cards deck: $deck"),
                     houses = it._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
             )
-            if (saveable.cardInstances.size != 36) {
+            if (saveable.cards.size != 36) {
                 throw java.lang.IllegalStateException("Can't have a deck without 36 cards deck: $deck")
             }
             saveable

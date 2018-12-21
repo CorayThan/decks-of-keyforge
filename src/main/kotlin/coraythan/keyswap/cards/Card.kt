@@ -22,12 +22,13 @@ data class Card(
         val flavorText: String? = null,
         val cardNumber: Int,
         val expansion: Int,
-        val isMaverick: Boolean,
+        val maverick: Boolean,
 
         @ElementCollection
         @Enumerated(EnumType.STRING)
         val traits: Set<CardTrait> = setOf()
-        )
+
+)
 
 data class KeyforgeCard(
         val id: String,

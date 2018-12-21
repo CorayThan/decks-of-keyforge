@@ -13,6 +13,7 @@
         "member-access": [true, "no-public"],
         "object-literal-sort-keys": false,
         "no-any": true,
+        "no-unused-expression": false,
         "no-var-requires": false,
         "quotemark": [true, "double", "jsx-double"],
         "semicolon": [true, "never"],

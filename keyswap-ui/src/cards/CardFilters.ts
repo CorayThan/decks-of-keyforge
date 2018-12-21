@@ -1,5 +1,6 @@
 import { observable } from "mobx"
 import * as React from "react"
+import { SortDirection } from "../generic/SortDirection"
 import { House } from "../houses/House"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
@@ -17,7 +18,7 @@ export class CardFilters {
     armors: number[] = []
     sort?: string
     @observable
-    sortDirection: "ASC" | "DESC" = "ASC"
+    sortDirection: SortDirection = "ASC"
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value

@@ -3,6 +3,7 @@ import { ArrowDownward, ArrowUpward } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { SortDirection } from "../generic/SortDirection"
 
 @observer
 export class SortDirectionView extends React.Component<{ sortDirectionController: SortDirectionController }> {
@@ -20,7 +21,7 @@ export class SortDirectionView extends React.Component<{ sortDirectionController
 
 export class SortDirectionController {
     @observable
-    direction: "ASC" | "DESC" = "ASC"
+    direction: SortDirection = "ASC"
 
     switch = () => this.direction = this.direction === "ASC" ? "DESC" : "ASC"
 }

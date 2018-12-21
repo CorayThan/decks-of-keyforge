@@ -1,14 +1,13 @@
 import { createMuiTheme } from "@material-ui/core"
-import amber from "@material-ui/core/colors/amber"
-import red from "@material-ui/core/colors/red"
+import { deepOrange, teal } from "@material-ui/core/colors"
 import { TextConfig } from "./TextConfig"
 
 export const spacing = (spacingValue = 1) => spacingValue * 8
 
 export const muiTheme = createMuiTheme({
     palette: {
-        primary: amber,
-        secondary: red,
+        primary: teal,
+        secondary: deepOrange,
     },
     typography: {
         useNextVariants: true,
@@ -31,5 +30,8 @@ export const muiTheme = createMuiTheme({
         title: {
             fontFamily: TextConfig.TITLE
         },
+        subtitle2: {
+            fontWeight: 600
+        }
     },
 })

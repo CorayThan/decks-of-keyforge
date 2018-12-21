@@ -2,7 +2,7 @@ import { House } from "../houses/House"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
 
-export interface Card {
+export interface KCard {
     id: string
     cardTitle: string
     house: House
@@ -17,5 +17,5 @@ export interface Card {
     flavorText?: string
     cardNumber: number
     expansion: number
-    isMaverick: boolean
+    maverick: boolean
 }

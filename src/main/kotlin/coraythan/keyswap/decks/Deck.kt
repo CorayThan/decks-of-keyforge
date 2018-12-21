@@ -16,12 +16,23 @@ data class Deck(
         val wins: Int,
         val losses: Int,
 
-        @ManyToMany
-        val cardInstances: List<Card> = listOf(),
+        @ManyToMany(fetch = FetchType.EAGER)
+        @JoinTable(
+                name = "deck_cards",
+                joinColumns = [JoinColumn(name = "deck_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "card_id", referencedColumnName = "id")]
+        )
+        val cards: List<Card> = listOf(),
 
         @ElementCollection
         @Enumerated(EnumType.STRING)
         val houses: Set<House> = setOf()
+)
+
+data class DecksPage(
+        val decks: List<Deck>,
+        val page: Int,
+        val pages: Int
 )
 
 data class KeyforgeDeck(

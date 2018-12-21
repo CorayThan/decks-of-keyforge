@@ -1,14 +1,13 @@
-import Drawer from "@material-ui/core/Drawer"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { KeyDrawer } from "../components/KeyDrawer"
 import { SortDirectionController, SortDirectionView } from "../components/SortDirectionView"
 import { spacing } from "../config/MuiConfig"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { CardFilters } from "./CardFilters"
 import { CardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
@@ -17,8 +16,6 @@ import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
 import { CardTypeSelect, SelectedCardTypes } from "./selects/CardTypeSelect"
 import { PowerSelect, SelectedPowers } from "./selects/PowerSelect"
 import { RaritySelect, SelectedRarities } from "./selects/RaritySelect"
-
-const panelWidth = 360
 
 @observer
 export class CardsSearchDrawer extends React.Component {
@@ -53,13 +50,7 @@ export class CardsSearchDrawer extends React.Component {
     render() {
         const {title, description, handleTitleUpdate, handleDescriptionUpdate} = this.filters
         return (
-            <Drawer
-                style={{width: panelWidth, flexShrink: 0}}
-                variant={"permanent"}
-                open={true}
-                PaperProps={{style: {width: panelWidth}}}
-            >
-                <ToolbarSpacer/>
+            <KeyDrawer>
                 <List style={{marginTop: spacing(1)}}>
                     <ListItem>
                         <TextField
@@ -90,7 +81,7 @@ export class CardsSearchDrawer extends React.Component {
                     <ListItem>
                         <CardSortSelect store={this.selectedSortStore}/>
                         <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                            <SortDirectionView sortDirectionController={this.sortDirectionController} />
+                            <SortDirectionView sortDirectionController={this.sortDirectionController}/>
                         </div>
                     </ListItem>
                     <ListItem>
@@ -104,7 +95,7 @@ export class CardsSearchDrawer extends React.Component {
                         </KeyButton>
                     </ListItem>
                 </List>
-            </Drawer>
+            </KeyDrawer>
         )
     }
 }

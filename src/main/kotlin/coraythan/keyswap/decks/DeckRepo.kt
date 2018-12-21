@@ -1,5 +1,6 @@
 package coraythan.keyswap.decks
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.querydsl.QuerydslPredicateExecutor
 
-interface DeckRepo : CrudRepository<Deck, String>
+interface DeckRepo : JpaRepository<Deck, String>, QuerydslPredicateExecutor<Deck>

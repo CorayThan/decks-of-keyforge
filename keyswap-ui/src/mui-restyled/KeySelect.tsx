@@ -30,7 +30,7 @@ export class KeySelect extends React.Component<KeySelectProps> {
                     value={selected.selectedValue}
                     onChange={this.handleChange}
                     inputProps={{
-                        name: name,
+                        name,
                         id: `key-select-${name}`
                     }}
                 >

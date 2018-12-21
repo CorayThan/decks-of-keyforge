@@ -2,15 +2,15 @@ import axios, { AxiosResponse } from "axios"
 import { IObservableArray, observable } from "mobx"
 import { API } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
-import { Card } from "./Card"
 import { CardFilters } from "./CardFilters"
+import { KCard } from "./KCard"
 
 export class CardStore {
 
     static readonly CONTEXT = API + "/cards"
     private static innerInstance: CardStore
 
-    cards: IObservableArray<Card> = observable([])
+    cards: IObservableArray<KCard> = observable([])
 
     @observable
     searchingForCards = false
