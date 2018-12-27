@@ -1,13 +1,14 @@
 import { createMuiTheme } from "@material-ui/core"
-import { deepOrange, teal } from "@material-ui/core/colors"
+import { amber, blue } from "@material-ui/core/colors"
+import { ScreenStore } from "./ScreenStore"
 import { TextConfig } from "./TextConfig"
 
-export const spacing = (spacingValue = 1) => spacingValue * 8
+export const spacing = (spacingValue = 1) => spacingValue * 8 * (ScreenStore.instance.screenSizeXs() ? 0.5 : 1)
 
 export const muiTheme = createMuiTheme({
     palette: {
-        primary: teal,
-        secondary: deepOrange,
+        primary: blue,
+        secondary: amber,
     },
     typography: {
         useNextVariants: true,

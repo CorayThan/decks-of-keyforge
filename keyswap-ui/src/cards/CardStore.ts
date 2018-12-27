@@ -1,41 +1,44 @@
 import axios, { AxiosResponse } from "axios"
 import { IObservableArray, observable } from "mobx"
-import { API } from "../config/HttpConfig"
+import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
 import { KCard } from "./KCard"
 
 export class CardStore {
 
-    static readonly CONTEXT = API + "/cards"
+    static readonly CONTEXT = HttpConfig.API + "/cards/public"
     private static innerInstance: CardStore
 
-    cards: IObservableArray<KCard> = observable([])
+    cards?: IObservableArray<KCard>
 
     @observable
     searchingForCards = false
 
-    // @observable
-    // firstCardName = ""
-
     private constructor() {
     }
+
     static get instance() {
         return this.innerInstance || (this.innerInstance = new this())
     }
 
     reset = () => {
-        this.cards.clear()
+        if (this.cards) {
+            this.cards.clear()
+        }
     }
 
     searchCards = (filters: CardFilters) => {
         this.searchingForCards = true
         axios.post(`${CardStore.CONTEXT}/filter`, filters)
             .then((response: AxiosResponse) => {
-                this.searchingForCards = false
                 log.debug(`With filters: ${prettyJson(filters)} Got the filtered cards. cards: ${prettyJson(response.data)}`)
-                this.cards.replace(response.data)
-                // this.firstCardName = response.data[0].cardTitle
+                if (this.cards) {
+                    this.cards.replace(response.data)
+                } else {
+                    this.cards = observable(response.data)
+                }
+                this.searchingForCards = false
             })
     }
 }

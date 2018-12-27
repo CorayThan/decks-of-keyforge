@@ -2,6 +2,8 @@ package coraythan.keyswap.decks
 
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.Rarity
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -49,18 +51,27 @@ class DeckImporter(
     }
 
     private fun saveDecks(deck: List<KeyforgeDeck>) {
-        val saveableDecks = deck.map {
+        val saveableDecks = deck.map { keyforgeDeck ->
 
-            val saveable = it.toDeck()
+            val saveable = keyforgeDeck.toDeck()
                     .copy(
-                    cards = it.cards?.mapNotNull { cardService.cachedCards[it] }
+                    cards = keyforgeDeck.cards?.mapNotNull { cardService.cachedCards[it] }
                             ?: throw IllegalStateException("Can't have a deck with no cards deck: $deck"),
-                    houses = it._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                    houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
             )
             if (saveable.cards.size != 36) {
                 throw java.lang.IllegalStateException("Can't have a deck without 36 cards deck: $deck")
             }
             saveable
+                    .copy(
+                            expectedAmber = saveable.cards.map { it.amber }.sum(),
+                            totalPower = saveable.cards.map { it.power }.sum(),
+                            totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
+                            maverickCount = saveable.cards.filter { it.maverick }.size,
+                            specialsCount = saveable.cards.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
+                            raresCount = saveable.cards.filter { it.rarity == Rarity.Rare }.size,
+                            uncommonsCount = saveable.cards.filter { it.rarity == Rarity.Uncommon }.size
+                    )
         }
 
         deckRepo.saveAll(saveableDecks)

@@ -33,6 +33,7 @@ export class CardsSearchDrawer extends React.Component {
 
     componentDidMount() {
         this.cardStore.reset()
+        this.search()
     }
 
     search = () => {

@@ -16,7 +16,7 @@ export enum Rarity {
 export interface RarityValue {
     rarity: Rarity
     img: string
-    icon?: React.ReactElement<any>
+    icon?: React.ReactElement<HTMLImageElement>
 }
 
 export const rarityValuesArray: RarityValue[] = [

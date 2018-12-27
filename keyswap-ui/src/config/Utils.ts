@@ -11,6 +11,12 @@ export class Utils {
     static enumValues<T extends EnumType>(enunn: any): T[] {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]
     }
+
+    static validateEmail = (email: string) => {
+        // tslint:disable-next-line
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return re.test(String(email).toLowerCase())
+    }
 }
 
 type EnumType = string | number

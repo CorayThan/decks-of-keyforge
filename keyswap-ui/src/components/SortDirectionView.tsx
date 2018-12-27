@@ -8,7 +8,7 @@ import { SortDirection } from "../generic/SortDirection"
 @observer
 export class SortDirectionView extends React.Component<{ sortDirectionController: SortDirectionController }> {
     render() {
-        const icon = this.props.sortDirectionController.direction === "ASC" ? <ArrowUpward/> : <ArrowDownward/>
+        const icon = this.props.sortDirectionController.direction === "ASC" ? <ArrowUpward fontSize={"small"}/> : <ArrowDownward fontSize={"small"}/>
         return (
             <IconButton
                 onClick={() => this.props.sortDirectionController.switch()}

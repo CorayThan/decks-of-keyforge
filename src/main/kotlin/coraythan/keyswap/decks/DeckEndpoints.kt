@@ -15,7 +15,7 @@ class DeckEndpoints(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/filter")
+    @PostMapping("/public/filter")
     fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
         val decks = deckService.filterDecks(deckFilters)
         // log.info("Decks: $decks")

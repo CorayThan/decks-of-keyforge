@@ -2,20 +2,30 @@ import { KCard } from "../cards/KCard"
 import { House } from "../houses/House"
 
 export interface Deck {
-    id: string
+    id: number
+    keyforgeId: string
     name: string
     expansion: number
     powerLevel: number
     chains: number
     wins: number
     losses: number
+
+    expectedAmber: number
+    totalPower: number
+    totalCreatures: number
+    maverickCount: number
+    specialsCount: number
+    raresCount: number
+    uncommonsCount: number
+
     cards: KCard[]
     houses: House[]
 }
 
 export class DeckUtils {
     static cardsInHouses = (deck: Deck) => {
-        const cardsByHouse: { house: House, cards: KCard[] }[] = []
+        const cardsByHouse: Array<{ house: House, cards: KCard[] }> = []
         deck.houses.forEach((house) => {
             cardsByHouse.push({house, cards: deck.cards.filter((card) => (card.house === house))})
         })

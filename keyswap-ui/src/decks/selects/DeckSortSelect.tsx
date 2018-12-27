@@ -2,15 +2,24 @@ import { observable } from "mobx"
 import * as React from "react"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 
+const dateAdded = "Date Added"
+const deckName = "Deck Name"
+const amber = "Expected Amber"
+const power = "Total Power"
+const mavericks = "Maverick Count"
+const rares = "Rares"
+const uncommons = "Uncommons"
+const specials = "Specials"
+
 const deckSortOptions = [
-    "Date Added",
-    "Deck Name",
-    "Aember",
-    "Power",
-    "Multiples",
-    "Maverick Count",
-    "Rares",
-    "Uncommons"
+    dateAdded,
+    deckName,
+    amber,
+    power,
+    mavericks,
+    rares,
+    uncommons,
+    specials
 ]
 
 export class DeckSortSelect extends React.Component<{store: DeckSortSelectStore}> {
@@ -26,20 +35,22 @@ export class DeckSortSelectStore implements SelectedStore {
 
     toEnumValue = () => {
         switch (this.selectedValue) {
-            case "Date Added":
-                return "ADDED_DATE"
-            case "Aember":
+            case deckName:
+                return "DECK_NAME"
+            case amber:
                 return "AMBER"
-            case "Power":
+            case power:
                 return "POWER"
-            case "Multiples":
-                return "MULTIPLES"
-            case "Mavericks":
+            case mavericks:
                 return "MAVERICK_COUNT"
-            case "Rares":
+            case rares:
                 return "RARES"
-            default:
+            case specials:
+                return "SPECIALS"
+            case uncommons:
                 return "UNCOMMONS"
+            default:
+                return "ADDED_DATE"
         }
     }
 }

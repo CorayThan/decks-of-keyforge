@@ -21,10 +21,10 @@ enum class DeckSortOptions {
     AMBER,
     POWER,
     CREATURES,
-    MULTIPLES,
     MAVERICK_COUNT,
     RARES,
-    UNCOMMONS
+    UNCOMMONS,
+    SPECIALS
 }
 
 enum class SortDirection(val direction: Sort.Direction) {

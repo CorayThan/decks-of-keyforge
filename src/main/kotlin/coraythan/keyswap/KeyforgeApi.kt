@@ -15,7 +15,7 @@ data class KeyforgeDecksPageDto(
 )
 
 data class KeyforgeDeckLinks(
-        val houses: Set<House>?,
+        val houses: List<House>?,
         val cards: List<String>?
 )
 

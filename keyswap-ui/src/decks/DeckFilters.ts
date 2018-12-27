@@ -23,7 +23,7 @@ export type DeckSortOptions =
     | "DECK_NAME"
     | "AMBER"
     | "POWER"
-    | "MULTIPLES"
     | "MAVERICK_COUNT"
     | "RARES"
     | "UNCOMMONS"
+    | "SPECIALS"

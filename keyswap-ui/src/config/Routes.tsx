@@ -1,7 +1,8 @@
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { CardsPage } from "../cards/CardsPage"
-import { DecksPage } from "../decks/DecksPage"
+import { DecksPageComponent } from "../decks/DecksPageComponent"
+import { RegistrationPage } from "../user/RegistrationPage"
 
 export {
     Routes,
@@ -11,6 +12,8 @@ export {
 class Routes {
     static cards = "/cards"
     static decks = "/decks"
+    static registration = "/registration"
+    static login = "/login"
 }
 
 class KeyRouter extends React.Component {
@@ -25,10 +28,15 @@ class KeyRouter extends React.Component {
                         />
                         <Route
                             path={Routes.decks}
-                            component={DecksPage}
+                            component={DecksPageComponent}
                         />
                         <Route
-                            component={DecksPage}
+                            path={Routes.registration}
+                            component={RegistrationPage}
+                        />
+
+                        <Route
+                            component={DecksPageComponent}
                         />
                     </Switch>
                 </div>

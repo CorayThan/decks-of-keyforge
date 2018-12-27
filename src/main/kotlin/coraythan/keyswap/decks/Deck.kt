@@ -7,14 +7,24 @@ import javax.persistence.*
 
 @Entity
 data class Deck(
-        @Id
-        val id: String,
+
+        @Column(unique = true)
+        val keyforgeId: String,
+
         val name: String,
         val expansion: Int,
         val powerLevel: Int,
         val chains: Int,
         val wins: Int,
         val losses: Int,
+
+        val expectedAmber: Int = 0,
+        val totalPower: Int = 0,
+        val totalCreatures: Int = 0,
+        val maverickCount: Int = 0,
+        val specialsCount: Int = 0,
+        val raresCount: Int = 0,
+        val uncommonsCount: Int = 0,
 
         @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(
@@ -26,7 +36,11 @@ data class Deck(
 
         @ElementCollection
         @Enumerated(EnumType.STRING)
-        val houses: Set<House> = setOf()
+        val houses: List<House> = listOf(),
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        val id: Long = -1
 )
 
 data class DecksPage(

@@ -16,7 +16,7 @@ class CardEndpoints(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/filter")
+    @PostMapping("/public/filter")
     fun cards(@RequestBody cardFilters: CardFilters): Iterable<Card> {
         log.debug("In cards filter with filters $cardFilters")
         return cardService.filterCards(cardFilters)

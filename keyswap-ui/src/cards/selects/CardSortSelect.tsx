@@ -4,7 +4,7 @@ import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 
 const cardSortOptions = [
     "Set Number",
-    "KCard Name",
+    "Card Name",
     "Aember",
     "Power",
     "Armor"
@@ -23,7 +23,7 @@ export class CardSortSelectStore implements SelectedStore {
 
     toEnumValue = () => {
         switch (this.selectedValue) {
-            case "KCard Name":
+            case "Card Name":
                 return "CARD_NAME"
             case "Aember":
                 return "AMBER"

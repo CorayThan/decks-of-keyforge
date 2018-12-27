@@ -4,7 +4,6 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
 import { KCard } from "./KCard"
 import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 
@@ -13,7 +12,6 @@ export const CardSimpleView = (props: { card: KCard }) => {
         <img src={props.card.frontImage} style={{width: 300, margin: spacing(2)}}/>
     )
 }
-
 
 @observer
 export class CardAsLine extends React.Component<{ card: KCard }> {
@@ -34,16 +32,24 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
 
     render() {
         const card = this.props.card
-        log.debug(`Pop open: ${this.popOpen} anchor el: ${this.anchorElement}`)
+        // log.debug(`Pop open: ${this.popOpen} anchor el: ${this.anchorElement}`)
         return (
-            <div>
+            <div
+                onWheel={this.handlePopoverClose}
+            >
                 <div
                     style={{display: "flex", marginTop: 4, alignItems: "center"}}
                     onMouseEnter={this.handlePopoverOpen}
                     onMouseLeave={this.handlePopoverClose}
                 >
                     {rarityValues.get(card.rarity)!.icon!}
-                    <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>{card.cardTitle}</Typography>
+                    <Typography
+                        variant={"body2"}
+                        style={{marginLeft: spacing(1), maxWidth: 144}}
+                        noWrap={true}
+                    >
+                        {card.cardTitle}
+                    </Typography>
                     {card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
                 </div>
                 <Popover
@@ -52,14 +58,13 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
                     anchorEl={this.anchorElement}
                     onClose={this.handlePopoverClose}
                     anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
+                        vertical: "bottom",
+                        horizontal: "left",
                     }}
                     transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
+                        vertical: "top",
+                        horizontal: "left",
                     }}
-                    disableRestoreFocus={true}
                 >
                     <CardSimpleView card={card}/>
                 </Popover>

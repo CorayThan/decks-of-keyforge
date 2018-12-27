@@ -1,20 +1,30 @@
 import axios, { AxiosResponse } from "axios"
+import { clone } from "lodash"
 import { observable } from "mobx"
-import { API } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
+import { HttpConfig } from "../config/HttpConfig"
+import { log } from "../config/Utils"
 import { DeckPage } from "./Deck"
 import { DeckFilters } from "./DeckFilters"
 
 export class DeckStore {
 
-    static readonly CONTEXT = API + "/decks"
+    static readonly CONTEXT = HttpConfig.API + "/decks/public"
     private static innerInstance: DeckStore
 
     @observable
     deckPage?: DeckPage
 
     @observable
+    nextDeckPage?: DeckPage
+
+    @observable
+    currentFilters?: DeckFilters
+
+    @observable
     searchingForDecks = false
+
+    @observable
+    addingMoreDecks = false
 
     private constructor() {
     }
@@ -27,13 +37,54 @@ export class DeckStore {
         this.deckPage = undefined
     }
 
-    searchDecks = (filters: DeckFilters) => {
+    searchDecks = async (filters: DeckFilters) => {
+        log.debug(`Sorting by ${filters.sort}`)
         this.searchingForDecks = true
+        this.currentFilters = clone(filters)
+        this.nextDeckPage = undefined
+        const decks = await this.findDecks(filters)
+        if (decks) {
+            this.deckPage = observable(decks)
+            log.debug(`Current decks page ${decks.page}. Total pages ${decks.pages}.`)
+        }
+        this.searchingForDecks = false
+        this.findNextDecks()
+    }
+
+    findNextDecks = async () => {
+        if (this.currentFilters && this.moreDecksAvailable()) {
+            this.addingMoreDecks = true
+            this.currentFilters.page++
+            const decks = await this.findDecks(this.currentFilters)
+            if (decks) {
+                this.addingMoreDecks = false
+                this.nextDeckPage = decks
+            }
+        }
+    }
+
+    showMoreDecks = () => {
+        if (this.deckPage && this.nextDeckPage) {
+            this.deckPage.decks.push(...this.nextDeckPage.decks)
+            this.deckPage.page++
+            this.deckPage.pages = this.nextDeckPage.pages
+            this.nextDeckPage = undefined
+            log.debug(`Current decks page ${this.deckPage.page}. Total pages ${this.deckPage.pages}.`)
+            this.findNextDecks()
+        }
+    }
+
+    moreDecksAvailable = () => this.deckPage && this.deckPage.page + 1 < this.deckPage.pages
+
+    private findDecks = async (filters: DeckFilters) => new Promise<DeckPage>(resolve => {
         axios.post(`${DeckStore.CONTEXT}/filter`, filters)
             .then((response: AxiosResponse) => {
-                log.debug(`With filters: ${prettyJson(filters)} Got the filtered decks. decks: ${prettyJson(response.data)}`)
-                this.deckPage = observable(response.data)
-                this.searchingForDecks = false
+                // log.debug(`With filters: ${prettyJson(filters)} Got the filtered decks. decks: ${prettyJson(response.data)}`)
+                resolve(response.data)
             })
-    }
+            .catch(() => {
+                resolve()
+            })
+    })
+
 }
