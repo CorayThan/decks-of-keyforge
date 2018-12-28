@@ -29,6 +29,8 @@ export class MessageStore {
 
     setErrorMessage = (message: string) => this.setMessage(message, "Error")
 
+    setSuccessMessage = (message: string) => this.setMessage(message, "Info")
+
     setMessage = (message: string, messageType?: MessageType) => {
         this.message = message
         this.messageType = messageType

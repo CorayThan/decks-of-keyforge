@@ -1,4 +1,4 @@
-package coraythan.keyswap.userdecks
+package coraythan.keyswap.userdeck
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.Deck
@@ -11,8 +11,6 @@ import javax.persistence.ManyToOne
 
 @Entity
 data class UserDeck(
-        @Id
-        val id: UUID = UUID.randomUUID(),
 
         @JsonIgnoreProperties("decks")
         @ManyToOne
@@ -21,7 +19,7 @@ data class UserDeck(
         @ManyToOne
         val deck: Deck,
 
-        val favorite: Boolean = false,
+        val wishlist: Boolean = false,
         val funny: Boolean = false,
         val owned: Boolean = false,
 
@@ -38,9 +36,11 @@ data class UserDeck(
         val redeemed: Boolean = true,
 
         val dateListed: ZonedDateTime? = null,
-        val dateRefreshed: ZonedDateTime? = null
+        val dateRefreshed: ZonedDateTime? = null,
 
-)
+        @Id
+        val id: UUID = UUID.randomUUID()
+        )
 
 enum class DeckCondition {
     NEW_IN_PLASTIC,

@@ -2,7 +2,7 @@ package coraythan.keyswap.users
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import coraythan.keyswap.userdecks.UserDeck
+import coraythan.keyswap.userdeck.UserDeck
 import java.util.*
 import javax.persistence.*
 
@@ -28,6 +28,6 @@ data class KeyUser(
         val allowUsersToSeeDeckOwnership: Boolean,
 
         @JsonIgnoreProperties("user")
-        @OneToMany(mappedBy = "user")
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         val decks: List<UserDeck> = listOf()
 )

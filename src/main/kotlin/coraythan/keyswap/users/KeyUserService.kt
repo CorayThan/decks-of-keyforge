@@ -1,7 +1,6 @@
 package coraythan.keyswap.users
 
 import coraythan.keyswap.config.EmailTakenException
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,12 +12,6 @@ class KeyUserService(
         private val userRepo: KeyUserRepo,
         private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
-
-    fun loggedInUser(): KeyUser? {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val userEmail = authentication.principal as String? ?: return null
-        return userRepo.findByEmail(userEmail)!!.apply { decks.size }
-    }
 
     fun register(userRegInfo: UserRegistration): KeyUser {
 
@@ -54,6 +47,6 @@ class KeyUserService(
 
     fun userFromEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
-    fun findUser(id: String) = userRepo.getOne(id)
+    fun findUser(id: UUID) = userRepo.getOne(id)
 
 }

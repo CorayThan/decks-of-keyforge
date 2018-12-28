@@ -14,7 +14,7 @@ import { ScreenStore } from "../config/ScreenStore"
 import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
-import { FavoriteDeck } from "./buttons/FavoriteDeck"
+import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
 
 interface DeckViewSmallProps {
@@ -66,7 +66,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </CardContent>
 
                 <CardActions>
-                    <FavoriteDeck favorited={false} deckId={id}/>
+                    <WishlistDeck deckName={name} wishlisted={false} deckId={id}/>
                 </CardActions>
             </Card>
         )

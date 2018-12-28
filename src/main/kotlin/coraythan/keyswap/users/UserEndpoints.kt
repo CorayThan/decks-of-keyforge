@@ -11,11 +11,12 @@ const val users = "users"
 @RestController
 @RequestMapping("${Api.base}/$users")
 class UserEndpoints(
-        private val userService: KeyUserService
+        private val userService: KeyUserService,
+        private val currentUserService: CurrentUserService
 ) {
 
     @GetMapping("/your-user")
-    fun findYourUser() = userService.loggedInUser()
+    fun findYourUser() = currentUserService.loggedInUser()
 
     @PostMapping("/public/register")
     fun register(@RequestBody user: UserRegistration) {

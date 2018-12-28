@@ -1,4 +1,4 @@
-import { UserDeck } from "../userdecks/UserDeck"
+import { UserDeck } from "../userdeck/UserDeck"
 
 export interface KeyUser {
     id: string
