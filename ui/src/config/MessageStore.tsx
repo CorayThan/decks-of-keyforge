@@ -50,7 +50,7 @@ export class SnackMessage extends React.Component {
     }
 
     render() {
-        const {message, messageType} = MessageStore.instance
+        const {message} = MessageStore.instance
 
         log.debug(`In snack message with message ${message}`)
         return (

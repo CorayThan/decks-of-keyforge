@@ -26,6 +26,10 @@ export class UserStore {
     }
 
     loadLoggedInUser = () => {
+        if (!KeyLocalStorage.findAuthKey()) {
+            return
+        }
+        HttpConfig.setAuthHeaders()
         this.loginInProgress = true
         axiosWithoutErrors
             .get(UserStore.CONTEXT + "/your-user")
@@ -76,7 +80,6 @@ export class UserStore {
             .then((response: AxiosResponse) => {
                 log.info("Logged in!")
                 KeyLocalStorage.saveAuthKey(response.headers.authorization)
-                HttpConfig.setAuthHeaders()
                 this.loadLoggedInUser()
             })
             .catch((error: AxiosError) => {

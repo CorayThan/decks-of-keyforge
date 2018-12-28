@@ -1,22 +1,16 @@
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
 import * as React from "react"
-import "./App.css"
+import { SnackMessage } from "./config/MessageStore"
+import { muiTheme } from "./config/MuiConfig"
+import { KeyRouter } from "./config/Routes"
 
-import logo from "./logo.svg"
-
-class App extends React.Component {
-  public render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+export class App extends React.Component {
+    render() {
+        return (
+            <MuiThemeProvider theme={muiTheme}>
+                <KeyRouter/>
+                <SnackMessage/>
+            </MuiThemeProvider>
+        )
+    }
 }
-
-export default App;

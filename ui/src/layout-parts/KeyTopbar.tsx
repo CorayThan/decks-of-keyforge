@@ -9,6 +9,7 @@ import { ScreenStore } from "../config/ScreenStore"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { LoginPop } from "../user/LoginPop"
 import { UserStore } from "../user/UserStore"
@@ -41,7 +42,9 @@ export class KeyTopbar extends React.Component<KeyTopbarProps> {
         let rightContent
         let farRightContent = null
 
-        if (UserStore.instance.loggedIn()) {
+        if (UserStore.instance.loginInProgress) {
+            rightContent = (<Loader/>)
+        } else if (UserStore.instance.loggedIn()) {
             rightContent = (
                 <KeyButton
                     variant={"outlined"}

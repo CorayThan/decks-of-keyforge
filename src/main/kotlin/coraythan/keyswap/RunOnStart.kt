@@ -9,6 +9,6 @@ class RunOnStart(
         val deckImporter: DeckImporter
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
-//        deckImporter.importNewDecks()
+        deckImporter.importNewDecks()
     }
 }
