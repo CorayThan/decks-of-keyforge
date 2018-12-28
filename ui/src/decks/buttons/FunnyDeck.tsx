@@ -1,41 +1,41 @@
 import { Tooltip } from "@material-ui/core"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Typography from "@material-ui/core/Typography"
-import FavoriteIcon from "@material-ui/icons/Favorite"
+import TagFacesIcon from "@material-ui/icons/TagFaces"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { UserStore } from "../../user/UserStore"
 import { UserDeckStore } from "../../userdeck/UserDeckStore"
 
-interface WishlistDeckProps {
-    wishlisted: boolean
+interface FunnyDeckProps {
+    funny: boolean
+    funnyCount: number
     deckId: number
     deckName: string
-    wishlistCount: number
 }
 
 @observer
-export class WishlistDeck extends React.Component<WishlistDeckProps> {
+export class FunnyDeck extends React.Component<FunnyDeckProps> {
 
     @observable
-    wishlisted = false
+    funny = false
 
     @observable
-    wishlistCount = 0
+    funnyCount = 0
 
     componentDidMount(): void {
-        this.wishlisted = this.props.wishlisted
-        this.wishlistCount = this.props.wishlistCount
+        this.funny = this.props.funny
+        this.funnyCount = this.props.funnyCount
     }
 
     render() {
         const {deckId, deckName} = this.props
         let title
         if (UserStore.instance.loggedIn()) {
-            title = (this.wishlisted ? "Remove from" : "Add to") + " my wishlist"
+            title = (this.funny ? "Remove as" : "Mark as") + " a funny deck"
         } else {
-            title = "Login to add decks to your wishlist"
+            title = "Login to mark decks as funny"
         }
         return (
             <div style={{display: "flex", alignItems: "center"}}>
@@ -43,18 +43,18 @@ export class WishlistDeck extends React.Component<WishlistDeckProps> {
                     <div>
                         <IconButton
                             onClick={() => {
-                                this.wishlisted = !this.wishlisted
-                                this.wishlistCount += (this.wishlisted ? 1 : -1)
-                                UserDeckStore.instance.wishlist(deckName, deckId, this.wishlisted)
+                                this.funny = !this.funny
+                                this.funnyCount += (this.funny ? 1 : -1)
+                                UserDeckStore.instance.funny(deckName, deckId, this.funny)
                             }}
                             disabled={!UserStore.instance.loggedIn()}
                         >
-                            {this.wishlisted ? <FavoriteIcon color={"primary"}/> : <FavoriteIcon/>}
+                            {this.funny ? <TagFacesIcon color={"primary"}/> : <TagFacesIcon/>}
                         </IconButton>
                     </div>
                 </Tooltip>
-                <Tooltip title={"Times wishlisted"}>
-                    <Typography variant={"body1"}>{this.wishlistCount}</Typography>
+                <Tooltip title={"Times marked funny"}>
+                    <Typography variant={"body1"}>{this.funnyCount}</Typography>
                 </Tooltip>
             </div>
         )

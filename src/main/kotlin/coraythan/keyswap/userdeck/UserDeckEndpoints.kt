@@ -19,5 +19,17 @@ class UserDeckEndpoints(
     fun wishlist(@PathVariable id: Long) = userDeckService.addToWishlist(id)
 
     @PostMapping("/{id}/unwishlist")
-    fun unwishlist(@PathVariable id: Long) = userDeckService.removeFromWishlist(id)
+    fun unwishlist(@PathVariable id: Long) = userDeckService.addToWishlist(id, false)
+
+    @PostMapping("/{id}/funny")
+    fun funny(@PathVariable id: Long) = userDeckService.markAsFunny(id)
+
+    @PostMapping("/{id}/unfunny")
+    fun unfunny(@PathVariable id: Long) = userDeckService.markAsFunny(id, false)
+
+    @PostMapping("/{id}/owned")
+    fun owned(@PathVariable id: Long) = userDeckService.markAsOwned(id)
+
+    @PostMapping("/{id}/unowned")
+    fun unowned(@PathVariable id: Long) = userDeckService.markAsOwned(id, false)
 }

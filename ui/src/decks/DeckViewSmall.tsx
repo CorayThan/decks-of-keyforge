@@ -14,6 +14,9 @@ import { ScreenStore } from "../config/ScreenStore"
 import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
+import { UserStore } from "../user/UserStore"
+import { FunnyDeck } from "./buttons/FunnyDeck"
+import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
 
@@ -24,7 +27,14 @@ interface DeckViewSmallProps {
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
-        const {name, houses, expectedAmber, totalPower, id} = this.props.deck
+        const {name, houses, expectedAmber, totalPower, id, wishlistCount, funnyCount} = this.props.deck
+        const userDeck = UserStore.instance.userDeckByDeckId(id)
+        let wishlist = false
+        let funny = false
+        if (userDeck) {
+            wishlist = userDeck.wishlist
+            funny = userDeck.funny
+        }
         return (
             <Card
                 style={{
@@ -66,7 +76,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </CardContent>
 
                 <CardActions>
-                    <WishlistDeck deckName={name} wishlisted={false} deckId={id}/>
+                    <MyDecksButton deck={this.props.deck}/>
+                    <div style={{flexGrow: 1}}/>
+                    <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
+                    <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
                 </CardActions>
             </Card>
         )

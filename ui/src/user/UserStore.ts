@@ -4,6 +4,7 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { KeyLocalStorage } from "../config/KeyLocalStorage"
 import { MessageStore } from "../config/MessageStore"
 import { log, prettyJson } from "../config/Utils"
+import { UserDeck } from "../userdeck/UserDeck"
 import { KeyUser, UserLogin, UserRegistration } from "./KeyUser"
 
 export class UserStore {
@@ -14,6 +15,9 @@ export class UserStore {
 
     @observable
     user?: KeyUser
+
+    @observable
+    userDecks?: Map<number, UserDeck>
 
     @observable
     loginInProgress = false
@@ -35,7 +39,7 @@ export class UserStore {
             .get(UserStore.CONTEXT + "/your-user")
             .then((response: AxiosResponse) => {
                 log.debug(`Got logged in user: ${prettyJson(response.data)}`)
-                this.user = response.data
+                this.setUser(response.data)
                 this.loginInProgress = false
             })
             .catch((error: AxiosError) => {
@@ -91,10 +95,22 @@ export class UserStore {
 
     logout = () => {
         this.loginInProgress = false
-        this.user = undefined
+        this.setUser(undefined)
         KeyLocalStorage.clear()
         HttpConfig.setAuthHeaders()
     }
 
     loggedIn = () => !!this.user
+
+    setUser = (user?: KeyUser) => {
+        this.user = user
+        if (user) {
+            this.userDecks = new Map()
+            user.decks.forEach((userDeck) => this.userDecks!.set(userDeck.deck.id, userDeck))
+        } else {
+            this.userDecks = undefined
+        }
+    }
+
+    userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
 }

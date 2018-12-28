@@ -10,7 +10,7 @@ export class TextConfig {
         // Fonts we use get loaded here.
         WebFont.load({
             google: {
-                families: [TextConfig.TITLE, TextConfig.BODY]
+                families: [TextConfig.TITLE, TextConfig.BODY + ":600"]
             },
         })
     }

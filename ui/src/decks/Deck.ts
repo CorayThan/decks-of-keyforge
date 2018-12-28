@@ -19,6 +19,9 @@ export interface Deck {
     raresCount: number
     uncommonsCount: number
 
+    wishlistCount: number
+    funnyCount: number
+
     cards: KCard[]
     houses: House[]
 }

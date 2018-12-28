@@ -1,5 +1,6 @@
 package coraythan.keyswap.userdeck
 
+import coraythan.keyswap.decks.Deck
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
@@ -17,28 +18,45 @@ class UserDeckService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun addToWishlist(deckId: Long) {
-        modUserDeck(deckId) {
-            it.copy(wishlist = true)
+    fun addToWishlist(deckId: Long, add: Boolean = true) {
+        modUserDeck(deckId, {
+            it.cards.size
+            it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
+        }) {
+            it.copy(wishlist = add)
         }
     }
 
-    fun removeFromWishlist(deckId: Long) {
-        modUserDeck(deckId) {
-            it.copy(wishlist = false)
+    fun markAsFunny(deckId: Long, mark: Boolean = true) {
+        modUserDeck(deckId, {
+            it.cards.size
+            it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)
+        }) {
+            it.copy(funny = mark)
         }
     }
 
-    private fun modUserDeck(deckId: Long, mod: (userDeck: UserDeck) -> UserDeck) {
+    fun markAsOwned(deckId: Long, mark: Boolean = true) {
+        modUserDeck(deckId, null) {
+            it.copy(owned = mark)
+        }
+    }
+
+    private fun modUserDeck(deckId: Long, modDeck: ((deck: Deck) -> Deck)?, mod: (userDeck: UserDeck) -> UserDeck) {
         log.info("modifying userdeck")
         val currentUser = currentUserService.loggedInUser()!!
-        val deck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
+        val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
             UserDeck(currentUser, deckRepo.getOne(deckId))
-        }
+        }.apply { deck.cards.size }
 
         val toSave = currentUser.copy(decks = currentUser.decks.filter { it.deck.id != deckId }.plus(
-                mod(deck)
+                mod(userDeck)
         ))
         userRepo.save(toSave)
+
+        if (modDeck != null) {
+            val deck = deckRepo.getOne(deckId)
+            deckRepo.save(modDeck(deck))
+        }
     }
 }

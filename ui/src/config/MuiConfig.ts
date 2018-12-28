@@ -33,6 +33,9 @@ export const muiTheme = createMuiTheme({
         },
         subtitle2: {
             fontWeight: 600
+        },
+        button: {
+            fontWeight: 600
         }
     },
 })

@@ -26,7 +26,10 @@ data class Deck(
         val raresCount: Int = 0,
         val uncommonsCount: Int = 0,
 
-        @ManyToMany(fetch = FetchType.EAGER)
+        val wishlistCount: Int = 0,
+        val funnyCount: Int = 0,
+
+        @ManyToMany(fetch = FetchType.LAZY)
         @JoinTable(
                 name = "deck_cards",
                 joinColumns = [JoinColumn(name = "deck_id", referencedColumnName = "id")],

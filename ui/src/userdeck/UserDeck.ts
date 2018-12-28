@@ -5,7 +5,7 @@ export interface UserDeck {
     id: string
     user: KeyUser
     deck: Deck
-    favorite: boolean
+    wishlist: boolean
     funny: boolean
     owned: boolean
 
@@ -23,7 +23,19 @@ export interface UserDeck {
 }
 
 export enum DeckCondition {
-    NEW_IN_PLASTIC,
-    NEAR_MINT,
-    PLAYED
+    NEW_IN_PLASTIC = "NEW_IN_PLASTIC",
+    NEAR_MINT = "NEAR_MINT",
+    PLAYED = "PLAYED"
+}
+
+export const deckConditionReadableValue = (condition: DeckCondition) => {
+    if (condition === DeckCondition.NEW_IN_PLASTIC) {
+        return "New in Plastic"
+    } else if (condition === DeckCondition.NEAR_MINT) {
+        return "Near Mint"
+    } else if (condition === DeckCondition.PLAYED) {
+        return "Played"
+    } else {
+        throw new Error("Unexpected deck condition.")
+    }
 }
