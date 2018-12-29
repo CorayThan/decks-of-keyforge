@@ -8,7 +8,6 @@ import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Link } from "react-router-dom"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
@@ -18,6 +17,7 @@ import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
+import { KeyLink } from "../mui-restyled/KeyLink"
 import { ScreenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
@@ -56,7 +56,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 <div
                     style={{
                         backgroundColor: blue ["500"],
-                        width: "100%", display: "flex",
+                        width: "100%",
+                        display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
                         paddingTop: spacing(1),
@@ -81,9 +82,15 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
                     <div style={{display: "flex"}}>
-                        <Link to={Routes.deckPage(keyforgeId)} style={{textDecoration: "none", paddingBottom: spacing(1), flexGrow: 1}}>
-                            <Typography variant={"h5"}>{name}</Typography>
-                        </Link>
+                        <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
+                            <KeyLink
+                                to={Routes.deckPage(keyforgeId)}
+                                disabled={fullVersion}
+                                noStyle={true}
+                            >
+                                <Typography variant={"h5"}>{name}</Typography>
+                            </KeyLink>
+                        </div>
                         {forSale || userDeckForSale ? (
                             <Tooltip title={"For sale"}>
                                 <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
@@ -101,7 +108,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </CardContent>
 
                 <CardActions>
-                    {fullVersion ? <MyDecksButton deck={this.props.deck}/> : null}
+                    <MyDecksButton deck={this.props.deck}/>
                     <div style={{flexGrow: 1}}/>
                     <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
                     <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
@@ -131,8 +138,8 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     return (
         <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
             {cardsByHouse.map((cardsForHouse) => (
-                <div style={{flex: 1}}>
-                    <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse}/>
+                <div style={{flex: 1}} key={cardsForHouse.house}>
+                    <DisplayCardsInHouse {...cardsForHouse}/>
                 </div>
             ))}
             <div style={{flex: 1}}/>

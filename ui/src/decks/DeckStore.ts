@@ -5,6 +5,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
 import { Deck, DeckPage } from "./Deck"
 import { DeckFilters } from "./DeckFilters"
+import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
 export class DeckStore {
 
@@ -29,6 +30,9 @@ export class DeckStore {
     @observable
     deck?: Deck
 
+    @observable
+    saleInfo?: DeckSaleInfo[]
+
     private constructor() {
     }
 
@@ -44,6 +48,13 @@ export class DeckStore {
         axios.get(`${DeckStore.CONTEXT}/${keyforgeId}`)
             .then((response: AxiosResponse) => {
                 this.deck = response.data
+            })
+    }
+
+    findDeckSaleInfo = (keyforgeId: string) => {
+        axios.get(`${DeckStore.CONTEXT}/${keyforgeId}/sale-info`)
+            .then((response: AxiosResponse) => {
+                this.saleInfo = response.data
             })
     }
 

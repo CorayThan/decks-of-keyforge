@@ -1,3 +1,5 @@
+import * as format from "date-fns/format"
+import * as parse from "date-fns/parse"
 import * as loglevel from "loglevel"
 
 export const log = loglevel
@@ -17,6 +19,8 @@ export class Utils {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(String(email).toLowerCase())
     }
+
+    static formatDate = (date: string) => format(parse(date), "MMM D, YYYY")
 }
 
 type EnumType = string | number

@@ -17,6 +17,7 @@ export interface UserDeck {
     listingInfo?: string
     condition?: DeckCondition
     redeemed: boolean
+    externalLink?: string
     dateListed: string
     dateRefreshed: string
 }

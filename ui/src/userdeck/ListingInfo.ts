@@ -7,4 +7,5 @@ export interface ListingInfo {
     condition: DeckCondition
     askingPrice?: number
     listingInfo: string
+    externalLink: string
 }

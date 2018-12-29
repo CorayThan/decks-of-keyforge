@@ -6,5 +6,6 @@ data class ListingInfo(
         val forTrade: Boolean,
         val condition: DeckCondition,
         val askingPrice: Double?,
-        val listingInfo: String
+        val listingInfo: String,
+        val externalLink: String
 )

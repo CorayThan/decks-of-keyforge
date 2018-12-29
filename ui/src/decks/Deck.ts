@@ -1,5 +1,6 @@
 import { KCard } from "../cards/KCard"
 import { House } from "../houses/House"
+import { UserDeck } from "../userdeck/UserDeck"
 
 export interface Deck {
     id: number
@@ -23,6 +24,8 @@ export interface Deck {
     forTrade: boolean
     wishlistCount: number
     funnyCount: number
+
+    userDecks: UserDeck[]
 
     cards: KCard[]
     houses: House[]

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { HttpConfig } from "../config/HttpConfig"
+import { DeckStore } from "../decks/DeckStore"
 import { MessageStore } from "../ui/MessageStore"
 import { UserStore } from "../user/UserStore"
 import { ListingInfo } from "./ListingInfo"
@@ -45,6 +46,7 @@ export class UserDeckStore {
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(`Listed ${deckName} for sale or trade.`)
                 UserStore.instance.loadLoggedInUser()
+                this.refreshDeckInfo()
             })
     }
 
@@ -53,6 +55,15 @@ export class UserDeckStore {
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(`${deckName} is no longer listed for sale or trade.`)
                 UserStore.instance.loadLoggedInUser()
+                this.refreshDeckInfo()
             })
+    }
+
+    private refreshDeckInfo = () => {
+        if (DeckStore.instance.deck) {
+            const keyforgeId = DeckStore.instance.deck.keyforgeId
+            DeckStore.instance.findDeck(keyforgeId)
+            DeckStore.instance.findDeckSaleInfo(keyforgeId)
+        }
     }
 }

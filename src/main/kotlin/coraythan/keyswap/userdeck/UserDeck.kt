@@ -33,6 +33,7 @@ data class UserDeck(
 
         val condition: DeckCondition? = null,
         val redeemed: Boolean = true,
+        val externalLink: String? = null,
 
         val dateListed: ZonedDateTime? = null,
         val dateRefreshed: ZonedDateTime? = null,

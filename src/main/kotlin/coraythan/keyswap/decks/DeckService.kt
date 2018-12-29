@@ -43,12 +43,6 @@ class DeckService(
             DeckSortOptions.UNCOMMONS -> "uncommonsCount"
         }
 
-//        val sortProperties = if (sortProperty == "id") {
-//            arrayOf(sortProperty)
-//        } else {
-//            arrayOf(sortProperty)
-//        }
-
         val deckPage = deckRepo.findAll(predicate, PageRequest.of(
                 filters.page, 20,
                 Sort.by(filters.sortDirection.direction, sortProperty)
@@ -60,4 +54,25 @@ class DeckService(
     }
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)
+
+    fun saleInfoForDeck(keyforgeId: String): List<DeckSaleInfo> {
+        val deck = findDeck(keyforgeId) ?: return listOf()
+        return deck.userDecks.mapNotNull {
+            if (!it.forSale && !it.forTrade) {
+                null
+            } else {
+                DeckSaleInfo(
+                        forSale = it.forSale,
+                        forTrade = it.forTrade,
+                        askingPrice = it.askingPrice,
+                        listingInfo = it.listingInfo,
+                        externalLink = it.externalLink,
+                        condition = it.condition!!,
+                        dateListed = it.dateListed,
+                        username = it.user.username,
+                        publicContactInfo = it.user.publicContactInfo
+                )
+            }
+        }.sortedByDescending { it.dateListed }
+    }
 }

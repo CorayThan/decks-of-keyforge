@@ -14,7 +14,7 @@ export class LoginPop extends React.Component {
     anchorElement?: HTMLDivElement
 
     @observable
-    emailOrUsername = "coraythan@gmail.com"
+    email = "coraythan@gmail.com"
     @observable
     password = "stuffstuff"
 
@@ -24,7 +24,7 @@ export class LoginPop extends React.Component {
     }
 
     login = () => {
-        UserStore.instance.login({email: this.emailOrUsername, password: this.password})
+        UserStore.instance.login({email: this.email, password: this.password})
     }
 
     handlePopoverOpen = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -69,9 +69,9 @@ export class LoginPop extends React.Component {
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField
-                            label={"Email or Username"}
-                            value={this.emailOrUsername}
-                            onChange={(event) => this.emailOrUsername = event.target.value}
+                            label={"Email"}
+                            value={this.email}
+                            onChange={(event) => this.email = event.target.value}
                             style={{marginBottom: spacing(2)}}
                             autoFocus={true}
                         />

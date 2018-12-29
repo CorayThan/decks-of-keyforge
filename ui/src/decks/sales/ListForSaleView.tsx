@@ -39,6 +39,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     askingPrice = ""
     @observable
     listingInfo = ""
+    @observable
+        externalLink = ""
 
     handleClose = () => this.open = false
     handleOpen = () => {
@@ -48,10 +50,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.condition = DeckCondition.NEW_IN_PLASTIC
         this.askingPrice = ""
         this.listingInfo = ""
+        this.externalLink = ""
     }
 
     list = () => {
-        const {forSale, forTrade, condition, askingPrice, listingInfo} = this
+        const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink} = this
         if (!forSale && !forTrade) {
             MessageStore.instance.setWarningMessage("The deck must be listed for sale or trade.")
             return
@@ -71,7 +74,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             forTrade,
             condition,
             askingPrice: askingPriceNumber,
-            listingInfo
+            listingInfo,
+            externalLink
         }
         UserDeckStore.instance.listDeck(this.props.deck.name, listingInfoDto)
         this.handleClose()
@@ -162,12 +166,21 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             style={{visibility: this.forSale ? "visible" : "hidden"}}
                         />
                         <TextField
+                            label={"External listing link"}
+                            value={this.externalLink}
+                            onChange={(event) => this.externalLink = event.target.value}
+                            fullWidth={true}
+                            helperText={"Ebay link, store link, etc."}
+                            style={{marginTop: spacing(2)}}
+                        />
+                        <TextField
                             label={"Listing Info"}
                             value={this.listingInfo}
                             onChange={(event) => this.listingInfo = event.target.value}
                             multiline={true}
                             fullWidth={true}
-                            helperText={"Ebay link, trade requests, detailed condition info, etc."}
+                            helperText={"Trade requests, detailed condition info, etc."}
+                            style={{marginTop: spacing(2)}}
                         />
                     </DialogContent>
                     <DialogActions>

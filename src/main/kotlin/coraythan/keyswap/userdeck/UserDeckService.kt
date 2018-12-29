@@ -58,8 +58,9 @@ class UserDeckService(
                     forSale = listingInfo.forSale,
                     forTrade = listingInfo.forTrade,
                     askingPrice = listingInfo.askingPrice,
-                    listingInfo = listingInfo.listingInfo,
+                    listingInfo = if (listingInfo.listingInfo.isBlank()) null else listingInfo.listingInfo,
                     condition = listingInfo.condition,
+                    externalLink = if (listingInfo.externalLink.isBlank()) null else listingInfo.externalLink,
                     dateListed = now(),
                     dateRefreshed = now()
             )
@@ -95,7 +96,8 @@ class UserDeckService(
                     listingInfo = null,
                     condition = null,
                     dateListed = null,
-                    dateRefreshed = null
+                    dateRefreshed = null,
+                    externalLink = null
             )
         }
     }
