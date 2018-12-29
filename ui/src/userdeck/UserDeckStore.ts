@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { HttpConfig } from "../config/HttpConfig"
-import { MessageStore } from "../config/MessageStore"
+import { MessageStore } from "../ui/MessageStore"
 import { UserStore } from "../user/UserStore"
 import { ListingInfo } from "./ListingInfo"
 

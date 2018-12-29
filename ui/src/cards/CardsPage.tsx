@@ -3,14 +3,19 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { log, prettyJson } from "../config/Utils"
-import { KeyTopbar } from "../layout-parts/KeyTopbar"
 import { Loader } from "../mui-restyled/Loader"
+import { UiStore } from "../ui/UiStore"
 import { CardSimpleView } from "./CardSimpleView"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { CardStore } from "./CardStore"
 
 @observer
 export class CardsPage extends React.Component {
+
+    constructor(props: {}) {
+        super(props)
+        UiStore.instance.setTopbarValues("Cards of Keyforge", "Cards", "Search and sort")
+    }
 
     render() {
 
@@ -37,19 +42,17 @@ export class CardsPage extends React.Component {
         }
 
         return (
-            <KeyTopbar name={"Cards of Keyforge"} shortName={"Cards"} subheader={"Search and sort"}>
-                <div style={{display: "flex"}}>
-                    <CardsSearchDrawer/>
-                    <div
-                        style={{flexGrow: 1, padding: spacing(4)}}
-                    >
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                            <Loader show={searchingForCards && !cards}/>
-                            {cardsDisplay}
-                        </div>
+            <div style={{display: "flex"}}>
+                <CardsSearchDrawer/>
+                <div
+                    style={{flexGrow: 1, padding: spacing(4)}}
+                >
+                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                        <Loader show={searchingForCards && !cards}/>
+                        {cardsDisplay}
                     </div>
                 </div>
-            </KeyTopbar>
+            </div>
         )
     }
 }

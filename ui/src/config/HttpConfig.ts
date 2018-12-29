@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
+import { MessageStore } from "../ui/MessageStore"
 import { KeyLocalStorage } from "./KeyLocalStorage"
-import { MessageStore } from "./MessageStore"
 import { log } from "./Utils"
 
 export const axiosWithoutInterceptors = axios.create()

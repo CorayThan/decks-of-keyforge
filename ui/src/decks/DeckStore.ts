@@ -3,7 +3,7 @@ import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
-import { DeckPage } from "./Deck"
+import { Deck, DeckPage } from "./Deck"
 import { DeckFilters } from "./DeckFilters"
 
 export class DeckStore {
@@ -26,6 +26,9 @@ export class DeckStore {
     @observable
     addingMoreDecks = false
 
+    @observable
+    deck?: Deck
+
     private constructor() {
     }
 
@@ -35,6 +38,13 @@ export class DeckStore {
 
     reset = () => {
         this.deckPage = undefined
+    }
+
+    findDeck = (keyforgeId: string) => {
+        axios.get(`${DeckStore.CONTEXT}/${keyforgeId}`)
+            .then((response: AxiosResponse) => {
+                this.deck = response.data
+            })
     }
 
     searchDecks = async (filters: DeckFilters) => {

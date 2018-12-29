@@ -5,9 +5,9 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { ScreenStore } from "../config/ScreenStore"
 import { log } from "../config/Utils"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
+import { ScreenStore } from "../ui/ScreenStore"
 
 const panelWidth = 344
 

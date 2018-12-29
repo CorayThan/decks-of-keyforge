@@ -4,8 +4,8 @@ import CloseIcon from "@material-ui/icons/Close"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "./MuiConfig"
-import { log } from "./Utils"
+import { spacing } from "../config/MuiConfig"
+import { log } from "../config/Utils"
 
 export type MessageType = "Error" | "Info"
 

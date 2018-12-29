@@ -3,38 +3,36 @@ import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { RouteComponentProps, withRouter } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { ScreenStore } from "../config/ScreenStore"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
+import { ScreenStore } from "../ui/ScreenStore"
+import { UiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { UserStore } from "../user/UserStore"
 
-interface KeyTopbarProps {
-    name: string
-    shortName: string
-    subheader?: string
-    children: React.ReactNode
+interface KeyTopbarProps extends RouteComponentProps<{}> {
 }
 
 @observer
-export class KeyTopbar extends React.Component<KeyTopbarProps> {
+class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
     render() {
-        const {name, shortName, subheader, children} = this.props
+        const {topbarName, topbarShortName, topbarSubheader} = UiStore.instance
 
         let subheaderNode
-        if (subheader) {
+        if (topbarSubheader) {
             subheaderNode = (
                 <Typography
                     variant={"subtitle1"}
                     style={{marginLeft: spacing(2), marginTop: 12}}
                     color={"inherit"}>
-                    {subheader}
+                    {topbarSubheader}
                 </Typography>
             )
         }
@@ -78,7 +76,7 @@ export class KeyTopbar extends React.Component<KeyTopbarProps> {
                             variant={"h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
-                            {ScreenStore.instance.screenSizeXs() ? shortName : name}
+                            {ScreenStore.instance.screenSizeXs() ? topbarShortName : topbarName}
                         </Typography>
                         {ScreenStore.instance.screenWidth < 1024 ? null : subheaderNode}
                         <div
@@ -106,8 +104,9 @@ export class KeyTopbar extends React.Component<KeyTopbarProps> {
                     </Toolbar>
                 </AppBar>
                 <ToolbarSpacer/>
-                {children}
             </div>
         )
     }
 }
+
+export const KeyTopbar = withRouter(KeyTopbarPlain)

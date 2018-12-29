@@ -2,15 +2,20 @@ import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { KeyTopbar } from "../layout-parts/KeyTopbar"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
+import { UiStore } from "../ui/UiStore"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 import { DeckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 
 @observer
 export class DecksPageComponent extends React.Component {
+
+    constructor(props: {}) {
+        super(props)
+        UiStore.instance.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
+    }
 
     render() {
         const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks} = DeckStore.instance
@@ -49,23 +54,21 @@ export class DecksPageComponent extends React.Component {
         }
 
         return (
-            <KeyTopbar name={"Decks of Keyforge"} shortName={"Decks"} subheader={"Search, evaluate, sell and trade"}>
-                <div style={{display: "flex"}}>
-                    <DecksSearchDrawer/>
-                    <div
-                        style={{
-                            flexGrow: 1,
-                            margin: spacing(2),
-                        }}
-                    >
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                            {decksToDisplay}
-                            {showMoreButton}
-                            <Loader show={searchingForDecks}/>
-                        </div>
+            <div style={{display: "flex"}}>
+                <DecksSearchDrawer/>
+                <div
+                    style={{
+                        flexGrow: 1,
+                        margin: spacing(2),
+                    }}
+                >
+                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                        {decksToDisplay}
+                        {showMoreButton}
+                        <Loader show={searchingForDecks}/>
                     </div>
                 </div>
-            </KeyTopbar>
+            </div>
         )
     }
 }

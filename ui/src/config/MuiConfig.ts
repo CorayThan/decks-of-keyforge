@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
-import { ScreenStore } from "./ScreenStore"
+import { ScreenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
 
 export const spacing = (spacingValue = 1) => spacingValue * 8 * (ScreenStore.instance.screenSizeXs() ? 0.5 : 1)

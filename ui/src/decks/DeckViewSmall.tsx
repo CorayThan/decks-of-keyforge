@@ -8,15 +8,17 @@ import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { Link } from "react-router-dom"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
-import { ScreenStore } from "../config/ScreenStore"
+import { Routes } from "../config/Routes"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
+import { ScreenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
@@ -25,12 +27,14 @@ import { Deck, DeckUtils } from "./Deck"
 
 interface DeckViewSmallProps {
     deck: Deck
+    fullVersion?: boolean
 }
 
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
-        const {name, houses, expectedAmber, totalPower, id, wishlistCount, funnyCount, forSale, forTrade} = this.props.deck
+        const {deck, fullVersion} = this.props
+        const {keyforgeId, name, houses, expectedAmber, totalPower, id, wishlistCount, funnyCount, forSale, forTrade} = deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
         let funny = false
@@ -77,7 +81,9 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
                     <div style={{display: "flex"}}>
-                        <Typography variant={"h5"} style={{paddingBottom: spacing(1), flexGrow: 1}}>{name}</Typography>
+                        <Link to={Routes.deckPage(keyforgeId)} style={{textDecoration: "none", paddingBottom: spacing(1), flexGrow: 1}}>
+                            <Typography variant={"h5"}>{name}</Typography>
+                        </Link>
                         {forSale || userDeckForSale ? (
                             <Tooltip title={"For sale"}>
                                 <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
@@ -95,7 +101,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </CardContent>
 
                 <CardActions>
-                    <MyDecksButton deck={this.props.deck}/>
+                    {fullVersion ? <MyDecksButton deck={this.props.deck}/> : null}
                     <div style={{flexGrow: 1}}/>
                     <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
                     <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
