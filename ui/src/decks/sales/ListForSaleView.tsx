@@ -89,7 +89,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             saleButton = (
                 <KeyButton
                     color={"primary"}
-                    style={{marginLeft: spacing(2)}}
                     onClick={() => UserDeckStore.instance.unlist(deck.name, deck.id)}
                 >
                     Remove listing
@@ -99,7 +98,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             saleButton = (
                 <KeyButton
                     color={"primary"}
-                    style={{marginLeft: spacing(2)}}
                     onClick={this.handleOpen}
                 >
                     Sell or trade

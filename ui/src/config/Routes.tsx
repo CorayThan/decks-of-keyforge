@@ -4,6 +4,7 @@ import { CardsPage } from "../cards/CardsPage"
 import { DecksPageComponent } from "../decks/DecksPageComponent"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { KeyTopbar } from "../layout-parts/KeyTopbar"
+import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 
 export {
@@ -12,10 +13,12 @@ export {
 }
 
 class Routes {
+    static users = "/users"
     static cards = "/cards"
     static decks = "/decks"
     static registration = "/registration"
-    static deckPage = (keyforgeDeckId?: string) => `/decks/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
+    static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
+    static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
 }
 
 class KeyRouter extends React.Component {
@@ -44,6 +47,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.deckPage()}
                             component={DeckViewPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.userProfilePage()}
+                            component={ProfilePage}
                         />
                         <Route
                             component={DecksPageComponent}

@@ -17,6 +17,7 @@ import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
+import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { ScreenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
@@ -81,33 +82,42 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     </div>
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
-                    <div style={{display: "flex"}}>
-                        <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
-                            <KeyLink
-                                to={Routes.deckPage(keyforgeId)}
-                                disabled={fullVersion}
-                                noStyle={true}
-                            >
+                    <KeyLink
+                        to={Routes.deckPage(keyforgeId)}
+                        disabled={fullVersion}
+                        noStyle={true}
+                    >
+                        <div style={{display: "flex"}}>
+                            <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
                                 <Typography variant={"h5"}>{name}</Typography>
-                            </KeyLink>
+                            </div>
+                            {forSale || userDeckForSale ? (
+                                <Tooltip title={"For sale"}>
+                                    <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
+                                </Tooltip>
+                            ) : null}
+                            {forTrade || userDeckForTrade ? (
+                                <Tooltip title={"For trade"}>
+                                    <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                                </Tooltip>
+                            ) : null}
                         </div>
-                        {forSale || userDeckForSale ? (
-                            <Tooltip title={"For sale"}>
-                                <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
-                            </Tooltip>
-                        ) : null}
-                        {forTrade || userDeckForTrade ? (
-                            <Tooltip title={"For trade"}>
-                                <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
-                            </Tooltip>
-                        ) : null}
-                    </div>
+                    </KeyLink>
                     <div style={{display: "flex"}}>
                         <DisplayAllCardsByHouse deck={this.props.deck}/>
                     </div>
                 </CardContent>
 
                 <CardActions>
+                    {fullVersion ? null : (
+                        <KeyLink
+                            to={Routes.deckPage(keyforgeId)}
+                            noStyle={true}
+                            style={{marginRight: spacing(2)}}
+                        >
+                            <KeyButton color={"primary"}>Deck Page</KeyButton>
+                        </KeyLink>
+                    )}
                     <MyDecksButton deck={this.props.deck}/>
                     <div style={{flexGrow: 1}}/>
                     <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>

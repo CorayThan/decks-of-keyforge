@@ -19,9 +19,9 @@ export class UiStore {
         return this.innerInstance || (this.innerInstance = new this())
     }
 
-    setTopbarValues = (name: string, shortName: string, subheader?: string) => {
+    setTopbarValues = (name: string, shortName?: string, subheader?: string) => {
         this.topbarName = name
-        this.topbarShortName = shortName
+        this.topbarShortName = shortName ? shortName : name
         this.topbarSubheader = subheader
     }
 }

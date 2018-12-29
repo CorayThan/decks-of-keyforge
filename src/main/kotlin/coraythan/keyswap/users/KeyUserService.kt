@@ -48,5 +48,6 @@ class KeyUserService(
     fun userFromEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
     fun findUser(id: UUID) = userRepo.getOne(id)
+    fun findUserProfile(username: String) = userRepo.findByUsernameIgnoreCase(username)?.toProfile()
 
 }

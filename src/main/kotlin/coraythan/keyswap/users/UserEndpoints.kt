@@ -23,4 +23,7 @@ class UserEndpoints(
         userService.register(user)
     }
 
+    @GetMapping("/public/{username}")
+    fun findUserProfile(@PathVariable username: String) = userService.findUserProfile(username)
+
 }

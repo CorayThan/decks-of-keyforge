@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { KeyLocalStorage } from "../config/KeyLocalStorage"
@@ -6,6 +6,7 @@ import { log, prettyJson } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
 import { UserDeck } from "../userdeck/UserDeck"
 import { KeyUser, UserLogin, UserRegistration } from "./KeyUser"
+import { UserProfile } from "./UserProfile"
 
 export class UserStore {
 
@@ -15,6 +16,9 @@ export class UserStore {
 
     @observable
     user?: KeyUser
+
+    @observable
+    userProfile?: UserProfile
 
     @observable
     userDecks?: Map<number, UserDeck>
@@ -38,7 +42,7 @@ export class UserStore {
         axiosWithoutErrors
             .get(UserStore.CONTEXT + "/your-user")
             .then((response: AxiosResponse) => {
-                log.debug(`Got logged in user: ${prettyJson(response.data)}`)
+                // log.debug(`Got logged in user: ${prettyJson(response.data)}`)
                 this.setUser(response.data)
                 this.loginInProgress = false
             })
@@ -90,6 +94,18 @@ export class UserStore {
                 this.loginInProgress = false
                 log.error(`Error loggin in ${error}`)
                 MessageStore.instance.setRequestErrorMessage()
+            })
+    }
+
+    findUserProfile = (username: string) => {
+        axios.get(`${UserStore.PUBLIC_CONTEXT}/${username}`)
+            .then((response: AxiosResponse) => {
+                log.debug("Got the user profile.")
+                if (!response.data) {
+                    MessageStore.instance.setErrorMessage(`Couldn't find a user with the username ${username}.`)
+                } else {
+                    this.userProfile = response.data
+                }
             })
     }
 

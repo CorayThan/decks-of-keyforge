@@ -3,7 +3,9 @@ import { blue } from "@material-ui/core/colors"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import * as React from "react"
+import { Link } from "react-router-dom"
 import { spacing } from "../../config/MuiConfig"
+import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -79,7 +81,9 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
-                    <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>Listed on {Utils.formatDate(dateListed)} by {username}</Typography>
+                    <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
+                        Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
+                    </Typography>
                 </div>
             </Card>
         )
