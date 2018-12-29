@@ -1,14 +1,18 @@
+import { FormGroup } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
+import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { SortDirectionController, SortDirectionView } from "../components/SortDirectionView"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
+import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
+import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { DeckFilters } from "./DeckFilters"
@@ -41,7 +45,7 @@ export class DecksSearchDrawer extends React.Component {
         const {title, containsMaverick, handleTitleUpdate, handleContainsMaverickUpdate} = this.filters
         return (
             <KeyDrawer>
-                <List style={{marginTop: spacing(1)}}>
+                <List dense={true} style={{marginTop: spacing(1)}}>
                     <ListItem>
                         <TextField
                             label={"Deck Name"}
@@ -52,6 +56,38 @@ export class DecksSearchDrawer extends React.Component {
                     </ListItem>
                     <ListItem>
                         <HouseSelect selectedHouses={this.selectedHouses}/>
+                    </ListItem>
+                    <ListItem>
+                        <FormGroup row={true}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.filters.forSale}
+                                        onChange={(event) => this.filters.forSale = event.target.checked}
+                                    />
+                                }
+                                label={(
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <SellDeckIcon/>
+                                        <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For sale</Typography>
+                                    </div>
+                                )}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.filters.forTrade}
+                                        onChange={(event) => this.filters.forTrade = event.target.checked}
+                                    />
+                                }
+                                label={(
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <TradeDeckIcon/>
+                                        <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For trade</Typography>
+                                    </div>
+                                )}
+                            />
+                        </FormGroup>
                     </ListItem>
                     <ListItem>
                         <FormControlLabel

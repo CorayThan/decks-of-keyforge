@@ -26,6 +26,8 @@ class DeckService(
             }
         }
 
+        if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
+        if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         if (filters.containsMaverick) predicate.and(deckQ.cards.any().maverick.isTrue)
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
 

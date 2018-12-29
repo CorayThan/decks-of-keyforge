@@ -10,6 +10,10 @@ export class DeckFilters {
     page: number = 0
     sort: DeckSortOptions = "ADDED_DATE"
     @observable
+    forSale = false
+    @observable
+    forTrade = false
+    @observable
     containsMaverick: boolean = false
     @observable
     sortDirection: SortDirection = "ASC"

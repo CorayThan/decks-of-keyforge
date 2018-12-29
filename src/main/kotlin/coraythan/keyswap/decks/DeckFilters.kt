@@ -9,6 +9,8 @@ data class DeckFilters(
 
         val page: Int = 1,
 
+        val forSale: Boolean = false,
+        val forTrade: Boolean = false,
         val containsMaverick: Boolean = false,
 
         val sort: DeckSortOptions = DeckSortOptions.ADDED_DATE,

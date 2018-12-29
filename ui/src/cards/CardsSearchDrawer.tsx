@@ -52,7 +52,7 @@ export class CardsSearchDrawer extends React.Component {
         const {title, description, handleTitleUpdate, handleDescriptionUpdate} = this.filters
         return (
             <KeyDrawer>
-                <List style={{marginTop: spacing(1)}}>
+                <List dense={true} style={{marginTop: spacing(1)}}>
                     <ListItem>
                         <TextField
                             label={"Card Name"}
