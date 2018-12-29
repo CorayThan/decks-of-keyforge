@@ -1,3 +1,4 @@
+import { Tooltip } from "@material-ui/core"
 import Card from "@material-ui/core/Card/Card"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
@@ -11,6 +12,8 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { ScreenStore } from "../config/ScreenStore"
+import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
+import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
@@ -27,13 +30,17 @@ interface DeckViewSmallProps {
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
-        const {name, houses, expectedAmber, totalPower, id, wishlistCount, funnyCount} = this.props.deck
+        const {name, houses, expectedAmber, totalPower, id, wishlistCount, funnyCount, forSale, forTrade} = this.props.deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
         let funny = false
+        let userDeckForSale = false
+        let userDeckForTrade = false
         if (userDeck) {
             wishlist = userDeck.wishlist
             funny = userDeck.funny
+            userDeckForSale = userDeck.forSale
+            userDeckForTrade = userDeck.forTrade
         }
         return (
             <Card
@@ -69,7 +76,19 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     </div>
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
-                    <Typography variant={"h5"} style={{paddingBottom: spacing(1)}}>{name}</Typography>
+                    <div style={{display: "flex"}}>
+                        <Typography variant={"h5"} style={{paddingBottom: spacing(1), flexGrow: 1}}>{name}</Typography>
+                        {forSale || userDeckForSale ? (
+                            <Tooltip title={"For sale"}>
+                                <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
+                            </Tooltip>
+                        ) : null}
+                        {forTrade || userDeckForTrade ? (
+                            <Tooltip title={"For trade"}>
+                                <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                            </Tooltip>
+                        ) : null}
+                    </div>
                     <div style={{display: "flex"}}>
                         <DisplayAllCardsByHouse deck={this.props.deck}/>
                     </div>

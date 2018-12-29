@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 class UserDeckService(
         val currentUserService: CurrentUserService,
         val userRepo: KeyUserRepo,
-        val deckRepo: DeckRepo
+        val deckRepo: DeckRepo,
+        val userDeckRepo: UserDeckRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -41,10 +42,18 @@ class UserDeckService(
         modUserDeck(deckId, null) {
             it.copy(owned = mark)
         }
+        if (!mark) {
+            this.unlist(deckId)
+        }
     }
 
     fun list(listingInfo: ListingInfo) {
-        modUserDeck(listingInfo.deckId, null) {
+        modUserDeck(listingInfo.deckId, {
+            it.copy(
+                    forSale = it.forSale || listingInfo.forSale,
+                    forTrade = it.forTrade || listingInfo.forTrade
+            )
+        }) {
             it.copy(
                     forSale = listingInfo.forSale,
                     forTrade = listingInfo.forTrade,
@@ -58,7 +67,27 @@ class UserDeckService(
     }
 
     fun unlist(deckId: Long) {
-        modUserDeck(deckId, null) {
+
+        val currentUser = currentUserService.loggedInUser()!!
+        val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
+            UserDeck(currentUser, deckRepo.getOne(deckId))
+        }
+
+        val otherUserDecks = userDeckRepo.findByDeckId(deckId)
+        var forSale = false
+        var forTrade = false
+        otherUserDecks.filter { it.id != userDeck.id }.forEach {
+            if (it.forSale) {
+                forSale = true
+            }
+            if (it.forTrade) {
+                forTrade = true
+            }
+        }
+
+        modUserDeck(deckId, {
+            it.copy(forSale = forSale, forTrade = forTrade)
+        }) {
             it.copy(
                     forSale = false,
                     forTrade = false,

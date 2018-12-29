@@ -28,6 +28,8 @@ data class Deck(
         val raresCount: Int = 0,
         val uncommonsCount: Int = 0,
 
+        val forSale: Boolean = false,
+        val forTrade: Boolean = false,
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
 

@@ -19,6 +19,8 @@ export interface Deck {
     raresCount: number
     uncommonsCount: number
 
+    forSale: boolean
+    forTrade: boolean
     wishlistCount: number
     funnyCount: number
 
