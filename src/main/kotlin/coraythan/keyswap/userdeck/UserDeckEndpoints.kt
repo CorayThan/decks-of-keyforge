@@ -2,10 +2,7 @@ package coraythan.keyswap.userdeck
 
 import coraythan.keyswap.Api
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("${Api.base}/userdeck")
@@ -32,4 +29,10 @@ class UserDeckEndpoints(
 
     @PostMapping("/{id}/unowned")
     fun unowned(@PathVariable id: Long) = userDeckService.markAsOwned(id, false)
+
+    @PostMapping("/list")
+    fun list(@RequestBody listingInfo: ListingInfo) = userDeckService.list(listingInfo)
+
+    @PostMapping("/{id}/unlist")
+    fun unlist(@PathVariable id: Long) = userDeckService.unlist(id)
 }

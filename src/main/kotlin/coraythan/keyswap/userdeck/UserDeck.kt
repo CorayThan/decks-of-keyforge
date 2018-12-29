@@ -27,8 +27,7 @@ data class UserDeck(
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
 
-        val askingPrice: String? = null,
-        val tradeRequests: String? = null,
+        val askingPrice: Double? = null,
 
         val listingInfo: String? = null,
 
@@ -45,5 +44,6 @@ data class UserDeck(
 enum class DeckCondition {
     NEW_IN_PLASTIC,
     NEAR_MINT,
-    PLAYED
+    PLAYED,
+    HEAVILY_PLAYED
 }

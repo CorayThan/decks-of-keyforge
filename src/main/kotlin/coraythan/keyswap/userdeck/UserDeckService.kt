@@ -2,6 +2,7 @@ package coraythan.keyswap.userdeck
 
 import coraythan.keyswap.decks.Deck
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.now
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
@@ -39,6 +40,34 @@ class UserDeckService(
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
         modUserDeck(deckId, null) {
             it.copy(owned = mark)
+        }
+    }
+
+    fun list(listingInfo: ListingInfo) {
+        modUserDeck(listingInfo.deckId, null) {
+            it.copy(
+                    forSale = listingInfo.forSale,
+                    forTrade = listingInfo.forTrade,
+                    askingPrice = listingInfo.askingPrice,
+                    listingInfo = listingInfo.listingInfo,
+                    condition = listingInfo.condition,
+                    dateListed = now(),
+                    dateRefreshed = now()
+            )
+        }
+    }
+
+    fun unlist(deckId: Long) {
+        modUserDeck(deckId, null) {
+            it.copy(
+                    forSale = false,
+                    forTrade = false,
+                    askingPrice = null,
+                    listingInfo = null,
+                    condition = null,
+                    dateListed = null,
+                    dateRefreshed = null
+            )
         }
     }
 

@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { HttpConfig } from "../config/HttpConfig"
 import { MessageStore } from "../config/MessageStore"
 import { UserStore } from "../user/UserStore"
+import { ListingInfo } from "./ListingInfo"
 
 export class UserDeckStore {
 
@@ -39,4 +40,19 @@ export class UserDeckStore {
             })
     }
 
+    listDeck = (deckName: string, listingInfo: ListingInfo) => {
+        axios.post(`${UserDeckStore.CONTEXT}/list`, listingInfo)
+            .then((response: AxiosResponse) => {
+                MessageStore.instance.setSuccessMessage(`Listed ${deckName} for sale or trade.`)
+                UserStore.instance.loadLoggedInUser()
+            })
+    }
+
+    unlist = (deckName: string, deckId: number) => {
+        axios.post(`${UserDeckStore.CONTEXT}/${deckId}/unlist`)
+            .then((response: AxiosResponse) => {
+                MessageStore.instance.setSuccessMessage(`${deckName} is no longer listed for sale or trade.`)
+                UserStore.instance.loadLoggedInUser()
+            })
+    }
 }

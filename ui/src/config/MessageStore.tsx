@@ -28,6 +28,7 @@ export class MessageStore {
     setRequestErrorMessage = () => this.setMessage("There was an unexpected error making your request.", "Error")
 
     setErrorMessage = (message: string) => this.setMessage(message, "Error")
+    setWarningMessage = (message: string) => this.setMessage(message, "Error")
 
     setSuccessMessage = (message: string) => this.setMessage(message, "Info")
 

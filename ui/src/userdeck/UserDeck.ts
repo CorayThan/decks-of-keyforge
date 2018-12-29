@@ -12,8 +12,7 @@ export interface UserDeck {
     forSale: boolean
     forTrade: boolean
 
-    askingPrice?: string
-    tradeRequests?: string
+    askingPrice?: number
 
     listingInfo?: string
     condition?: DeckCondition
@@ -25,7 +24,8 @@ export interface UserDeck {
 export enum DeckCondition {
     NEW_IN_PLASTIC = "NEW_IN_PLASTIC",
     NEAR_MINT = "NEAR_MINT",
-    PLAYED = "PLAYED"
+    PLAYED = "PLAYED",
+    HEAVILY_PLAYED = "HEAVILY_PLAYED",
 }
 
 export const deckConditionReadableValue = (condition: DeckCondition) => {
@@ -35,7 +35,9 @@ export const deckConditionReadableValue = (condition: DeckCondition) => {
         return "Near Mint"
     } else if (condition === DeckCondition.PLAYED) {
         return "Played"
+    } else if (condition === DeckCondition.HEAVILY_PLAYED) {
+        return "Heavily Played"
     } else {
-        throw new Error("Unexpected deck condition.")
+        throw new Error(`Unexpected deck condition: ${condition}`)
     }
 }

@@ -1,8 +1,10 @@
 package coraythan.keyswap.decks
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.KeyforgeDeckLinks
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.userdeck.UserDeck
 import javax.persistence.*
 
 @Entity
@@ -36,6 +38,10 @@ data class Deck(
                 inverseJoinColumns = [JoinColumn(name = "card_id", referencedColumnName = "id")]
         )
         val cards: List<Card> = listOf(),
+
+        @JsonIgnoreProperties("deck")
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
+        val userDecks: List<UserDeck> = listOf(),
 
         @ElementCollection
         @Enumerated(EnumType.STRING)

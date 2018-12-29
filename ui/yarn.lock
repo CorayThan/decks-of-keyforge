@@ -5396,13 +5396,6 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-material-ui-rating@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/material-ui-rating/-/material-ui-rating-2.0.0.tgz#709493803c5dfc81116702a1df97b166d5a6d419"
-  integrity sha1-cJSTgDxd/IERZwKh35exZtWm1Bk=
-  dependencies:
-    prop-types "^15.5.8"
-
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz#de819fdbcd84dccd8fae59c6aeb79615b9d266ac"
@@ -6726,7 +6719,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==
@@ -6947,6 +6940,13 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-number-format@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.0.6.tgz#3cdfc48f5fc106edb3cf1d767d320348aa857f6a"
+  integrity sha512-WfBlqYRD0fGZpQxRy1apxsPeaqtxhzo7CnUVFKBoGDsQbc89+DQNhjG/D3IxgGYM47oKB+W/Su9ol/vVS6Wc2Q==
+  dependencies:
+    prop-types "^15.6.0"
 
 react-router-dom@^4.3.1:
   version "4.3.1"
