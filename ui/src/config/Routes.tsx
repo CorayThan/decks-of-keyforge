@@ -6,6 +6,7 @@ import { DeckViewPage } from "../decks/DeckViewFull"
 import { KeyTopbar } from "../layout-parts/KeyTopbar"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
+import { spacing } from "./MuiConfig"
 
 export {
     Routes,
@@ -27,6 +28,7 @@ class KeyRouter extends React.Component {
             <BrowserRouter>
                 <div>
                     <KeyTopbar/>
+                    <div style={{marginBottom: spacing(2)}} />
                     <Switch>
                         <Route
                             exact={true}

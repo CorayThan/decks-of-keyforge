@@ -45,7 +45,7 @@ export class CardsPage extends React.Component {
             <div style={{display: "flex"}}>
                 <CardsSearchDrawer/>
                 <div
-                    style={{flexGrow: 1, padding: spacing(4)}}
+                    style={{flexGrow: 1, margin: spacing(2)}}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
                         <Loader show={searchingForCards && !cards}/>

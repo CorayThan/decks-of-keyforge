@@ -51,7 +51,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         }
         return (
             <div
-                style={{display: "flex", justifyContent: "center", flexWrap: "wrap", marginTop: spacing(2)}}
+                style={{display: "flex", justifyContent: "center", flexWrap: "wrap", margin: spacing(2)}}
             >
                 <DeckViewSmall deck={deck} fullVersion={true}/>
                 {saleInfoComponent}
