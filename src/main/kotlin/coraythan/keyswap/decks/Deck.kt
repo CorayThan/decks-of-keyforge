@@ -20,13 +20,23 @@ data class Deck(
         val wins: Int,
         val losses: Int,
 
-        val expectedAmber: Int = 0,
-        val totalPower: Int = 0,
-        val totalCreatures: Int = 0,
         val maverickCount: Int = 0,
         val specialsCount: Int = 0,
         val raresCount: Int = 0,
         val uncommonsCount: Int = 0,
+
+        val rawAmber: Int = 0,
+        val totalPower: Int = 0,
+        val totalCreatures: Int = 0,
+
+        val expectedAmber: Double = 0.0,
+        val amberControl: Double = 0.0,
+        val creatureControl: Double = 0.0,
+        val artifactControl: Double = 0.0,
+        val sasRating: Double = 0.0,
+        val cardsRating: Int = 0,
+        val synergyRating: Double = 0.0,
+        val antisynergyRating: Double = 0.0,
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
@@ -52,14 +62,31 @@ data class Deck(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
-)
+) {
+        fun toRatedDeck(): Deck {
+                val extraCardInfos = cards.map { it.extraCardInfo }
+                return this.copy(
+                        expectedAmber = extraCardInfos.map { it.expectedAmber }.sum(),
+                        amberControl = extraCardInfos.map { it.amberControl }.sum(),
+                        creatureControl = extraCardInfos.map { it.creatureControl }.sum(),
+                        artifactControl = extraCardInfos.map { it.artifactControl }.sum(),
+                        sasRating = 0.0,
+                        cardsRating = extraCardInfos.map { it.rating }.sum(),
+                        synergyRating = 0.0,
+                        antisynergyRating = 0.0
 
+                )
+        }
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class DecksPage(
         val decks: List<Deck>,
         val page: Int,
         val pages: Int
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDeck(
         val id: String,
         val name: String,

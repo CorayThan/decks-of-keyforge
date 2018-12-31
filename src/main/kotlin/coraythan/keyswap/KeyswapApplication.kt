@@ -1,5 +1,8 @@
 package coraythan.keyswap
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -21,6 +24,20 @@ class KeyswapApplication {
 
     @Bean
     fun bCryptPasswordEncoder() = BCryptPasswordEncoder()
+
+    @Bean
+    fun objectMapper(): ObjectMapper {
+        val mapper = ObjectMapper()
+        mapper.findAndRegisterModules()
+        return mapper
+    }
+
+    @Bean
+    fun yamlMapper(): YAMLMapper {
+        val mapper = YAMLMapper()
+        mapper.registerModule(KotlinModule())
+        return mapper
+    }
 }
 
 fun main(args: Array<String>) {

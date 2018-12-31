@@ -62,7 +62,7 @@ class CardService(
         decks.forEach { deck ->
             if (deck.cards?.any { !cachedCards.keys.contains(it) } == true) {
                 keyforgeApi.findDeck(deck.id)?._linked?.cards?.forEach {
-                    if (!cachedCards.keys.contains(it.id)) cardRepo.save(it.toCard())
+                    if (!cachedCards.keys.contains(it.id)) this.saveNewCard(it.toCard())
                 }
                 this.loadCachedCards()
                 log.info("Loaded cards from deck.")
@@ -70,5 +70,17 @@ class CardService(
                 log.info("Skipped loading cards from deck.")
             }
         }
+    }
+
+    fun saveNewCard(card: Card) {
+        cardRepo.save(card)
+    }
+
+    fun updateExtraCardInfo() {
+        cardRepo.findAll()
+                .map { it.copy(extraCardInfo = ExtraCardInfo.extraInfoMap[it.cardNumber]!!) }
+                .apply {
+                    cardRepo.saveAll(this)
+                }
     }
 }

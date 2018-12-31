@@ -3,6 +3,7 @@ import { House } from "../houses/House"
 import { UserDeck } from "../userdeck/UserDeck"
 
 export interface Deck {
+
     id: number
     keyforgeId: string
     name: string
@@ -12,13 +13,23 @@ export interface Deck {
     wins: number
     losses: number
 
-    expectedAmber: number
-    totalPower: number
-    totalCreatures: number
     maverickCount: number
     specialsCount: number
     raresCount: number
     uncommonsCount: number
+
+    rawAmber: number
+    totalPower: number
+    totalCreatures: number
+
+    expectedAmber: number
+    amberControl: number
+    creatureControl: number
+    artifactControl: number
+    sasRating: number
+    cardsRating: number
+    synergyRating: number
+    antisynergyRating: number
 
     forSale: boolean
     forTrade: boolean

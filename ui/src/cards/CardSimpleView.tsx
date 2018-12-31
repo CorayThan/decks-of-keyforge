@@ -9,7 +9,10 @@ import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 export const CardSimpleView = (props: { card: KCard }) => {
     return (
-        <img src={props.card.frontImage} style={{width: 300, margin: spacing(2)}}/>
+        <div>
+            <Typography>{props.card.cardTitle}</Typography>
+            <img src={props.card.frontImage} style={{width: 300, margin: spacing(2)}}/>
+        </div>
     )
 }
 

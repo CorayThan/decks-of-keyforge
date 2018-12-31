@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { IObservableArray, observable } from "mobx"
+import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
@@ -10,7 +10,8 @@ export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards/public"
     private static innerInstance: CardStore
 
-    cards?: IObservableArray<KCard>
+    @observable
+    cards?: KCard[]
 
     @observable
     searchingForCards = false
@@ -24,7 +25,7 @@ export class CardStore {
 
     reset = () => {
         if (this.cards) {
-            this.cards.clear()
+            this.cards = undefined
         }
     }
 
@@ -33,11 +34,7 @@ export class CardStore {
         axios.post(`${CardStore.CONTEXT}/filter`, filters)
             .then((response: AxiosResponse) => {
                 log.debug(`With filters: ${prettyJson(filters)} Got the filtered cards. cards: ${prettyJson(response.data)}`)
-                if (this.cards) {
-                    this.cards.replace(response.data)
-                } else {
-                    this.cards = observable(response.data)
-                }
+                this.cards = response.data
                 this.searchingForCards = false
             })
     }

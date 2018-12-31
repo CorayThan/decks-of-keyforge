@@ -1,5 +1,6 @@
 package coraythan.keyswap.cards
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import javax.persistence.*
 
@@ -24,12 +25,15 @@ data class Card(
         val expansion: Int,
         val maverick: Boolean,
 
+        @OneToOne(cascade = [CascadeType.ALL])
+        val extraCardInfo: ExtraCardInfo,
+
         @ElementCollection
         @Enumerated(EnumType.STRING)
         val traits: Set<CardTrait> = setOf()
-
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeCard(
         val id: String,
         val card_title: String,
@@ -49,6 +53,7 @@ data class KeyforgeCard(
 ) {
     fun toCard() =
             Card(id, card_title, house, card_type, front_image, card_text, amber, power, armor, rarity, flavor_text, card_number, expansion, is_maverick,
+                    extraCardInfo = ExtraCardInfo.extraInfoMap[card_number]!!,
                     traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
 }
 

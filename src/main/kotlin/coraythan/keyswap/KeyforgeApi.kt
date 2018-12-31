@@ -1,5 +1,6 @@
 package coraythan.keyswap
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.KeyforgeCard
 import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory
@@ -8,27 +9,33 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import kotlin.system.measureTimeMillis
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDecksPageDto(
         val count: Int,
         val data: List<KeyforgeDeck>
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDeckLinks(
         val houses: List<House>?,
         val cards: List<String>?
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDeckLinksFullCards(
         val houses: Set<KeyforgeHouse>?,
         val cards: List<KeyforgeCard>?
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDeckDto(
         val data: KeyforgeDeck,
         val _linked: KeyforgeDeckLinksFullCards
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeHouse(
         val id: String,
         val name: String,
@@ -48,11 +55,15 @@ class KeyforgeApi(
         } else if (pageSize < 1 || pageSize > 25) {
             throw IllegalArgumentException("Page size has to be greater than 1 and less than 26.")
         }
-        val decks = keyforgeGetRequest(
-                KeyforgeDecksPageDto::class.java,
-                "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=date"
-        )
-        // log.info("Found decks from api: $decks")
+        var decks: KeyforgeDecksPageDto? = null
+
+        val keyforgeRequestDuration = measureTimeMillis {
+            decks = keyforgeGetRequest(
+                    KeyforgeDecksPageDto::class.java,
+                    "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=date"
+            )
+        }
+        log.info("Getting $pageSize decks from keyforge api took $keyforgeRequestDuration")
         return decks
     }
 

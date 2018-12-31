@@ -6,19 +6,23 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import kotlin.system.measureTimeMillis
 
 @RestController
 @RequestMapping("${Api.base}/cards")
 class CardEndpoints(
-        val cardService: CardService,
-        val cardRepo: CardRepo
+        val cardService: CardService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/public/filter")
     fun cards(@RequestBody cardFilters: CardFilters): Iterable<Card> {
-        log.debug("In cards filter with filters $cardFilters")
-        return cardService.filterCards(cardFilters)
+        var cards: Iterable<Card> = listOf()
+        val cardFilterTime = measureTimeMillis {
+            cards = cardService.filterCards(cardFilters)
+        }
+            log.info("Filtering cards took $cardFilterTime with filters $cardFilters")
+        return cards
     }
 }

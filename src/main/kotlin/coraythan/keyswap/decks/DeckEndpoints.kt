@@ -3,6 +3,7 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.Api
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
+import kotlin.system.measureTimeMillis
 
 @RestController
 @RequestMapping("${Api.base}/decks")
@@ -14,8 +15,12 @@ class DeckEndpoints(
 
     @PostMapping("/public/filter")
     fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
-        val decks = deckService.filterDecks(deckFilters)
-        // log.info("Decks: $decks")
+        var decks = DecksPage(listOf(), 0, 0)
+        val decksFilterTime = measureTimeMillis {
+            decks = deckService.filterDecks(deckFilters)
+        }
+
+        log.info("Decks filtering took $decksFilterTime ms with filters $deckFilters")
         return decks
     }
 

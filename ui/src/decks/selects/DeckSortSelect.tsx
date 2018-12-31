@@ -8,17 +8,17 @@ const amber = "Expected Amber"
 const power = "Total Power"
 const mavericks = "Maverick Count"
 const rares = "Rares"
-const uncommons = "Uncommons"
+const cardsRating = "Cards' Rating"
 const specials = "Specials"
 
 const deckSortOptions = [
     dateAdded,
     deckName,
+    cardsRating,
     amber,
     power,
     mavericks,
     rares,
-    uncommons,
     specials
 ]
 
@@ -47,8 +47,8 @@ export class DeckSortSelectStore implements SelectedStore {
                 return "RARES"
             case specials:
                 return "SPECIALS"
-            case uncommons:
-                return "UNCOMMONS"
+            case cardsRating:
+                return "CARDS_RATING"
             default:
                 return "ADDED_DATE"
         }

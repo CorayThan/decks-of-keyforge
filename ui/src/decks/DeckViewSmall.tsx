@@ -35,7 +35,17 @@ interface DeckViewSmallProps {
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
         const {deck, fullVersion} = this.props
-        const {keyforgeId, name, houses, expectedAmber, totalPower, id, wishlistCount, funnyCount, forSale, forTrade} = deck
+        const {
+            id, keyforgeId, name, houses,
+            totalPower,
+            expectedAmber,
+            cardsRating,
+            // sasRating,
+            // synergyRating,
+            // antisynergyRating,
+            wishlistCount, funnyCount,
+            forSale, forTrade
+        } = deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
         let funny = false
@@ -75,8 +85,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 flexGrow: 1,
                             }}
                         >
-                            <InfoBox top={"SAS"} bottom={"52"} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
-                            <InfoBox top={"Aember"} bottom={expectedAmber} popInfo={"Expected aember generated from cards"} textColor={"#FFFFFF"}/>
+                            <InfoBox top={"SAS"} bottom={cardsRating} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
+                            <InfoBox top={"EAember"} bottom={expectedAmber} popInfo={"Expected aember generated from cards"} textColor={"#FFFFFF"}/>
                             <InfoBox top={"Power"} bottom={totalPower} popInfo={"Power of all creatures combined"} textColor={"#FFFFFF"}/>
                         </div>
                     </div>

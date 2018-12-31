@@ -64,7 +64,7 @@ class DeckImporter(
             }
             saveable
                     .copy(
-                            expectedAmber = saveable.cards.map { it.amber }.sum(),
+                            rawAmber = saveable.cards.map { it.amber }.sum(),
                             totalPower = saveable.cards.map { it.power }.sum(),
                             totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
                             maverickCount = saveable.cards.filter { it.maverick }.size,
@@ -72,9 +72,9 @@ class DeckImporter(
                             raresCount = saveable.cards.filter { it.rarity == Rarity.Rare }.size,
                             uncommonsCount = saveable.cards.filter { it.rarity == Rarity.Uncommon }.size
                     )
+                    .toRatedDeck()
         }
 
         deckRepo.saveAll(saveableDecks)
     }
-
 }

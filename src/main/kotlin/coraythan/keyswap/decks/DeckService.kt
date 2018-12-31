@@ -40,7 +40,7 @@ class DeckService(
             DeckSortOptions.MAVERICK_COUNT -> "maverickCount"
             DeckSortOptions.SPECIALS -> "specialsCount"
             DeckSortOptions.RARES -> "raresCount"
-            DeckSortOptions.UNCOMMONS -> "uncommonsCount"
+            DeckSortOptions.CARDS_RATING -> "cardsRating"
         }
 
         val deckPage = deckRepo.findAll(predicate, PageRequest.of(
@@ -74,5 +74,19 @@ class DeckService(
                 )
             }
         }.sortedByDescending { it.dateListed }
+    }
+
+    fun updateDeckRatings(calculateAveragesOnly: Boolean = false) {
+        val sort = Sort.by("id")
+        var currentPage = 0
+//        val
+        while (true) {
+            val results = deckRepo.findAll(PageRequest.of(currentPage, 100, sort))
+            if (results.isEmpty) {
+                break
+            }
+            deckRepo.saveAll(results.content.map { it.toRatedDeck() })
+            currentPage++
+        }
     }
 }

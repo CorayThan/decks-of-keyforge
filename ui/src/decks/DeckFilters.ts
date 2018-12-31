@@ -29,5 +29,5 @@ export type DeckSortOptions =
     | "POWER"
     | "MAVERICK_COUNT"
     | "RARES"
-    | "UNCOMMONS"
     | "SPECIALS"
+    | "CARDS_RATING"
