@@ -11,7 +11,7 @@
   rating: 2
   expectedAmber: 1.5
   artifactControl: 0.75
-  traits: [playsArtifacts]
+  traits: [returnsFriendlyArtifactsToHand, returnsEnemyArtifactsToHand]
   synergies: []
 
 - name: Blood Money
@@ -47,7 +47,7 @@
   cardNumber: 6
   rating: 3
   creatureControl: 3.0
-  traits: [destroysCreatures, causesFighting, destroysFriendlyCreatures]
+  traits: [destroysEnemyCreatures, causesFighting, destroysFriendlyCreatures]
   synergies:
     - trait: highCreatureCount
       type: deck
@@ -60,7 +60,7 @@
   cardNumber: 7
   rating: 3
   creatureControl: 3.0
-  traits: [destroysCreatures, destroysFriendlyCreatures]
+  traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
     - trait: dealsAoeDamage
       rating: -2
@@ -86,7 +86,7 @@
   expectedAmber: 2.0
   traits: []
   synergies:
-    - trait: destroysCreatures
+    - trait: destroysEnemyCreatures
       type: house
     - trait: causesFighting
       type: house
@@ -149,7 +149,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: [causesStun]
+  traits: [stuns]
   synergies: []
 
 - name: Unguarded Camp
@@ -186,7 +186,8 @@
   creatureControl: 1.0
   artifactControl: 0.0
   traits: [dealsAoeDamage, dealsDamage]
-  synergies: []
+  synergies:
+    - trait: highTotalArmor
 
 - name: Banner of Battle
   cardNumber: 20
@@ -202,7 +203,7 @@
   cardNumber: 21
   rating: 2
   creatureControl: 1.0
-  traits: [dealsDamage]
+  traits: [dealsDamage, usableArtifact]
   synergies: []
 
 - name: Gauntlet of Command
@@ -210,7 +211,7 @@
   rating: 3
   expectedAmber: 0.5
   creatureControl: 1.0
-  traits: [causesFighting]
+  traits: [causesFighting, usableArtifact]
   synergies: []
 
 - name: Iron Obelisk
@@ -230,7 +231,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [dealsDamage]
+  traits: [dealsDamage, usableArtifact]
   synergies: []
 
 - name: Pile of Skulls
@@ -239,7 +240,7 @@
   amberControl: 2.0
   traits: [capturesAmber]
   synergies:
-    - trait: destroysCreatures
+    - trait: destroysEnemyCreatures
       rating: 3
     - trait: dealsDamage
       rating: 3
@@ -255,7 +256,7 @@
   amberControl: 2.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: The Warchest
@@ -265,7 +266,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies:
     - trait: causesFighting
       type: house
@@ -296,13 +297,15 @@
 
 - name: Bumpsy
   cardNumber: 30
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [hasPlayEffect]
-  synergies: []
+  traits: []
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 3
 
 - name: Earthshaker
   cardNumber: 31
@@ -311,7 +314,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [destroysFriendlyCreatures, destroysCreatures]
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: power3OrHigherCreatures
     - trait: power2OrLowerCreatures
@@ -337,12 +340,13 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [hasPlayEffect, causesFighting]
+  traits: [causesFighting]
   synergies:
     - trait: lowCreatureCount
       rating: -2
     - trait: highTotalCreaturePower
       rating: 1
+    - trait: returnsFriendlyCreaturesToHand
 
 - name: Grenade Snib
   cardNumber: 34
@@ -350,7 +354,7 @@
   amberControl: 1.5
   traits: []
   synergies:
-    - trait: sacrificesCreatures
+    - trait: destroysFriendlyCreatures
 
 - name: Headhunter
   cardNumber: 35
@@ -372,6 +376,7 @@
   synergies:
     - trait: power2OrLowerCreatures
       rating: -3
+    - trait: highTotalArmor
 
 - name: Kelifi Dragon
   cardNumber: 37
@@ -421,14 +426,13 @@
   cardNumber: 41
   rating: 3
   expectedAmber: 2.0
-  traits: [elusive]
+  traits: [elusive, highValueReap]
   synergies:
-    - trait: destroysCreatures
+    - trait: destroysEnemyCreatures
       type: house
     - trait: dealsDamage
       rating: 1
       type: house
-    - trait: allowsUse
 
 - name: Mugwump
   cardNumber: 42
@@ -461,10 +465,11 @@
 
 - name: Smaaash
   cardNumber: 46
-  rating: 4
+  rating: 3
   creatureControl: 0.5
-  traits: [causesStun, hasPlayEffect]
-  synergies: []
+  traits: [stuns]
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
 
 - name: Tireless Crocag
   cardNumber: 47
@@ -478,9 +483,6 @@
   rating: 4
   expectedAmber: 1.0
   traits: []
-  synergies:
-    - trait: allowsUse
-      rating: 1
 
 - name: Wardrummer
   cardNumber: 49
@@ -490,9 +492,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
+  houseOnlyTraits: [returnsFriendlyCreaturesToHand]
   synergies:
-    - trait: hasPlayEffect
-      rating: 3
     - trait: powerfulCreatures
       type: house
 
@@ -513,9 +514,9 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [dealsAoeDamage, dealsDamage, protectsCreatures, destroysFriendlyCreatures]
+  traits: [dealsAoeDamage, dealsDamage, protectsCreatures, destroysFriendlyCreatures, returnsFriendlyCreaturesToHand]
   synergies:
-    - trait: hasPlayEffect
+    - trait: highTotalArmor
 
 - name: Yo Mama Mastery
   cardNumber: 52
@@ -534,7 +535,7 @@
   amberControl: -1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [revealsHand]
   synergies: []
 
 - name: Arise!
@@ -544,7 +545,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [returnsCreaturesFromDiscard, chains]
   synergies:
     - trait: highCreatureCount
       type: house
@@ -574,7 +575,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [purgesEnemyCreatures]
   synergies: []
 
 - name: Dance of Doom
@@ -584,7 +585,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [destroysCreatures]
+  traits: [destroysEnemyCreatures]
   synergies: []
 
 - name: Fear
@@ -594,7 +595,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [unsummonsOpponentsCreatures]
+  traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
 - name: Gateway to Dis
@@ -604,7 +605,7 @@
   amberControl: 0.0
   creatureControl: 3.0
   artifactControl: 0.0
-  traits: [destroysCreatures, destroysFriendlyCreatures]
+  traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies: []
 
 - name: Gongoozle
@@ -619,13 +620,17 @@
 
 - name: Guilty Hearts
   cardNumber: 61
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: capturesAmberOnEnemies
+      rating: 3
+    - trait: capturesAmber
+      rating: -2
 
 - name: Hand of Dis
   cardNumber: 62
@@ -634,8 +639,12 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [destroysEnemyCreatures]
+  synergies:
+    - trait: destroysEnemyCreatures
+      rating: -2
+    - trait: returnsEnemyCreaturesToHand
+      rating: 1
 
 - name: Hecatomb
   cardNumber: 63
@@ -644,18 +653,19 @@
   amberControl: -0.5
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  houseOnlyTraits: [destroysFriendlyCreatures]
   synergies: []
 
 - name: Tendrils of Pain
   cardNumber: 64
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage, dealsAoeDamage, destroysFriendlyCreatures]
+  synergies:
+    - trait: highTotalArmor
 
 - name: Hysteria
   cardNumber: 65
@@ -664,7 +674,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: []
+  traits: [returnsEnemyCreaturesToHand, returnsFriendlyCreaturesToHand]
   synergies: []
 
 - name: Key Hammer
@@ -675,7 +685,14 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: capturesAmber
+      rating: 1
+      type: house
+    - trait: stealsAmber
+      rating: 3
+      type: house
+    - trait: increasesKeyCost
 
 - name: Mind Barb
   cardNumber: 67
@@ -694,8 +711,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [capturesAmber, capturesAmberOnEnemies]
+  synergies:
+    - trait: heals
+      rating: 1
 
 - name: Poltergeist
   cardNumber: 69
@@ -704,8 +723,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.0
-  traits: []
-  synergies: []
+  traits: [destroysArtifacts]
+  synergies:
+    - trait: destroysArtifacts
+      rating: -2
 
 - name: Red-Hot Armor
   cardNumber: 70
@@ -724,8 +745,12 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
+  synergies:
+    - trait: powerfulCreatures
+      rating: -2
+    - trait: weakCreatures
+      rating: 2
 
 - name: Annihilation Ritual
   cardNumber: 72
@@ -734,18 +759,24 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [purgesFriendlyCreatures, purgesEnemyCreatures]
+  synergies:
+    - trait: returnsCreaturesFromDiscard
+      rating: -2
 
 - name: Dominator Bauble
   cardNumber: 73
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  outsideHouseTraits: [usesCreaturesOutOfHouse, usableArtifact]
+  synergies:
+    - trait: highValueReap
+      rating: 3
+    - trait: highValueAction
+      rating: 3
 
 - name: Key to Dis
   cardNumber: 74
@@ -754,7 +785,7 @@
   amberControl: 0.0
   creatureControl: 3.0
   artifactControl: 0.0
-  traits: []
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures, usableArtifact]
   synergies: []
 
 - name: Lash of Broken Dreams
@@ -764,7 +795,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [increasesKeyCost, usableArtifact]
   synergies: []
 
 - name: Library of the Damned
@@ -774,7 +805,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [archivesFriendlyCards, usableArtifact]
   synergies: []
 
 - name: Lifeward
@@ -784,8 +815,9 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact]
+  synergies:
+    - trait: returnsEnemyCreaturesToHand
 
 - name: Sacrificial Altar
   cardNumber: 78
@@ -794,8 +826,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [returnsCreaturesFromDiscard, usableArtifact]
+  synergies:
+    - trait: human
 
 - name: Screaming Cave
   cardNumber: 79
@@ -804,18 +837,24 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Soul Snatcher
   cardNumber: 80
-  rating: 1
+  rating: 2
   expectedAmber: 2.0
   amberControl: -2.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highCreatureCount
+      rating: 3
+    - trait: lowCreatureCount
+      rating: -2
+    - trait: badPenny
+      rating: 3
 
 - name: Charette
   cardNumber: 81
@@ -824,7 +863,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [capturesAmber]
   synergies: []
 
 - name: Drumble
@@ -834,7 +873,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [elusive, capturesAmber]
   synergies: []
 
 - name: Dust Imp
@@ -845,7 +884,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: destroysFriendlyCreatures
 
 - name: Eater of the Dead
   cardNumber: 84
@@ -854,7 +894,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [purgesEnemyCreatures]
   synergies: []
 
 - name: Ember Imp
@@ -865,7 +905,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: protectsCreatures
 
 - name: Gabos Longarms
   cardNumber: 86
@@ -884,8 +925,13 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [controlsCreatures]
+  synergies:
+    - trait: increasesCreaturePower
+    - trait: usesCreaturesOutOfHouse
+      rating: 3
+    - trait: causesFighting
+      rating: 3
 
 - name: Guardian Demon
   cardNumber: 88
@@ -894,8 +940,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [heals, dealsDamage, highValueReap]
 
 - name: Master of 1
   cardNumber: 89
@@ -904,7 +949,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [destroysEnemyCreatures]
   synergies: []
 
 - name: Master of 2
@@ -914,7 +959,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [destroysEnemyCreatures, highValueReap]
   synergies: []
 
 - name: Master of 3
@@ -924,7 +969,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [destroysEnemyCreatures, highValueReap]
   synergies: []
 
 - name: Pit Demon
@@ -934,8 +979,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber, highValueAction]
 
 - name: Pitlord
   cardNumber: 93
@@ -944,8 +988,11 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  houseOnlyTraits: [protectsCreatures]
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
+      type: house
+      rating: 3
 
 - name: Restringuntus
   cardNumber: 94
@@ -954,8 +1001,12 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [controlsHouseChoice]
+  synergies:
+    - trait: controlsHouseChoice
+      rating: 3
+    - trait: protectsCreatures
+      rating: 3
 
 - name: Shaffles
   cardNumber: 95
@@ -965,7 +1016,10 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: protectsCreatures
+    - trait: increasesCreaturePower
+      rating: 1
 
 - name: Shooler
   cardNumber: 96
@@ -974,8 +1028,10 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber]
+  synergies:
+    - trait: increasesKeyCost
+    - trait: returnsFriendlyCreaturesToHand
 
 - name: Snudge
   cardNumber: 97
@@ -984,28 +1040,36 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 1.0
-  traits: []
-  synergies: []
+  traits: [highValueReap, returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand, returnsEnemyArtifactsToHand]
+  synergies:
+    - trait: protectsCreatures
+      rating: 1
 
 - name: Stealer of Souls
   cardNumber: 98
-  rating: 4
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [purgesEnemyCreatures, ]
+  synergies:
+    - trait: causesFighting
+      rating: 1
+    - trait: increasesCreaturePower
 
 - name: Succubus
   cardNumber: 99
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [reducesEnemyDraw]
+  synergies:
+    - trait: reducesEnemyDraw
+    - trait: protectsCreatures
+      rating: 3
 
 - name: Tentacus
   cardNumber: 100
@@ -1015,7 +1079,9 @@
   creatureControl: 0.0
   artifactControl: 0.5
   traits: []
-  synergies: []
+  synergies:
+    - trait: destroysArtifacts
+      rating: -2
 
 - name: The Terror
   cardNumber: 101
@@ -1025,7 +1091,13 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: capturesAmber
+      type: house
+    - trait: stealsAmber
+      type: house
+    - trait: increasesKeyCost
+      rating: -1
 
 - name: Tocsin
   cardNumber: 102
@@ -1034,18 +1106,24 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [discardsEnemyCards, highValueReap]
+  synergies:
+    - trait: protectsCreatures
+      rating: 1
 
 - name: Tolas
   cardNumber: 103
-  rating: 1
+  rating: 2
   expectedAmber: 1.0
   amberControl: -1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [elusive]
+  synergies:
+    - trait: highCreatureCount
+      rating: 3
+    - trait: lowCreatureCount
+      rating: -2
 
 - name: Truebaru
   cardNumber: 104
@@ -1054,8 +1132,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [protectsCreatures]
+  synergies:
+    - trait: destroysFriendlyCreatures
 
 - name: Collar of Subordination
   cardNumber: 105
@@ -1064,8 +1143,10 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [controlsCreatures]
+  synergies:
+    - trait: causesFighting
+    - trait: usesCreaturesOutOfHouse
 
 - name: Flame-Wreathed
   cardNumber: 106
@@ -1074,7 +1155,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures, increasesCreaturePower ]
   synergies: []
 
 - name: Bouncing Deathquark
@@ -1084,7 +1165,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: []
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies: []
 
 - name: Dimension Door
@@ -1094,8 +1175,9 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber]
+  synergies:
+    - trait: highTotalCreaturePower
 
 - name: Effervescent Principle
   cardNumber: 109
@@ -1104,8 +1186,12 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [chains]
+  synergies:
+    - trait: increasesKeyCost
+      rating: 1
+    - trait: capturesAmber
+      rating: 1
 
 - name: Foggify
   cardNumber: 110
@@ -1114,7 +1200,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Help from Future Self
@@ -1124,7 +1210,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [drawsCards]
   synergies: []
 
 - name: Interdimensional Graft
@@ -1134,8 +1220,10 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber]
+  synergies:
+    - trait: capturesAmber
+      type: house
 
 - name: Knowledge is Power
   cardNumber: 113
@@ -1144,8 +1232,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [archivesFriendlyCards]
+  synergies:
+    - trait: archivesFriendlyCards
+      rating: 3
 
 - name: Labwork
   cardNumber: 114
@@ -1154,7 +1244,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [archivesFriendlyCards]
   synergies: []
 
 - name: Library Access
@@ -1165,7 +1255,11 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: archivesFriendlyCards
+    - trait: drawsCards
+      rating: 1
+    - trait: playsCards
 
 - name: Neuro Syphon
   cardNumber: 116
@@ -1174,8 +1268,9 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber]
+  synergies:
+    - trait: increasesKeyCost
 
 - name: Phase Shift
   cardNumber: 117
@@ -1184,8 +1279,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [playsCards]
+  synergies:
+    - trait: libraryAccess
 
 - name: Positron Bolt
   cardNumber: 118
@@ -1194,7 +1290,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
+  traits: [dealsDamage]
   synergies: []
 
 - name: Random Access Archives
@@ -1204,7 +1300,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [archivesFriendlyCards]
   synergies: []
 
 - name: Remote Access
@@ -1215,7 +1311,9 @@
   creatureControl: 0.0
   artifactControl: 0.5
   traits: []
-  synergies: []
+  synergies:
+    - trait: destroysArtifacts
+      rating: -1
 
 - name: Reverse Time
   cardNumber: 121
@@ -1225,7 +1323,9 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: libraryAccess
+      rating: 3
 
 - name: Scrambler Storm
   cardNumber: 122
@@ -1244,7 +1344,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [archivesFriendlyCards]
   synergies: []
 
 - name: Twin Bolt Emission
@@ -1254,7 +1354,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [dealsDamage]
   synergies: []
 
 - name: Wild Wormhole
@@ -1264,8 +1364,12 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [playsCards]
+  synergies:
+    - trait: destroysFriendlyCreatures
+      rating: -3
+    - trait: chains
+      rating: -3
 
 - name: Anomaly Exploiter
   cardNumber: 126
@@ -1274,8 +1378,9 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [destroysEnemyCreatures, usableArtifact]
+  synergies:
+    - trait: dealsAoeDamage
 
 - name: Chaos Portal
   cardNumber: 127
@@ -1284,8 +1389,11 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [playsCards, usableArtifact]
+  synergies:
+    - trait: revealsTopDeck
+    - trait: chains
+      rating: -2
 
 - name: Crazy Killing Machine
   cardNumber: 128
@@ -1294,8 +1402,9 @@
   amberControl: 0.0
   creatureControl: 0.1
   artifactControl: 0.5
-  traits: []
-  synergies: []
+  traits: [destroysArtifacts, destroysFriendlyCreatures, destroysEnemyCreatures, usableArtifact]
+  synergies:
+    - trait: revealsTopDeck
 
 - name: Library of Babble
   cardNumber: 129
@@ -1304,8 +1413,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [drawsCards, usableArtifact]
+  synergies:
+    - trait: dextre
 
 - name: Mobius Scroll
   cardNumber: 130
@@ -1314,7 +1424,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [archivesFriendlyCards, usableArtifact]
   synergies: []
 
 - name: Pocket Universe
@@ -1324,7 +1434,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Spangler Box
@@ -1334,7 +1444,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Spectral Tunneler
@@ -1344,7 +1454,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [drawsCards, usableArtifact]
   synergies: []
 
 - name: Strange Gizmo
@@ -1354,7 +1464,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [destroysArtifacts, destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies: []
 
 - name: The Howling Pit
@@ -1364,7 +1474,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [drawsCards, increasesHandSize]
   synergies: []
 
 - name: Batdrone
@@ -1374,8 +1484,10 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber]
+  synergies:
+    - trait: protectsCreatures
+    - trait: causesFighting
 
 - name: Brain Eater
   cardNumber: 137
@@ -1384,8 +1496,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [drawsCards]
+  synergies:
+    - trait: increasesCreaturePower
+      rating: 1
 
 - name: Dextre
   cardNumber: 138
@@ -1394,7 +1508,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [revealsTopDeck, capturesAmber]
   synergies: []
 
 - name: Doc Bookton
@@ -1404,8 +1518,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [drawsCards]
 
 - name: Dr. Escotera
   cardNumber: 140
@@ -1415,7 +1528,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
 
 - name: Dysania
   cardNumber: 141
@@ -1429,13 +1543,14 @@
 
 - name: Ganymede Archivist
   cardNumber: 142
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [archivesFriendlyCards, highValueReap]
+  synergies:
+    - trait: protectsCreatures
 
 - name: Harland Mindlock
   cardNumber: 143
@@ -1445,7 +1560,8 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: protectsCreatures
 
 - name: Quixo the “Adventurer”
   cardNumber: 144
@@ -1454,8 +1570,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [skirmish, drawsCards]
+  synergies:
+    - trait: causesFighting
 
 - name: Mother
   cardNumber: 145
@@ -1464,8 +1581,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [drawsCards, increasesHandSize]
+  synergies:
+    - trait: protectsCreatures
 
 - name: Neutron Shark
   cardNumber: 146
@@ -1474,7 +1592,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures, destroysArtifacts]
   synergies: []
 
 - name: Novu Archaeologist
@@ -1484,18 +1602,21 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [archivesFriendlyCards, highValueAction]
+  synergies:
+    - trait: protectsCreatures
+      rating: 1
 
 - name: Ozmo, Martianologist
   cardNumber: 148
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: hasMars
 
 - name: Psychic Bug
   cardNumber: 149
@@ -1504,7 +1625,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [revealsHand]
   synergies: []
 
 - name: Replicator
@@ -1514,7 +1635,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [highValueReap]
   synergies: []
 
 - name: Research Smoko
@@ -1524,7 +1645,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [archivesFriendlyCards]
   synergies: []
 
 - name: Skippy Timehog
@@ -1535,7 +1656,11 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 3
+    - trait: returnsCreaturesFromDiscard
+      rating: 3
 
 - name: Timetraveller
   cardNumber: 153
@@ -1544,7 +1669,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [drawsCards]
   synergies: []
 
 - name: Titan Mechanic
@@ -1564,18 +1689,21 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [elusive, archivesFriendlyCards, highValueReap]
+  synergies:
+    - trait: revealsTopDeck
 
 - name: Veylan Analyst
   cardNumber: 156
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: usableArtifact
+      rating: 3
 
 - name: Experimental Therapy
   cardNumber: 157
@@ -1584,7 +1712,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [stuns, usesCreaturesOutOfHouse]
   synergies: []
 
 - name: Rocket Boots
@@ -1595,7 +1723,11 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: skirmish
+      type: house
+    - trait: highValueReap
+      type: house
 
 - name: Transposition Sandals
   cardNumber: 159
@@ -1604,7 +1736,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usesCreaturesOutOfHouse]
   synergies: []
 
 - name: Ammonia Clouds
@@ -1614,38 +1746,53 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage, dealsAoeDamage]
+  synergies:
+    - trait: power3OrLowerCreatures
+      rating: -2
+    - trait: power4OrHigherCreatures
+      rating: 1
+    - trait: highTotalArmor
 
 - name: Battle Fleet
   cardNumber: 161
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [drawsCards]
+  synergies:
+    - trait: increasesHandSize
+    - trait: drawsCards
+      type: house
+    - trait: returnsFriendlyCreaturesToHand
+      type: house
 
 - name: Deep Probe
   cardNumber: 162
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: revealsHand
+      rating: 3
 
 - name: EMP Blast
   cardNumber: 163
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 1.5
-  traits: []
-  synergies: []
+  traits: [destroysArtifacts, stuns]
+  synergies:
+    - trait: lowArtifactCount
+    - trait: highArtifactCount
+      rating: -2
 
 - name: Hypnotic Command
   cardNumber: 164
@@ -1654,8 +1801,10 @@
   amberControl: 2.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [capturesAmberOnEnemies]
+  synergies:
+    - trait: highCreatureCount
+      type: house
 
 - name: Irradiated Æmber
   cardNumber: 165
@@ -1664,18 +1813,27 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage, dealsAoeDamage]
+  synergies:
+    - trait: increasesKeyCost
 
 - name: Key Abduction
   cardNumber: 166
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [forgesKeys]
+  synergies:
+    - trait: highCreatureCount
+      type: house
+    - trait: lowCreatureCount
+      type: house
+      rating: -2
+    - trait: archivesFriendlyCards
+      rating: 3
+    - trait: increasesHandSize
 
 - name: Martian Hounds
   cardNumber: 167
@@ -1685,7 +1843,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: dealsAoeDamage
 
 - name: Martians Make Bad Allies
   cardNumber: 168
@@ -1704,8 +1863,11 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [archivesEnemyCards]
+  synergies:
+    - trait: archivesFriendlyCards
+      rating: -3
+    - trait: dealsAoeDamage
 
 - name: Mating Season
   cardNumber: 170
@@ -1715,7 +1877,9 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highCreatureCount
+      rating: 1
 
 - name: Mothership Support
   cardNumber: 171
@@ -1724,8 +1888,10 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage]
+  synergies:
+    - trait: highTotalCreaturePower
+      type: house
 
 - name: Orbital Bombardment
   cardNumber: 172
@@ -1734,8 +1900,13 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage]
+  synergies:
+    - trait: increasesHandSize
+    - trait: drawsCards
+      type: house
+    - trait: returnsFriendlyCreaturesToHand
+      type: house
 
 - name: Phosphorus Stars
   cardNumber: 173
@@ -1744,8 +1915,11 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [chains, stuns]
+  synergies:
+    - trait: highCreatureCount
+      type: house
+      rating: -2
 
 - name: Psychic Network
   cardNumber: 174
@@ -1754,18 +1928,24 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [stealsAmber]
+  synergies:
+    - trait: readiesCreatures
+      type: house
+    - trait: highTotalCreaturePower
+      type: house
 
 - name: Sample Collection
   cardNumber: 175
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [archivesEnemyCards]
+  synergies:
+    - trait: archivesFriendlyCards
+      rating: -3
 
 - name: Shatter Storm
   cardNumber: 176
@@ -1775,7 +1955,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: increasesKeyCost
 
 - name: Soft Landing
   cardNumber: 177
@@ -1784,7 +1965,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [readiesCreatures]
   synergies: []
 
 - name: Squawker
@@ -1794,7 +1975,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [readiesCreatures, stuns]
   synergies: []
 
 - name: Total Recall
@@ -1804,8 +1985,11 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [returnsFriendlyCreaturesToHand]
+  synergies:
+    - trait: capturesAmber
+      rating: -1
+    - trait: highTotalCreaturePower
 
 - name: Combat Pheromones
   cardNumber: 180
@@ -1814,28 +1998,51 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact]
+  synergies:
+    - trait: highValueReap
+      type: house
+    - trait: highValueAction
+      type: house
 
 - name: Commpod
   cardNumber: 181
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact, readiesCreatures]
+  synergies:
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
+    - trait: highCreatureCount
+      type: house
+      rating: 3
+    - trait: drawsCards
+      type: house
+      rating: 1
+    - trait: increasesHandSize
+      rating: 1
 
 - name: Crystal Hive
   cardNumber: 182
-  rating: 4
+  rating: 3
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact]
+  synergies:
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
+    - trait: highCreatureCount
+      type: house
+      rating: 3
+    - trait: highValueReap
+      type: house
 
 - name: Custom Virus
   cardNumber: 183
@@ -1844,7 +2051,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact, destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies: []
 
 - name: Feeding Pit
@@ -1854,18 +2061,20 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Invasion Portal
   cardNumber: 185
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact, drawsCards]
+  synergies:
+    - trait: highCreatureCount
+      type: house
 
 - name: Incubation Chamber
   cardNumber: 186
@@ -1874,8 +2083,11 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact, archivesFriendlyCards]
+  synergies:
+    - trait: lowCreatureCount
+      rating: -3
+      type: house
 
 - name: Mothergun
   cardNumber: 187
@@ -1884,8 +2096,12 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact, dealsDamage]
+  synergies:
+    - trait: archivesFriendlyCards
+    - trait: drawsCards
+      type: house
+    - trait: increasesHandSize
 
 - name: Sniffer
   cardNumber: 188
@@ -1894,18 +2110,21 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Swap Widget
   cardNumber: 189
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact, readiesCreatures]
+  synergies:
+    - trait: lowCreatureCount
+      rating: -3
+      type: house
 
 - name: Blypyp
   cardNumber: 190
@@ -1914,8 +2133,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [readiesCreatures, highValueReap]
 
 - name: Chuff Ape
   cardNumber: 191
@@ -1924,7 +2142,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Ether Spider
@@ -1934,7 +2152,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [capturesAmber]
   synergies: []
 
 - name: Grabber Jammer
@@ -1944,7 +2162,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [increasesKeyCost, capturesAmber]
   synergies: []
 
 - name: Grommid
@@ -1955,7 +2173,9 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: lowCreatureCount
+      rating: 3
 
 - name: “John Smyth”
   cardNumber: 195
@@ -1964,8 +2184,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [readiesCreatures, highValueReap, elusive]
+  synergies:
+    - trait: readiesCreatures
+      type: house
 
 - name: Mindwarper
   cardNumber: 196
@@ -1974,18 +2196,24 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueAction, elusive, capturesAmberOnEnemies]
+  synergies:
+    - trait: readiesCreatures
+      type: house
 
 - name: Phylyx the Disintegrator
   cardNumber: 197
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueAction, elusive]
+  synergies:
+    - trait: readiesCreatures
+      type: house
+    - trait: highCreatureCount
+      type: house
 
 - name: Qyxxlyx Plague Master
   cardNumber: 198
@@ -1995,7 +2223,9 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: human
+      rating: -2
 
 - name: Tunk
   cardNumber: 199
@@ -2005,7 +2235,9 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highCreatureCount
+      rating: 1
 
 - name: Ulyq Megamouth
   cardNumber: 200
@@ -2014,8 +2246,11 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usesCreaturesOutOfHouse, highValueReap]
+  synergies:
+    - trait: protectsCreatures
+    - trait: readiesCreatures
+      type: house
 
 - name: Uxlyx the Zookeeper
   cardNumber: 201
@@ -2024,8 +2259,12 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueReap, archivesEnemyCards, elusive]
+  synergies:
+    - trait: readiesCreatures
+      type: house
+    - trait: archivesFriendlyCards
+      rating: -3
 
 - name: Vezyma Thinkdrone
   cardNumber: 202
@@ -2044,8 +2283,10 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [capturesAmber]
+  synergies:
+    - trait: highTotalCreaturePower
+      type: house
 
 - name: Yxilo Bolter
   cardNumber: 204
@@ -2054,8 +2295,10 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueReap, dealsDamage]
+  synergies:
+    - trait: readiesCreatures
+      type: house
 
 - name: Yxilx Dominator
   cardNumber: 205
@@ -2064,7 +2307,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Zorg
@@ -2074,7 +2317,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [stuns]
   synergies: []
 
 - name: Zyzzix the Many
@@ -2084,8 +2327,14 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueReap, archivesFriendlyCards]
+  synergies:
+    - trait: archivesEnemyCards
+      rating: -3
+    - trait: readiesCreatures
+      type: house
+    - trait: highCreatureCount
+      type: outsideHouse
 
 - name: Biomatrix Backup
   cardNumber: 208
@@ -2094,8 +2343,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [archivesFriendlyCards]
+  synergies:
+    - trait: causesFighting
 
 - name: Brain Stem Antenna
   cardNumber: 209
@@ -2104,8 +2354,11 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usesCreaturesOutOfHouse]
+  synergies:
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
 
 - name: Jammer Pack
   cardNumber: 210
@@ -2114,7 +2367,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [increasesKeyCost]
   synergies: []
 
 - name: Red Planet Ray Gun
@@ -2124,8 +2377,15 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueReap]
+  synergies:
+    - trait: readiesCreatures
+      type: house
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
+    - trait: highCreatureCount
+      type: house
 
 - name: Begone!
   cardNumber: 212
@@ -2144,7 +2404,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
+  traits: [stuns]
   synergies: []
 
 - name: Charge!
@@ -2154,8 +2414,14 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage]
+  synergies:
+    - trait: lowCreatureCount
+      type: house
+      rating: 3
+    - trait: highCreatureCount
+      type: house
+      rating: -3
 
 - name: Cleansing Wave
   cardNumber: 215
@@ -2164,8 +2430,15 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [heals]
+  synergies:
+    - trait: dealsAoeDamage
+    - trait: dealsDamage
+    - trait: lowCreatureCount
+      type: house
+    - trait: highCreatureCount
+      type: house
+      rating: -3
 
 - name: Clear Mind
   cardNumber: 216
@@ -2185,7 +2458,10 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: capturesAmber
+      type: house
+    - trait: increasesKeyCost
 
 - name: Glorious Few
   cardNumber: 218
@@ -2195,7 +2471,11 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: lowCreatureCount
+      rating: 3
+    - trait: highCreatureCount
+      rating: -3
 
 - name: Honorable Claim
   cardNumber: 219
@@ -2204,8 +2484,11 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [capturesAmber]
+  synergies:
+    - trait: highCreatureCount
+      type: house
+      rating: 1
 
 - name: Inspiration
   cardNumber: 220
@@ -2215,7 +2498,9 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highValueReap
+    - trait: highValueAction
 
 - name: Mighty Lance
   cardNumber: 221
@@ -2224,7 +2509,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
+  traits: [dealsDamage]
   synergies: []
 
 - name: Oath of Poverty
@@ -2235,7 +2520,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highArtifactCount
 
 - name: One Stood Against Many
   cardNumber: 223
@@ -2244,8 +2530,9 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [causesFighting]
+  synergies:
+    - trait: powerfulCreatures
 
 - name: Radiant Truth
   cardNumber: 224
@@ -2254,7 +2541,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [stuns]
   synergies: []
 
 - name: Shield of Justice
@@ -2265,7 +2552,13 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highCreatureCount
+      type: house
+    - trait: lowCreatureCount
+      type: house
+      rating: -2
+
 
 - name: Take Hostages
   cardNumber: 226
@@ -2274,7 +2567,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [capturesAmber]
   synergies: []
 
 - name: Terms of Redress
@@ -2284,7 +2577,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [capturesAmber]
   synergies: []
 
 - name: The Harder They Come
@@ -2299,13 +2592,19 @@
 
 - name: The Spirit’s Way
   cardNumber: 229
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
+  synergies:
+    - trait: power3OrHigherCreatures
+      rating: -3
+    - trait: power2OrLowerCreatures
+      rating: 3
+    - trait: increasesCreaturePower
+      rating: -2
 
 - name: Virtuous Works
   cardNumber: 230
@@ -2319,13 +2618,18 @@
 
 - name: Epic Quest
   cardNumber: 231
-  rating: 3
+  rating: 1
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [forgesKeys, archivesFriendlyCards]
+  synergies:
+    - trait: knight
+      rating: 3
+      type: house
+    - trait: archivesFriendlyCards
+    - trait: increasesHandSize
 
 - name: Gorm of Omm
   cardNumber: 232
@@ -2334,7 +2638,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.0
-  traits: []
+  traits: [usableArtifact, destroysArtifacts]
   synergies: []
 
 - name: Hallowed Blaster
@@ -2344,8 +2648,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact, heals]
+  synergies:
+    - trait: highTotalCreaturePower
+      rating: 1
 
 - name: Potion of Invulnerability
   cardNumber: 234
@@ -2354,28 +2660,33 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Round Table
   cardNumber: 235
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: knight
+      rating: 3
 
 - name: Sigil of Brotherhood
   cardNumber: 236
-  rating: 4
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [usableArtifact]
+  synergies:
+    - trait: highCreatureCount
+      type: house
+      rating: 3
 
 - name: Whispering Reliquary
   cardNumber: 237
@@ -2384,18 +2695,19 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Bulwark
   cardNumber: 238
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [protectsCreatures]
+  synergies:
+    - trait: dealsAoeDamage
 
 - name: Champion Anaphiel
   cardNumber: 239
@@ -2404,7 +2716,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Champion Tabris
@@ -2414,7 +2726,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [capturesAmber]
   synergies: []
 
 - name: Commander Remiel
@@ -2424,17 +2736,18 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [highValueReap, usesCreaturesOutOfHouse]
+  synergies:
+    - trait: protectsCreatures
 
 - name: Duma the Martyr
   cardNumber: 242
-  rating: 5
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [drawsCards, heals]
   synergies: []
 
 - name: Francus
@@ -2444,7 +2757,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [capturesAmber]
   synergies: []
 
 - name: Grey Monk
@@ -2454,18 +2767,23 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [heals]
+  synergies:
+    - trait: dealsAoeDamage
 
 - name: Hayyel the Merchant
   cardNumber: 245
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: highArtifactCount
+      rating: 3
+    - trait: protectsCreatures
+    - trait: returnsFriendlyArtifactsToHand
 
 - name: Horseman of Death
   cardNumber: 246
@@ -2479,13 +2797,14 @@
 
 - name: Horseman of Famine
   cardNumber: 247
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
+  synergies:
+    - trait: powerfulCreatures
 
 - name: Horseman of Pestilence
   cardNumber: 248
@@ -2494,8 +2813,9 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [dealsDamage, dealsAoeDamage]
+  synergies:
+    - trait: highTotalArmor
 
 - name: Horseman of War
   cardNumber: 249
@@ -2504,18 +2824,19 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [causesFighting]
   synergies: []
 
 - name: Jehu the Bureaucrat
   cardNumber: 250
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: protectsCreatures
 
 - name: Lady Maxena
   cardNumber: 251
@@ -2524,7 +2845,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [stuns]
   synergies: []
 
 - name: Lord Golgotha
@@ -2535,17 +2856,22 @@
   creatureControl: 1.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: causesFighting
 
 - name: Numquid the Fair
   cardNumber: 253
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [destroysEnemyCreatures]
+  synergies:
+    - trait: lowCreatureCount
+      rating: 3
+    - trait: highCreatureCount
+      rating: -3
 
 - name: Protectrix
   cardNumber: 254
@@ -2554,7 +2880,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [heals]
   synergies: []
 
 - name: Raiding Knight
@@ -2574,7 +2900,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Sequis
@@ -2594,8 +2920,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [causesFighting]
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
 
 - name: Staunch Knight
   cardNumber: 259
@@ -2614,8 +2941,9 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
-  synergies: []
+  traits: [capturesAmber]
+  synergies:
+    - trait: increasesKeyCost
 
 - name: The Vaultkeeper
   cardNumber: 261
@@ -2625,7 +2953,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: protectsCreatures
 
 - name: Veemos Lightbringer
   cardNumber: 262
@@ -2635,7 +2964,9 @@
   creatureControl: 1.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: elusive
+      rating: -3
 
 - name: Armageddon Cloak
   cardNumber: 263
@@ -2644,37 +2975,39 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Mantle of the Zealot
   cardNumber: 264
-  rating: 4
-  expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  traits: []
-  synergies: []
-
-- name: Protect the Weak
-  cardNumber: 265
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usesCreaturesOutOfHouse]
+  synergies:
+    - trait: highValueReap
+    - trait: highValueAction
+
+- name: Protect the Weak
+  cardNumber: 265
+  rating: 2
+  expectedAmber: 1.0
+  amberControl: 0.0
+  creatureControl: 0.0
+  artifactControl: 0.0
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Shoulder Armor
   cardNumber: 266
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies: []
 
 - name: Bait and Switch
@@ -2884,7 +3217,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Masterplan
@@ -2894,7 +3227,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Safe Place
@@ -2904,7 +3237,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Seeker Needle
@@ -2914,7 +3247,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Skeleton Key
@@ -2924,7 +3257,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Special Delivery
@@ -2934,7 +3267,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Speed Sigil
@@ -2954,7 +3287,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: The Sting
@@ -2964,7 +3297,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Bad Penny
@@ -3414,7 +3747,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Nepenthe Seed
@@ -3424,7 +3757,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Ritual of Balance
@@ -3434,7 +3767,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Ritual of the Hunt
@@ -3444,7 +3777,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: World Tree
@@ -3454,7 +3787,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [usableArtifact]
   synergies: []
 
 - name: Ancient Bear

@@ -15,24 +15,76 @@ data class SynTraitValue(
 )
 
 enum class SynTrait {
-    causesFighting,
-    playsArtifacts,
+
+    // Amber / keys
     capturesAmberOnEnemies,
     capturesAmber,
-    destroysCreatures,
+    stealsAmber,
+    increasesKeyCost,
+
+    // Damage
     dealsAoeDamage,
     dealsDamage,
-    causesStun,
-    protectsCreatures,
-    increasesKeyCost,
-    hasPlayEffect,
-    sacrificesCreatures,
-    increasesCreaturePower,
-    allowsUse,
-    elusive,
-    controlsHouseChoice,
-    unsummonsOpponentsCreatures,
+
+    // Creatures
     destroysFriendlyCreatures,
+    destroysEnemyCreatures,
+    causesFighting,
+    stuns,
+    protectsCreatures,
+    increasesCreaturePower,
+    elusive,
+    skirmish,
+    heals,
+    controlsCreatures,
+    highValueReap,
+    highValueAction,
+    readiesCreatures,
+
+    // Purging
+    purgesEnemyCreatures,
+    purgesFriendlyCreatures,
+
+    // Archives
+    archivesFriendlyCards,
+    archivesEnemyCards,
+
+    // Discard
+    returnsCreaturesFromDiscard,
+
+    // Artifacts
+    destroysArtifacts,
+    usableArtifact,
+
+    // Hand Manipulation
+    discardsEnemyCards,
+    reducesEnemyDraw,
+    returnsFriendlyCreaturesToHand,
+    returnsEnemyCreaturesToHand,
+    returnsFriendlyArtifactsToHand,
+    returnsEnemyArtifactsToHand,
+    drawsCards,
+    increasesHandSize,
+    playsCards,
+    revealsHand,
+
+    // Houses
+    controlsHouseChoice,
+    usesCreaturesOutOfHouse,
+
+    // other
+    revealsTopDeck,
+    chains,
+    forgesKeys,
+
+    // Traits (these don't need to be traits on the extra info
+    knight,
+    human,
+
+    // Special cards
+    libraryAccess,
+    badPenny,
+    dextre,
 
     // Deck / House traits
     highTotalCreaturePower,
@@ -40,9 +92,16 @@ enum class SynTrait {
     highCreatureCount,
     lowCreatureCount,
     powerfulCreatures,
+    weakCreatures,
+    power4OrHigherCreatures,
+    power3OrLowerCreatures,
     power3OrHigherCreatures,
     power2OrLowerCreatures,
-    expectedAmber
+    highArtifactCount,
+    lowArtifactCount,
+    expectedAmber,
+    hasMars,
+    highTotalArmor
 }
 
 enum class SynTraitType {

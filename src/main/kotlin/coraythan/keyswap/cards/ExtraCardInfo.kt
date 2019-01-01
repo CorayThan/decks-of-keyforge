@@ -19,6 +19,14 @@ data class ExtraCardInfo(
         @Enumerated(EnumType.STRING)
         val traits: Set<SynTrait> = setOf(),
 
+        @ElementCollection
+        @Enumerated(EnumType.STRING)
+        val houseOnlyTraits: Set<SynTrait> = setOf(),
+
+        @ElementCollection
+        @Enumerated(EnumType.STRING)
+        val outsideHouseTraits: Set<SynTrait> = setOf(),
+
         @OneToMany(cascade = [CascadeType.ALL])
         val synergies: List<SynTraitValue> = listOf(),
 
