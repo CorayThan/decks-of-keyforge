@@ -23,8 +23,10 @@ enum class SynTrait {
     increasesKeyCost,
 
     // Damage
-    dealsAoeDamage,
+    damagesMultipleEnemies,
+    damagesFriendlyCreatures,
     dealsDamage,
+    preventsDamage,
 
     // Creatures
     destroysFriendlyCreatures,
@@ -33,27 +35,31 @@ enum class SynTrait {
     stuns,
     protectsCreatures,
     increasesCreaturePower,
-    elusive,
-    skirmish,
     heals,
     controlsCreatures,
-    highValueReap,
-    highValueAction,
+    goodReap,
+    goodAction,
     readiesCreatures,
+    sacrificesCreatures,
+    elusive,
+    skirmish,
+    poison,
 
     // Purging
     purgesEnemyCreatures,
     purgesFriendlyCreatures,
 
     // Archives
-    archivesFriendlyCards,
+    archives,
     archivesEnemyCards,
 
     // Discard
     returnsCreaturesFromDiscard,
+    returnsCardsFromDiscard,
 
     // Artifacts
-    destroysArtifacts,
+    destroysEnemyArtifacts,
+    destroysFriendlyArtifacts,
     usableArtifact,
 
     // Hand Manipulation
@@ -76,23 +82,29 @@ enum class SynTrait {
     revealsTopDeck,
     chains,
     forgesKeys,
+    itself,
 
     // Traits (these don't need to be traits on the extra info
     knight,
     human,
+    scientist,
+    niffle,
+    beast,
 
     // Special cards
     libraryAccess,
     badPenny,
     dextre,
+    routineJob,
+    urchin,
+    ancientBear,
 
     // Deck / House traits
     highTotalCreaturePower,
     lowTotalCreaturePower,
-    highCreatureCount,
-    lowCreatureCount,
+    highCreatureCount, // 6=0, 7=1/4, 8=1/2, 9,10=3/4, 11,12=1
+    lowCreatureCount, // 6=0, 5=1/4, 4=1/2, 3,2=3/4, 1,0=1
     powerfulCreatures,
-    weakCreatures,
     power4OrHigherCreatures,
     power3OrLowerCreatures,
     power3OrHigherCreatures,
@@ -101,7 +113,7 @@ enum class SynTrait {
     lowArtifactCount,
     expectedAmber,
     hasMars,
-    highTotalArmor
+    highTotalArmor,
 }
 
 enum class SynTraitType {
