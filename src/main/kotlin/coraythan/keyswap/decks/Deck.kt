@@ -7,6 +7,11 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.userdeck.UserDeck
 import javax.persistence.*
 
+data class DeckWithSynergyInfo(
+        val deck: Deck,
+        val deckSynergyInfo: DeckSynergyInfo
+)
+
 @Entity
 data class Deck(
 

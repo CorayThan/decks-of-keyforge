@@ -1,6 +1,12 @@
 import { KCard } from "../cards/KCard"
 import { House } from "../houses/House"
 import { UserDeck } from "../userdeck/UserDeck"
+import { DeckSynergyInfo } from "./DeckSynergyInfo"
+
+export interface DeckWithSynergyInfo {
+    deck: Deck
+    deckSynergyInfo: DeckSynergyInfo
+}
 
 export interface Deck {
 

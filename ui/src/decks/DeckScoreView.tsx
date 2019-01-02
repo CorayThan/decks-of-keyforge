@@ -1,4 +1,5 @@
 import { Typography } from "@material-ui/core"
+import Tooltip from "@material-ui/core/Tooltip"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Deck } from "./Deck"
@@ -38,14 +39,14 @@ const RatingRow = (props: { value: number, name: string, operator?: string, larg
                 <div style={{flexGrow: 1}}/>
                 <Typography variant={large ? "h3" : "body1"} style={{...textStyle}}>{props.operator} {props.value}</Typography>
             </div>
-            <div>
+            <Tooltip title={"Synergy and Antisynergy Rating"} open={large ? undefined : false}>
                 <Typography
                     variant={large ? "h5" : "body2"}
                     style={{fontSize: large ? undefined : 12, marginBottom: large ? undefined : 2, ...textStyle}}
                 >
                     {props.name}
                 </Typography>
-            </div>
+            </Tooltip>
         </div>
     )
 }

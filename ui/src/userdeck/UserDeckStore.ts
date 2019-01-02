@@ -61,7 +61,7 @@ export class UserDeckStore {
 
     private refreshDeckInfo = () => {
         if (DeckStore.instance.deck) {
-            const keyforgeId = DeckStore.instance.deck.keyforgeId
+            const keyforgeId = DeckStore.instance.deck.deck.keyforgeId
             DeckStore.instance.findDeck(keyforgeId)
             DeckStore.instance.findDeckSaleInfo(keyforgeId)
         }

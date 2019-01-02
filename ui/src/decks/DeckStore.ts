@@ -3,7 +3,7 @@ import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
-import { Deck, DeckPage } from "./Deck"
+import { DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckFilters } from "./DeckFilters"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
@@ -28,7 +28,7 @@ export class DeckStore {
     addingMoreDecks = false
 
     @observable
-    deck?: Deck
+    deck?: DeckWithSynergyInfo
 
     @observable
     saleInfo?: DeckSaleInfo[]

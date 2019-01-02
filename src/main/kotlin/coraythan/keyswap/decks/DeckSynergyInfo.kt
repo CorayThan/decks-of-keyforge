@@ -6,10 +6,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 data class SynergyCombo(
+        val house: House,
         val cardName: String,
         val synergies: List<SynTrait>,
         val antisynergies: List<SynTrait>,
-        val netSynergy: Double
+        val netSynergy: Double,
+        val copies: Int = 1
 )
 
 data class DeckSynergyInfo(
@@ -74,12 +76,19 @@ class DeckSynergyService(
                     netSynergy < minSynergy -> minSynergy
                     else -> netSynergy
                 }
-                SynergyCombo(
-                        card.cardTitle,
-                        matchedTraits.filter { it.second > 0 }.map { it.first },
-                        matchedTraits.filter { it.second < 0 }.map { it.first },
-                        limitedNetSynergy
-                )
+                val matchedSynergies = matchedTraits.filter { it.second > 0 }.map { it.first }
+                val matchedAntisynergies = matchedTraits.filter { it.second < 0 }.map { it.first }
+                if (matchedSynergies.isEmpty() && matchedAntisynergies.isEmpty()) {
+                    null
+                } else {
+                    SynergyCombo(
+                            card.house,
+                            card.cardTitle,
+                            matchedSynergies,
+                            matchedAntisynergies,
+                            limitedNetSynergy
+                    )
+                }
             }
         }
 
@@ -87,10 +96,16 @@ class DeckSynergyService(
         val antisynergyRating = synergyValues.filter { it < 0 }.sum()
         val synergyRating = synergyValues.filter { it > 0 }.sum()
 
+        val dedupedCombos: MutableList<SynergyCombo> = mutableListOf()
+        val groupedCombos = synergyCombos.groupBy { it.house to it.cardName }
+        groupedCombos.forEach { key, dups ->
+            dedupedCombos.add(dups[0].copy(copies = dups.size))
+        }
+
         return DeckSynergyInfo(
                 synergyRating,
                 antisynergyRating,
-                synergyCombos
+                dedupedCombos
         )
     }
 

@@ -51,11 +51,12 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             userDeckForSale = userDeck.forSale
             userDeckForTrade = userDeck.forTrade
         }
+        const compact = ScreenStore.instance.screenSizeXs()
         return (
             <Card
                 style={{
                     margin: spacing(2),
-                    width: ScreenStore.instance.screenSizeXs() ? 344 : 544,
+                    width: compact ? 344 : 544,
                 }}
             >
                 <div
@@ -69,8 +70,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         paddingBottom: spacing(1),
                     }}
                 >
-                    <div style={{display: "flex", flexWrap: "wrap", alignItems: "center"}}>
-                        <HouseBanner houses={houses} style={{flexGrow: 1}}/>
+                    <div style={{display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-evenly"}}>
+                        <HouseBanner houses={houses} style={{flexGrow: compact ? undefined : 1}} vertical={compact}/>
                         <DeckScoreView deck={deck} style={{marginRight: spacing(2)}}/>
                     </div>
                 </div>

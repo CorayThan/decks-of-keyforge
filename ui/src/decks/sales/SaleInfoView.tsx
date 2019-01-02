@@ -1,5 +1,4 @@
-import { Card, Tooltip } from "@material-ui/core"
-import { blue } from "@material-ui/core/colors"
+import { Tooltip } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import * as React from "react"
@@ -9,6 +8,7 @@ import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
+import { KeyCard } from "../../generic/KeyCard"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { DeckSaleInfo } from "./DeckSaleInfo"
 
@@ -37,28 +37,34 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
             forSale, forTrade, askingPrice, condition, dateListed, listingInfo, username, publicContactInfo, externalLink
         } = this.props.saleInfo
         return (
-            <Card style={{margin: spacing(2)}}>
-                <div style={{backgroundColor: blue["500"], padding: spacing(2)}}>
-                    <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
-                        <div style={{display: "flex"}}>
-                            {forSale ? (
-                                <Tooltip title={"For sale"}>
-                                    <div><SellDeckIcon height={48}/></div>
-                                </Tooltip>
-                            ) : null}
-                            {forTrade && forSale ? <div style={{marginRight: spacing(1)}}/> : null}
-                            {forTrade ? (
-                                <Tooltip title={"For trade"}>
-                                    <div><TradeDeckIcon height={48}/></div>
-                                </Tooltip>
-                            ) : null}
+            <KeyCard
+                topContents={
+                    (
+                        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
+                            <div style={{display: "flex"}}>
+                                {forSale ? (
+                                    <Tooltip title={"For sale"}>
+                                        <div><SellDeckIcon height={48}/></div>
+                                    </Tooltip>
+                                ) : null}
+                                {forTrade && forSale ? <div style={{marginRight: spacing(1)}}/> : null}
+                                {forTrade ? (
+                                    <Tooltip title={"For trade"}>
+                                        <div><TradeDeckIcon height={48}/></div>
+                                    </Tooltip>
+                                ) : null}
+                            </div>
+                            {askingPrice == null ? null :
+                                <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                    ${askingPrice}
+                                </Typography>}
+                            <Typography variant={"subtitle1"} style={{color: "#FFFFFF"}}>
+                                {deckConditionReadableValue(condition)}
+                            </Typography>
                         </div>
-                        {askingPrice == null ? null : <Typography variant={"h4"} style={{color: "#FFFFFF"}}>${askingPrice}</Typography>}
-                        <Typography variant={"subtitle1"} style={{color: "#FFFFFF"}}>
-                            {deckConditionReadableValue(condition)}
-                        </Typography>
-                    </div>
-                </div>
+                    )
+                }
+            >
                 <div style={{maxWidth: 360}}>
                     {listingInfo == null ? null : (
                         <div style={{margin: spacing(2)}}>
@@ -85,7 +91,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
                 </div>
-            </Card>
+            </KeyCard>
         )
     }
 }

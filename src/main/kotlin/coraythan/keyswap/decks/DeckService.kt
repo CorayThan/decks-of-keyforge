@@ -66,6 +66,12 @@ class DeckService(
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)
 
+    fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
+        val deck = findDeck(keyforgeId)!!
+        val synergies = deckSynergyService.fromDeck(deck)
+        return DeckWithSynergyInfo(deck, synergies)
+    }
+
     fun saleInfoForDeck(keyforgeId: String): List<DeckSaleInfo> {
         val deck = findDeck(keyforgeId) ?: return listOf()
         return deck.userDecks.mapNotNull {

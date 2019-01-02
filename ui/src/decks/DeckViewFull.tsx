@@ -1,11 +1,12 @@
+import { Grid } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
 import { DeckStore } from "./DeckStore"
+import { DeckSynergiesInfoView } from "./DeckSynergiesInfoView"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
@@ -50,12 +51,17 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
             saleInfoComponent = <Loader/>
         }
         return (
-            <div
-                style={{display: "flex", justifyContent: "center", flexWrap: "wrap", margin: spacing(2)}}
-            >
-                <DeckViewSmall deck={deck} fullVersion={true}/>
-                {saleInfoComponent}
-            </div>
+            <Grid container={true}>
+                <Grid item={true}>
+                    {saleInfoComponent}
+                </Grid>
+                <Grid item={true}>
+                    <DeckViewSmall deck={deck.deck} fullVersion={true}/>
+                </Grid>
+                <Grid item={true}>
+                    <DeckSynergiesInfoView synergies={deck.deckSynergyInfo}/>
+                </Grid>
+            </Grid>
         )
     }
 }
