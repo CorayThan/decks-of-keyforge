@@ -14,7 +14,6 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
-import { InfoBox } from "../generic/InfoBox"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -25,6 +24,7 @@ import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
+import { DeckScoreView } from "./DeckScoreView"
 
 interface DeckViewSmallProps {
     deck: Deck
@@ -37,12 +37,6 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {deck, fullVersion} = this.props
         const {
             id, keyforgeId, name, houses,
-            totalPower,
-            expectedAmber,
-            cardsRating,
-            sasRating,
-            synergyRating,
-            antisynergyRating,
             wishlistCount, funnyCount,
             forSale, forTrade
         } = deck
@@ -75,23 +69,9 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         paddingBottom: spacing(1),
                     }}
                 >
-                    <div style={{display: "flex", flexWrap: "wrap"}}>
+                    <div style={{display: "flex", flexWrap: "wrap", alignItems: "center"}}>
                         <HouseBanner houses={houses} style={{flexGrow: 1}}/>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-evenly",
-                                marginTop: spacing(1),
-                                flexGrow: 1,
-                            }}
-                        >
-                            <InfoBox top={"Cards Rating"} bottom={cardsRating} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
-                            <InfoBox top={"SAS"} bottom={sasRating} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
-                            <InfoBox top={"Syn"} bottom={synergyRating} popInfo={"Synergy Rating"} textColor={"#FFFFFF"}/>
-                            <InfoBox top={"Asyn"} bottom={antisynergyRating} popInfo={"Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
-                            <InfoBox top={"EAember"} bottom={expectedAmber} popInfo={"Expected aember generated from cards"} textColor={"#FFFFFF"}/>
-                            <InfoBox top={"Power"} bottom={totalPower} popInfo={"Power of all creatures combined"} textColor={"#FFFFFF"}/>
-                        </div>
+                        <DeckScoreView deck={deck} style={{marginRight: spacing(2)}}/>
                     </div>
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>

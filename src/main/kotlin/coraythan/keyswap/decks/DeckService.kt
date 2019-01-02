@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @Transactional
@@ -41,14 +42,16 @@ class DeckService(
 
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> "id"
-            DeckSortOptions.DECK_NAME -> "name"
-            DeckSortOptions.AMBER -> "expectedAmber"
-            DeckSortOptions.POWER -> "totalPower"
-            DeckSortOptions.CREATURES -> "totalCreatures"
+            DeckSortOptions.EXPECTED_AMBER -> "expectedAmber"
+            DeckSortOptions.TOTAL_CREATURE_POWER -> "totalPower"
+            DeckSortOptions.CREATURE_COUNT -> "totalCreatures"
             DeckSortOptions.MAVERICK_COUNT -> "maverickCount"
             DeckSortOptions.SPECIALS -> "specialsCount"
             DeckSortOptions.RARES -> "raresCount"
             DeckSortOptions.CARDS_RATING -> "cardsRating"
+            DeckSortOptions.SAS_RATING -> "sasRating"
+            DeckSortOptions.SYNERGY -> "synergyRating"
+            DeckSortOptions.ANTISYNERGY -> "antisynergyRating"
         }
 
         val deckPage = deckRepo.findAll(predicate, PageRequest.of(
@@ -203,16 +206,18 @@ class DeckService(
         val cards = cardService.fullCardsFromCards(deck.cards)
         val extraCardInfos = cards.map { it.extraCardInfo!! }
         val deckSynergyInfo = deckSynergyService.fromDeck(deck)
-        val cardsRating = extraCardInfos.map { it.rating }.sum()
+        val cardsRating = extraCardInfos.map { it.rating - 1 }.sum()
+        val synergy = deckSynergyInfo.synergyRating.roundToInt()
+        val antisynergy = deckSynergyInfo.antisynergyRating.roundToInt()
         return deck.copy(
                 expectedAmber = extraCardInfos.map { it.expectedAmber }.sum(),
                 amberControl = extraCardInfos.map { it.amberControl }.sum(),
                 creatureControl = extraCardInfos.map { it.creatureControl }.sum(),
                 artifactControl = extraCardInfos.map { it.artifactControl }.sum(),
-                sasRating = cardsRating + deckSynergyInfo.synergyRating + deckSynergyInfo.antisynergyRating,
+                sasRating = cardsRating + synergy + antisynergy,
                 cardsRating = cardsRating,
-                synergyRating = deckSynergyInfo.synergyRating,
-                antisynergyRating = deckSynergyInfo.antisynergyRating
+                synergyRating = synergy,
+                antisynergyRating = antisynergy.absoluteValue
         )
     }
 

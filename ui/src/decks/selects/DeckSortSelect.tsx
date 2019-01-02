@@ -1,30 +1,11 @@
 import { observable } from "mobx"
 import * as React from "react"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
+import { deckSortOptions } from "../DeckFilters"
 
-const dateAdded = "Date Added"
-const deckName = "Deck Name"
-const amber = "Expected Amber"
-const power = "Total Power"
-const mavericks = "Maverick Count"
-const rares = "Rares"
-const cardsRating = "Cards' Rating"
-const specials = "Specials"
-
-const deckSortOptions = [
-    dateAdded,
-    deckName,
-    cardsRating,
-    amber,
-    power,
-    mavericks,
-    rares,
-    specials
-]
-
-export class DeckSortSelect extends React.Component<{store: DeckSortSelectStore}> {
+export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore }> {
     render() {
-        return (<KeySelect name={"Sort By"} options={deckSortOptions} selected={this.props.store}/>)
+        return (<KeySelect name={"Sort By"} options={deckSortOptions.map(option => option.name)} selected={this.props.store}/>)
     }
 }
 
@@ -34,23 +15,13 @@ export class DeckSortSelectStore implements SelectedStore {
     selectedValue = ""
 
     toEnumValue = () => {
-        switch (this.selectedValue) {
-            case deckName:
-                return "DECK_NAME"
-            case amber:
-                return "AMBER"
-            case power:
-                return "POWER"
-            case mavericks:
-                return "MAVERICK_COUNT"
-            case rares:
-                return "RARES"
-            case specials:
-                return "SPECIALS"
-            case cardsRating:
-                return "CARDS_RATING"
-            default:
-                return "ADDED_DATE"
+        if (!this.selectedValue) {
+            return deckSortOptions[0].value
         }
+        const value = deckSortOptions.filter(option => option.name === this.selectedValue)[0].value
+        // if (value == null) {
+        //     return deckSortOptions[0].value
+        // }
+        return value
     }
 }

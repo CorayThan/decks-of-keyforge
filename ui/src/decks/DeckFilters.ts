@@ -8,7 +8,7 @@ export class DeckFilters {
     @observable
     title: string = ""
     page: number = 0
-    sort: DeckSortOptions = "ADDED_DATE"
+    sort: string = "ADDED_DATE"
     @observable
     forSale = false
     @observable
@@ -22,12 +22,21 @@ export class DeckFilters {
     handleContainsMaverickUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.containsMaverick = event.target.checked
 }
 
-export type DeckSortOptions =
-    "ADDED_DATE"
-    | "DECK_NAME"
-    | "AMBER"
-    | "POWER"
-    | "MAVERICK_COUNT"
-    | "RARES"
-    | "SPECIALS"
-    | "CARDS_RATING"
+interface DeckSortOption {
+    name: string
+    value: string
+}
+
+export const deckSortOptions: DeckSortOption[] = [
+    { value: "ADDED_DATE", name: "Date Added" },
+    { value: "SAS_RATING", name: "SAS Rating" },
+    { value: "CARDS_RATING", name: "Card Rating" },
+    { value: "SYNERGY", name: "Synergy" },
+    { value: "ANTISYNERGY", name: "Antisynergy" },
+    { value: "EXPECTED_AMBER", name: "Expected Amber" },
+    { value: "TOTAL_CREATURE_POWER", name: "Total Creature Power" },
+    { value: "CREATURE_COUNT", name: "Creature Count" },
+    { value: "MAVERICK_COUNT", name: "Maverick Count" },
+    { value: "RARES", name: "Rares" },
+    { value: "SPECIALS", name: "Special Rarities" }
+    ]

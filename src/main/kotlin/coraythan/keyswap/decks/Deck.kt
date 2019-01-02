@@ -35,10 +35,10 @@ data class Deck(
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
-        val sasRating: Double = 0.0,
+        val sasRating: Int = 0,
         val cardsRating: Int = 0,
-        val synergyRating: Double = 0.0,
-        val antisynergyRating: Double = 0.0,
+        val synergyRating: Int = 0,
+        val antisynergyRating: Int = 0,
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,

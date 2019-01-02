@@ -19,14 +19,16 @@ data class DeckFilters(
 
 enum class DeckSortOptions {
     ADDED_DATE,
-    DECK_NAME,
-    AMBER,
-    POWER,
-    CREATURES,
+    SAS_RATING,
+    CARDS_RATING,
+    SYNERGY,
+    ANTISYNERGY,
+    EXPECTED_AMBER,
+    TOTAL_CREATURE_POWER,
+    CREATURE_COUNT,
     MAVERICK_COUNT,
     RARES,
     SPECIALS,
-    CARDS_RATING
 }
 
 enum class SortDirection(val direction: Sort.Direction) {
