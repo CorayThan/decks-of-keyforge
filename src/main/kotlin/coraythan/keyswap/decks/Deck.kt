@@ -62,22 +62,7 @@ data class Deck(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
-) {
-        fun toRatedDeck(): Deck {
-                val extraCardInfos = cards.map { it.extraCardInfo }
-                return this.copy(
-                        expectedAmber = extraCardInfos.map { it.expectedAmber }.sum(),
-                        amberControl = extraCardInfos.map { it.amberControl }.sum(),
-                        creatureControl = extraCardInfos.map { it.creatureControl }.sum(),
-                        artifactControl = extraCardInfos.map { it.artifactControl }.sum(),
-                        sasRating = 0.0,
-                        cardsRating = extraCardInfos.map { it.rating }.sum(),
-                        synergyRating = 0.0,
-                        antisynergyRating = 0.0
-
-                )
-        }
-}
+)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DecksPage(

@@ -1,6 +1,10 @@
 package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
+import coraythan.keyswap.KeyforgeApi
+import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.Rarity
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -10,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class DeckService(
+        val keyforgeApi: KeyforgeApi,
+        val cardService: CardService,
+        val deckSynergyService: DeckSynergyService,
         val deckRepo: DeckRepo
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -79,14 +86,90 @@ class DeckService(
     fun updateDeckRatings(calculateAveragesOnly: Boolean = false) {
         val sort = Sort.by("id")
         var currentPage = 0
-//        val
         while (true) {
             val results = deckRepo.findAll(PageRequest.of(currentPage, 100, sort))
             if (results.isEmpty) {
                 break
             }
-            deckRepo.saveAll(results.content.map { it.toRatedDeck() })
+            deckRepo.saveAll(results.content.map { rateDeck(it) })
             currentPage++
         }
+    }
+
+    // @Scheduled(fixedDelay = 1000 * 60)
+    fun importNewDecks() {
+
+        val decksPerPage = 10
+        val currentDecks = deckRepo.count().toInt()
+        var currentPage = 1 + currentDecks / decksPerPage
+
+        val newDeckTotal = keyforgeApi.findDecks(1, 1)?.count
+        if (newDeckTotal == null) {
+            log.warn("Got null when getting the count for all decks!")
+            return
+        }
+        val finalPage = 1 + newDeckTotal / decksPerPage
+
+        val maxPageRequests = 10
+        var pagesRequested = 0
+        while (currentPage < finalPage && pagesRequested < maxPageRequests) {
+            val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
+//            log.info("Found decks from api count ${decks?.data?.size}.")
+            if (decks == null) {
+                log.warn("Got null decks from the api for page $currentPage decks per page $decksPerPage with new deck total $newDeckTotal")
+            } else {
+                cardService.importNewCards(decks.data)
+                saveDecks(decks.data)
+            }
+
+            log.info("Loaded page $currentPage. Decks from db: ${deckRepo.findAll().count()}. Total current decks: $newDeckTotal")
+            currentPage++
+            pagesRequested++
+        }
+    }
+
+    private fun saveDecks(deck: List<KeyforgeDeck>) {
+        val saveableDecks = deck.map { keyforgeDeck ->
+
+            val saveable = keyforgeDeck.toDeck()
+                    .copy(
+                            cards = keyforgeDeck.cards?.mapNotNull { cardService.cachedCards[it] }
+                                    ?: throw IllegalStateException("Can't have a deck with no cards deck: $deck"),
+                            houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                    )
+            if (saveable.cards.size != 36) {
+                throw java.lang.IllegalStateException("Can't have a deck without 36 cards deck: $deck")
+            }
+            rateDeck(saveable
+                    .copy(
+                            rawAmber = saveable.cards.map { it.amber }.sum(),
+                            totalPower = saveable.cards.map { it.power }.sum(),
+                            totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
+                            maverickCount = saveable.cards.filter { it.maverick }.size,
+                            specialsCount = saveable.cards.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
+                            raresCount = saveable.cards.filter { it.rarity == Rarity.Rare }.size,
+                            uncommonsCount = saveable.cards.filter { it.rarity == Rarity.Uncommon }.size
+                    )
+            )
+        }
+
+        deckRepo.saveAll(saveableDecks)
+    }
+
+    fun rateDeck(deck: Deck): Deck {
+        val cards = cardService.fullCardsFromCards(deck.cards)
+        val extraCardInfos = cards.map { it.extraCardInfo!! }
+        val deckSynergyInfo = deckSynergyService.fromDeck(deck)
+        val cardsRating = extraCardInfos.map { it.rating }.sum()
+        return deck.copy(
+                expectedAmber = extraCardInfos.map { it.expectedAmber }.sum(),
+                amberControl = extraCardInfos.map { it.amberControl }.sum(),
+                creatureControl = extraCardInfos.map { it.creatureControl }.sum(),
+                artifactControl = extraCardInfos.map { it.artifactControl }.sum(),
+                sasRating = cardsRating + deckSynergyInfo.synergyRating + deckSynergyInfo.antisynergyRating,
+                cardsRating = cardsRating,
+                synergyRating = deckSynergyInfo.synergyRating,
+                antisynergyRating = deckSynergyInfo.antisynergyRating
+        )
     }
 }

@@ -40,9 +40,9 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             totalPower,
             expectedAmber,
             cardsRating,
-            // sasRating,
-            // synergyRating,
-            // antisynergyRating,
+            sasRating,
+            synergyRating,
+            antisynergyRating,
             wishlistCount, funnyCount,
             forSale, forTrade
         } = deck
@@ -85,7 +85,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 flexGrow: 1,
                             }}
                         >
-                            <InfoBox top={"SAS"} bottom={cardsRating} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
+                            <InfoBox top={"Cards Rating"} bottom={cardsRating} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
+                            <InfoBox top={"SAS"} bottom={sasRating} popInfo={"Synergy and Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
+                            <InfoBox top={"Syn"} bottom={synergyRating} popInfo={"Synergy Rating"} textColor={"#FFFFFF"}/>
+                            <InfoBox top={"Asyn"} bottom={antisynergyRating} popInfo={"Anti-Synergy Rating"} textColor={"#FFFFFF"}/>
                             <InfoBox top={"EAember"} bottom={expectedAmber} popInfo={"Expected aember generated from cards"} textColor={"#FFFFFF"}/>
                             <InfoBox top={"Power"} bottom={totalPower} popInfo={"Power of all creatures combined"} textColor={"#FFFFFF"}/>
                         </div>

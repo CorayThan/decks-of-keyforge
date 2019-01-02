@@ -8,11 +8,36 @@ import javax.persistence.Id
 data class SynTraitValue(
             val trait: SynTrait,
             val rating: Int = 2,
-            val type: SynTraitType = SynTraitType.card,
+            val type: SynTraitType = SynTraitType.anyHouse,
 
             @Id
             val id: UUID = UUID.randomUUID()
-)
+) {
+    fun synergyValue(matches: Int): Double {
+        return matches * when (rating) {
+            -3 -> -0.5
+            -2 -> -0.25
+            -1 -> -0.125
+            1 -> 0.125
+            2 -> 0.25
+            3 -> 0.5
+            else -> throw IllegalStateException("Can't have synergy rating of $rating")
+        }
+    }
+}
+
+fun Set<CardTrait>.toSynTraits(): List<SynTrait> {
+    return this.mapNotNull {
+        when (it) {
+            CardTrait.Beast -> SynTrait.beast
+            CardTrait.Knight -> SynTrait.knight
+            CardTrait.Human -> SynTrait.human
+            CardTrait.Scientist -> SynTrait.scientist
+            CardTrait.Niffle -> SynTrait.niffle
+            else -> null
+        }
+    }
+}
 
 enum class SynTrait {
 
@@ -82,7 +107,6 @@ enum class SynTrait {
     revealsTopDeck,
     chains,
     forgesKeys,
-    itself,
 
     // Traits (these don't need to be traits on the extra info
     knight,
@@ -92,6 +116,8 @@ enum class SynTrait {
     beast,
 
     // Special cards
+    wardrummer,
+    dominatorBauble,
     libraryAccess,
     badPenny,
     dextre,
@@ -117,8 +143,7 @@ enum class SynTrait {
 }
 
 enum class SynTraitType {
-    card,
-    deck,
+    anyHouse,
+    // Only synergizes with traits inside its house
     house,
-    outsideHouse
 }
