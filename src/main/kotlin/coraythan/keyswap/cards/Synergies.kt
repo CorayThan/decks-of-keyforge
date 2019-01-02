@@ -128,15 +128,15 @@ enum class SynTrait {
     // Deck / House traits
     highTotalCreaturePower,
     lowTotalCreaturePower,
-    highCreatureCount, // 6=0, 7=1/4, 8=1/2, 9,10=3/4, 11,12=1
-    lowCreatureCount, // 6=0, 5=1/4, 4=1/2, 3,2=3/4, 1,0=1
+    highCreatureCount, // =<6=0, 7=1/4, 8=1/2, 9,10=3/4, 11,12=1
+    lowCreatureCount, // =>6=0, 5=1/4, 4=1/2, 3,2=3/4, 1,0=1
     powerfulCreatures,
     power4OrHigherCreatures,
     power3OrLowerCreatures,
     power3OrHigherCreatures,
     power2OrLowerCreatures,
-    highArtifactCount,
-    lowArtifactCount,
+    highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
+    lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
     expectedAmber,
     hasMars,
     highTotalArmor,

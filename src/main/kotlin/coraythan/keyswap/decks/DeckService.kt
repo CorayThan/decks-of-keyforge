@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.roundToInt
 
 @Transactional
 @Service
@@ -84,6 +85,14 @@ class DeckService(
     }
 
     fun updateDeckRatings(calculateAveragesOnly: Boolean = false) {
+        val armorValues: MutableMap<Int, Int> = mutableMapOf()
+        val totalCreaturePower: MutableMap<Int, Int> = mutableMapOf()
+        val expectedAmber: MutableMap<Int, Int> = mutableMapOf()
+        val power2OrLower: MutableMap<Int, Int> = mutableMapOf()
+        val power3OrLower: MutableMap<Int, Int> = mutableMapOf()
+        val power3OrHigher: MutableMap<Int, Int> = mutableMapOf()
+        val power4OrHigher: MutableMap<Int, Int> = mutableMapOf()
+        val power5OrHigher: MutableMap<Int, Int> = mutableMapOf()
         val sort = Sort.by("id")
         var currentPage = 0
         while (true) {
@@ -91,9 +100,38 @@ class DeckService(
             if (results.isEmpty) {
                 break
             }
-            deckRepo.saveAll(results.content.map { rateDeck(it) })
+            deckRepo.saveAll(results.content.map {
+                val ratedDeck = rateDeck(it)
+
+                armorValues.incrementValue(ratedDeck.totalArmor)
+                totalCreaturePower.incrementValue(ratedDeck.totalPower)
+                expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
+                power2OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size)
+                power3OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size)
+                power3OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size)
+                power4OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size)
+                power5OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size)
+
+                ratedDeck
+            })
             currentPage++
         }
+        val deckStatistics = DeckStatistics(
+                armorValues, totalCreaturePower, expectedAmber,
+                power2OrLower, power3OrLower, power3OrHigher,
+                power4OrHigher, power5OrHigher
+        )
+        log.info(
+                "Deck stats: $deckStatistics \n" +
+                        "armor: ${deckStatistics.armorStats}\n" +
+                        "expectedAmber: ${deckStatistics.expectedAmberStats}\n" +
+                        "totalCreaturePower: ${deckStatistics.totalCreaturePowerStats}\n" +
+                        "power2OrLower: ${deckStatistics.power2OrLowerStats}\n" +
+                        "power3OrLower: ${deckStatistics.power3OrLowerStats}\n" +
+                        "power3OrHigher: ${deckStatistics.power3OrHigherStats}\n" +
+                        "power4OrHigher: ${deckStatistics.power4OrHigherStats}\n" +
+                        "power5OrHigher: ${deckStatistics.power5OrHigherStats}"
+        )
     }
 
     // @Scheduled(fixedDelay = 1000 * 60)
@@ -144,6 +182,7 @@ class DeckService(
                     .copy(
                             rawAmber = saveable.cards.map { it.amber }.sum(),
                             totalPower = saveable.cards.map { it.power }.sum(),
+                            totalArmor = saveable.cards.map { it.armor }.sum(),
                             totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
                             maverickCount = saveable.cards.filter { it.maverick }.size,
                             specialsCount = saveable.cards.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
@@ -172,4 +211,5 @@ class DeckService(
                 antisynergyRating = deckSynergyInfo.antisynergyRating
         )
     }
+
 }

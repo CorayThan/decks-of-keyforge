@@ -38,16 +38,8 @@ class DeckSynergyService(
             val cardInfo = card.extraCardInfo!!
             cardInfo.traits.forEach {
                 val cardHouseCount = counts[card.house]!!
-                if (anyHouseCount[it] == null) {
-                    anyHouseCount[it] = 1
-                } else {
-                    anyHouseCount[it] = anyHouseCount[it]!! + 1
-                }
-                if (cardHouseCount[it] == null) {
-                    cardHouseCount[it] = 1
-                } else {
-                    cardHouseCount[it] = cardHouseCount[it]!! + 1
-                }
+                anyHouseCount.incrementValue(it)
+                cardHouseCount.incrementValue(it)
             }
         }
         val synergyCombos: List<SynergyCombo> = cards.mapNotNull { card ->

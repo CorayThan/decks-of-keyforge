@@ -2793,7 +2793,7 @@
 
 - name: Hayyel the Merchant
   cardNumber: 245
-  rating: 1
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2802,6 +2802,8 @@
   synergies:
     - trait: highArtifactCount
       rating: 3
+    - trait: lowArtifactCount
+      rating: -2
     - trait: protectsCreatures
     - trait: returnsFriendlyArtifactsToHand
 
