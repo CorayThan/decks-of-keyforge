@@ -88,6 +88,7 @@ class DeckService(
         val armorValues: MutableMap<Int, Int> = mutableMapOf()
         val totalCreaturePower: MutableMap<Int, Int> = mutableMapOf()
         val expectedAmber: MutableMap<Int, Int> = mutableMapOf()
+        val creatureCount: MutableMap<Int, Int> = mutableMapOf()
         val power2OrLower: MutableMap<Int, Int> = mutableMapOf()
         val power3OrLower: MutableMap<Int, Int> = mutableMapOf()
         val power3OrHigher: MutableMap<Int, Int> = mutableMapOf()
@@ -106,6 +107,7 @@ class DeckService(
                 armorValues.incrementValue(ratedDeck.totalArmor)
                 totalCreaturePower.incrementValue(ratedDeck.totalPower)
                 expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
+                creatureCount.incrementValue(ratedDeck.totalCreatures)
                 power2OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size)
                 power3OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size)
                 power3OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size)
@@ -117,15 +119,16 @@ class DeckService(
             currentPage++
         }
         val deckStatistics = DeckStatistics(
-                armorValues, totalCreaturePower, expectedAmber,
+                armorValues, totalCreaturePower, expectedAmber, creatureCount,
                 power2OrLower, power3OrLower, power3OrHigher,
                 power4OrHigher, power5OrHigher
         )
         log.info(
-                "Deck stats: $deckStatistics \n" +
+                "Deck stats:\n" +
                         "armor: ${deckStatistics.armorStats}\n" +
                         "expectedAmber: ${deckStatistics.expectedAmberStats}\n" +
                         "totalCreaturePower: ${deckStatistics.totalCreaturePowerStats}\n" +
+                        "creatureCounts: ${deckStatistics.creatureCountStats}\n" +
                         "power2OrLower: ${deckStatistics.power2OrLowerStats}\n" +
                         "power3OrLower: ${deckStatistics.power3OrLowerStats}\n" +
                         "power3OrHigher: ${deckStatistics.power3OrHigherStats}\n" +
@@ -184,6 +187,7 @@ class DeckService(
                             totalPower = saveable.cards.map { it.power }.sum(),
                             totalArmor = saveable.cards.map { it.armor }.sum(),
                             totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
+                            totalArtifacts = saveable.cards.filter { it.cardType == CardType.Artifact }.size,
                             maverickCount = saveable.cards.filter { it.maverick }.size,
                             specialsCount = saveable.cards.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
                             raresCount = saveable.cards.filter { it.rarity == Rarity.Rare }.size,

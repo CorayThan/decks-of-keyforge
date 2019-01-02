@@ -381,16 +381,12 @@
 
 - name: Kelifi Dragon
   cardNumber: 37
-  rating: 1
+  rating: 2
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
   traits: []
-  synergies:
-    - trait: expectedAmber
-      rating: 3
-      type: house
 
 - name: King of the Crag
   cardNumber: 38
@@ -756,7 +752,7 @@
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
       rating: -3
 
 - name: Annihilation Ritual
@@ -2546,7 +2542,7 @@
   artifactControl: 0.0
   traits: [causesFighting]
   synergies:
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
     - trait: preventsDamage
 
 - name: Radiant Truth
@@ -2828,7 +2824,7 @@
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
 
 - name: Horseman of Pestilence
   cardNumber: 248
@@ -3273,7 +3269,7 @@
       rating: 1
     - trait: causesFighting
       rating: -3
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
       rating: -3
 
 - name: Longfused Mines
@@ -3635,7 +3631,7 @@
   artifactControl: 0.0
   traits: [goodReap, stealsAmber]
   synergies:
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
     - trait: protectsCreatures
 
 - name: Ring of Invisibility
@@ -3845,7 +3841,7 @@
   artifactControl: 0.0
   traits: [causesFighting]
   synergies:
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
 
 - name: Stampede
   cardNumber: 335
@@ -3893,7 +3889,7 @@
   artifactControl: 0.0
   traits: [heals]
   synergies:
-    - trait: powerfulCreatures
+    - trait: power5OrHigherCreatures
 
 - name: Word of Returning
   cardNumber: 339

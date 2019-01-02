@@ -28,6 +28,7 @@ data class Deck(
         val rawAmber: Int = 0,
         val totalPower: Int = 0,
         val totalCreatures: Int = 0,
+        val totalArtifacts: Int = 0,
         val totalArmor: Int = 0,
 
         val expectedAmber: Double = 0.0,
