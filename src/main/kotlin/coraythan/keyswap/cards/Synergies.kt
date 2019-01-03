@@ -64,6 +64,8 @@ enum class SynTrait {
     controlsCreatures,
     goodReap,
     goodAction,
+    goodPlay,
+    goodFight,
     readiesCreatures,
     sacrificesCreatures,
     elusive,

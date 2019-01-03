@@ -27,6 +27,9 @@ export interface Deck {
     rawAmber: number
     totalPower: number
     totalCreatures: number
+    totalActions: number
+    totalArtifacts: number
+    totalUpgrades: number
 
     expectedAmber: number
     amberControl: number

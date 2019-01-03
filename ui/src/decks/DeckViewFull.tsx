@@ -5,6 +5,7 @@ import { RouteComponentProps } from "react-router"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
+import { DeckStatsView } from "./DeckStatsView"
 import { DeckStore } from "./DeckStore"
 import { DeckSynergiesInfoView } from "./DeckSynergiesInfoView"
 import { DeckViewSmall } from "./DeckViewSmall"
@@ -54,6 +55,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
             <Grid container={true}>
                 <Grid item={true}>
                     {saleInfoComponent}
+                    <DeckStatsView deck={deck.deck}/>
                 </Grid>
                 <Grid item={true}>
                     <DeckViewSmall deck={deck.deck} fullVersion={true}/>

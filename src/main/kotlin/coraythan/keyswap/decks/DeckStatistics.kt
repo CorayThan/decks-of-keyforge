@@ -6,6 +6,9 @@ data class DeckStatistics(
         val totalCreaturePower: Map<Int, Int>,
         val expectedAmber: Map<Int, Int>,
         val creatureCount: Map<Int, Int>,
+        val actionCount: Map<Int, Int>,
+        val artifactCount: Map<Int, Int>,
+        val upgradeCount: Map<Int, Int>,
         val power2OrLower: Map<Int, Int>,
         val power3OrLower: Map<Int, Int>,
         val power3OrHigher: Map<Int, Int>,
@@ -16,6 +19,9 @@ data class DeckStatistics(
     val totalCreaturePowerStats = IndividalDeckTraitStats.fromValues(totalCreaturePower)
     val expectedAmberStats = IndividalDeckTraitStats.fromValues(expectedAmber)
     val creatureCountStats = IndividalDeckTraitStats.fromValues(creatureCount)
+    val actionCountStats = IndividalDeckTraitStats.fromValues(actionCount)
+    val artifactCountStats = IndividalDeckTraitStats.fromValues(artifactCount)
+    val upgradeCountStats = IndividalDeckTraitStats.fromValues(upgradeCount)
     val power2OrLowerStats = IndividalDeckTraitStats.fromValues(power2OrLower)
     val power3OrLowerStats = IndividalDeckTraitStats.fromValues(power3OrLower)
     val power3OrHigherStats = IndividalDeckTraitStats.fromValues(power3OrHigher)

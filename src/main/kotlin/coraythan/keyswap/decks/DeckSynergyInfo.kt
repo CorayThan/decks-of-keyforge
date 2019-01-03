@@ -11,6 +11,9 @@ data class SynergyCombo(
         val synergies: List<SynTrait>,
         val antisynergies: List<SynTrait>,
         val netSynergy: Double,
+        val synergy: Double,
+        val antisynergy: Double,
+        val cardRating: Int,
         val copies: Int = 1
 )
 
@@ -70,7 +73,9 @@ class DeckSynergyService(
             if (matchedTraits.isEmpty()) {
                 null
             } else {
-                val netSynergy = matchedTraits.map { it.second }.sum()
+                val synergy = matchedTraits.map { it.second }.filter { it > 0 }.sum()
+                val antisynergy = matchedTraits.map { it.second }.filter { it < 0 }.sum()
+                val netSynergy = synergy + antisynergy
                 val limitedNetSynergy = when {
                     netSynergy > maxSynergy -> maxSynergy
                     netSynergy < minSynergy -> minSynergy
@@ -82,11 +87,14 @@ class DeckSynergyService(
                     null
                 } else {
                     SynergyCombo(
-                            card.house,
-                            card.cardTitle,
-                            matchedSynergies,
-                            matchedAntisynergies,
-                            limitedNetSynergy
+                            house = card.house,
+                            cardName = card.cardTitle,
+                            synergies = matchedSynergies,
+                            antisynergies = matchedAntisynergies,
+                            netSynergy = limitedNetSynergy,
+                            synergy = synergy,
+                            antisynergy = antisynergy,
+                            cardRating = card.extraCardInfo!!.rating - 1
                     )
                 }
             }
@@ -98,14 +106,14 @@ class DeckSynergyService(
 
         val dedupedCombos: MutableList<SynergyCombo> = mutableListOf()
         val groupedCombos = synergyCombos.groupBy { it.house to it.cardName }
-        groupedCombos.forEach { key, dups ->
+        groupedCombos.forEach { _, dups ->
             dedupedCombos.add(dups[0].copy(copies = dups.size))
         }
 
         return DeckSynergyInfo(
                 synergyRating,
                 antisynergyRating,
-                dedupedCombos
+                dedupedCombos.sortedByDescending { it.cardRating + it.netSynergy }
         )
     }
 

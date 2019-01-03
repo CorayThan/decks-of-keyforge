@@ -98,6 +98,9 @@ class DeckService(
         val totalCreaturePower: MutableMap<Int, Int> = mutableMapOf()
         val expectedAmber: MutableMap<Int, Int> = mutableMapOf()
         val creatureCount: MutableMap<Int, Int> = mutableMapOf()
+        val actionCount: MutableMap<Int, Int> = mutableMapOf()
+        val artifactCount: MutableMap<Int, Int> = mutableMapOf()
+        val equipmentCount: MutableMap<Int, Int> = mutableMapOf()
         val power2OrLower: MutableMap<Int, Int> = mutableMapOf()
         val power3OrLower: MutableMap<Int, Int> = mutableMapOf()
         val power3OrHigher: MutableMap<Int, Int> = mutableMapOf()
@@ -117,6 +120,9 @@ class DeckService(
                 totalCreaturePower.incrementValue(ratedDeck.totalPower)
                 expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
                 creatureCount.incrementValue(ratedDeck.totalCreatures)
+                actionCount.incrementValue(ratedDeck.totalActions)
+                artifactCount.incrementValue(ratedDeck.totalArtifacts)
+                equipmentCount.incrementValue(ratedDeck.totalUpgrades)
                 power2OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size)
                 power3OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size)
                 power3OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size)
@@ -128,9 +134,18 @@ class DeckService(
             currentPage++
         }
         val deckStatistics = DeckStatistics(
-                armorValues, totalCreaturePower, expectedAmber, creatureCount,
-                power2OrLower, power3OrLower, power3OrHigher,
-                power4OrHigher, power5OrHigher
+                armorValues = armorValues,
+                totalCreaturePower = totalCreaturePower,
+                expectedAmber = expectedAmber,
+                creatureCount = creatureCount,
+                actionCount = actionCount,
+                artifactCount = artifactCount,
+                upgradeCount = equipmentCount,
+                power2OrLower = power2OrLower,
+                power3OrLower = power3OrLower,
+                power3OrHigher = power3OrHigher,
+                power4OrHigher = power4OrHigher,
+                power5OrHigher = power5OrHigher
         )
         log.info(
                 "Deck stats:\n" +
@@ -138,6 +153,9 @@ class DeckService(
                         "expectedAmber: ${deckStatistics.expectedAmberStats}\n" +
                         "totalCreaturePower: ${deckStatistics.totalCreaturePowerStats}\n" +
                         "creatureCounts: ${deckStatistics.creatureCountStats}\n" +
+                        "artifactCounts: ${deckStatistics.artifactCountStats}\n" +
+                        "actionCounts: ${deckStatistics.actionCountStats}\n" +
+                        "upgradeCounts: ${deckStatistics.upgradeCountStats}\n" +
                         "power2OrLower: ${deckStatistics.power2OrLowerStats}\n" +
                         "power3OrLower: ${deckStatistics.power3OrLowerStats}\n" +
                         "power3OrHigher: ${deckStatistics.power3OrHigherStats}\n" +
@@ -196,7 +214,9 @@ class DeckService(
                             totalPower = saveable.cards.map { it.power }.sum(),
                             totalArmor = saveable.cards.map { it.armor }.sum(),
                             totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
+                            totalActions = saveable.cards.filter { it.cardType == CardType.Action }.size,
                             totalArtifacts = saveable.cards.filter { it.cardType == CardType.Artifact }.size,
+                            totalUpgrades = saveable.cards.filter { it.cardType == CardType.Upgrade }.size,
                             maverickCount = saveable.cards.filter { it.maverick }.size,
                             specialsCount = saveable.cards.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
                             raresCount = saveable.cards.filter { it.rarity == Rarity.Rare }.size,
@@ -216,6 +236,12 @@ class DeckService(
         val synergy = deckSynergyInfo.synergyRating.roundToInt()
         val antisynergy = deckSynergyInfo.antisynergyRating.roundToInt()
         return deck.copy(
+
+                totalCreatures = cards.filter { it.cardType == CardType.Creature }.size,
+                totalActions = cards.filter { it.cardType == CardType.Action }.size,
+                totalArtifacts = cards.filter { it.cardType == CardType.Artifact }.size,
+                totalUpgrades = cards.filter { it.cardType == CardType.Upgrade }.size,
+
                 expectedAmber = extraCardInfos.map { it.expectedAmber }.sum(),
                 amberControl = extraCardInfos.map { it.amberControl }.sum(),
                 creatureControl = extraCardInfos.map { it.creatureControl }.sum(),

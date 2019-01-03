@@ -16,6 +16,8 @@
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "3.1.0",
+    "recharts": "^1.4.2",
+    "victory": "^31.0.2",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -32,6 +34,8 @@
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/react-router-dom": "^4.3.1",
+    "@types/recharts": "^1.1.6",
+    "@types/victory": "^31.0.3",
     "@types/webfontloader": "^1.6.29",
     "typescript": "^3.2.2"
   }

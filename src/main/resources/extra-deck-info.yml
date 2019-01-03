@@ -177,6 +177,8 @@
     - trait: lowCreatureCount
       type: house
       rating: -2
+    - trait: goodFight
+      type: house
 
 - name: Autocannon
   cardNumber: 19
@@ -246,6 +248,10 @@
       rating: 3
     - trait: damagesFriendlyCreatures
       rating: -2
+    - trait: dealsDamage
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -2
 
 - name: Screechbomb
   cardNumber: 26
@@ -268,10 +274,11 @@
   synergies:
     - trait: causesFighting
       type: house
-      rating: 3
     - trait: highTotalCreaturePower
       type: house
       rating: 3
+    - trait: goodFight
+      type: house
 
 - name: Bilgum Avalanche
   cardNumber: 28
@@ -300,7 +307,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
     - trait: wardrummer
@@ -313,7 +320,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
+  traits: [destroysFriendlyCreatures, destroysEnemyCreatures, goodPlay]
   synergies:
     - trait: power3OrHigherCreatures
     - trait: power2OrLowerCreatures
@@ -328,7 +335,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, causesFighting]
+  traits: [damagesMultipleEnemies, goodFight]
   synergies:
     - trait: increasesCreaturePower
       rating: 1
@@ -341,7 +348,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [causesFighting]
+  traits: [causesFighting, goodPlay]
   synergies:
     - trait: lowCreatureCount
       rating: -2
@@ -361,7 +368,7 @@
   cardNumber: 35
   rating: 2
   expectedAmber: 1.0
-  traits: []
+  traits: [goodFight]
   synergies:
     - trait: causesFighting
     - trait: increasesCreaturePower
@@ -405,7 +412,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodFight]
   synergies:
     - trait: causesFighting
     - trait: increasesCreaturePower
@@ -414,7 +421,7 @@
   cardNumber: 40
   rating: 3
   amberControl: 1.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: capturesAmber
       type: house
@@ -434,6 +441,8 @@
       type: house
     - trait: dealsDamage
       rating: 1
+      type: house
+    - trait: goodFight
       type: house
 
 - name: Mugwump
@@ -471,7 +480,7 @@
   cardNumber: 46
   rating: 3
   creatureControl: 0.5
-  traits: [stuns]
+  traits: [stuns, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
     - trait: wardrummer
@@ -857,7 +866,7 @@
     - trait: lowCreatureCount
       rating: -2
     - trait: badPenny
-      rating: 3
+    - trait: returnsCreaturesFromDiscard
 
 - name: Charette
   cardNumber: 81
@@ -928,7 +937,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [controlsCreatures]
+  traits: [controlsCreatures, goodFight]
   synergies:
     - trait: increasesCreaturePower
     - trait: usesCreaturesOutOfHouse
@@ -1030,7 +1039,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [stealsAmber]
+  traits: [stealsAmber, goodPlay]
   synergies:
     - trait: increasesKeyCost
     - trait: returnsFriendlyCreaturesToHand
@@ -1054,7 +1063,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: [purgesEnemyCreatures, ]
+  traits: [purgesEnemyCreatures, goodFight]
   synergies:
     - trait: causesFighting
       rating: 1
@@ -1486,7 +1495,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [stealsAmber]
+  traits: [stealsAmber, goodFight]
   synergies:
     - trait: readiesCreatures
       type: house
@@ -1501,7 +1510,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [drawsCards]
+  traits: [drawsCards, goodFight]
   synergies:
     - trait: increasesCreaturePower
       rating: 1
@@ -1576,7 +1585,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [skirmish, drawsCards]
+  traits: [skirmish, drawsCards, goodFight]
   synergies:
     - trait: causesFighting
 
@@ -1661,7 +1670,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
       rating: 3
@@ -1675,7 +1684,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [drawsCards]
+  traits: [drawsCards, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
     - trait: returnsCreaturesFromDiscard
@@ -2287,7 +2296,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: goodPlay
 
 - name: Yxili Marauder
   cardNumber: 203
@@ -2330,7 +2340,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [stuns]
+  traits: [stuns, goodFight]
   synergies: []
 
 - name: Zyzzix the Many
@@ -2340,7 +2350,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [goodReap, archives]
+  traits: [goodReap, archives, goodFight]
   synergies:
     - trait: archivesEnemyCards
       rating: -3
@@ -2430,10 +2440,10 @@
   synergies:
     - trait: lowCreatureCount
       type: house
-      rating: 3
+      rating: -3
     - trait: highCreatureCount
       type: house
-      rating: -3
+      rating: 3
 
 - name: Cleansing Wave
   cardNumber: 215
@@ -2535,7 +2545,7 @@
 
 - name: One Stood Against Many
   cardNumber: 223
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -2543,7 +2553,10 @@
   traits: [causesFighting]
   synergies:
     - trait: power5OrHigherCreatures
+      rating: 3
     - trait: preventsDamage
+      type: house
+    - trait: skirmish
 
 - name: Radiant Truth
   cardNumber: 224
@@ -2810,14 +2823,14 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
     - trait: returnsCreaturesFromDiscard
       
 - name: Horseman of Famine
   cardNumber: 247
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2825,6 +2838,8 @@
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: power5OrHigherCreatures
+    - trait: power2OrLowerCreatures
+      rating: -3
 
 - name: Horseman of Pestilence
   cardNumber: 248
@@ -2844,7 +2859,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: [causesFighting]
+  traits: [causesFighting, goodPlay]
   synergies:
     - trait: preventsDamage
       rating: 3
@@ -2867,7 +2882,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [stuns]
+  traits: [stuns, goodPlay]
   synergies: []
 
 - name: Lord Golgotha
@@ -2877,25 +2892,22 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodFight]
   synergies:
     - trait: causesFighting
 
 - name: Numquid the Fair
   cardNumber: 253
-  rating: 3
+  rating: 5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [destroysEnemyCreatures]
+  traits: [destroysEnemyCreatures, goodPlay]
   synergies:
-    - trait: lowCreatureCount
-      rating: 3
     - trait: highCreatureCount
-      rating: -3
-    - trait: returnsCreaturesFromDiscard
-      
+      rating: -2
+
 - name: Protectrix
   cardNumber: 254
   rating: 3
@@ -2943,7 +2955,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [causesFighting]
+  traits: [causesFighting, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
 
@@ -3486,7 +3498,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [skirmish, poison]
+  traits: [skirmish, poison, goodFight]
   synergies:
     - trait: causesFighting
     - trait: protectsCreatures
@@ -3533,7 +3545,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [stealsAmber]
+  traits: [stealsAmber, goodFight]
   synergies:
     - trait: causesFighting
     - trait: preventsDamage
@@ -3559,7 +3571,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [preventsDamage, protectsCreatures]
-  synergies: []
+  synergies:
+    - trait: goodFight
 
 - name: Silvertooth
   cardNumber: 311
@@ -3590,7 +3603,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: destroysEnemyArtifacts
       rating: -2
@@ -3604,7 +3617,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [stealsAmber, skirmish]
+  traits: [stealsAmber, skirmish, goodFight]
   synergies:
     - trait: readiesCreatures
       type: house
@@ -3619,7 +3632,7 @@
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [urchin, elusive, stealsAmber]
+  traits: [urchin, elusive, stealsAmber, goodPlay]
   synergies: []
 
 - name: Duskrunner
@@ -3842,6 +3855,8 @@
   traits: [causesFighting]
   synergies:
     - trait: power5OrHigherCreatures
+    - trait: goodFight
+      rating: 1
 
 - name: Stampede
   cardNumber: 335
@@ -4017,7 +4032,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [forgesKeys]
+  traits: [forgesKeys, goodPlay]
   synergies:
     - trait: forgesKeys
       rating: -2
@@ -4048,6 +4063,7 @@
   synergies:
     - trait: returnsFriendlyCreaturesToHand
       rating: 3
+    - trait: goodPlay
 
 - name: Flaxia
   cardNumber: 352
@@ -4056,7 +4072,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: lowCreatureCount
       rating: -3
@@ -4135,7 +4151,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: [skirmish, dealsDamage]
+  traits: [skirmish, dealsDamage, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
 
@@ -4146,7 +4162,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [dealsDamage]
+  traits: [dealsDamage, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
       rating: 3
@@ -4203,7 +4219,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, goodReap]
+  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, goodReap, goodPlay]
   synergies:
     - trait: highTotalArmor
     - trait: power2OrLowerCreatures
@@ -4268,3 +4284,5 @@
   traits: []
   synergies:
     - trait: causesFighting
+    - trait: goodFight
+      rating: 1

@@ -37,25 +37,29 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
             <Table padding={"dense"}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Net Synergy</TableCell>
-                        <TableCell>Copies</TableCell>
                         <TableCell>Card Name</TableCell>
+                        <TableCell>Copies</TableCell>
+                        <TableCell style={{maxWidth: 40}}>Rating (0 to 4)</TableCell>
+                        <TableCell style={{maxWidth: 48}}>Synergy (-2 to 2)</TableCell>
+                        <TableCell style={{maxWidth: 40}}>Value (0 to 4)</TableCell>
                         <TableCell>Synergies</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {synergyCombos.map((combo, idx) => (
                         <TableRow key={idx}>
-                            <TableCell>{combo.netSynergy * combo.copies}</TableCell>
-                            <TableCell>{combo.copies}</TableCell>
                             <TableCell>{combo.cardName}</TableCell>
+                            <TableCell>{combo.copies}</TableCell>
+                            <TableCell>{combo.cardRating}</TableCell>
+                            <TableCell>{combo.netSynergy}</TableCell>
+                            <TableCell>{combo.cardRating + combo.netSynergy}</TableCell>
                             <TableCell>
-                                <div style={{display: "flex", flexWrap: "wrap", maxWidth: 240}}>
+                                <div style={{display: "flex", flexWrap: "wrap", maxWidth: 280}}>
                                     {combo.synergies.map(synergy => (
-                                        <TraitBubble name={startCase(synergy)} synergy={true}/>
+                                        <TraitBubble key={synergy} name={startCase(synergy)} synergy={true}/>
                                     ))}
                                     {combo.antisynergies.map(antisynergy => (
-                                        <TraitBubble name={startCase(antisynergy)} synergy={false}/>
+                                        <TraitBubble key={antisynergy} name={startCase(antisynergy)} synergy={false}/>
                                     ))}
                                 </div>
                             </TableCell>
