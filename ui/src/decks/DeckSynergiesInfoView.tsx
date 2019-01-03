@@ -41,7 +41,7 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
                         <TableCell>Copies</TableCell>
                         <TableCell style={{maxWidth: 40}}>Rating (0 to 4)</TableCell>
                         <TableCell style={{maxWidth: 48}}>Synergy (-2 to 2)</TableCell>
-                        <TableCell style={{maxWidth: 40}}>Value (0 to 4)</TableCell>
+                        <TableCell style={{maxWidth: 40}}>Value (0 to 5)</TableCell>
                         <TableCell>Synergies</TableCell>
                     </TableRow>
                 </TableHead>

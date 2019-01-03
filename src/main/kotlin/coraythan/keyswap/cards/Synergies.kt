@@ -118,7 +118,6 @@ enum class SynTrait {
     beast,
 
     // Special cards
-    wardrummer,
     dominatorBauble,
     libraryAccess,
     badPenny,

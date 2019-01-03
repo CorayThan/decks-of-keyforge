@@ -54,11 +54,11 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         return (
             <Grid container={true}>
                 <Grid item={true}>
-                    {saleInfoComponent}
-                    <DeckStatsView deck={deck.deck}/>
+                    <DeckViewSmall deck={deck.deck} fullVersion={true}/>
                 </Grid>
                 <Grid item={true}>
-                    <DeckViewSmall deck={deck.deck} fullVersion={true}/>
+                    {saleInfoComponent}
+                    <DeckStatsView deck={deck.deck}/>
                 </Grid>
                 <Grid item={true}>
                     <DeckSynergiesInfoView synergies={deck.deckSynergyInfo}/>

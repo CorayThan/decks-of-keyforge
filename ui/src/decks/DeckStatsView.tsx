@@ -12,11 +12,11 @@ const pieColors = ["DodgerBlue", "SandyBrown", "SlateBlue", "MediumTurquoise"]
 
 export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
-        const {totalCreatures, totalActions, totalArtifacts, totalUpgrades} = this.props.deck
+        const {name, totalCreatures, totalActions, totalArtifacts, totalUpgrades} = this.props.deck
 
         return (
-            <div style={{display: "flex"}}>
-                <KeyPie name={"This Deck"} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
+            <div style={{display: "flex", margin: spacing(2)}}>
+                <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
                 <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>
             </div>
         )
@@ -24,7 +24,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
 }
 
 const KeyPie = (props: { name: string, creatures: number, actions: number, artifacts: number, upgrades: number }) => (
-    <div style={{margin: spacing(2)}}>
+    <div>
         <Typography variant={"h6"}>{props.name}</Typography>
         <VictoryPie
             data={[

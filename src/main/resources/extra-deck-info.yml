@@ -138,6 +138,9 @@
     - trait: highCreatureCount
       rating: 1
       type: house
+    - trait: lowCreatureCount
+      rating: -2
+      type: house
 
 - name: Tremor
   cardNumber: 16
@@ -310,8 +313,6 @@
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
-    - trait: wardrummer
-      rating: 3
 
 - name: Earthshaker
   cardNumber: 31
@@ -339,7 +340,6 @@
   synergies:
     - trait: increasesCreaturePower
       rating: 1
-    - trait: wardrummer
 
 - name: Ganger Chieftain
   cardNumber: 33
@@ -428,8 +428,6 @@
     - trait: increasesKeyCost
     - trait: archives
       rating: 1
-    - trait: wardrummer
-      rating: 3
 
 - name: Looter Goblin
   cardNumber: 41
@@ -452,8 +450,6 @@
   traits: []
   synergies:
     - trait: causesFighting
-    - trait: wardrummer
-      rating: -1
 
 - name: Pingle Who Annoys
   cardNumber: 43
@@ -483,7 +479,6 @@
   traits: [stuns, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
-    - trait: wardrummer
 
 - name: Tireless Crocag
   cardNumber: 47
@@ -512,6 +507,9 @@
       type: house
     - trait: highCreatureCount
       type: house
+    - trait: goodPlay
+      type: house
+      rating: 3
 
 - name: Blood of Titans
   cardNumber: 50
@@ -2065,6 +2063,9 @@
       rating: 3
     - trait: goodReap
       type: house
+    - trait: readiesCreatures
+      type: house
+      rating: 3
 
 - name: Custom Virus
   cardNumber: 183
@@ -2234,8 +2235,13 @@
   synergies:
     - trait: readiesCreatures
       type: house
-    - trait: highCreatureCount
+      rating: 3
+    - trait: highTotalCreaturePower
       type: house
+      rating: 3
+    - trait: lowCreatureCount
+      type: house
+      rating: -2
 
 - name: Qyxxlyx Plague Master
   cardNumber: 198
@@ -2350,7 +2356,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: [goodReap, archives, goodFight]
+  traits: [goodReap, archives]
   synergies:
     - trait: archivesEnemyCards
       rating: -3
@@ -2688,6 +2694,8 @@
     - trait: highTotalCreaturePower
     - trait: lowTotalCreaturePower
       rating: -3
+    - trait: goodFight
+      rating: 3
 
 - name: Round Table
   cardNumber: 235
@@ -3056,6 +3064,7 @@
   synergies:
     - trait: increasesKeyCost
     - trait: capturesAmber
+      type: house
 
 - name: Booby Trap
   cardNumber: 268
@@ -3209,6 +3218,7 @@
       rating: -3
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
+    - trait: preventsDamage
 
 - name: Relentless Whispers
   cardNumber: 281
@@ -3283,6 +3293,10 @@
       rating: -3
     - trait: power5OrHigherCreatures
       rating: -3
+    - trait: goodFight
+      rating: -3
+    - trait: power2OrLowerCreatures
+      rating: 3
 
 - name: Longfused Mines
   cardNumber: 287
@@ -3573,6 +3587,7 @@
   traits: [preventsDamage, protectsCreatures]
   synergies:
     - trait: goodFight
+    - trait: damagesFriendlyCreatures
 
 - name: Silvertooth
   cardNumber: 311
@@ -4238,7 +4253,7 @@
 
 - name: Hunting Witch
   cardNumber: 367
-  rating: 3
+  rating: 4
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4248,6 +4263,7 @@
     - trait: highCreatureCount
       rating: 3
       type: house
+    - trait: protectsCreatures
     - trait: lowCreatureCount
       rating: -3
       type: house
