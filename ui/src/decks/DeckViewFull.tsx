@@ -3,6 +3,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
+import { ScreenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { DeckStatsView } from "./DeckStatsView"
 import { DeckStore } from "./DeckStore"
@@ -59,7 +60,10 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
                 </div>
                 <div style={wrapperStyle}>
                     {saleInfoComponent}
-                    <DeckSynergiesInfoView synergies={deck} width={saleInfo && saleInfo.length !== 0 ? 840 : 1200}/>
+                    <DeckSynergiesInfoView
+                        synergies={deck}
+                        width={ScreenStore.instance.screenSizeSm() ? undefined : (saleInfo && saleInfo.length !== 0 ? 840 : 1200)}
+                    />
                 </div>
             </div>
         )

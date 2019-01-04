@@ -14,7 +14,7 @@ import { PercentRatingRow } from "./DeckScoreView"
 
 interface DeckSynergiesInfoViewProps {
     synergies: DeckWithSynergyInfo
-    width: number
+    width?: number
 }
 
 export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
