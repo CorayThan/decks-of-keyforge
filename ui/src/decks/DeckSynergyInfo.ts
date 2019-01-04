@@ -1,6 +1,4 @@
 export interface DeckSynergyInfo {
-    synergyRating: number
-    antisynergyRating: number
     synergyCombos: SynergyCombo[]
 }
 

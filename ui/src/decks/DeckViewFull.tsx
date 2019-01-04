@@ -1,4 +1,3 @@
-import { Grid } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
@@ -51,19 +50,18 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         } else {
             saleInfoComponent = <Loader/>
         }
+        const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap"}
         return (
-            <Grid container={true}>
-                <Grid item={true}>
+            <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
+                <div style={wrapperStyle}>
                     <DeckViewSmall deck={deck.deck} fullVersion={true}/>
-                </Grid>
-                <Grid item={true}>
-                    {saleInfoComponent}
                     <DeckStatsView deck={deck.deck}/>
-                </Grid>
-                <Grid item={true}>
-                    <DeckSynergiesInfoView synergies={deck.deckSynergyInfo}/>
-                </Grid>
-            </Grid>
+                </div>
+                <div style={wrapperStyle}>
+                    {saleInfoComponent}
+                    <DeckSynergiesInfoView synergies={deck.deckSynergyInfo} width={saleInfo && saleInfo.length !== 0 ? 840 : 1192}/>
+                </div>
+            </div>
         )
     }
 }

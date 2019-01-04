@@ -4,9 +4,9 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
 export const KeyCard = (props: { topContents: React.ReactNode } & CardProps) => {
-    const {topContents, children, ...rest} = props
+    const {topContents, children, style, ...rest} = props
     return (
-        <Card style={{margin: spacing(2)}} {...rest}>
+        <Card style={{margin: spacing(2), ...style}} {...rest}>
             <div style={{backgroundColor: blue["500"], padding: spacing(2)}}>
                 {topContents}
             </div>

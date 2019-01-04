@@ -13,23 +13,19 @@ import { DeckSynergyInfo } from "./DeckSynergyInfo"
 
 interface DeckSynergiesInfoViewProps {
     synergies: DeckSynergyInfo
+    width: number
 }
 
 export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
-    const {synergyRating, antisynergyRating, synergyCombos} = props.synergies
+    const {synergyCombos} = props.synergies
 
     return (
         <KeyCard
+            style={{width: props.width}}
             topContents={(
                 <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end"}}>
                     <Typography variant={"h5"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
                         Synergy Details
-                    </Typography>
-                    <Typography variant={"subtitle1"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
-                        Total Synergy: {synergyRating}
-                    </Typography>
-                    <Typography variant={"subtitle1"} style={{color: "#FFFFFF", marginBottom: spacing(1)}}>
-                        Total Antisynergy: {antisynergyRating}
                     </Typography>
                 </div>
             )}

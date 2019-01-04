@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @Transactional
@@ -97,6 +96,13 @@ class DeckService(
         val armorValues: MutableMap<Int, Int> = mutableMapOf()
         val totalCreaturePower: MutableMap<Int, Int> = mutableMapOf()
         val expectedAmber: MutableMap<Int, Int> = mutableMapOf()
+        val amberControl: MutableMap<Int, Int> = mutableMapOf()
+        val creatureControl: MutableMap<Int, Int> = mutableMapOf()
+        val artifactControl: MutableMap<Int, Int> = mutableMapOf()
+        val sasRating: MutableMap<Int, Int> = mutableMapOf()
+        val cardsRating: MutableMap<Int, Int> = mutableMapOf()
+        val synergy: MutableMap<Int, Int> = mutableMapOf()
+        val antisynergy: MutableMap<Int, Int> = mutableMapOf()
         val creatureCount: MutableMap<Int, Int> = mutableMapOf()
         val actionCount: MutableMap<Int, Int> = mutableMapOf()
         val artifactCount: MutableMap<Int, Int> = mutableMapOf()
@@ -119,6 +125,13 @@ class DeckService(
                 armorValues.incrementValue(ratedDeck.totalArmor)
                 totalCreaturePower.incrementValue(ratedDeck.totalPower)
                 expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
+                amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
+                creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
+                artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
+                sasRating.incrementValue(ratedDeck.sasRating)
+                cardsRating.incrementValue(ratedDeck.cardsRating)
+                synergy.incrementValue(ratedDeck.synergyRating)
+                antisynergy.incrementValue(ratedDeck.antisynergyRating)
                 creatureCount.incrementValue(ratedDeck.totalCreatures)
                 actionCount.incrementValue(ratedDeck.totalActions)
                 artifactCount.incrementValue(ratedDeck.totalArtifacts)
@@ -137,6 +150,13 @@ class DeckService(
                 armorValues = armorValues,
                 totalCreaturePower = totalCreaturePower,
                 expectedAmber = expectedAmber,
+                amberControl = amberControl,
+                creatureControl = creatureControl,
+                artifactControl = artifactControl,
+                sas = sasRating,
+                cardsRating = cardsRating,
+                synergy = synergy,
+                antisynergy = antisynergy,
                 creatureCount = creatureCount,
                 actionCount = actionCount,
                 artifactCount = artifactCount,
@@ -151,6 +171,13 @@ class DeckService(
                 "Deck stats:\n" +
                         "armor: ${deckStatistics.armorStats}\n" +
                         "expectedAmber: ${deckStatistics.expectedAmberStats}\n" +
+                        "amberControl: ${deckStatistics.amberControlStats}\n" +
+                        "creature control: ${deckStatistics.creatureCountStats}\n" +
+                        "artifact control: ${deckStatistics.artifactCountStats}\n" +
+                        "sas stats: ${deckStatistics.sasStats}\n" +
+                        "cards rating: ${deckStatistics.cardsRatingStats}\n" +
+                        "synergy: ${deckStatistics.synergyStats}\n" +
+                        "antisynergy: ${deckStatistics.antisynergyStats}\n" +
                         "totalCreaturePower: ${deckStatistics.totalCreaturePowerStats}\n" +
                         "creatureCounts: ${deckStatistics.creatureCountStats}\n" +
                         "artifactCounts: ${deckStatistics.artifactCountStats}\n" +

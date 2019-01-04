@@ -5,6 +5,13 @@ data class DeckStatistics(
         val armorValues: Map<Int, Int>,
         val totalCreaturePower: Map<Int, Int>,
         val expectedAmber: Map<Int, Int>,
+        val amberControl: Map<Int, Int>,
+        val creatureControl: Map<Int, Int>,
+        val artifactControl: Map<Int, Int>,
+        val sas: Map<Int, Int>,
+        val cardsRating: Map<Int, Int>,
+        val synergy: Map<Int, Int>,
+        val antisynergy: Map<Int, Int>,
         val creatureCount: Map<Int, Int>,
         val actionCount: Map<Int, Int>,
         val artifactCount: Map<Int, Int>,
@@ -18,6 +25,13 @@ data class DeckStatistics(
     val armorStats = IndividalDeckTraitStats.fromValues(armorValues)
     val totalCreaturePowerStats = IndividalDeckTraitStats.fromValues(totalCreaturePower)
     val expectedAmberStats = IndividalDeckTraitStats.fromValues(expectedAmber)
+    val amberControlStats = IndividalDeckTraitStats.fromValues(amberControl)
+    val creatureControlStats = IndividalDeckTraitStats.fromValues(creatureControl)
+    val artifactControlStats = IndividalDeckTraitStats.fromValues(artifactControl)
+    val sasStats = IndividalDeckTraitStats.fromValues(sas)
+    val cardsRatingStats = IndividalDeckTraitStats.fromValues(cardsRating)
+    val synergyStats = IndividalDeckTraitStats.fromValues(synergy)
+    val antisynergyStats = IndividalDeckTraitStats.fromValues(antisynergy)
     val creatureCountStats = IndividalDeckTraitStats.fromValues(creatureCount)
     val actionCountStats = IndividalDeckTraitStats.fromValues(actionCount)
     val artifactCountStats = IndividalDeckTraitStats.fromValues(artifactCount)
@@ -36,9 +50,11 @@ data class IndividalDeckTraitStats(
         val top90Percent: Int,
         val bottom10Percent: Int,
         val percentile40: Int,
-        val percentile60: Int
+        val percentile60: Int,
+        val percentileForValue: Map<Int, Int>
 ) {
     companion object {
+
         fun fromValues(values: Map<Int, Int>): IndividalDeckTraitStats {
             val keysSorted = values.keys.sorted()
             val total = values.values.sum()
@@ -54,8 +70,12 @@ data class IndividalDeckTraitStats(
             var top90Percent: Int = -1
             var percentile40 = -1
             var percentile60 = -1
+            var currentPercentile = 0
+            val percentileForValue = mutableMapOf<Int, Int>()
             keysSorted.forEach {
                 currentIndex += values[it]!!
+                currentPercentile = currentIndex / total
+                percentileForValue[it] = currentPercentile
                 if (bottom10Percent == -1 && currentIndex >= bottom10PercentIndex) {
                     bottom10Percent = it
                 }
@@ -80,7 +100,8 @@ data class IndividalDeckTraitStats(
                     top90Percent,
                     bottom10Percent,
                     percentile40,
-                    percentile60
+                    percentile60,
+                    percentileForValue
             )
         }
     }

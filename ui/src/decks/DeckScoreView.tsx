@@ -35,7 +35,7 @@ const RatingRow = (props: { value: number, name: string, operator?: string, larg
     return (
 
         <div style={{display: "flex", alignItems: "flex-end"}}>
-            <div style={{width: 70, display: "flex", marginRight: spacing(1)}}>
+            <div style={{width: 76, display: "flex", marginRight: spacing(1)}}>
                 <div style={{flexGrow: 1}}/>
                 <Typography variant={large ? "h3" : "body1"} style={{...textStyle}}>{props.operator} {props.value}</Typography>
             </div>

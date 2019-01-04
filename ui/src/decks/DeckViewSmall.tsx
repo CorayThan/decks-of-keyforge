@@ -114,8 +114,12 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     )}
                     <MyDecksButton deck={this.props.deck}/>
                     <div style={{flexGrow: 1}}/>
-                    <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
-                    <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
+                    <div style={{marginRight: spacing(1)}}>
+                        <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
+                    </div>
+                    <div style={{marginRight: spacing(1)}}>
+                        <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
+                    </div>
                 </CardActions>
             </Card>
         )
@@ -140,11 +144,9 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
 
     return (
-        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             {cardsByHouse.map((cardsForHouse) => (
-                <div style={{flex: 1}} key={cardsForHouse.house}>
-                    <DisplayCardsInHouse {...cardsForHouse}/>
-                </div>
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse}/>
             ))}
             <div style={{flex: 1}}/>
         </div>
