@@ -20,4 +20,6 @@ export class CardTypeSelect extends React.Component<{ selectedCardTypes: Selecte
 
 export class SelectedCardTypes implements SelectedValues<CardType> {
     selectedValues: IObservableArray<CardType> = observable([])
+
+    reset = () => this.selectedValues.clear()
 }

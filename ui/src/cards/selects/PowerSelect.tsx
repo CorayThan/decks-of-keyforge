@@ -21,5 +21,7 @@ export class PowerSelect extends React.Component<{ selectedPowers: SelectedPower
 export class SelectedPowers implements SelectedValues<string> {
     selectedValues: IObservableArray<string> = observable([])
 
+    reset = () => this.selectedValues.clear()
+
     toArray = (): number[] => this.selectedValues.map(power => Number(power))
 }

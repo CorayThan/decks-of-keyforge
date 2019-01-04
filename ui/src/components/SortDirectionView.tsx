@@ -20,8 +20,15 @@ export class SortDirectionView extends React.Component<{ sortDirectionController
 }
 
 export class SortDirectionController {
+
     @observable
-    direction: SortDirection = "DESC"
+    direction: SortDirection
+
+    constructor(private defaultDirection: SortDirection = "DESC") {
+        this.direction = defaultDirection
+    }
+
+    reset = () => this.direction = this.defaultDirection
 
     switch = () => this.direction = this.direction === "ASC" ? "DESC" : "ASC"
 }

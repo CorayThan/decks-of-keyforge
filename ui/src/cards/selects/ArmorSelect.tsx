@@ -21,5 +21,7 @@ export class ArmorSelect extends React.Component<{ selectedArmors: SelectedArmor
 export class SelectedArmors implements SelectedValues<string> {
     selectedValues: IObservableArray<string> = observable([])
 
+    reset = () => this.selectedValues.clear()
+
     toArray = (): number[] => this.selectedValues.map(armor => Number(armor))
 }

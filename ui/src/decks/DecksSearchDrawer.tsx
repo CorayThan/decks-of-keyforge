@@ -33,11 +33,21 @@ export class DecksSearchDrawer extends React.Component {
         this.search()
     }
 
-    search = () => {
+    search = (event?: React.FormEvent) => {
+        if (event) {
+            event.preventDefault()
+        }
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
         this.filters.sortDirection = this.sortDirectionController.direction
         this.deckStore.searchDecks(this.filters)
+    }
+
+    clearSearch = () => {
+        this.selectedHouses.reset()
+        this.selectedSortStore.selectedValue = ""
+        this.sortDirectionController.reset()
+        this.filters.reset()
     }
 
     render() {
@@ -45,78 +55,89 @@ export class DecksSearchDrawer extends React.Component {
         const {title, containsMaverick, handleTitleUpdate, handleContainsMaverickUpdate} = this.filters
         return (
             <KeyDrawer>
-                <List dense={true} style={{marginTop: spacing(1)}}>
-                    <ListItem>
-                        <TextField
-                            label={"Deck Name"}
-                            onChange={handleTitleUpdate}
-                            value={title}
-                            fullWidth={true}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <HouseSelect selectedHouses={this.selectedHouses}/>
-                    </ListItem>
-                    <ListItem>
-                        <FormGroup row={true}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.filters.forSale}
-                                        onChange={(event) => this.filters.forSale = event.target.checked}
-                                    />
-                                }
-                                label={(
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <SellDeckIcon/>
-                                        <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For sale</Typography>
-                                    </div>
-                                )}
+                <form onSubmit={this.search}>
+                    <List dense={true} style={{marginTop: spacing(1)}}>
+                        <ListItem>
+                            <TextField
+                                label={"Deck Name"}
+                                onChange={handleTitleUpdate}
+                                value={title}
+                                fullWidth={true}
                             />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.filters.forTrade}
-                                        onChange={(event) => this.filters.forTrade = event.target.checked}
-                                    />
-                                }
-                                label={(
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <TradeDeckIcon/>
-                                        <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For trade</Typography>
-                                    </div>
-                                )}
-                            />
-                        </FormGroup>
-                    </ListItem>
-                    <ListItem>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={containsMaverick}
-                                    onChange={handleContainsMaverickUpdate}
+                        </ListItem>
+                        <ListItem>
+                            <HouseSelect selectedHouses={this.selectedHouses}/>
+                        </ListItem>
+                        <ListItem>
+                            <FormGroup row={true}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.filters.forSale}
+                                            onChange={(event) => this.filters.forSale = event.target.checked}
+                                        />
+                                    }
+                                    label={(
+                                        <div style={{display: "flex", alignItems: "center"}}>
+                                            <SellDeckIcon/>
+                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For sale</Typography>
+                                        </div>
+                                    )}
                                 />
-                            }
-                            label={"Contains a maverick"}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <DeckSortSelect store={this.selectedSortStore}/>
-                        <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                            <SortDirectionView sortDirectionController={this.sortDirectionController}/>
-                        </div>
-                    </ListItem>
-                    <ListItem>
-                        <KeyButton
-                            variant={"contained"}
-                            color={"secondary"}
-                            onClick={this.search}
-                            loading={this.deckStore.searchingForDecks}
-                        >
-                            Search
-                        </KeyButton>
-                    </ListItem>
-                </List>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.filters.forTrade}
+                                            onChange={(event) => this.filters.forTrade = event.target.checked}
+                                        />
+                                    }
+                                    label={(
+                                        <div style={{display: "flex", alignItems: "center"}}>
+                                            <TradeDeckIcon/>
+                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For trade</Typography>
+                                        </div>
+                                    )}
+                                />
+                            </FormGroup>
+                        </ListItem>
+                        <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={containsMaverick}
+                                        onChange={handleContainsMaverickUpdate}
+                                    />
+                                }
+                                label={"Contains a maverick"}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <DeckSortSelect store={this.selectedSortStore}/>
+                            <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
+                                <SortDirectionView sortDirectionController={this.sortDirectionController}/>
+                            </div>
+                        </ListItem>
+                        <ListItem>
+                            <div style={{display: "flex"}}>
+                                <KeyButton
+                                    variant={"outlined"}
+                                    onClick={this.clearSearch}
+                                    style={{marginRight: spacing(2)}}
+                                >
+                                    Clear
+                                </KeyButton>
+                                <KeyButton
+                                    variant={"contained"}
+                                    color={"secondary"}
+                                    type={"submit"}
+                                    loading={this.deckStore.searchingForDecks}
+                                >
+                                    Search
+                                </KeyButton>
+                            </div>
+                        </ListItem>
+                    </List>
+                </form>
             </KeyDrawer>
         )
     }

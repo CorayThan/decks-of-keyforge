@@ -66,7 +66,13 @@ export interface SelectedHouse {
 
 export class SelectedHouses {
     @observable
-    selectedHouses: SelectedHouse[] = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))
+    selectedHouses: SelectedHouse[]
+
+    constructor() {
+        this.reset()
+    }
+
+    reset = () => this.selectedHouses = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))
 
     getSelectedHouses = () => this.selectedHouses.slice()
 

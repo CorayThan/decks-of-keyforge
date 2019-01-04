@@ -25,6 +25,8 @@ export class RaritySelect extends React.Component<{ selectedRarities: SelectedRa
 export class SelectedRarities implements SelectedValues<Rarity | "Special"> {
     selectedValues: IObservableArray<Rarity | "Special"> = observable([])
 
+    reset = () => this.selectedValues.clear()
+
     toArray = (): Rarity[] => {
         const rarities: Rarity[] = []
 

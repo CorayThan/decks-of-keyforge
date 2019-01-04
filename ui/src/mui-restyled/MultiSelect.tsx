@@ -12,6 +12,7 @@ import { log } from "../config/Utils"
 
 export interface SelectedValues<T extends string> {
     selectedValues: IObservableArray<T>
+    reset: () => void
 }
 
 interface MultiSelectProps<T extends string> {

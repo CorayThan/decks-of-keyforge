@@ -29,14 +29,17 @@ export class CardsSearchDrawer extends React.Component {
     selectedAmbers = new SelectedAmbers()
     selectedArmors = new SelectedArmors()
     selectedSortStore = new CardSortSelectStore()
-    sortDirectionController = new SortDirectionController()
+    sortDirectionController = new SortDirectionController("ASC")
 
     componentDidMount() {
         this.cardStore.reset()
         this.search()
     }
 
-    search = () => {
+    search = (event?: React.FormEvent) => {
+        if (event) {
+            event.preventDefault()
+        }
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.types = this.selectedCardTypes.selectedValues
         this.filters.rarities = this.selectedRarities.toArray()
@@ -48,54 +51,75 @@ export class CardsSearchDrawer extends React.Component {
         this.cardStore.searchCards(this.filters)
     }
 
+    clearSearch = () => {
+        this.selectedHouses.reset()
+        this.selectedSortStore.selectedValue = ""
+        this.sortDirectionController.reset()
+        this.filters.reset()
+        this.selectedCardTypes.reset()
+        this.selectedRarities.reset()
+        this.selectedPowers.reset()
+        this.selectedAmbers.reset()
+        this.selectedArmors.reset()
+    }
+
     render() {
         const {title, description, handleTitleUpdate, handleDescriptionUpdate} = this.filters
         return (
             <KeyDrawer>
-                <List dense={true} style={{marginTop: spacing(1)}}>
-                    <ListItem>
-                        <TextField
-                            label={"Card Name"}
-                            onChange={handleTitleUpdate}
-                            value={title}
-                            fullWidth={true}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <TextField
-                            label={"Card Description"}
-                            onChange={handleDescriptionUpdate}
-                            value={description}
-                            fullWidth={true}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <HouseSelect selectedHouses={this.selectedHouses}/>
-                    </ListItem>
-                    <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
-                        <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>
-                        <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><RaritySelect selectedRarities={this.selectedRarities}/></div>
-                        <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><AmberSelect selectedAmbers={this.selectedAmbers}/></div>
-                        <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><PowerSelect selectedPowers={this.selectedPowers}/></div>
-                        <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
-                    </ListItem>
-                    <ListItem>
-                        <CardSortSelect store={this.selectedSortStore}/>
-                        <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                            <SortDirectionView sortDirectionController={this.sortDirectionController}/>
-                        </div>
-                    </ListItem>
-                    <ListItem>
-                        <KeyButton
-                            variant={"contained"}
-                            color={"secondary"}
-                            onClick={this.search}
-                            loading={this.cardStore.searchingForCards}
-                        >
-                            Search
-                        </KeyButton>
-                    </ListItem>
-                </List>
+                <form onSubmit={this.search}>
+                    <List dense={true} style={{marginTop: spacing(1)}}>
+                        <ListItem>
+                            <TextField
+                                label={"Card Name"}
+                                onChange={handleTitleUpdate}
+                                value={title}
+                                fullWidth={true}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <TextField
+                                label={"Card Description"}
+                                onChange={handleDescriptionUpdate}
+                                value={description}
+                                fullWidth={true}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <HouseSelect selectedHouses={this.selectedHouses}/>
+                        </ListItem>
+                        <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><RaritySelect selectedRarities={this.selectedRarities}/></div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><AmberSelect selectedAmbers={this.selectedAmbers}/></div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><PowerSelect selectedPowers={this.selectedPowers}/></div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
+                        </ListItem>
+                        <ListItem>
+                            <CardSortSelect store={this.selectedSortStore}/>
+                            <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
+                                <SortDirectionView sortDirectionController={this.sortDirectionController}/>
+                            </div>
+                        </ListItem>
+                        <ListItem>
+                            <KeyButton
+                                variant={"outlined"}
+                                onClick={this.clearSearch}
+                                style={{marginRight: spacing(2)}}
+                            >
+                                Clear
+                            </KeyButton>
+                            <KeyButton
+                                variant={"contained"}
+                                color={"secondary"}
+                                type={"submit"}
+                                loading={this.cardStore.searchingForCards}
+                            >
+                                Search
+                            </KeyButton>
+                        </ListItem>
+                    </List>
+                </form>
             </KeyDrawer>
         )
     }

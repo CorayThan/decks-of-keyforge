@@ -1,7 +1,6 @@
 import { observable } from "mobx"
 import * as React from "react"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
-import { deckSortOptions } from "../DeckFilters"
 
 export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore }> {
     render() {
@@ -12,16 +11,31 @@ export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore
 export class DeckSortSelectStore implements SelectedStore {
 
     @observable
-    selectedValue = ""
+    selectedValue = deckSortOptions[0].name
 
     toEnumValue = () => {
         if (!this.selectedValue) {
             return deckSortOptions[0].value
         }
-        const value = deckSortOptions.filter(option => option.name === this.selectedValue)[0].value
-        // if (value == null) {
-        //     return deckSortOptions[0].value
-        // }
-        return value
+        return deckSortOptions.filter(option => option.name === this.selectedValue)[0].value
     }
 }
+
+export interface SortOption {
+    name: string
+    value: string
+}
+
+const deckSortOptions: SortOption[] = [
+    {value: "ADDED_DATE", name: "Date Added"},
+    {value: "SAS_RATING", name: "SAS Rating"},
+    {value: "CARDS_RATING", name: "Card Rating"},
+    {value: "SYNERGY", name: "Synergy"},
+    {value: "ANTISYNERGY", name: "Antisynergy"},
+    {value: "EXPECTED_AMBER", name: "Expected Amber"},
+    {value: "TOTAL_CREATURE_POWER", name: "Total Creature Power"},
+    {value: "CREATURE_COUNT", name: "Creature Count"},
+    {value: "MAVERICK_COUNT", name: "Maverick Count"},
+    {value: "RARES", name: "Rares"},
+    {value: "SPECIALS", name: "Special Rarities"}
+]
