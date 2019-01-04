@@ -4,8 +4,8 @@ import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
 import { DeckPage, DeckWithSynergyInfo } from "./Deck"
-import { DeckFilters } from "./DeckFilters"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
+import { DeckFilters } from "./search/DeckFilters"
 
 export class DeckStore {
 

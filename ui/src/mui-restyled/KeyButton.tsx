@@ -5,13 +5,16 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
 interface KeyButtonProps extends ButtonProps {
+    outlinedWhite?: boolean
     loading?: boolean
 }
 
 export const KeyButton = (props: KeyButtonProps) => {
-    const {loading, children, ...rest} = props
+    const {loading, children, outlinedWhite, style, ...rest} = props
     return (
         <Button
+            variant={outlinedWhite ? "outlined" : undefined}
+            style={{border: outlinedWhite ? "1px solid rgb(255, 255, 255)" : undefined, ...style}}
             {...rest}
         >
             {children}

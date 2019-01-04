@@ -1,7 +1,7 @@
 import { observable } from "mobx"
 import * as React from "react"
-import { SortDirection } from "../generic/SortDirection"
-import { House } from "../houses/House"
+import { SortDirection } from "../../generic/SortDirection"
+import { House } from "../../houses/House"
 
 export class DeckFilters {
     houses: House[] = []
@@ -16,6 +16,7 @@ export class DeckFilters {
     @observable
     containsMaverick: boolean = false
     sortDirection: SortDirection = "DESC"
+    owner: string = ""
 
     reset = () => {
         this.title = ""
@@ -27,3 +28,5 @@ export class DeckFilters {
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleContainsMaverickUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.containsMaverick = event.target.checked
 }
+
+export const DeckFiltersInstance = new DeckFilters()

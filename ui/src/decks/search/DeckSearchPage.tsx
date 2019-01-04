@@ -1,16 +1,34 @@
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
+import * as QueryString from "query-string"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
-import { KeyButton } from "../mui-restyled/KeyButton"
-import { Loader } from "../mui-restyled/Loader"
-import { UiStore } from "../ui/UiStore"
+import { RouteComponentProps } from "react-router"
+import { spacing } from "../../config/MuiConfig"
+import { KeyButton } from "../../mui-restyled/KeyButton"
+import { Loader } from "../../mui-restyled/Loader"
+import { UiStore } from "../../ui/UiStore"
+import { DeckStore } from "../DeckStore"
+import { DeckViewSmall } from "../DeckViewSmall"
+import { DeckFiltersInstance } from "./DeckFilters"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
-import { DeckStore } from "./DeckStore"
-import { DeckViewSmall } from "./DeckViewSmall"
+
+export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
+
+    constructor(props: RouteComponentProps<{}>) {
+        super(props)
+        const queryValues = QueryString.parse(this.props.location.search)
+        DeckFiltersInstance.owner = queryValues.owner ? queryValues.owner as string : ""
+    }
+
+    render() {
+        return (
+            <DeckSearchContainer/>
+        )
+    }
+}
 
 @observer
-export class DecksPageComponent extends React.Component {
+class DeckSearchContainer extends React.Component {
 
     constructor(props: {}) {
         super(props)

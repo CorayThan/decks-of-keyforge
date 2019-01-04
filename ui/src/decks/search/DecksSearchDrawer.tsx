@@ -7,23 +7,23 @@ import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { KeyDrawer } from "../components/KeyDrawer"
-import { SortDirectionController, SortDirectionView } from "../components/SortDirectionView"
-import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
-import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
-import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
-import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
-import { KeyButton } from "../mui-restyled/KeyButton"
-import { DeckFilters } from "./DeckFilters"
-import { DeckStore } from "./DeckStore"
-import { DeckSortSelect, DeckSortSelectStore } from "./selects/DeckSortSelect"
+import { KeyDrawer } from "../../components/KeyDrawer"
+import { SortDirectionController, SortDirectionView } from "../../components/SortDirectionView"
+import { spacing } from "../../config/MuiConfig"
+import { log } from "../../config/Utils"
+import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
+import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
+import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
+import { KeyButton } from "../../mui-restyled/KeyButton"
+import { DeckStore } from "../DeckStore"
+import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
+import { DeckFiltersInstance } from "./DeckFilters"
 
 @observer
 export class DecksSearchDrawer extends React.Component {
 
     deckStore = DeckStore.instance
-    filters = new DeckFilters()
+    filters = DeckFiltersInstance
     selectedHouses = new SelectedHouses()
     selectedSortStore = new DeckSortSelectStore()
     sortDirectionController = new SortDirectionController()

@@ -94,7 +94,7 @@ export class RegistrationPage extends React.Component {
                         <DokIcon height={100} style={{marginBottom: spacing(2)}}/>
                         <Typography variant={"h3"} style={{marginBottom: spacing(2)}}>Sign up</Typography>
                         <Typography variant={"subtitle1"} style={{marginBottom: spacing(2)}}>
-                            Sell, trade and share your decks
+                            Sell, trade and evaluate your decks
                         </Typography>
                         <form onSubmit={this.signUp}>
                             <Grid container={true} spacing={16}>

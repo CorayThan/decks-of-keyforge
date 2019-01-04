@@ -13,6 +13,8 @@ data class DeckFilters(
         val forTrade: Boolean = false,
         val containsMaverick: Boolean = false,
 
+        val owner: String = "",
+
         val sort: DeckSortOptions = DeckSortOptions.ADDED_DATE,
         val sortDirection: SortDirection = SortDirection.ASC
 )

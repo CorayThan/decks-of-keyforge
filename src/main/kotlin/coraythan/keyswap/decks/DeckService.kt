@@ -37,6 +37,8 @@ class DeckService(
             }
         }
 
+        log.info("filtering with owner name ${filters.owner}")
+        if (filters.owner.isNotBlank()) predicate.and(deckQ.userDecks.any().user.username.eq(filters.owner))
         if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
         if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         if (filters.containsMaverick) predicate.and(deckQ.cards.any().maverick.isTrue)

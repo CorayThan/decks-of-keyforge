@@ -1,8 +1,9 @@
+import * as QueryString from "query-string"
 import * as React from "react"
-import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import { CardsPage } from "../cards/CardsPage"
-import { DecksPageComponent } from "../decks/DecksPageComponent"
 import { DeckViewPage } from "../decks/DeckViewFull"
+import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { KeyTopbar } from "../layout-parts/KeyTopbar"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
@@ -20,6 +21,10 @@ class Routes {
     static registration = "/registration"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
+
+    static deckSearch = (query?: { owner?: string }) => {
+        return `${Routes.decks}${query ? "?" + QueryString.stringify(query) : ""}`
+    }
 }
 
 class KeyRouter extends React.Component {
@@ -28,7 +33,7 @@ class KeyRouter extends React.Component {
             <BrowserRouter>
                 <div>
                     <KeyTopbar/>
-                    <div style={{marginBottom: spacing(2)}} />
+                    <div style={{marginBottom: spacing(2)}}/>
                     <Switch>
                         <Route
                             exact={true}
@@ -38,7 +43,7 @@ class KeyRouter extends React.Component {
                         <Route
                             exact={true}
                             path={Routes.decks}
-                            component={DecksPageComponent}
+                            component={DeckSearchPage}
                         />
                         <Route
                             exact={true}
@@ -55,9 +60,7 @@ class KeyRouter extends React.Component {
                             path={Routes.userProfilePage()}
                             component={ProfilePage}
                         />
-                        <Route
-                            component={DecksPageComponent}
-                        />
+                        <Route render={() => <Redirect to={Routes.decks}/>}/>
                     </Switch>
                 </div>
             </BrowserRouter>

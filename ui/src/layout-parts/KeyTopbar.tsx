@@ -44,13 +44,22 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             rightContent = (<Loader/>)
         } else if (UserStore.instance.loggedIn()) {
             rightContent = (
-                <KeyButton
-                    variant={"outlined"}
-                    color={"inherit"}
-                    onClick={UserStore.instance.logout}
-                >
-                    Logout
-                </KeyButton>
+                <div style={{display: "flex"}}>
+                    <LinkButton
+                        color={"inherit"}
+                        to={Routes.userProfilePage(UserStore.instance.user!.username)}
+                        style={{marginRight: spacing(2)}}
+                    >
+                        Profile
+                    </LinkButton>
+                    <KeyButton
+                        outlinedWhite={true}
+                        color={"inherit"}
+                        onClick={UserStore.instance.logout}
+                    >
+                        Logout
+                    </KeyButton>
+                </div>
             )
         } else {
             rightContent = (
@@ -69,7 +78,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
         return (
             <div>
-                <AppBar position={"fixed"} style={{zIndex: 10000}}>
+                <AppBar position={"fixed"} style={{zIndex: 9000}}>
                     <Toolbar>
                         <DokIcon/>
                         <Typography
@@ -96,7 +105,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             Decks
                         </LinkButton>
                         <div
-                            style={{borderLeft: "1px solid rgba(0, 0, 0, 0.12", marginLeft: spacing(2), paddingLeft: spacing(4)}}
+                            style={{borderLeft: "1px solid rgb(255, 255, 255, 0.25)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
                         >
                             {rightContent}
                         </div>

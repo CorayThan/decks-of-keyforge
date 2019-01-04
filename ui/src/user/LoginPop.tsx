@@ -45,7 +45,7 @@ export class LoginPop extends React.Component {
                     ref={(ref: HTMLDivElement) => this.anchorElement = ref}
                 >
                     <KeyButton
-                        variant={"outlined"}
+                        outlinedWhite={true}
                         color={"inherit"}
                         style={{marginRight: spacing(2)}}
                         onClick={this.handlePopoverOpen}
@@ -60,12 +60,13 @@ export class LoginPop extends React.Component {
                     anchorPosition={{top: 500, left: 400}}
                     anchorOrigin={{
                         vertical: "bottom",
-                        horizontal: "left",
+                        horizontal: "right",
                     }}
                     transformOrigin={{
                         vertical: "top",
-                        horizontal: "left",
+                        horizontal: "right",
                     }}
+                    style={{zIndex: 10000}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField
