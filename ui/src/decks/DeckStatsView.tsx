@@ -19,12 +19,12 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
 
         return (
             <div>
-                <div style={{display: "flex", width: 600, height: 232, margin: spacing(2)}}>
+                <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2)}}>
                     <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
                     <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>
                 </div>
 
-                <div style={{maxWidth: 600, maxHeight: 400, display: "flex", margin: spacing(2)}}>
+                <div style={{maxWidth: 616, maxHeight: 400, display: "flex", margin: spacing(2)}}>
 
                     <KeyBar data={[
                         {x: "Aember", y: expectedAmber},
@@ -32,9 +32,9 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                         {x: "Aember Ctrl", y: amberControl},
                         {x: "Avg ACtrl", y: 7},
                         {x: "Creature Ctrl", y: creatureControl},
-                        {x: "Avg CCtrl", y: 17},
+                        {x: "Avg CCtrl", y: 11},
                         {x: "Artifact Ctrl", y: artifactControl},
-                        {x: "Avg ArCtrl", y: 4},
+                        {x: "Avg ArCtrl", y: 1},
                     ]}/>
 
                 </div>
@@ -59,7 +59,7 @@ const KeyBar = (props: { data: Array<{ x: string, y: number }> }) => (
         domainPadding={20}
         padding={32}
         width={600}
-        height={360}
+        height={400}
     >
         <VictoryAxis/>
         <VictoryAxis dependentAxis={true}/>
@@ -84,7 +84,7 @@ const KeyPie = (props: { name: string, creatures: number, actions: number, artif
                 {x: `Upgrades – ${props.upgrades}`, y: props.upgrades},
             ]}
             colorScale={pieColors}
-            height={180}
+            height={184}
         />
     </div>
 )

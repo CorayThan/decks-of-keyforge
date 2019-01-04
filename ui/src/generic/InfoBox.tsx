@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
-export const InfoBox = (props: { top: string, bottom: string | number, popInfo?: string, textColor?: string }) => {
+export const InfoBox = (props: { top: React.ReactNode, bottom: React.ReactNode, popInfo?: string, textColor?: string }) => {
 
     const contents = (
         <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>

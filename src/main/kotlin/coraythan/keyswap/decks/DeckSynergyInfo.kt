@@ -18,6 +18,8 @@ data class SynergyCombo(
 )
 
 data class DeckSynergyInfo(
+        val synergyRating: Double,
+        val antisynergyRating: Double,
         val synergyCombos: List<SynergyCombo>
 )
 
@@ -98,6 +100,10 @@ class DeckSynergyService(
             }
         }
 
+        val synergyValues = synergyCombos.map { it.netSynergy }
+        val antisynergyRating = synergyValues.filter { it < 0 }.sum()
+        val synergyRating = synergyValues.filter { it > 0 }.sum()
+
         val dedupedCombos: MutableList<SynergyCombo> = mutableListOf()
         val groupedCombos = synergyCombos.groupBy { it.house to it.cardName }
         groupedCombos.forEach { _, dups ->
@@ -105,6 +111,8 @@ class DeckSynergyService(
         }
 
         return DeckSynergyInfo(
+                synergyRating,
+                antisynergyRating,
                 dedupedCombos.sortedByDescending { it.cardRating + it.netSynergy }
         )
     }

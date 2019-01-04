@@ -6,6 +6,10 @@ import { DeckSynergyInfo } from "./DeckSynergyInfo"
 export interface DeckWithSynergyInfo {
     deck: Deck
     deckSynergyInfo: DeckSynergyInfo
+    cardRatingPercentile: number
+    synergyPercentile: number
+    antisynergyPercentile: number
+    sasPercentile: number
 }
 
 export interface Deck {

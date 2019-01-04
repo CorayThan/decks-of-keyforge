@@ -31,7 +31,7 @@ data class DeckStatistics(
     val sasStats = IndividalDeckTraitStats.fromValues(sas)
     val cardsRatingStats = IndividalDeckTraitStats.fromValues(cardsRating)
     val synergyStats = IndividalDeckTraitStats.fromValues(synergy)
-    val antisynergyStats = IndividalDeckTraitStats.fromValues(antisynergy)
+    val antisynergyStats = IndividalDeckTraitStats.fromValues(antisynergy, true)
     val creatureCountStats = IndividalDeckTraitStats.fromValues(creatureCount)
     val actionCountStats = IndividalDeckTraitStats.fromValues(actionCount)
     val artifactCountStats = IndividalDeckTraitStats.fromValues(artifactCount)
@@ -55,8 +55,8 @@ data class IndividalDeckTraitStats(
 ) {
     companion object {
 
-        fun fromValues(values: Map<Int, Int>): IndividalDeckTraitStats {
-            val keysSorted = values.keys.sorted()
+        fun fromValues(values: Map<Int, Int>, reverse: Boolean = false): IndividalDeckTraitStats {
+            val keysSorted = if (reverse) values.keys.sortedDescending() else values.keys.sorted()
             val total = values.values.sum()
             val medianIndex = total / 2
             val top90PercentIndex = total * 0.9
@@ -70,11 +70,11 @@ data class IndividalDeckTraitStats(
             var top90Percent: Int = -1
             var percentile40 = -1
             var percentile60 = -1
-            var currentPercentile = 0
+            var currentPercentile: Int
             val percentileForValue = mutableMapOf<Int, Int>()
             keysSorted.forEach {
                 currentIndex += values[it]!!
-                currentPercentile = currentIndex / total
+                currentPercentile = (currentIndex * 100) / total
                 percentileForValue[it] = currentPercentile
                 if (bottom10Percent == -1 && currentIndex >= bottom10PercentIndex) {
                     bottom10Percent = it

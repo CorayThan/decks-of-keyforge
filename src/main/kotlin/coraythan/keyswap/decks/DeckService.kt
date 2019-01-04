@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @Transactional
@@ -21,6 +22,8 @@ class DeckService(
         val deckRepo: DeckRepo
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    var deckStatistics: DeckStatistics? = null
 
     fun filterDecks(filters: DeckFilters): DecksPage {
         val deckQ = QDeck.deck
@@ -68,7 +71,14 @@ class DeckService(
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
         val deck = findDeck(keyforgeId)!!
         val synergies = deckSynergyService.fromDeck(deck)
-        return DeckWithSynergyInfo(deck, synergies)
+        return DeckWithSynergyInfo(
+                deck = deck,
+                deckSynergyInfo = synergies,
+                cardRatingPercentile = this.deckStatistics?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1,
+                synergyPercentile = this.deckStatistics?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1,
+                antisynergyPercentile = this.deckStatistics?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1,
+                sasPercentile = this.deckStatistics?.sasStats?.percentileForValue?.get(deck.sasRating) ?: -1
+        )
     }
 
     fun saleInfoForDeck(keyforgeId: String): List<DeckSaleInfo> {
@@ -167,13 +177,14 @@ class DeckService(
                 power4OrHigher = power4OrHigher,
                 power5OrHigher = power5OrHigher
         )
+        this.deckStatistics = deckStatistics
         log.info(
                 "Deck stats:\n" +
                         "armor: ${deckStatistics.armorStats}\n" +
                         "expectedAmber: ${deckStatistics.expectedAmberStats}\n" +
                         "amberControl: ${deckStatistics.amberControlStats}\n" +
-                        "creature control: ${deckStatistics.creatureCountStats}\n" +
-                        "artifact control: ${deckStatistics.artifactCountStats}\n" +
+                        "creature control: ${deckStatistics.creatureControlStats}\n" +
+                        "artifact control: ${deckStatistics.artifactControlStats}\n" +
                         "sas stats: ${deckStatistics.sasStats}\n" +
                         "cards rating: ${deckStatistics.cardsRatingStats}\n" +
                         "synergy: ${deckStatistics.synergyStats}\n" +

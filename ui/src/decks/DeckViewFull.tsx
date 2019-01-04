@@ -59,7 +59,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
                 </div>
                 <div style={wrapperStyle}>
                     {saleInfoComponent}
-                    <DeckSynergiesInfoView synergies={deck.deckSynergyInfo} width={saleInfo && saleInfo.length !== 0 ? 840 : 1192}/>
+                    <DeckSynergiesInfoView synergies={deck} width={saleInfo && saleInfo.length !== 0 ? 840 : 1200}/>
                 </div>
             </div>
         )

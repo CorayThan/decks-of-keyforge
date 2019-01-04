@@ -1,5 +1,7 @@
 export interface DeckSynergyInfo {
     synergyCombos: SynergyCombo[]
+    synergyRating: number
+    antisynergyRating: number
 }
 
 export interface SynergyCombo {

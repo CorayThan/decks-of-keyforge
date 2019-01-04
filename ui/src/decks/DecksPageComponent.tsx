@@ -46,7 +46,6 @@ export class DecksPageComponent extends React.Component {
                     disabled={addingMoreDecks}
                     loading={addingMoreDecks}
                     onClick={showMoreDecks}
-                    variant={"outlined"}
                 >
                     Show more
                 </KeyButton>

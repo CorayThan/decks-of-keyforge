@@ -38,7 +38,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         } = this.props.saleInfo
         return (
             <KeyCard
-                style={{width: 312}}
+                style={{width: 328}}
                 topContents={
                     (
                         <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>

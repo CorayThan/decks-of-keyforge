@@ -9,7 +9,11 @@ import javax.persistence.*
 
 data class DeckWithSynergyInfo(
         val deck: Deck,
-        val deckSynergyInfo: DeckSynergyInfo
+        val deckSynergyInfo: DeckSynergyInfo,
+        val cardRatingPercentile: Int,
+        val synergyPercentile: Int,
+        val antisynergyPercentile: Int,
+        val sasPercentile: Int
 )
 
 @Entity

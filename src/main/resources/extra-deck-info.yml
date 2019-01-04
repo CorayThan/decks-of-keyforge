@@ -58,8 +58,11 @@
   creatureControl: 3.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
-    - trait: damagesMultipleEnemies
-      rating: -2
+    - trait: damagesAllEnemies
+      rating: -3
+    - trait: goodFight
+      rating: 1
+    - trait: power5OrHigherCreatures
 
 - name: Follow the Leader
   cardNumber: 8
@@ -190,7 +193,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage]
+  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
 
@@ -290,7 +293,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, dealsDamage]
+  traits: [damagesMultipleEnemies, dealsDamage, damagesAllEnemies]
   synergies: []
 
 - name: Valdr
@@ -336,7 +339,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, goodFight]
+  traits: [damagesMultipleEnemies, goodFight, damagesAllEnemies]
   synergies:
     - trait: increasesCreaturePower
       rating: 1
@@ -363,6 +366,7 @@
   traits: []
   synergies:
     - trait: destroysFriendlyCreatures
+    - trait: damagesFriendlyCreatures
 
 - name: Headhunter
   cardNumber: 35
@@ -455,7 +459,7 @@
   cardNumber: 43
   rating: 3
   creatureControl: 0.5
-  traits: [damagesMultipleEnemies, dealsDamage]
+  traits: [damagesMultipleEnemies, dealsDamage, damagesAllEnemies]
   synergies: []
 
 - name: Rock-Hurling Giant
@@ -528,7 +532,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, dealsDamage, protectsCreatures, damagesFriendlyCreatures, returnsFriendlyCreaturesToHand]
+  traits: [damagesMultipleEnemies, damagesAllEnemies, dealsDamage, protectsCreatures, damagesFriendlyCreatures, returnsFriendlyCreaturesToHand]
   synergies:
     - trait: highTotalArmor
 
@@ -554,7 +558,7 @@
 
 - name: Arise!
   cardNumber: 54
-  rating: 3
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -562,10 +566,14 @@
   traits: [returnsCreaturesFromDiscard, chains]
   synergies:
     - trait: highCreatureCount
+      rating: 1
+    - trait: highCreatureCount
+      type: house
       rating: 3
     - trait: destroysFriendlyCreatures
+    - trait: damagesFriendlyCreatures
     - trait: lowCreatureCount
-      rating: -2
+      rating: -3
 
 - name: Control the Weak
   cardNumber: 55
@@ -675,7 +683,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures]
+  traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
 
@@ -896,6 +904,7 @@
   traits: []
   synergies:
     - trait: destroysFriendlyCreatures
+    - trait: damagesFriendlyCreatures
 
 - name: Eater of the Dead
   cardNumber: 84
@@ -1761,7 +1770,7 @@
   amberControl: 0.0
   creatureControl: 2.0
   artifactControl: 0.0
-  traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures]
+  traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: power3OrLowerCreatures
       rating: -2
@@ -1830,7 +1839,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: [dealsDamage, damagesMultipleEnemies]
+  traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies]
   synergies:
     - trait: increasesKeyCost
 
@@ -1888,6 +1897,8 @@
     - trait: archives
       rating: -3
     - trait: damagesMultipleEnemies
+      rating: 1
+    - trait: damagesAllEnemies
 
 - name: Mating Season
   cardNumber: 170
@@ -1900,6 +1911,7 @@
   synergies:
     - trait: highCreatureCount
       rating: 1
+      type: house
 
 - name: Mothership Support
   cardNumber: 171
@@ -2856,7 +2868,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures]
+  traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures]
   synergies:
     - trait: highTotalArmor
 
@@ -3212,7 +3224,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage]
+  traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
       rating: -3
@@ -3789,7 +3801,7 @@
   synergies:
     - trait: lowCreatureCount
     - trait: highCreatureCount
-      rating: -2
+      rating: -1
 
 - name: Mimicry
   cardNumber: 328
@@ -3893,7 +3905,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, damagesFriendlyCreatures]
+  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: hasMars
       rating: -1
@@ -4234,7 +4246,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, goodReap, goodPlay]
+  traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, goodReap, goodPlay, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
     - trait: power2OrLowerCreatures

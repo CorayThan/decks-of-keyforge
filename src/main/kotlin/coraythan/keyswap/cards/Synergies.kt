@@ -49,6 +49,7 @@ enum class SynTrait {
 
     // Damage
     damagesMultipleEnemies,
+    damagesAllEnemies,
     damagesFriendlyCreatures,
     dealsDamage,
     preventsDamage,

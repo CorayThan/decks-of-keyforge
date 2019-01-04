@@ -9,24 +9,31 @@ import { startCase } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { KeyCard } from "../generic/KeyCard"
-import { DeckSynergyInfo } from "./DeckSynergyInfo"
+import { DeckWithSynergyInfo } from "./Deck"
+import { PercentRatingRow } from "./DeckScoreView"
 
 interface DeckSynergiesInfoViewProps {
-    synergies: DeckSynergyInfo
+    synergies: DeckWithSynergyInfo
     width: number
 }
 
 export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
-    const {synergyCombos} = props.synergies
-
+    const {deckSynergyInfo, antisynergyPercentile, synergyPercentile, cardRatingPercentile, sasPercentile} = props.synergies
+    const {synergyCombos} = deckSynergyInfo
     return (
         <KeyCard
             style={{width: props.width}}
             topContents={(
-                <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end"}}>
-                    <Typography variant={"h5"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
+                <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center"}}>
+                    <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
                         Synergy Details
                     </Typography>
+                    <div style={{display: "flex", alignItems: "flex-end"}}>
+                        <PercentRatingRow value={cardRatingPercentile} name={"CARD RATING"}/>
+                        <PercentRatingRow value={synergyPercentile} name={"SYNERGY"}/>
+                        <PercentRatingRow value={antisynergyPercentile} name={"ANTISYNERGY"}/>
+                        <PercentRatingRow value={sasPercentile} name={"SAS"}/>
+                    </div>
                 </div>
             )}
         >

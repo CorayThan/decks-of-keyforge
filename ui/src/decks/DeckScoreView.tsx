@@ -34,19 +34,38 @@ const RatingRow = (props: { value: number, name: string, operator?: string, larg
     const textStyle = {color: "#FFFFFF"}
     return (
 
-        <div style={{display: "flex", alignItems: "flex-end"}}>
-            <div style={{width: 76, display: "flex", marginRight: spacing(1)}}>
-                <div style={{flexGrow: 1}}/>
-                <Typography variant={large ? "h3" : "body1"} style={{...textStyle}}>{props.operator} {props.value}</Typography>
-            </div>
-            <Tooltip title={"Synergy and Antisynergy Rating"} open={large ? undefined : false}>
+        <Tooltip title={"Synergy and Antisynergy Rating"} open={large ? undefined : false}>
+            <div style={{display: "flex", alignItems: "flex-end"}}>
+                <div style={{width: 76, display: "flex", marginRight: spacing(1)}}>
+                    <div style={{flexGrow: 1}}/>
+                    <Typography variant={large ? "h3" : "body1"} style={{...textStyle}}>{props.operator} {props.value}</Typography>
+                </div>
                 <Typography
                     variant={large ? "h5" : "body2"}
                     style={{fontSize: large ? undefined : 12, marginBottom: large ? undefined : 2, ...textStyle}}
                 >
                     {props.name}
                 </Typography>
-            </Tooltip>
-        </div>
+            </div>
+        </Tooltip>
     )
 }
+
+export const PercentRatingRow = (props: { value: number, name: string }) => (
+    <Tooltip title={"Percentile ranking among all decks (higher is better)"}>
+        <div style={{display: "flex", alignItems: "flex-end"}}>
+            <Typography variant={"h5"} style={{color: "#FFFFFF"}}>
+                {props.value}
+            </Typography>
+            <Typography variant={"body2"} style={{color: "#FFFFFF", fontWeight: 500, marginRight: spacing(1)}}>
+                %
+            </Typography>
+            <Typography
+                variant={"body2"}
+                style={{color: "#FFFFFF", fontWeight: 500, marginRight: spacing(2)}}
+            >
+                {props.name}
+            </Typography>
+        </div>
+    </Tooltip>
+)
