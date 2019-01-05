@@ -87,7 +87,6 @@ export class LoginPop extends React.Component {
                             style={{marginBottom: spacing(2)}}
                         />
                         <div style={{display: "flex"}}>
-                            <div style={{flexGrow: 1}}/>
                             <Button
                                 variant={"outlined"}
                                 style={{marginRight: spacing(2)}}
@@ -95,6 +94,7 @@ export class LoginPop extends React.Component {
                             >
                                 Cancel
                             </Button>
+                            <div style={{flexGrow: 1}}/>
                             <KeyButton
                                 variant={"contained"}
                                 color={"primary"}

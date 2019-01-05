@@ -56,7 +56,7 @@ export class DecksSearchDrawer extends React.Component {
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
-                    <List dense={true} style={{marginTop: spacing(1)}}>
+                    <List dense={true}>
                         <ListItem>
                             <TextField
                                 label={"Deck Name"}
@@ -119,6 +119,15 @@ export class DecksSearchDrawer extends React.Component {
                         </ListItem>
                         <ListItem>
                             <div style={{display: "flex"}}>
+
+                                {}
+                                <KeyButton
+                                    variant={"outlined"}
+                                    onClick={this.clearSearch}
+                                    style={{marginRight: spacing(2)}}
+                                >
+                                    Clear
+                                </KeyButton>
                                 <KeyButton
                                     variant={"outlined"}
                                     onClick={this.clearSearch}

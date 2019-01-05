@@ -1,5 +1,7 @@
+import { IconButton } from "@material-ui/core"
 import Drawer from "@material-ui/core/Drawer"
 import Fab from "@material-ui/core/Fab/Fab"
+import { Close } from "@material-ui/icons"
 import Search from "@material-ui/icons/Search"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -35,7 +37,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                                 style={{
                                     position: "fixed",
                                     left: spacing(2),
-                                    bottom: spacing(2),
+                                    top: spacing(16),
                                     opacity: 1,
                                     zIndex: 1000,
                                 }}
@@ -53,6 +55,14 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                         PaperProps={{style: {width: panelWidth}}}
                     >
                         <ToolbarSpacer/>
+                        {small ? (
+                            <div style={{display: "flex", marginRight: spacing(1), marginTop: spacing(1)}}>
+                                <div style={{flexGrow: 1}}/>
+                                <IconButton onClick={() => this.open = false}>
+                                    <Close/>
+                                </IconButton>
+                            </div>
+                        ) : null}
                         {this.props.children}
                     </Drawer>
                 </div>
@@ -66,6 +76,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                     PaperProps={{style: {width: panelWidth}}}
                 >
                     <ToolbarSpacer/>
+                    <div style={{marginTop: spacing(1)}}/>
                     {this.props.children}
                 </Drawer>
             )

@@ -79,7 +79,7 @@ export class RegistrationPage extends React.Component {
                     <LoginPop/>
                 )}
             >
-                <div style={{margin: spacing(4), marginTop: spacing(6), display: "flex", justifyContent: "center"}}>
+                <div style={{margin: spacing(4), display: "flex", justifyContent: "center"}}>
                     <Card
                         style={{
                             width: 480,

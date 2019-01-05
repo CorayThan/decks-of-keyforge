@@ -68,7 +68,7 @@ export class CardsSearchDrawer extends React.Component {
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
-                    <List dense={true} style={{marginTop: spacing(1)}}>
+                    <List dense={true}>
                         <ListItem>
                             <TextField
                                 label={"Card Name"}

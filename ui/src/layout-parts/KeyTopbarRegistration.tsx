@@ -6,7 +6,7 @@ import ArrowBack from "@material-ui/icons/ArrowBack"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router-dom"
 import { spacing } from "../config/MuiConfig"
-import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
+import { ScreenStore } from "../ui/ScreenStore"
 
 interface KeyTopbarRegistrationProps extends RouteComponentProps<{}> {
     name: string
@@ -27,7 +27,7 @@ class KeyTopbarRegistrationBase extends React.Component<KeyTopbarRegistrationPro
                             <ArrowBack/>
                         </IconButton>
                         <Typography
-                            variant={"h4"}
+                            variant={ScreenStore.instance.screenSizeXs() ? "h5" : "h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
                             {name}
@@ -38,7 +38,6 @@ class KeyTopbarRegistrationBase extends React.Component<KeyTopbarRegistrationPro
                         {rightContent}
                     </Toolbar>
                 </AppBar>
-                <ToolbarSpacer/>
                 {children}
             </div>
         )
