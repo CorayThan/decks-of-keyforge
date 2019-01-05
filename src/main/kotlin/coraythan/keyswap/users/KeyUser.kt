@@ -32,6 +32,6 @@ data class KeyUser(
         val decks: List<UserDeck> = listOf()
 ) {
         fun toProfile() = UserProfile(
-                id, username, publicContactInfo
+                id, username, publicContactInfo, allowUsersToSeeDeckOwnership
         )
 }

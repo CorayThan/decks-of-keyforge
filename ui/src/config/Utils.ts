@@ -21,6 +21,8 @@ export class Utils {
     }
 
     static formatDate = (date: string) => format(parse(date), "MMM D, YYYY")
+
+    static isDev = () => process.env.NODE_ENV === "development"
 }
 
 type EnumType = string | number

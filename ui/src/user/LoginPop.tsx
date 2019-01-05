@@ -3,6 +3,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Utils } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { UserStore } from "./UserStore"
 
@@ -14,9 +15,9 @@ export class LoginPop extends React.Component {
     anchorElement?: HTMLDivElement
 
     @observable
-    email = "coraythan@gmail.com"
+    email = Utils.isDev() ? "coraythan@gmail.com" : ""
     @observable
-    password = "stuffstuff"
+    password = Utils.isDev() ? "stuffstuff" : ""
 
     componentDidMount() {
         UserStore.instance.loginInProgress = false
@@ -70,6 +71,7 @@ export class LoginPop extends React.Component {
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField
+                            variant={"outlined"}
                             label={"Email"}
                             value={this.email}
                             onChange={(event) => this.email = event.target.value}
@@ -77,6 +79,7 @@ export class LoginPop extends React.Component {
                             autoFocus={true}
                         />
                         <TextField
+                            variant={"outlined"}
                             label={"Password"}
                             type={"password"}
                             value={this.password}

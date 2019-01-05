@@ -6,6 +6,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -22,7 +23,8 @@ class DeckService(
         val cardService: CardService,
         val deckSynergyService: DeckSynergyService,
         val deckRepo: DeckRepo,
-        val deckPageService: DeckPageService
+        val deckPageService: DeckPageService,
+        val userService: KeyUserService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -40,10 +42,20 @@ class DeckService(
             }
         }
 
+        val forSaleOrTrade = BooleanBuilder().andAnyOf(deckQ.forSale.isTrue, deckQ.forTrade.isTrue)
+
         log.info("filtering with owner name ${filters.owner}")
-        if (filters.owner.isNotBlank()) predicate.and(deckQ.userDecks.any().user.username.eq(filters.owner))
-        if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
-        if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
+        if (filters.owner.isNotBlank()) {
+            predicate.and(deckQ.userDecks.any().user.username.eq(filters.owner))
+            val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
+            if (!allowToSeeAllDecks) predicate.and(forSaleOrTrade)
+        }
+        if (filters.forSale && filters.forTrade) {
+            predicate.and(forSaleOrTrade)
+        } else {
+            if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
+            if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
+        }
         if (filters.containsMaverick) predicate.and(deckQ.cards.any().maverick.isTrue)
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
 

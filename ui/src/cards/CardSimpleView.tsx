@@ -10,7 +10,6 @@ import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 export const CardSimpleView = (props: { card: KCard }) => {
     return (
         <div>
-            <Typography>{props.card.cardTitle}</Typography>
             <img src={props.card.frontImage} style={{width: 300, margin: spacing(2)}}/>
         </div>
     )
@@ -48,7 +47,7 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
                     {rarityValues.get(card.rarity)!.icon!}
                     <Typography
                         variant={"body2"}
-                        style={{marginLeft: spacing(1), maxWidth: 144}}
+                        style={{marginLeft: spacing(1), width: 144}}
                         noWrap={true}
                     >
                         {card.cardTitle}
@@ -68,6 +67,8 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
                         vertical: "top",
                         horizontal: "left",
                     }}
+                    disableAutoFocus={true}
+                    disableRestoreFocus={true}
                 >
                     <CardSimpleView card={card}/>
                 </Popover>

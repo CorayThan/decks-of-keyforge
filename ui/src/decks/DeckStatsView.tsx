@@ -18,7 +18,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
         } = this.props.deck
 
         return (
-            <div>
+            <div style={{pointerEvents: "none"}}>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2)}}>
                     <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
                     <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>

@@ -1,4 +1,3 @@
-import Button from "@material-ui/core/Button/Button"
 import Card from "@material-ui/core/Card/Card"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
@@ -16,23 +15,24 @@ import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyTopbarRegistration } from "../layout-parts/KeyTopbarRegistration"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { MessageStore } from "../ui/MessageStore"
+import { LoginPop } from "./LoginPop"
 import { UserStore } from "./UserStore"
 
 @observer
 export class RegistrationPage extends React.Component {
 
     @observable
-    email = "coraythan@gmail.com"
+    email = Utils.isDev() ? "coraythan@gmail.com" : ""
     @observable
-    username = "stuff"
+    username = Utils.isDev() ? "stuff" : ""
     @observable
-    password = "stuffstuff"
+    password = Utils.isDev() ? "stuffstuff" : ""
     @observable
-    confirmPassword = "stuffstuff"
+    confirmPassword = Utils.isDev() ? "stuffstuff" : ""
     @observable
     publicContactInfo = ""
     @observable
-    allowUsersToSeeDeckOwnership = false
+    allowUsersToSeeDeckOwnership: boolean = false
 
     signUp = (submitEvent: React.FormEvent) => {
         submitEvent.preventDefault()
@@ -76,13 +76,13 @@ export class RegistrationPage extends React.Component {
             <KeyTopbarRegistration
                 name={"Decks of Keyforge"}
                 rightContent={(
-                    <Button variant={"outlined"} color={"inherit"}>Sign in</Button>
+                    <LoginPop/>
                 )}
             >
                 <div style={{margin: spacing(4), marginTop: spacing(6), display: "flex", justifyContent: "center"}}>
                     <Card
                         style={{
-                            width: 360,
+                            width: 480,
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -100,6 +100,7 @@ export class RegistrationPage extends React.Component {
                             <Grid container={true} spacing={16}>
                                 <Grid item={true} xs={6}>
                                     <TextField
+                                        variant={"outlined"}
                                         label={"Email"}
                                         type={"email"}
                                         value={this.email}
@@ -113,6 +114,7 @@ export class RegistrationPage extends React.Component {
                                         autoFocus={true}
                                     />
                                     <TextField
+                                        variant={"outlined"}
                                         label={"Password"}
                                         type={"password"}
                                         value={this.password}
@@ -123,6 +125,7 @@ export class RegistrationPage extends React.Component {
                                 </Grid>
                                 <Grid item={true} xs={6}>
                                     <TextField
+                                        variant={"outlined"}
                                         label={"Username"}
                                         value={this.username}
                                         onChange={(event) => this.username = event.target.value}
@@ -133,6 +136,7 @@ export class RegistrationPage extends React.Component {
                                         style={{marginBottom: spacing(2), paddingTop: 19}}
                                     >
                                         <TextField
+                                            variant={"outlined"}
                                             label={"Repeat Password"}
                                             type={"password"}
                                             value={this.confirmPassword}
@@ -143,6 +147,7 @@ export class RegistrationPage extends React.Component {
                                 </Grid>
                             </Grid>
                             <TextField
+                                variant={"outlined"}
                                 label={"Contact Info"}
                                 helperText={"Optional public info for users to contact you for sales and trades."}
                                 value={this.publicContactInfo}

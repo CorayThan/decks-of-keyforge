@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DokIcon } from "../generic/icons/DokIcon"
+import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -80,7 +81,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             <div>
                 <AppBar position={"fixed"} style={{zIndex: 9000}}>
                     <Toolbar>
-                        <DokIcon/>
+                        <UnstyledLink to={Routes.decks}><DokIcon/></UnstyledLink>
                         <Typography
                             variant={"h4"}
                             style={{marginLeft: spacing(2)}}

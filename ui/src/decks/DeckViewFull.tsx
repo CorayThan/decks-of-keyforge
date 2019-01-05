@@ -51,6 +51,19 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         } else {
             saleInfoComponent = <Loader/>
         }
+        if (ScreenStore.instance.screenSizeSm()) {
+            return (
+                <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                    <DeckViewSmall deck={deck.deck} fullVersion={true}/>
+                    <DeckStatsView deck={deck.deck}/>
+                    {saleInfoComponent}
+                    <DeckSynergiesInfoView
+                        synergies={deck}
+                        width={undefined}
+                    />
+                </div>
+            )
+        }
         const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap"}
         return (
             <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
@@ -62,7 +75,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
                     {saleInfoComponent}
                     <DeckSynergiesInfoView
                         synergies={deck}
-                        width={ScreenStore.instance.screenSizeSm() ? undefined : (saleInfo && saleInfo.length !== 0 ? 840 : 1200)}
+                        width={(saleInfo && saleInfo.length !== 0 ? 840 : 1200)}
                     />
                 </div>
             </div>

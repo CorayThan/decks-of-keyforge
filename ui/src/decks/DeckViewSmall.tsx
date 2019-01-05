@@ -97,9 +97,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             ) : null}
                         </div>
                     </KeyLink>
-                    <div style={{display: "flex"}}>
-                        <DisplayAllCardsByHouse deck={this.props.deck}/>
-                    </div>
+                    <DisplayAllCardsByHouse deck={this.props.deck}/>
                 </CardContent>
 
                 <CardActions>
@@ -144,11 +142,10 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
 
     return (
-        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+        <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
             {cardsByHouse.map((cardsForHouse) => (
                 <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse}/>
             ))}
-            <div style={{flex: 1}}/>
         </div>
     )
 }

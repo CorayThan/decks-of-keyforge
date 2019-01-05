@@ -51,7 +51,7 @@ export class ProfilePage extends React.Component<ProfilePageProps> {
                     }
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                     <LinkButton color={"primary"} to={decksLink}>
-                        {profile.username}'s Decks
+                        {profile.username}'s {profile.allowUsersToSeeDeckOwnership ? "" : "For Sale or Trade "}Decks
                     </LinkButton>
                 </Card>
             </div>

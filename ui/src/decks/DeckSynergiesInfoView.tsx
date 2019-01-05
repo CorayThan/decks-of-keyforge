@@ -6,11 +6,14 @@ import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import { startCase } from "lodash"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { KeyCard } from "../generic/KeyCard"
+import { ScreenStore } from "../ui/ScreenStore"
 import { DeckWithSynergyInfo } from "./Deck"
 import { PercentRatingRow } from "./DeckScoreView"
+import { SynergyCombo } from "./DeckSynergyInfo"
 
 interface DeckSynergiesInfoViewProps {
     synergies: DeckWithSynergyInfo
@@ -28,7 +31,7 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
                     <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
                         Synergy Details
                     </Typography>
-                    <div style={{display: "flex", alignItems: "flex-end"}}>
+                    <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
                         <PercentRatingRow value={cardRatingPercentile} name={"CARD RATING"}/>
                         <PercentRatingRow value={synergyPercentile} name={"SYNERGY"}/>
                         <PercentRatingRow value={antisynergyPercentile} name={"ANTISYNERGY"}/>
@@ -40,22 +43,14 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
             <Table padding={"dense"}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Card Name</TableCell>
-                        <TableCell>Copies</TableCell>
-                        <TableCell style={{maxWidth: 40}}>Rating (0 to 4)</TableCell>
-                        <TableCell style={{maxWidth: 48}}>Synergy (-2 to 2)</TableCell>
-                        <TableCell style={{maxWidth: 40}}>Value (0 to 5)</TableCell>
+                        <ColumnHeaders/>
                         <TableCell>Synergies</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {synergyCombos.map((combo, idx) => (
                         <TableRow key={idx}>
-                            <TableCell>{combo.cardName}</TableCell>
-                            <TableCell>{combo.copies}</TableCell>
-                            <TableCell>{combo.cardRating}</TableCell>
-                            <TableCell>{combo.netSynergy}</TableCell>
-                            <TableCell>{combo.cardRating + combo.netSynergy}</TableCell>
+                            <CellValues combo={combo}/>
                             <TableCell>
                                 <div style={{display: "flex", flexWrap: "wrap", maxWidth: 280}}>
                                     {combo.synergies.map(synergy => (
@@ -72,6 +67,55 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
             </Table>
         </KeyCard>
     )
+}
+
+@observer
+class ColumnHeaders extends React.Component {
+    render() {
+        if (ScreenStore.instance.screenSizeXs()) {
+            return (
+                <>
+                    <TableCell>Card Name</TableCell>
+                    <TableCell>Rating / Synergy</TableCell>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <TableCell>Card Name</TableCell>
+                    <TableCell>Copies</TableCell>
+                    <TableCell style={{maxWidth: 40}}>Rating (0 to 4)</TableCell>
+                    <TableCell style={{maxWidth: 48}}>Synergy (-2 to 2)</TableCell>
+                    <TableCell style={{maxWidth: 40}}>Value (0 to 5)</TableCell>
+                </>
+            )
+        }
+    }
+}
+
+@observer
+class CellValues extends React.Component<{ combo: SynergyCombo }> {
+    render() {
+        const combo = this.props.combo
+        if (ScreenStore.instance.screenSizeXs()) {
+            return (
+                <>
+                    <TableCell>{combo.cardName}{combo.copies === 1 ? "" : ` x ${combo.copies}`}</TableCell>
+                    <TableCell>{combo.cardRating} / {combo.netSynergy}</TableCell>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <TableCell>{combo.cardName}</TableCell>
+                    <TableCell>{combo.copies}</TableCell>
+                    <TableCell>{combo.cardRating}</TableCell>
+                    <TableCell>{combo.netSynergy}</TableCell>
+                    <TableCell>{combo.cardRating + combo.netSynergy}</TableCell>
+                </>
+            )
+        }
+    }
 }
 
 const TraitBubble = (props: { name: string, synergy: boolean }) => (
