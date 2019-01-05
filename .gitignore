@@ -2,8 +2,6 @@
 /build/
 !gradle/wrapper/gradle-wrapper.jar
 
-/src/main/resources/static
-
 ### STS ###
 .apt_generated
 .classpath
