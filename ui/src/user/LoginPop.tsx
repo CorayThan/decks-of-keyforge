@@ -8,7 +8,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { UserStore } from "./UserStore"
 
 @observer
-export class LoginPop extends React.Component {
+export class LoginPop extends React.Component<{style?: React.CSSProperties}> {
 
     @observable
     popOpen = false
@@ -41,7 +41,7 @@ export class LoginPop extends React.Component {
             return null
         }
         return (
-            <div>
+            <div style={this.props.style}>
                 <div
                     ref={(ref: HTMLDivElement) => this.anchorElement = ref}
                 >

@@ -92,8 +92,13 @@ export class UserStore {
             })
             .catch((error: AxiosError) => {
                 this.loginInProgress = false
-                log.error(`Error loggin in ${error}`)
-                MessageStore.instance.setRequestErrorMessage()
+
+                if (error.message === "Request failed with status code 401") {
+                    MessageStore.instance.setErrorMessage("Your email or password was incorrect.")
+                } else {
+                    log.error(`Error loggin in ${error}`)
+                    MessageStore.instance.setRequestErrorMessage()
+                }
             })
     }
 

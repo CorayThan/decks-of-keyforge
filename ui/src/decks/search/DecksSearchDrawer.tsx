@@ -15,6 +15,7 @@ import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
+import { ScreenStore } from "../../ui/ScreenStore"
 import { DeckStore } from "../DeckStore"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { DeckFiltersInstance } from "./DeckFilters"
@@ -62,7 +63,7 @@ export class DecksSearchDrawer extends React.Component {
                                 label={"Deck Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
-                                fullWidth={true}
+                                fullWidth={ScreenStore.instance.screenSizeXs()}
                             />
                         </ListItem>
                         <ListItem>
@@ -119,15 +120,6 @@ export class DecksSearchDrawer extends React.Component {
                         </ListItem>
                         <ListItem>
                             <div style={{display: "flex"}}>
-
-                                {}
-                                <KeyButton
-                                    variant={"outlined"}
-                                    onClick={this.clearSearch}
-                                    style={{marginRight: spacing(2)}}
-                                >
-                                    Clear
-                                </KeyButton>
                                 <KeyButton
                                     variant={"outlined"}
                                     onClick={this.clearSearch}

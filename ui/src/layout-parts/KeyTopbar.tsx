@@ -1,6 +1,10 @@
+import { Divider, IconButton } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
+import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
+import MenuIcon from "@material-ui/icons/Menu"
+import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
@@ -38,45 +42,6 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             )
         }
 
-        let rightContent
-        let farRightContent = null
-
-        if (UserStore.instance.loginInProgress) {
-            rightContent = (<Loader/>)
-        } else if (UserStore.instance.loggedIn()) {
-            rightContent = (
-                <div style={{display: "flex"}}>
-                    <LinkButton
-                        color={"inherit"}
-                        to={Routes.userProfilePage(UserStore.instance.user!.username)}
-                        style={{marginRight: spacing(2)}}
-                    >
-                        Profile
-                    </LinkButton>
-                    <KeyButton
-                        outlinedWhite={true}
-                        color={"inherit"}
-                        onClick={UserStore.instance.logout}
-                    >
-                        Logout
-                    </KeyButton>
-                </div>
-            )
-        } else {
-            rightContent = (
-                <LoginPop/>
-            )
-            farRightContent = (
-                <LinkButton
-                    color={"secondary"}
-                    variant={"contained"}
-                    to={Routes.registration}
-                >
-                    Sign Up
-                </LinkButton>
-            )
-        }
-
         return (
             <div>
                 <AppBar position={"fixed"} style={{zIndex: 9000}}>
@@ -89,33 +54,123 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             {ScreenStore.instance.screenSizeXs() ? topbarShortName : topbarName}
                         </Typography>
                         {ScreenStore.instance.screenWidth < 1024 ? null : subheaderNode}
-                        <div
-                            style={{flexGrow: 1}}
-                        />
-                        <LinkButton
-                            color={"inherit"}
-                            to={Routes.cards}
-                        >
-                            Cards
-                        </LinkButton>
-                        <LinkButton
-                            color={"inherit"}
-                            style={{marginLeft: spacing(2)}}
-                            to={Routes.decks}
-                        >
-                            Decks
-                        </LinkButton>
-                        <div
-                            style={{borderLeft: "1px solid rgb(255, 255, 255, 0.25)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
-                        >
-                            {rightContent}
-                        </div>
-                        {farRightContent}
+                        <div style={{flexGrow: 1}}/>
+                        <RightMenu/>
                     </Toolbar>
                 </AppBar>
                 <ToolbarSpacer/>
             </div>
         )
+    }
+}
+
+@observer
+class RightMenu extends React.Component {
+
+    @observable
+    open = false
+
+    render() {
+        if (ScreenStore.instance.screenSizeXs()) {
+            return (
+                <>
+                    <IconButton
+                        onClick={() => this.open = !this.open}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
+
+                    <Drawer
+                        open={this.open}
+                        onClose={() => this.open = false}
+                        anchor={"right"}
+                        style={{zIndex: 11000}}
+                    >
+                        <div style={{display: "flex", padding: spacing(2), flexDirection: "column"}}>
+                            <AppLinks/>
+                            <Divider style={{margin: spacing(2)}}/>
+                            <UserLinks/>
+                        </div>
+                    </Drawer>
+
+                </>
+            )
+        }
+
+        return (
+            <>
+                <AppLinks/>
+                <div
+                    style={{display: "flex", borderLeft: "1px solid rgb(255, 255, 255, 0.25)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
+                >
+                    <UserLinks/>
+                </div>
+            </>
+        )
+    }
+}
+
+const AppLinks = () => (
+    <>
+        <LinkButton
+            style={{margin: spacing(1)}}
+            color={"inherit"}
+            to={Routes.cards}
+        >
+            Cards
+        </LinkButton>
+        <LinkButton
+            color={"inherit"}
+            style={{margin: spacing(1)}}
+            to={Routes.decks}
+        >
+            Decks
+        </LinkButton>
+    </>
+)
+
+@observer
+class UserLinks extends React.Component {
+    render() {
+        if (UserStore.instance.loginInProgress) {
+            return <Loader/>
+        } else if (UserStore.instance.loggedIn()) {
+            return (
+                <>
+                    <LinkButton
+                        color={"inherit"}
+                        to={Routes.userProfilePage(UserStore.instance.user!.username)}
+                        style={{margin: spacing(1)}}
+                    >
+                        Profile
+                    </LinkButton>
+                    <KeyButton
+                        outlinedWhite={true}
+                        color={"inherit"}
+                        onClick={UserStore.instance.logout}
+                        style={{margin: spacing(1)}}
+                    >
+                        Logout
+                    </KeyButton>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <LoginPop
+                        style={{margin: spacing(1)}}
+                    />
+                    <LinkButton
+                        color={"secondary"}
+                        variant={"contained"}
+                        to={Routes.registration}
+                        style={{margin: spacing(1)}}
+                    >
+                        Sign Up
+                    </LinkButton>
+                </>
+            )
+        }
     }
 }
 
