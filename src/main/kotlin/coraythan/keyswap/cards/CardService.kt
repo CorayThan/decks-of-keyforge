@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.ResourceUtils
-import kotlin.system.measureTimeMillis
 
 @Transactional
 @Service
@@ -21,7 +20,6 @@ class CardService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    var cachedCards: Map<String, Card> = mapOf()
     lateinit var extraInfo: Map<Int, ExtraCardInfo>
 
     fun loadExtraInfo() {
@@ -31,14 +29,9 @@ class CardService(
         this.extraInfo = extraInfosFromFile.map { it.cardNumber to it }.toMap()
     }
 
-    fun loadCachedCards() {
-        val loadCachedCardsTime = measureTimeMillis {
-            this.cachedCards = cardRepo.findAll().associate { it.id to it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
-        }
-        log.info("Loading cached cards took $loadCachedCardsTime ms for ${this.cachedCards.size} cards")
-    }
+    fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
 
-    fun fullCardsFromCards(cards: List<Card>) = cards.map { cachedCards[it.id] ?: throw IllegalStateException("${it.cardTitle} was not cached!") }
+    fun findByIds(cardIds: List<String>) = cardRepo.findAllById(cardIds)
 
     fun filterCards(filters: CardFilters): Iterable<Card> {
         val cardQ = QCard.card
@@ -72,22 +65,26 @@ class CardService(
         return cardRepo.findAll(predicate, Sort.by(filters.sortDirection.direction, sortProperty))
     }
 
-    fun importNewCards(decks: List<KeyforgeDeck>) {
-        this.loadCachedCards()
+    fun importNewCards(decks: List<KeyforgeDeck>): List<Card> {
+        val cards = cardRepo.findAll()
+        val cardsToReturn = cards.toMutableList()
+        val cardKeys = cards.map { it.id }.toSet()
         decks.forEach { deck ->
-            if (deck.cards?.any { !cachedCards.keys.contains(it) } == true) {
+            if (deck.cards?.any { !cardKeys.contains(it) } == true) {
                 keyforgeApi.findDeck(deck.id)?._linked?.cards?.forEach {
-                    if (!cachedCards.keys.contains(it.id)) this.saveNewCard(it.toCard(this.extraInfo))
+                    if (!cardKeys.contains(it.id)) {
+                        cardsToReturn.add(this.saveNewCard(it.toCard(this.extraInfo)))
+                    }
                 }
-                this.loadCachedCards()
                 log.info("Loaded cards from deck.")
             } else {
                 log.info("Skipped loading cards from deck.")
             }
         }
+        return cardsToReturn
     }
 
-    fun saveNewCard(card: Card) {
-        cardRepo.save(card)
+    fun saveNewCard(card: Card): Card {
+        return cardRepo.save(card)
     }
 }

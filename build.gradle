@@ -49,7 +49,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
     implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml')
-    // implementation('org.flywaydb:flyway-core')
+    implementation('org.flywaydb:flyway-core')
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     compile("io.jsonwebtoken:jjwt:0.9.1")
@@ -58,7 +58,6 @@ dependencies {
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion")
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jpa")
 
-//	runtimeOnly("com.h2database:h2")
     runtimeOnly('org.postgresql:postgresql')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')

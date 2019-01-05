@@ -142,7 +142,7 @@
       rating: 1
       type: house
     - trait: lowCreatureCount
-      rating: -2
+      rating: -1
       type: house
 
 - name: Tremor

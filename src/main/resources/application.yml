@@ -7,7 +7,7 @@ spring:
     name: keyswap
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
        hibernate:
         show_sql: false

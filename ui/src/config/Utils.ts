@@ -1,5 +1,5 @@
-import * as format from "date-fns/format"
-import * as parse from "date-fns/parse"
+import format from "date-fns/format"
+import parse from "date-fns/parse"
 import * as loglevel from "loglevel"
 
 export const log = loglevel

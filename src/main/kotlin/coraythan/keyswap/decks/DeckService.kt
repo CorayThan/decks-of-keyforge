@@ -2,12 +2,14 @@ package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.KeyforgeApi
+import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
@@ -19,7 +21,8 @@ class DeckService(
         val keyforgeApi: KeyforgeApi,
         val cardService: CardService,
         val deckSynergyService: DeckSynergyService,
-        val deckRepo: DeckRepo
+        val deckRepo: DeckRepo,
+        val deckPageService: DeckPageService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -131,7 +134,8 @@ class DeckService(
             if (results.isEmpty) {
                 break
             }
-            deckRepo.saveAll(results.content.map {
+
+            val decksToSave = results.content.map {
                 val ratedDeck = rateDeck(it)
 
                 armorValues.incrementValue(ratedDeck.totalArmor)
@@ -155,7 +159,9 @@ class DeckService(
                 power5OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size)
 
                 ratedDeck
-            })
+            }
+
+            if (!calculateAveragesOnly) deckRepo.saveAll(decksToSave)
             currentPage++
         }
         val deckStatistics = DeckStatistics(
@@ -204,44 +210,48 @@ class DeckService(
         )
     }
 
-    // @Scheduled(fixedDelay = 1000 * 60)
-    fun importNewDecks() {
-
-        val decksPerPage = 10
-        val currentDecks = deckRepo.count().toInt()
-        var currentPage = 1 + currentDecks / decksPerPage
-
-        val newDeckTotal = keyforgeApi.findDecks(1, 1)?.count
-        if (newDeckTotal == null) {
-            log.warn("Got null when getting the count for all decks!")
-            return
-        }
-        val finalPage = 1 + newDeckTotal / decksPerPage
-
-        val maxPageRequests = 10
-        var pagesRequested = 0
-        while (currentPage < finalPage && pagesRequested < maxPageRequests) {
-            val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
-//            log.info("Found decks from api count ${decks?.data?.size}.")
-            if (decks == null) {
-                log.warn("Got null decks from the api for page $currentPage decks per page $decksPerPage with new deck total $newDeckTotal")
-            } else {
-                cardService.importNewCards(decks.data)
-                saveDecks(decks.data)
-            }
-
-            log.info("Loaded page $currentPage. Decks from db: ${deckRepo.findAll().count()}. Total current decks: $newDeckTotal")
-            currentPage++
-            pagesRequested++
+    @Scheduled(fixedDelay = 1000 * 60 * 60)
+    fun updateRatings() {
+        if (deckPageService.findCurrentPage() > 100) {
+            updateDeckRatings(true)
+            log.info("Updated deck ratings.")
         }
     }
 
-    private fun saveDecks(deck: List<KeyforgeDeck>) {
+    @Scheduled(fixedDelay = 1000 * 60 * 1)
+    fun importNewDecks() {
+
+        val decksPerPage = 10
+        var currentPage = deckPageService.findCurrentPage()
+
+        val finalPage = currentPage + decksPerPage
+
+        val maxPageRequests = 11
+        var pagesRequested = 0
+        while (currentPage < finalPage && pagesRequested < maxPageRequests) {
+            val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
+            if (decks == null) {
+                log.warn("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+            } else {
+                val cards = cardService.importNewCards(decks.data)
+                saveDecks(decks.data, cards)
+            }
+
+            log.info("Loaded page $currentPage. Decks from db: ${deckRepo.findAll().count()}. Total current decks: ${decks?.count}")
+            currentPage++
+            pagesRequested++
+        }
+
+        deckPageService.setCurrentPage(currentPage - 2)
+    }
+
+    private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
+        val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         val saveableDecks = deck.map { keyforgeDeck ->
 
             val saveable = keyforgeDeck.toDeck()
                     .copy(
-                            cards = keyforgeDeck.cards?.mapNotNull { cardService.cachedCards[it] }
+                            cards = keyforgeDeck.cards?.map { cardsById[it]!! }
                                     ?: throw IllegalStateException("Can't have a deck with no cards deck: $deck"),
                             houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
                     )
@@ -264,8 +274,27 @@ class DeckService(
                     )
             )
         }
+        saveOrUpdateDecks(saveableDecks)
+    }
 
-        deckRepo.saveAll(saveableDecks)
+    fun saveOrUpdateDecks(decks: List<Deck>) {
+
+        val saveDecks = decks.mapNotNull {
+            val deck = deckRepo.findByKeyforgeId(it.keyforgeId)
+
+            if (deck == null) {
+                it
+            } else {
+
+                // Don't resave unless we need to
+//                val toSave = it.copy(id = deck.id)
+//                deckRepo.save(toSave)
+
+                null
+            }
+        }
+
+        deckRepo.saveAll(saveDecks)
     }
 
     fun rateDeck(deck: Deck): Deck {

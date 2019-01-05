@@ -17,13 +17,12 @@ class RunOnStart(
     override fun run(vararg args: String?) {
 
         cardService.loadExtraInfo()
-        cardService.loadCachedCards()
 
 //        val importDecksMillis = measureTimeMillis {
 //            deckService.importNewDecks()
 //        }
 //        log.info("Import deck millis: $importDecksMillis.")
-//
+
 //        val updateDeckRatingsMillis = measureTimeMillis {
 //            deckService.updateDeckRatings()
 //        }
