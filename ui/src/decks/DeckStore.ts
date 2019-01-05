@@ -9,7 +9,7 @@ import { DeckFilters } from "./search/DeckFilters"
 
 export class DeckStore {
 
-    static readonly CONTEXT = HttpConfig.API + "/decks/public"
+    static readonly CONTEXT = HttpConfig.API + "/decks"
     private static innerInstance: DeckStore
 
     @observable

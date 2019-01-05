@@ -16,7 +16,7 @@ class CardEndpoints(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/public/filter")
+    @PostMapping("/filter")
     fun cards(@RequestBody cardFilters: CardFilters): Iterable<Card> {
         var cards: Iterable<Card> = listOf()
         val cardFilterTime = measureTimeMillis {

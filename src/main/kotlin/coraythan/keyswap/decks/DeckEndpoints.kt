@@ -13,7 +13,7 @@ class DeckEndpoints(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/public/filter")
+    @PostMapping("/filter")
     fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
         var decks = DecksPage(listOf(), 0, 0)
         val decksFilterTime = measureTimeMillis {
@@ -24,9 +24,9 @@ class DeckEndpoints(
         return decks
     }
 
-    @GetMapping("/public/{id}")
+    @GetMapping("/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
-    @GetMapping("/public/{id}/sale-info")
+    @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String) = deckService.saleInfoForDeck(id)
 }

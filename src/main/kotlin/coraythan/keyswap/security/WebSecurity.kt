@@ -36,8 +36,9 @@ class WebSecurity(
                 .authorizeRequests()
 
                 // api security config
-                .antMatchers("/**/public/**").permitAll()
-                .anyRequest().authenticated().and()
+                .antMatchers("/**/secured/**").authenticated()
+                .antMatchers("/**").permitAll()
+                .and()
                 .addFilter(AuthenticationFilter(authenticationManager(), jwtAuthService))
                 .addFilter(AuthorizationFilter(authenticationManager(), jwtAuthService))
 

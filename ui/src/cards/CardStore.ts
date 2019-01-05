@@ -7,7 +7,7 @@ import { KCard } from "./KCard"
 
 export class CardStore {
 
-    static readonly CONTEXT = HttpConfig.API + "/cards/public"
+    static readonly CONTEXT = HttpConfig.API + "/cards"
     private static innerInstance: CardStore
 
     @observable

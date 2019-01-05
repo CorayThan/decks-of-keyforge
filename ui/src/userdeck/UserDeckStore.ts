@@ -7,7 +7,7 @@ import { ListingInfo } from "./ListingInfo"
 
 export class UserDeckStore {
 
-    static readonly CONTEXT = HttpConfig.API + "/userdeck"
+    static readonly CONTEXT = HttpConfig.API + "/userdeck/secured"
     private static innerInstance: UserDeckStore
 
     private constructor() {

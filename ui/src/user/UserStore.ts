@@ -10,8 +10,8 @@ import { UserProfile } from "./UserProfile"
 
 export class UserStore {
 
-    static readonly PUBLIC_CONTEXT = HttpConfig.API + "/users/public"
     static readonly CONTEXT = HttpConfig.API + "/users"
+    static readonly SECURE_CONTEXT = HttpConfig.API + "/users/secured"
     private static innerInstance: UserStore
 
     @observable
@@ -40,7 +40,7 @@ export class UserStore {
         HttpConfig.setAuthHeaders()
         this.loginInProgress = true
         axiosWithoutErrors
-            .get(UserStore.CONTEXT + "/your-user")
+            .get(UserStore.SECURE_CONTEXT + "/your-user")
             .then((response: AxiosResponse) => {
                 // log.debug(`Got logged in user: ${prettyJson(response.data)}`)
                 this.setUser(response.data)
@@ -62,7 +62,7 @@ export class UserStore {
         log.debug(`Posting user: ${prettyJson(user)} api is: ${HttpConfig.API}`)
         this.loginInProgress = true
         axiosWithoutErrors
-            .post(UserStore.PUBLIC_CONTEXT + "/register", user)
+            .post(UserStore.CONTEXT + "/register", user)
             .then((response: AxiosResponse) => {
                 log.info("Registered!")
                 this.login({...user})
@@ -98,7 +98,7 @@ export class UserStore {
     }
 
     findUserProfile = (username: string) => {
-        axios.get(`${UserStore.PUBLIC_CONTEXT}/${username}`)
+        axios.get(`${UserStore.CONTEXT}/${username}`)
             .then((response: AxiosResponse) => {
                 log.debug("Got the user profile.")
                 if (!response.data) {

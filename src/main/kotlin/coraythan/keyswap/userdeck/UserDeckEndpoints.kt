@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("${Api.base}/userdeck")
+@RequestMapping("${Api.base}/userdeck/secured")
 class UserDeckEndpoints(
         val userDeckService: UserDeckService
 ) {

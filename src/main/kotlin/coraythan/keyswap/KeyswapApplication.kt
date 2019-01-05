@@ -47,4 +47,3 @@ fun main(args: Array<String>) {
 object Api {
     const val base = "/api"
 }
-

@@ -5,7 +5,6 @@ import coraythan.keyswap.decks.DeckService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
-import kotlin.system.measureTimeMillis
 
 @Component
 class RunOnStart(
@@ -25,9 +24,9 @@ class RunOnStart(
 //        }
 //        log.info("Import deck millis: $importDecksMillis.")
 //
-        val updateDeckRatingsMillis = measureTimeMillis {
-            deckService.updateDeckRatings()
-        }
-        log.info("Update deck ratings millis: $updateDeckRatingsMillis.")
+//        val updateDeckRatingsMillis = measureTimeMillis {
+//            deckService.updateDeckRatings()
+//        }
+//        log.info("Update deck ratings millis: $updateDeckRatingsMillis.")
     }
 }

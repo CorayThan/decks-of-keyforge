@@ -15,15 +15,15 @@ class UserEndpoints(
         private val currentUserService: CurrentUserService
 ) {
 
-    @GetMapping("/your-user")
+    @GetMapping("/secured/your-user")
     fun findYourUser() = currentUserService.loggedInUser()
 
-    @PostMapping("/public/register")
+    @PostMapping("/register")
     fun register(@RequestBody user: UserRegistration) {
         userService.register(user)
     }
 
-    @GetMapping("/public/{username}")
+    @GetMapping("/{username}")
     fun findUserProfile(@PathVariable username: String) = userService.findUserProfile(username)
 
 }
