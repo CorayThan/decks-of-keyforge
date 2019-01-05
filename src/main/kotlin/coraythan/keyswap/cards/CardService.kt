@@ -6,10 +6,10 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.ClassPathResource
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.ResourceUtils
 
 @Transactional
 @Service
@@ -24,7 +24,7 @@ class CardService(
 
     fun loadExtraInfo() {
         val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
-                ResourceUtils.getFile("classpath:extra-deck-info.yml")
+                ClassPathResource("extra-deck-info.yml").inputStream
         )
         this.extraInfo = extraInfosFromFile.map { it.cardNumber to it }.toMap()
     }
