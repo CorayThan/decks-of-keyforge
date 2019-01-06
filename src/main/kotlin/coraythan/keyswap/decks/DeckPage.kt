@@ -34,11 +34,8 @@ class DeckPageService(
     }
 
     fun setCurrentPage(currentPage: Int) {
-        val all = deckPageRepo.findAll().toList()
-        when {
-            all.size == 1 -> deckPageRepo.save(all[0].copy(currentPage = currentPage))
-            else -> throw IllegalStateException("More than one deck page?! $all")
-        }
+        deckPageRepo.deleteAll()
+        deckPageRepo.save(DeckPage(currentPage))
     }
 }
 

@@ -1,4 +1,4 @@
-package coraythan.keyswap.decks
+package coraythan.keyswap.stats
 
 // First is value, second is occurrances for that value in all decks
 data class DeckStatistics(

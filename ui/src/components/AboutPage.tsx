@@ -56,8 +56,6 @@ export class AboutPage extends React.Component {
                             "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
                             "rating.",
                             "However, when searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
-                            `If you're familiar with the "ADHD" scores, you'll notice these bear some similarity, however they were created ` +
-                            "independently and differ significantly."
                         ]}/>
                     </Grid>
                     <Grid item={true} xs={12} md={6}>

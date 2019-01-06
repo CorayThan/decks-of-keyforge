@@ -50,9 +50,11 @@ dependencies {
     implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
     implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml')
     implementation('org.flywaydb:flyway-core')
+    implementation('net.javacrumbs.shedlock:shedlock-spring:2.1.0')
+    implementation('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:2.2.0')
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    compile("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
 
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion")

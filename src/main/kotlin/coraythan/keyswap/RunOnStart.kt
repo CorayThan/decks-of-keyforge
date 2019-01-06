@@ -18,14 +18,5 @@ class RunOnStart(
 
         cardService.loadExtraInfo()
 
-//        val importDecksMillis = measureTimeMillis {
-//            deckService.importNewDecks()
-//        }
-//        log.info("Import deck millis: $importDecksMillis.")
-
-//        val updateDeckRatingsMillis = measureTimeMillis {
-//            deckService.updateDeckRatings()
-//        }
-//        log.info("Update deck ratings millis: $updateDeckRatingsMillis.")
     }
 }

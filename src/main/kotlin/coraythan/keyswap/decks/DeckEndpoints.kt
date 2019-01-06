@@ -8,7 +8,8 @@ import kotlin.system.measureTimeMillis
 @RestController
 @RequestMapping("${Api.base}/decks")
 class DeckEndpoints(
-        val deckService: DeckService
+        val deckService: DeckService,
+        val deckImporterService: DeckImporterService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -28,7 +29,7 @@ class DeckEndpoints(
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
     @PostMapping("/{id}/import")
-    fun importDeck(@PathVariable id: String) = deckService.importDeck(id)
+    fun importDeck(@PathVariable id: String) = deckImporterService.importDeck(id)
 
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String) = deckService.saleInfoForDeck(id)
