@@ -127,11 +127,13 @@ const AppLinks = () => (
         >
             Cards
         </LinkButton>
-        <DeckImportPop/>
+        <DeckImportPop
+            style={{margin: spacing(1)}}
+        />
         <LinkButton
             style={{margin: spacing(1)}}
             color={"inherit"}
-            to={Routes.cards}
+            to={Routes.about}
         >
             About
         </LinkButton>

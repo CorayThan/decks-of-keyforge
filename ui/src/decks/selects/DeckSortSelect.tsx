@@ -33,6 +33,8 @@ const deckSortOptions: SortOption[] = [
     {value: "SYNERGY", name: "Synergy"},
     {value: "ANTISYNERGY", name: "Antisynergy"},
     {value: "EXPECTED_AMBER", name: "Expected Amber"},
+    {value: "FUNNIEST", name: "Funniest"},
+    {value: "MOST_WISHLISTED", name: "Most Wishlisted"},
     {value: "TOTAL_CREATURE_POWER", name: "Total Creature Power"},
     {value: "CREATURE_COUNT", name: "Creature Count"},
     {value: "MAVERICK_COUNT", name: "Maverick Count"},

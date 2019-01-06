@@ -7,16 +7,16 @@ import { spacing } from "../config/MuiConfig"
 import { KCard } from "./KCard"
 import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 
-export const CardSimpleView = (props: { card: KCard }) => {
+export const CardSimpleView = (props: { card: Partial<KCard>, size?: number }) => {
     return (
         <div>
-            <img src={props.card.frontImage} style={{width: 300, margin: spacing(2)}}/>
+            <img src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2)}}/>
         </div>
     )
 }
 
 @observer
-export class CardAsLine extends React.Component<{ card: KCard }> {
+export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
 
     @observable
     popOpen = false
@@ -34,7 +34,6 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
 
     render() {
         const card = this.props.card
-        // log.debug(`Pop open: ${this.popOpen} anchor el: ${this.anchorElement}`)
         return (
             <div
                 onWheel={this.handlePopoverClose}
@@ -44,7 +43,7 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
                     onMouseEnter={this.handlePopoverOpen}
                     onMouseLeave={this.handlePopoverClose}
                 >
-                    {rarityValues.get(card.rarity)!.icon!}
+                    {rarityValues.get(card.rarity!)!.icon!}
                     <Typography
                         variant={"body2"}
                         style={{marginLeft: spacing(1)}}

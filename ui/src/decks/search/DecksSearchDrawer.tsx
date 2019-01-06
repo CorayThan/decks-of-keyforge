@@ -64,7 +64,7 @@ export class DecksSearchDrawer extends React.Component {
                                 label={"Deck Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
-                                fullWidth={ScreenStore.instance.screenSizeXs()}
+                                fullWidth={!ScreenStore.instance.screenSizeXs()}
                             />
                         </ListItem>
                         <ListItem>

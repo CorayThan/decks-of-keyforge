@@ -81,6 +81,8 @@ class DeckService(
             DeckSortOptions.SAS_RATING -> "sasRating"
             DeckSortOptions.SYNERGY -> "synergyRating"
             DeckSortOptions.ANTISYNERGY -> "antisynergyRating"
+            DeckSortOptions.FUNNIEST -> "funnyCount"
+            DeckSortOptions.MOST_WISHLISTED -> "wishlistCount"
         }
 
         val deckPage = deckRepo.findAll(predicate, PageRequest.of(

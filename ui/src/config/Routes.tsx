@@ -2,6 +2,7 @@ import * as QueryString from "query-string"
 import * as React from "react"
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import { CardsPage } from "../cards/CardsPage"
+import { AboutPage } from "../components/AboutPage"
 import { KeyTopbar } from "../components/KeyTopbar"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
@@ -36,6 +37,11 @@ class KeyRouter extends React.Component {
                     <KeyTopbar/>
                     <div style={{marginBottom: spacing(2)}}/>
                     <Switch>
+                        <Route
+                            exact={true}
+                            path={Routes.about}
+                            component={AboutPage}
+                        />
                         <Route
                             exact={true}
                             path={Routes.cards}
