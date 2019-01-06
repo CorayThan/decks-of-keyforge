@@ -20,7 +20,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
             <div style={{pointerEvents: "none"}}>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2)}}>
                     <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
-                    <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>
+                    <KeyPieGlobalAverages/>
                 </div>
 
                 <div style={{maxWidth: 616, maxHeight: 400, display: "flex", margin: spacing(2)}}>
@@ -51,10 +51,10 @@ const keyBarStyle: VictoryStyleInterface = {
     }
 } as unknown as VictoryStyleInterface
 
-const KeyBar = (props: { data: Array<{ x: string, y: number }> }) => (
+export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPadding?: number }) => (
     <VictoryChart
         theme={VictoryTheme.material}
-        domainPadding={20}
+        domainPadding={props.domainPadding ? props.domainPadding : 20}
         padding={32}
         width={600}
         height={400}
@@ -70,11 +70,13 @@ const KeyBar = (props: { data: Array<{ x: string, y: number }> }) => (
     </VictoryChart>
 )
 
-const KeyPie = (props: { name: string, creatures: number, actions: number, artifacts: number, upgrades: number }) => (
+export const KeyPieGlobalAverages = () => <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>
+
+export const KeyPie = (props: { name?: string, creatures: number, actions: number, artifacts: number, upgrades: number, padding?: number }) => (
     <div>
-        <Typography variant={"h6"} noWrap={true}>{props.name}</Typography>
+        {props.name ? <Typography variant={"h6"} noWrap={true}>{props.name}</Typography> : null}
         <VictoryPie
-            padding={20}
+            padding={props.padding ? props.padding : 20}
             data={[
                 {x: `Actions – ${props.actions}`, y: props.actions},
                 {x: `Artifacts – ${props.artifacts}`, y: props.artifacts},

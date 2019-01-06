@@ -242,7 +242,7 @@ class DeckService(
         }
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 1)
+    @Scheduled(fixedDelay = 1000 * 60 * 15)
     fun importNewDecks() {
 
         val decksPerPage = 10

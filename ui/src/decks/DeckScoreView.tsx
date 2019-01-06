@@ -2,10 +2,14 @@ import { Typography } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Deck } from "./Deck"
 
 interface DeckScoreViewProps {
-    deck: Deck
+    deck: {
+        cardsRating: number,
+        sasRating: number,
+        synergyRating: number,
+        antisynergyRating: number,
+    }
     style?: React.CSSProperties
 }
 
