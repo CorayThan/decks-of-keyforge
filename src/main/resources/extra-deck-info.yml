@@ -2223,6 +2223,10 @@
   synergies:
     - trait: readiesCreatures
       type: house
+    - trait: protectsCreatures
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
 
 - name: Mindwarper
   cardNumber: 196
@@ -2378,6 +2382,7 @@
       rating: -3
     - trait: readiesCreatures
       type: house
+      rating: 3
     - trait: highCreatureCount
 
 - name: Biomatrix Backup
@@ -3124,7 +3129,6 @@
   traits: [stealsAmber]
   synergies:
     - trait: capturesAmber
-      rating: 1
       type: house
 
 - name: Hidden Stash
@@ -3455,7 +3459,7 @@
 
 - name: Carlo Phantom
   cardNumber: 298
-  rating: 2
+  rating: 3
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0

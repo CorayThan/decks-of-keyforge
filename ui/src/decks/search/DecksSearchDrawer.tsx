@@ -16,6 +16,7 @@ import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { ScreenStore } from "../../ui/ScreenStore"
+import { UserStore } from "../../user/UserStore"
 import { DeckStore } from "../DeckStore"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { DeckFiltersInstance } from "./DeckFilters"
@@ -53,7 +54,7 @@ export class DecksSearchDrawer extends React.Component {
 
     render() {
         log.debug(`Rendering decks search drawer, decks: ${DeckStore.instance.deckPage}`)
-        const {title, containsMaverick, handleTitleUpdate, handleContainsMaverickUpdate} = this.filters
+        const {title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate} = this.filters
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -102,15 +103,28 @@ export class DecksSearchDrawer extends React.Component {
                             </FormGroup>
                         </ListItem>
                         <ListItem>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={containsMaverick}
-                                        onChange={handleContainsMaverickUpdate}
+                            <FormGroup row={true}>
+                                {UserStore.instance.loggedIn() ? (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={myDecks}
+                                                onChange={handleMyDecksUpdate}
+                                            />
+                                        }
+                                        label={"My Decks"}
                                     />
-                                }
-                                label={"Contains a maverick"}
-                            />
+                                ) : null}
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={containsMaverick}
+                                            onChange={handleContainsMaverickUpdate}
+                                        />
+                                    }
+                                    label={"Has maverick"}
+                                />
+                            </FormGroup>
                         </ListItem>
                         <ListItem>
                             <DeckSortSelect store={this.selectedSortStore}/>

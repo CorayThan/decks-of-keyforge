@@ -8,11 +8,16 @@ import { Routes } from "../config/Routes"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { DeckStore } from "./DeckStore"
 
+class DeckImportPopStore {
+    @observable
+    popOpen = false
+}
+
+export const deckImportPopStore = new DeckImportPopStore()
+
 @observer
 export class DeckImportPop extends React.Component<{ style?: React.CSSProperties }> {
 
-    @observable
-    popOpen = false
     anchorElement?: HTMLDivElement
 
     @observable
@@ -22,7 +27,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
         DeckStore.instance.importedDeck = false
         DeckStore.instance.importingDeck = false
         this.deckId = ""
-        this.popOpen = false
+        deckImportPopStore.popOpen = false
     }
 
     import = () => {
@@ -30,11 +35,12 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
     }
 
     handlePopoverOpen = (event: React.MouseEvent<HTMLInputElement>) => {
-        this.popOpen = true
+        deckImportPopStore.popOpen = true
+        this.deckId = ""
     }
 
     handlePopoverClose = () => {
-        this.popOpen = false
+        deckImportPopStore.popOpen = false
     }
 
     render() {
@@ -56,7 +62,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     </KeyButton>
                 </div>
                 <Popover
-                    open={this.popOpen}
+                    open={deckImportPopStore.popOpen}
                     onClose={this.handlePopoverClose}
                     anchorEl={this.anchorElement}
                     anchorPosition={{top: 500, left: 400}}

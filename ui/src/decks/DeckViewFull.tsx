@@ -5,6 +5,7 @@ import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { ScreenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
+import { deckImportPopStore } from "./DeckImportPop"
 import { DeckStatsView } from "./DeckStatsView"
 import { DeckStore } from "./DeckStore"
 import { DeckSynergiesInfoView } from "./DeckSynergiesInfoView"
@@ -48,6 +49,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         DeckStore.instance.findDeck(deckId)
         DeckStore.instance.findDeckSaleInfo(deckId)
         DeckStore.instance.importedDeck = undefined
+        deckImportPopStore.popOpen = false
     }
 
     render() {

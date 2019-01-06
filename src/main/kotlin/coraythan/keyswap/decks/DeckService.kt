@@ -7,6 +7,7 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
@@ -25,7 +26,8 @@ class DeckService(
         val deckSynergyService: DeckSynergyService,
         val deckRepo: DeckRepo,
         val deckPageService: DeckPageService,
-        val userService: KeyUserService
+        val userService: KeyUserService,
+        val currentUserService: CurrentUserService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -58,6 +60,13 @@ class DeckService(
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         }
         if (filters.containsMaverick) predicate.and(deckQ.cards.any().maverick.isTrue)
+        if (filters.myDecks) {
+            val user = currentUserService.loggedInUser()
+            if (user != null) {
+                predicate.and(deckQ.userDecks.any().user.id.eq(user.id))
+                predicate.and(deckQ.userDecks.any().owned.isTrue)
+            }
+        }
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
 
         val sortProperty = when (filters.sort) {

@@ -12,6 +12,7 @@ data class DeckFilters(
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
         val containsMaverick: Boolean = false,
+        val myDecks: Boolean = false,
 
         val owner: String = "",
 

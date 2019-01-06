@@ -10,15 +10,22 @@ interface KeyButtonProps extends ButtonProps {
 }
 
 export const KeyButton = (props: KeyButtonProps) => {
-    const {loading, children, outlinedWhite, style, ...rest} = props
+    const {loading, children, outlinedWhite, style, color, ...rest} = props
     return (
         <Button
             variant={outlinedWhite ? "outlined" : undefined}
             style={{border: outlinedWhite ? "1px solid rgb(255, 255, 255)" : undefined, ...style}}
+            color={color}
             {...rest}
         >
             {children}
-            {loading ? <CircularProgress style={{marginLeft: spacing(1)}} size={spacing(2)}/> : null}
+            {loading ? (
+                <CircularProgress
+                    color={color === "primary" ? "inherit" : "primary"}
+                    style={{marginLeft: spacing(1)}}
+                    size={spacing(2)}
+                />
+            ) : null}
         </Button>
     )
 }
