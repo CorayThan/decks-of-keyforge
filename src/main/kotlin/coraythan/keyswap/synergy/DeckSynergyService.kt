@@ -1,27 +1,13 @@
-package coraythan.keyswap.decks
+package coraythan.keyswap.synergy
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.*
+import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.decks.Deck
+import coraythan.keyswap.decks.incrementValue
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-
-data class SynergyCombo(
-        val house: House,
-        val cardName: String,
-        val synergies: List<SynTrait>,
-        val antisynergies: List<SynTrait>,
-        val netSynergy: Double,
-        val synergy: Double,
-        val antisynergy: Double,
-        val cardRating: Int,
-        val copies: Int = 1
-)
-
-data class DeckSynergyInfo(
-        val synergyRating: Double,
-        val antisynergyRating: Double,
-        val synergyCombos: List<SynergyCombo>
-)
 
 @Service
 class DeckSynergyService(
@@ -64,10 +50,11 @@ class DeckSynergyService(
                 -1 -> -0.5
                 else -> minRating + 1.0
             }
-            val matchedTraits = cardInfo.synergies.map { synTraitValue ->
+            val matchedTraits: List<Pair<SynTrait, Double>> = cardInfo.synergies.map { synTraitValue ->
                 val matchWith = if (synTraitValue.type == SynTraitType.anyHouse) counts[null]!! else counts[card.house]!!
                 // Max of 4 matches
-                val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it }
+                val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it } -
+                        (if (cardInfo.traits.contains(synTraitValue.trait)) 1 else 0)
                 synTraitValue.trait to synTraitValue.synergyValue(matches)
             }
             if (matchedTraits.isEmpty()) {

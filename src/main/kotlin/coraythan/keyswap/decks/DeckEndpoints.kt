@@ -27,6 +27,9 @@ class DeckEndpoints(
     @GetMapping("/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
+    @PostMapping("/{id}/import")
+    fun importDeck(@PathVariable id: String) = deckService.importDeck(id)
+
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String) = deckService.saleInfoForDeck(id)
 }

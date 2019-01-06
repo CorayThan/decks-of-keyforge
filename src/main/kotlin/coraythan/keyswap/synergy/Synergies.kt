@@ -1,16 +1,17 @@
-package coraythan.keyswap.cards
+package coraythan.keyswap.synergy
 
+import coraythan.keyswap.cards.CardTrait
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
 data class SynTraitValue(
-            val trait: SynTrait,
-            val rating: Int = 2,
-            val type: SynTraitType = SynTraitType.anyHouse,
+        val trait: SynTrait,
+        val rating: Int = 2,
+        val type: SynTraitType = SynTraitType.anyHouse,
 
-            @Id
+        @Id
             val id: UUID = UUID.randomUUID()
 ) {
     fun synergyValue(matches: Int): Double {

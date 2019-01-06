@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.KeyforgeDeckLinks
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.userdeck.UserDeck
 import javax.persistence.*
 

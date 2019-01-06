@@ -2277,7 +2277,10 @@
   traits: []
   synergies:
     - trait: highCreatureCount
+      type: house
+    - trait: damagesFriendlyCreatures
       rating: 1
+
 
 - name: Ulyq Megamouth
   cardNumber: 200
@@ -2316,6 +2319,7 @@
   traits: []
   synergies:
     - trait: goodPlay
+      rating: 3
 
 - name: Yxili Marauder
   cardNumber: 203
@@ -2420,12 +2424,14 @@
   traits: [goodReap]
   synergies:
     - trait: readiesCreatures
-      type: house
+      rating: 1
     - trait: lowCreatureCount
       type: house
       rating: -3
     - trait: highCreatureCount
       type: house
+      rating: 3
+    - trait: power5OrHigherCreatures
 
 - name: Begone!
   cardNumber: 212
@@ -2503,7 +2509,7 @@
 
 - name: Glorious Few
   cardNumber: 218
-  rating: 3
+  rating: 4
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2514,6 +2520,7 @@
       rating: 3
     - trait: highCreatureCount
       rating: -3
+    - trait: stuns
 
 - name: Honorable Claim
   cardNumber: 219
@@ -3227,7 +3234,7 @@
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
-      rating: -3
+      rating: -2
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
     - trait: preventsDamage
@@ -3390,7 +3397,9 @@
   traits: [readiesCreatures]
   synergies:
     - trait: goodReap
+      rating: 3
     - trait: goodAction
+      rating: 3
     - trait: skirmish
     - trait: returnsFriendlyArtifactsToHand
       rating: 3
@@ -3481,6 +3490,8 @@
   synergies:
     - trait: urchin
       rating: 3
+    - trait: protectsCreatures
+      rating: 1
 
 - name: Macis Asp
   cardNumber: 301
@@ -3576,6 +3587,9 @@
     - trait: causesFighting
     - trait: preventsDamage
       type: house
+    - trait: readiesCreatures
+      type: house
+      rating: 3
 
 - name: Selwyn the Fence
   cardNumber: 309
@@ -3648,6 +3662,7 @@
   synergies:
     - trait: readiesCreatures
       type: house
+      rating: 3
     - trait: protectsCreatures
       rating: 3
     - trait: causesFighting
@@ -3802,6 +3817,7 @@
     - trait: lowCreatureCount
     - trait: highCreatureCount
       rating: -1
+    - trait: goodPlay
 
 - name: Mimicry
   cardNumber: 328
@@ -4086,11 +4102,10 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
       rating: 3
-    - trait: goodPlay
 
 - name: Flaxia
   cardNumber: 352
@@ -4250,7 +4265,7 @@
   synergies:
     - trait: highTotalArmor
     - trait: power2OrLowerCreatures
-      rating: -3
+      rating: -2
 
 - name: Teliga
   cardNumber: 366

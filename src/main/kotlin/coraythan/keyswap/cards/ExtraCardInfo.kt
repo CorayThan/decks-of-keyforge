@@ -1,6 +1,8 @@
 package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.synergy.SynTrait
+import coraythan.keyswap.synergy.SynTraitValue
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExtraCardInfo(

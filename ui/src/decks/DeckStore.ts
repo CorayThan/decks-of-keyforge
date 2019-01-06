@@ -3,6 +3,7 @@ import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
+import { MessageStore } from "../ui/MessageStore"
 import { DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
@@ -33,6 +34,12 @@ export class DeckStore {
     @observable
     saleInfo?: DeckSaleInfo[]
 
+    @observable
+    importedDeck?: boolean
+
+    @observable
+    importingDeck = false
+
     private constructor() {
     }
 
@@ -48,6 +55,19 @@ export class DeckStore {
         axios.get(`${DeckStore.CONTEXT}/${keyforgeId}`)
             .then((response: AxiosResponse) => {
                 this.deck = response.data
+            })
+    }
+
+    importDeck = (keyforgeId: string) => {
+        this.importingDeck = true
+        axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import`)
+            .then((response: AxiosResponse) => {
+                this.importedDeck = response.data
+                if (!response.data) {
+                    MessageStore.instance.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+                }
+
+                this.importingDeck = false
             })
     }
 

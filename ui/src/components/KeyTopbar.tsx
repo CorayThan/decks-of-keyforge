@@ -10,6 +10,7 @@ import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -113,18 +114,26 @@ class RightMenu extends React.Component {
 const AppLinks = () => (
     <>
         <LinkButton
+            color={"inherit"}
+            style={{margin: spacing(1)}}
+            to={Routes.decks}
+        >
+            Decks
+        </LinkButton>
+        <LinkButton
             style={{margin: spacing(1)}}
             color={"inherit"}
             to={Routes.cards}
         >
             Cards
         </LinkButton>
+        <DeckImportPop/>
         <LinkButton
-            color={"inherit"}
             style={{margin: spacing(1)}}
-            to={Routes.decks}
+            color={"inherit"}
+            to={Routes.cards}
         >
-            Decks
+            About
         </LinkButton>
     </>
 )

@@ -16,7 +16,9 @@ interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string
 
 export class DeckViewPage extends React.Component<DeckViewPageProps> {
     render() {
-        return (<DeckViewFull keyforgeDeckId={this.props.match.params.keyforgeDeckId}/>)
+        const deckId = this.props.match.params.keyforgeDeckId
+        log.debug(`Rendering deck view page with deck id: ${deckId}`)
+        return (<DeckViewFull keyforgeDeckId={deckId}/>)
     }
 }
 
@@ -35,8 +37,17 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
     }
 
     componentDidMount(): void {
-        DeckStore.instance.findDeck(this.props.keyforgeDeckId)
-        DeckStore.instance.findDeckSaleInfo(this.props.keyforgeDeckId)
+        this.refreshDeck(this.props.keyforgeDeckId)
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<DeckViewFullProps>) {
+        this.refreshDeck(nextProps.keyforgeDeckId)
+    }
+
+    refreshDeck = (deckId: string) => {
+        DeckStore.instance.findDeck(deckId)
+        DeckStore.instance.findDeckSaleInfo(deckId)
+        DeckStore.instance.importedDeck = undefined
     }
 
     render() {

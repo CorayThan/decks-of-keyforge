@@ -40,14 +40,14 @@ export class CardAsLine extends React.Component<{ card: KCard }> {
                 onWheel={this.handlePopoverClose}
             >
                 <div
-                    style={{display: "flex", marginTop: 4, alignItems: "center"}}
+                    style={{display: "flex", marginTop: 4, width: 160}}
                     onMouseEnter={this.handlePopoverOpen}
                     onMouseLeave={this.handlePopoverClose}
                 >
                     {rarityValues.get(card.rarity)!.icon!}
                     <Typography
                         variant={"body2"}
-                        style={{marginLeft: spacing(1), width: 144}}
+                        style={{marginLeft: spacing(1)}}
                         noWrap={true}
                     >
                         {card.cardTitle}

@@ -2,7 +2,6 @@ import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
 import { spacing } from "../config/MuiConfig"
-import { log, prettyJson } from "../config/Utils"
 import { Deck } from "./Deck"
 
 interface DeckStatsViewProps {
@@ -47,7 +46,6 @@ const keyBarStyle: VictoryStyleInterface = {
     labels: {fill: "white"},
     data: {
         fill: (d: { x: string }) => {
-            log.debug(`D is ${prettyJson(d)}`)
             return d.x.startsWith("Avg") ? "SandyBrown" : "DodgerBlue"
         }
     }

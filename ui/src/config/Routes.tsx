@@ -2,9 +2,9 @@ import * as QueryString from "query-string"
 import * as React from "react"
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import { CardsPage } from "../cards/CardsPage"
+import { KeyTopbar } from "../components/KeyTopbar"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
-import { KeyTopbar } from "../layout-parts/KeyTopbar"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { spacing } from "./MuiConfig"
@@ -17,6 +17,7 @@ export {
 class Routes {
     static users = "/users"
     static cards = "/cards"
+    static about = "/about"
     static decks = "/decks"
     static registration = "/registration"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`

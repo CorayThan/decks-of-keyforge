@@ -6,6 +6,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
@@ -255,6 +256,22 @@ class DeckService(
         }
 
         deckPageService.setCurrentPage(currentPage - 2)
+    }
+
+    fun importDeck(deckId: String): Boolean {
+        val preExistingDeck = this.findDeck(deckId)
+        if (preExistingDeck != null) {
+            return true
+        } else {
+            val deck = keyforgeApi.findDeck(deckId)
+            if (deck != null) {
+                val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
+                val cards = cardService.importNewCards(deckList)
+                saveDecks(deckList, cards)
+                return true
+            }
+        }
+        return false
     }
 
     private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
