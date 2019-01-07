@@ -2,10 +2,7 @@ package coraythan.keyswap.cards
 
 import coraythan.keyswap.Api
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import kotlin.system.measureTimeMillis
 
 @RestController
@@ -25,4 +22,7 @@ class CardEndpoints(
             log.info("Filtering cards took $cardFilterTime with filters $cardFilters")
         return cards
     }
+
+    @GetMapping
+    fun allCards() = cardService.allFullCardsNonMaverick()
 }

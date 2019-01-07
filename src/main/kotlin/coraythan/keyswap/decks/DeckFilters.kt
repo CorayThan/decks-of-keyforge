@@ -14,10 +14,17 @@ data class DeckFilters(
         val containsMaverick: Boolean = false,
         val myDecks: Boolean = false,
 
+        val cards: List<DeckCardQuantity> = listOf(),
+
         val owner: String = "",
 
         val sort: DeckSortOptions = DeckSortOptions.ADDED_DATE,
         val sortDirection: SortDirection = SortDirection.ASC
+)
+
+data class DeckCardQuantity(
+        val cardName: String,
+        val quantity: Int
 )
 
 enum class DeckSortOptions {

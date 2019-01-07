@@ -1,12 +1,14 @@
-import { FormGroup } from "@material-ui/core"
+import { FormGroup, IconButton } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
+import AddIcon from "@material-ui/icons/Add"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer } from "../../components/KeyDrawer"
 import { SortDirectionController, SortDirectionView } from "../../components/SortDirectionView"
 import { spacing } from "../../config/MuiConfig"
@@ -42,7 +44,7 @@ export class DecksSearchDrawer extends React.Component {
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
         this.filters.sortDirection = this.sortDirectionController.direction
-        this.deckStore.searchDecks(this.filters)
+        this.deckStore.searchDecks(this.filters.cleaned())
     }
 
     clearSearch = () => {
@@ -54,7 +56,7 @@ export class DecksSearchDrawer extends React.Component {
 
     render() {
         log.debug(`Rendering decks search drawer, decks: ${DeckStore.instance.deckPage}`)
-        const {title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate} = this.filters
+        const {title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate, cards} = this.filters
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -125,6 +127,26 @@ export class DecksSearchDrawer extends React.Component {
                                     label={"Has maverick"}
                                 />
                             </FormGroup>
+                        </ListItem>
+                        {cards.map((card, idx) => (
+                            <ListItem key={idx}>
+                                <CardSearchSuggest
+                                    updateCardName={id => card.cardName = id}
+                                    style={{marginTop: 12}}
+                                />
+                                <TextField
+                                    style={{width: 56, marginLeft: spacing(2)}}
+                                    label={"Copies"}
+                                    type={"number"}
+                                    value={card.quantity}
+                                    onChange={event => card.quantity = Number(event.target.value)}
+                                />
+                            </ListItem>
+                        ))}
+                        <ListItem>
+                            <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
+                                <AddIcon/>
+                            </IconButton>
                         </ListItem>
                         <ListItem>
                             <DeckSortSelect store={this.selectedSortStore}/>

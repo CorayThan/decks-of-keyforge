@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from "axios"
+import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
+import { CardSuggestOption } from "./CardSearchSuggest"
 import { KCard } from "./KCard"
 
 export class CardStore {
@@ -15,6 +17,12 @@ export class CardStore {
 
     @observable
     searchingForCards = false
+
+    @observable
+    allCards: KCard[] = []
+
+    @observable
+    cardSuggestions: CardSuggestOption[] = []
 
     private constructor() {
     }
@@ -36,6 +44,18 @@ export class CardStore {
                 log.debug(`With filters: ${prettyJson(filters)} Got the filtered cards. cards: ${prettyJson(response.data)}`)
                 this.cards = response.data
                 this.searchingForCards = false
+            })
+    }
+
+    loadAllCards = () => {
+        axios.get(`${CardStore.CONTEXT}`)
+            .then((response: AxiosResponse) => {
+                this.allCards = response.data
+                this.cardSuggestions = this.allCards!.map(card => ({
+                    label: card.cardTitle,
+                    value: card
+                }))
+                sortBy(this.cardSuggestions, suggestion => suggestion.value.cardNumber)
             })
     }
 }

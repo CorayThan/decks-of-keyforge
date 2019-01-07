@@ -17,7 +17,7 @@ class DeckSynergyService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun fromDeck(deck: Deck): DeckSynergyInfo {
-        val cards = cardService.fullCardsFromCards(deck.cards)
+        val cards = cardService.fullCardsFromCards(deck.cardsList)
         val counts: MutableMap<House?, MutableMap<SynTrait, Int>> = mutableMapOf()
         deck.houses.forEach { counts[it] = mutableMapOf() }
         counts[null] = mutableMapOf()
@@ -188,11 +188,11 @@ class DeckSynergyService(
             else -> 1
         }
 
-        val power2OrLower = deck.cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size
-        val power3OrLower = deck.cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size
-        val power3OrHigher = deck.cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size
-        val power4OrHigher = deck.cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size
-        val power5OrHigher = deck.cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size
+        val power2OrLower = deck.cardsList.filter { it.cardType == CardType.Creature && it.power < 3 }.size
+        val power3OrLower = deck.cardsList.filter { it.cardType == CardType.Creature && it.power < 4 }.size
+        val power3OrHigher = deck.cardsList.filter { it.cardType == CardType.Creature && it.power > 2 }.size
+        val power4OrHigher = deck.cardsList.filter { it.cardType == CardType.Creature && it.power > 3 }.size
+        val power5OrHigher = deck.cardsList.filter { it.cardType == CardType.Creature && it.power > 4 }.size
 
         if (power2OrLower > 3) traits[SynTrait.power2OrLowerCreatures] = when {
             power2OrLower > 6 -> 4

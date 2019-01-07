@@ -1,3 +1,4 @@
+import { Deck } from "../decks/Deck"
 import { House } from "../houses/House"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
@@ -18,4 +19,12 @@ export interface KCard {
     cardNumber: number
     expansion: number
     maverick: boolean
+}
+
+export interface DeckCard {
+    deck: Deck
+    card: KCard
+    cardName: string
+    quantityInDeck: number
+    id: string
 }

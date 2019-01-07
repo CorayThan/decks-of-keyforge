@@ -1,1 +1,0 @@
-create index deck_houses_deck_id_idx on deck_houses (deck_id);

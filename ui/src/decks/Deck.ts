@@ -1,4 +1,4 @@
-import { KCard } from "../cards/KCard"
+import { DeckCard, KCard } from "../cards/KCard"
 import { House } from "../houses/House"
 import { UserDeck } from "../userdeck/UserDeck"
 import { DeckSynergyInfo } from "./DeckSynergyInfo"
@@ -51,7 +51,7 @@ export interface Deck {
 
     userDecks: UserDeck[]
 
-    cards: KCard[]
+    cards: DeckCard[]
     houses: House[]
 }
 
@@ -59,7 +59,7 @@ export class DeckUtils {
     static cardsInHouses = (deck: Deck) => {
         const cardsByHouse: Array<{ house: House, cards: KCard[] }> = []
         deck.houses.forEach((house) => {
-            cardsByHouse.push({house, cards: deck.cards.filter((card) => (card.house === house))})
+            cardsByHouse.push({house, cards: deck.cards.map(card => card.card).filter((card) => (card.house === house))})
         })
         return cardsByHouse
     }

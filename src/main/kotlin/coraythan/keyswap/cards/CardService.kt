@@ -29,6 +29,8 @@ class CardService(
         this.extraInfo = extraInfosFromFile.map { it.cardNumber to it }.toMap()
     }
 
+    fun allFullCardsNonMaverick() = fullCardsFromCards(cardRepo.findByMaverickFalse())
+
     fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
 
     fun findByIds(cardIds: List<String>) = cardRepo.findAllById(cardIds)

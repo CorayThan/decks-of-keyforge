@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.KeyforgeDeckLinks
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.userdeck.UserDeck
 import javax.persistence.*
@@ -73,13 +74,9 @@ data class Deck(
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
 
-        @ManyToMany(fetch = FetchType.LAZY)
-        @JoinTable(
-                name = "deck_cards",
-                joinColumns = [JoinColumn(name = "deck_id", referencedColumnName = "id")],
-                inverseJoinColumns = [JoinColumn(name = "card_id", referencedColumnName = "id")]
-        )
-        val cards: List<Card> = listOf(),
+        @JsonIgnoreProperties("deck")
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "deck", cascade = [CascadeType.ALL])
+        val cards: List<DeckCard> = listOf(),
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
@@ -92,7 +89,10 @@ data class Deck(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
-)
+) {
+    val cardsList: List<Card>
+        get() = cards.map { it.card }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DecksPage(
@@ -114,4 +114,6 @@ data class KeyforgeDeck(
         val _links: KeyforgeDeckLinks? = null
 ) {
     fun toDeck() = Deck(id, name, expansion, power_level, chains, wins, losses)
+
+
 }

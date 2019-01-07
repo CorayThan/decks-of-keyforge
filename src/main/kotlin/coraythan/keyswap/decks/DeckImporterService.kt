@@ -5,6 +5,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.DeckStatisticsService
 import coraythan.keyswap.stats.incrementValue
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-private const val lockImportNewDecksFor = "PT5M"
+private const val lockImportNewDecksFor = "PT1M"
 private const val lockUpdateStatistics = "PT24H"
 
 @Transactional
@@ -141,11 +142,11 @@ class DeckImporterService(
                 actionCount.incrementValue(ratedDeck.totalActions)
                 artifactCount.incrementValue(ratedDeck.totalArtifacts)
                 equipmentCount.incrementValue(ratedDeck.totalUpgrades)
-                power2OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size)
-                power3OrLower.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size)
-                power3OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size)
-                power4OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size)
-                power5OrHigher.incrementValue(ratedDeck.cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size)
+                power2OrLower.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power < 3 }.size)
+                power3OrLower.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power < 4 }.size)
+                power3OrHigher.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power > 2 }.size)
+                power4OrHigher.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power > 3 }.size)
+                power5OrHigher.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power > 4 }.size)
             }
 
             currentPage++
@@ -214,58 +215,51 @@ class DeckImporterService(
 
     private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
-        val saveableDecks = deck.map { keyforgeDeck ->
+        deck
+                .mapNotNull { if (deckRepo.findByKeyforgeId(it.id) == null) it else null }
+                .forEach { keyforgeDeck ->
 
-            val saveable = keyforgeDeck.toDeck()
-                    .copy(
-                            cards = keyforgeDeck.cards?.map { cardsById[it]!! }
-                                    ?: throw IllegalStateException("Can't have a deck with no cards deck: $deck"),
-                            houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                    val cardsList = keyforgeDeck.cards?.map { cardsById[it]!! } ?: listOf()
+                    val savedDeck = deckRepo.save(keyforgeDeck.toDeck())
+
+                    val deckCards = cardsList.map { card ->
+                        DeckCard(savedDeck, card, card.cardTitle, cardsList.count { card.cardTitle == it.cardTitle })
+                    }
+
+                    val saveable = savedDeck
+                            .copy(
+                                    cards = deckCards,
+                                    houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                            )
+
+                    val ratedDeck = rateDeck(saveable
+                            .copy(
+                                    rawAmber = cardsList.map { it.amber }.sum(),
+                                    totalPower = cardsList.map { it.power }.sum(),
+                                    totalArmor = cardsList.map { it.armor }.sum(),
+                                    totalCreatures = cardsList.filter { it.cardType == CardType.Creature }.size,
+                                    totalActions = cardsList.filter { it.cardType == CardType.Action }.size,
+                                    totalArtifacts = cardsList.filter { it.cardType == CardType.Artifact }.size,
+                                    totalUpgrades = cardsList.filter { it.cardType == CardType.Upgrade }.size,
+                                    maverickCount = cardsList.filter { it.maverick }.size,
+                                    specialsCount = cardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
+                                    raresCount = cardsList.filter { it.rarity == Rarity.Rare }.size,
+                                    uncommonsCount = cardsList.filter { it.rarity == Rarity.Uncommon }.size
+                            )
                     )
-            if (saveable.cards.size != 36) {
-                throw java.lang.IllegalStateException("Can't have a deck without 36 cards deck: $deck")
-            }
-            rateDeck(saveable
-                    .copy(
-                            rawAmber = saveable.cards.map { it.amber }.sum(),
-                            totalPower = saveable.cards.map { it.power }.sum(),
-                            totalArmor = saveable.cards.map { it.armor }.sum(),
-                            totalCreatures = saveable.cards.filter { it.cardType == CardType.Creature }.size,
-                            totalActions = saveable.cards.filter { it.cardType == CardType.Action }.size,
-                            totalArtifacts = saveable.cards.filter { it.cardType == CardType.Artifact }.size,
-                            totalUpgrades = saveable.cards.filter { it.cardType == CardType.Upgrade }.size,
-                            maverickCount = saveable.cards.filter { it.maverick }.size,
-                            specialsCount = saveable.cards.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
-                            raresCount = saveable.cards.filter { it.rarity == Rarity.Rare }.size,
-                            uncommonsCount = saveable.cards.filter { it.rarity == Rarity.Uncommon }.size
-                    )
-            )
-        }
-        saveOrUpdateDecks(saveableDecks)
-    }
 
-    private fun saveOrUpdateDecks(decks: List<Deck>) {
-
-        val saveDecks = decks.mapNotNull {
-            val deck = deckRepo.findByKeyforgeId(it.keyforgeId)
-
-            if (deck == null) {
-                it
-            } else {
-
-                // Don't resave unless we need to
-//                val toSave = it.copy(id = deck.id)
-//                deckRepo.save(toSave)
-
-                null
-            }
-        }
-
-        deckRepo.saveAll(saveDecks)
+                    if (ratedDeck.cards.size != 36) {
+                        throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
+                    }
+                    if (ratedDeck.houses.size != 3) {
+                        throw IllegalStateException("Deck doesn't have 3 houses! $deck")
+                    }
+                    deckRepo.save(ratedDeck)
+                }
     }
 
     private fun rateDeck(deck: Deck): Deck {
-        val cards = cardService.fullCardsFromCards(deck.cards)
+        val cards = cardService.fullCardsFromCards(deck.cardsList)
         val extraCardInfos = cards.map { it.extraCardInfo!! }
         val deckSynergyInfo = deckSynergyService.fromDeck(deck)
         val cardsRating = extraCardInfos.map { it.rating - 1 }.sum()

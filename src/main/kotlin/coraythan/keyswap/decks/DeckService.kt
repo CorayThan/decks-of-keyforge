@@ -1,7 +1,9 @@
 package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
+import com.querydsl.jpa.JPAExpressions
 import coraythan.keyswap.House
+import coraythan.keyswap.deckcard.QDeckCard
 import coraythan.keyswap.stats.DeckStatisticsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
@@ -26,6 +28,8 @@ class DeckService(
     fun filterDecks(filters: DeckFilters): DecksPage {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
+
+        log.info("Filtering decks with $filters")
 
         if (filters.houses.isNotEmpty()) {
             if (filters.houses.size < 4) {
@@ -59,6 +63,24 @@ class DeckService(
             }
         }
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
+
+        filters.cards.forEach {
+            if (it.quantity == 1) {
+                predicate.and(deckQ.cards.any().cardName.eq(it.cardName))
+            } else {
+
+                val deckCardQ = QDeckCard.deckCard
+                predicate.and(
+                        deckQ.cards.any().`in`(
+                                JPAExpressions.selectFrom(deckCardQ)
+                                        .where(
+                                                deckCardQ.cardName.eq(it.cardName),
+                                                deckCardQ.quantityInDeck.goe(it.quantity)
+                                        )
+                        )
+                )
+            }
+        }
 
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> "id"
