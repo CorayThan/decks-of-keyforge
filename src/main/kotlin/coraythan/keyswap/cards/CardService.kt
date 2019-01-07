@@ -64,7 +64,8 @@ class CardService(
             }
         }
 
-        return cardRepo.findAll(predicate, Sort.by(filters.sortDirection.direction, sortProperty))
+        val cards = cardRepo.findAll(predicate, Sort.by(filters.sortDirection.direction, sortProperty)).toList()
+        return fullCardsFromCards(cards)
     }
 
     fun importNewCards(decks: List<KeyforgeDeck>): List<Card> {

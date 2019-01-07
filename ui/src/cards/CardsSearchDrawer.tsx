@@ -1,3 +1,4 @@
+import { FormControlLabel, Switch } from "@material-ui/core"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
@@ -9,6 +10,7 @@ import { spacing } from "../config/MuiConfig"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { CardFilters } from "./CardFilters"
+import { cardsPageStoreInstance } from "./CardsPage"
 import { CardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
@@ -117,6 +119,17 @@ export class CardsSearchDrawer extends React.Component {
                             >
                                 Search
                             </KeyButton>
+                        </ListItem>
+                        <ListItem style={{marginTop: spacing(2)}}>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={cardsPageStoreInstance.fullView}
+                                        onChange={() => cardsPageStoreInstance.fullView = !cardsPageStoreInstance.fullView}
+                                    />
+                                }
+                                label={"Full card view"}
+                            />
                         </ListItem>
                     </List>
                 </form>

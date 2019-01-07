@@ -1,5 +1,4 @@
 import { Typography } from "@material-ui/core"
-import { amber, blue } from "@material-ui/core/colors"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
@@ -9,11 +8,12 @@ import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { DeckWithSynergyInfo } from "../decks/Deck"
+import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
 import { ScreenStore } from "../ui/ScreenStore"
-import { DeckWithSynergyInfo } from "./Deck"
-import { PercentRatingRow } from "./DeckScoreView"
 import { SynergyCombo } from "./DeckSynergyInfo"
+import { TraitBubble } from "./TraitBubble"
 
 interface DeckSynergiesInfoViewProps {
     synergies: DeckWithSynergyInfo
@@ -54,10 +54,10 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
                             <TableCell>
                                 <div style={{display: "flex", flexWrap: "wrap", maxWidth: 280}}>
                                     {combo.synergies.map(synergy => (
-                                        <TraitBubble key={synergy} name={startCase(synergy)} synergy={true}/>
+                                        <TraitBubble key={synergy} name={startCase(synergy)} positive={true}/>
                                     ))}
                                     {combo.antisynergies.map(antisynergy => (
-                                        <TraitBubble key={antisynergy} name={startCase(antisynergy)} synergy={false}/>
+                                        <TraitBubble key={antisynergy} name={startCase(antisynergy)} positive={false}/>
                                     ))}
                                 </div>
                             </TableCell>
@@ -117,21 +117,3 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
         }
     }
 }
-
-const TraitBubble = (props: { name: string, synergy: boolean }) => (
-    <span
-        style={{
-            borderRadius: 20,
-            backgroundColor: props.synergy ? blue.A400 : amber.A400,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: spacing(1),
-            paddingLeft: spacing(2),
-            paddingRight: spacing(2),
-            margin: 4,
-        }}
-    >
-        <Typography variant={"body2"} style={{fontSize: "0.8125rem", color: props.synergy ? "#FFFFFF" : undefined}}>{props.name}</Typography>
-    </span>
-)

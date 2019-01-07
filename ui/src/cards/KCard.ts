@@ -1,5 +1,6 @@
 import { Deck } from "../decks/Deck"
 import { House } from "../houses/House"
+import { SynTraitValue } from "../synergy/SynTraitValue"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
 
@@ -19,6 +20,8 @@ export interface KCard {
     cardNumber: number
     expansion: number
     maverick: boolean
+
+    extraCardInfo: ExtraCardInfo
 }
 
 export interface DeckCard {
@@ -27,4 +30,16 @@ export interface DeckCard {
     cardName: string
     quantityInDeck: number
     id: string
+}
+
+export interface ExtraCardInfo {
+    cardNumber: number
+    rating: number
+    expectedAmber: number
+    amberControl: number
+    creatureControl: number
+    artifactControl: number
+
+    traits: string[]
+    synergies: SynTraitValue[]
 }
