@@ -12,8 +12,12 @@ data class SynTraitValue(
         val type: SynTraitType = SynTraitType.anyHouse,
 
         @Id
-            val id: UUID = UUID.randomUUID()
-) {
+        val id: UUID = UUID.randomUUID()
+) : Comparable<SynTraitValue> {
+    override fun compareTo(other: SynTraitValue): Int {
+        return other.rating - this.rating
+    }
+
     fun synergyValue(matches: Int): Double {
         return matches * when (rating) {
             -3 -> -0.5

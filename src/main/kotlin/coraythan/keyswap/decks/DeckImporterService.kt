@@ -35,7 +35,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedRateString = lockImportNewDecksFor)
+    // @Scheduled(fixedRateString = lockImportNewDecksFor)
     @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor)
     fun importNewDecks() {
 

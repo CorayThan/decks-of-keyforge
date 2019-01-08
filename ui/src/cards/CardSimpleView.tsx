@@ -1,10 +1,15 @@
-import { Divider } from "@material-ui/core"
+import { Divider, Tooltip } from "@material-ui/core"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { AmberIcon } from "../generic/icons/AmberIcon"
+import { ArtifactIcon } from "../generic/icons/ArtifactIcon"
+import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
+import { CreatureIcon } from "../generic/icons/CreatureIcon"
+import { FistIcon } from "../generic/icons/FistIcon"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { KCard } from "./KCard"
@@ -29,8 +34,11 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
             <div>
                 <img src={props.card.frontImage}/>
             </div>
-            <div style={{margin: spacing(2), width: "100%"}}>
-                <Typography variant={"h6"}>{cardTitle}</Typography>
+            <div style={{padding: spacing(2), width: "100%"}}>
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <CardQualityIcon quality={rating}/>
+                    <Typography variant={"h6"} style={{marginLeft: spacing(1)}}>{cardTitle}</Typography>
+                </div>
                 <div style={{display: "flex"}}>
                     <Typography variant={"subtitle1"}>{cardType}</Typography>
                     <div style={{flexGrow: 1}}/>
@@ -38,11 +46,40 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                 </div>
                 <Typography>{cardText}</Typography>
                 <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <Typography>Rating: {rating - 1}</Typography>
-                <Typography>Expected Aember: {expectedAmber}</Typography>
-                <Typography>Aember Control: {amberControl}</Typography>
-                <Typography>Creature Control: {creatureControl}</Typography>
-                <Typography>Artifact Control: {artifactControl}</Typography>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                    <div>
+                        <CardRatingBox
+                            firstIcon={<AmberIcon/>}
+                            value={expectedAmber}
+                            tooltip={"Expected Aember"}
+                        />
+                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                        <CardRatingBox
+                            firstIcon={<AmberIcon/>}
+                            secondIcon={<FistIcon/>}
+                            value={amberControl}
+                            tooltip={"Aember Control"}
+                        />
+                    </div>
+                    <div
+                        style={{borderLeft: "1px solid rgb(0, 0, 0, 0.12)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
+                    >
+                        <CardRatingBox
+                            firstIcon={<CreatureIcon/>}
+                            secondIcon={<FistIcon/>}
+                            value={creatureControl}
+                            tooltip={"Creature Control"}
+                        />
+                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                        <CardRatingBox
+                            firstIcon={<ArtifactIcon/>}
+                            secondIcon={<FistIcon/>}
+                            value={artifactControl}
+                            tooltip={"Artifact Control"}
+                        />
+                    </div>
+                </div>
+                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                 {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
                 <div style={{display: "flex", flexWrap: "wrap"}}>
                     {traits.map(trait => (
@@ -52,13 +89,29 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                 {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
                 <div style={{display: "flex", flexWrap: "wrap"}}>
                     {synergies.map(synergy => (
-                        <TraitBubble key={synergy.id} name={synergy.trait} positive={synergy.rating > 0} home={synergy.type === SynTraitType.house}/>
+                        <TraitBubble
+                            key={synergy.id}
+                            name={synergy.trait}
+                            positive={synergy.rating > 0}
+                            home={synergy.type === SynTraitType.house}
+                            rating={synergy.rating}
+                        />
                     ))}
                 </div>
             </div>
         </div>
     )
 }
+
+const CardRatingBox = (props: { firstIcon: React.ReactNode, secondIcon?: React.ReactNode, value: number, tooltip: string }) => (
+    <Tooltip title={props.tooltip}>
+        <div style={{display: "flex", width: 100, alignItems: "center", justifyContent: "space-between"}}>
+            {props.firstIcon}
+            {props.secondIcon}
+            <Typography variant={"h5"}>{props.value}</Typography>
+        </div>
+    </Tooltip>
+)
 
 @observer
 export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {

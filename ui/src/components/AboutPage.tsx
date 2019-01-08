@@ -4,6 +4,11 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckScoreView } from "../decks/DeckScoreView"
 import { KeyBar, KeyPie } from "../decks/DeckStatsView"
+import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
+import { AverageIcon } from "../generic/icons/AverageIcon"
+import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
+import { BestIcon } from "../generic/icons/BestIcon"
+import { WorstIcon } from "../generic/icons/WorstIcon"
 import { InfoListCard } from "../generic/InfoListCard"
 import { UiStore } from "../ui/UiStore"
 
@@ -51,11 +56,32 @@ export class AboutPage extends React.Component {
                                 />
                             </div>,
                             <div style={{paddingBottom: spacing(2)}}/>,
-                            "I've rated every card in key metrics, like its expected aember generation, aember control (a combination of steal, " +
-                            "loss, and capture), creature control, and artifact control.",
+                            "I've rated every card in key metrics, like its expected aember generation, aember control, creature control, and artifact " +
+                            "control.",
                             "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
                             "rating.",
                             "However, when searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Expected Aember</Typography>,
+                            "This rating is an approximation of how much aember you can expect a card to generate. It does not take the ability of creatures " +
+                            "to reap into account, unless they are a special skill that will usually generate extra aember, like Dew " +
+                            "Faerie's \"Reap: Gain 1<A>\".",
+                            "Some cards that are difficult to play have their base aember reduced, and some cards " +
+                            "that immediately allow the use of creatures have aember added on the assumption creatures will be used to reap.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Aember Control</Typography>,
+                            "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
+                            "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
+                            "avoided.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Creature Control</Typography>,
+                            "Creature control is increased by cards that directly damage, destroy, disable or prevent the play of enemy creatures. It does " +
+                            "not account for your creatures' power, although it does account for special abilities that encourage using a creature to fight.",
+                            "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Artifact Control</Typography>,
+                            "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
+                            "1 point is approximately equal to destroying one artifact."
                         ]}/>
                     </Grid>
                     <Grid item={true} xs={12} md={6}>
@@ -64,7 +90,18 @@ export class AboutPage extends React.Component {
                             "This is the deck's SAS rating.",
                             <div style={{paddingBottom: spacing(1)}}/>,
                             <Typography variant={"h6"}>Card Ratings</Typography>,
-                            "Every card in the game is given a rating between 0 and 4, where 0 is very bad, and 4 is very good. These create the deck's Card Rating.",
+                            "Every card in the game is given a rating between 0 and 4, where 0 is very bad, and 4 is very good. These create the deck's Card " +
+                            "Rating.",
+                            <div>
+                                <Typography>These ratings are represented, from best to worst, by the symbols:</Typography>
+                                <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
+                                    <BestIcon style={{marginRight: spacing(1)}}/>
+                                    <AboveAverageIcon style={{marginRight: spacing(1)}}/>
+                                    <AverageIcon style={{marginRight: spacing(1)}}/>
+                                    <BelowAverageIcon style={{marginRight: spacing(1)}}/>
+                                    <WorstIcon style={{marginRight: spacing(1)}}/>
+                                </div>
+                            </div>,
                             <CardExample
                                 text={"Bait and Switch is one of the few cards rated 4. It consistently provides a net value of 2, 4, or more aember. " +
                                 "Key of Darkness, on the other hand, is one of the few cards rated 0. It provides no aember and is very difficult to use."}
@@ -74,7 +111,21 @@ export class AboutPage extends React.Component {
                             <div style={{paddingBottom: spacing(1)}}/>,
                             <Typography variant={"h6"}>Card Synergies</Typography>,
                             "Every card is given a list of traits it provides, and synergies and antisynergies it has with card and deck traits.",
-                            "Synergies and antisynergies are rated from 1 to 3, with more powerful effects rated higher.",
+                            "Synergies and antisynergies are rated from 1 to 3, with more powerful effects rated higher. A synergy or antisynergy becomes " +
+                            "stronger the more instances of its trait that exist in a deck, up to a maximum of 4. At maximum effect you can expect " +
+                            "the following increases to total synergy:",
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <BelowAverageIcon/>
+                                <Typography style={{marginLeft: spacing(1)}}>Level 1 synergy: 0.5</Typography>
+                            </div>,
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <AverageIcon/>
+                                <Typography style={{marginLeft: spacing(1)}}>Level 2 synergy: 1</Typography>
+                            </div>,
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <AboveAverageIcon/>
+                                <Typography style={{marginLeft: spacing(1)}}>Level 3 synergy: 2</Typography>
+                            </div>,
                             "Synergy and antisynergy benefits are limited to 2 and -2 per card, to help reflect diminishing returns.",
                             <CardExample
                                 text={"Ember Imp and Shadow Self synergize because Ember Imp has a great effect but is easy to kill, and " +
@@ -94,20 +145,20 @@ export class AboutPage extends React.Component {
                             />,
                             <div style={{paddingBottom: spacing(1)}}/>,
                             <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
-                                <div
-                                    style={{
-                                        backgroundColor: blue["500"],
-                                        padding: spacing(2),
-                                        width: 200,
-                                        borderRadius: 10
-                                    }}
-                                >
-                                    <DeckScoreView deck={{
-                                        cardsRating: 75,
-                                        sasRating: 80,
-                                        synergyRating: 10,
-                                        antisynergyRating: 5,
-                                    }}/>
+                            <div
+                                style={{
+                                    backgroundColor: blue["500"],
+                                    padding: spacing(2),
+                                    width: 200,
+                                    borderRadius: 10
+                                }}
+                            >
+                                <DeckScoreView deck={{
+                                    cardsRating: 75,
+                                    sasRating: 80,
+                                    synergyRating: 10,
+                                    antisynergyRating: 5,
+                                }}/>
                             </div>,
                             "I add together the card ratings, synergy, and antisynergy of a deck to create its SAS rating.",
                             "The system isn't perfect, but it gives a great approximation of the relative quality of decks, and can help you " +

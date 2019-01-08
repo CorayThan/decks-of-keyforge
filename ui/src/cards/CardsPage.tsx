@@ -3,7 +3,6 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { log, prettyJson } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
 import { CardView } from "./CardSimpleView"
@@ -28,7 +27,6 @@ export class CardsPage extends React.Component {
     render() {
 
         const {cards, searchingForCards} = CardStore.instance
-        log.debug(`Cards in cards page ${prettyJson(cards)}`)
 
         let cardsDisplay
         if (cards) {

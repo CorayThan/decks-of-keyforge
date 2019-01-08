@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios"
 import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
 import { CardSuggestOption } from "./CardSearchSuggest"
 import { KCard } from "./KCard"
@@ -41,7 +40,7 @@ export class CardStore {
         this.searchingForCards = true
         axios.post(`${CardStore.CONTEXT}/filter`, filters)
             .then((response: AxiosResponse) => {
-                log.debug(`With filters: ${prettyJson(filters)} Got the filtered cards. cards: ${prettyJson(response.data)}`)
+                // log.debug(`With filters: ${prettyJson(filters)} Got the filtered cards. cards: ${prettyJson(response.data)}`)
                 this.cards = response.data
                 this.searchingForCards = false
             })

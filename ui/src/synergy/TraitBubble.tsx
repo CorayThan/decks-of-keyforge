@@ -4,9 +4,10 @@ import HomeIcon from "@material-ui/icons/Home"
 import { startCase } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
 
 
-export const TraitBubble = (props: { name: string, positive: boolean, home?: boolean, trait?: boolean }) => {
+export const TraitBubble = (props: { name: string, positive: boolean, home?: boolean, trait?: boolean, rating?: number }) => {
     const color = props.positive ? "#FFFFFF" : undefined
     let title
     if (props.trait) {
@@ -30,12 +31,17 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
                 margin: 4,
             }}
         >
-        {props.home ? (
-            <Tooltip title={"Synergizes with house traits only"}>
-                <HomeIcon style={{color, marginRight: spacing(1)}}/>
-            </Tooltip>
-        ) : null}
-        <Tooltip title={title}>
+            {props.rating ? (
+                <div style={{marginRight: spacing(1)}}>
+                    <SynergyEffectIcon effect={props.rating}/>
+                </div>
+            ) : null}
+            {props.home ? (
+                <Tooltip title={"Synergizes with house traits only"}>
+                    <HomeIcon style={{color, marginRight: spacing(1)}}/>
+                </Tooltip>
+            ) : null}
+            <Tooltip title={title}>
             <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
             {startCase(props.name)}
         </Typography>

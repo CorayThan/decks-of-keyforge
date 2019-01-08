@@ -26,7 +26,9 @@ class CardService(
         val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info.yml").inputStream
         )
-        this.extraInfo = extraInfosFromFile.map { it.cardNumber to it }.toMap()
+        this.extraInfo = extraInfosFromFile
+                .map { it.cardNumber to it.copy(synergies = it.synergies.sorted()) }
+                .toMap()
     }
 
     fun allFullCardsNonMaverick() = fullCardsFromCards(cardRepo.findByMaverickFalse())
