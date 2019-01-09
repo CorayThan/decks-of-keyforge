@@ -63,7 +63,7 @@ class KeyforgeApi(
                     "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=date"
             )
         }
-        log.info("Getting $pageSize decks from keyforge api took $keyforgeRequestDuration")
+        log.debug("Getting $pageSize decks from keyforge api took $keyforgeRequestDuration")
         return decks
     }
 

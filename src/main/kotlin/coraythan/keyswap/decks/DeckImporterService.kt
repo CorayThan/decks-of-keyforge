@@ -19,8 +19,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
+import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT1M"
+private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateStatistics = "PT24H"
 
 @Transactional
@@ -35,32 +36,37 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    // @Scheduled(fixedRateString = lockImportNewDecksFor)
+    @Scheduled(fixedRateString = lockImportNewDecksFor)
     @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
-        val decksPerPage = 10
-        var currentPage = deckPageService.findCurrentPage()
+        val deckCountBeforeImport = deckRepo.count()
+        val importDecksDuration = measureTimeMillis {
+            val decksPerPage = 10
+            var currentPage = deckPageService.findCurrentPage()
 
-        val finalPage = currentPage + decksPerPage
+            val finalPage = currentPage + decksPerPage
 
-        val maxPageRequests = 11
-        var pagesRequested = 0
-        while (currentPage < finalPage && pagesRequested < maxPageRequests) {
-            val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
-            if (decks == null) {
-                log.warn("Got null decks from the api for page $currentPage decks per page $decksPerPage")
-            } else {
-                val cards = cardService.importNewCards(decks.data)
-                saveDecks(decks.data, cards)
+            val maxPageRequests = 11
+            var pagesRequested = 0
+            while (currentPage < finalPage && pagesRequested < maxPageRequests) {
+                val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
+                if (decks == null) {
+                    log.warn("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+                } else {
+                    val cards = cardService.importNewCards(decks.data)
+                    saveDecks(decks.data, cards)
+                }
+
+                currentPage++
+                pagesRequested++
             }
 
-            log.info("Loaded page $currentPage. Decks from db: ${deckRepo.findAll().count()}. Total current decks: ${decks?.count}")
-            currentPage++
-            pagesRequested++
+            deckPageService.setCurrentPage(currentPage - 2)
         }
+        val deckCountNow = deckRepo.count()
+        log.info("Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
 
-        deckPageService.setCurrentPage(currentPage - 2)
     }
 
     @Scheduled(fixedRateString = lockUpdateStatistics)

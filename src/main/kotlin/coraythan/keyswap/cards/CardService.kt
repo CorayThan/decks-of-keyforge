@@ -81,9 +81,7 @@ class CardService(
                         cardsToReturn.add(this.saveNewCard(it.toCard(this.extraInfo)))
                     }
                 }
-                log.info("Loaded cards from deck.")
-            } else {
-                log.info("Skipped loading cards from deck.")
+                log.debug("Loaded cards from deck.")
             }
         }
         return cardsToReturn

@@ -17,3 +17,5 @@
 *.iml
 *.ipr
 /out/
+
+/src/main/resources/static/

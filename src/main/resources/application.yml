@@ -10,15 +10,15 @@ spring:
       ddl-auto: validate
     properties:
        hibernate:
-        show_sql: true
+        show_sql: false
         format_sql: true
         temp:
           use_jdbc_metadata_defaults: false
   datasource:
     platform: POSTGRESQL
-    url: jdbc:postgresql://127.0.0.1:5432/keyswap
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/keyswap
+    username: ${RDS_USERNAME:postgres}
+    password: ${RDS_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
-jwt-secret: abbb766d-dd23-45d3-af40-83db9d4dbbf4
+jwt-secret: ${JWT_SECRET:abbb766d-dd23-45d3-af40-83db9d4dbbf4}
