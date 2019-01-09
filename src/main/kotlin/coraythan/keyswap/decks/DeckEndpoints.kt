@@ -16,7 +16,7 @@ class DeckEndpoints(
 
     @PostMapping("/filter")
     fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
-        var decks = DecksPage(listOf(), 0, 0)
+        var decks = DecksPage(listOf(), 0, 0, 0)
         val decksFilterTime = measureTimeMillis {
             decks = deckService.filterDecks(deckFilters)
         }

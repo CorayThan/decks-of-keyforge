@@ -26,12 +26,12 @@ private const val lockUpdateStatistics = "PT24H"
 @Transactional
 @Service
 class DeckImporterService(
-        val keyforgeApi: KeyforgeApi,
-        val cardService: CardService,
-        val deckSynergyService: DeckSynergyService,
-        val deckRepo: DeckRepo,
-        val deckPageService: DeckPageService,
-        val deckStatisticsService: DeckStatisticsService
+        private val keyforgeApi: KeyforgeApi,
+        private val cardService: CardService,
+        private val deckSynergyService: DeckSynergyService,
+        private val deckRepo: DeckRepo,
+        private val deckPageService: DeckPageService,
+        private val deckStatisticsService: DeckStatisticsService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 

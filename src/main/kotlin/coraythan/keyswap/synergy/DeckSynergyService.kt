@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class DeckSynergyService(
-        val cardService: CardService
+        private val cardService: CardService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)

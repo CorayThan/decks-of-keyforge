@@ -17,7 +17,7 @@
 - name: Blood Money
   cardNumber: 3
   rating: 2
-  expectedAmber: 1.7
+  expectedAmber: 2
   traits: [capturesAmberOnEnemies]
   synergies: []
 
@@ -196,6 +196,7 @@
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
+      rating: 3
 
 - name: Banner of Battle
   cardNumber: 20

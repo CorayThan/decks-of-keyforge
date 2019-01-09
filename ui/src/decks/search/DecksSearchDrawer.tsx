@@ -1,4 +1,4 @@
-import { FormGroup, IconButton } from "@material-ui/core"
+import { FormGroup, FormLabel, IconButton } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -12,7 +12,6 @@ import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer } from "../../components/KeyDrawer"
 import { SortDirectionController, SortDirectionView } from "../../components/SortDirectionView"
 import { spacing } from "../../config/MuiConfig"
-import { log } from "../../config/Utils"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
@@ -21,6 +20,7 @@ import { ScreenStore } from "../../ui/ScreenStore"
 import { UserStore } from "../../user/UserStore"
 import { DeckStore } from "../DeckStore"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
+import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
 import { DeckFiltersInstance } from "./DeckFilters"
 
 @observer
@@ -31,6 +31,7 @@ export class DecksSearchDrawer extends React.Component {
     selectedHouses = new SelectedHouses()
     selectedSortStore = new DeckSortSelectStore()
     sortDirectionController = new SortDirectionController()
+    constraintsStore = new FiltersConstraintsStore()
 
     componentDidMount() {
         this.deckStore.reset()
@@ -44,6 +45,7 @@ export class DecksSearchDrawer extends React.Component {
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
         this.filters.sortDirection = this.sortDirectionController.direction
+        this.filters.constraints = this.constraintsStore.cleanConstraints()
         this.deckStore.searchDecks(this.filters.cleaned())
     }
 
@@ -52,10 +54,10 @@ export class DecksSearchDrawer extends React.Component {
         this.selectedSortStore.selectedValue = ""
         this.sortDirectionController.reset()
         this.filters.reset()
+        this.constraintsStore.reset()
     }
 
     render() {
-        log.debug(`Rendering decks search drawer, decks: ${DeckStore.instance.deckPage}`)
         const {title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate, cards} = this.filters
         return (
             <KeyDrawer>
@@ -128,25 +130,41 @@ export class DecksSearchDrawer extends React.Component {
                                 />
                             </FormGroup>
                         </ListItem>
-                        {cards.map((card, idx) => (
-                            <ListItem key={idx}>
-                                <CardSearchSuggest
-                                    updateCardName={id => card.cardName = id}
-                                    style={{marginTop: 12}}
-                                />
-                                <TextField
-                                    style={{width: 56, marginLeft: spacing(2)}}
-                                    label={"Copies"}
-                                    type={"number"}
-                                    value={card.quantity}
-                                    onChange={event => card.quantity = Number(event.target.value)}
-                                />
-                            </ListItem>
-                        ))}
                         <ListItem>
-                            <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
-                                <AddIcon/>
-                            </IconButton>
+                            <ConstraintDropdowns
+                                store={this.constraintsStore}
+                                properties={[
+                                    "expectedAmber",
+                                    "amberControl",
+                                    "creatureControl",
+                                    "artifactControl"
+                                ]}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <div>
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                    <FormLabel style={{marginRight: spacing(1)}}>Cards</FormLabel>
+                                    <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
+                                        <AddIcon fontSize={"small"}/>
+                                    </IconButton>
+                                </div>
+                                {cards.map((card, idx) => (
+                                    <div style={{display: "flex", marginBottom: spacing(1)}}>
+                                        <CardSearchSuggest
+                                            updateCardName={id => card.cardName = id}
+                                            style={{marginTop: 12}}
+                                        />
+                                        <TextField
+                                            style={{width: 56, marginLeft: spacing(2)}}
+                                            label={"Copies"}
+                                            type={"number"}
+                                            value={card.quantity}
+                                            onChange={event => card.quantity = Number(event.target.value)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         </ListItem>
                         <ListItem>
                             <DeckSortSelect store={this.selectedSortStore}/>
@@ -173,6 +191,11 @@ export class DecksSearchDrawer extends React.Component {
                                 </KeyButton>
                             </div>
                         </ListItem>
+                        {this.deckStore.deckPage ? (
+                            <ListItem>
+                                <Typography variant={"subtitle2"}>You found {this.deckStore.deckPage.count} decks</Typography>
+                            </ListItem>
+                        ) : null}
                     </List>
                 </form>
             </KeyDrawer>

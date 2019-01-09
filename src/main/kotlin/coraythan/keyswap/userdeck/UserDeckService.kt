@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class UserDeckService(
-        val currentUserService: CurrentUserService,
-        val userRepo: KeyUserRepo,
-        val deckRepo: DeckRepo,
-        val userDeckRepo: UserDeckRepo
+        private val currentUserService: CurrentUserService,
+        private val userRepo: KeyUserRepo,
+        private val deckRepo: DeckRepo,
+        private val userDeckRepo: UserDeckRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)

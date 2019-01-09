@@ -69,4 +69,5 @@ export interface DeckPage {
     decks: Deck[]
     page: number
     pages: number
+    count: number
 }

@@ -14,6 +14,8 @@ data class DeckFilters(
         val containsMaverick: Boolean = false,
         val myDecks: Boolean = false,
 
+        val constraints: List<Constraint> = listOf(),
+
         val cards: List<DeckCardQuantity> = listOf(),
 
         val owner: String = "",
@@ -46,4 +48,15 @@ enum class DeckSortOptions {
 enum class SortDirection(val direction: Sort.Direction) {
     ASC(Sort.Direction.ASC),
     DESC(Sort.Direction.DESC)
+}
+
+data class Constraint(
+        val property: String,
+        val cap: Cap,
+        val value: Int
+)
+
+enum class Cap {
+    MIN,
+    MAX
 }

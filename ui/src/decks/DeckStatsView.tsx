@@ -73,10 +73,10 @@ export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPad
 export const KeyPieGlobalAverages = () => <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>
 
 export const KeyPie = (props: { name?: string, creatures: number, actions: number, artifacts: number, upgrades: number, padding?: number }) => (
-    <div>
+    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
         {props.name ? <Typography variant={"h6"} noWrap={true}>{props.name}</Typography> : null}
         <VictoryPie
-            padding={props.padding ? props.padding : 20}
+            padding={props.padding ? props.padding : 30}
             data={[
                 {x: `Actions – ${props.actions}`, y: props.actions},
                 {x: `Artifacts – ${props.artifacts}`, y: props.artifacts},

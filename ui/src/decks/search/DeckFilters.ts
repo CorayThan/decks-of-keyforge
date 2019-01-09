@@ -3,6 +3,7 @@ import { observable } from "mobx"
 import * as React from "react"
 import { SortDirection } from "../../generic/SortDirection"
 import { House } from "../../houses/House"
+import { Constraint } from "./ConstraintDropdowns"
 
 export class DeckFilters {
     houses: House[] = []
@@ -18,6 +19,7 @@ export class DeckFilters {
     containsMaverick: boolean = false
     @observable
     myDecks: boolean = false
+    constraints: Constraint[] = []
     @observable
     cards: DeckCardQuantity[] = [{
         cardName: "",
@@ -36,6 +38,7 @@ export class DeckFilters {
             cardName: "",
             quantity: 1
         }]
+        this.constraints = []
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

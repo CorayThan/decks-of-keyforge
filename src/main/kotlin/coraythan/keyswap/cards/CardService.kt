@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class CardService(
-        val cardRepo: CardRepo,
-        val keyforgeApi: KeyforgeApi,
-        val yamlMapper: YAMLMapper
+        private val cardRepo: CardRepo,
+        private val keyforgeApi: KeyforgeApi,
+        private val yamlMapper: YAMLMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 

@@ -1,6 +1,8 @@
 package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
+import com.querydsl.core.types.Ops
+import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import coraythan.keyswap.House
 import coraythan.keyswap.deckcard.QDeckCard
@@ -17,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class DeckService(
-        val deckSynergyService: DeckSynergyService,
-        val deckRepo: DeckRepo,
-        val userService: KeyUserService,
-        val currentUserService: CurrentUserService,
-        val deckStatisticsService: DeckStatisticsService
+        private val deckSynergyService: DeckSynergyService,
+        private val deckRepo: DeckRepo,
+        private val userService: KeyUserService,
+        private val currentUserService: CurrentUserService,
+        private val deckStatisticsService: DeckStatisticsService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -42,6 +44,7 @@ class DeckService(
 
         val forSaleOrTrade = BooleanBuilder().andAnyOf(deckQ.forSale.isTrue, deckQ.forTrade.isTrue)
 
+        if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
         if (filters.owner.isNotBlank()) {
             log.info("filtering with owner name ${filters.owner}")
             predicate.and(deckQ.userDecks.any().user.username.eq(filters.owner))
@@ -62,7 +65,12 @@ class DeckService(
                 predicate.and(deckQ.userDecks.any().owned.isTrue)
             }
         }
-        if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
+        if (filters.constraints.isNotEmpty()) {
+            filters.constraints.forEach {
+                val pathToVal = Expressions.path(Double::class.java, deckQ, it.property)
+                predicate.and(Expressions.predicate(if (it.cap == Cap.MIN) Ops.GOE else Ops.LOE, pathToVal, Expressions.constant(it.value)))
+            }
+        }
 
         filters.cards.forEach {
             if (it.quantity == 1) {
@@ -105,7 +113,7 @@ class DeckService(
 
         log.info("Found ${deckPage.content.size} decks. Current page ${filters.page}. Total pages ${deckPage.totalPages}. Sorted by $sortProperty.")
 
-        return DecksPage(deckPage.content, filters.page, deckPage.totalPages)
+        return DecksPage(deckPage.content, filters.page, deckPage.totalPages, deckPage.totalElements)
     }
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)

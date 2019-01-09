@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CurrentUserService(
-        val userRepo: KeyUserRepo
+        private val userRepo: KeyUserRepo
 ) {
     fun loggedInUser(): KeyUser? {
         val authentication = SecurityContextHolder.getContext().authentication

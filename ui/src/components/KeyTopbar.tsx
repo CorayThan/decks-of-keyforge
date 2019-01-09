@@ -54,7 +54,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             color={"inherit"}>
                             {ScreenStore.instance.screenSizeXs() ? topbarShortName : topbarName}
                         </Typography>
-                        {ScreenStore.instance.screenWidth < 1024 ? null : subheaderNode}
+                        {ScreenStore.instance.screenWidth < 1280 ? null : subheaderNode}
                         <div style={{flexGrow: 1}}/>
                         <RightMenu/>
                     </Toolbar>
@@ -72,7 +72,7 @@ class RightMenu extends React.Component {
     open = false
 
     render() {
-        if (ScreenStore.instance.screenSizeXs()) {
+        if (ScreenStore.instance.screenSizeSm()) {
             return (
                 <>
                     <IconButton

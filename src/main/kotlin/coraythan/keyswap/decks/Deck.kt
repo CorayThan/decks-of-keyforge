@@ -98,7 +98,8 @@ data class Deck(
 data class DecksPage(
         val decks: List<Deck>,
         val page: Int,
-        val pages: Int
+        val pages: Int,
+        val count: Long
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
