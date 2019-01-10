@@ -55,21 +55,26 @@ const RatingRow = (props: { value: number, name: string, operator?: string, larg
     )
 }
 
-export const PercentRatingRow = (props: { value: number, name: string }) => (
-    <Tooltip title={"Percentile ranking among all decks (higher is better)"}>
-        <div style={{display: "flex", alignItems: "flex-end"}}>
-            <Typography variant={"h5"} style={{color: "#FFFFFF"}}>
-                {props.value}
-            </Typography>
-            <Typography variant={"body2"} style={{color: "#FFFFFF", fontWeight: 500, marginRight: spacing(1)}}>
-                %
-            </Typography>
-            <Typography
-                variant={"body2"}
-                style={{color: "#FFFFFF", fontWeight: 500, marginRight: spacing(2)}}
-            >
-                {props.name}
-            </Typography>
-        </div>
-    </Tooltip>
-)
+export const PercentRatingRow = (props: { value: number, name: string }) => {
+            if (props.value === -1) {
+                return null
+            }
+    return (
+        <Tooltip title={"Percentile ranking among all decks (higher is better)"}>
+            <div style={{display: "flex", alignItems: "flex-end"}}>
+                <Typography variant={"h5"} style={{color: "#FFFFFF"}}>
+                    {props.value}
+                </Typography>
+                <Typography variant={"body2"} style={{color: "#FFFFFF", fontWeight: 500, marginRight: spacing(1)}}>
+                    %
+                </Typography>
+                <Typography
+                    variant={"body2"}
+                    style={{color: "#FFFFFF", fontWeight: 500, marginRight: spacing(2)}}
+                >
+                    {props.name}
+                </Typography>
+            </div>
+        </Tooltip>
+    )
+}

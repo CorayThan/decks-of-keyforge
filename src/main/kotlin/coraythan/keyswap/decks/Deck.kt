@@ -1,9 +1,11 @@
 package coraythan.keyswap.decks
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.KeyforgeDeckLinks
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.userdeck.UserDeck
@@ -90,13 +92,60 @@ data class Deck(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
 ) {
+    @get:JsonIgnore
     val cardsList: List<Card>
         get() = cards.map { it.card }
+
+    fun toDeckSearchResult() = DeckSearchResult(
+            id = id,
+            keyforgeId = keyforgeId,
+            name = name,
+            expectedAmber = expectedAmber,
+            amberControl = amberControl,
+            creatureControl = creatureControl,
+            artifactControl = artifactControl,
+            sasRating = sasRating,
+            cardsRating = cardsRating,
+            synergyRating = synergyRating,
+            antisynergyRating = antisynergyRating,
+            forSale = forSale,
+            forTrade = forTrade,
+            wishlistCount = wishlistCount,
+            funnyCount = funnyCount,
+            searchResultCards = cards.map { it.card.toDeckSearchResultCard() },
+            houses = houses
+    )
 }
+
+// It takes a long time to load all the crap in hibernate, so avoid that.
+data class DeckSearchResult(
+        val id: Long,
+        val keyforgeId: String,
+
+        val name: String,
+
+        val expectedAmber: Double = 0.0,
+        val amberControl: Double = 0.0,
+        val creatureControl: Double = 0.0,
+        val artifactControl: Double = 0.0,
+        val sasRating: Int = 0,
+        val cardsRating: Int = 0,
+        val synergyRating: Int = 0,
+        val antisynergyRating: Int = 0,
+
+        val forSale: Boolean = false,
+        val forTrade: Boolean = false,
+        val wishlistCount: Int = 0,
+        val funnyCount: Int = 0,
+
+        val searchResultCards: List<DeckSearchResultCard> = listOf(),
+
+        val houses: List<House> = listOf()
+)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DecksPage(
-        val decks: List<Deck>,
+        val decks: List<DeckSearchResult>,
         val page: Int,
         val pages: Int,
         val count: Long

@@ -51,16 +51,24 @@ export interface Deck {
 
     userDecks: UserDeck[]
 
-    cards: DeckCard[]
+    cards?: DeckCard[]
+    searchResultCards?: KCard[]
     houses: House[]
 }
 
 export class DeckUtils {
     static cardsInHouses = (deck: Deck) => {
         const cardsByHouse: Array<{ house: House, cards: KCard[] }> = []
-        deck.houses.forEach((house) => {
-            cardsByHouse.push({house, cards: deck.cards.map(card => card.card).filter((card) => (card.house === house))})
-        })
+        deck.houses
+            .forEach((house) => {
+                let cards
+                if (deck.cards) {
+                    cards = deck.cards.map(card => card.card).filter((card) => (card.house === house))
+                } else {
+                    cards = deck.searchResultCards!.filter(card => card.house === house)
+                }
+                cardsByHouse.push({house, cards})
+            })
         return cardsByHouse
     }
 }

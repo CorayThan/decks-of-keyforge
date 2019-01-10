@@ -55,6 +55,7 @@ export class DeckStore {
         axios.get(`${DeckStore.CONTEXT}/${keyforgeId}`)
             .then((response: AxiosResponse) => {
                 this.deck = response.data
+                this.deck!.deck.houses.sort()
             })
     }
 
@@ -121,7 +122,9 @@ export class DeckStore {
         axios.post(`${DeckStore.CONTEXT}/filter`, filters)
             .then((response: AxiosResponse) => {
                 // log.debug(`With filters: ${prettyJson(filters)} Got the filtered decks. decks: ${prettyJson(response.data)}`)
-                resolve(response.data)
+                const decks: DeckPage = response.data
+                decks.decks.forEach(deck => deck.houses.sort())
+                resolve(decks)
             })
             .catch(() => {
                 resolve()

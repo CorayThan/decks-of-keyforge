@@ -31,7 +31,15 @@ data class Card(
 
         @Transient
         var extraCardInfo: ExtraCardInfo?
-)
+) {
+    fun toDeckSearchResultCard() = DeckSearchResultCard(
+            cardTitle = cardTitle,
+            house = house,
+            frontImage = frontImage,
+            rarity = rarity,
+            maverick = maverick
+    )
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeCard(
@@ -56,6 +64,14 @@ data class KeyforgeCard(
                     extraCardInfo = extraInfoMap[card_number],
                     traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
 }
+
+data class DeckSearchResultCard(
+        val cardTitle: String,
+        val house: House,
+        val frontImage: String,
+        val rarity: Rarity,
+        val maverick: Boolean
+)
 
 enum class CardTrait {
     Agent,

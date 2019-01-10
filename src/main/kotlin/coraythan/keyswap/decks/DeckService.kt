@@ -107,13 +107,13 @@ class DeckService(
         }
 
         val deckPage = deckRepo.findAll(predicate, PageRequest.of(
-                filters.page, 20,
+                filters.page, 10,
                 Sort.by(filters.sortDirection.direction, sortProperty)
         ))
 
         log.info("Found ${deckPage.content.size} decks. Current page ${filters.page}. Total pages ${deckPage.totalPages}. Sorted by $sortProperty.")
 
-        return DecksPage(deckPage.content, filters.page, deckPage.totalPages, deckPage.totalElements)
+        return DecksPage(deckPage.content.map { it.toDeckSearchResult() }, filters.page, deckPage.totalPages, deckPage.totalElements)
     }
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)
