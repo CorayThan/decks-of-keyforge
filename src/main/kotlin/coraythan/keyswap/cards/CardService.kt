@@ -20,6 +20,7 @@ class CardService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    private var nonMaverickCachedCards: Map<String, Card>? = null
     lateinit var extraInfo: Map<Int, ExtraCardInfo>
 
     fun loadExtraInfo() {
@@ -31,11 +32,16 @@ class CardService(
                 .toMap()
     }
 
-    fun allFullCardsNonMaverick() = fullCardsFromCards(cardRepo.findByMaverickFalse())
+    fun allFullCardsNonMaverick() = allFullCardsNonMaverickMap().values
+
+    fun allFullCardsNonMaverickMap(): Map<String, Card> {
+        if (nonMaverickCachedCards == null) {
+            reloadCachedCards()
+        }
+        return nonMaverickCachedCards!!
+    }
 
     fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
-
-    fun findByIds(cardIds: List<String>) = cardRepo.findAllById(cardIds)
 
     fun filterCards(filters: CardFilters): Iterable<Card> {
         val cardQ = QCard.card
@@ -81,6 +87,7 @@ class CardService(
                         cardsToReturn.add(this.saveNewCard(it.toCard(this.extraInfo)))
                     }
                 }
+                reloadCachedCards()
                 log.debug("Loaded cards from deck.")
             }
         }
@@ -90,4 +97,9 @@ class CardService(
     fun saveNewCard(card: Card): Card {
         return cardRepo.save(card)
     }
+
+    private fun reloadCachedCards() {
+        nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map { it.id to it }.toMap()
+    }
+
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.system.measureTimeMillis
 
 @Transactional
 @Service
@@ -111,9 +112,28 @@ class DeckService(
                 Sort.by(filters.sortDirection.direction, sortProperty)
         ))
 
-        log.info("Found ${deckPage.content.size} decks. Current page ${filters.page}. Total pages ${deckPage.totalPages}. Sorted by $sortProperty.")
+        val timeToLoadDeckCards = measureTimeMillis {
+            deckPage.content.forEach { it.cards }
+        }
 
-        return DecksPage(deckPage.content.map { it.toDeckSearchResult() }, filters.page, deckPage.totalPages, deckPage.totalElements)
+        val timeToLoadCards = measureTimeMillis {
+            deckPage.content.forEach { it.cards.forEach { it.card.id } }
+        }
+
+        var decks: List<DeckSearchResult>? = null
+        val timeToConvert = measureTimeMillis {
+            decks = deckPage.content.map { it.toDeckSearchResult() }
+        }
+
+        log.info("Time to load deck cards: $timeToLoadDeckCards. " +
+                "Time to load cards: $timeToLoadCards. " +
+                "Time to convert to deck search results: $timeToConvert. " +
+                "Found ${deckPage.content.size} decks. " +
+                "Current page ${filters.page}. " +
+                "Total pages ${deckPage.totalPages}. " +
+                "Sorted by $sortProperty.")
+
+        return DecksPage(decks!!, filters.page, deckPage.totalPages, deckPage.totalElements)
     }
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)

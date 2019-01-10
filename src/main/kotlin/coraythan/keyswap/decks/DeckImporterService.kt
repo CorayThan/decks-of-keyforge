@@ -1,10 +1,12 @@
 package coraythan.keyswap.decks
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.DeckStatisticsService
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.annotation.PostConstruct
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
@@ -32,7 +35,8 @@ class DeckImporterService(
         private val deckSynergyService: DeckSynergyService,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
-        private val deckStatisticsService: DeckStatisticsService
+        private val deckStatisticsService: DeckStatisticsService,
+        private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -79,6 +83,7 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
+    @PostConstruct
     fun rerateDecks() {
         val sort = Sort.by("id")
         var currentPage = 0
@@ -92,7 +97,8 @@ class DeckImporterService(
             if (currentPage % 10 == 0) log.info("Updating decks, currently on deck ${currentPage * pageSize}")
 
             val decksToSave = results.content.map {
-                rateDeck(it)
+                // TODO remove add card ids to deck, just temporary
+                addCardIdsToDeck(rateDeck(it))
             }
 
             deckRepo.saveAll(decksToSave)
@@ -235,7 +241,8 @@ class DeckImporterService(
                     val saveable = savedDeck
                             .copy(
                                     cards = deckCards,
-                                    houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                                    houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses."),
+                                    cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                             )
 
                     val ratedDeck = rateDeck(saveable
@@ -289,4 +296,12 @@ class DeckImporterService(
         )
     }
 
+    private fun addCardIdsToDeck(deck: Deck): Deck {
+        if (deck.cardIds.isNotEmpty()) {
+            return deck
+        } else {
+
+            return deck.copy(cardIds = objectMapper.writeValueAsString(CardIds.fromCards(deck.cardsList)))
+        }
+    }
 }

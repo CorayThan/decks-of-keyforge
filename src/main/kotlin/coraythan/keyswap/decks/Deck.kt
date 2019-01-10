@@ -80,6 +80,10 @@ data class Deck(
         @OneToMany(fetch = FetchType.LAZY, mappedBy = "deck", cascade = [CascadeType.ALL])
         val cards: List<DeckCard> = listOf(),
 
+        // Json of card ids for performance loading decks, loading cards from cache
+        @Lob
+        val cardIds: String = "",
+
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
         val userDecks: List<UserDeck> = listOf(),
