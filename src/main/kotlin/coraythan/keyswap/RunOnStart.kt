@@ -17,6 +17,7 @@ class RunOnStart(
     override fun run(vararg args: String?) {
 
         cardService.loadExtraInfo()
+//        deckImporterService.rerateDecks()
 
         //        val importDecksMillis = measureTimeMillis {
 //            deckService.importNewDecks()

@@ -5,6 +5,7 @@ import com.querydsl.core.types.Ops
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.deckcard.QDeckCard
 import coraythan.keyswap.stats.DeckStatisticsService
 import coraythan.keyswap.synergy.DeckSynergyService
@@ -20,6 +21,7 @@ import kotlin.system.measureTimeMillis
 @Transactional
 @Service
 class DeckService(
+        private val cardService: CardService,
         private val deckSynergyService: DeckSynergyService,
         private val deckRepo: DeckRepo,
         private val userService: KeyUserService,
@@ -112,26 +114,37 @@ class DeckService(
                 Sort.by(filters.sortDirection.direction, sortProperty)
         ))
 
-        val timeToLoadDeckCards = measureTimeMillis {
-            deckPage.content.forEach { it.cards }
-        }
+//        val timeToLoadDeckCards = measureTimeMillis {
+//            deckPage.content.forEach { it.cards }
+//        }
 
-        val timeToLoadCards = measureTimeMillis {
-            deckPage.content.forEach { it.cards.forEach { it.card.id } }
-        }
-
+//        val timeToLoadCards = measureTimeMillis {
+//            deckPage.content.forEach { it.cards.forEach { it.card.id } }
+//        }
+//
         var decks: List<DeckSearchResult>? = null
         val timeToConvert = measureTimeMillis {
-            decks = deckPage.content.map { it.toDeckSearchResult() }
+            decks = deckPage.content.map {
+                it.toDeckSearchResult(if (it.cardIds.isNullOrBlank()) {
+                    log.warn("No card ids available!")
+                    null
+                } else {
+                    val fromCache = cardService.cachedCardsFromCardIds(it.cardIds)
+                    log.info("Cards from cache: ${fromCache?.size}")
+                    fromCache
+                })
+            }
         }
 
-        log.info("Time to load deck cards: $timeToLoadDeckCards. " +
-                "Time to load cards: $timeToLoadCards. " +
+        log.info(
+//                "Time to load deck cards: $timeToLoadDeckCards. " +
+//                "Time to load cards: $timeToLoadCards. " +
                 "Time to convert to deck search results: $timeToConvert. " +
-                "Found ${deckPage.content.size} decks. " +
-                "Current page ${filters.page}. " +
-                "Total pages ${deckPage.totalPages}. " +
-                "Sorted by $sortProperty.")
+                        "Found ${deckPage.content.size} decks. " +
+                        "Current page ${filters.page}. " +
+                        "Total pages ${deckPage.totalPages}. " +
+                        "Sorted by $sortProperty."
+        )
 
         return DecksPage(decks!!, filters.page, deckPage.totalPages, deckPage.totalElements)
     }

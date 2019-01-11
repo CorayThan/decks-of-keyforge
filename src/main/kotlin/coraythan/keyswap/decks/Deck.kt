@@ -9,6 +9,7 @@ import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.userdeck.UserDeck
+import org.hibernate.annotations.Type
 import javax.persistence.*
 
 data class DeckWithSynergyInfo(
@@ -82,6 +83,7 @@ data class Deck(
 
         // Json of card ids for performance loading decks, loading cards from cache
         @Lob
+        @Type(type = "org.hibernate.type.TextType")
         val cardIds: String = "",
 
         @JsonIgnoreProperties("deck")
@@ -100,7 +102,7 @@ data class Deck(
     val cardsList: List<Card>
         get() = cards.map { it.card }
 
-    fun toDeckSearchResult() = DeckSearchResult(
+    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>?) = DeckSearchResult(
             id = id,
             keyforgeId = keyforgeId,
             name = name,
@@ -116,7 +118,7 @@ data class Deck(
             forTrade = forTrade,
             wishlistCount = wishlistCount,
             funnyCount = funnyCount,
-            searchResultCards = cards.map { it.card.toDeckSearchResultCard() },
+            searchResultCards = if (searchResultCards == null) cards.map { it.card.toDeckSearchResultCard() } else searchResultCards,
             houses = houses
     )
 }
@@ -168,6 +170,4 @@ data class KeyforgeDeck(
         val _links: KeyforgeDeckLinks? = null
 ) {
     fun toDeck() = Deck(id, name, expansion, power_level, chains, wins, losses)
-
-
 }

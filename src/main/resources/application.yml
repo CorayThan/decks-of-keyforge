@@ -11,7 +11,7 @@ spring:
     properties:
        hibernate:
         show_sql: false
-        format_sql: true
+        format_sql: false
         temp:
           use_jdbc_metadata_defaults: false
   datasource:

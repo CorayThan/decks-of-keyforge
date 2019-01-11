@@ -1,9 +1,12 @@
 package coraythan.keyswap.cards
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.KeyforgeApi
+import coraythan.keyswap.deckcard.CardIds
+import coraythan.keyswap.deckcard.CardNumberSetPair
 import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
@@ -16,11 +19,12 @@ import org.springframework.transaction.annotation.Transactional
 class CardService(
         private val cardRepo: CardRepo,
         private val keyforgeApi: KeyforgeApi,
-        private val yamlMapper: YAMLMapper
+        private val yamlMapper: YAMLMapper,
+        private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private var nonMaverickCachedCards: Map<String, Card>? = null
+    private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     lateinit var extraInfo: Map<Int, ExtraCardInfo>
 
     fun loadExtraInfo() {
@@ -34,11 +38,21 @@ class CardService(
 
     fun allFullCardsNonMaverick() = allFullCardsNonMaverickMap().values
 
-    fun allFullCardsNonMaverickMap(): Map<String, Card> {
+    fun allFullCardsNonMaverickMap(): Map<CardNumberSetPair, Card> {
         if (nonMaverickCachedCards == null) {
             reloadCachedCards()
         }
         return nonMaverickCachedCards!!
+    }
+
+    fun cachedCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard>? {
+        val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
+        val realCards = allFullCardsNonMaverickMap()
+        return cardIds.cardIds.flatMap { entry ->
+            entry.value.map {
+                realCards[it]?.toDeckSearchResultCard()?.copy(house = entry.key) ?: return null
+            }
+        }
     }
 
     fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
@@ -99,7 +113,7 @@ class CardService(
     }
 
     private fun reloadCachedCards() {
-        nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map { it.id to it }.toMap()
+        nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map { CardNumberSetPair(it.expansion, it.cardNumber) to it }.toMap()
     }
 
 }

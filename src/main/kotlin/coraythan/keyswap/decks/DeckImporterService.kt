@@ -19,12 +19,11 @@ import org.springframework.data.domain.Sort
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import javax.annotation.PostConstruct
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT5M"
+private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateStatistics = "PT24H"
 
 @Transactional
@@ -83,27 +82,50 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-    @PostConstruct
+    var stopRating: Boolean = false
+    var currentPage = 0
+
     fun rerateDecks() {
+        if (stopRating) return
+
+        val startPage = currentPage
         val sort = Sort.by("id")
-        var currentPage = 0
         val pageSize = 100
+        val maxPages = 10
         while (true) {
 
-            val results = deckRepo.findAll(PageRequest.of(currentPage, pageSize, sort))
+            val results = deckRepo.findAll(
+                    PageRequest.of(currentPage, pageSize, sort)
+            )
             if (results.isEmpty) {
+                log.info("Done with rerating decks on page $currentPage.")
+                stopRating = true
                 break
             }
-            if (currentPage % 10 == 0) log.info("Updating decks, currently on deck ${currentPage * pageSize}")
-
-            val decksToSave = results.content.map {
-                // TODO remove add card ids to deck, just temporary
-                addCardIdsToDeck(rateDeck(it))
+            if (currentPage - startPage == maxPages) {
+                log.info("Take a break from rerating decks because $currentPage minus $startPage == $maxPages.")
+                break
             }
 
+            val decksToSave = results.content.mapNotNull {
+
+                if (it.cardIds.isNotBlank()) {
+                    // Don't save these decks
+                    null
+                } else {
+                    // TODO remove add card ids to deck, just temporary
+                    addCardIdsToDeck(rateDeck(it))
+                }
+            }
+
+//            if (currentPage % 10 == 0)
+            log.info("Updating decks, currently on deck ${currentPage * pageSize}. Saving ${decksToSave.size} decks.")
+
             deckRepo.saveAll(decksToSave)
+            deckRepo.flush()
             currentPage++
         }
+//        log.info("Done updating decks.")
     }
 
     private fun updateDeckStatisticsPrivate() {
@@ -297,11 +319,10 @@ class DeckImporterService(
     }
 
     private fun addCardIdsToDeck(deck: Deck): Deck {
-        if (deck.cardIds.isNotEmpty()) {
-            return deck
+        return if (deck.cardIds.isNotEmpty()) {
+            deck.copy(cardIds = objectMapper.writeValueAsString(CardIds.fromCards(deck.cardsList)))
         } else {
-
-            return deck.copy(cardIds = objectMapper.writeValueAsString(CardIds.fromCards(deck.cardsList)))
+            deck
         }
     }
 }

@@ -1208,6 +1208,7 @@
   traits: [stealsAmber]
   synergies:
     - trait: highTotalCreaturePower
+      type: house
 
 - name: Effervescent Principle
   cardNumber: 109
@@ -3253,7 +3254,6 @@
       rating: -2
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
-    - trait: preventsDamage
 
 - name: Relentless Whispers
   cardNumber: 281
