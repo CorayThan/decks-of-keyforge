@@ -41,6 +41,17 @@ data class DeckStatistics(
     val power3OrHigherStats = IndividalDeckTraitStats.fromValues(power3OrHigher)
     val power4OrHigherStats = IndividalDeckTraitStats.fromValues(power4OrHigher)
     val power5OrHigherStats = IndividalDeckTraitStats.fromValues(power5OrHigher)
+
+    fun toGlobalStats() = GlobalStats(
+            averageActions = actionCountStats.median,
+            averageArtifacts = artifactCountStats.median,
+            averageCreatures = creatureCountStats.median,
+            averageUpgrades = upgradeCountStats.median,
+            averageExpectedAmber = expectedAmberStats.median,
+            averageAmberControl = amberControlStats.median,
+            averageCreatureControl = creatureCountStats.median,
+            averageArtifactControl = artifactCountStats.median
+    )
 }
 
 data class IndividalDeckTraitStats(

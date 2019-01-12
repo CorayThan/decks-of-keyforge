@@ -1,17 +1,21 @@
 import { Grid, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckScoreView } from "../decks/DeckScoreView"
-import { KeyBar, KeyPie } from "../decks/DeckStatsView"
 import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
 import { AverageIcon } from "../generic/icons/AverageIcon"
 import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { BestIcon } from "../generic/icons/BestIcon"
 import { WorstIcon } from "../generic/icons/WorstIcon"
 import { InfoListCard } from "../generic/InfoListCard"
+import { Loader } from "../mui-restyled/Loader"
+import { KeyBar, KeyPieGlobalAverages } from "../stats/DeckStatsView"
+import { StatsStore } from "../stats/StatsStore"
 import { UiStore } from "../ui/UiStore"
 
+@observer
 export class AboutPage extends React.Component {
 
     constructor(props: {}) {
@@ -20,6 +24,8 @@ export class AboutPage extends React.Component {
     }
 
     render() {
+        const stats = StatsStore.instance.stats
+
         return (
             <div style={{margin: spacing(4), display: "flex", justifyContent: "center"}}>
                 <Grid container={true} spacing={32} style={{maxWidth: 1280}}>
@@ -39,21 +45,23 @@ export class AboutPage extends React.Component {
                             <Typography variant={"h6"}>Deck Statistics</Typography>,
                             <div style={{paddingBottom: spacing(1)}}/>,
                             <div style={{maxWidth: 520, maxHeight: 240}}>
-                                <KeyPie creatures={17} actions={14} artifacts={4} upgrades={1} padding={48}/>
+                                {stats ? <KeyPieGlobalAverages stats={stats} padding={48}/> : <Loader/>}
                             </div>,
                             "I've calculated the average statistics for decks in many categories, like card type ratios.",
                             <div style={{paddingBottom: spacing(1)}}/>,
                             <Typography variant={"h6"}>Deck Traits</Typography>,
                             <div style={{maxWidth: 520, maxHeight: 320}}>
-                                <KeyBar
-                                    data={[
-                                        {x: "Expected Aember", y: 18},
-                                        {x: "Aember Control", y: 7},
-                                        {x: "Creature Control", y: 11},
-                                        {x: "Artifact Control", y: 1},
-                                    ]}
-                                    domainPadding={60}
-                                />
+                                {stats ? (
+                                    <KeyBar
+                                        data={[
+                                            {x: "Expected Aember", y: stats.averageExpectedAmber},
+                                            {x: "Aember Control", y: stats.averageAmberControl},
+                                            {x: "Creature Control", y: stats.averageCreatureControl},
+                                            {x: "Artifact Control", y: stats.averageArtifactControl},
+                                        ]}
+                                        domainPadding={60}
+                                    />
+                                ) : <Loader/>}
                             </div>,
                             <div style={{paddingBottom: spacing(2)}}/>,
                             "I've rated every card in key metrics, like its expected aember generation, aember control, creature control, and artifact " +

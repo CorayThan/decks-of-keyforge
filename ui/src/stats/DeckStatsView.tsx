@@ -1,8 +1,12 @@
 import { Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
 import { spacing } from "../config/MuiConfig"
-import { Deck } from "./Deck"
+import { Deck } from "../decks/Deck"
+import { Loader } from "../mui-restyled/Loader"
+import { GlobalStats } from "./GlobalStats"
+import { StatsStore } from "./StatsStore"
 
 interface DeckStatsViewProps {
     deck: Deck
@@ -10,30 +14,35 @@ interface DeckStatsViewProps {
 
 const pieColors = ["DodgerBlue", "SandyBrown", "SlateBlue", "MediumTurquoise"]
 
+@observer
 export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
         const {
             name, totalCreatures, totalActions, totalArtifacts, totalUpgrades, expectedAmber, amberControl, creatureControl, artifactControl
         } = this.props.deck
-
+        const stats = StatsStore.instance.stats
+        if (!stats) {
+            return <Loader/>
+        }
+        const {averageExpectedAmber, averageAmberControl, averageCreatureControl, averageArtifactControl} = stats
         return (
             <div style={{pointerEvents: "none"}}>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2)}}>
                     <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
-                    <KeyPieGlobalAverages/>
+                    <KeyPieGlobalAverages stats={stats}/>
                 </div>
 
                 <div style={{maxWidth: 616, maxHeight: 400, display: "flex", margin: spacing(2)}}>
 
                     <KeyBar data={[
                         {x: "Aember", y: expectedAmber},
-                        {x: "Avg Aember", y: 18},
+                        {x: "Avg Aember", y: averageExpectedAmber},
                         {x: "Aember Ctrl", y: amberControl},
-                        {x: "Avg ACtrl", y: 7},
+                        {x: "Avg ACtrl", y: averageAmberControl},
                         {x: "Creature Ctrl", y: creatureControl},
-                        {x: "Avg CCtrl", y: 11},
+                        {x: "Avg CCtrl", y: averageCreatureControl},
                         {x: "Artifact Ctrl", y: artifactControl},
-                        {x: "Avg ArCtrl", y: 1},
+                        {x: "Avg ArCtrl", y: averageArtifactControl},
                     ]}/>
 
                 </div>
@@ -70,7 +79,16 @@ export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPad
     </VictoryChart>
 )
 
-export const KeyPieGlobalAverages = () => <KeyPie name={"Global Average"} creatures={17} actions={14} artifacts={4} upgrades={1}/>
+export const KeyPieGlobalAverages = (props: { stats: GlobalStats, padding?: number }) =>
+    (
+        <KeyPie
+            name={"Global Average"}
+            padding={props.padding}
+            creatures={props.stats.averageCreatures}
+            actions={props.stats.averageActions}
+            artifacts={props.stats.averageArtifacts}
+            upgrades={props.stats.averageUpgrades}/>
+    )
 
 export const KeyPie = (props: { name?: string, creatures: number, actions: number, artifacts: number, upgrades: number, padding?: number }) => (
     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>

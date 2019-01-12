@@ -31,7 +31,12 @@ data class Card(
 
         @Transient
         var extraCardInfo: ExtraCardInfo?
-) {
+) : Comparable<Card> {
+    override fun compareTo(other: Card): Int {
+        if (expansion != other.expansion) return expansion - other.expansion
+        return cardNumber - other.cardNumber
+    }
+
     fun toDeckSearchResultCard() = DeckSearchResultCard(
             cardTitle = cardTitle,
             house = house,

@@ -150,7 +150,7 @@ export class DecksSearchDrawer extends React.Component {
                                     </IconButton>
                                 </div>
                                 {cards.map((card, idx) => (
-                                    <div style={{display: "flex", marginBottom: spacing(1)}}>
+                                    <div style={{display: "flex", marginBottom: spacing(1)}} key={card.cardName}>
                                         <CardSearchSuggest
                                             updateCardName={id => card.cardName = id}
                                             style={{marginTop: 12}}

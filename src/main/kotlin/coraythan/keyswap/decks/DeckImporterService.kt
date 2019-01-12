@@ -10,7 +10,7 @@ import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.stats.DeckStatistics
-import coraythan.keyswap.stats.DeckStatisticsService
+import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
 import coraythan.keyswap.synergy.DeckSynergyService
 import net.javacrumbs.shedlock.core.SchedulerLock
@@ -24,7 +24,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT10S"
+private const val lockImportNewDecksFor = "PT15S"
 private const val lockUpdateStatistics = "PT24H"
 
 @Transactional
@@ -35,12 +35,12 @@ class DeckImporterService(
         private val deckSynergyService: DeckSynergyService,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
-        private val deckStatisticsService: DeckStatisticsService,
+        private val statsService: StatsService,
         private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-     @Scheduled(fixedRateString = lockImportNewDecksFor)
+      @Scheduled(fixedRateString = lockImportNewDecksFor)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
@@ -174,7 +174,7 @@ class DeckImporterService(
                 power4OrHigher = power4OrHigher,
                 power5OrHigher = power5OrHigher
         )
-        deckStatisticsService.setStats(deckStatistics)
+        statsService.setStats(deckStatistics)
         log.info(
                 "Deck stats:\n" +
                         "armor: ${deckStatistics.armorStats}\n" +

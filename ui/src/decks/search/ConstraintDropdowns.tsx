@@ -40,7 +40,7 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                     </IconButton>
                 </div>
                 {store.constraints.map((constraint, idx) => (
-                    <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
+                    <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}} key={constraint.property}>
                         <TextField
                             select={true}
                             value={constraint.property}

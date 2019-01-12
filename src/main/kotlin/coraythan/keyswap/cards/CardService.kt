@@ -25,6 +25,7 @@ class CardService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
+    private var nonMaverickCachedCardsList: List<Card>? = null
     lateinit var extraInfo: Map<Int, ExtraCardInfo>
 
     fun loadExtraInfo() {
@@ -36,7 +37,12 @@ class CardService(
                 .toMap()
     }
 
-    fun allFullCardsNonMaverick() = allFullCardsNonMaverickMap().values
+    fun allFullCardsNonMaverick(): List<Card> {
+        if (nonMaverickCachedCardsList == null) {
+            reloadCachedCards()
+        }
+        return nonMaverickCachedCardsList!!
+    }
 
     fun allFullCardsNonMaverickMap(): Map<CardNumberSetPair, Card> {
         if (nonMaverickCachedCards == null) {
@@ -45,12 +51,16 @@ class CardService(
         return nonMaverickCachedCards!!
     }
 
-    fun cachedCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard>? {
+    fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard>? {
+        return cardsFromCardIds(cardIdsString)?.map { it.toDeckSearchResultCard() }
+    }
+
+    fun cardsFromCardIds(cardIdsString: String): List<Card>? {
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->
             entry.value.map {
-                realCards[it]?.toDeckSearchResultCard()?.copy(house = entry.key) ?: return null
+                realCards[it]?.copy(house = entry.key) ?: return null
             }
         }
     }
@@ -113,7 +123,11 @@ class CardService(
     }
 
     private fun reloadCachedCards() {
-        nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map { CardNumberSetPair(it.expansion, it.cardNumber) to it }.toMap()
+        nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
+            it.traits.size
+            CardNumberSetPair(it.expansion, it.cardNumber) to it
+        }.toMap()
+        nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
     }
 
 }

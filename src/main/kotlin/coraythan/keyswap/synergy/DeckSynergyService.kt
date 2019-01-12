@@ -17,13 +17,13 @@ class DeckSynergyService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun fromDeck(deck: Deck): DeckSynergyInfo {
-        val cards = cardService.fullCardsFromCards(deck.cardsList)
+        val cards = cardService.cardsFromCardIds(deck.cardIds) ?: cardService.fullCardsFromCards(deck.cardsList)
         val counts: MutableMap<House?, MutableMap<SynTrait, Int>> = mutableMapOf()
         deck.houses.forEach { counts[it] = mutableMapOf() }
         counts[null] = mutableMapOf()
         val anyHouseCount = counts[null]!!
 
-        addDeckTraits(deck, anyHouseCount)
+        addDeckTraits(deck, anyHouseCount, cards)
         addHouseTraits(cards, counts)
 
         cards.forEach { card ->
@@ -135,7 +135,7 @@ class DeckSynergyService(
         }
     }
 
-    private fun addDeckTraits(deck: Deck, traits: MutableMap<SynTrait, Int>) {
+    private fun addDeckTraits(deck: Deck, traits: MutableMap<SynTrait, Int>, cards: List<Card>) {
 
         if (deck.houses.contains(House.Mars)) traits[SynTrait.hasMars] = 4
 
@@ -188,14 +188,14 @@ class DeckSynergyService(
             else -> 1
         }
 
-        val power2OrLower = deck.cardsList.filter { it.cardType == CardType.Creature && it.power < 3 }.size
-        val power3OrLower = deck.cardsList.filter { it.cardType == CardType.Creature && it.power < 4 }.size
-        val power3OrHigher = deck.cardsList.filter { it.cardType == CardType.Creature && it.power > 2 }.size
-        val power4OrHigher = deck.cardsList.filter { it.cardType == CardType.Creature && it.power > 3 }.size
-        val power5OrHigher = deck.cardsList.filter { it.cardType == CardType.Creature && it.power > 4 }.size
+        val power2OrLower = cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size
+        val power3OrLower = cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size
+        val power3OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size
+        val power4OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size
+        val power5OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size
 
         if (power2OrLower > 3) traits[SynTrait.power2OrLowerCreatures] = when {
-            power2OrLower > 6 -> 4
+            power2OrLower > 6 -> 4 
             power2OrLower > 5 -> 3
             power2OrLower > 4 -> 2
             else -> 1

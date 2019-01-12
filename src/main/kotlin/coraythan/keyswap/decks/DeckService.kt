@@ -7,7 +7,7 @@ import com.querydsl.jpa.JPAExpressions
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.deckcard.QDeckCard
-import coraythan.keyswap.stats.DeckStatisticsService
+import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserService
@@ -25,7 +25,7 @@ class DeckService(
         private val deckRepo: DeckRepo,
         private val userService: KeyUserService,
         private val currentUserService: CurrentUserService,
-        private val deckStatisticsService: DeckStatisticsService
+        private val statsService: StatsService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -112,13 +112,13 @@ class DeckService(
         ))
 
         val decks = deckPage.content.map {
-                it.toDeckSearchResult(if (it.cardIds.isBlank()) {
-                    log.warn("No card ids available!")
-                    null
-                } else {
-                    cardService.cachedCardsFromCardIds(it.cardIds)
-                })
-            }
+            it.toDeckSearchResult(if (it.cardIds.isBlank()) {
+                log.warn("No card ids available!")
+                null
+            } else {
+                cardService.deckSearchResultCardsFromCardIds(it.cardIds)
+            })
+        }
 
         return DecksPage(decks, filters.page, deckPage.totalPages, deckPage.totalElements)
     }
@@ -126,9 +126,10 @@ class DeckService(
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
+
         val deck = findDeck(keyforgeId)!!
         val synergies = deckSynergyService.fromDeck(deck)
-        val stats = deckStatisticsService.findCurrentStats()
+        val stats = statsService.findCurrentStats()
         return DeckWithSynergyInfo(
                 deck = deck,
                 deckSynergyInfo = synergies,
