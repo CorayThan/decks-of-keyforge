@@ -18,8 +18,8 @@ export interface UserDeck {
     condition?: DeckCondition
     redeemed: boolean
     externalLink?: string
-    dateListed: string
-    dateRefreshed: string
+    dateListed?: string
+    expiresAt?: string
 }
 
 export enum DeckCondition {

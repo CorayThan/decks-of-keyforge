@@ -7,5 +7,6 @@ data class ListingInfo(
         val condition: DeckCondition,
         val askingPrice: Double?,
         val listingInfo: String,
-        val externalLink: String
+        val externalLink: String,
+        val expireInDays: Int
 )

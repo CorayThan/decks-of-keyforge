@@ -40,7 +40,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     listingInfo = ""
     @observable
-        externalLink = ""
+    externalLink = ""
+    @observable
+    expireInDays = "7"
 
     handleClose = () => this.open = false
     handleOpen = () => {
@@ -54,7 +56,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     list = () => {
-        const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink} = this
+        const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expireInDays} = this
         if (!forSale && !forTrade) {
             MessageStore.instance.setWarningMessage("The deck must be listed for sale or trade.")
             return
@@ -75,7 +77,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             condition,
             askingPrice: askingPriceNumber,
             listingInfo,
-            externalLink
+            externalLink,
+            expireInDays: Number(expireInDays)
         }
         UserDeckStore.instance.listDeck(this.props.deck.name, listingInfoDto)
         this.handleClose()
@@ -141,6 +144,29 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 label={"For trade"}
                             />
                         </FormGroup>
+                        <TextField
+                            select={true}
+                            label={"Expires In"}
+                            value={this.expireInDays}
+                            onChange={(event) => this.expireInDays = event.target.value}
+                            style={{marginRight: spacing(2)}}
+                        >
+                            <MenuItem value={"3"}>
+                                3 days
+                            </MenuItem>
+                            <MenuItem value={"7"}>
+                                7 days
+                            </MenuItem>
+                            <MenuItem value={"10"}>
+                                10 days
+                            </MenuItem>
+                            <MenuItem value={"30"}>
+                                30 days
+                            </MenuItem>
+                            <MenuItem value={"365"}>
+                                One year
+                            </MenuItem>
+                        </TextField>
                         <TextField
                             select={true}
                             label={"Condition"}

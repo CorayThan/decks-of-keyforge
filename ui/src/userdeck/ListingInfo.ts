@@ -8,4 +8,5 @@ export interface ListingInfo {
     askingPrice?: number
     listingInfo: string
     externalLink: string
+    expireInDays: number
 }

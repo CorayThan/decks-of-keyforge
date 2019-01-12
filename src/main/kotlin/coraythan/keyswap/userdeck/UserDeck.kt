@@ -36,7 +36,7 @@ data class UserDeck(
         val externalLink: String? = null,
 
         val dateListed: ZonedDateTime? = null,
-        val dateRefreshed: ZonedDateTime? = null,
+        val expiresAt: ZonedDateTime? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()

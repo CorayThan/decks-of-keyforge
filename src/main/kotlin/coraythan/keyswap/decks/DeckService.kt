@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.system.measureTimeMillis
 
 @Transactional
 @Service
@@ -33,8 +32,6 @@ class DeckService(
     fun filterDecks(filters: DeckFilters): DecksPage {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
-
-        log.info("Filtering decks with $filters")
 
         if (filters.houses.isNotEmpty()) {
             if (filters.houses.size < 4) {
@@ -114,39 +111,16 @@ class DeckService(
                 Sort.by(filters.sortDirection.direction, sortProperty)
         ))
 
-//        val timeToLoadDeckCards = measureTimeMillis {
-//            deckPage.content.forEach { it.cards }
-//        }
-
-//        val timeToLoadCards = measureTimeMillis {
-//            deckPage.content.forEach { it.cards.forEach { it.card.id } }
-//        }
-//
-        var decks: List<DeckSearchResult>? = null
-        val timeToConvert = measureTimeMillis {
-            decks = deckPage.content.map {
-                it.toDeckSearchResult(if (it.cardIds.isNullOrBlank()) {
+        val decks = deckPage.content.map {
+                it.toDeckSearchResult(if (it.cardIds.isBlank()) {
                     log.warn("No card ids available!")
                     null
                 } else {
-                    val fromCache = cardService.cachedCardsFromCardIds(it.cardIds)
-                    log.info("Cards from cache: ${fromCache?.size}")
-                    fromCache
+                    cardService.cachedCardsFromCardIds(it.cardIds)
                 })
             }
-        }
 
-        log.info(
-//                "Time to load deck cards: $timeToLoadDeckCards. " +
-//                "Time to load cards: $timeToLoadCards. " +
-                "Time to convert to deck search results: $timeToConvert. " +
-                        "Found ${deckPage.content.size} decks. " +
-                        "Current page ${filters.page}. " +
-                        "Total pages ${deckPage.totalPages}. " +
-                        "Sorted by $sortProperty."
-        )
-
-        return DecksPage(decks!!, filters.page, deckPage.totalPages, deckPage.totalElements)
+        return DecksPage(decks, filters.page, deckPage.totalPages, deckPage.totalElements)
     }
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)

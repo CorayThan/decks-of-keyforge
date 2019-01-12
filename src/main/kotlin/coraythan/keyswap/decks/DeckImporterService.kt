@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
@@ -23,7 +24,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT2M"
+private const val lockImportNewDecksFor = "PT10S"
 private const val lockUpdateStatistics = "PT24H"
 
 @Transactional
@@ -39,8 +40,8 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedRateString = lockImportNewDecksFor)
-    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor)
+     @Scheduled(fixedRateString = lockImportNewDecksFor)
+    // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
         val deckCountBeforeImport = deckRepo.count()
@@ -65,7 +66,7 @@ class DeckImporterService(
                 pagesRequested++
             }
 
-            deckPageService.setCurrentPage(currentPage - 2)
+            deckPageService.setCurrentPage(currentPage - 1)
         }
         val deckCountNow = deckRepo.count()
         log.info("Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
@@ -73,7 +74,7 @@ class DeckImporterService(
     }
 
     @Scheduled(fixedRateString = lockUpdateStatistics)
-    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics)
+    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         if (deckPageService.findCurrentPage() > 100) {
@@ -82,50 +83,17 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-    var stopRating: Boolean = false
-    var currentPage = 0
-
-    fun rerateDecks() {
-        if (stopRating) return
-
-        val startPage = currentPage
-        val sort = Sort.by("id")
-        val pageSize = 100
-        val maxPages = 10
-        while (true) {
-
-            val results = deckRepo.findAll(
-                    PageRequest.of(currentPage, pageSize, sort)
-            )
-            if (results.isEmpty) {
-                log.info("Done with rerating decks on page $currentPage.")
-                stopRating = true
-                break
-            }
-            if (currentPage - startPage == maxPages) {
-                log.info("Take a break from rerating decks because $currentPage minus $startPage == $maxPages.")
-                break
-            }
-
-            val decksToSave = results.content.mapNotNull {
-
-                if (it.cardIds.isNotBlank()) {
-                    // Don't save these decks
-                    null
-                } else {
-                    // TODO remove add card ids to deck, just temporary
-                    addCardIdsToDeck(rateDeck(it))
-                }
-            }
-
-//            if (currentPage % 10 == 0)
-            log.info("Updating decks, currently on deck ${currentPage * pageSize}. Saving ${decksToSave.size} decks.")
-
-            deckRepo.saveAll(decksToSave)
-            deckRepo.flush()
-            currentPage++
-        }
-//        log.info("Done updating decks.")
+    // hopefully not needed again
+    fun addCardIds() {
+        log.info("Beginning to add card ids.")
+        val deckQ = QDeck.deck
+        val predicate = BooleanBuilder()
+        predicate.andAnyOf(deckQ.cardIds.isEmpty, deckQ.cardIds.isNull)
+        val cardIdlessDecks = deckRepo.findAll(predicate, PageRequest.of(0, 1000)).content
+        val withCardIds = cardIdlessDecks.map { addCardIdsToDeck(it) }
+        log.info("Added ids to the decks.")
+        deckRepo.saveAll(withCardIds)
+        log.info("Done adding card ids to 1000 decks.")
     }
 
     private fun updateDeckStatisticsPrivate() {
@@ -319,9 +287,10 @@ class DeckImporterService(
     }
 
     private fun addCardIdsToDeck(deck: Deck): Deck {
-        return if (deck.cardIds.isNotEmpty()) {
+        return if (deck.cardIds.isBlank()) {
             deck.copy(cardIds = objectMapper.writeValueAsString(CardIds.fromCards(deck.cardsList)))
         } else {
+            log.warn("Huh? Why are you giving me a deck that already had card ids?!")
             deck
         }
     }

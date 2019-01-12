@@ -27,7 +27,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-all": "craco build && cd ..\\src\\main\\resources && rmdir /S /Q static && xcopy /i /s ..\\..\\..\\ui\\build static && cd ..\\..\\..\\ && .\\gradlew build"
   },
   "eslintConfig": {
     "extends": "react-app"

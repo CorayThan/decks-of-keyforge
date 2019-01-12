@@ -6,6 +6,7 @@ import coraythan.keyswap.now
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,8 +21,19 @@ class UserDeckService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @Scheduled(fixedRateString = "PT1M")
+    fun unlistExpiredDecks() {
+        val toUnlist = userDeckRepo.findAll(
+                QUserDeck.userDeck.expiresAt.before(now())
+        )
+        toUnlist.forEach {
+            unlistUserDeck(it)
+            log.info("Unlisted ${it.id}")
+        }
+    }
+
     fun addToWishlist(deckId: Long, add: Boolean = true) {
-        modUserDeck(deckId, {
+        modOrCreateUserDeck(deckId, {
             it.cards.size
             it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
         }) {
@@ -30,7 +42,7 @@ class UserDeckService(
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
-        modUserDeck(deckId, {
+        modOrCreateUserDeck(deckId, {
             it.cards.size
             it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)
         }) {
@@ -39,7 +51,7 @@ class UserDeckService(
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
-        modUserDeck(deckId, null) {
+        modOrCreateUserDeck(deckId, null) {
             it.copy(owned = mark)
         }
         if (!mark) {
@@ -48,7 +60,7 @@ class UserDeckService(
     }
 
     fun list(listingInfo: ListingInfo) {
-        modUserDeck(listingInfo.deckId, {
+        modOrCreateUserDeck(listingInfo.deckId, {
             it.copy(
                     forSale = it.forSale || listingInfo.forSale,
                     forTrade = it.forTrade || listingInfo.forTrade
@@ -62,52 +74,56 @@ class UserDeckService(
                     condition = listingInfo.condition,
                     externalLink = if (listingInfo.externalLink.isBlank()) null else listingInfo.externalLink,
                     dateListed = now(),
-                    dateRefreshed = now()
+                    expiresAt = now().plusDays(listingInfo.expireInDays.toLong())
             )
         }
     }
 
     fun unlist(deckId: Long) {
-
         val currentUser = currentUserService.loggedInUser()!!
         val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
             UserDeck(currentUser, deckRepo.getOne(deckId))
         }
-
-        val otherUserDecks = userDeckRepo.findByDeckId(deckId)
-        var forSale = false
-        var forTrade = false
-        otherUserDecks.filter { it.id != userDeck.id }.forEach {
-            if (it.forSale) {
-                forSale = true
-            }
-            if (it.forTrade) {
-                forTrade = true
-            }
-        }
-
-        modUserDeck(deckId, {
-            it.copy(forSale = forSale, forTrade = forTrade)
-        }) {
-            it.copy(
-                    forSale = false,
-                    forTrade = false,
-                    askingPrice = null,
-                    listingInfo = null,
-                    condition = null,
-                    dateListed = null,
-                    dateRefreshed = null,
-                    externalLink = null
-            )
-        }
+        unlistUserDeck(userDeck)
+    }
+    fun unlistUserDeck(userDeck: UserDeck) {
+        val deckId = userDeck.deck.id
+        userDeckRepo.save(userDeckWithoutListingInfo(userDeck))
+        val userDeckQ = QUserDeck.userDeck
+        val userDecksForSale = userDeckRepo.findAll(
+                userDeckQ.forSale.isTrue
+                        .and(userDeckQ.deck.id.eq(deckId))
+                        .and(userDeckQ.id.ne(userDeck.id))
+        )
+        val userDecksForTrade = userDeckRepo.findAll(
+                userDeckQ.forTrade.isTrue
+                        .and(userDeckQ.deck.id.eq(deckId))
+                        .and(userDeckQ.id.ne(userDeck.id))
+        )
+        deckRepo.save(userDeck.deck.copy(
+                forSale = userDecksForSale.toList().isNotEmpty(),
+                forTrade = userDecksForTrade.toList().isNotEmpty()
+        ))
     }
 
-    private fun modUserDeck(deckId: Long, modDeck: ((deck: Deck) -> Deck)?, mod: (userDeck: UserDeck) -> UserDeck) {
+    private fun userDeckWithoutListingInfo(userDeck: UserDeck) = userDeck.copy(
+            forSale = false,
+            forTrade = false,
+            askingPrice = null,
+            listingInfo = null,
+            condition = null,
+            dateListed = null,
+            expiresAt = null,
+            externalLink = null
+    )
+
+
+    private fun modOrCreateUserDeck(deckId: Long, modDeck: ((deck: Deck) -> Deck)?, mod: (userDeck: UserDeck) -> UserDeck) {
         log.info("modifying userdeck")
         val currentUser = currentUserService.loggedInUser()!!
         val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
             UserDeck(currentUser, deckRepo.getOne(deckId))
-        }.apply { deck.cards.size }
+        }
 
         val toSave = currentUser.copy(decks = currentUser.decks.filter { it.deck.id != deckId }.plus(
                 mod(userDeck)

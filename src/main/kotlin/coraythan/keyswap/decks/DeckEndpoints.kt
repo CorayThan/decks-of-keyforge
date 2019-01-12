@@ -21,7 +21,7 @@ class DeckEndpoints(
             decks = deckService.filterDecks(deckFilters)
         }
 
-        log.info("Decks filtering took $decksFilterTime ms with filters $deckFilters")
+        if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $deckFilters")
         return decks
     }
 
