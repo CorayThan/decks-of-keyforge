@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField/TextField"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer } from "../components/KeyDrawer"
-import { SortDirectionController, SortDirectionView } from "../components/SortDirectionView"
+import { SortDirectionView } from "../components/SortDirectionView"
 import { spacing } from "../config/MuiConfig"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -31,7 +31,6 @@ export class CardsSearchDrawer extends React.Component {
     selectedAmbers = new SelectedAmbers()
     selectedArmors = new SelectedArmors()
     selectedSortStore = new CardSortSelectStore()
-    sortDirectionController = new SortDirectionController("ASC")
 
     componentDidMount() {
         this.cardStore.reset()
@@ -49,14 +48,12 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.ambers = this.selectedAmbers.toArray()
         this.filters.armors = this.selectedArmors.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
-        this.filters.sortDirection = this.sortDirectionController.direction
         this.cardStore.searchCards(this.filters)
     }
 
     clearSearch = () => {
         this.selectedHouses.reset()
         this.selectedSortStore.selectedValue = ""
-        this.sortDirectionController.reset()
         this.filters.reset()
         this.selectedCardTypes.reset()
         this.selectedRarities.reset()
@@ -100,7 +97,7 @@ export class CardsSearchDrawer extends React.Component {
                         <ListItem>
                             <CardSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                                <SortDirectionView sortDirectionController={this.sortDirectionController}/>
+                                <SortDirectionView hasSort={this.filters}/>
                             </div>
                         </ListItem>
                         <ListItem>

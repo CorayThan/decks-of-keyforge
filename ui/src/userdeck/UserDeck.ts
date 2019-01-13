@@ -7,7 +7,7 @@ export interface UserDeck {
     deck: Deck
     wishlist: boolean
     funny: boolean
-    owned: boolean
+    ownedBy: string
 
     forSale: boolean
     forTrade: boolean

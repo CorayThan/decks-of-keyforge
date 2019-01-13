@@ -31,6 +31,7 @@ class DeckService(
 
     fun filterDecks(filters: DeckFilters): DecksPage {
         val deckQ = QDeck.deck
+        val deckCardQ = QDeckCard.deckCard
         val predicate = BooleanBuilder()
 
         if (filters.houses.isNotEmpty()) {
@@ -47,11 +48,9 @@ class DeckService(
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
         if (filters.owner.isNotBlank()) {
             log.info("filtering with owner name ${filters.owner}")
-            predicate.and(deckQ.userDecks.any().user.username.eq(filters.owner))
-            if (currentUserService.loggedInUser()?.username != filters.owner) {
-                val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
-                if (!allowToSeeAllDecks) predicate.and(forSaleOrTrade)
-            }
+            predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+            val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
+            if (!allowToSeeAllDecks) predicate.and(forSaleOrTrade)
         }
         if (filters.forSale && filters.forTrade) {
             predicate.and(forSaleOrTrade)
@@ -63,8 +62,7 @@ class DeckService(
         if (filters.myDecks) {
             val user = currentUserService.loggedInUser()
             if (user != null) {
-                predicate.and(deckQ.userDecks.any().user.id.eq(user.id))
-                predicate.and(deckQ.userDecks.any().owned.isTrue)
+                predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))
             }
         }
         if (filters.constraints.isNotEmpty()) {
@@ -78,8 +76,6 @@ class DeckService(
             if (it.quantity == 1) {
                 predicate.and(deckQ.cards.any().cardName.eq(it.cardName))
             } else {
-
-                val deckCardQ = QDeckCard.deckCard
                 predicate.and(
                         deckQ.cards.any().`in`(
                                 JPAExpressions.selectFrom(deckCardQ)
@@ -132,7 +128,6 @@ class DeckService(
         val deck = findDeck(keyforgeId)!!
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
-        log.info("Deck sas percentiles: ${stats?.sas}")
         return DeckWithSynergyInfo(
                 deck = deck,
                 deckSynergyInfo = synergies,

@@ -5,6 +5,7 @@ import { CardsPage } from "../cards/CardsPage"
 import { AboutPage } from "../components/AboutPage"
 import { KeyTopbar } from "../components/KeyTopbar"
 import { DeckViewPage } from "../decks/DeckViewFull"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
@@ -24,8 +25,12 @@ class Routes {
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
 
-    static deckSearch = (query?: { owner?: string }) => {
-        return `${Routes.decks}${query ? "?" + QueryString.stringify(query) : ""}`
+    /**
+     * Deck filters should be cleaned.
+     * @param filters
+     */
+    static deckSearch = (filters: DeckFilters) => {
+        return `${Routes.decks}?${QueryString.stringify(filters)}`
     }
 }
 
@@ -39,6 +44,11 @@ class KeyRouter extends React.Component {
                     <Switch>
                         <Route
                             exact={true}
+                            path={Routes.deckPage()}
+                            component={DeckViewPage}
+                        />
+                        <Route
+                            exact={true}
                             path={Routes.about}
                             component={AboutPage}
                         />
@@ -48,7 +58,6 @@ class KeyRouter extends React.Component {
                             component={CardsPage}
                         />
                         <Route
-                            exact={true}
                             path={Routes.decks}
                             component={DeckSearchPage}
                         />
@@ -56,11 +65,6 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.registration}
                             component={RegistrationPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.deckPage()}
-                            component={DeckViewPage}
                         />
                         <Route
                             exact={true}

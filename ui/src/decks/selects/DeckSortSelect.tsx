@@ -11,7 +11,16 @@ export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore
 export class DeckSortSelectStore implements SelectedStore {
 
     @observable
-    selectedValue = deckSortOptions[0].name
+    selectedValue: string
+
+    constructor(initialSort?: string) {
+        if (initialSort) {
+            this.selectedValue = deckSortOptions.filter(option => option.value === initialSort)[0].name
+        } else {
+            this.selectedValue = deckSortOptions[0].name
+        }
+
+    }
 
     toEnumValue = () => {
         if (!this.selectedValue) {

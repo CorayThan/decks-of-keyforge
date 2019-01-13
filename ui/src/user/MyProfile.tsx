@@ -4,6 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { UserStore } from "./UserStore"
 
@@ -12,7 +13,9 @@ export class MyProfile extends React.Component {
 
     render() {
         const profile = UserStore.instance.userProfile!
-        const decksLink = Routes.deckSearch({owner: profile.username})
+        const filters = new DeckFilters()
+        filters.owner = profile.username
+        const decksLink = Routes.deckSearch(filters.prepareForQueryString())
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
                 <Card style={{padding: spacing(2), maxWidth: 400}}>

@@ -52,7 +52,7 @@ class UserDeckService(
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
         modOrCreateUserDeck(deckId, null) {
-            it.copy(owned = mark)
+            it.copy(ownedBy = if (mark) currentUserService.loggedInUser()!!.username else null)
         }
         if (!mark) {
             this.unlist(deckId)

@@ -68,8 +68,10 @@ export class SelectedHouses {
     @observable
     selectedHouses: SelectedHouse[] = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))
 
-    constructor() {
-        this.reset()
+    constructor(initialHouses?: House[]) {
+        this.selectedHouses = houseValuesArray.map(houseValue => {
+            return {house: houseValue.house, selected: initialHouses ? initialHouses.indexOf(houseValue.house) !== -1 : false}
+        })
     }
 
     reset = () => this.selectedHouses = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))

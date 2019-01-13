@@ -1,5 +1,4 @@
-import { Chip, MenuItem, Paper, TextField, Typography } from "@material-ui/core"
-import CancelIcon from "@material-ui/icons/Cancel"
+import { MenuItem, Paper, TextField, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import Select from "react-select"
@@ -51,19 +50,21 @@ const Option = (props: any) => (
     </MenuItem>
 )
 
-const Placeholder = (props: any) => (
-    <Typography
-        color="textSecondary"
-        style={{
-            position: "absolute",
-            left: 2,
-            fontSize: 16,
-        }}
-        {...props.innerProps}
-    >
-        {props.children}
-    </Typography>
-)
+const Placeholder = (props: any) => {
+    return (
+        <Typography
+            color="textSecondary"
+            style={{
+                position: "absolute",
+                left: 2,
+                fontSize: 16,
+            }}
+            {...props.innerProps}
+        >
+            {props.children}
+        </Typography>
+    )
+}
 
 const SingleValue = (props: any) => (
     <Typography
@@ -74,28 +75,21 @@ const SingleValue = (props: any) => (
     </Typography>
 )
 
-const ValueContainer = (props: any) => (
-    <div
-        style={{
-            display: "flex",
-            flexWrap: "wrap",
-            flex: 1,
-            alignItems: "center",
-            overflow: "hidden",
-        }}
-    >
-        {props.children}
-    </div>
-)
-
-const MultiValue = (props: any) => (
-    <Chip
-        tabIndex={-1}
-        label={props.children}
-        onDelete={props.removeProps.onClick}
-        deleteIcon={<CancelIcon {...props.removeProps} />}
-    />
-)
+const ValueContainer = (props: any) => {
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+                flex: 1,
+                alignItems: "center",
+                overflow: "hidden",
+            }}
+        >
+            {props.children}
+        </div>
+    )
+}
 
 const Menu = (props: any) => (
     <Paper
@@ -126,7 +120,6 @@ const NoOptionsMessage = (props: any) => (
 const components = {
     Control,
     Menu,
-    MultiValue,
     NoOptionsMessage,
     Option,
     Placeholder,
@@ -143,6 +136,7 @@ interface CardSearchSuggestProps {
 export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
 
     render() {
+        const card = this.props.card
         return (
             <div
                 style={{
@@ -153,12 +147,16 @@ export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
                 <Select
                     options={CardStore.instance.cardNames}
                     components={components}
-                    value={{label: this.props.card.cardName, value: this.props.card.cardName}}
+                    value={card.cardName ? {label: card.cardName, value: card.cardName} : null}
                     onChange={(value: ValueType<{ label: string, value: string }>) => {
-                        const valueNonArray = value as { value: string }
-                        this.props.card.cardName = valueNonArray!.value
+                        if (value == null) {
+                            card.cardName = ""
+                        } else {
+                            const valueNonArray = value as { label: string, value: string }
+                            card.cardName = valueNonArray!.value
+                        }
                     }}
-                    placeholder="Deck must contain card"
+                    placeholder={"Filter on card"}
                     isClearable
                 />
             </div>

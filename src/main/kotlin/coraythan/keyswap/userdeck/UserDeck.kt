@@ -21,7 +21,7 @@ data class UserDeck(
 
         val wishlist: Boolean = false,
         val funny: Boolean = false,
-        val owned: Boolean = false,
+        val ownedBy: String? = null,
 
         // Deck selling info below
         val forSale: Boolean = false,

@@ -120,7 +120,8 @@ class CardService(
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->
             entry.value.map {
-                realCards[it]?.copy(house = entry.key) ?: return null
+                val realCard = realCards[it]
+                realCard?.copy(house = entry.key, maverick = entry.key != realCard.house) ?: return null
             }
         }
     }

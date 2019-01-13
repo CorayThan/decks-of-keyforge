@@ -34,9 +34,6 @@ export class KeySelect extends React.Component<KeySelectProps> {
                         id: `key-select-${name}`
                     }}
                 >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
                     {options.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                 </Select>
             </FormControl>

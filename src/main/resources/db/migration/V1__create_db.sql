@@ -52,6 +52,7 @@ create table deck (
   uncommons_count int4 not null,
   wins int4 not null,
   wishlist_count int4 not null,
+  card_ids text not null,
   primary key (id)
 );
 create table deck_card (
@@ -93,13 +94,13 @@ create table user_deck (
   asking_price float8,
   condition int4,
   date_listed timestamp,
-  date_refreshed timestamp,
+  expires_at timestamp,
   external_link varchar(255),
   for_sale boolean not null,
   for_trade boolean not null,
   funny boolean not null,
-  listing_info varchar(255),
-  owned boolean not null,
+  listing_info varchar(2000),
+  owned_by varchar(255),
   redeemed boolean not null,
   wishlist boolean not null,
   deck_id int8,
@@ -165,3 +166,5 @@ create index for_sale_idx on deck (for_sale);
 create index for_trade_idx on deck (for_trade);
 create index name_idx on deck (name);
 create index deck_houses_deck_id_idx on deck_houses (deck_id);
+create index deck_cards_card_name_idx on deck_card (card_name);
+

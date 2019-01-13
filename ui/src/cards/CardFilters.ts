@@ -17,11 +17,13 @@ export class CardFilters {
     ambers: number[] = []
     armors: number[] = []
     sort?: string
+    @observable
     sortDirection: SortDirection = "ASC"
 
     reset = () => {
         this.title = ""
         this.description = ""
+        this.sortDirection = "ASC"
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

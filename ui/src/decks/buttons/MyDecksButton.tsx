@@ -20,7 +20,7 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
             return null
         }
         const userDeck = UserStore.instance.userDeckByDeckId(id)
-        const owned = userDeck ? userDeck.owned : false
+        const owned = userDeck ? !!userDeck.ownedBy : false
         const forSale = userDeck && userDeck.forSale
         const forTrade = userDeck && userDeck.forTrade
 

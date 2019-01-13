@@ -13,6 +13,7 @@ import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
 import coraythan.keyswap.synergy.DeckSynergyService
+import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -23,7 +24,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT5M"
+private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateStatistics = "PT72H"
 
 @Transactional
@@ -73,7 +74,7 @@ class DeckImporterService(
     }
 
     @Scheduled(fixedRateString = lockUpdateStatistics)
-    // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
+    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         if (deckPageService.findCurrentPage() > 100) {

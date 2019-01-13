@@ -15,7 +15,15 @@ const makeDefaultConstraint = () => ({
 export class FiltersConstraintsStore {
 
     @observable
-    constraints: Constraint[] = [makeDefaultConstraint()]
+    constraints: Constraint[]
+
+    constructor(initialConstraints?: Constraint[]) {
+        if (initialConstraints && initialConstraints.length > 0) {
+            this.constraints = initialConstraints
+        } else {
+            this.constraints = [makeDefaultConstraint()]
+        }
+    }
 
     reset = () => this.constraints = [makeDefaultConstraint()]
 
@@ -40,7 +48,7 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                     </IconButton>
                 </div>
                 {store.constraints.map((constraint, idx) => (
-                    <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}} key={constraint.property}>
+                    <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}} key={idx}>
                         <TextField
                             select={true}
                             value={constraint.property}

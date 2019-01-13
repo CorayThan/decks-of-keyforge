@@ -1,4 +1,4 @@
-import { FormGroup, FormLabel, IconButton } from "@material-ui/core"
+import { FormGroup, IconButton } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -6,12 +6,15 @@ import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
 import AddIcon from "@material-ui/icons/Add"
+import Delete from "@material-ui/icons/Delete"
+import * as History from "history"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer } from "../../components/KeyDrawer"
-import { SortDirectionController, SortDirectionView } from "../../components/SortDirectionView"
+import { SortDirectionView } from "../../components/SortDirectionView"
 import { spacing } from "../../config/MuiConfig"
+import { Routes } from "../../config/Routes"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
@@ -21,22 +24,24 @@ import { UserStore } from "../../user/UserStore"
 import { DeckStore } from "../DeckStore"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
-import { DeckFiltersInstance } from "./DeckFilters"
+import { DeckFilters } from "./DeckFilters"
+
+interface DecksSearchDrawerProps {
+    history: History.History
+    filters: DeckFilters
+}
 
 @observer
-export class DecksSearchDrawer extends React.Component {
+export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     deckStore = DeckStore.instance
-    filters = DeckFiltersInstance
-    selectedHouses = new SelectedHouses()
-    selectedSortStore = new DeckSortSelectStore()
-    sortDirectionController = new SortDirectionController()
-    constraintsStore = new FiltersConstraintsStore()
+    filters = this.props.filters
+    selectedHouses = new SelectedHouses(this.props.filters.houses)
+    selectedSortStore = new DeckSortSelectStore(this.props.filters.sort)
+    constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
 
     componentDidMount() {
         this.deckStore.reset()
-        this.clearSearch()
-        this.search()
     }
 
     search = (event?: React.FormEvent) => {
@@ -45,21 +50,24 @@ export class DecksSearchDrawer extends React.Component {
         }
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
-        this.filters.sortDirection = this.sortDirectionController.direction
         this.filters.constraints = this.constraintsStore.cleanConstraints()
-        this.deckStore.searchDecks(this.filters.cleaned())
+        const cleaned = this.filters.prepareForQueryString()
+        this.props.history.push(
+            Routes.deckSearch(cleaned)
+        )
     }
 
     clearSearch = () => {
         this.selectedHouses.reset()
         this.selectedSortStore.selectedValue = ""
-        this.sortDirectionController.reset()
         this.filters.reset()
         this.constraintsStore.reset()
     }
 
     render() {
-        const {title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate, cards} = this.filters
+        const {
+            title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate, cards, owner
+        } = this.filters
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -144,14 +152,8 @@ export class DecksSearchDrawer extends React.Component {
                         </ListItem>
                         <ListItem>
                             <div>
-                                <div style={{display: "flex", alignItems: "center"}}>
-                                    <FormLabel style={{marginRight: spacing(1)}}>Cards</FormLabel>
-                                    <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
-                                        <AddIcon fontSize={"small"}/>
-                                    </IconButton>
-                                </div>
                                 {cards.map((card, idx) => (
-                                    <div style={{display: "flex", marginBottom: spacing(1)}} key={card.cardName}>
+                                    <div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>
                                         <CardSearchSuggest
                                             card={card}
                                             style={{marginTop: 12}}
@@ -165,12 +167,21 @@ export class DecksSearchDrawer extends React.Component {
                                         />
                                     </div>
                                 ))}
+                                <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
+                                    <AddIcon fontSize={"small"}/>
+                                </IconButton>
                             </div>
                         </ListItem>
+                        {owner ? (
+                            <ListItem>
+                                <Typography>Owner: {owner}</Typography>
+                                <IconButton onClick={() => this.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
+                            </ListItem>
+                        ) : null}
                         <ListItem>
                             <DeckSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                                <SortDirectionView sortDirectionController={this.sortDirectionController}/>
+                                <SortDirectionView hasSort={this.filters}/>
                             </div>
                         </ListItem>
                         <ListItem>

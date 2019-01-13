@@ -61,6 +61,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             MessageStore.instance.setWarningMessage("The deck must be listed for sale or trade.")
             return
         }
+        if (listingInfo.length > 2000) {
+            MessageStore.instance.setWarningMessage("The listing info must be less than 2000 characters long.")
+            return
+        }
         let askingPriceNumber
         if (askingPrice.length > 0) {
             askingPriceNumber = Number(askingPrice)
