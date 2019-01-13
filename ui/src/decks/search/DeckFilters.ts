@@ -1,6 +1,7 @@
 import { clone } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
+import { log } from "../../config/Utils"
 import { SortDirection } from "../../generic/SortDirection"
 import { House } from "../../houses/House"
 import { Constraint } from "./ConstraintDropdowns"
@@ -29,6 +30,7 @@ export class DeckFilters {
     owner: string = ""
 
     reset = () => {
+        log.debug("Reseting deck filters.")
         this.title = ""
         this.forSale = false
         this.forTrade = false
@@ -52,7 +54,7 @@ export class DeckFilters {
     }
 }
 
-interface DeckCardQuantity {
+export interface DeckCardQuantity {
     cardName: string
     quantity: number
 }

@@ -1,13 +1,12 @@
 import { Chip, MenuItem, Paper, TextField, Typography } from "@material-ui/core"
 import CancelIcon from "@material-ui/icons/Cancel"
-import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import Select from "react-select"
 import { ValueType } from "react-select/lib/types"
 import { spacing } from "../config/MuiConfig"
+import { DeckCardQuantity } from "../decks/search/DeckFilters"
 import { CardStore } from "./CardStore"
-import { KCard } from "./KCard"
 
 const inputComponent = (props: any) => {
     const {inputRef, ...rest} = props
@@ -135,21 +134,13 @@ const components = {
     ValueContainer,
 }
 
-export interface CardSuggestOption {
-    label: string
-    value: KCard
-}
-
 interface CardSearchSuggestProps {
     style?: React.CSSProperties
-    updateCardName: (cardName: string) => void
+    card: DeckCardQuantity
 }
 
 @observer
 export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
-
-    @observable
-    selectedCard?: CardSuggestOption
 
     render() {
         return (
@@ -160,16 +151,12 @@ export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
                 }}
             >
                 <Select
-                    options={CardStore.instance.cardSuggestions}
+                    options={CardStore.instance.cardNames}
                     components={components}
-                    value={this.selectedCard}
-                    onChange={(value: ValueType<{ label: string, value: KCard }>) => {
-                        this.selectedCard = value as CardSuggestOption
-                        if (this.selectedCard) {
-                            this.props.updateCardName(this.selectedCard.value.cardTitle)
-                        } else {
-                            this.props.updateCardName("")
-                        }
+                    value={{label: this.props.card.cardName, value: this.props.card.cardName}}
+                    onChange={(value: ValueType<{ label: string, value: string }>) => {
+                        const valueNonArray = value as { value: string }
+                        this.props.card.cardName = valueNonArray!.value
                     }}
                     placeholder="Deck must contain card"
                     isClearable

@@ -35,6 +35,7 @@ export class DecksSearchDrawer extends React.Component {
 
     componentDidMount() {
         this.deckStore.reset()
+        this.clearSearch()
         this.search()
     }
 
@@ -152,7 +153,7 @@ export class DecksSearchDrawer extends React.Component {
                                 {cards.map((card, idx) => (
                                     <div style={{display: "flex", marginBottom: spacing(1)}} key={card.cardName}>
                                         <CardSearchSuggest
-                                            updateCardName={id => card.cardName = id}
+                                            card={card}
                                             style={{marginTop: 12}}
                                         />
                                         <TextField

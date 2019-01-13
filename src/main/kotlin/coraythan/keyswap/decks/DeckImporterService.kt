@@ -13,7 +13,6 @@ import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
 import coraythan.keyswap.synergy.DeckSynergyService
-import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -24,8 +23,8 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT15S"
-private const val lockUpdateStatistics = "PT24H"
+private const val lockImportNewDecksFor = "PT5M"
+private const val lockUpdateStatistics = "PT72H"
 
 @Transactional
 @Service
@@ -56,14 +55,14 @@ class DeckImporterService(
             while (currentPage < finalPage && pagesRequested < maxPageRequests) {
                 val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
                 if (decks == null) {
-                    log.warn("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+                    log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+                    break
                 } else {
                     val cards = cardService.importNewCards(decks.data)
                     saveDecks(decks.data, cards)
+                    currentPage++
+                    pagesRequested++
                 }
-
-                currentPage++
-                pagesRequested++
             }
 
             deckPageService.setCurrentPage(currentPage - 1)
@@ -74,7 +73,7 @@ class DeckImporterService(
     }
 
     @Scheduled(fixedRateString = lockUpdateStatistics)
-    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
+    // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         if (deckPageService.findCurrentPage() > 100) {
@@ -125,9 +124,10 @@ class DeckImporterService(
             if (results.isEmpty) {
                 break
             }
-            if (currentPage % 10 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize}")
+            if (currentPage % 100 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize}")
 
             results.content.forEach {
+                val cards = cardService.cardsForDeck(it)
                 val ratedDeck = rateDeck(it)
 
                 armorValues.incrementValue(ratedDeck.totalArmor)
@@ -144,11 +144,11 @@ class DeckImporterService(
                 actionCount.incrementValue(ratedDeck.totalActions)
                 artifactCount.incrementValue(ratedDeck.totalArtifacts)
                 equipmentCount.incrementValue(ratedDeck.totalUpgrades)
-                power2OrLower.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power < 3 }.size)
-                power3OrLower.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power < 4 }.size)
-                power3OrHigher.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power > 2 }.size)
-                power4OrHigher.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power > 3 }.size)
-                power5OrHigher.incrementValue(ratedDeck.cardsList.filter { it.cardType == CardType.Creature && it.power > 4 }.size)
+                power2OrLower.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power < 3 }.size)
+                power3OrLower.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power < 4 }.size)
+                power3OrHigher.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power > 2 }.size)
+                power4OrHigher.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power > 3 }.size)
+                power5OrHigher.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power > 4 }.size)
             }
 
             currentPage++
@@ -262,7 +262,7 @@ class DeckImporterService(
     }
 
     private fun rateDeck(deck: Deck): Deck {
-        val cards = cardService.fullCardsFromCards(deck.cardsList)
+        val cards = cardService.cardsForDeck(deck)
         val extraCardInfos = cards.map { it.extraCardInfo!! }
         val deckSynergyInfo = deckSynergyService.fromDeck(deck)
         val cardsRating = extraCardInfos.map { it.rating - 1 }.sum()

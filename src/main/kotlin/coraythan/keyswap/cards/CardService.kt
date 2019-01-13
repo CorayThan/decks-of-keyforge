@@ -7,6 +7,7 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.deckcard.CardNumberSetPair
+import coraythan.keyswap.decks.Deck
 import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
@@ -55,17 +56,7 @@ class CardService(
         return cardsFromCardIds(cardIdsString)?.map { it.toDeckSearchResultCard() }
     }
 
-    fun cardsFromCardIds(cardIdsString: String): List<Card>? {
-        val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
-        val realCards = allFullCardsNonMaverickMap()
-        return cardIds.cardIds.flatMap { entry ->
-            entry.value.map {
-                realCards[it]?.copy(house = entry.key) ?: return null
-            }
-        }
-    }
-
-    fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
+    fun cardsForDeck(deck: Deck) = cardsFromCardIds(deck.cardIds) ?: fullCardsFromCards(deck.cardsList)
 
     fun filterCards(filters: CardFilters): Iterable<Card> {
         val cardQ = QCard.card
@@ -120,6 +111,18 @@ class CardService(
 
     fun saveNewCard(card: Card): Card {
         return cardRepo.save(card)
+    }
+
+    private fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
+
+    private fun cardsFromCardIds(cardIdsString: String): List<Card>? {
+        val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
+        val realCards = allFullCardsNonMaverickMap()
+        return cardIds.cardIds.flatMap { entry ->
+            entry.value.map {
+                realCards[it]?.copy(house = entry.key) ?: return null
+            }
+        }
     }
 
     private fun reloadCachedCards() {

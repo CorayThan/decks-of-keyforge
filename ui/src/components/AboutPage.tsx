@@ -44,7 +44,7 @@ export class AboutPage extends React.Component {
                         <InfoListCard title={"Stats of Keyforge"} titleVariant={"h4"} infos={[
                             <Typography variant={"h6"}>Deck Statistics</Typography>,
                             <div style={{paddingBottom: spacing(1)}}/>,
-                            <div style={{maxWidth: 520, maxHeight: 240}}>
+                            <div style={{maxWidth: 520, maxHeight: 240 }}>
                                 {stats ? <KeyPieGlobalAverages stats={stats} padding={48}/> : <Loader/>}
                             </div>,
                             "I've calculated the average statistics for decks in many categories, like card type ratios.",

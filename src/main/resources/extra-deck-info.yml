@@ -1778,7 +1778,7 @@
 
 - name: Ammonia Clouds
   cardNumber: 160
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -2227,7 +2227,7 @@
 
 - name: “John Smyth”
   cardNumber: 195
-  rating: 4
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2243,7 +2243,7 @@
 
 - name: Mindwarper
   cardNumber: 196
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -2336,7 +2336,6 @@
   traits: []
   synergies:
     - trait: goodPlay
-      rating: 3
 
 - name: Yxili Marauder
   cardNumber: 203
@@ -2395,7 +2394,6 @@
       rating: -3
     - trait: readiesCreatures
       type: house
-      rating: 3
     - trait: highCreatureCount
 
 - name: Biomatrix Backup
@@ -2424,17 +2422,19 @@
 
 - name: Jammer Pack
   cardNumber: 210
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [increasesKeyCost]
-  synergies: []
+  synergies:
+    - trait: power5OrHigherCreatures
+
 
 - name: Red Planet Ray Gun
   cardNumber: 211
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2445,7 +2445,7 @@
       rating: 1
     - trait: lowCreatureCount
       type: house
-      rating: -3
+      rating: -2
     - trait: highCreatureCount
       type: house
       rating: 3
@@ -2732,7 +2732,7 @@
     - trait: lowTotalCreaturePower
       rating: -3
     - trait: goodFight
-      rating: 3
+      rating: 2
 
 - name: Round Table
   cardNumber: 235
@@ -3220,7 +3220,7 @@
 
 - name: Oubliette
   cardNumber: 278
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3263,7 +3263,9 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: [dealsDamage, stealsAmber]
-  synergies: []
+  synergies:
+    - trait: dealsDamage
+      type: house
 
 - name: Routine Job
   cardNumber: 282
@@ -3629,7 +3631,6 @@
   traits: [preventsDamage, protectsCreatures]
   synergies:
     - trait: goodFight
-    - trait: damagesFriendlyCreatures
 
 - name: Silvertooth
   cardNumber: 311

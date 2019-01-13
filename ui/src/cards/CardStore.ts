@@ -1,9 +1,7 @@
 import axios, { AxiosResponse } from "axios"
-import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { CardFilters } from "./CardFilters"
-import { CardSuggestOption } from "./CardSearchSuggest"
 import { KCard } from "./KCard"
 
 export class CardStore {
@@ -21,7 +19,7 @@ export class CardStore {
     allCards: KCard[] = []
 
     @observable
-    cardSuggestions: CardSuggestOption[] = []
+    cardNames: Array<{label: string, value: string}> = []
 
     private constructor() {
     }
@@ -50,11 +48,8 @@ export class CardStore {
         axios.get(`${CardStore.CONTEXT}`)
             .then((response: AxiosResponse) => {
                 this.allCards = response.data
-                this.cardSuggestions = this.allCards!.map(card => ({
-                    label: card.cardTitle,
-                    value: card
-                }))
-                sortBy(this.cardSuggestions, suggestion => suggestion.value.cardNumber)
+                this.cardNames = this.allCards!.map(card => ({label: card.cardTitle, value: card.cardTitle}))
+                // sortBy(this.cardSuggestions, suggestion => suggestion.value.cardNumber)
             })
     }
 }

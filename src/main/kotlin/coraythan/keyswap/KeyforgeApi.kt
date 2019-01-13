@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import kotlin.system.measureTimeMillis
 
@@ -49,6 +50,9 @@ class KeyforgeApi(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    /**
+     * Null implies no decks available.
+     */
     fun findDecks(page: Int, pageSize: Int = 25): KeyforgeDecksPageDto? {
         if (page < 1) {
             throw IllegalArgumentException("Page has to be greater than 1.")
@@ -75,15 +79,20 @@ class KeyforgeApi(
     }
 
     private fun <T> keyforgeGetRequest(returnType: Class<T>, url: String): T? {
-        val decksEntity = restTemplate.exchange(
-                "https://www.keyforgegame.com/api/$url",
-                HttpMethod.GET,
-                HttpEntity<Any?>(null, HttpHeaders().let {
-                    it.set("cache-control", "no-cache")
-                    it.set("user-agent", "SpringBootRequest")
-                    it
-                }),
-                returnType)
-        return decksEntity.body
+        try {
+            val decksEntity = restTemplate.exchange(
+                    "https://www.keyforgegame.com/api/$url",
+                    HttpMethod.GET,
+                    HttpEntity<Any?>(null, HttpHeaders().let {
+                        it.set("cache-control", "no-cache")
+                        it.set("user-agent", "SpringBootRequest")
+                        it
+                    }),
+                    returnType)
+            return decksEntity.body
+        } catch (e: HttpClientErrorException.NotFound) {
+            // No results
+            return null
+        }
     }
 }

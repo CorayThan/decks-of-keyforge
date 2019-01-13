@@ -32,10 +32,10 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
                         Synergy Details
                     </Typography>
                     <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
+                        <PercentRatingRow value={sasPercentile} name={"SAS"}/>
                         <PercentRatingRow value={cardRatingPercentile} name={"CARD RATING"}/>
                         <PercentRatingRow value={synergyPercentile} name={"SYNERGY"}/>
                         <PercentRatingRow value={antisynergyPercentile} name={"ANTISYNERGY"}/>
-                        <PercentRatingRow value={sasPercentile} name={"SAS"}/>
                     </div>
                 </div>
             )}

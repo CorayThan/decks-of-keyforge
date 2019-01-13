@@ -17,7 +17,7 @@ class DeckSynergyService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun fromDeck(deck: Deck): DeckSynergyInfo {
-        val cards = cardService.cardsFromCardIds(deck.cardIds) ?: cardService.fullCardsFromCards(deck.cardsList)
+        val cards = cardService.cardsForDeck(deck)
         val counts: MutableMap<House?, MutableMap<SynTrait, Int>> = mutableMapOf()
         deck.houses.forEach { counts[it] = mutableMapOf() }
         counts[null] = mutableMapOf()
