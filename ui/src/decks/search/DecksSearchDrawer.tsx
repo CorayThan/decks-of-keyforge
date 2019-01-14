@@ -5,13 +5,14 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
+import { Close } from "@material-ui/icons"
 import AddIcon from "@material-ui/icons/Add"
 import Delete from "@material-ui/icons/Delete"
 import * as History from "history"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
-import { KeyDrawer } from "../../components/KeyDrawer"
+import { KeyDrawer, KeyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
@@ -55,6 +56,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.props.history.push(
             Routes.deckSearch(cleaned)
         )
+        KeyDrawerStore.closeIfSmall()
     }
 
     clearSearch = () => {
@@ -106,6 +108,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 value={title}
                                 fullWidth={!ScreenStore.instance.screenSizeXs()}
                             />
+                            <div style={{flexGrow: 1}}/>
+                            {ScreenStore.instance.screenSizeXs() ? (
+                                <IconButton onClick={() => KeyDrawerStore.open = false}>
+                                    <Close/>
+                                </IconButton>
+                            ) : null}
                         </ListItem>
                         <ListItem>
                             <HouseSelect selectedHouses={this.selectedHouses}/>

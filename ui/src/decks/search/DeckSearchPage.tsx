@@ -101,9 +101,9 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     }}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                        <Loader show={searchingForDecks}/>
                         {decksToDisplay}
                         {showMoreButton}
-                        <Loader show={searchingForDecks}/>
                     </div>
                 </div>
             </div>

@@ -12,6 +12,7 @@ import { CreatureIcon } from "../generic/icons/CreatureIcon"
 import { FistIcon } from "../generic/icons/FistIcon"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
+import { ScreenStore } from "../ui/ScreenStore"
 import { KCard } from "./KCard"
 import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 
@@ -29,8 +30,25 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     }
     const {cardTitle, cardType, cardText, amber, extraCardInfo} = props.card
     const {rating, expectedAmber, amberControl, creatureControl, artifactControl, traits, synergies} = extraCardInfo
+
+    const wrapperStyle: React.CSSProperties = ScreenStore.instance.screenSizeXs() ? {
+        backgroundColor: "#DFDFDF",
+        display: "flex",
+        flexDirection: "column",
+        width: 300,
+        margin: spacing(1),
+        borderRadius: "20px"
+    } : {
+        backgroundColor: "#DFDFDF",
+        display: "flex",
+        width: 600,
+        minHeight: 420,
+        margin: spacing(1),
+        borderRadius: "20px"
+    }
+
     return (
-        <div style={{backgroundColor: "#DFDFDF", display: "flex", width: 600, minHeight: 420, margin: spacing(1), borderRadius: "20px"}}>
+        <div style={wrapperStyle}>
             <div>
                 <img src={props.card.frontImage}/>
             </div>

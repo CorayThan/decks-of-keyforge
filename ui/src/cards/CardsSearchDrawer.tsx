@@ -1,14 +1,16 @@
-import { FormControlLabel, Switch } from "@material-ui/core"
+import { FormControlLabel, IconButton, Switch } from "@material-ui/core"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
+import { Close } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { KeyDrawer } from "../components/KeyDrawer"
+import { KeyDrawer, KeyDrawerStore } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { spacing } from "../config/MuiConfig"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { ScreenStore } from "../ui/ScreenStore"
 import { CardFilters } from "./CardFilters"
 import { cardsPageStoreInstance } from "./CardsPage"
 import { CardStore } from "./CardStore"
@@ -49,6 +51,7 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.armors = this.selectedArmors.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
         this.cardStore.searchCards(this.filters)
+        KeyDrawerStore.closeIfSmall()
     }
 
     clearSearch = () => {
@@ -73,8 +76,14 @@ export class CardsSearchDrawer extends React.Component {
                                 label={"Card Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
-                                fullWidth={true}
+                                fullWidth={!ScreenStore.instance.screenSizeXs()}
                             />
+                            <div style={{flexGrow: 1}}/>
+                            {ScreenStore.instance.screenSizeXs() ? (
+                                <IconButton onClick={() => KeyDrawerStore.open = false}>
+                                    <Close/>
+                                </IconButton>
+                            ) : null}
                         </ListItem>
                         <ListItem>
                             <TextField

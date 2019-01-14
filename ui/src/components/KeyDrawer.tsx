@@ -1,7 +1,5 @@
-import { IconButton } from "@material-ui/core"
 import Drawer from "@material-ui/core/Drawer"
 import Fab from "@material-ui/core/Fab/Fab"
-import { Close } from "@material-ui/icons"
 import Search from "@material-ui/icons/Search"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -13,14 +11,24 @@ import { ScreenStore } from "../ui/ScreenStore"
 
 const panelWidth = 344
 
-@observer
-export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
-
+class KeyDrawerStoreImpl {
     @observable
     open = true
 
+    closeIfSmall = () => {
+        if (ScreenStore.instance.screenSizeSm()) {
+            this.open = false
+        }
+    }
+}
+
+export const KeyDrawerStore = new KeyDrawerStoreImpl()
+
+@observer
+export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
+
     componentDidMount() {
-        this.open = true
+        KeyDrawerStore.open = true
     }
 
     render() {
@@ -29,7 +37,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
         if (small) {
             return (
                 <div>
-                    {this.open ? null : (
+                    {KeyDrawerStore.open ? null : (
                         <div>
                             <ToolbarSpacer/>
                             <Fab
@@ -41,7 +49,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                                     opacity: 1,
                                     zIndex: 1000,
                                 }}
-                                onClick={() => this.open = true}
+                                onClick={() => KeyDrawerStore.open = true}
                             >
                                 <Search style={{marginLeft: spacing(1)}}/>
                             </Fab>
@@ -50,19 +58,11 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                     <Drawer
                         style={{width: panelWidth}}
                         anchor={"left"}
-                        open={this.open}
-                        onClose={() => this.open = false}
+                        open={KeyDrawerStore.open}
+                        onClose={() => KeyDrawerStore.open = false}
                         PaperProps={{style: {width: panelWidth}}}
                     >
                         <ToolbarSpacer/>
-                        {small ? (
-                            <div style={{display: "flex", marginRight: spacing(1), marginTop: spacing(1)}}>
-                                <div style={{flexGrow: 1}}/>
-                                <IconButton onClick={() => this.open = false}>
-                                    <Close/>
-                                </IconButton>
-                            </div>
-                        ) : null}
                         {this.props.children}
                     </Drawer>
                 </div>
@@ -72,11 +72,10 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                 <Drawer
                     style={{width: panelWidth, flexShrink: 0}}
                     variant={"permanent"}
-                    open={this.open}
+                    open={true}
                     PaperProps={{style: {width: panelWidth}}}
                 >
                     <ToolbarSpacer/>
-                    <div style={{marginTop: spacing(1)}}/>
                     {this.props.children}
                 </Drawer>
             )
