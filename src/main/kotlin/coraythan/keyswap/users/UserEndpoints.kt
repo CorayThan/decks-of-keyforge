@@ -26,4 +26,6 @@ class UserEndpoints(
     @GetMapping("/{username}")
     fun findUserProfile(@PathVariable username: String) = userService.findUserProfile(username)
 
+    @PostMapping("/secured/update")
+    fun updateProfile(@RequestBody userProfile: UserProfileUpdate) = userService.updateUserProfile(userProfile)
 }

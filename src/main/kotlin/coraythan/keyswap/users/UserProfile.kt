@@ -9,3 +9,8 @@ data class UserProfile(
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean
 )
+
+data class UserProfileUpdate(
+        val publicContactInfo: String?,
+        val allowUsersToSeeDeckOwnership: Boolean
+)

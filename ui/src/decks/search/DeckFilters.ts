@@ -47,9 +47,6 @@ export class DeckFilters {
         if (queryObject.forTrade) {
             queryObject.forTrade = Boolean(queryObject.forTrade)
         }
-        if (queryObject.containsMaverick) {
-            queryObject.containsMaverick = Boolean(queryObject.containsMaverick)
-        }
         if (queryObject.myDecks) {
             queryObject.myDecks = Boolean(queryObject.myDecks)
         }
@@ -79,8 +76,6 @@ export class DeckFilters {
     @observable
     forTrade = false
     @observable
-    containsMaverick: boolean = false
-    @observable
     myDecks: boolean = false
     constraints: Constraint[] = []
     @observable
@@ -98,7 +93,6 @@ export class DeckFilters {
         this.title = ""
         this.forSale = false
         this.forTrade = false
-        this.containsMaverick = false
         this.myDecks = false
         this.cards = [{
             cardName: "",
@@ -109,7 +103,6 @@ export class DeckFilters {
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
-    handleContainsMaverickUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.containsMaverick = event.target.checked
     handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.myDecks = event.target.checked
 
     prepareForQueryString = (): DeckFilters => {

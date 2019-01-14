@@ -52,4 +52,14 @@ class KeyUserService(
     fun findUserProfile(username: String) =
             userRepo.findByUsernameIgnoreCase(username)?.toProfile(currentUserService.loggedInUser()?.username == username)
 
+    fun updateUserProfile(update: UserProfileUpdate) {
+        val user = currentUserService.loggedInUser()
+        if (user != null) {
+            userRepo.save(user.copy(
+                    publicContactInfo = update.publicContactInfo,
+                    allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership
+            ))
+        }
+    }
+
 }

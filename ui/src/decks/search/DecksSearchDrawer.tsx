@@ -66,8 +66,35 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     render() {
         const {
-            title, containsMaverick, myDecks, handleTitleUpdate, handleContainsMaverickUpdate, handleMyDecksUpdate, cards, owner
+            title, myDecks, handleTitleUpdate, handleMyDecksUpdate, cards, owner
         } = this.filters
+
+        const showMyDecks = UserStore.instance.loggedIn()
+        const showDecksOwner = !!owner
+        const optionals = !showMyDecks && !showDecksOwner ? null : (
+            <ListItem>
+                <FormGroup row={true}>
+                    {showMyDecks ? (
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={myDecks}
+                                    onChange={handleMyDecksUpdate}
+                                />
+                            }
+                            label={"My Decks"}
+                        />
+                    ) : null}
+                    {showDecksOwner ? (
+                        <ListItem>
+                            <Typography>Owner: {owner}</Typography>
+                            <IconButton onClick={() => this.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
+                        </ListItem>
+                    ) : null}
+                </FormGroup>
+            </ListItem>
+        )
+
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -115,30 +142,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 />
                             </FormGroup>
                         </ListItem>
-                        <ListItem>
-                            <FormGroup row={true}>
-                                {UserStore.instance.loggedIn() ? (
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={myDecks}
-                                                onChange={handleMyDecksUpdate}
-                                            />
-                                        }
-                                        label={"My Decks"}
-                                    />
-                                ) : null}
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={containsMaverick}
-                                            onChange={handleContainsMaverickUpdate}
-                                        />
-                                    }
-                                    label={"Has maverick"}
-                                />
-                            </FormGroup>
-                        </ListItem>
+                        {optionals}
                         <ListItem>
                             <ConstraintDropdowns
                                 store={this.constraintsStore}
@@ -172,12 +176,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             </div>
                         </ListItem>
-                        {owner ? (
-                            <ListItem>
-                                <Typography>Owner: {owner}</Typography>
-                                <IconButton onClick={() => this.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
-                            </ListItem>
-                        ) : null}
                         <ListItem>
                             <DeckSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>

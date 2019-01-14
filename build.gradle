@@ -23,14 +23,21 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'coraythan'
-version = '18'
+version = '20'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
         jvmTarget = "1.8"
     }
+
+    bootJar {
+        from('.ebextensions') {
+            into('.ebextensions' )
+        }
+    }
 }
+
 compileTestKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]

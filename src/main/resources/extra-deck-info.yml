@@ -2971,7 +2971,7 @@
   traits: [destroysEnemyCreatures, goodPlay]
   synergies:
     - trait: highCreatureCount
-      rating: -2
+      rating: -1
 
 - name: Protectrix
   cardNumber: 254
@@ -3441,6 +3441,9 @@
     - trait: skirmish
     - trait: returnsFriendlyArtifactsToHand
       rating: 3
+    - trait: readiesCreatures
+      rating: -2
+      type: house
 
 - name: Subtle Maul
   cardNumber: 294
@@ -3660,7 +3663,10 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
-  synergies: []
+  synergies:
+    - trait: readiesCreatures
+      type: house
+      rating: -2
 
 - name: Smiling Ruth
   cardNumber: 312

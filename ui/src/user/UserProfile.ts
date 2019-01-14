@@ -5,3 +5,8 @@ export interface UserProfile {
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
 }
+
+export interface UserProfileUpdate {
+    publicContactInfo?: string
+    allowUsersToSeeDeckOwnership: boolean
+}

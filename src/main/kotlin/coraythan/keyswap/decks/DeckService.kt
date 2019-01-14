@@ -73,7 +73,6 @@ class DeckService(
             if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         }
-        if (filters.containsMaverick) predicate.and(deckQ.maverickCount.goe(1))
         if (filters.myDecks) {
             val user = currentUserService.loggedInUser()
             if (user != null) predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))

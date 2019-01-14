@@ -1,6 +1,7 @@
-import { Divider } from "@material-ui/core"
+import { Button, CardActions, Checkbox, FormControlLabel } from "@material-ui/core"
 import TextField from "@material-ui/core/es/TextField"
 import Typography from "@material-ui/core/Typography"
+import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -30,51 +31,93 @@ interface MyProfileInnerProps {
 @observer
 class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
+    @observable
     contactInfo: string
-    allowUsersToSeeDecks: boolean
+    @observable
+    allowUsersToSeeDeckOwnership: boolean
 
     constructor(props: MyProfileInnerProps) {
         super(props)
         const {publicContactInfo, allowUsersToSeeDeckOwnership} = props.profile
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
-        this.allowUsersToSeeDecks = allowUsersToSeeDeckOwnership
+        this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
     }
 
+    updateProfile = (event?: React.FormEvent) => {
+        if (event) {
+            event.preventDefault()
+        }
+        UserStore.instance.updateUserProfile({
+            publicContactInfo: this.contactInfo.trim().length === 0 ? undefined : this.contactInfo.trim(),
+            allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership
+        })
+    }
 
     render() {
-        const profile = UserStore.instance.userProfile!
+        const profile = this.props.profile
         const filters = new DeckFilters()
         filters.owner = profile.username
         const decksLink = Routes.deckSearch(filters.prepareForQueryString())
+        let shareLinkDescription
+        if (this.allowUsersToSeeDeckOwnership) {
+            shareLinkDescription = "Use this link to share your deck list and decks for sale and trade with other users."
+        } else {
+            shareLinkDescription = "Use this link to share your decks for sale and trade with other users."
+        }
         return (
             <div style={{marginTop: spacing(2), display: "flex", justifyContent: "center"}}>
-                <KeyCard
-                    topContents={(
-                        <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
-                    )}
-                    style={{maxWidth: 400}}
-                >
-                    <div style={{padding: spacing(2)}}>
-                        {
-                            <TextField
-                                label={"Public contact and trade info"}
-                                value={this.contactInfo}
-                                multiline={true}
-                                rows={4}
-                                onChange={(event) => this.contactInfo = event.target.value}
-                                fullWidth={true}
-                            />
+                <form onSubmit={this.updateProfile}>
+                    <KeyCard
+                        topContents={(
+                            <div>
+                                <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1)}}>{profile.username}</Typography>
+                                <Typography style={{color: "#FFFFFF"}}>{profile.email}</Typography>
+                            </div>
+                        )}
+                        style={{maxWidth: 400}}
+                    >
+                        <div style={{padding: spacing(2)}}>
+                            {
+                                <TextField
+                                    label={"Public contact and trade info"}
+                                    value={this.contactInfo}
+                                    multiline={true}
+                                    rows={4}
+                                    onChange={(event) => this.contactInfo = event.target.value}
+                                    fullWidth={true}
+                                />
 
-                        }
-                        <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
-                        <Typography style={{marginBottom: spacing(2)}}>
-                            Use this link to view and share your deck list.
-                        </Typography>
-                        <LinkButton color={"primary"} to={decksLink}>
-                            {profile.username}'s Decks
-                        </LinkButton>
-                    </div>
-                </KeyCard>
+                            }
+                            <Typography style={{marginBottom: spacing(2), marginTop: spacing(2)}}>
+                                {shareLinkDescription}
+                            </Typography>
+                            <LinkButton color={"primary"} to={decksLink}>
+                                {profile.username}'s Decks
+                            </LinkButton>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.allowUsersToSeeDeckOwnership}
+                                        onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
+                                        tabIndex={6}
+                                    />
+                                }
+                                label={"Allow anyone to see which decks I own"}
+                            />
+                            <CardActions
+                                style={{paddingLeft: 0}}
+                            >
+                                <div style={{flexGrow: 1}}/>
+                                <Button
+                                    variant={"contained"}
+                                    type={"submit"}
+                                >
+                                    Save
+                                </Button>
+                            </CardActions>
+                        </div>
+                    </KeyCard>
+                </form>
             </div>
         )
     }

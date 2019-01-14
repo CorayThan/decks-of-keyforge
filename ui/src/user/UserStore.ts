@@ -6,7 +6,7 @@ import { log, prettyJson } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
 import { UserDeck } from "../userdeck/UserDeck"
 import { KeyUser, UserLogin, UserRegistration } from "./KeyUser"
-import { UserProfile } from "./UserProfile"
+import { UserProfile, UserProfileUpdate } from "./UserProfile"
 
 export class UserStore {
 
@@ -111,6 +111,13 @@ export class UserStore {
                 } else {
                     this.userProfile = response.data
                 }
+            })
+    }
+
+    updateUserProfile = (updateUserProfile: UserProfileUpdate) => {
+        axios.post(`${UserStore.SECURE_CONTEXT}/update`, updateUserProfile)
+            .then((response: AxiosResponse) => {
+                MessageStore.instance.setSuccessMessage("Updated your profile!")
             })
     }
 
