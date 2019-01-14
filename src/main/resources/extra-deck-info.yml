@@ -1835,7 +1835,7 @@
 
 - name: Hypnotic Command
   cardNumber: 164
-  rating: 5
+  rating: 4
   expectedAmber: 1.5
   amberControl: 2.0
   creatureControl: 0.0
@@ -1844,6 +1844,10 @@
   synergies:
     - trait: highCreatureCount
       type: house
+      rating: 3
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
 
 - name: Irradiated Æmber
   cardNumber: 165
@@ -1874,7 +1878,7 @@
       rating: 3
     - trait: increasesHandSize
     - trait: forgesKeys
-      rating: -3
+      rating: -2
 
 - name: Martian Hounds
   cardNumber: 167
@@ -2049,6 +2053,9 @@
       type: house
     - trait: goodAction
       type: house
+    - trait: lowCreatureCount
+      type: house
+      rating: -2
 
 - name: Commpod
   cardNumber: 181
@@ -2126,7 +2133,7 @@
 
 - name: Incubation Chamber
   cardNumber: 186
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2135,6 +2142,9 @@
   synergies:
     - trait: lowCreatureCount
       rating: -3
+      type: house
+    - trait: highCreatureCount
+      rating: 2
       type: house
 
 - name: Mothergun
@@ -2163,7 +2173,7 @@
 
 - name: Swap Widget
   cardNumber: 189
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2171,7 +2181,16 @@
   traits: [usableArtifact, readiesCreatures]
   synergies:
     - trait: lowCreatureCount
-      rating: -3
+      rating: -2
+      type: house
+    - trait: goodReap
+      type: house
+    - trait: goodAction
+      type: house
+    - trait: goodPlay
+      rating: 3
+      type: house
+    - trait: goodFight
       type: house
 
 - name: Blypyp
@@ -2360,6 +2379,7 @@
   synergies:
     - trait: readiesCreatures
       type: house
+      rating: 1
 
 - name: Yxilx Dominator
   cardNumber: 205
@@ -2383,7 +2403,7 @@
 
 - name: Zyzzix the Many
   cardNumber: 207
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0

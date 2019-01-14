@@ -10,6 +10,7 @@ import java.util.*
 @Transactional
 class KeyUserService(
         private val userRepo: KeyUserRepo,
+        private val currentUserService: CurrentUserService,
         private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
@@ -48,6 +49,7 @@ class KeyUserService(
     fun userFromEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
     fun findUser(id: UUID) = userRepo.getOne(id)
-    fun findUserProfile(username: String) = userRepo.findByUsernameIgnoreCase(username)?.toProfile()
+    fun findUserProfile(username: String) =
+            userRepo.findByUsernameIgnoreCase(username)?.toProfile(currentUserService.loggedInUser()?.username == username)
 
 }

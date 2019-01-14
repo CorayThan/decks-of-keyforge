@@ -22,3 +22,4 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 jwt-secret: ${JWT_SECRET:abbb766d-dd23-45d3-af40-83db9d4dbbf4}
+env: ${ENV:dev}

@@ -9,6 +9,7 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.deckcard.QDeckCard
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
@@ -45,12 +46,26 @@ class DeckService(
 
         val forSaleOrTrade = BooleanBuilder().andAnyOf(deckQ.forSale.isTrue, deckQ.forTrade.isTrue)
 
-        if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title}%"))
+        if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title.toLowerCase()}%"))
         if (filters.owner.isNotBlank()) {
             log.info("filtering with owner name ${filters.owner}")
-            predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
             val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
-            if (!allowToSeeAllDecks) predicate.and(forSaleOrTrade)
+
+            if (allowToSeeAllDecks) {
+                predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+            } else {
+                val userDeckQ = QUserDeck.userDeck
+                predicate.and(
+                        deckQ.userDecks.any().`in`(
+                                JPAExpressions.selectFrom(userDeckQ)
+                                        .where(
+                                                userDeckQ.ownedBy.eq(filters.owner),
+                                                userDeckQ.forSale.isTrue
+                                                        .or(userDeckQ.forTrade.isTrue)
+                                        )
+                        )
+                )
+            }
         }
         if (filters.forSale && filters.forTrade) {
             predicate.and(forSaleOrTrade)
@@ -61,9 +76,7 @@ class DeckService(
         if (filters.containsMaverick) predicate.and(deckQ.maverickCount.goe(1))
         if (filters.myDecks) {
             val user = currentUserService.loggedInUser()
-            if (user != null) {
-                predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))
-            }
+            if (user != null) predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))
         }
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {

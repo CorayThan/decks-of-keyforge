@@ -1,7 +1,6 @@
 package coraythan.keyswap.decks
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
@@ -13,18 +12,16 @@ import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
 import coraythan.keyswap.synergy.DeckSynergyService
-import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT10M"
+private const val lockImportNewDecksFor = "PT15M"
 private const val lockUpdateStatistics = "PT72H"
 
 @Transactional
@@ -40,7 +37,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-      @Scheduled(fixedRateString = lockImportNewDecksFor)
+    // @Scheduled(fixedRateString = lockImportNewDecksFor)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
@@ -73,27 +70,14 @@ class DeckImporterService(
 
     }
 
-    @Scheduled(fixedRateString = lockUpdateStatistics)
-    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
-    fun updateDeckStats() {
+    // @Scheduled(fixedRateString = lockUpdateStatistics)
+    // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
+    fun updateDeckStatsAndRateDecks() {
         log.info("Began update to deck statistics.")
         if (deckPageService.findCurrentPage() > 100) {
             updateDeckStatisticsPrivate()
         }
         log.info("Updated deck statistics.")
-    }
-
-    // hopefully not needed again
-    fun addCardIds() {
-        log.info("Beginning to add card ids.")
-        val deckQ = QDeck.deck
-        val predicate = BooleanBuilder()
-        predicate.andAnyOf(deckQ.cardIds.isEmpty, deckQ.cardIds.isNull)
-        val cardIdlessDecks = deckRepo.findAll(predicate, PageRequest.of(0, 1000)).content
-        val withCardIds = cardIdlessDecks.map { addCardIdsToDeck(it) }
-        log.info("Added ids to the decks.")
-        deckRepo.saveAll(withCardIds)
-        log.info("Done adding card ids to 1000 decks.")
     }
 
     private fun updateDeckStatisticsPrivate() {
@@ -130,6 +114,7 @@ class DeckImporterService(
             results.content.forEach {
                 val cards = cardService.cardsForDeck(it)
                 val ratedDeck = rateDeck(it)
+                deckRepo.save(ratedDeck)
 
                 armorValues.incrementValue(ratedDeck.totalArmor)
                 totalCreaturePower.incrementValue(ratedDeck.totalPower)
@@ -287,12 +272,4 @@ class DeckImporterService(
         )
     }
 
-    private fun addCardIdsToDeck(deck: Deck): Deck {
-        return if (deck.cardIds.isBlank()) {
-            deck.copy(cardIds = objectMapper.writeValueAsString(CardIds.fromCards(deck.cardsList)))
-        } else {
-            log.warn("Huh? Why are you giving me a deck that already had card ids?!")
-            deck
-        }
-    }
 }
