@@ -44,7 +44,9 @@ fun Set<CardTrait>.toSynTraits(): List<SynTrait> {
     }
 }
 
-enum class SynTrait {
+enum class SynTrait(
+        val associatedCardTrait: CardTrait? = null
+) {
 
     // Amber / keys
     capturesAmberOnEnemies,
@@ -116,18 +118,15 @@ enum class SynTrait {
     chains,
     forgesKeys,
 
-    // Traits (these don't need to be traits on the extra info
-    knight,
-    human,
-    scientist,
-    niffle,
-    beast,
+    // Traits (these don't need to be traits on the extra info)
+    knight(CardTrait.Knight),
+    human(CardTrait.Human),
+    scientist(CardTrait.Scientist),
+    niffle(CardTrait.Niffle),
+    beast(CardTrait.Beast),
 
     // Special cards
-    dominatorBauble,
-    libraryAccess,
     badPenny,
-    dextre,
     routineJob,
     urchin,
     ancientBear,

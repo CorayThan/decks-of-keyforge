@@ -34,7 +34,9 @@ class CardService(
                 ClassPathResource("extra-deck-info.yml").inputStream
         )
         this.extraInfo = extraInfosFromFile
-                .map { it.cardNumber to it.copy(synergies = it.synergies.sorted()) }
+                .map { it.cardNumber to it.copy(
+                        synergies = it.synergies.sorted()
+                ) }
                 .toMap()
     }
 

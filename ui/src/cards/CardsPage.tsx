@@ -29,7 +29,7 @@ export class CardsPage extends React.Component {
         const {cards, searchingForCards} = CardStore.instance
 
         let cardsDisplay
-        if (cards) {
+        if (!searchingForCards && cards) {
             if (cards.length === 0) {
                 cardsDisplay = (
                     <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
@@ -54,7 +54,7 @@ export class CardsPage extends React.Component {
                     style={{flexGrow: 1, margin: spacing(2)}}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        <Loader show={searchingForCards && !cards}/>
+                        <Loader show={searchingForCards}/>
                         {cardsDisplay}
                     </div>
                 </div>

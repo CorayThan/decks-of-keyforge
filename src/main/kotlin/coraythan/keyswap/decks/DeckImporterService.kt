@@ -15,13 +15,14 @@ import coraythan.keyswap.synergy.DeckSynergyService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT15M"
+private const val lockImportNewDecksFor = "PT15S"
 private const val lockUpdateStatistics = "PT72H"
 
 @Transactional
@@ -37,7 +38,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    // @Scheduled(fixedRateString = lockImportNewDecksFor)
+    @Scheduled(fixedRateString = lockImportNewDecksFor)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
@@ -70,7 +71,7 @@ class DeckImporterService(
 
     }
 
-    // @Scheduled(fixedRateString = lockUpdateStatistics)
+    //     @Scheduled(fixedRateString = lockUpdateStatistics)
     // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
     fun updateDeckStatsAndRateDecks() {
         log.info("Began update to deck statistics.")
@@ -78,6 +79,28 @@ class DeckImporterService(
             updateDeckStatisticsPrivate()
         }
         log.info("Updated deck statistics.")
+    }
+
+    @Scheduled(fixedRateString = lockUpdateStatistics)
+    fun rateDecks() {
+        val sort = Sort.by("id")
+        var currentPage = 0
+        val pageSize = 100
+        while (true) {
+
+            val results = deckRepo.findAll(PageRequest.of(currentPage, pageSize, sort))
+            if (results.isEmpty) {
+                break
+            }
+            if (currentPage % 100 == 0) log.info("Rating decks, currently on deck ${currentPage * pageSize}")
+
+            results.content.forEach {
+                val ratedDeck = rateDeck(it)
+                deckRepo.save(ratedDeck)
+            }
+            currentPage++
+        }
+        log.info("Done rating decks.")
     }
 
     private fun updateDeckStatisticsPrivate() {

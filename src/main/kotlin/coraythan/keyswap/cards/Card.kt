@@ -2,6 +2,7 @@ package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
+import coraythan.keyswap.synergy.SynTrait
 import javax.persistence.*
 
 @Entity
@@ -78,10 +79,12 @@ data class DeckSearchResultCard(
         val maverick: Boolean
 )
 
-enum class CardTrait {
+enum class CardTrait(
+        val synTrait: SynTrait? = null
+) {
     Agent,
     Angel,
-    Beast,
+    Beast(SynTrait.beast),
     Cyborg,
     Demon,
     Dragon,
@@ -91,18 +94,18 @@ enum class CardTrait {
     Giant,
     Goblin,
     Horseman,
-    Human,
+    Human(SynTrait.human),
     Imp,
     Insect,
-    Knight,
+    Knight(SynTrait.knight),
     Martian,
     Merchant,
     Mutant,
-    Niffle,
+    Niffle(SynTrait.niffle),
     Priest,
     Ranger,
     Robot,
-    Scientist,
+    Scientist(SynTrait.scientist),
     Soldier,
     Specter,
     Spirit,

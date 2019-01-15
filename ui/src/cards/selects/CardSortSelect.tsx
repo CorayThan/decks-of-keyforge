@@ -24,8 +24,9 @@ export class CardSortSelectStore implements SelectedStore {
 
 const cardSortOptions: SortOption[] = [
     {value: "SET_NUMBER", name: "Set Number"},
-    {value: "CARD_NAME", name: "Card Name"},
-    {value: "AMBER", name: "Aember"},
-    {value: "POWER", name: "Power"},
-    {value: "ARMOR", name: "Armor"},
+    {value: "CARD_RATING", name: "Card Rating"},
+    {value: "EXPECTED_AMBER", name: "Expected Aember"},
+    {value: "AMBER_CONTROL", name: "Aember Control"},
+    {value: "CREATURE_CONTROL", name: "Creature Control"},
+    {value: "ARTIFACT_CONTROL", name: "Artifact Control"},
 ]

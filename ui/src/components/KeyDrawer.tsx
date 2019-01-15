@@ -75,6 +75,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                     open={true}
                     PaperProps={{style: {width: panelWidth}}}
                 >
+                    <div style={{paddingTop: spacing(1)}} />
                     <ToolbarSpacer/>
                     {this.props.children}
                 </Drawer>

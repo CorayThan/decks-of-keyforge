@@ -15,23 +15,30 @@ export interface SelectedValues<T extends string> {
     reset: () => void
 }
 
-interface MultiSelectProps<T extends string> {
+export interface MultiSelectOption {
+    value: string
+    option: React.ReactNode
+}
+
+interface MultiSelectProps {
     name: string
-    selected: SelectedValues<T>
-    options: T[]
+    selected: SelectedValues<string>
+    options: string[] | MultiSelectOption[]
 }
 
 @observer
-export class MultiSelect<T extends string> extends React.Component<MultiSelectProps<T>> {
+export class MultiSelect extends React.Component<MultiSelectProps> {
 
     handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         log.debug(`target value: ${event.target.value}`)
-        this.props.selected.selectedValues.replace(event.target.value as unknown as T[])
+        this.props.selected.selectedValues.replace(event.target.value as unknown as string[])
     }
 
     render() {
         const {selected, options, name} = this.props
         const selectedRarities = selected.selectedValues
+        const fixedOptions =
+            typeof options[0] === "string" ? (options as string[]).map(option => ({value: option, option})) : options as MultiSelectOption[]
 
         const id = `select-multiple-${options.join("")}`
 
@@ -55,11 +62,11 @@ export class MultiSelect<T extends string> extends React.Component<MultiSelectPr
                             }
                         }}
                     >
-                        {options.map(option => {
+                        {fixedOptions.map(option => {
                             return (
-                                <MenuItem key={option} value={option}>
-                                    <Checkbox checked={selectedRarities.indexOf(option) > -1}/>
-                                    <ListItemText primary={option}/>
+                                <MenuItem key={option.value} value={option.value}>
+                                    <Checkbox checked={selectedRarities.indexOf(option.value) > -1}/>
+                                    <ListItemText primary={option.option}/>
                                 </MenuItem>
                             )
                         })}

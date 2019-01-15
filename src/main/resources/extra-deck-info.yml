@@ -1285,12 +1285,14 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [drawsCards]
   synergies:
     - trait: archives
     - trait: drawsCards
       rating: 1
     - trait: playsCards
+    - trait: returnsCardsFromDiscard
+      rating: 3
 
 - name: Neuro Syphon
   cardNumber: 116
@@ -1311,8 +1313,6 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [playsCards]
-  synergies:
-    - trait: libraryAccess
 
 - name: Positron Bolt
   cardNumber: 118
@@ -1355,8 +1355,8 @@
   artifactControl: 0.0
   traits: []
   synergies:
-    - trait: libraryAccess
-      rating: 3
+    - trait: playsCards
+      type: house
 
 - name: Scrambler Storm
   cardNumber: 122
@@ -1446,7 +1446,7 @@
   artifactControl: 0.0
   traits: [drawsCards, usableArtifact]
   synergies:
-    - trait: dextre
+    - trait: revealsTopDeck
 
 - name: Mobius Scroll
   cardNumber: 130
@@ -2711,10 +2711,8 @@
   artifactControl: 0.0
   traits: [forgesKeys, archives]
   synergies:
-    - trait: knight
-      rating: 3
-      type: house
     - trait: archives
+      rating: 3
     - trait: increasesHandSize
 
 - name: Gorm of Omm
@@ -2761,10 +2759,9 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [protectsCreatures]
   synergies:
     - trait: knight
-      rating: 3
 
 - name: Sigil of Brotherhood
   cardNumber: 236
@@ -3163,6 +3160,9 @@
   synergies:
     - trait: capturesAmber
       type: house
+    - trait: stealsAmber
+      type: house
+      rating: 1
 
 - name: Hidden Stash
   cardNumber: 271
@@ -4028,9 +4028,6 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [usableArtifact, returnsCardsFromDiscard]
-  synergies:
-    - trait: libraryAccess
-      rating: 3
 
 - name: Ritual of Balance
   cardNumber: 342
@@ -4076,7 +4073,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  traits: []
+  traits: [ancientBear]
   synergies:
     - trait: causesFighting
 

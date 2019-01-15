@@ -28,11 +28,13 @@ class DeckSynergyService(
 
         cards.forEach { card ->
             val cardInfo = card.extraCardInfo!!
-            cardInfo.traits.forEach {
-                val cardHouseCount = counts[card.house]!!
-                anyHouseCount.incrementValue(it)
-                cardHouseCount.incrementValue(it)
-            }
+            cardInfo.traits
+                    .plus(card.traits.mapNotNull { it.synTrait })
+                    .forEach {
+                        val cardHouseCount = counts[card.house]!!
+                        anyHouseCount.incrementValue(it)
+                        cardHouseCount.incrementValue(it)
+                    }
         }
         val synergyCombos: List<SynergyCombo> = cards.mapNotNull { card ->
             val cardInfo = card.extraCardInfo ?: throw IllegalStateException("Oh no, ${card.cardTitle} had null extra info! $card")
@@ -195,7 +197,7 @@ class DeckSynergyService(
         val power5OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size
 
         if (power2OrLower > 3) traits[SynTrait.power2OrLowerCreatures] = when {
-            power2OrLower > 6 -> 4 
+            power2OrLower > 6 -> 4
             power2OrLower > 5 -> 3
             power2OrLower > 4 -> 2
             else -> 1
