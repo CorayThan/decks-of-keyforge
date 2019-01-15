@@ -4293,7 +4293,6 @@
   synergies:
     - trait: beast
     - trait: niffle
-      rating: 3
 
 - name: Piranha Monkeys
   cardNumber: 365

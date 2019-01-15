@@ -16,7 +16,7 @@ spring:
           use_jdbc_metadata_defaults: false
   datasource:
     platform: POSTGRESQL
-    url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/keyswap
+    url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/keytest
     username: ${RDS_USERNAME:postgres}
     password: ${RDS_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver

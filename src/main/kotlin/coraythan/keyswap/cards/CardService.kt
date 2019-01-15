@@ -34,9 +34,11 @@ class CardService(
                 ClassPathResource("extra-deck-info.yml").inputStream
         )
         this.extraInfo = extraInfosFromFile
-                .map { it.cardNumber to it.copy(
-                        synergies = it.synergies.sorted()
-                ) }
+                .map {
+                    it.cardNumber to it.copy(
+                            synergies = it.synergies.sorted()
+                    )
+                }
                 .toMap()
     }
 
@@ -134,6 +136,25 @@ class CardService(
             CardNumberSetPair(it.expansion, it.cardNumber) to it
         }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
+
+        val addToExtraInfo = nonMaverickCachedCardsList?.mapNotNull {
+            if (it.traits.contains(CardTrait.Niffle)) {
+            }
+            val synTraitsFromTraits = it.traits.mapNotNull { trait ->
+                trait.synTrait
+            }
+            if (synTraitsFromTraits.isNotEmpty()) {
+                it.cardNumber to synTraitsFromTraits
+            } else {
+                null
+            }
+        }?.toMap()
+
+        extraInfo = extraInfo.map {
+            val add = addToExtraInfo?.get(it.key)
+            it.key to if (add == null) it.value else it.value.copy(traits = it.value.traits.plus(add))
+        }.toMap()
+
     }
 
 }
