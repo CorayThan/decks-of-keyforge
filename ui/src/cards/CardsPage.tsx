@@ -11,7 +11,7 @@ import { CardStore } from "./CardStore"
 
 class CardsPageStore {
     @observable
-    fullView = true
+    fullView = false
 }
 
 export const cardsPageStoreInstance = new CardsPageStore()

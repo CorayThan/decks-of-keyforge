@@ -15,7 +15,6 @@ import coraythan.keyswap.synergy.DeckSynergyService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
@@ -38,7 +37,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedRateString = lockImportNewDecksFor)
+    // @Scheduled(fixedRateString = lockImportNewDecksFor)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
@@ -81,7 +80,7 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-    @Scheduled(fixedRateString = lockUpdateStatistics)
+    // @Scheduled(fixedRateString = lockUpdateStatistics)
     fun rateDecks() {
         val sort = Sort.by("id")
         var currentPage = 0
