@@ -91,6 +91,16 @@ export class AboutPage extends React.Component {
                             "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
                             "1 point is approximately equal to destroying one artifact."
                         ]}/>
+                        <div style={{marginBottom: spacing(4)}}/>
+                        <InfoListCard title={"Legal Stuff"} titleVariant={"h5"} infos={[
+                            "Decks of Keyforge is not associated with Keyforge or Fantasy Flight Games in any way.",
+                            "You sell, trade, and purchase decks at your own risk. We do not verify the authenticity or trustworthiness of any sellers," +
+                            "buyers, or transactions.",
+                            "The SAS rating system is a copyrighted property of Decks of Keyforge, but I'm always interested in hearing about ways you'd " +
+                            "like to help make it better or collaborate! But please don't steal the system, obviously.",
+                            "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
+                            "or real loss of value due to changes to the system."
+                        ]}/>
                     </Grid>
                     <Grid item={true} xs={12} md={6}>
                         <InfoListCard title={"How SASy is your deck?"} titleVariant={"h4"} infos={[
