@@ -10,6 +10,7 @@ import { DeckFilters } from "./search/DeckFilters"
 
 export class DeckStore {
 
+    static readonly DECK_PAGE_SIZE = 10
     static readonly CONTEXT = HttpConfig.API + "/decks"
     private static innerInstance: DeckStore
 
@@ -91,7 +92,6 @@ export class DeckStore {
         this.currentFilters = clone(filters)
         log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
         this.nextDeckPage = undefined
-        this.countingDecks = true
         const decksPromise = this.findDecks(filters)
         const countPromise = this.findDecksCount(filters)
         const decks = await decksPromise
@@ -100,7 +100,6 @@ export class DeckStore {
         }
         this.searchingForDecks = false
         await countPromise
-        this.countingDecks = false
         this.findNextDecks()
     }
 
@@ -130,7 +129,7 @@ export class DeckStore {
     }
 
     moreDecksAvailable = () => (this.deckPage && this.decksCount && this.deckPage.page + 1 < this.decksCount.pages)
-        || (this.deckPage && !this.decksCount && this.deckPage.decks.length % 10 === 0)
+        || (this.deckPage && !this.decksCount && this.deckPage.decks.length % DeckStore.DECK_PAGE_SIZE === 0)
 
     private findDecks = async (filters: DeckFilters) => new Promise<DeckPage>(resolve => {
         axios.post(`${DeckStore.CONTEXT}/filter`, filters)
@@ -147,8 +146,10 @@ export class DeckStore {
 
     private findDecksCount = (filters: DeckFilters) => {
         this.decksCount = undefined
+        this.countingDecks = true
         axios.post(`${DeckStore.CONTEXT}/filter-count`, filters)
             .then((response: AxiosResponse) => {
+                this.countingDecks = false
                 this.decksCount = response.data
             })
     }

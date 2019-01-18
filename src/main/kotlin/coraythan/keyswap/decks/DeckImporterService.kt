@@ -15,13 +15,14 @@ import coraythan.keyswap.synergy.DeckSynergyService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT15S"
+private const val lockImportNewDecksFor = "PT1M"
 private const val lockUpdateStatistics = "PT72H"
 
 @Transactional
@@ -38,7 +39,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    // @Scheduled(fixedRateString = lockImportNewDecksFor)
+     @Scheduled(fixedRateString = lockImportNewDecksFor)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 

@@ -84,12 +84,7 @@ class DeckService(
                 .fetch()
 
         val decks = deckResults.map {
-            it.toDeckSearchResult(if (it.cardIds.isBlank()) {
-                log.warn("No card ids available!")
-                null
-            } else {
-                cardService.deckSearchResultCardsFromCardIds(it.cardIds)
-            })
+            it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
         }
 
         return DecksPage(
@@ -170,15 +165,12 @@ class DeckService(
         return predicate
     }
 
-    fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)
-
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
-
-        val deck = findDeck(keyforgeId)!!
+        val deck = deckRepo.findByKeyforgeId(keyforgeId)!!
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
         return DeckWithSynergyInfo(
-                deck = deck,
+                deck = deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds)),
                 deckSynergyInfo = synergies,
                 cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1,
                 synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1,
@@ -188,7 +180,7 @@ class DeckService(
     }
 
     fun saleInfoForDeck(keyforgeId: String): List<DeckSaleInfo> {
-        val deck = findDeck(keyforgeId) ?: return listOf()
+        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
         return deck.userDecks.mapNotNull {
             if (!it.forSale && !it.forTrade) {
                 null
@@ -200,7 +192,7 @@ class DeckService(
                         listingInfo = it.listingInfo,
                         externalLink = it.externalLink,
                         condition = it.condition!!,
-                        dateListed = it.dateListed,
+                        dateListed = it.dateListed!!.toLocalDate(),
                         username = it.user.username,
                         publicContactInfo = it.user.publicContactInfo
                 )

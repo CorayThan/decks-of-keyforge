@@ -13,7 +13,7 @@ import org.hibernate.annotations.Type
 import javax.persistence.*
 
 data class DeckWithSynergyInfo(
-        val deck: Deck,
+        val deck: DeckSearchResult,
         val deckSynergyInfo: DeckSynergyInfo,
         val cardRatingPercentile: Int,
         val synergyPercentile: Int,
@@ -106,6 +106,10 @@ data class Deck(
             id = id,
             keyforgeId = keyforgeId,
             name = name,
+            totalCreatures = totalCreatures,
+            totalActions = totalActions,
+            totalArtifacts = totalArtifacts,
+            totalUpgrades = totalUpgrades,
             expectedAmber = expectedAmber,
             amberControl = amberControl,
             creatureControl = creatureControl,
@@ -129,6 +133,11 @@ data class DeckSearchResult(
         val keyforgeId: String,
 
         val name: String,
+
+        val totalCreatures: Int = 0,
+        val totalActions: Int = 0,
+        val totalArtifacts: Int = 0,
+        val totalUpgrades: Int = 0,
 
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,

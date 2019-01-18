@@ -215,6 +215,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <Typography variant={"subtitle2"}>You found {this.deckStore.decksCount.count} decks</Typography>
                             </ListItem>
                         ) : null}
+                        {this.deckStore.countingDecks ? (
+                            <ListItem>
+                                <Typography variant={"subtitle2"}>Counting ...</Typography>
+                            </ListItem>
+                        ) : null}
                     </List>
                 </form>
             </KeyDrawer>

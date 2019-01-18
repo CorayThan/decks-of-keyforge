@@ -1,7 +1,7 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.userdeck.DeckCondition
-import java.time.ZonedDateTime
+import java.time.LocalDate
 
 data class DeckSaleInfo(
         val forSale: Boolean,
@@ -14,7 +14,7 @@ data class DeckSaleInfo(
 
         val condition: DeckCondition,
 
-        val dateListed: ZonedDateTime?,
+        val dateListed: LocalDate,
 
         val username: String,
         val publicContactInfo: String?
