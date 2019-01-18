@@ -4,6 +4,7 @@ import * as React from "react"
 import { log, prettyJson } from "../../config/Utils"
 import { SortDirection } from "../../generic/SortDirection"
 import { House } from "../../houses/House"
+import { defaultSort } from "../selects/DeckSortSelect"
 import { Constraint } from "./ConstraintDropdowns"
 
 export class DeckFilters {
@@ -70,7 +71,7 @@ export class DeckFilters {
     title: string = ""
     page: number = 0
     @observable
-    sort: string = "ADDED_DATE"
+    sort: string = defaultSort.value
     @observable
     forSale = false
     @observable

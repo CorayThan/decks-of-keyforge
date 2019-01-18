@@ -204,14 +204,15 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     color={"secondary"}
                                     type={"submit"}
                                     loading={this.deckStore.searchingForDecks}
+                                    disabled={this.deckStore.searchingForDecks}
                                 >
                                     Search
                                 </KeyButton>
                             </div>
                         </ListItem>
-                        {this.deckStore.deckPage ? (
+                        {this.deckStore.decksCount ? (
                             <ListItem>
-                                <Typography variant={"subtitle2"}>You found {this.deckStore.deckPage.count} decks</Typography>
+                                <Typography variant={"subtitle2"}>You found {this.deckStore.decksCount.count} decks</Typography>
                             </ListItem>
                         ) : null}
                     </List>

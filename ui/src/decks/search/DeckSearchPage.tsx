@@ -5,9 +5,9 @@ import * as QueryString from "query-string"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../../config/MuiConfig"
-import { log, prettyJson } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
+import { ScreenStore } from "../../ui/ScreenStore"
 import { UiStore } from "../../ui/UiStore"
 import { DeckStore } from "../DeckStore"
 import { DeckViewSmall } from "../DeckViewSmall"
@@ -17,12 +17,10 @@ import { DecksSearchDrawer } from "./DecksSearchDrawer"
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     componentDidMount(): void {
-        log.debug("Deck search page component did mount")
         this.search(this.props)
     }
 
     componentWillReceiveProps(nextProps: Readonly<RouteComponentProps<{}>>): void {
-        log.debug("Deck search page component will receive props")
         this.search(nextProps)
     }
 
@@ -32,7 +30,7 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     }
 
     search = (props: RouteComponentProps<{}>) => {
-        log.debug(`Search with filters ${prettyJson(this.makeFilters(props).cleaned())}`)
+        // log.debug(`Search with filters ${prettyJson(this.makeFilters(props).cleaned())}`)
         DeckStore.instance.searchDecks(this.makeFilters(props).cleaned())
     }
 
@@ -57,7 +55,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
     }
 
     render() {
-        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks} = DeckStore.instance
+        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = DeckStore.instance
 
         let decksToDisplay = null
         if (deckPage != null) {
@@ -82,8 +80,8 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
         if (moreDecksAvailable()) {
             showMoreButton = (
                 <KeyButton
-                    disabled={addingMoreDecks}
-                    loading={addingMoreDecks}
+                    disabled={addingMoreDecks || countingDecks}
+                    loading={addingMoreDecks || countingDecks}
                     onClick={showMoreDecks}
                 >
                     Show more
@@ -101,7 +99,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     }}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        <Loader show={searchingForDecks}/>
+                        {ScreenStore.instance.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
                         {decksToDisplay}
                         {showMoreButton}
                     </div>

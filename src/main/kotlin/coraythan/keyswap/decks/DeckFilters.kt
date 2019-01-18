@@ -7,7 +7,7 @@ data class DeckFilters(
         val houses: Set<House> = setOf(),
         val title: String = "",
 
-        val page: Int = 1,
+        val page: Long = 0,
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
@@ -20,7 +20,7 @@ data class DeckFilters(
         val owner: String = "",
 
         val sort: DeckSortOptions = DeckSortOptions.ADDED_DATE,
-        val sortDirection: SortDirection = SortDirection.ASC
+        val sortDirection: SortDirection = SortDirection.DESC
 )
 
 data class DeckCardQuantity(
@@ -36,12 +36,7 @@ enum class DeckSortOptions {
     ANTISYNERGY,
     EXPECTED_AMBER,
     FUNNIEST,
-    MOST_WISHLISTED,
-    TOTAL_CREATURE_POWER,
-    CREATURE_COUNT,
-    MAVERICK_COUNT,
-    RARES,
-    SPECIALS,
+    MOST_WISHLISTED
 }
 
 enum class SortDirection(val direction: Sort.Direction) {

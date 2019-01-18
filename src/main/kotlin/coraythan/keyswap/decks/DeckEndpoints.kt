@@ -16,13 +16,24 @@ class DeckEndpoints(
 
     @PostMapping("/filter")
     fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
-        var decks = DecksPage(listOf(), 0, 0, 0)
+        var decks: DecksPage? = null
         val decksFilterTime = measureTimeMillis {
             decks = deckService.filterDecks(deckFilters)
         }
 
         if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $deckFilters")
-        return decks
+        return decks!!
+    }
+
+    @PostMapping("/filter-count")
+    fun decksCount(@RequestBody deckFilters: DeckFilters): DeckCount {
+        var decks: DeckCount? = null
+        val decksFilterTime = measureTimeMillis {
+            decks = deckService.countFilters(deckFilters)
+        }
+
+        if (decksFilterTime > 500) log.warn("Decks counting took $decksFilterTime ms with filters $deckFilters")
+        return decks!!
     }
 
     @GetMapping("/{id}")

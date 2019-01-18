@@ -76,6 +76,9 @@ export class DeckUtils {
 export interface DeckPage {
     decks: Deck[]
     page: number
+}
+
+export interface DeckCount {
     pages: number
     count: number
 }

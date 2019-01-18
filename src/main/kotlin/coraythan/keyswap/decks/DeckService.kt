@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Ops
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
+import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.deckcard.QDeckCard
@@ -13,10 +14,9 @@ import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
 
 @Transactional
 @Service
@@ -26,11 +26,79 @@ class DeckService(
         private val deckRepo: DeckRepo,
         private val userService: KeyUserService,
         private val currentUserService: CurrentUserService,
-        private val statsService: StatsService
+        private val statsService: StatsService,
+        private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+    private val deckPageSize = 10L
+    private val defaultFilters = DeckFilters()
+    private val query = JPAQueryFactory(entityManager)
+
+    var deckCount: Long? = null
+
+    fun countFilters(filters: DeckFilters): DeckCount {
+
+        val count: Long
+        val preExistingCount = deckCount
+        val filtersAreEqual = filters.copy(
+                sort = defaultFilters.sort,
+                sortDirection = defaultFilters.sortDirection
+        ) == defaultFilters
+        if (preExistingCount != null && filtersAreEqual) {
+            log.info("Defaulting to preexisting count for default filters.")
+            count = preExistingCount
+        } else {
+            val predicate = deckFilterPedicate(filters)
+            count = deckRepo.count(predicate)
+            if (filtersAreEqual) {
+                deckCount = count
+            }
+        }
+
+        return DeckCount(
+                pages = (count + deckPageSize - 1) / deckPageSize,
+                count = count
+        )
+    }
 
     fun filterDecks(filters: DeckFilters): DecksPage {
+
+        val predicate = deckFilterPedicate(filters)
+        val deckQ = QDeck.deck
+        val sortProperty = when (filters.sort) {
+            DeckSortOptions.ADDED_DATE -> deckQ.id
+            DeckSortOptions.EXPECTED_AMBER -> deckQ.expectedAmber
+            DeckSortOptions.CARDS_RATING -> deckQ.cardsRating
+            DeckSortOptions.SAS_RATING -> deckQ.sasRating
+            DeckSortOptions.SYNERGY -> deckQ.synergyRating
+            DeckSortOptions.ANTISYNERGY -> deckQ.antisynergyRating
+            DeckSortOptions.FUNNIEST -> deckQ.funnyCount
+            DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
+        }
+
+        val deckResults = query.selectFrom(deckQ)
+                .where(predicate)
+                .limit(deckPageSize)
+                .offset(filters.page * deckPageSize)
+                .orderBy(if (filters.sortDirection == SortDirection.DESC) sortProperty.desc() else sortProperty.asc())
+                .fetch()
+
+        val decks = deckResults.map {
+            it.toDeckSearchResult(if (it.cardIds.isBlank()) {
+                log.warn("No card ids available!")
+                null
+            } else {
+                cardService.deckSearchResultCardsFromCardIds(it.cardIds)
+            })
+        }
+
+        return DecksPage(
+                decks,
+                filters.page
+        )
+    }
+
+    private fun deckFilterPedicate(filters: DeckFilters): BooleanBuilder {
         val deckQ = QDeck.deck
         val deckCardQ = QDeckCard.deckCard
         val predicate = BooleanBuilder()
@@ -99,38 +167,7 @@ class DeckService(
                 )
             }
         }
-
-        val sortProperty = when (filters.sort) {
-            DeckSortOptions.ADDED_DATE -> "id"
-            DeckSortOptions.EXPECTED_AMBER -> "expectedAmber"
-            DeckSortOptions.TOTAL_CREATURE_POWER -> "totalPower"
-            DeckSortOptions.CREATURE_COUNT -> "totalCreatures"
-            DeckSortOptions.MAVERICK_COUNT -> "maverickCount"
-            DeckSortOptions.SPECIALS -> "specialsCount"
-            DeckSortOptions.RARES -> "raresCount"
-            DeckSortOptions.CARDS_RATING -> "cardsRating"
-            DeckSortOptions.SAS_RATING -> "sasRating"
-            DeckSortOptions.SYNERGY -> "synergyRating"
-            DeckSortOptions.ANTISYNERGY -> "antisynergyRating"
-            DeckSortOptions.FUNNIEST -> "funnyCount"
-            DeckSortOptions.MOST_WISHLISTED -> "wishlistCount"
-        }
-
-        val deckPage = deckRepo.findAll(predicate, PageRequest.of(
-                filters.page, 10,
-                Sort.by(filters.sortDirection.direction, sortProperty)
-        ))
-
-        val decks = deckPage.content.map {
-            it.toDeckSearchResult(if (it.cardIds.isBlank()) {
-                log.warn("No card ids available!")
-                null
-            } else {
-                cardService.deckSearchResultCardsFromCardIds(it.cardIds)
-            })
-        }
-
-        return DecksPage(decks, filters.page, deckPage.totalPages, deckPage.totalElements)
+        return predicate
     }
 
     fun findDeck(keyforgeId: String) = deckRepo.findByKeyforgeId(keyforgeId)

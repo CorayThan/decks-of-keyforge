@@ -17,14 +17,14 @@ export class DeckSortSelectStore implements SelectedStore {
         if (initialSort) {
             this.selectedValue = deckSortOptions.filter(option => option.value === initialSort)[0].name
         } else {
-            this.selectedValue = deckSortOptions[0].name
+            this.selectedValue = defaultSort.name
         }
 
     }
 
     toEnumValue = () => {
         if (!this.selectedValue) {
-            return deckSortOptions[0].value
+            return defaultSort.value
         }
         return deckSortOptions.filter(option => option.name === this.selectedValue)[0].value
     }
@@ -44,9 +44,6 @@ const deckSortOptions: SortOption[] = [
     {value: "EXPECTED_AMBER", name: "Expected Amber"},
     {value: "FUNNIEST", name: "Funniest"},
     {value: "MOST_WISHLISTED", name: "Most Wishlisted"},
-    {value: "TOTAL_CREATURE_POWER", name: "Total Creature Power"},
-    {value: "CREATURE_COUNT", name: "Creature Count"},
-    {value: "MAVERICK_COUNT", name: "Maverick Count"},
-    {value: "RARES", name: "Rares"},
-    {value: "SPECIALS", name: "Special Rarities"}
 ]
+
+export const defaultSort = deckSortOptions[1]

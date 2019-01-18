@@ -152,8 +152,11 @@ data class DeckSearchResult(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DecksPage(
         val decks: List<DeckSearchResult>,
-        val page: Int,
-        val pages: Int,
+        val page: Long
+)
+
+data class DeckCount(
+        val pages: Long,
         val count: Long
 )
 

@@ -30,6 +30,7 @@ class DeckImporterService(
         private val keyforgeApi: KeyforgeApi,
         private val cardService: CardService,
         private val deckSynergyService: DeckSynergyService,
+        private val deckService: DeckService,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
         private val statsService: StatsService,
@@ -67,7 +68,8 @@ class DeckImporterService(
         }
         val deckCountNow = deckRepo.count()
         log.info("Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
-
+        deckService.deckCount = null
+        deckService.countFilters(DeckFilters())
     }
 
     //     @Scheduled(fixedRateString = lockUpdateStatistics)
