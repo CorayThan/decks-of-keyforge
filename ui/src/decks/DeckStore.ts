@@ -10,7 +10,7 @@ import { DeckFilters } from "./search/DeckFilters"
 
 export class DeckStore {
 
-    static readonly DECK_PAGE_SIZE = 10
+    static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
     private static innerInstance: DeckStore
 

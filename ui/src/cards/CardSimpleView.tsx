@@ -5,11 +5,8 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { AmberIcon } from "../generic/icons/AmberIcon"
-import { ArtifactIcon } from "../generic/icons/ArtifactIcon"
+import { DeckTraits } from "../decks/DeckViewSmall"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
-import { CreatureIcon } from "../generic/icons/CreatureIcon"
-import { FistIcon } from "../generic/icons/FistIcon"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { ScreenStore } from "../ui/ScreenStore"
@@ -64,40 +61,8 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                 </div>
                 <Typography>{cardText}</Typography>
                 <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <div style={{display: "flex", justifyContent: "center"}}>
-                    <div>
-                        <CardRatingBox
-                            firstIcon={<AmberIcon/>}
-                            value={expectedAmber}
-                            tooltip={"Expected Aember"}
-                        />
-                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                        <CardRatingBox
-                            firstIcon={<AmberIcon/>}
-                            secondIcon={<FistIcon/>}
-                            value={amberControl}
-                            tooltip={"Aember Control"}
-                        />
-                    </div>
-                    <div
-                        style={{borderLeft: "1px solid rgb(0, 0, 0, 0.12)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
-                    >
-                        <CardRatingBox
-                            firstIcon={<CreatureIcon/>}
-                            secondIcon={<FistIcon/>}
-                            value={creatureControl}
-                            tooltip={"Creature Control"}
-                        />
-                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                        <CardRatingBox
-                            firstIcon={<ArtifactIcon/>}
-                            secondIcon={<FistIcon/>}
-                            value={artifactControl}
-                            tooltip={"Artifact Control"}
-                        />
-                    </div>
-                </div>
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                <DeckTraits hasTraits={extraCardInfo} color={"rgba(0, 0, 0, 0.87)"}/>
+                <Divider style={{marginTop: spacing(2), marginBottom: spacing(1)}}/>
                 {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
                 <div style={{display: "flex", flexWrap: "wrap"}}>
                     {traits.map(trait => (
@@ -121,7 +86,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     )
 }
 
-const CardRatingBox = (props: { firstIcon: React.ReactNode, secondIcon?: React.ReactNode, value: number, tooltip: string }) => (
+export const CardRatingBox = (props: { firstIcon: React.ReactNode, secondIcon?: React.ReactNode, value: number, tooltip: string }) => (
     <Tooltip title={props.tooltip}>
         <div style={{display: "flex", width: 100, alignItems: "center", justifyContent: "space-between"}}>
             {props.firstIcon}

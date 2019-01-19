@@ -57,7 +57,7 @@ class CardService(
     }
 
     fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard>? {
-        return cardsFromCardIds(cardIdsString)?.map { it.toDeckSearchResultCard() }
+        return cardsFromCardIds(cardIdsString)?.sorted()?.map { it.toDeckSearchResultCard() }
     }
 
     fun cardsForDeck(deck: Deck) = cardsFromCardIds(deck.cardIds) ?: fullCardsFromCards(deck.cardsList)

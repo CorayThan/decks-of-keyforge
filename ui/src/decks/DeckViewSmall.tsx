@@ -38,7 +38,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {
             id, keyforgeId, name, houses,
             wishlistCount, funnyCount,
-            forSale, forTrade
+            forSale, forTrade, expectedAmber,
+            amberControl, creatureControl, artifactControl
         } = deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
@@ -71,7 +72,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     }}
                 >
                     <div style={{display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-evenly"}}>
-                        <HouseBanner houses={houses} style={{flexGrow: compact ? undefined : 1}} vertical={compact}/>
+                        <div style={{flexGrow: compact ? undefined : 1, display: compact ? "flex" : undefined}}>
+                            <HouseBanner houses={houses} vertical={compact}/>
+                            <DeckTraits hasTraits={deck} compact={compact}/>
+                        </div>
                         <DeckScoreView deck={deck} style={{marginRight: spacing(2)}}/>
                     </div>
                 </div>
@@ -95,6 +99,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
                                 </Tooltip>
                             ) : null}
+
                         </div>
                     </KeyLink>
                     <DisplayAllCardsByHouse deck={this.props.deck}/>
@@ -157,3 +162,38 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[] }) => (
         {props.cards.map((card, idx) => (<CardAsLine key={idx} card={card}/>))}
     </List>
 )
+
+export const DeckTraits = (
+    props: {
+        hasTraits: { amberControl: number, expectedAmber: number, artifactControl: number, creatureControl: number },
+        compact?: boolean,
+        color?: string
+    }
+) => (
+    <div style={{display: "flex", justifyContent: "center", marginTop: spacing(2), flexDirection: props.compact ? "column" : undefined}}>
+        <DeckTraitValue name={"A"} value={props.hasTraits.amberControl} tooltip={"Aember Control"} color={props.color} style={{marginRight: spacing(2)}}/>
+        <DeckTraitValue name={"E"} value={props.hasTraits.expectedAmber} tooltip={"Expected Aember"} color={props.color} style={{marginRight: spacing(2)}}/>
+        <DeckTraitValue name={"R"} value={props.hasTraits.artifactControl} tooltip={"Artifact Control"} color={props.color} style={{marginRight: spacing(2)}}/>
+        <DeckTraitValue name={"C"} value={props.hasTraits.creatureControl} tooltip={"Creature Control"} color={props.color}/>
+    </div>
+)
+
+
+export const DeckTraitValue = (props: { value: number, name: string, tooltip: string, color?: string, style?: React.CSSProperties }) => {
+    return (
+        <Tooltip title={props.tooltip}>
+            <div style={{display: "flex", alignItems: "flex-end", ...props.style}}>
+                <div style={{display: "flex", width: 20, marginRight: spacing(1)}}>
+                    <div style={{flexGrow: 1}}/>
+                    <Typography variant={"body1"} style={{color: props.color ? props.color : "#FFFFFF"}}>{Math.round(props.value)}</Typography>
+                </div>
+                <Typography
+                    variant={"body2"}
+                    style={{fontSize: 12, marginBottom: 1, color: props.color ? props.color : "#FFFFFF"}}
+                >
+                    {props.name}
+                </Typography>
+            </div>
+        </Tooltip>
+    )
+}

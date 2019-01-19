@@ -122,7 +122,7 @@ data class Deck(
             forTrade = forTrade,
             wishlistCount = wishlistCount,
             funnyCount = funnyCount,
-            searchResultCards = if (searchResultCards == null) cards.map { it.card.toDeckSearchResultCard() } else searchResultCards,
+            searchResultCards = searchResultCards ?: cards.map { it.card.toDeckSearchResultCard() },
             houses = houses
     )
 }

@@ -30,7 +30,7 @@ class DeckService(
         private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
-    private val deckPageSize = 10L
+    private val deckPageSize = 20L
     private val defaultFilters = DeckFilters()
     private val query = JPAQueryFactory(entityManager)
 

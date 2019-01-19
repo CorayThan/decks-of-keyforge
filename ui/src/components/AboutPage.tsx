@@ -41,7 +41,7 @@ export class AboutPage extends React.Component {
                             </span>
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
-                        <InfoListCard title={"Stats of Keyforge"} titleVariant={"h4"} infos={[
+                        <InfoListCard title={"The AERC of your Deck"} titleVariant={"h4"} infos={[
                             <Typography variant={"h6"}>Deck Statistics</Typography>,
                             <div style={{paddingBottom: spacing(1)}}/>,
                             <div style={{maxWidth: 520, maxHeight: 240 }}>
@@ -49,47 +49,48 @@ export class AboutPage extends React.Component {
                             </div>,
                             "I've calculated the average statistics for decks in many categories, like card type ratios.",
                             <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Deck Traits</Typography>,
+                            <Typography variant={"h6"}>AERC Deck Traits</Typography>,
                             <div style={{maxWidth: 520, maxHeight: 320}}>
                                 {stats ? (
                                     <KeyBar
                                         data={[
-                                            {x: "Expected Aember", y: stats.averageExpectedAmber},
                                             {x: "Aember Control", y: stats.averageAmberControl},
-                                            {x: "Creature Control", y: stats.averageCreatureControl},
+                                            {x: "Expected Aember", y: stats.averageExpectedAmber},
                                             {x: "Artifact Control", y: stats.averageArtifactControl},
+                                            {x: "Creature Control", y: stats.averageCreatureControl},
                                         ]}
                                         domainPadding={60}
                                     />
                                 ) : <Loader/>}
                             </div>,
                             <div style={{paddingBottom: spacing(2)}}/>,
-                            "I've rated every card in key metrics, like its expected aember generation, aember control, creature control, and artifact " +
-                            "control.",
+                            "I've rated every card in key metrics, like its expected aember control (A), expected aember (E), artifact control (R), and " +
+                            "creature control (C).",
+                            "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
                             "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
                             "rating.",
                             "However, when searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
                             <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Expected Aember</Typography>,
+                            <Typography variant={"h6"}>Aember Control (A)</Typography>,
+                            "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
+                            "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
+                            "avoided.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Expected Aember (E)</Typography>,
                             "This rating is an approximation of how much aember you can expect a card to generate. It does not take the ability of creatures " +
                             "to reap into account, unless they are a special skill that will usually generate extra aember, like Dew " +
                             "Faerie's \"Reap: Gain 1<A>\".",
                             "Some cards that are difficult to play have their base aember reduced, and some cards " +
                             "that immediately allow the use of creatures have aember added on the assumption creatures will be used to reap.",
                             <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Aember Control</Typography>,
-                            "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
-                            "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
-                            "avoided.",
+                            <Typography variant={"h6"}>Artifact Control (R)</Typography>,
+                            "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
+                            "1 point is approximately equal to destroying one artifact.",
                             <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Creature Control</Typography>,
+                            <Typography variant={"h6"}>Creature Control (C)</Typography>,
                             "Creature control is increased by cards that directly damage, destroy, disable or prevent the play of enemy creatures. It does " +
                             "not account for your creatures' power, although it does account for special abilities that encourage using a creature to fight.",
                             "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Artifact Control</Typography>,
-                            "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
-                            "1 point is approximately equal to destroying one artifact."
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"Legal Stuff"} titleVariant={"h5"} infos={[
