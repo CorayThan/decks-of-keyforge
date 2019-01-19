@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
+import { log } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
 import { DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
@@ -90,12 +90,13 @@ export class DeckStore {
     searchDecks = async (filters: DeckFilters) => {
         this.searchingForDecks = true
         this.currentFilters = clone(filters)
-        log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
+        // log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
         this.nextDeckPage = undefined
         const decksPromise = this.findDecks(filters)
         const countPromise = this.findDecksCount(filters)
         const decks = await decksPromise
         if (decks) {
+            // log.debug(`Replacing decks page with decks:  ${decks.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
             this.deckPage = decks
         }
         this.searchingForDecks = false
@@ -107,7 +108,7 @@ export class DeckStore {
         if (this.currentFilters && this.moreDecksAvailable()) {
             this.addingMoreDecks = true
             this.currentFilters.page++
-            log.debug(`Searching for next deck page with ${prettyJson(this.currentFilters)}`)
+            // log.debug(`Searching for next deck page with ${prettyJson(this.currentFilters)}`)
             const decks = await this.findDecks(this.currentFilters)
             if (decks) {
                 this.addingMoreDecks = false
@@ -118,8 +119,8 @@ export class DeckStore {
 
     showMoreDecks = () => {
         if (this.deckPage && this.nextDeckPage && this.decksCount) {
-            log.debug(`Current decks name: ${this.deckPage.decks.map(deck => deck.name)}`)
-            log.debug(`Pushing decks name: ${this.nextDeckPage.decks.map(deck => deck.name)}`)
+            // log.debug(`Current decks name: ${this.deckPage.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
+            // log.debug(`Pushing decks name: ${this.nextDeckPage.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
             this.deckPage.decks.push(...this.nextDeckPage.decks)
             this.deckPage.page++
             this.nextDeckPage = undefined

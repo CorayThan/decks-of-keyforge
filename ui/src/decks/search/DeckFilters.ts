@@ -54,7 +54,7 @@ export class DeckFilters {
 
         const filters = new DeckFilters() as any
         Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
-        log.debug(`Rehydrated to: ${prettyJson(filters)}`)
+        // log.debug(`Rehydrated to: ${prettyJson(filters)}`)
         return filters
     }
 

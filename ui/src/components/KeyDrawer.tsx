@@ -5,7 +5,6 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { ScreenStore } from "../ui/ScreenStore"
 
@@ -33,7 +32,6 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
 
     render() {
         const small = ScreenStore.instance.screenSizeSm()
-        log.debug(`Rendering key drawer with screen size small ${small}`)
         if (small) {
             return (
                 <div>

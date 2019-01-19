@@ -34,7 +34,6 @@ class UserDeckService(
 
     fun addToWishlist(deckId: Long, add: Boolean = true) {
         modOrCreateUserDeck(deckId, {
-            it.cards.size
             it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
         }) {
             it.copy(wishlist = add)
@@ -43,7 +42,6 @@ class UserDeckService(
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
         modOrCreateUserDeck(deckId, {
-            it.cards.size
             it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)
         }) {
             it.copy(funny = mark)
@@ -86,6 +84,7 @@ class UserDeckService(
         }
         unlistUserDeck(userDeck)
     }
+
     fun unlistUserDeck(userDeck: UserDeck) {
         val deckId = userDeck.deck.id
         userDeckRepo.save(userDeckWithoutListingInfo(userDeck))
@@ -119,10 +118,10 @@ class UserDeckService(
 
 
     private fun modOrCreateUserDeck(deckId: Long, modDeck: ((deck: Deck) -> Deck)?, mod: (userDeck: UserDeck) -> UserDeck) {
-        log.info("modifying userdeck")
         val currentUser = currentUserService.loggedInUser()!!
+        val deck = deckRepo.getOne(deckId)
         val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
-            UserDeck(currentUser, deckRepo.getOne(deckId))
+            UserDeck(currentUser, deck)
         }
 
         val toSave = currentUser.copy(decks = currentUser.decks.filter { it.deck.id != deckId }.plus(
@@ -131,7 +130,6 @@ class UserDeckService(
         userRepo.save(toSave)
 
         if (modDeck != null) {
-            val deck = deckRepo.getOne(deckId)
             deckRepo.save(modDeck(deck))
         }
     }

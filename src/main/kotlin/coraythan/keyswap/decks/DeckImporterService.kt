@@ -22,7 +22,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT1M"
+private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateStatistics = "PT72H"
 
 @Transactional

@@ -75,12 +75,19 @@ class DeckService(
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
             DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
         }
+        val sort = if (filters.sortDirection == SortDirection.DESC) sortProperty.desc() else sortProperty.asc()
 
         val deckResults = query.selectFrom(deckQ)
                 .where(predicate)
                 .limit(deckPageSize)
                 .offset(filters.page * deckPageSize)
-                .orderBy(if (filters.sortDirection == SortDirection.DESC) sortProperty.desc() else sortProperty.asc())
+                .apply {
+                    if (filters.sort != DeckSortOptions.ADDED_DATE) {
+                        orderBy(sort, deckQ.id.asc())
+                    } else {
+                        orderBy(sort)
+                    }
+                }
                 .fetch()
 
         val decks = deckResults.map {
