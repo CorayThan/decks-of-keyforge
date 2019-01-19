@@ -67,15 +67,18 @@ class DeckService(
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
-            DeckSortOptions.EXPECTED_AMBER -> deckQ.expectedAmber
             DeckSortOptions.CARDS_RATING -> deckQ.cardsRating
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
-            DeckSortOptions.SYNERGY -> deckQ.synergyRating
-            DeckSortOptions.ANTISYNERGY -> deckQ.antisynergyRating
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
             DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
         }
-        val sort = if (filters.sortDirection == SortDirection.DESC) sortProperty.desc() else sortProperty.asc()
+        val sort = if (filters.sortDirection == SortDirection.DESC
+                || filters.sort == DeckSortOptions.FUNNIEST
+                || filters.sort == DeckSortOptions.MOST_WISHLISTED) {
+            sortProperty.desc()
+        } else {
+            sortProperty.asc()
+        }
 
         val deckResults = query.selectFrom(deckQ)
                 .where(predicate)

@@ -32,9 +32,6 @@ enum class DeckSortOptions {
     ADDED_DATE,
     SAS_RATING,
     CARDS_RATING,
-    SYNERGY,
-    ANTISYNERGY,
-    EXPECTED_AMBER,
     FUNNIEST,
     MOST_WISHLISTED
 }
