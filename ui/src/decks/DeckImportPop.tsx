@@ -23,17 +23,31 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
     @observable
     deckId = ""
 
+    @observable
+    error = false
+
     componentDidMount() {
         DeckStore.instance.importedDeck = false
         DeckStore.instance.importingDeck = false
         this.deckId = ""
         deckImportPopStore.popOpen = false
+        this.error = false
     }
 
     import = () => {
-        DeckStore.instance.importDeck(this.deckId)
+        this.error = false
+        const importWith = this.deckIdFromUserInput()
+        if (importWith.length !== 36) {
+            this.error = true
+            return
+        }
+        DeckStore.instance.importDeck(importWith)
     }
 
+    deckIdFromUserInput = (): string => {
+        const splitOnSlash = this.deckId.split("/")
+        return splitOnSlash[splitOnSlash.length - 1]
+    }
     handlePopoverOpen = (event: React.MouseEvent<HTMLInputElement>) => {
         deckImportPopStore.popOpen = true
         this.deckId = ""
@@ -46,7 +60,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
     render() {
 
         if (DeckStore.instance.importedDeck) {
-            return <Redirect to={Routes.deckPage(this.deckId)}/>
+            return <Redirect to={Routes.deckPage(this.deckIdFromUserInput())}/>
         }
 
         return (
@@ -79,12 +93,13 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField
                             variant={"outlined"}
-                            label={"Keyforge Deck Id"}
+                            label={"Keyforge Deck Id or URL"}
                             value={this.deckId}
                             onChange={(event) => this.deckId = event.target.value}
                             style={{marginBottom: spacing(2)}}
                             autoFocus={true}
-                            helperText={"Id from the deck url at keyforgegame.com e.g. 293f366d-af1d-46ea-9c0f-4cc956dae50d"}
+                            helperText={"Id or Url from the deck url at keyforgegame.com e.g. 293f366d-af1d-46ea-9c0f-4cc956dae50d"}
+                            error={this.error}
                         />
                         <div style={{display: "flex"}}>
                             <div style={{flexGrow: 1}}/>

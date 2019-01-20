@@ -18,7 +18,7 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
-import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
+import { SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { ScreenStore } from "../../ui/ScreenStore"
 import { UserStore } from "../../user/UserStore"
@@ -115,9 +115,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             ) : null}
                         </ListItem>
-                        <ListItem>
-                            <HouseSelect selectedHouses={this.selectedHouses}/>
-                        </ListItem>
+                        {/*<ListItem>*/}
+                            {/*<HouseSelect selectedHouses={this.selectedHouses}/>*/}
+                        {/*</ListItem>*/}
                         <ListItem>
                             <FormGroup row={true}>
                                 <FormControlLabel
@@ -214,7 +214,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         </ListItem>
                         {this.deckStore.decksCount ? (
                             <ListItem>
-                                <Typography variant={"subtitle2"}>You found {this.deckStore.decksCount.count} decks</Typography>
+                                <Typography variant={"subtitle2"}>
+                                    You found {this.deckStore.decksCount.count}{this.deckStore.decksCount.count === 1000 ? "+ " : ""} decks
+                                </Typography>
                             </ListItem>
                         ) : null}
                         {this.deckStore.countingDecks ? (

@@ -112,7 +112,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             noStyle={true}
                             style={{marginRight: spacing(2)}}
                         >
-                            <KeyButton color={"primary"}>Deck Page</KeyButton>
+                            <KeyButton color={"primary"}>View Deck </KeyButton>
                         </KeyLink>
                     )}
                     <MyDecksButton deck={this.props.deck}/>

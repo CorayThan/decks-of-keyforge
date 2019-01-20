@@ -54,7 +54,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             color={"inherit"}>
                             {ScreenStore.instance.screenSizeXs() ? topbarShortName : topbarName}
                         </Typography>
-                        {ScreenStore.instance.screenWidth < 1280 ? null : subheaderNode}
+                        {ScreenStore.instance.screenWidth < 1360 ? null : subheaderNode}
                         <div style={{flexGrow: 1}}/>
                         <RightMenu/>
                     </Toolbar>
@@ -65,25 +65,33 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
     }
 }
 
-@observer
-class RightMenu extends React.Component {
-
+class RightMenuStore {
     @observable
     open = false
+
+    close = () => {
+        this.open = false
+    }
+}
+
+const rightMenuStore = new RightMenuStore()
+
+@observer
+class RightMenu extends React.Component {
 
     render() {
         if (ScreenStore.instance.screenSizeSm()) {
             return (
                 <>
                     <IconButton
-                        onClick={() => this.open = !this.open}
+                        onClick={() => rightMenuStore.open = !rightMenuStore.open}
                     >
                         <MenuIcon/>
                     </IconButton>
 
                     <Drawer
-                        open={this.open}
-                        onClose={() => this.open = false}
+                        open={rightMenuStore.open}
+                        onClose={rightMenuStore.close}
                         anchor={"right"}
                         style={{zIndex: 11000}}
                     >
@@ -117,6 +125,7 @@ const AppLinks = () => (
             color={"inherit"}
             style={{margin: spacing(1)}}
             to={Routes.decks}
+            onClick={rightMenuStore.close}
         >
             Decks
         </LinkButton>
@@ -124,6 +133,7 @@ const AppLinks = () => (
             style={{margin: spacing(1)}}
             color={"inherit"}
             to={Routes.cards}
+            onClick={rightMenuStore.close}
         >
             Cards
         </LinkButton>
@@ -134,6 +144,7 @@ const AppLinks = () => (
             style={{margin: spacing(1)}}
             color={"inherit"}
             to={Routes.about}
+            onClick={rightMenuStore.close}
         >
             About
         </LinkButton>
@@ -150,8 +161,17 @@ class UserLinks extends React.Component {
                 <>
                     <LinkButton
                         color={"inherit"}
+                        to={Routes.usersDecks}
+                        style={{margin: spacing(1)}}
+                        onClick={rightMenuStore.close}
+                    >
+                        My Decks
+                    </LinkButton>
+                    <LinkButton
+                        color={"inherit"}
                         to={Routes.userProfilePage(UserStore.instance.user!.username)}
                         style={{margin: spacing(1)}}
+                        onClick={rightMenuStore.close}
                     >
                         Profile
                     </LinkButton>
@@ -169,13 +189,14 @@ class UserLinks extends React.Component {
             return (
                 <>
                     <LoginPop
-                        style={{margin: spacing(1)}}
+                        style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
                     />
                     <LinkButton
                         color={"secondary"}
                         variant={"contained"}
                         to={Routes.registration}
                         style={{margin: spacing(1)}}
+                        onClick={rightMenuStore.close}
                     >
                         Sign Up
                     </LinkButton>

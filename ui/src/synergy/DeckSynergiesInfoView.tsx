@@ -10,6 +10,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
+import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { ScreenStore } from "../ui/ScreenStore"
 import { SynergyCombo } from "./DeckSynergyInfo"
@@ -109,7 +110,12 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                 <>
                     <TableCell>{combo.cardName}</TableCell>
                     <TableCell>{combo.copies}</TableCell>
-                    <TableCell>{combo.cardRating}</TableCell>
+                    <TableCell>
+                        <div style={{display: "flex", alignItems: "center"}}>
+                            {combo.cardRating}
+                            <CardQualityIcon quality={combo.cardRating + 1} style={{marginLeft: spacing(1)}}/>
+                        </div>
+                    </TableCell>
                     <TableCell>{combo.netSynergy}</TableCell>
                     <TableCell>{combo.cardRating + combo.netSynergy}</TableCell>
                 </>

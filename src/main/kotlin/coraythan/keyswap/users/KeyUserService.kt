@@ -14,6 +14,8 @@ class KeyUserService(
         private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
+    private val usernameRegex = "(\\d|\\w|-|_)+]".toRegex()
+
     fun register(userRegInfo: UserRegistration): KeyUser {
 
         check(userRegInfo.password.length > 7) {
@@ -25,6 +27,11 @@ class KeyUserService(
         check(userRegInfo.username.isNotBlank()) {
             "Username is blank."
         }
+
+        check(userRegInfo.username.matches(usernameRegex)) {
+            "Username is malformed."
+        }
+
         if (userRepo.findByEmailIgnoreCase(userRegInfo.email) != null) {
             throw EmailTakenException("This email is already taken.")
         }

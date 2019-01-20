@@ -21,6 +21,8 @@ import { UserStore } from "./UserStore"
 @observer
 export class RegistrationPage extends React.Component {
 
+    private static readonly USERNAME_REGEX = /(\d|\w|-|_)+]/
+
     @observable
     email = Utils.isDev() ? "coraythan@gmail.com" : ""
     @observable
@@ -49,6 +51,10 @@ export class RegistrationPage extends React.Component {
         if (this.email.length < 1 || !Utils.validateEmail(this.email)) {
             error = "Please enter a valid email address."
         }
+        if (!this.username.match(RegistrationPage.USERNAME_REGEX)) {
+            error = "Please choose a username with only letters, numbers, hyphen, and underscore."
+        }
+
         if (error) {
             MessageStore.instance.setErrorMessage(error)
             return
@@ -94,7 +100,7 @@ export class RegistrationPage extends React.Component {
                         <DokIcon height={100} style={{marginBottom: spacing(2)}}/>
                         <Typography variant={"h3"} style={{marginBottom: spacing(2)}}>Sign up</Typography>
                         <Typography variant={"subtitle1"} style={{marginBottom: spacing(2)}}>
-                            Sell, trade and evaluate your decks
+                            Evaluate, sell and trade your decks
                         </Typography>
                         <form onSubmit={this.signUp}>
                             <Grid container={true} spacing={16}>

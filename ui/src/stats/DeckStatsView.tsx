@@ -1,4 +1,5 @@
-import { Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
+import { Info } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
@@ -26,25 +27,32 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
         }
         const {averageExpectedAmber, averageAmberControl, averageCreatureControl, averageArtifactControl} = stats
         return (
-            <div style={{pointerEvents: "none"}}>
-                <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2)}}>
+            <div>
+                <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2), pointerEvents: "none"}}>
                     <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
                     <KeyPieGlobalAverages stats={stats}/>
                 </div>
 
-                <div style={{maxWidth: 616, maxHeight: 400, display: "flex", margin: spacing(2)}}>
-
-                    <KeyBar data={[
-                        {x: "Aember", y: expectedAmber},
-                        {x: "Avg Aember", y: averageExpectedAmber},
-                        {x: "Aember Ctrl", y: amberControl},
-                        {x: "Avg ACtrl", y: averageAmberControl},
-                        {x: "Creature Ctrl", y: creatureControl},
-                        {x: "Avg CCtrl", y: averageCreatureControl},
-                        {x: "Artifact Ctrl", y: artifactControl},
-                        {x: "Avg ArCtrl", y: averageArtifactControl},
-                    ]}/>
-
+                <div style={{maxWidth: 616, maxHeight: 400, display: "flex", alignItems: "flex-end", margin: spacing(2)}}>
+                    <KeyBar
+                        data={[
+                            {x: "A", y: amberControl},
+                            {x: "Avg A", y: averageAmberControl},
+                            {x: "E", y: expectedAmber},
+                            {x: "Avg E", y: averageExpectedAmber},
+                            {x: "R", y: artifactControl},
+                            {x: "Avg R", y: averageArtifactControl},
+                            {x: "C", y: creatureControl},
+                            {x: "Avg C", y: averageCreatureControl},
+                        ]}
+                        style={{pointerEvents: "none"}}
+                    />
+                    <Tooltip
+                        title={"A = Aember Control, E = Expected Aember, R = Artifact Control, C = Creature Control"}
+                        style={{marginBottom: spacing(1)}}
+                    >
+                        <Info color={"primary"}/>
+                    </Tooltip>
                 </div>
             </div>
         )
@@ -60,13 +68,14 @@ const keyBarStyle: VictoryStyleInterface = {
     }
 } as unknown as VictoryStyleInterface
 
-export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPadding?: number }) => (
+export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPadding?: number, style?: React.CSSProperties }) => (
     <VictoryChart
         theme={VictoryTheme.material}
         domainPadding={props.domainPadding ? props.domainPadding : 20}
         padding={32}
         width={600}
         height={400}
+        style={props.style}
     >
         <VictoryAxis/>
         <VictoryAxis dependentAxis={true}/>

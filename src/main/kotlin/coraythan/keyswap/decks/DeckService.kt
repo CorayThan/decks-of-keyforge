@@ -45,13 +45,27 @@ class DeckService(
                 sortDirection = defaultFilters.sortDirection
         ) == defaultFilters
         if (preExistingCount != null && filtersAreEqual) {
-            log.info("Defaulting to preexisting count for default filters.")
             count = preExistingCount
         } else {
+
             val predicate = deckFilterPedicate(filters)
-            count = deckRepo.count(predicate)
+
             if (filtersAreEqual) {
+
+                count = deckRepo.count()
                 deckCount = count
+
+            } else {
+
+                val deckQ = QDeck.deck
+                count = query
+                        .select(deckQ.id)
+                        .from(deckQ)
+                        .where(predicate)
+                        .limit(1000)
+                        .fetch()
+                        .count()
+                        .toLong()
             }
         }
 

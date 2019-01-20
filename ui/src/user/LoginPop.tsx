@@ -48,7 +48,6 @@ export class LoginPop extends React.Component<{style?: React.CSSProperties}> {
                     <KeyButton
                         outlinedWhite={true}
                         color={"inherit"}
-                        style={{marginRight: spacing(2)}}
                         onClick={this.handlePopoverOpen}
                     >
                         Sign In

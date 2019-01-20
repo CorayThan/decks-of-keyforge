@@ -21,6 +21,7 @@ class Routes {
     static cards = "/cards"
     static about = "/about"
     static decks = "/decks"
+    static usersDecks = "/decks?myDecks=true"
     static registration = "/registration"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
