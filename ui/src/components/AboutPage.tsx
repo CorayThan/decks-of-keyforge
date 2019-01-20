@@ -41,6 +41,13 @@ export class AboutPage extends React.Component {
                             </span>
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
+                        <InfoListCard title={"Release Notes"} titleVariant={"h5"} infos={[
+                            <Typography color={"primary"}>1.1</Typography>,
+                            "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
+                            "that had the potential to bring down the database.",
+                            "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
+                        ]}/>
+                        <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"The AERC of your Deck"} titleVariant={"h4"} infos={[
                             <Typography variant={"h6"}>Deck Statistics</Typography>,
                             <div style={{paddingBottom: spacing(1)}}/>,

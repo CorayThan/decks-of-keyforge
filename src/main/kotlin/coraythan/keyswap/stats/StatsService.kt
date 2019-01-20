@@ -14,10 +14,10 @@ class StatsService(
     var cachedStats: DeckStatistics? = null
     var cachedGlobalStats: GlobalStats? = null
     val defaultGlobalStats = GlobalStats(
-            averageActions = 0,
-            averageArtifacts = 0,
-            averageCreatures = 0,
-            averageUpgrades = 0,
+            averageActions = 14,
+            averageArtifacts = 4,
+            averageCreatures = 17,
+            averageUpgrades = 1,
             averageExpectedAmber = 0,
             averageAmberControl = 0,
             averageCreatureControl = 0,

@@ -6,7 +6,6 @@ import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
 import { Close } from "@material-ui/icons"
-import AddIcon from "@material-ui/icons/Add"
 import Delete from "@material-ui/icons/Delete"
 import * as History from "history"
 import { observer } from "mobx-react"
@@ -18,7 +17,7 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
-import { SelectedHouses } from "../../houses/HouseSelect"
+import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { ScreenStore } from "../../ui/ScreenStore"
 import { UserStore } from "../../user/UserStore"
@@ -115,9 +114,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             ) : null}
                         </ListItem>
-                        {/*<ListItem>*/}
-                            {/*<HouseSelect selectedHouses={this.selectedHouses}/>*/}
-                        {/*</ListItem>*/}
+                        <ListItem>
+                            <HouseSelect selectedHouses={this.selectedHouses}/>
+                        </ListItem>
                         <ListItem>
                             <FormGroup row={true}>
                                 <FormControlLabel
@@ -181,9 +180,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         />
                                     </div>
                                 ))}
-                                <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
-                                    <AddIcon fontSize={"small"}/>
-                                </IconButton>
+                                {/*<IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>*/}
+                                    {/*<AddIcon fontSize={"small"}/>*/}
+                                {/*</IconButton>*/}
                             </div>
                         </ListItem>
                         <ListItem>

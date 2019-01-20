@@ -49,8 +49,8 @@ data class DeckStatistics(
             averageUpgrades = upgradeCountStats.median,
             averageExpectedAmber = expectedAmberStats.median,
             averageAmberControl = amberControlStats.median,
-            averageCreatureControl = creatureCountStats.median,
-            averageArtifactControl = artifactCountStats.median
+            averageCreatureControl = creatureControlStats.median,
+            averageArtifactControl = artifactControlStats.median
     )
 }
 
