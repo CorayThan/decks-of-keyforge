@@ -14,7 +14,7 @@ class KeyUserService(
         private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
-    private val usernameRegex = "(\\d|\\w|-|_)+]".toRegex()
+    private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
 
     fun register(userRegInfo: UserRegistration): KeyUser {
 

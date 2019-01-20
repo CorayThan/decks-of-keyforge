@@ -42,6 +42,8 @@ export class AboutPage extends React.Component {
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"Release Notes"} titleVariant={"h5"} infos={[
+                            <Typography color={"primary"}>1.2</Typography>,
+                            "Fixed problem with user registration.",
                             <Typography color={"primary"}>1.1</Typography>,
                             "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
                             "that had the potential to bring down the database.",

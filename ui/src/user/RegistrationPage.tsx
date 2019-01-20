@@ -21,7 +21,7 @@ import { UserStore } from "./UserStore"
 @observer
 export class RegistrationPage extends React.Component {
 
-    private static readonly USERNAME_REGEX = /(\d|\w|-|_)+]/
+    private static readonly USERNAME_REGEX = /(\d|\w|-|_)+/
 
     @observable
     email = Utils.isDev() ? "coraythan@gmail.com" : ""
