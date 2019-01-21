@@ -154,12 +154,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             <ConstraintDropdowns
                                 store={this.constraintsStore}
                                 properties={[
+                                    "amberControl",
+                                    "expectedAmber",
+                                    "artifactControl",
+                                    "creatureControl",
                                     "synergyRating",
                                     "antisynergyRating",
-                                    "expectedAmber",
-                                    "amberControl",
-                                    "creatureControl",
-                                    "artifactControl"
                                 ]}
                             />
                         </ListItem>

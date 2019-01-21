@@ -1,54 +1,51 @@
-import { Divider } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
-import { CardRatingBox } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { AmberIcon } from "../generic/icons/AmberIcon"
-import { ArtifactIcon } from "../generic/icons/ArtifactIcon"
-import { CreatureIcon } from "../generic/icons/CreatureIcon"
-import { FistIcon } from "../generic/icons/FistIcon"
 
 interface TraitsViewProps {
-    expectedAmber: number
-    amberControl: number
-    creatureControl: number
-    artifactControl: number
+    hasTraits: { amberControl: number, expectedAmber: number, artifactControl: number, creatureControl: number },
+    compact?: boolean,
+    color?: string
+    round?: boolean
 }
 
-export const TraitsView = (props: TraitsViewProps) => {
-    const {expectedAmber, amberControl, creatureControl, artifactControl} = props
+export const TraitsView = (props: TraitsViewProps) => (
+    <div style={{display: "flex", justifyContent: "center", marginTop: spacing(2), flexDirection: props.compact ? "column" : undefined}}>
+        <TraitValue
+            name={"A"} value={props.hasTraits.amberControl} round={props.round} tooltip={"Aember Control"} color={props.color}
+            style={{marginRight: spacing(2)}}
+        />
+        <TraitValue
+            name={"E"} value={props.hasTraits.expectedAmber} round={props.round} tooltip={"Expected Aember"} color={props.color}
+            style={{marginRight: spacing(2)}}
+        />
+        <TraitValue
+            name={"R"} value={props.hasTraits.artifactControl} round={props.round} tooltip={"Artifact Control"} color={props.color}
+            style={{marginRight: spacing(2)}}
+        />
+        <TraitValue
+            name={"C"} value={props.hasTraits.creatureControl} round={props.round} tooltip={"Creature Control"} color={props.color}
+        />
+    </div>
+)
+
+const TraitValue = (props: { value: number, name: string, tooltip: string, color?: string, style?: React.CSSProperties, round?: boolean }) => {
     return (
-        <div style={{display: "flex", justifyContent: "center"}}>
-            <div>
-                <CardRatingBox
-                    firstIcon={<AmberIcon/>}
-                    value={expectedAmber}
-                    tooltip={"Expected Aember"}
-                />
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <CardRatingBox
-                    firstIcon={<AmberIcon/>}
-                    secondIcon={<FistIcon/>}
-                    value={amberControl}
-                    tooltip={"Aember Control"}
-                />
+        <Tooltip title={props.tooltip}>
+            <div style={{display: "flex", alignItems: "flex-end", ...props.style}}>
+                <div style={{display: "flex", width: 20, marginRight: spacing(1)}}>
+                    <div style={{flexGrow: 1}}/>
+                    <Typography variant={"body1"} style={{color: props.color ? props.color : "#FFFFFF"}}>
+                        {props.round ? Math.round(props.value) : props.value}
+                    </Typography>
+                </div>
+                <Typography
+                    variant={"body2"}
+                    style={{fontSize: 12, marginBottom: 1, color: props.color ? props.color : "#FFFFFF"}}
+                >
+                    {props.name}
+                </Typography>
             </div>
-            <div
-                style={{borderLeft: "1px solid rgb(0, 0, 0, 0.12)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
-            >
-                <CardRatingBox
-                    firstIcon={<CreatureIcon/>}
-                    secondIcon={<FistIcon/>}
-                    value={creatureControl}
-                    tooltip={"Creature Control"}
-                />
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <CardRatingBox
-                    firstIcon={<ArtifactIcon/>}
-                    secondIcon={<FistIcon/>}
-                    value={artifactControl}
-                    tooltip={"Artifact Control"}
-                />
-            </div>
-        </div>
+        </Tooltip>
     )
 }

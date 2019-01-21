@@ -938,6 +938,8 @@
     - trait: protectsCreatures
     - trait: discardsEnemyCards
       rating: -1
+    - trait: reducesEnemyDraw
+      rating: -1
 
 - name: Gabos Longarms
   cardNumber: 86
@@ -1091,14 +1093,13 @@
 
 - name: Succubus
   cardNumber: 99
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [reducesEnemyDraw]
   synergies:
-    - trait: reducesEnemyDraw
     - trait: protectsCreatures
       rating: 3
 
@@ -1788,10 +1789,11 @@
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: power3OrLowerCreatures
-      rating: -2
+      rating: -3
     - trait: power4OrHigherCreatures
       rating: 1
     - trait: highTotalArmor
+      rating: 3
 
 - name: Battle Fleet
   cardNumber: 161
@@ -3275,7 +3277,7 @@
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
-      rating: -2
+      rating: -3
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
 
@@ -3316,6 +3318,9 @@
       rating: 3
     - trait: capturesAmber
       type: house
+    - trait: stealsAmber
+      type: house
+      rating: 1
 
 - name: Treasure Map
   cardNumber: 284

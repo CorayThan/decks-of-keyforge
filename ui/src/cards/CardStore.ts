@@ -21,6 +21,9 @@ export class CardStore {
     allCards: KCard[] = []
 
     @observable
+    cardNameToCard?: Map<string, KCard>
+
+    @observable
     cardNames: Array<{ label: string, value: string }> = []
 
     private constructor() {
@@ -88,7 +91,22 @@ export class CardStore {
                 this.searchingForCards = false
                 this.allCards = response.data
                 this.cards = response.data.slice()
-                this.cardNames = this.allCards!.map(card => ({label: card.cardTitle, value: card.cardTitle}))
+                this.cardNameToCard = new Map()
+                this.cardNames = this.allCards!.map(card => {
+                    this.cardNameToCard!.set(card.cardTitle, card)
+                    return {label: card.cardTitle, value: card.cardTitle}
+                })
             })
+    }
+
+    frontImageFromCard = (card: Partial<KCard>) => {
+        if (card.frontImage) {
+            return card.frontImage
+        }
+        if (this.cardNameToCard && card.cardTitle) {
+            const cardWithImage = this.cardNameToCard.get(card.cardTitle)
+            return cardWithImage && cardWithImage.frontImage
+        }
+        return undefined
     }
 }

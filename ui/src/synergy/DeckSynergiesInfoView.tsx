@@ -7,6 +7,7 @@ import TableRow from "@material-ui/core/TableRow"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
@@ -98,17 +99,18 @@ class ColumnHeaders extends React.Component {
 class CellValues extends React.Component<{ combo: SynergyCombo }> {
     render() {
         const combo = this.props.combo
+        const cardLine = <CardAsLine card={{cardTitle: combo.cardName}} />
         if (ScreenStore.instance.screenSizeXs()) {
             return (
                 <>
-                    <TableCell>{combo.cardName}{combo.copies === 1 ? "" : ` x ${combo.copies}`}</TableCell>
+                    <TableCell>{cardLine}{combo.copies === 1 ? "" : ` x ${combo.copies}`}</TableCell>
                     <TableCell>{combo.cardRating} / {combo.netSynergy}</TableCell>
                 </>
             )
         } else {
             return (
                 <>
-                    <TableCell>{combo.cardName}</TableCell>
+                    <TableCell>{cardLine}</TableCell>
                     <TableCell>{combo.copies}</TableCell>
                     <TableCell>
                         <div style={{display: "flex", alignItems: "center"}}>
