@@ -80,16 +80,21 @@
 
 - name: Loot the Bodies
   cardNumber: 10
-  rating: 3
-  expectedAmber: 2.0
+  rating: 2
+  expectedAmber: 1.5
   traits: []
   synergies:
     - trait: destroysEnemyCreatures
       type: house
     - trait: causesFighting
       type: house
+      rating: 1
     - trait: dealsDamage
       type: house
+      rating: 1
+    - trait: highTotalCreaturePower
+      type: house
+      rating: 3
 
 - name: Take that, Smartypants
   cardNumber: 11
@@ -816,7 +821,7 @@
 
 - name: Lash of Broken Dreams
   cardNumber: 75
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -893,6 +898,9 @@
   synergies:
     - trait: protectsCreatures
       rating: 1
+    - trait: returnsCreaturesFromDiscard
+      type: house
+
 
 - name: Drumble
   cardNumber: 82

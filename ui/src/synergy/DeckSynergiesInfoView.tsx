@@ -1,9 +1,10 @@
-import { Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
+import { Info } from "@material-ui/icons"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -38,6 +39,13 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
                         <PercentRatingRow value={cardRatingPercentile} name={"CARD RATING"}/>
                         <PercentRatingRow value={synergyPercentile} name={"SYNERGY"}/>
                         <PercentRatingRow value={antisynergyPercentile} name={"ANTISYNERGY"}/>
+                        <div>
+                            <Tooltip
+                                title={"Percentile ranking among all decks. Higher is better."}
+                            >
+                                <Info style={{color: "white"}}/>
+                            </Tooltip>
+                        </div>
                     </div>
                 </div>
             )}
@@ -99,7 +107,7 @@ class ColumnHeaders extends React.Component {
 class CellValues extends React.Component<{ combo: SynergyCombo }> {
     render() {
         const combo = this.props.combo
-        const cardLine = <CardAsLine card={{cardTitle: combo.cardName}} />
+        const cardLine = <CardAsLine card={{cardTitle: combo.cardName}}/>
         if (ScreenStore.instance.screenSizeXs()) {
             return (
                 <>
