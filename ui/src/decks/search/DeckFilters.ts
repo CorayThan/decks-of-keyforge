@@ -4,6 +4,7 @@ import * as React from "react"
 import { log, prettyJson } from "../../config/Utils"
 import { SortDirection } from "../../generic/SortDirection"
 import { House } from "../../houses/House"
+import { UserStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
 import { Constraint } from "./ConstraintDropdowns"
 
@@ -48,8 +49,8 @@ export class DeckFilters {
         if (queryObject.forTrade) {
             queryObject.forTrade = Boolean(queryObject.forTrade)
         }
-        if (queryObject.myDecks) {
-            queryObject.myDecks = Boolean(queryObject.myDecks)
+        if (queryObject.myFavorites) {
+            queryObject.myFavorites = Boolean(queryObject.myFavorites)
         }
 
         const filters = new DeckFilters() as any
@@ -77,7 +78,7 @@ export class DeckFilters {
     @observable
     forTrade = false
     @observable
-    myDecks: boolean = false
+    myFavorites: boolean = false
     constraints: Constraint[] = []
     @observable
     cards: DeckCardQuantity[] = [{
@@ -94,17 +95,26 @@ export class DeckFilters {
         this.title = ""
         this.forSale = false
         this.forTrade = false
-        this.myDecks = false
+        this.myFavorites = false
         this.cards = [{
             cardName: "",
             quantity: 1
         }]
         this.constraints = []
         this.sortDirection = "DESC"
+        this.owner = ""
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
-    handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.myDecks = event.target.checked
+    handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            const username = UserStore.instance.username
+            this.owner = username ? username : ""
+        } else {
+            this.owner = ""
+        }
+    }
+    handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.myFavorites = event.target.checked
 
     prepareForQueryString = (): DeckFilters => {
         const copied = JSON.parse(JSON.stringify(this))

@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography"
 import { Close } from "@material-ui/icons"
 import Delete from "@material-ui/icons/Delete"
 import * as History from "history"
+import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
@@ -35,23 +36,18 @@ interface DecksSearchDrawerProps {
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     deckStore = DeckStore.instance
-    filters = this.props.filters
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedSortStore = new DeckSortSelectStore(this.props.filters.sort)
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
-
-    componentDidMount() {
-        this.deckStore.reset()
-    }
 
     search = (event?: React.FormEvent) => {
         if (event) {
             event.preventDefault()
         }
-        this.filters.houses = this.selectedHouses.toArray()
-        this.filters.sort = this.selectedSortStore.toEnumValue()
-        this.filters.constraints = this.constraintsStore.cleanConstraints()
-        const cleaned = this.filters.prepareForQueryString()
+        this.props.filters.houses = this.selectedHouses.toArray()
+        this.props.filters.sort = this.selectedSortStore.toEnumValue()
+        this.props.filters.constraints = this.constraintsStore.cleanConstraints()
+        const cleaned = this.props.filters.prepareForQueryString()
         this.props.history.push(
             Routes.deckSearch(cleaned)
         )
@@ -61,36 +57,52 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     clearSearch = () => {
         this.selectedHouses.reset()
         this.selectedSortStore.selectedValue = ""
-        this.filters.reset()
+        this.props.filters.reset()
         this.constraintsStore.reset()
+    }
+
+    @computed
+    get myDecks(): boolean {
+        return this.props.filters.owner === UserStore.instance.username
     }
 
     render() {
         const {
-            title, myDecks, handleTitleUpdate, handleMyDecksUpdate, cards, owner
-        } = this.filters
+            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner
+        } = this.props.filters
 
         const showMyDecks = UserStore.instance.loggedIn()
-        const showDecksOwner = !!owner
+        const showDecksOwner = !!owner && owner !== UserStore.instance.username
         const optionals = !showMyDecks && !showDecksOwner ? null : (
             <ListItem>
                 <FormGroup row={true}>
-                    {showMyDecks ? (
+                    {!showDecksOwner && showMyDecks ? (
+                        <>
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={myDecks}
+                                    checked={this.myDecks}
                                     onChange={handleMyDecksUpdate}
                                 />
                             }
                             label={"My Decks"}
                         />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={myFavorites}
+                                        onChange={handleMyFavoritesUpdate}
+                                    />
+                                }
+                                label={"My Favorites"}
+                            />
+                        </>
                     ) : null}
                     {showDecksOwner ? (
-                        <ListItem>
+                        <>
                             <Typography>Owner: {owner}</Typography>
-                            <IconButton onClick={() => this.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
-                        </ListItem>
+                            <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
+                        </>
                     ) : null}
                 </FormGroup>
             </ListItem>
@@ -122,8 +134,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={this.filters.forSale}
-                                            onChange={(event) => this.filters.forSale = event.target.checked}
+                                            checked={this.props.filters.forSale}
+                                            onChange={(event) => this.props.filters.forSale = event.target.checked}
                                         />
                                     }
                                     label={(
@@ -136,8 +148,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={this.filters.forTrade}
-                                            onChange={(event) => this.filters.forTrade = event.target.checked}
+                                            checked={this.props.filters.forTrade}
+                                            onChange={(event) => this.props.filters.forTrade = event.target.checked}
                                         />
                                     }
                                     label={(
@@ -181,14 +193,14 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     </div>
                                 ))}
                                 {/*<IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>*/}
-                                    {/*<AddIcon fontSize={"small"}/>*/}
+                                {/*<AddIcon fontSize={"small"}/>*/}
                                 {/*</IconButton>*/}
                             </div>
                         </ListItem>
                         <ListItem>
                             <DeckSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                                <SortDirectionView hasSort={this.filters}/>
+                                <SortDirectionView hasSort={this.props.filters}/>
                             </div>
                         </ListItem>
                         <ListItem>

@@ -2430,17 +2430,12 @@
 
 - name: Biomatrix Backup
   cardNumber: 208
-  rating: 2
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [archives]
-  synergies:
-    - trait: causesFighting
-      rating: 1
-    - trait: sacrificesCreatures
-      rating: 1
 
 - name: Brain Stem Antenna
   cardNumber: 209
@@ -3430,7 +3425,8 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [usableArtifact, capturesAmber]
-  synergies: []
+  synergies:
+    - trait: power5OrHigherCreatures
 
 - name: Special Delivery
   cardNumber: 292

@@ -3,6 +3,7 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.House
 import org.springframework.data.domain.Sort
 
+
 data class DeckFilters(
         val houses: Set<House> = setOf(),
         val title: String = "",
@@ -11,7 +12,7 @@ data class DeckFilters(
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
-        val myDecks: Boolean = false,
+        val myFavorites: Boolean = false,
 
         val constraints: List<Constraint> = listOf(),
 

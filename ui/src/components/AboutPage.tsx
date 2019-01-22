@@ -1,5 +1,6 @@
-import { Grid, Typography } from "@material-ui/core"
+import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
+import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -32,7 +33,7 @@ export class AboutPage extends React.Component {
                     <Grid item={true} xs={12} md={6}>
                         <InfoListCard title={"Decks of Keyforge"} titleVariant={"h4"} infos={[
                             "The most robust deck and card search available for Keyforge.",
-                            "SAS is a unique rating system that reflects deck power.",
+                            "SAS is a unique rating system that reflects approximate deck power.",
                             "List decks for sale or trade, and use the search features to find available decks.",
                             "Wishlist and mark decks as funny, and see what everyone else thinks too!",
                             <span>
@@ -41,19 +42,29 @@ export class AboutPage extends React.Component {
                             </span>
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
-                        <InfoListCard title={"Release Notes"} titleVariant={"h5"} infos={[
-                            <Typography color={"primary"}>1.2</Typography>,
-                            "Fixed problem with user registration.",
-                            <Typography color={"primary"}>1.1</Typography>,
-                            "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
-                            "that had the potential to bring down the database.",
-                            "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
+                        <InfoListCard title={"Release Notes"} titleVariant={"h5"} noDivider={true} infos={[
+                            <div>
+                                <ReleaseNote releaseNumber={"1.3"} expanded={true} releaseNotes={[
+                                    `Added "My Favorites" to deck search options. Changed "Wishlist" to favorites, but it can be used for either.`,
+                                    "Added card popovers with expanded details to Synergy Details.",
+                                    "Improved release notes. Whoa so meta!",
+                                    "Fixed some bugs, like when the site is linked to from Facebook."
+                                ]}/>
+                                <ReleaseNote releaseNumber={"1.2"} releaseNotes={[
+                                    "Fixed problem with user registration."
+                                ]}/>
+                                <ReleaseNote releaseNumber={"1.1"} releaseNotes={[
+                                    "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
+                                    "that had the potential to bring down the database.",
+                                    "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
+                                ]}/>
+                            </div>
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"The AERC of your Deck"} titleVariant={"h4"} infos={[
                             <Typography variant={"h6"}>Deck Statistics</Typography>,
                             <div style={{paddingBottom: spacing(1)}}/>,
-                            <div style={{maxWidth: 520, maxHeight: 240 }}>
+                            <div style={{maxWidth: 520, maxHeight: 240}}>
                                 {stats ? <KeyPieGlobalAverages stats={stats} padding={48}/> : <Loader/>}
                             </div>,
                             "I've calculated the average statistics for decks in many categories, like card type ratios.",
@@ -190,7 +201,10 @@ export class AboutPage extends React.Component {
                             </div>,
                             "I add together the card ratings, synergy, and antisynergy of a deck to create its SAS rating.",
                             "The system isn't perfect, but it gives a great approximation of the relative quality of decks, and can help you " +
-                            "see the useful synergies in your deck, as well as antisynergies to be aware of."
+                            "see the useful synergies in your deck, as well as antisynergies to be aware of.",
+                            "Please keep in mind this system will never judge decks as accurately as a human, and it will inaccurately judge many decks, " +
+                            "especially ones with very complex interactions or strategies. So just because SAS thinks your deck is bad, or average, " +
+                            "doesn't mean it is in real play!"
                         ]}/>
                     </Grid>
                 </Grid>
@@ -217,4 +231,21 @@ export const CardExample = (props: { text: string, img1: string, img2: string })
             </div>
         </div>
     </div>
+)
+
+export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean }) => (
+    <ExpansionPanel defaultExpanded={props.expanded}>
+        <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+            <Typography color={"primary"} variant={"h6"}>{props.releaseNumber}</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+            <div>
+                {props.releaseNotes.map((note, idx) => (
+                    <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes.length - 1 ? spacing(1) : undefined}}>
+                        {note}
+                    </Typography>
+                ))}
+            </div>
+        </ExpansionPanelDetails>
+    </ExpansionPanel>
 )

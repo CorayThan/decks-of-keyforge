@@ -35,8 +35,9 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     }
 
     render() {
+        const filters = this.makeFilters(this.props)
         return (
-            <DeckSearchContainer history={this.props.history} filters={this.makeFilters(this.props)}/>
+            <DeckSearchContainer history={this.props.history} filters={filters}/>
         )
     }
 }

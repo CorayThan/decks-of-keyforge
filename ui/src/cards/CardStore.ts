@@ -99,14 +99,10 @@ export class CardStore {
             })
     }
 
-    frontImageFromCard = (card: Partial<KCard>) => {
-        if (card.frontImage) {
-            return card.frontImage
-        }
+    fullCardFromCardWithName = (card: Partial<KCard>) => {
         if (this.cardNameToCard && card.cardTitle) {
-            const cardWithImage = this.cardNameToCard.get(card.cardTitle)
-            return cardWithImage && cardWithImage.frontImage
+            return this.cardNameToCard.get(card.cardTitle)
         }
-        return undefined
+        return card
     }
 }

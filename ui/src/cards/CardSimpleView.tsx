@@ -36,7 +36,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
         return <CardSimpleView card={props.card}/>
     }
     const {cardTitle, cardType, cardText, amber, extraCardInfo} = props.card
-    const {rating, expectedAmber, amberControl, creatureControl, artifactControl, traits, synergies} = extraCardInfo
+    const {rating, traits, synergies} = extraCardInfo
 
     const wrapperStyle: React.CSSProperties = ScreenStore.instance.screenSizeXs() ? {
         backgroundColor: "#DFDFDF",
@@ -107,7 +107,7 @@ export const CardRatingBox = (props: { firstIcon: React.ReactNode, secondIcon?: 
 )
 
 @observer
-export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
+export class CardAsLine extends React.Component<{ card: Partial<KCard>, complex?: boolean }> {
 
     @observable
     popOpen = false
@@ -125,10 +125,10 @@ export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
 
     render() {
         const card = this.props.card
-        const frontImage = CardStore.instance.frontImageFromCard(card)
+        const fullCard = CardStore.instance.fullCardFromCardWithName(card)
 
         let pop = null
-        if (frontImage) {
+        if (fullCard && fullCard.id != null) {
             pop = (
                 <Popover
                     style={{pointerEvents: "none"}}
@@ -146,7 +146,7 @@ export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
                 >
-                    <CardSimpleView card={{frontImage}}/>
+                    {this.props.complex ? <CardView card={fullCard as KCard}/> : <CardSimpleView card={fullCard as KCard}/>}
                 </Popover>
             )
         }

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { computed, observable } from "mobx"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { KeyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
@@ -141,4 +141,12 @@ export class UserStore {
     }
 
     userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
+
+    @computed
+    get username(): string | undefined {
+        if (this.user) {
+            return this.user.username
+        }
+        return undefined
+    }
 }

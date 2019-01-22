@@ -9,6 +9,7 @@ import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
+import { UserStore } from "../user/UserStore"
 import { spacing } from "./MuiConfig"
 
 export {
@@ -21,10 +22,10 @@ class Routes {
     static cards = "/cards"
     static about = "/about"
     static decks = "/decks"
-    static usersDecks = "/decks?myDecks=true"
     static registration = "/registration"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
+    static usersDecks = () => `/decks?owner=${UserStore.instance.username}`
 
     /**
      * Deck filters should be cleaned.

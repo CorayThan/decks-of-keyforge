@@ -33,9 +33,9 @@ export class WishlistDeck extends React.Component<WishlistDeckProps> {
         const {deckId, deckName} = this.props
         let title
         if (UserStore.instance.loggedIn()) {
-            title = (this.wishlisted ? "Remove from" : "Add to") + " my wishlist"
+            title = (this.wishlisted ? "Remove from" : "Add to") + " my favorites"
         } else {
-            title = "Login to add decks to your wishlist"
+            title = "Login to add decks to your favorites"
         }
         return (
             <div style={{display: "flex", alignItems: "center"}}>
@@ -53,7 +53,7 @@ export class WishlistDeck extends React.Component<WishlistDeckProps> {
                         </IconButton>
                     </div>
                 </Tooltip>
-                <Tooltip title={"Times wishlisted"}>
+                <Tooltip title={"Times favorited"}>
                     <Typography variant={"body1"}>{this.wishlistCount}</Typography>
                 </Tooltip>
             </div>

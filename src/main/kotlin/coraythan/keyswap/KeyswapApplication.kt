@@ -3,6 +3,7 @@ package coraythan.keyswap
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
@@ -54,6 +55,8 @@ class KeyswapApplication {
                             .addSerializer(dateSer)
                             .addDeserializer(LocalDate::class.java, dateDeser)
                     )
+
+                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 }
     }
 

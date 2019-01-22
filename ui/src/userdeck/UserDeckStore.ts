@@ -20,7 +20,7 @@ export class UserDeckStore {
     wishlist = (deckName: string, deckId: number, wishlist: boolean) => {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(wishlist ? `Added ${deckName} to your wishlist!` : `Removed ${deckName} from your wishlist.`)
+                MessageStore.instance.setSuccessMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
                 UserStore.instance.loadLoggedInUser()
             })
     }

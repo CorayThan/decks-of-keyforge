@@ -161,7 +161,7 @@ class UserLinks extends React.Component {
                 <>
                     <LinkButton
                         color={"inherit"}
-                        to={Routes.usersDecks}
+                        to={Routes.usersDecks()}
                         style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >

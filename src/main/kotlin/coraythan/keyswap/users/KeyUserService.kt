@@ -29,7 +29,7 @@ class KeyUserService(
         }
 
         check(userRegInfo.username.matches(usernameRegex)) {
-            "Username is malformed."
+            "Username is malformed: ${userRegInfo.username}"
         }
 
         if (userRepo.findByEmailIgnoreCase(userRegInfo.email) != null) {

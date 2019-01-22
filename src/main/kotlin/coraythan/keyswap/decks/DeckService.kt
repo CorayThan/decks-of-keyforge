@@ -7,6 +7,7 @@ import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.deckcard.QDeckCard
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
@@ -135,34 +136,48 @@ class DeckService(
 
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title.toLowerCase()}%"))
         if (filters.owner.isNotBlank()) {
-            log.info("filtering with owner name ${filters.owner}")
-            val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
 
-            if (allowToSeeAllDecks) {
-                predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+            if (currentUserService.loggedInUser()?.username == filters.owner) {
+                // it's me
+                val user = currentUserService.loggedInUser()
+                if (user != null) predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))
             } else {
-                val userDeckQ = QUserDeck.userDeck
-                predicate.and(
-                        deckQ.userDecks.any().`in`(
-                                JPAExpressions.selectFrom(userDeckQ)
-                                        .where(
-                                                userDeckQ.ownedBy.eq(filters.owner),
-                                                userDeckQ.forSale.isTrue
-                                                        .or(userDeckQ.forTrade.isTrue)
-                                        )
-                        )
-                )
+                val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
+
+                if (allowToSeeAllDecks) {
+                    predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+                } else {
+                    val userDeckQ = QUserDeck.userDeck
+                    predicate.and(
+                            deckQ.userDecks.any().`in`(
+                                    JPAExpressions.selectFrom(userDeckQ)
+                                            .where(
+                                                    userDeckQ.ownedBy.eq(filters.owner),
+                                                    userDeckQ.forSale.isTrue
+                                                            .or(userDeckQ.forTrade.isTrue)
+                                            )
+                            )
+                    )
+                }
             }
+        }
+        if (filters.myFavorites) {
+            val userDeckQ = QUserDeck.userDeck
+            predicate.and(
+                    deckQ.userDecks.any().`in`(
+                            JPAExpressions.selectFrom(userDeckQ)
+                                    .where(
+                                            userDeckQ.user.id.eq(currentUserService.loggedInUser()?.id),
+                                            userDeckQ.wishlist.isTrue
+                                    )
+                    )
+            )
         }
         if (filters.forSale && filters.forTrade) {
             predicate.and(forSaleOrTrade)
         } else {
             if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
-        }
-        if (filters.myDecks) {
-            val user = currentUserService.loggedInUser()
-            if (user != null) predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))
         }
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
@@ -190,7 +205,7 @@ class DeckService(
     }
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
-        val deck = deckRepo.findByKeyforgeId(keyforgeId)!!
+        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
         return DeckWithSynergyInfo(
