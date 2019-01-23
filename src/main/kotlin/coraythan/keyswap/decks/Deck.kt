@@ -118,6 +118,7 @@ data class Deck(
             cardsRating = cardsRating,
             synergyRating = synergyRating,
             antisynergyRating = antisynergyRating,
+            totalPower = totalPower,
             forSale = forSale,
             forTrade = forTrade,
             wishlistCount = wishlistCount,
@@ -147,6 +148,8 @@ data class DeckSearchResult(
         val cardsRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,
+
+        val totalPower: Int = 0,
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,

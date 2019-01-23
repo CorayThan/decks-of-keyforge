@@ -1,9 +1,11 @@
 import { Tooltip, Typography } from "@material-ui/core"
+import { amber, blue } from "@material-ui/core/colors"
 import { Info } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
 import { spacing } from "../config/MuiConfig"
+import { log } from "../config/Utils"
 import { Deck } from "../decks/Deck"
 import { Loader } from "../mui-restyled/Loader"
 import { GlobalStats } from "./GlobalStats"
@@ -19,13 +21,14 @@ const pieColors = ["DodgerBlue", "SandyBrown", "SlateBlue", "MediumTurquoise"]
 export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
         const {
-            name, totalCreatures, totalActions, totalArtifacts, totalUpgrades, expectedAmber, amberControl, creatureControl, artifactControl
+            name, totalCreatures, totalActions, totalArtifacts, totalUpgrades, expectedAmber, amberControl, creatureControl, artifactControl,
+            sasRating
         } = this.props.deck
         const stats = StatsStore.instance.stats
         if (!stats) {
             return <Loader/>
         }
-        const {averageExpectedAmber, averageAmberControl, averageCreatureControl, averageArtifactControl} = stats
+        const {averageExpectedAmber, averageAmberControl, averageCreatureControl, averageArtifactControl, sas} = stats
         return (
             <div>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2), pointerEvents: "none"}}>
@@ -59,16 +62,45 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     }
 }
 
+@observer
+export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
+    render() {
+        const {
+            sasRating, cardsRating, synergyRating, antisynergyRating, totalPower
+        } = this.props.deck
+        const stats = StatsStore.instance.stats
+        if (!stats) {
+            return <Loader/>
+        }
+        const creaturePowerCompareValue = Math.floor(totalPower / 5) * 5
+        log.info(`Creature power compare value: ${creaturePowerCompareValue} total: ${totalPower}`)
+        return (
+            <>
+                <ComparisonBar name={"SAS"} data={stats.sas} comparison={sasRating}/>
+                <ComparisonBar name={"Cards Rating"} data={stats.cardsRating} comparison={cardsRating}/>
+                <ComparisonBar name={"Synergy"} data={stats.synergy} comparison={synergyRating}/>
+                <ComparisonBar name={"Antisynergy"} data={stats.antisynergy} comparison={antisynergyRating}/>
+                <ComparisonBar name={"Total Creature Power"} data={stats.totalCreaturePower} comparison={creaturePowerCompareValue}/>
+            </>
+        )
+    }
+}
+
 const keyBarStyle: VictoryStyleInterface = {
     labels: {fill: "white"},
     data: {
         fill: (d: { x: string }) => {
-            return d.x.startsWith("Avg") ? "SandyBrown" : "DodgerBlue"
+            return d.x.startsWith("Avg") ? amber["500"] : blue["500"]
         }
     }
 } as unknown as VictoryStyleInterface
 
-export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPadding?: number, style?: React.CSSProperties }) => (
+export interface BarData {
+    x: string | number
+    y: number
+}
+
+export const KeyBar = (props: { data: BarData[], domainPadding?: number, style?: React.CSSProperties }) => (
     <VictoryChart
         theme={VictoryTheme.material}
         domainPadding={props.domainPadding ? props.domainPadding : 20}
@@ -86,6 +118,30 @@ export const KeyBar = (props: { data: Array<{ x: string, y: number }>, domainPad
             labelComponent={<VictoryLabel dy={30}/>}
         />
     </VictoryChart>
+)
+
+export const ComparisonBar = (props: { name: string, data: BarData[], comparison: number }) => (
+    <div style={{maxWidth: 400, padding: spacing(2), display: "flex", flexDirection: "column", alignItems: "center"}}>
+        <Typography variant={"h5"} color={"primary"}>{props.name}</Typography>
+        <VictoryChart
+            theme={VictoryTheme.material}
+            padding={32}
+            width={300}
+            height={150}
+        >
+            <VictoryAxis/>
+            <VictoryBar
+                data={props.data}
+                style={{
+                    data: {
+                        fill: (d: { x: number }) => {
+                            return d.x === props.comparison ? amber["500"] : blue["500"]
+                        }
+                    }
+                } as unknown as VictoryStyleInterface}
+            />
+        </VictoryChart>
+    </div>
 )
 
 export const KeyPieGlobalAverages = (props: { stats: GlobalStats, padding?: number }) =>

@@ -3,7 +3,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
-import { DeckStatsView } from "../stats/DeckStatsView"
+import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
 import { ScreenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
@@ -64,8 +64,11 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         } else {
             saleInfoComponent = <Loader/>
         }
+
+        let inner
+
         if (ScreenStore.instance.screenSizeSm()) {
-            return (
+            inner = (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                     <DeckViewSmall deck={deck.deck} fullVersion={true}/>
                     <DeckStatsView deck={deck.deck}/>
@@ -74,24 +77,40 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
                         synergies={deck}
                         width={undefined}
                     />
+                    <div style={{display: "flex", flexWrap: "wrap"}}>
+                        <ExtraDeckStatsView deck={deck.deck}/>
+                    </div>
+                </div>
+            )
+        } else {
+            const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap"}
+            inner = (
+                <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
+                    <div style={{display: "flex", flexWrap: "wrap"}}>
+                        <ExtraDeckStatsView deck={deck.deck}/>
+                    </div>
+                    <div style={wrapperStyle}>
+                        <DeckViewSmall deck={deck.deck} fullVersion={true}/>
+                        <DeckStatsView deck={deck.deck}/>
+                    </div>
+                    <div style={wrapperStyle}>
+                        {saleInfoComponent}
+                        <DeckSynergiesInfoView
+                            synergies={deck}
+                            width={(saleInfo && saleInfo.length !== 0 ? 840 : 1200)}
+                        />
+                    </div>
                 </div>
             )
         }
-        const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap"}
+
         return (
-            <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
-                <div style={wrapperStyle}>
-                    <DeckViewSmall deck={deck.deck} fullVersion={true}/>
-                    <DeckStatsView deck={deck.deck}/>
-                </div>
-                <div style={wrapperStyle}>
-                    {saleInfoComponent}
-                    <DeckSynergiesInfoView
-                        synergies={deck}
-                        width={(saleInfo && saleInfo.length !== 0 ? 840 : 1200)}
-                    />
+            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                {inner}
+                <div>
                 </div>
             </div>
         )
+
     }
 }

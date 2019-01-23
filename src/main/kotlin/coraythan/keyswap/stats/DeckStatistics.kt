@@ -50,8 +50,18 @@ data class DeckStatistics(
             averageExpectedAmber = expectedAmberStats.median,
             averageAmberControl = amberControlStats.median,
             averageCreatureControl = creatureControlStats.median,
-            averageArtifactControl = artifactControlStats.median
+            averageArtifactControl = artifactControlStats.median,
+            sas = sas.map { BarData(it.key, it.value) },
+            cardsRating = cardsRating.map { BarData(it.key, it.value) },
+            synergy = synergy.map { BarData(it.key, it.value) },
+            antisynergy = antisynergy.map { BarData(it.key, it.value) },
+            totalCreaturePower = groupCreaturePowerByTens(),
+            totalArmor = armorValues.map { BarData(it.key, it.value) }
     )
+
+    fun groupCreaturePowerByTens(): List<BarData> {
+        return totalCreaturePower.keys.groupBy { it / 5 }.toList().map { BarData(it.first * 5, it.second.map { totalCreaturePower[it]!! }.sum()) }
+    }
 }
 
 data class IndividalDeckTraitStats(

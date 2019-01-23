@@ -36,6 +36,9 @@ class DeckEndpoints(
         return decks!!
     }
 
+    @GetMapping("/{id}/simple")
+    fun findDeckSimple(@PathVariable id: String) = deckService.findDeckSimple(id)
+
     @GetMapping("/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 

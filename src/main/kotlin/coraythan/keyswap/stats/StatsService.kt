@@ -13,16 +13,7 @@ class StatsService(
     private val log = LoggerFactory.getLogger(this::class.java)
     var cachedStats: DeckStatistics? = null
     var cachedGlobalStats: GlobalStats? = null
-    val defaultGlobalStats = GlobalStats(
-            averageActions = 14,
-            averageArtifacts = 4,
-            averageCreatures = 17,
-            averageUpgrades = 1,
-            averageExpectedAmber = 0,
-            averageAmberControl = 0,
-            averageCreatureControl = 0,
-            averageArtifactControl = 0
-    )
+    val defaultGlobalStats = GlobalStats()
 
     fun findGlobalStats(): GlobalStats {
         if (cachedGlobalStats != null) {

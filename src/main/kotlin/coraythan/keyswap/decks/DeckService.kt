@@ -204,6 +204,11 @@ class DeckService(
         return predicate
     }
 
+    fun findDeckSimple(keyforgeId: String): DeckSearchResult {
+        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")
+        return deck.toDeckSearchResult(listOf())
+    }
+
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")
         val synergies = deckSynergyService.fromDeck(deck)

@@ -1,3 +1,5 @@
+import { BarData } from "./DeckStatsView"
+
 export interface GlobalStats {
     averageActions: number
     averageArtifacts: number
@@ -7,4 +9,10 @@ export interface GlobalStats {
     averageAmberControl: number
     averageCreatureControl: number
     averageArtifactControl: number
+    sas: BarData[]
+    cardsRating: BarData[]
+    synergy: BarData[]
+    antisynergy: BarData[]
+    totalCreaturePower: BarData[]
+    totalArmor: BarData[]
 }

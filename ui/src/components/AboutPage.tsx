@@ -1,5 +1,6 @@
 import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
+import { GridProps } from "@material-ui/core/Grid"
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -15,6 +16,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { KeyBar, KeyPieGlobalAverages } from "../stats/DeckStatsView"
 import { StatsStore } from "../stats/StatsStore"
 import { UiStore } from "../ui/UiStore"
+import { ReleaseNotes } from "./ReleaseNotes"
 
 @observer
 export class AboutPage extends React.Component {
@@ -28,102 +30,9 @@ export class AboutPage extends React.Component {
         const stats = StatsStore.instance.stats
 
         return (
-            <div style={{margin: spacing(4), display: "flex", justifyContent: "center"}}>
-                <Grid container={true} spacing={32} style={{maxWidth: 1280}}>
-                    <Grid item={true} xs={12} md={6}>
-                        <InfoListCard title={"Decks of Keyforge"} titleVariant={"h4"} infos={[
-                            "The most robust deck and card search available for Keyforge.",
-                            "SAS is a unique rating system that reflects approximate deck power.",
-                            "List decks for sale or trade, and use the search features to find available decks.",
-                            "Wishlist and mark decks as funny, and see what everyone else thinks too!",
-                            <span>
-                                <Typography>For comments and suggestions send a PM to Coraythan on Reddit, or send an email to</Typography>
-                                <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
-                            </span>
-                        ]}/>
-                        <div style={{marginBottom: spacing(4)}}/>
-                        <InfoListCard title={"Release Notes"} titleVariant={"h5"} noDivider={true} infos={[
-                            <div>
-                                <ReleaseNote releaseNumber={"1.3"} expanded={true} releaseNotes={[
-                                    `Added "My Favorites" to deck search options. Changed "Wishlist" to favorites, but it can be used for either.`,
-                                    "Added card popovers with expanded details to Synergy Details.",
-                                    "Improved release notes. Whoa so meta!",
-                                    "Fixed some bugs, like when the site is linked to from Facebook."
-                                ]}/>
-                                <ReleaseNote releaseNumber={"1.2"} releaseNotes={[
-                                    "Fixed problem with user registration."
-                                ]}/>
-                                <ReleaseNote releaseNumber={"1.1"} releaseNotes={[
-                                    "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
-                                    "that had the potential to bring down the database.",
-                                    "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
-                                ]}/>
-                            </div>
-                        ]}/>
-                        <div style={{marginBottom: spacing(4)}}/>
-                        <InfoListCard title={"The AERC of your Deck"} titleVariant={"h4"} infos={[
-                            <Typography variant={"h6"}>Deck Statistics</Typography>,
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <div style={{maxWidth: 520, maxHeight: 240}}>
-                                {stats ? <KeyPieGlobalAverages stats={stats} padding={48}/> : <Loader/>}
-                            </div>,
-                            "I've calculated the average statistics for decks in many categories, like card type ratios.",
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>AERC Deck Traits</Typography>,
-                            <div style={{maxWidth: 520, maxHeight: 320}}>
-                                {stats ? (
-                                    <KeyBar
-                                        data={[
-                                            {x: "Aember Control", y: stats.averageAmberControl},
-                                            {x: "Expected Aember", y: stats.averageExpectedAmber},
-                                            {x: "Artifact Control", y: stats.averageArtifactControl},
-                                            {x: "Creature Control", y: stats.averageCreatureControl},
-                                        ]}
-                                        domainPadding={60}
-                                    />
-                                ) : <Loader/>}
-                            </div>,
-                            <div style={{paddingBottom: spacing(2)}}/>,
-                            "I've rated every card in key metrics, like its expected aember control (A), expected aember (E), artifact control (R), and " +
-                            "creature control (C).",
-                            "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
-                            "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
-                            "rating.",
-                            "However, when searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Aember Control (A)</Typography>,
-                            "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
-                            "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
-                            "avoided.",
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Expected Aember (E)</Typography>,
-                            "This rating is an approximation of how much aember you can expect a card to generate. It does not take the ability of creatures " +
-                            "to reap into account, unless they are a special skill that will usually generate extra aember, like Dew " +
-                            "Faerie's \"Reap: Gain 1<A>\".",
-                            "Some cards that are difficult to play have their base aember reduced, and some cards " +
-                            "that immediately allow the use of creatures have aember added on the assumption creatures will be used to reap.",
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Artifact Control (R)</Typography>,
-                            "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
-                            "1 point is approximately equal to destroying one artifact.",
-                            <div style={{paddingBottom: spacing(1)}}/>,
-                            <Typography variant={"h6"}>Creature Control (C)</Typography>,
-                            "Creature control is increased by cards that directly damage, destroy, disable or prevent the play of enemy creatures. It does " +
-                            "not account for your creatures' power, although it does account for special abilities that encourage using a creature to fight.",
-                            "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
-                        ]}/>
-                        <div style={{marginBottom: spacing(4)}}/>
-                        <InfoListCard title={"Legal Stuff"} titleVariant={"h5"} infos={[
-                            "Decks of Keyforge is not associated with Keyforge or Fantasy Flight Games in any way.",
-                            "You sell, trade, and purchase decks at your own risk. We do not verify the authenticity or trustworthiness of any sellers," +
-                            "buyers, or transactions.",
-                            "The SAS rating system is a copyrighted property of Decks of Keyforge, but I'm always interested in hearing about ways you'd " +
-                            "like to help make it better or collaborate! But please don't steal the system, obviously.",
-                            "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
-                            "or real loss of value due to changes to the system."
-                        ]}/>
-                    </Grid>
-                    <Grid item={true} xs={12} md={6}>
+            <div style={{margin: spacing(4), display: "flex"}}>
+                <Grid container={true} spacing={32} style={{maxWidth: 1920}} justify={"center"}>
+                    <AboutGridItem>
                         <InfoListCard title={"How SASy is your deck?"} titleVariant={"h4"} infos={[
                             "My formula calculates a rating for every deck based the quality of its cards and their synergies and antisynergies. " +
                             "This is the deck's SAS rating.",
@@ -206,26 +115,107 @@ export class AboutPage extends React.Component {
                             "especially ones with very complex interactions or strategies. So just because SAS thinks your deck is bad, or average, " +
                             "doesn't mean it is in real play!"
                         ]}/>
-                    </Grid>
+                    </AboutGridItem>
+                    <AboutGridItem>
+                        <InfoListCard title={"The AERC of your Deck"} titleVariant={"h4"} infos={[
+                            <Typography variant={"h6"}>Deck Statistics</Typography>,
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <div style={{maxWidth: 520, maxHeight: 240}}>
+                                {stats ? <KeyPieGlobalAverages stats={stats} padding={48}/> : <Loader/>}
+                            </div>,
+                            "I've calculated the average statistics for decks in many categories, like card type ratios.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>AERC Deck Traits</Typography>,
+                            <div style={{maxWidth: 520, maxHeight: 320}}>
+                                {stats ? (
+                                    <KeyBar
+                                        data={[
+                                            {x: "Aember Control", y: stats.averageAmberControl},
+                                            {x: "Expected Aember", y: stats.averageExpectedAmber},
+                                            {x: "Artifact Control", y: stats.averageArtifactControl},
+                                            {x: "Creature Control", y: stats.averageCreatureControl},
+                                        ]}
+                                        domainPadding={60}
+                                    />
+                                ) : <Loader/>}
+                            </div>,
+                            <div style={{paddingBottom: spacing(2)}}/>,
+                            "I've rated every card in key metrics, like its expected aember control (A), expected aember (E), artifact control (R), and " +
+                            "creature control (C).",
+                            "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
+                            "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
+                            "rating.",
+                            "However, when searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Aember Control (A)</Typography>,
+                            "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
+                            "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
+                            "avoided.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Expected Aember (E)</Typography>,
+                            "This rating is an approximation of how much aember you can expect a card to generate. It does not take the ability of creatures " +
+                            "to reap into account, unless they are a special skill that will usually generate extra aember, like Dew " +
+                            "Faerie's \"Reap: Gain 1<A>\".",
+                            "Some cards that are difficult to play have their base aember reduced, and some cards " +
+                            "that immediately allow the use of creatures have aember added on the assumption creatures will be used to reap.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Artifact Control (R)</Typography>,
+                            "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
+                            "1 point is approximately equal to destroying one artifact.",
+                            <div style={{paddingBottom: spacing(1)}}/>,
+                            <Typography variant={"h6"}>Creature Control (C)</Typography>,
+                            "Creature control is increased by cards that directly damage, destroy, disable or prevent the play of enemy creatures. It does " +
+                            "not account for your creatures' power, although it does account for special abilities that encourage using a creature to fight.",
+                            "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
+                        ]}/>
+                    </AboutGridItem>
+                    <AboutGridItem>
+                        <InfoListCard title={"Decks of Keyforge"} titleVariant={"h4"} infos={[
+                            "The most robust deck and card search available for Keyforge.",
+                            "SAS is a unique rating system that reflects approximate deck power.",
+                            "List decks for sale or trade, and use the search features to find available decks.",
+                            "Wishlist and mark decks as funny, and see what everyone else thinks too!",
+                            <span>
+                                <Typography>For comments and suggestions send a PM to Coraythan on Reddit, or send an email to</Typography>
+                                <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
+                            </span>
+                        ]}/>
+                        <div style={{marginBottom: spacing(4)}}/>
+                        <InfoListCard title={"Release Notes"} titleVariant={"h5"} noDivider={true} infos={[
+                            <ReleaseNotes/>
+                        ]}/>
+                        <div style={{marginBottom: spacing(4)}}/>
+                        <InfoListCard title={"Legal Stuff"} titleVariant={"h5"} infos={[
+                            "Decks of Keyforge is not associated with Keyforge or Fantasy Flight Games in any way.",
+                            "You sell, trade, and purchase decks at your own risk. We do not verify the authenticity or trustworthiness of any sellers," +
+                            "buyers, or transactions.",
+                            "The SAS rating system is a copyrighted property of Decks of Keyforge, but I'm always interested in hearing about ways you'd " +
+                            "like to help make it better or collaborate! But please don't steal the system, obviously.",
+                            "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
+                            "or real loss of value due to changes to the system."
+                        ]}/>
+                    </AboutGridItem>
                 </Grid>
             </div>
         )
     }
 }
 
+const AboutGridItem = (props: GridProps) => (<Grid item={true} xs={12} md={6} xl={4} style={{maxWidth: 608}} {...props} />)
+
 export const CardExample = (props: { text: string, img1: string, img2: string }) => (
     <div style={{padding: spacing(2), backgroundColor: "#DDDDDD"}}>
         <Typography>{props.text}</Typography>
-        <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2)}}>
+        <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2), justifyContent: "center"}}>
             <div>
                 <img
-                    style={{width: 240, marginRight: spacing(2)}}
+                    style={{width: 232, marginRight: spacing(2)}}
                     src={props.img1}
                 />
             </div>
             <div>
                 <img
-                    style={{width: 240}}
+                    style={{width: 232}}
                     src={props.img2}
                 />
             </div>

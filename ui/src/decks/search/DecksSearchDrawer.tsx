@@ -172,6 +172,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     "creatureControl",
                                     "synergyRating",
                                     "antisynergyRating",
+                                    "sasRating",
+                                    "cardsRating"
                                 ]}
                             />
                         </ListItem>
