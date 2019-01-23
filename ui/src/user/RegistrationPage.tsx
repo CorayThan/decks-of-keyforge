@@ -21,7 +21,7 @@ import { UserStore } from "./UserStore"
 @observer
 export class RegistrationPage extends React.Component {
 
-    private static readonly USERNAME_REGEX = /(\d|\w|-|_)+/
+    private static readonly USERNAME_REGEX = /^(\d|\w|-|_)+$/
 
     @observable
     email = Utils.isDev() ? "coraythan@gmail.com" : ""
@@ -45,14 +45,15 @@ export class RegistrationPage extends React.Component {
         if (this.password.length < 8) {
             error = "Please choose a password at least 8 characters long."
         }
-        if (this.username.length < 1) {
+        const username = this.username.trim()
+        if (username.length < 1) {
             error = "Please enter a username."
         }
         if (this.email.length < 1 || !Utils.validateEmail(this.email)) {
             error = "Please enter a valid email address."
         }
-        if (!this.username.match(RegistrationPage.USERNAME_REGEX)) {
-            error = "Please choose a username with only letters, numbers, hyphen, and underscore."
+        if (!RegistrationPage.USERNAME_REGEX.test(username)) {
+            error = "Please choose a username with letters, numbers, hyphen, and underscore."
         }
 
         if (error) {
@@ -62,7 +63,7 @@ export class RegistrationPage extends React.Component {
         UserStore.instance.registerAccount({
             email: this.email,
             password: this.password,
-            username: this.username,
+            username,
             publicContactInfo: this.publicContactInfo,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership
         })
