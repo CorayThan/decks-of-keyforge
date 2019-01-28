@@ -34,7 +34,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo }> {
     render() {
         const {
-            forSale, forTrade, askingPrice, condition, dateListed, listingInfo, username, publicContactInfo, externalLink
+            forSale, forTrade, askingPrice, condition, dateListed, dateExpires, listingInfo, username, publicContactInfo, externalLink
         } = this.props.saleInfo
         return (
             <KeyCard
@@ -90,6 +90,9 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     )}
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                         Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
+                    </Typography>
+                    <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
+                        Expires on {Utils.formatDate(dateExpires)}
                     </Typography>
                     <Divider style={{marginTop: spacing(2)}}/>
                     <Typography style={{margin: spacing(2), fontStyle: "italic"}} variant={"subtitle2"}>

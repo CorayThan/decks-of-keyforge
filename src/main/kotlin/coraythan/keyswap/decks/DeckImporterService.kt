@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.KeyforgeApi
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
@@ -12,18 +13,21 @@ import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
 import coraythan.keyswap.synergy.DeckSynergyService
+import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT10M"
-private const val lockUpdateStatistics = "PT72H"
+private const val lockUpdateRatings = "PT1S"
 
 @Transactional
 @Service
@@ -35,12 +39,16 @@ class DeckImporterService(
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
         private val statsService: StatsService,
-        private val objectMapper: ObjectMapper
+        private val objectMapper: ObjectMapper,
+        private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-     @Scheduled(fixedRateString = lockImportNewDecksFor)
-    // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    private val currentDeckRatingVersion = 2
+    private val query = JPAQueryFactory(entityManager)
+
+    @Scheduled(fixedRateString = lockImportNewDecksFor)
+    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
 
         val deckCountBeforeImport = deckRepo.count()
@@ -75,34 +83,35 @@ class DeckImporterService(
 
     //     @Scheduled(fixedRateString = lockUpdateStatistics)
     // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
-    fun updateDeckStatsAndRateDecks() {
+    fun updateDeckStats() {
         log.info("Began update to deck statistics.")
+        // Only update them if we have a few decks in the DB
         if (deckPageService.findCurrentPage() > 100) {
             updateDeckStatisticsPrivate()
         }
         log.info("Updated deck statistics.")
     }
 
-    // @Scheduled(fixedRateString = lockUpdateStatistics)
+    @Scheduled(fixedRateString = lockUpdateRatings)
     fun rateDecks() {
-        val sort = Sort.by("id")
-        var currentPage = 0
-        val pageSize = 100
-        while (true) {
 
-            val results = deckRepo.findAll(PageRequest.of(currentPage, pageSize, sort))
-            if (results.isEmpty) {
-                break
-            }
-            if (currentPage % 100 == 0) log.info("Rating decks, currently on deck ${currentPage * pageSize}")
+        val millisTaken = measureTimeMillis {
+            val deckQ = QDeck.deck
 
-            results.content.forEach {
-                val ratedDeck = rateDeck(it)
-                deckRepo.save(ratedDeck)
+            val deckResults = query.selectFrom(deckQ)
+                    .where(deckQ.ratingVersion.ne(currentDeckRatingVersion))
+                    .limit(1000)
+                    .fetch()
+
+            if (deckResults.isEmpty()) {
+                log.warn("Done rating decks!")
             }
-            currentPage++
+
+            val rated = deckResults.map { rateDeck(it).copy(ratingVersion = currentDeckRatingVersion) }
+            deckRepo.saveAll(rated)
         }
-        log.info("Done rating decks.")
+
+        log.info("Took $millisTaken ms to rate 1000 decks.")
     }
 
     private fun updateDeckStatisticsPrivate() {
@@ -128,41 +137,55 @@ class DeckImporterService(
         val sort = Sort.by("id")
         var currentPage = 0
         val pageSize = 100
+        var msToQuery = 0L
+        var msToIncMaps = 0L
         while (true) {
 
-            val results = deckRepo.findAll(PageRequest.of(currentPage, pageSize, sort))
-            if (results.isEmpty) {
+            var results: Page<Deck>? = null
+
+            val queryMs = measureTimeMillis {
+                results = deckRepo.findAll(PageRequest.of(currentPage, pageSize, sort))
+            }
+
+            msToQuery += queryMs
+
+            if (results!!.isEmpty) {
                 break
             }
-            if (currentPage % 100 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize}")
 
-            results.content.forEach {
-                val cards = cardService.cardsForDeck(it)
-                val ratedDeck = rateDeck(it)
-                deckRepo.save(ratedDeck)
+            val addToMapMs = measureTimeMillis {
+                results!!.content.forEach {
+                    val cards = cardService.cardsForDeck(it)
+                    val ratedDeck = it
 
-                armorValues.incrementValue(ratedDeck.totalArmor)
-                totalCreaturePower.incrementValue(ratedDeck.totalPower)
-                expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
-                amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
-                creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
-                artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
-                sasRating.incrementValue(ratedDeck.sasRating)
-                cardsRating.incrementValue(ratedDeck.cardsRating)
-                synergy.incrementValue(ratedDeck.synergyRating)
-                antisynergy.incrementValue(ratedDeck.antisynergyRating)
-                creatureCount.incrementValue(ratedDeck.totalCreatures)
-                actionCount.incrementValue(ratedDeck.totalActions)
-                artifactCount.incrementValue(ratedDeck.totalArtifacts)
-                equipmentCount.incrementValue(ratedDeck.totalUpgrades)
-                power2OrLower.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power < 3 }.size)
-                power3OrLower.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power < 4 }.size)
-                power3OrHigher.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power > 2 }.size)
-                power4OrHigher.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power > 3 }.size)
-                power5OrHigher.incrementValue(cards.filter { card -> card.cardType == CardType.Creature && card.power > 4 }.size)
+                    armorValues.incrementValue(ratedDeck.totalArmor)
+                    totalCreaturePower.incrementValue(ratedDeck.totalPower)
+                    expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
+                    amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
+                    creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
+                    artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
+                    sasRating.incrementValue(ratedDeck.sasRating)
+                    cardsRating.incrementValue(ratedDeck.cardsRating)
+                    synergy.incrementValue(ratedDeck.synergyRating)
+                    antisynergy.incrementValue(ratedDeck.antisynergyRating)
+                    creatureCount.incrementValue(ratedDeck.totalCreatures)
+                    actionCount.incrementValue(ratedDeck.totalActions)
+                    artifactCount.incrementValue(ratedDeck.totalArtifacts)
+                    equipmentCount.incrementValue(ratedDeck.totalUpgrades)
+
+                    val creatureCards = cards.filter { card -> card.cardType == CardType.Creature }
+
+                    power2OrLower.incrementValue(creatureCards.filter { card -> card.power < 3 }.size)
+                    power3OrLower.incrementValue(creatureCards.filter { card -> card.power < 4 }.size)
+                    power3OrHigher.incrementValue(creatureCards.filter { card -> card.power > 2 }.size)
+                    power4OrHigher.incrementValue(creatureCards.filter { card -> card.power > 3 }.size)
+                    power5OrHigher.incrementValue(creatureCards.filter { card -> card.power > 4 }.size)
+                }
             }
-
+            msToIncMaps += addToMapMs
             currentPage++
+
+            if (currentPage % 100 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize} sec ToQuery ${msToQuery / 1000} sec ToIncMap ${msToIncMaps / 1000}")
         }
         val deckStatistics = DeckStatistics(
                 armorValues = armorValues,

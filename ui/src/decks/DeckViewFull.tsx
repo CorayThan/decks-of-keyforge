@@ -67,7 +67,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
 
         let inner
 
-        if (ScreenStore.instance.screenSizeSm()) {
+        if (ScreenStore.instance.screenSizeMd()) {
             inner = (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                     <DeckViewSmall deck={deck.deck} fullVersion={true}/>

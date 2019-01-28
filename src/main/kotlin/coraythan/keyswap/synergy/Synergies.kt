@@ -72,6 +72,7 @@ enum class SynTrait {
     goodAction,
     goodPlay,
     goodFight,
+    goodDestroyed,
     readiesCreatures,
     sacrificesCreatures,
     elusive,
@@ -129,7 +130,7 @@ enum class SynTrait {
     urchin,
     ancientBear,
 
-    // Deck traits
+    // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4
     lowTotalCreaturePower, // 60-=1/4, 56-=1/2, 51-=3/4, 46-=1
     power5OrHigherCreatures, // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
     power4OrHigherCreatures, // 9+=1/4, 10+=1/2, 11+=3/4, 13+=1
@@ -150,6 +151,14 @@ enum class SynTrait {
 
     lowCreatureCount, // for house: =>6=0, 5=1/4, 4=1/2, 3=3/4, 2,1,0=1
     // for deck: 16-=1/4, 15-=1/2, 14-=3/4, 13-=1
+
+    highExpectedAmber, // for house: 7=0, 8=1/4, 9=1/2, 10=3/4, 11=1
+    // for deck: 22+=1/4, 24+=1/2, 26=3/4, 27+=1
+
+    lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
+    // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
+
+    // todo: Add average creature power. Banner of battle, other things synergize with it? Remove the "power lower than etc."???
 }
 
 enum class SynTraitType {

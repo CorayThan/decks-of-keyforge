@@ -94,6 +94,8 @@ data class Deck(
         @Enumerated(EnumType.STRING)
         val houses: List<House> = listOf(),
 
+        val ratingVersion: Int = 0,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1

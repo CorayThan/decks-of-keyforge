@@ -80,21 +80,16 @@
 
 - name: Loot the Bodies
   cardNumber: 10
-  rating: 2
-  expectedAmber: 1.5
+  rating: 3
+  expectedAmber: 2.0
   traits: []
   synergies:
     - trait: destroysEnemyCreatures
       type: house
     - trait: causesFighting
       type: house
-      rating: 1
     - trait: dealsDamage
       type: house
-      rating: 1
-    - trait: highTotalCreaturePower
-      type: house
-      rating: 3
 
 - name: Take that, Smartypants
   cardNumber: 11
@@ -712,7 +707,7 @@
 
 - name: Key Hammer
   cardNumber: 66
-  rating: 2
+  rating: 1
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -720,9 +715,9 @@
   traits: []
   synergies:
     - trait: stealsAmber
+      rating: 3
       type: house
     - trait: increasesKeyCost
-      rating: 3
     - trait: capturesAmber
       rating: 1
       type: house
@@ -821,7 +816,7 @@
 
 - name: Lash of Broken Dreams
   cardNumber: 75
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -895,12 +890,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [capturesAmber]
-  synergies:
-    - trait: protectsCreatures
-      rating: 1
-    - trait: returnsCreaturesFromDiscard
-      type: house
-
+  synergies: []
 
 - name: Drumble
   cardNumber: 82
@@ -945,8 +935,6 @@
   synergies:
     - trait: protectsCreatures
     - trait: discardsEnemyCards
-      rating: -1
-    - trait: reducesEnemyDraw
       rating: -1
 
 - name: Gabos Longarms
@@ -1101,13 +1089,14 @@
 
 - name: Succubus
   cardNumber: 99
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [reducesEnemyDraw]
   synergies:
+    - trait: reducesEnemyDraw
     - trait: protectsCreatures
       rating: 3
 
@@ -1797,11 +1786,10 @@
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: power3OrLowerCreatures
-      rating: -3
+      rating: -2
     - trait: power4OrHigherCreatures
       rating: 1
     - trait: highTotalArmor
-      rating: 3
 
 - name: Battle Fleet
   cardNumber: 161
@@ -2430,12 +2418,14 @@
 
 - name: Biomatrix Backup
   cardNumber: 208
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [archives]
+  synergies:
+    - trait: causesFighting
 
 - name: Brain Stem Antenna
   cardNumber: 209
@@ -2579,7 +2569,8 @@
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
-    - trait: knight
+    - trait: highCreatureCount
+      type: house
       rating: 1
 
 - name: Inspiration
@@ -3280,7 +3271,7 @@
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
-      rating: -3
+      rating: -2
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
 
@@ -3321,9 +3312,6 @@
       rating: 3
     - trait: capturesAmber
       type: house
-    - trait: stealsAmber
-      type: house
-      rating: 1
 
 - name: Treasure Map
   cardNumber: 284

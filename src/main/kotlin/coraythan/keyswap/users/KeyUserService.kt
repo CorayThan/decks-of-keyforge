@@ -1,6 +1,6 @@
 package coraythan.keyswap.users
 
-import coraythan.keyswap.config.EmailTakenException
+import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,6 +14,7 @@ class KeyUserService(
         private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
+    private val log = LoggerFactory.getLogger(this::class.java)
     private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
 
     fun register(userRegInfo: UserRegistration): KeyUser {
@@ -32,14 +33,14 @@ class KeyUserService(
             "Username is malformed: ${userRegInfo.username}"
         }
 
-        if (userRepo.findByEmailIgnoreCase(userRegInfo.email) != null) {
-            throw EmailTakenException("This email is already taken.")
+        requireNotNull(userRepo.findByEmailIgnoreCase(userRegInfo.email)) {
+            log.info("${userRegInfo.email} email is already taken.")
+            "This email is already taken."
         }
-        if (userRepo.findByUsernameIgnoreCase(userRegInfo.username) != null) {
-            throw EmailTakenException("This username is already taken.")
-        }
-        check(userRepo.findByEmailIgnoreCase(userRegInfo.email) == null) {
-            "${userRegInfo.email} is already taken."
+
+        requireNotNull(userRepo.findByUsernameIgnoreCase(userRegInfo.username)) {
+            log.info("${userRegInfo.username} username is already taken.")
+            "This username is already taken."
         }
 
         return userRepo.save(KeyUser(

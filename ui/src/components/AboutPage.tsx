@@ -109,7 +109,7 @@ export class AboutPage extends React.Component {
                                 }}/>
                             </div>,
                             "I add together the card ratings, synergy, and antisynergy of a deck to create its SAS rating.",
-                            "The system isn't perfect, but it gives a great approximation of the relative quality of decks, and can help you " +
+                            "The system isn't perfect, but it gives a reasonable approximation of the relative quality of decks, and can help you " +
                             "see the useful synergies in your deck, as well as antisynergies to be aware of.",
                             "Please keep in mind this system will never judge decks as accurately as a human, and it will inaccurately judge many decks, " +
                             "especially ones with very complex interactions or strategies. So just because SAS thinks your deck is bad, or average, " +
@@ -170,6 +170,15 @@ export class AboutPage extends React.Component {
                         ]}/>
                     </AboutGridItem>
                     <AboutGridItem>
+                        <InfoListCard title={"Using SAS and AERC"} titleVariant={"h4"} infos={[
+                            "SAS estimates the total power of the cards in a deck, and how the synergies and antisynergies effect the deck's quality, but " +
+                            "it won't be right about every deck. Many decks have complex combos SAS doesn't take into account, or their component cards " +
+                            "and synergies are very good, but they're missing a key overall trait, like sufficient Aember Control.",
+                            "Using a combination of SAS, AERC deck traits, and human judgement, it's possible to make an educated guess which of your decks " +
+                            "are best, or what would be a good deck to purchase. But even then, the best way to judge the quality of decks will be playing " +
+                            "the game!"
+                        ]}/>
+                        <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"Decks of Keyforge"} titleVariant={"h4"} infos={[
                             "The most robust deck and card search available for Keyforge.",
                             "SAS is a unique rating system that reflects approximate deck power.",

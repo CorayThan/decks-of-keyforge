@@ -5,7 +5,17 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <div>
-                <ReleaseNote releaseNumber={"1.4"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.0"} expanded={true} releaseNotes={[
+                    "Updated SAS Ratings.",
+                    "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
+                    "the increased value of how cards work together when often they don't both appear in the same game, or at the wrong time.",
+                    "Increased ratings of cards that increase expected aember, aember control, and creatures that help develop board control.",
+                    "Added an \"Expected Aember\" deck trait synergy and synergies with it.",
+                    "Added synergies, antisynergies, and changed card ratings based on community feedback.",
+                    "",
+                    "Added expiration date for deck listings."
+                ]}/>
+                <ReleaseNote releaseNumber={"1.4"} releaseNotes={[
                     "New graphs on deck page to show deck scores relative to global averages.",
                     "Added SAS and Cards Rating options to the deck search filters.",
                     "Fix for vague error on registration page.",

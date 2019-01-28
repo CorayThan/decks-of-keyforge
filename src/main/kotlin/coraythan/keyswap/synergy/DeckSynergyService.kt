@@ -112,6 +112,20 @@ class DeckSynergyService(
                 val cardsForHouse = cards.filter { it.house == house }
                 val totalCreaturePower = cardsForHouse.map { it.power }.sum()
                 val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
+                val totalExpectedAmber = cardsForHouse.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
+
+                if (totalExpectedAmber > 7) houseTraits[SynTrait.highExpectedAmber] = when {
+                    totalExpectedAmber > 10 -> 4
+                    totalExpectedAmber > 9 -> 3
+                    totalExpectedAmber > 8 -> 2
+                    else -> 1
+                }
+                if (totalExpectedAmber < 7) houseTraits[SynTrait.lowExpectedAmber] = when {
+                    totalExpectedAmber < 4 -> 4
+                    totalExpectedAmber < 5 -> 3
+                    totalExpectedAmber < 6 -> 2
+                    else -> 1
+                }
 
                 if (totalCreaturePower > 21) houseTraits[SynTrait.highTotalCreaturePower] = when {
                     totalCreaturePower > 23 -> 4
@@ -140,6 +154,20 @@ class DeckSynergyService(
     private fun addDeckTraits(deck: Deck, traits: MutableMap<SynTrait, Int>, cards: List<Card>) {
 
         if (deck.houses.contains(House.Mars)) traits[SynTrait.hasMars] = 4
+
+        val totalExpectedAmber = cards.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
+        if (totalExpectedAmber > 21) traits[SynTrait.highExpectedAmber] = when {
+            totalExpectedAmber > 26 -> 4
+            totalExpectedAmber > 25 -> 3
+            totalExpectedAmber > 23 -> 2
+            else -> 1
+        }
+        if (totalExpectedAmber < 19) traits[SynTrait.lowExpectedAmber] = when {
+            totalExpectedAmber < 15 -> 4
+            totalExpectedAmber < 17 -> 3
+            totalExpectedAmber < 18 -> 2
+            else -> 1
+        }
 
         if (deck.totalPower < 60) traits[SynTrait.lowTotalCreaturePower] = when {
             deck.totalPower < 47 -> 4

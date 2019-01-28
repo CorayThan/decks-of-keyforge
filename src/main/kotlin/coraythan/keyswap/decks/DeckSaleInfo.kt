@@ -15,6 +15,7 @@ data class DeckSaleInfo(
         val condition: DeckCondition,
 
         val dateListed: LocalDate,
+        val dateExpires: LocalDate,
 
         val username: String,
         val publicContactInfo: String?

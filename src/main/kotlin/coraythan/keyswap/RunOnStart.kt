@@ -18,17 +18,7 @@ class RunOnStart(
 
         cardService.loadExtraInfo()
         cardService.allFullCardsNonMaverick()
-        // deckImporterService.rerateDecks()
 
-        //        val importDecksMillis = measureTimeMillis {
-//            deckService.importNewDecks()
-//        }
-//        log.info("Import deck millis: $importDecksMillis.")
-
-//        val updateDeckRatingsMillis = measureTimeMillis {
-//            deckImporterService.rerateDecks()
-//        }
-//        log.info("Update deck ratings millis: $updateDeckRatingsMillis.")
-
+//        deckImporterService.updateDeckStats()
     }
 }

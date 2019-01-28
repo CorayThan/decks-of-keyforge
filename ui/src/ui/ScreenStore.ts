@@ -21,7 +21,9 @@ export class ScreenStore {
     }
 
     screenSizeXs = () => this.screenSize === ScreenSize.xs
-    screenSizeSm = () => this.screenSize !== ScreenSize.md
+    screenSizeSm = () => this.screenSize <= ScreenSize.sm
+    screenSizeMd = () => this.screenSize <= ScreenSize.md
+    screenSizeLg = () => this.screenSize <= ScreenSize.lg
 
     private onResize = () => {
         this.screenWidth = window.innerWidth
@@ -29,8 +31,10 @@ export class ScreenStore {
             this.screenSize = ScreenSize.xs
         } else if (this.screenWidth < 960) {
             this.screenSize = ScreenSize.sm
-        } else {
+        } else if (this.screenWidth < 1280) {
             this.screenSize = ScreenSize.md
+        } else {
+            this.screenSize = ScreenSize.lg
         }
     }
 }
@@ -38,5 +42,6 @@ export class ScreenStore {
 export enum ScreenSize {
     xs,
     sm,
-    md
+    md,
+    lg
 }

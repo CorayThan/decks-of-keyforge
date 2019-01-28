@@ -1,20 +1,38 @@
 package coraythan.keyswap.config
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@Suppress("unused")
 @RestControllerAdvice
 class RestErrorHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(EmailTakenException::class, BadRequestException::class)
-    fun badRequestException(ex: EmailTakenException) = ErrorResponse(ex.message!!)
-}
+    private val log = LoggerFactory.getLogger(this::class.java)
 
-class EmailTakenException(message: String) : RuntimeException(message)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException::class)
+    fun badRequestException(ex: BadRequestException): ErrorResponse {
+        log.info("In bad request response handler.")
+        return ErrorResponse(ex.message!!)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalStateException::class)
+    fun illegalState(ex: IllegalStateException): ErrorResponse {
+        log.info("In bad request response handler.")
+        return ErrorResponse(ex.message!!)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun illegalArgument(ex: IllegalArgumentException): ErrorResponse {
+        log.info("In bad request response handler.")
+        return ErrorResponse(ex.message!!)
+    }
+
+}
 
 class BadRequestException(message: String) : RuntimeException(message)
 
