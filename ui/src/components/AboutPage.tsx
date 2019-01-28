@@ -1,7 +1,6 @@
-import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Typography } from "@material-ui/core"
+import { Grid, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import { GridProps } from "@material-ui/core/Grid"
-import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -230,21 +229,4 @@ export const CardExample = (props: { text: string, img1: string, img2: string })
             </div>
         </div>
     </div>
-)
-
-export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean }) => (
-    <ExpansionPanel defaultExpanded={props.expanded}>
-        <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-            <Typography color={"primary"} variant={"h6"}>{props.releaseNumber}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-            <div>
-                {props.releaseNotes.map((note, idx) => (
-                    <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes.length - 1 ? spacing(1) : undefined}}>
-                        {note}
-                    </Typography>
-                ))}
-            </div>
-        </ExpansionPanelDetails>
-    </ExpansionPanel>
 )

@@ -1,5 +1,7 @@
+import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography } from "@material-ui/core"
+import { ExpandMore } from "@material-ui/icons"
 import * as React from "react"
-import { ReleaseNote } from "./AboutPage"
+import { spacing } from "../config/MuiConfig"
 
 export class ReleaseNotes extends React.Component {
     render() {
@@ -12,6 +14,10 @@ export class ReleaseNotes extends React.Component {
                     "Increased ratings of cards that increase expected aember, aember control, and creatures that help develop board control.",
                     "Added an \"Expected Aember\" deck trait synergy and synergies with it.",
                     "Added synergies, antisynergies, and changed card ratings based on community feedback.",
+                    "You can view the ratings as spreadsheets on google docs. (Although I recommend toggling on full view on the Cards page for the " +
+                    "current version.)",
+                    <a href={"https://docs.google.com/spreadsheets/d/1v8YYw1uTaZc_G01pFqbofgYsvKP2lADEs-5-SqGR6LY/edit?usp=sharing"}>Card Ratings V2 Spreadsheet</a>,
+                    <a href={"https://docs.google.com/spreadsheets/d/16gdzgD9Z3S6bb8NJbJCQ0A-mcOnznQnqV2wFoJublbs/edit?usp=sharing"}>Card Ratings V1 Spreadsheet</a>,
                     "",
                     "Added expiration date for deck listings."
                 ]}/>
@@ -38,3 +44,20 @@ export class ReleaseNotes extends React.Component {
         )
     }
 }
+
+export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean }) => (
+    <ExpansionPanel defaultExpanded={props.expanded}>
+        <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+            <Typography color={"primary"} variant={"h6"}>{props.releaseNumber}</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+            <div>
+                {props.releaseNotes.map((note, idx) => (
+                    <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes.length - 1 ? spacing(1) : undefined}}>
+                        {note}
+                    </Typography>
+                ))}
+            </div>
+        </ExpansionPanelDetails>
+    </ExpansionPanel>
+)

@@ -92,7 +92,7 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-    @Scheduled(fixedRateString = lockUpdateRatings)
+//    @Scheduled(fixedRateString = lockUpdateRatings)
     fun rateDecks() {
 
         val millisTaken = measureTimeMillis {
