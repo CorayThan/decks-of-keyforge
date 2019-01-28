@@ -122,6 +122,23 @@ export class UserStore {
             })
     }
 
+    sendReset = (email: string) => {
+        axios.post(`${UserStore.CONTEXT}/send-reset`, {email})
+            .then((response: AxiosResponse) => {
+                MessageStore.instance.setSuccessMessage(`A reset email has been sent to ${email}`)
+            })
+    }
+
+    changePassword = (resetCode: string, newPassword: string) => {
+        axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
+            .then((response: AxiosResponse) => {
+                MessageStore.instance.setSuccessMessage("Your password has been changed!")
+            })
+            .catch((error: AxiosError) => {
+                MessageStore.instance.setErrorMessage("Your password could not be changed. Try sending another reset request.")
+            })
+    }
+
     logout = () => {
         this.loginInProgress = false
         this.setUser(undefined)

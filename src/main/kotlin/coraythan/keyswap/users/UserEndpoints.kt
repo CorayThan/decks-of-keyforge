@@ -28,4 +28,10 @@ class UserEndpoints(
 
     @PostMapping("/secured/update")
     fun updateProfile(@RequestBody userProfile: UserProfileUpdate) = userService.updateUserProfile(userProfile)
+
+    @PostMapping("/send-reset")
+    fun sendReset(@RequestBody reset: ResetEmail) = userService.sendReset(reset)
+
+    @PostMapping("/change-password")
+    fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
 }

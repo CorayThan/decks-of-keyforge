@@ -12,6 +12,7 @@ export class HttpConfig {
 
     static setupAxios = () => {
         axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.errorInterceptor)
+        axiosWithoutErrors.interceptors.response.use(HttpConfig.responseInterceptor)
     }
 
     static setAuthHeader = (authHeader?: string) => {

@@ -19,3 +19,5 @@
 /out/
 
 /src/main/resources/static/
+
+application-nocommit.yml

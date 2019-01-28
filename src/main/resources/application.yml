@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: keyswap
+  profiles:
+    active: nocommit
   jpa:
     hibernate:
       ddl-auto: validate
@@ -20,6 +22,22 @@ spring:
     username: ${RDS_USERNAME:postgres}
     password: ${RDS_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
+  mail:
+    host: email-smtp.us-west-2.amazonaws.com
+    username: AKIAI7543AJ4RKGUYHBA
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          connectiontimeout: 10000
+          timeout: 5000
+          writetimeout: 10000
+          starttls:
+            enable: true
+            required: true
 
 jwt-secret: ${JWT_SECRET:abbb766d-dd23-45d3-af40-83db9d4dbbf4}
 env: ${ENV:dev}

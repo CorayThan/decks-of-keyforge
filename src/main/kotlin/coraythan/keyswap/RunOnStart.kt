@@ -21,7 +21,7 @@ class RunOnStart(
         cardService.loadExtraInfo()
         cardService.allFullCardsNonMaverick()
 
-        // log.info("Deck stats json: ${statsService.findDeckStatsJson()}")
+        // log.info("Deck stats json: \n\n${statsService.findDeckStatsJson().toList()[0].deckStats}\n\n")
 
 //        deckImporterService.updateDeckStats()
     }

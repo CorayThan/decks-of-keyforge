@@ -3,6 +3,8 @@ import * as React from "react"
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import { CardsPage } from "../cards/CardsPage"
 import { AboutPage } from "../components/AboutPage"
+import { ChangePasswordPage } from "../components/ChangePasswordPage"
+import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { DeckFilters } from "../decks/search/DeckFilters"
@@ -23,7 +25,9 @@ class Routes {
     static about = "/about"
     static decks = "/decks"
     static registration = "/registration"
+    static forgotPassword = "/forgot-password"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
+    static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
     static usersDecks = () => `/decks?owner=${UserStore.instance.username}`
 
@@ -67,6 +71,16 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.registration}
                             component={RegistrationPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.forgotPassword}
+                            component={ForgotPasswordPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.changePasswordPage()}
+                            component={ChangePasswordPage}
                         />
                         <Route
                             exact={true}

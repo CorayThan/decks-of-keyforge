@@ -39,7 +39,7 @@ export class RegistrationPage extends React.Component {
     signUp = (submitEvent: React.FormEvent) => {
         submitEvent.preventDefault()
         let error
-        if (this.password !== this.confirmPassword) {
+        if (this.password.trim() !== this.confirmPassword) {
             error = "Please make sure your password and confirm password match."
         }
         if (this.password.length < 8) {
