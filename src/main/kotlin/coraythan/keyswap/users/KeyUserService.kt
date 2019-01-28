@@ -33,12 +33,12 @@ class KeyUserService(
             "Username is malformed: ${userRegInfo.username}"
         }
 
-        requireNotNull(userRepo.findByEmailIgnoreCase(userRegInfo.email)) {
+        check(userRepo.findByEmailIgnoreCase(userRegInfo.email) == null) {
             log.info("${userRegInfo.email} email is already taken.")
             "This email is already taken."
         }
 
-        requireNotNull(userRepo.findByUsernameIgnoreCase(userRegInfo.username)) {
+        check(userRepo.findByUsernameIgnoreCase(userRegInfo.username) == null) {
             log.info("${userRegInfo.username} username is already taken.")
             "This username is already taken."
         }
