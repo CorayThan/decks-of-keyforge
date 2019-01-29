@@ -41,6 +41,7 @@ const deckSortOptions: SortOption[] = [
     {value: "CARDS_RATING", name: "Card Rating"},
     {value: "FUNNIEST", name: "Funniest"},
     {value: "MOST_WISHLISTED", name: "Most Wishlisted"},
+    {value: "NAME", name: "Name"},
 ]
 
 export const defaultSort = deckSortOptions[1]

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { computed, observable } from "mobx"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
-import { KeyLocalStorage } from "../config/KeyLocalStorage"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
 import { UserDeck } from "../userdeck/UserDeck"
@@ -34,7 +34,7 @@ export class UserStore {
     }
 
     loadLoggedInUser = () => {
-        if (!KeyLocalStorage.findAuthKey()) {
+        if (!keyLocalStorage.findAuthKey()) {
             return
         }
         HttpConfig.setAuthHeaders()
@@ -88,7 +88,7 @@ export class UserStore {
             .post(UserStore.CONTEXT + "/login", userLogin)
             .then((response: AxiosResponse) => {
                 log.info("Logged in!")
-                KeyLocalStorage.saveAuthKey(response.headers.authorization)
+                keyLocalStorage.saveAuthKey(response.headers.authorization)
                 this.loadLoggedInUser()
             })
             .catch((error: AxiosError) => {
@@ -142,7 +142,7 @@ export class UserStore {
     logout = () => {
         this.loginInProgress = false
         this.setUser(undefined)
-        KeyLocalStorage.clear()
+        keyLocalStorage.clear()
         HttpConfig.setAuthHeaders()
     }
 

@@ -7,12 +7,12 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer, KeyDrawerStore } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { ScreenStore } from "../ui/ScreenStore"
 import { CardFilters } from "./CardFilters"
-import { cardsPageStoreInstance } from "./CardsPage"
 import { CardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
@@ -137,12 +137,12 @@ export class CardsSearchDrawer extends React.Component {
                                 <Typography variant={"subtitle2"}>You found {this.cardStore.cards.length} cards</Typography>
                             </ListItem>
                         ) : null}
-                        <ListItem style={{marginTop: spacing(2)}}>
+                        <ListItem>
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        checked={cardsPageStoreInstance.fullView}
-                                        onChange={() => cardsPageStoreInstance.fullView = !cardsPageStoreInstance.fullView}
+                                        checked={keyLocalStorage.showFullCardView}
+                                        onChange={keyLocalStorage.toggleFullCardView}
                                     />
                                 }
                                 label={"Full card view"}

@@ -1,20 +1,13 @@
 import Typography from "@material-ui/core/Typography/Typography"
-import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
 import { CardView } from "./CardSimpleView"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { CardStore } from "./CardStore"
-
-class CardsPageStore {
-    @observable
-    fullView = false
-}
-
-export const cardsPageStoreInstance = new CardsPageStore()
 
 @observer
 export class CardsPage extends React.Component {
@@ -40,7 +33,7 @@ export class CardsPage extends React.Component {
                 cardsDisplay = (
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {cards.map(card => (
-                            <CardView card={card} key={card.id} simple={!cardsPageStoreInstance.fullView} />
+                            <CardView card={card} key={card.id} simple={!keyLocalStorage.showFullCardView} />
                         ))}
                     </div>
                 )

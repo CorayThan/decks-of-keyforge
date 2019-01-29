@@ -107,7 +107,7 @@ class ColumnHeaders extends React.Component {
 class CellValues extends React.Component<{ combo: SynergyCombo }> {
     render() {
         const combo = this.props.combo
-        const cardLine = <CardAsLine card={{cardTitle: combo.cardName}} complex={true}/>
+        const cardLine = <CardAsLine card={{cardTitle: combo.cardName}}/>
         if (ScreenStore.instance.screenSizeXs()) {
             return (
                 <>

@@ -2,6 +2,7 @@ package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Ops
+import com.querydsl.core.types.dsl.ComparableExpressionBase
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -86,13 +87,17 @@ class DeckService(
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
             DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
+            DeckSortOptions.NAME -> deckQ.name
         }
-        val sort = if (filters.sortDirection == SortDirection.DESC
+
+        val sort = if (
+                filters.sortDirection == SortDirection.DESC
                 || filters.sort == DeckSortOptions.FUNNIEST
-                || filters.sort == DeckSortOptions.MOST_WISHLISTED) {
-            sortProperty.desc()
+                || filters.sort == DeckSortOptions.MOST_WISHLISTED
+        ) {
+            (sortProperty as ComparableExpressionBase).desc()
         } else {
-            sortProperty.asc()
+            (sortProperty as ComparableExpressionBase).asc()
         }
 
         val deckResults = query.selectFrom(deckQ)

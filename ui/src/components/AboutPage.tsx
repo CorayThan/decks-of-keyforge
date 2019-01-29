@@ -195,7 +195,7 @@ export class AboutPage extends React.Component {
                         <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"Legal Stuff"} titleVariant={"h5"} infos={[
                             "Decks of Keyforge is not associated with Keyforge or Fantasy Flight Games in any way.",
-                            "You sell, trade, and purchase decks at your own risk. We do not verify the authenticity or trustworthiness of any sellers," +
+                            "You sell, trade, and purchase decks at your own risk. We do not verify the authenticity or trustworthiness of any sellers, " +
                             "buyers, or transactions.",
                             "The SAS rating system is a copyrighted property of Decks of Keyforge, but I'm always interested in hearing about ways you'd " +
                             "like to help make it better or collaborate! But please don't steal the system, obviously.",

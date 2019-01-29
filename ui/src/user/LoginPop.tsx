@@ -3,10 +3,8 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { LinkButton } from "../mui-restyled/LinkButton"
 import { UserStore } from "./UserStore"
 
 @observer
@@ -105,14 +103,14 @@ export class LoginPop extends React.Component<{style?: React.CSSProperties}> {
                                 Login
                             </KeyButton>
                         </div>
-                        <div style={{display: "flex", marginTop: spacing(2)}}>
-                            <LinkButton
-                                to={Routes.forgotPassword}
-                                size={"small"}
-                            >
-                                Reset Password
-                            </LinkButton>
-                        </div>
+                        {/*<div style={{display: "flex", marginTop: spacing(2)}}>*/}
+                            {/*<LinkButton*/}
+                                {/*to={Routes.forgotPassword}*/}
+                                {/*size={"small"}*/}
+                            {/*>*/}
+                                {/*Reset Password*/}
+                            {/*</LinkButton>*/}
+                        {/*</div>*/}
                     </div>
                 </Popover>
             </div>

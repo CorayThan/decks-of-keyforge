@@ -2,8 +2,13 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { House, houseValues } from "./House"
 
-export const HouseBanner = (props: { houses: House[], vertical: boolean, style?: React.CSSProperties }) => {
-    const size = props.vertical ? 40 : 72
+export const HouseBanner = (props: { houses: House[], vertical?: boolean, size?: number, style?: React.CSSProperties }) => {
+    let size = 0
+    if (props.size) {
+        size = props.size
+    } else {
+        size = props.vertical ? 40 : 72
+    }
 
     return (
         <div style={{display: "flex", flexDirection: props.vertical ? "column" : "row", justifyContent: "space-evenly", ...props.style}}>

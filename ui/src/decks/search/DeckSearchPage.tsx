@@ -4,13 +4,14 @@ import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
+import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { ScreenStore } from "../../ui/ScreenStore"
 import { UiStore } from "../../ui/UiStore"
+import { DeckListView, DeckTableView } from "../DeckListView"
 import { DeckStore } from "../DeckStore"
-import { DeckViewSmall } from "../DeckViewSmall"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
@@ -69,9 +70,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
             } else {
                 decksToDisplay = (
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                        {deckPage.decks.map((deck) => (
-                            <DeckViewSmall key={deck.id} deck={deck}/>
-                        ))}
+                        {keyLocalStorage.showTableView ? <DeckTableView decks={deckPage.decks}/> : <DeckListView decks={deckPage.decks}/>}
                     </div>
                 )
             }

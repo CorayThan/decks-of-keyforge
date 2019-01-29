@@ -39,8 +39,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {
             id, keyforgeId, name, houses,
             wishlistCount, funnyCount,
-            forSale, forTrade, expectedAmber,
-            amberControl, creatureControl, artifactControl
+            forSale, forTrade
         } = deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
@@ -107,13 +106,21 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </CardContent>
 
                 <CardActions>
-                    {fullVersion ? null : (
+                    {fullVersion ? (
+                        <KeyButton
+                            href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
+                            color={"primary"}
+                            style={{marginRight: spacing(2)}}
+                        >
+                            Master Vault
+                        </KeyButton>
+                        ) : (
                         <KeyLink
                             to={Routes.deckPage(keyforgeId)}
                             noStyle={true}
                             style={{marginRight: spacing(2)}}
                         >
-                            <KeyButton color={"primary"}>View Deck </KeyButton>
+                            <KeyButton color={"primary"}>View Deck</KeyButton>
                         </KeyLink>
                     )}
                     <MyDecksButton deck={this.props.deck}/>

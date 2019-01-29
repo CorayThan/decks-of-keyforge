@@ -34,7 +34,8 @@ enum class DeckSortOptions {
     SAS_RATING,
     CARDS_RATING,
     FUNNIEST,
-    MOST_WISHLISTED
+    MOST_WISHLISTED,
+    NAME
 }
 
 enum class SortDirection(val direction: Sort.Direction) {

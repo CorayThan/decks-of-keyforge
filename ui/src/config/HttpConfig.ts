@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { MessageStore } from "../ui/MessageStore"
-import { KeyLocalStorage } from "./KeyLocalStorage"
+import { keyLocalStorage } from "./KeyLocalStorage"
 import { log } from "./Utils"
 
 export const axiosWithoutInterceptors = axios.create()
@@ -20,7 +20,7 @@ export class HttpConfig {
     }
 
     static setAuthHeaders = () => {
-        const token = KeyLocalStorage.findAuthKey()
+        const token = keyLocalStorage.findAuthKey()
         if (token) {
             HttpConfig.setAuthHeader(token)
         }
@@ -29,7 +29,7 @@ export class HttpConfig {
     private static responseInterceptor = (response: AxiosResponse) => {
         const authHeader = response.headers.authorization
         if (authHeader) {
-            KeyLocalStorage.saveAuthKey(authHeader)
+            keyLocalStorage.saveAuthKey(authHeader)
             HttpConfig.setAuthHeaders()
         }
         return response

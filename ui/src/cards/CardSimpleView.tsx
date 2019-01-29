@@ -1,4 +1,4 @@
-import { Divider, Tooltip } from "@material-ui/core"
+import { Divider } from "@material-ui/core"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observable } from "mobx"
@@ -96,18 +96,8 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     )
 }
 
-export const CardRatingBox = (props: { firstIcon: React.ReactNode, secondIcon?: React.ReactNode, value: number, tooltip: string }) => (
-    <Tooltip title={props.tooltip}>
-        <div style={{display: "flex", width: 100, alignItems: "center", justifyContent: "space-between"}}>
-            {props.firstIcon}
-            {props.secondIcon}
-            <Typography variant={"h5"}>{props.value}</Typography>
-        </div>
-    </Tooltip>
-)
-
 @observer
-export class CardAsLine extends React.Component<{ card: Partial<KCard>, complex?: boolean }> {
+export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
 
     @observable
     popOpen = false
@@ -126,6 +116,7 @@ export class CardAsLine extends React.Component<{ card: Partial<KCard>, complex?
     render() {
         const card = this.props.card
         const fullCard = CardStore.instance.fullCardFromCardWithName(card)
+        const complex = !ScreenStore.instance.screenSizeXs()
 
         let pop = null
         if (fullCard && fullCard.id != null) {
@@ -146,7 +137,7 @@ export class CardAsLine extends React.Component<{ card: Partial<KCard>, complex?
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
                 >
-                    {this.props.complex ? <CardView card={fullCard as KCard}/> : <CardSimpleView card={fullCard as KCard}/>}
+                    {complex ? <CardView card={fullCard as KCard}/> : <CardSimpleView card={fullCard as KCard}/>}
                 </Popover>
             )
         }

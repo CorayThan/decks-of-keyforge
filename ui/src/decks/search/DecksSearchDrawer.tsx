@@ -1,4 +1,4 @@
-import { FormGroup, IconButton } from "@material-ui/core"
+import { FormGroup, IconButton, Switch } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -14,14 +14,17 @@ import * as React from "react"
 import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer, KeyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
+import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
+import { MessageStore } from "../../ui/MessageStore"
 import { ScreenStore } from "../../ui/ScreenStore"
 import { UserStore } from "../../user/UserStore"
+import { deckTableViewStore } from "../DeckListView"
 import { DeckStore } from "../DeckStore"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
@@ -48,10 +51,20 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.props.filters.sort = this.selectedSortStore.toEnumValue()
         this.props.filters.constraints = this.constraintsStore.cleanConstraints()
         const cleaned = this.props.filters.prepareForQueryString()
+
+        if (!cleaned.forSale && !cleaned.forTrade && !cleaned.myFavorites && !cleaned.owner) {
+            // search is broad, so disable bad searches
+            if (cleaned.sort === "NAME") {
+                MessageStore.instance.setWarningMessage("To use the name sort please check for sale, for trade, my decks, or my favorites.")
+                return
+            }
+        }
+
         this.props.history.push(
             Routes.deckSearch(cleaned)
         )
         KeyDrawerStore.closeIfSmall()
+        deckTableViewStore.reset()
     }
 
     clearSearch = () => {
@@ -78,15 +91,15 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                 <FormGroup row={true}>
                     {!showDecksOwner && showMyDecks ? (
                         <>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.myDecks}
-                                    onChange={handleMyDecksUpdate}
-                                />
-                            }
-                            label={"My Decks"}
-                        />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.myDecks}
+                                        onChange={handleMyDecksUpdate}
+                                    />
+                                }
+                                label={"My Decks"}
+                            />
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -237,6 +250,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <Typography variant={"subtitle2"}>Counting ...</Typography>
                             </ListItem>
                         ) : null}
+
+                        <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={keyLocalStorage.showTableView}
+                                        onChange={keyLocalStorage.toggleDeckTableView}
+                                    />
+                                }
+                                label={"Table view"}
+                            />
+                        </ListItem>
                     </List>
                 </form>
             </KeyDrawer>

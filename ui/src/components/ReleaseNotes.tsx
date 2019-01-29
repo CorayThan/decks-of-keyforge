@@ -7,6 +7,10 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <div>
+                <ReleaseNote releaseNumber={"2.1"} expanded={true} releaseNotes={[
+                    "You can now view decks in a table view with column sorting.",
+                    ""
+                ]}/>
                 <ReleaseNote releaseNumber={"2.0"} expanded={true} releaseNotes={[
                     "Updated SAS Ratings.",
                     "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
