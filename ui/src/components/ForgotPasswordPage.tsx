@@ -57,7 +57,12 @@ export class ForgotPasswordPage extends React.Component {
                             fullWidth={true}
                             error={this.error}
                         />
-                        <KeyButton color={"primary"} variant={"contained"} onClick={this.sendReset}>
+                        <KeyButton
+                            color={"primary"}
+                            variant={"contained"}
+                            onClick={this.sendReset}
+                            loading={UserStore.instance.sendingReset}
+                        >
                             Send Reset Email
                         </KeyButton>
                     </Paper>

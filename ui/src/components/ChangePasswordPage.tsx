@@ -68,7 +68,7 @@ export class ChangePasswordView extends React.Component<{resetCode: string}> {
                             onChange={(event) => this.confirmPassword = event.target.value}
                             style={{marginBottom: spacing(2)}}
                         />
-                        <KeyButton color={"primary"} variant={"contained"} onClick={this.sendReset}>
+                        <KeyButton color={"primary"} variant={"contained"} onClick={this.sendReset} loading={UserStore.instance.changingPassword}>
                             Change Password
                         </KeyButton>
                     </Paper>

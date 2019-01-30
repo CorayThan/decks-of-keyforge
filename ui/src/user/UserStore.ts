@@ -26,6 +26,12 @@ export class UserStore {
     @observable
     loginInProgress = false
 
+    @observable
+    sendingReset = false
+
+    @observable
+    changingPassword = false
+
     private constructor() {
     }
 
@@ -123,18 +129,23 @@ export class UserStore {
     }
 
     sendReset = (email: string) => {
+        this.sendingReset = true
         axios.post(`${UserStore.CONTEXT}/send-reset`, {email})
             .then((response: AxiosResponse) => {
+                this.sendingReset = false
                 MessageStore.instance.setSuccessMessage(`A reset email has been sent to ${email}`)
             })
     }
 
     changePassword = (resetCode: string, newPassword: string) => {
+        this.changingPassword = true
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
             .then((response: AxiosResponse) => {
+                this.changingPassword = false
                 MessageStore.instance.setSuccessMessage("Your password has been changed!")
             })
             .catch((error: AxiosError) => {
+                this.changingPassword = false
                 MessageStore.instance.setErrorMessage("Your password could not be changed. Try sending another reset request.")
             })
     }
