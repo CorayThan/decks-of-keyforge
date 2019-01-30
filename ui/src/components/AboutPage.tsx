@@ -202,6 +202,19 @@ export class AboutPage extends React.Component {
                             "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
                             "or real loss of value due to changes to the system."
                         ]}/>
+                        <div style={{marginBottom: spacing(4)}}/>
+                        <InfoListCard title={"For Devs"} titleVariant={"h5"} infos={[
+                            "I've created a simple API you can use to get SAS and AERC ratings for a deck, but if you use it I would appreciate it " +
+                            "if you could follow a few rules.",
+                            "1. Don't hit the endpoint too hard. It's a fairly efficient request, but my servers aren't super robust.",
+                            "2. If you display SAS or AERC values please provide a link to decksofkeyforge.com (or a link to the deck itself " +
+                            "on decksofkeyforge.com) along with the rating. " +
+                            `It doesn't need to be obtrusive, for example making "75 SAS" into a link, or having a small link icon next to it, is fine.`,
+                            "3. Please attribute decksofkeyforge.com on your site.",
+                            "To use the api make a request to",
+                            "https://decksofkeyforge.com/api/decks/293f366d-af1d-46ea-9c0f-4cc956dae50d/simple",
+                            "with the keyforge id of the deck you want to get SAS ratings for."
+                        ]}/>
                     </AboutGridItem>
                 </Grid>
             </div>

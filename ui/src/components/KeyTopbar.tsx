@@ -52,9 +52,9 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             variant={"h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
-                            {ScreenStore.instance.screenSizeXs() ? topbarShortName : topbarName}
+                            {ScreenStore.instance.screenWidth < 1240 ? topbarShortName : topbarName}
                         </Typography>
-                        {ScreenStore.instance.screenWidth < 1360 ? null : subheaderNode}
+                        {ScreenStore.instance.screenWidth < 1440 ? null : subheaderNode}
                         <div style={{flexGrow: 1}}/>
                         <RightMenu/>
                     </Toolbar>
@@ -148,6 +148,13 @@ const AppLinks = () => (
         >
             About
         </LinkButton>
+        <KeyButton
+            style={{margin: spacing(1)}}
+            color={"inherit"}
+            href={"https://www.patreon.com/decksofkeyforge"}
+        >
+            Donate
+        </KeyButton>
     </>
 )
 
