@@ -10,7 +10,13 @@ interface TraitsViewProps {
 }
 
 export const TraitsView = (props: TraitsViewProps) => (
-    <div style={{display: "flex", justifyContent: "center", marginTop: spacing(2), flexDirection: props.compact ? "column" : undefined}}>
+    <div
+        style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: props.compact ? "column" : undefined
+        }}
+    >
         <TraitValue
             name={"A"} value={props.hasTraits.amberControl} round={props.round} tooltip={"Aember Control"} color={props.color}
             style={{marginRight: spacing(2)}}

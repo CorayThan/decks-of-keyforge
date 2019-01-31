@@ -43,6 +43,8 @@ data class KeyforgeHouse(
         val image: String
 )
 
+const val keyforgeApiDeckPageSize = 10
+
 @Service
 class KeyforgeApi(
         val restTemplate: RestTemplate
@@ -53,21 +55,16 @@ class KeyforgeApi(
     /**
      * Null implies no decks available.
      */
-    fun findDecks(page: Int, pageSize: Int = 25): KeyforgeDecksPageDto? {
-        if (page < 1) {
-            throw IllegalArgumentException("Page has to be greater than 1.")
-        } else if (pageSize < 1 || pageSize > 25) {
-            throw IllegalArgumentException("Page size has to be greater than 1 and less than 26.")
-        }
+    fun findDecks(page: Int, ordering: String = "date"): KeyforgeDecksPageDto? {
         var decks: KeyforgeDecksPageDto? = null
 
         val keyforgeRequestDuration = measureTimeMillis {
             decks = keyforgeGetRequest(
                     KeyforgeDecksPageDto::class.java,
-                    "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=date"
+                    "decks/?page=$page&page_size=$keyforgeApiDeckPageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering"
             )
         }
-        log.debug("Getting $pageSize decks from keyforge api took $keyforgeRequestDuration")
+        log.debug("Getting $keyforgeApiDeckPageSize decks from keyforge api took $keyforgeRequestDuration got decks ${decks?.count}")
         return decks
     }
 

@@ -108,6 +108,12 @@ data class Deck(
             id = id,
             keyforgeId = keyforgeId,
             name = name,
+
+            powerLevel = powerLevel,
+            chains = chains,
+            wins = wins,
+            losses = losses,
+
             totalCreatures = totalCreatures,
             totalActions = totalActions,
             totalArtifacts = totalArtifacts,
@@ -128,6 +134,19 @@ data class Deck(
             searchResultCards = searchResultCards ?: cards.map { it.card.toDeckSearchResultCard() },
             houses = houses
     )
+
+    fun addGameStats(keyforgeDeck: KeyforgeDeck): Deck? {
+        if (this.wins == keyforgeDeck.wins && this.losses == keyforgeDeck.losses
+                && this.chains == keyforgeDeck.chains && this.powerLevel == keyforgeDeck.power_level) {
+            return null
+        }
+        return this.copy(
+                wins = keyforgeDeck.wins,
+                losses = keyforgeDeck.losses,
+                chains = keyforgeDeck.chains,
+                powerLevel = keyforgeDeck.power_level
+        )
+    }
 }
 
 // It takes a long time to load all the crap in hibernate, so avoid that.
@@ -141,6 +160,11 @@ data class DeckSearchResult(
         val totalActions: Int = 0,
         val totalArtifacts: Int = 0,
         val totalUpgrades: Int = 0,
+
+        val powerLevel: Int = 0,
+        val chains: Int = 0,
+        val wins: Int = 0,
+        val losses: Int = 0,
 
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,

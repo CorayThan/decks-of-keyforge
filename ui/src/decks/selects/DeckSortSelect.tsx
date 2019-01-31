@@ -39,6 +39,7 @@ const deckSortOptions: SortOption[] = [
     {value: "ADDED_DATE", name: "Date Added"},
     {value: "SAS_RATING", name: "SAS Rating"},
     {value: "CARDS_RATING", name: "Card Rating"},
+    {value: "CHAINS", name: "Chains"},
     {value: "FUNNIEST", name: "Funniest"},
     {value: "MOST_WISHLISTED", name: "Most Wishlisted"},
     {value: "NAME", name: "Name"},

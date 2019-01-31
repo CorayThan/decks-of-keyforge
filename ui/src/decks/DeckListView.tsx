@@ -73,7 +73,11 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             <DeckHeader title={"E"} property={"expectedAmber"}/>
                             <DeckHeader title={"R"} property={"artifactControl"}/>
                             <DeckHeader title={"C"} property={"creatureControl"}/>
-                            <DeckHeader title={"Power"} property={"totalPower"}/>
+                            <DeckHeader title={"Creature Power"} property={"totalPower"}/>
+                            <DeckHeader title={"Power"} property={"powerLevel"}/>
+                            <DeckHeader title={"Chains"} property={"chains"}/>
+                            <DeckHeader title={"Wins"} property={"wins"}/>
+                            <DeckHeader title={"Losses"} property={"losses"}/>
                             <TableCell/>
                         </TableRow>
                     </TableHead>
@@ -95,6 +99,10 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <TableCell>{deck.artifactControl}</TableCell>
                                 <TableCell>{deck.creatureControl}</TableCell>
                                 <TableCell>{deck.totalPower}</TableCell>
+                                <TableCell>{deck.powerLevel}</TableCell>
+                                <TableCell>{deck.chains}</TableCell>
+                                <TableCell>{deck.wins}</TableCell>
+                                <TableCell>{deck.losses}</TableCell>
                                 <TableCell>
                                     <KeyLink
                                         to={Routes.deckPage(deck.keyforgeId)}
@@ -124,7 +132,7 @@ const changeSortHandler = (property: string) => {
 }
 
 const DeckHeader = (props: { title: string, property: string, minWidth?: number }) => (
-    <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined}}>
+    <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined, maxWidth: 72}}>
         <TableSortLabel
             active={deckTableViewStore.activeTableSort === props.property}
             direction={deckTableViewStore.tableSortDir}

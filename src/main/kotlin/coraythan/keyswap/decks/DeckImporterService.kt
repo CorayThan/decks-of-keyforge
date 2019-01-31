@@ -9,6 +9,7 @@ import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.deckcard.DeckCard
+import coraythan.keyswap.keyforgeApiDeckPageSize
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
@@ -28,6 +29,7 @@ import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateRatings = "PT1S"
+private const val lockUpdateWinsLosses = "PT24H"
 
 @Transactional
 @Service
@@ -53,7 +55,7 @@ class DeckImporterService(
 
         val deckCountBeforeImport = deckRepo.count()
         val importDecksDuration = measureTimeMillis {
-            val decksPerPage = 10
+            val decksPerPage = keyforgeApiDeckPageSize
             var currentPage = deckPageService.findCurrentPage()
 
             val finalPage = currentPage + decksPerPage
@@ -61,7 +63,7 @@ class DeckImporterService(
             val maxPageRequests = 11
             var pagesRequested = 0
             while (currentPage < finalPage && pagesRequested < maxPageRequests) {
-                val decks = keyforgeApi.findDecks(currentPage, decksPerPage)
+                val decks = keyforgeApi.findDecks(currentPage)
                 if (decks == null) {
                     log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
                     break
@@ -81,6 +83,40 @@ class DeckImporterService(
         deckService.countFilters(DeckFilters())
     }
 
+    @Scheduled(fixedRateString = lockUpdateWinsLosses)
+    @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
+    fun updateWinsAndLosses() {
+
+        val updateWinsLossesDuration = measureTimeMillis {
+            val winPages = findAndUpdateDecks("-wins")
+            // val lossPages = findAndUpdateDecks("-losses")
+            log.info("Found $winPages win pages (of 10).")
+        }
+        log.info("It took ${updateWinsLossesDuration / 1000} seconds to update wins and losses.")
+    }
+
+    private fun findAndUpdateDecks(order: String): Int {
+        var currentPage = 1
+        while (true) {
+            val decks = keyforgeApi.findDecks(currentPage, order)
+            val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 }
+            if (updateDecks.isNullOrEmpty()) {
+                break
+            }
+            updateDecks.forEach {
+                val preexisting = deckRepo.findByKeyforgeId(it.id)
+                val updated = preexisting?.addGameStats(it)
+//                log.info("Deck before: ${preexisting?.wins} after: ${updated?.wins}")
+//                log.info("Deck before: ${preexisting?.losses} after: ${updated?.losses}")
+                if (updated != null) {
+                    deckRepo.save(updated)
+                }
+            }
+            currentPage++
+        }
+        return currentPage
+    }
+
     //     @Scheduled(fixedRateString = lockUpdateStatistics)
     // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
     fun updateDeckStats() {
@@ -92,7 +128,7 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-//    @Scheduled(fixedRateString = lockUpdateRatings)
+    //    @Scheduled(fixedRateString = lockUpdateRatings)
     fun rateDecks() {
 
         val millisTaken = measureTimeMillis {

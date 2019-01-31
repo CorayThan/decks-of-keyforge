@@ -12,6 +12,7 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { ChainsView } from "../generic/icons/ChainsView"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { House, houseValues } from "../houses/House"
@@ -39,7 +40,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {
             id, keyforgeId, name, houses,
             wishlistCount, funnyCount,
-            forSale, forTrade
+            forSale, forTrade, chains
         } = deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
@@ -74,34 +75,36 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     <div style={{display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-evenly"}}>
                         <div style={{flexGrow: compact ? undefined : 1, display: compact ? "flex" : undefined}}>
                             <HouseBanner houses={houses} vertical={compact}/>
-                            <TraitsView hasTraits={deck} compact={compact} round={true}/>
+                            <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: spacing(1)}}>
+                                <ChainsView chains={chains} style={{marginRight: spacing(2)}}/>
+                                <TraitsView hasTraits={deck} compact={compact} round={true}/>
+                            </div>
                         </div>
                         <DeckScoreView deck={deck} style={{marginRight: spacing(2)}}/>
                     </div>
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
-                    <KeyLink
-                        to={Routes.deckPage(keyforgeId)}
-                        disabled={fullVersion}
-                        noStyle={true}
-                    >
-                        <div style={{display: "flex"}}>
-                            <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
+                    <div style={{display: "flex"}}>
+                        <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
+                            <KeyLink
+                                to={Routes.deckPage(keyforgeId)}
+                                disabled={fullVersion}
+                                noStyle={true}
+                            >
                                 <Typography variant={"h5"}>{name}</Typography>
-                            </div>
-                            {forSale || userDeckForSale ? (
-                                <Tooltip title={"For sale"}>
-                                    <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
-                                </Tooltip>
-                            ) : null}
-                            {forTrade || userDeckForTrade ? (
-                                <Tooltip title={"For trade"}>
-                                    <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
-                                </Tooltip>
-                            ) : null}
-
+                            </KeyLink>
                         </div>
-                    </KeyLink>
+                        {forSale || userDeckForSale ? (
+                            <Tooltip title={"For sale"}>
+                                <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
+                            </Tooltip>
+                        ) : null}
+                        {forTrade || userDeckForTrade ? (
+                            <Tooltip title={"For trade"}>
+                                <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                            </Tooltip>
+                        ) : null}
+                    </div>
                     <DisplayAllCardsByHouse deck={this.props.deck}/>
                 </CardContent>
 
@@ -114,7 +117,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         >
                             Master Vault
                         </KeyButton>
-                        ) : (
+                    ) : (
                         <KeyLink
                             to={Routes.deckPage(keyforgeId)}
                             noStyle={true}

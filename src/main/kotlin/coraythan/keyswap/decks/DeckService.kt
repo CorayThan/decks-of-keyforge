@@ -84,6 +84,7 @@ class DeckService(
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.CARDS_RATING -> deckQ.cardsRating
+            DeckSortOptions.CHAINS -> deckQ.chains
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
             DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
@@ -94,6 +95,7 @@ class DeckService(
                 filters.sortDirection == SortDirection.DESC
                 || filters.sort == DeckSortOptions.FUNNIEST
                 || filters.sort == DeckSortOptions.MOST_WISHLISTED
+                || filters.sort == DeckSortOptions.CHAINS
         ) {
             (sortProperty as ComparableExpressionBase).desc()
         } else {
@@ -209,8 +211,12 @@ class DeckService(
         return predicate
     }
 
-    fun findDeckSimple(keyforgeId: String): DeckSearchResult {
-        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")
+    fun findDeckSimple(keyforgeId: String): DeckSearchResult? {
+        val deck = deckRepo.findByKeyforgeId(keyforgeId)
+        if (deck == null) {
+            log.info("Request for deck that doesn't exist $keyforgeId")
+            return null
+        }
         return deck.toDeckSearchResult(listOf())
     }
 

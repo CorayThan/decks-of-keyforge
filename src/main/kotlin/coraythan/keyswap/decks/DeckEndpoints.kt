@@ -36,6 +36,7 @@ class DeckEndpoints(
         return decks!!
     }
 
+    @CrossOrigin
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = deckService.findDeckSimple(id)
 
