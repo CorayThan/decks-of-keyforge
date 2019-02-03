@@ -43,6 +43,13 @@ class DeckEndpoints(
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = deckService.findDeckSimple(id)
 
+    @CrossOrigin
+    @GetMapping("/simple/v2/{id}")
+    fun findDeckSimple2(@PathVariable id: String): SimpleDeckResponse {
+        val deck = deckService.findDeckSimple(id)
+        return SimpleDeckResponse(deck ?: Nothing())
+    }
+
     @GetMapping("/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
@@ -62,3 +69,9 @@ class DeckEndpoints(
         return deckImporterService.addUnregisteredDeck(deck)
     }
 }
+
+data class SimpleDeckResponse(
+        val deck: Any
+)
+
+class Nothing()

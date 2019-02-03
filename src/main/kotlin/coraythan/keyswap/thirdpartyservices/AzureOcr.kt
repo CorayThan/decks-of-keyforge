@@ -41,8 +41,6 @@ class AzureOcr(
         )
         val results = response.body ?: return null
 
-        log.info("Deck results: $results")
-
         val ocrLines = results.regions.flatMap { it.lines }
         val topLine = ocrLines.filter { it.top() != null }.minBy { it.top()!! }
         val deckName = topLine?.words?.joinToString(" ") { it.text } ?: "Unrecognized Deck Name"

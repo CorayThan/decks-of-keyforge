@@ -25,6 +25,11 @@ export class DeckImportView extends React.Component {
         saveUnregisteredDeckStore.currentDeck = undefined
         deckImportStore.readDeck = undefined
         deckImportStore.newDeckId = undefined
+        deckImportStore.startMessages()
+    }
+
+    componentWillUnmount(): void {
+        deckImportStore.stopMessages()
     }
 
     handleImageAdded = (files: File[]) => {
@@ -63,12 +68,11 @@ export class DeckImportView extends React.Component {
                                         paddingLeft: spacing(2),
                                         paddingRight: spacing(2),
                                         height: "100%",
-                                        justifyContent: "center",
                                     }}
                                 >
-                                    {deckImportStore.readingDeckMessage ? (
-                                        <Typography variant={"body2"}>{deckImportStore.readingDeckMessage}</Typography>
-                                    ) : null}
+                                    <Typography variant={"body2"}>
+                                        Use a picture taken straight on with low glare and clear text.
+                                    </Typography>
                                     <KeyButton
                                         disabled={
                                             !deckImportViewStore.deckImage
@@ -84,9 +88,9 @@ export class DeckImportView extends React.Component {
                                     >
                                         Read Deck List
                                     </KeyButton>
-                                    <Typography variant={"body2"}>
-                                        Use a picture taken straight on with low glare and high quality (up to 3MB in size).
-                                    </Typography>
+                                    {deckImportStore.readingDeckMessage ? (
+                                        <Typography variant={"body2"}>{deckImportStore.readingDeckMessage}</Typography>
+                                    ) : null}
                                 </div>
                             </div>
                         </>

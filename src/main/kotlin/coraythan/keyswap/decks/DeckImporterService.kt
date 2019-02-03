@@ -54,7 +54,7 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Scheduled(fixedRateString = lockImportNewDecksFor)
-    // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         val deckCountBeforeImport = deckRepo.count()
         val importDecksDuration = measureTimeMillis {
@@ -296,9 +296,11 @@ class DeckImporterService(
 
         val cardsAsList = unregisteredDeck.cards.values.flatten()
 
-        val dup = deckService.findByNameIgnoreCase(unregisteredDeck.name)
+        log.info("Checking dups of unregistered deck.")
+        val dup = deckService.findByNameIgnoreCase(unregisteredDeck.name.toLowerCase())
         if (dup.isNotEmpty()) {
-            throw BadRequestException("Duplicate deck name.")
+            // This string is used in the front end, so don't change it!
+            throw BadRequestException("Duplicate deck name ${unregisteredDeck.name}")
         }
 
         val cards = cardsAsList.map {
@@ -334,7 +336,7 @@ class DeckImporterService(
     }
 
     @Scheduled(fixedRateString = lockUpdateCleanUnregistered)
-    // @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
+    @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
         var unregDeckCount = 0
         var cleanedOut = 0

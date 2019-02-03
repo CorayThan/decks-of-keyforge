@@ -186,7 +186,7 @@ export class AboutPage extends React.Component {
                             "List decks for sale or trade, and use the search features to find available decks.",
                             "Wishlist and mark decks as funny, and see what everyone else thinks too!",
                             <span>
-                                <Typography>For comments and suggestions send a PM to Coraythan on Reddit, or send an email to</Typography>
+                                <Typography>For comments and suggestions contact CorayThan on Reddit, or send an email to</Typography>
                                 <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                             </span>
                         ]}/>
@@ -210,12 +210,13 @@ export class AboutPage extends React.Component {
                             "I've created a simple API you can use to get SAS and AERC ratings for a deck, but if you use it I would appreciate it " +
                             "if you could follow a few rules.",
                             "1. Don't hit the endpoint too hard. It's a fairly efficient request, but my servers aren't super robust.",
-                            "2. If you display SAS or AERC values please provide a link to decksofkeyforge.com (or a link to the deck itself " +
+                            "2. Please don't send requests with deck IDs that don't exist in master vault.",
+                            "3. If you display SAS or AERC values please provide a link to decksofkeyforge.com (or a link to the deck itself " +
                             "on decksofkeyforge.com) along with the rating. " +
                             `It doesn't need to be obtrusive, for example making "75 SAS" into a link, or having a small link icon next to it, is fine.`,
-                            "3. Please attribute decksofkeyforge.com on your site.",
+                            "4. Please attribute decksofkeyforge.com on your site.",
                             "To use the api make a request to",
-                            "https://decksofkeyforge.com/api/decks/293f366d-af1d-46ea-9c0f-4cc956dae50d/simple",
+                            "https://decksofkeyforge.com/api/decks/simple/v2/293f366d-af1d-46ea-9c0f-4cc956dae50d",
                             "with the keyforge id of the deck you want to get SAS ratings for."
                         ]}/>
                     </AboutGridItem>

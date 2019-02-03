@@ -2,18 +2,23 @@ import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typograph
 import { ExpandMore } from "@material-ui/icons"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
+import { LinkButton } from "../mui-restyled/LinkButton"
 
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <div>
                 <ReleaseNote releaseNumber={"2.2"} expanded={true} releaseNotes={[
-                    "Added power level, chains, wins, and losses to decks, and sorting decks by chains.",
-                    "You can now add unregistered decks, to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
+                    "Added power level, chains, wins, and losses to decks, and sorting by chains.",
+                    "You can now add unregistered decks to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
                     "By default unregistered decks are filtered out of searches.",
-                    "Traits are now colored teal to differentiate from synergies.",
-                    "Improved the simple deck API to return null when a deck is requested with an ID that doesn't exist in Decks of Keyforge.",
-                    "Added a privacy policy."
+                    "Traits are colored teal to differentiate from synergies.",
+                    "Improved the simple deck API to v2, see below.",
+                    <div style={{display: "flex", alignItems: "center"}}>
+                        Added a 
+                        <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
+                    </div>
                 ]}/>
                 <ReleaseNote releaseNumber={"2.1"} releaseNotes={[
                     "You can now view decks in a table view with column sorting.",

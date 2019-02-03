@@ -225,7 +225,7 @@ class DeckService(
         return deck.toDeckSearchResult(listOf())
     }
 
-    fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name)
+    fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")

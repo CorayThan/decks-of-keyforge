@@ -36,20 +36,24 @@ class DeckImportStore {
         } catch (error) {
             const responseData = error.response.data
             log.debug(`Axios error: ${prettyJson(responseData)}`)
-            if (responseData.message === "Duplicate deck name.") {
+            if (responseData.message.includes("Duplicate deck name")) {
                 MessageStore.instance.setWarningMessage("There is already a deck with this name.")
             }
         }
         this.addingNewDeck = false
     }
 
-    readImageIntoDeck = async (deckImage: File) => {
-        this.readingDeckImage = true
-
+    startMessages = () => {
         this.readingDeckMessage = sample(CardStore.instance.cardFlavors)!
         this.messageIntervalId = window.setInterval(() => {
             this.readingDeckMessage = sample(CardStore.instance.cardFlavors)!
-        }, 5000)
+        }, 8000)
+    }
+
+    stopMessages = () => window.clearInterval(this.messageIntervalId)
+
+    readImageIntoDeck = async (deckImage: File) => {
+        this.readingDeckImage = true
 
         const imageData = new FormData()
         imageData.append("deckImage", deckImage)
