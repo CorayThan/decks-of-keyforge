@@ -8,4 +8,14 @@ enum class House {
     Sanctum,
     Shadows,
     Untamed;
+
+    companion object {
+        fun valueOfOrNull(value: String): House? {
+            try {
+                return House.valueOf(value)
+            } catch (e: Exception) {
+                return null
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import { GridProps } from "@material-ui/core/Grid"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
 import { DeckScoreView } from "../decks/DeckScoreView"
 import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
 import { AverageIcon } from "../generic/icons/AverageIcon"
@@ -11,6 +12,7 @@ import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { BestIcon } from "../generic/icons/BestIcon"
 import { WorstIcon } from "../generic/icons/WorstIcon"
 import { InfoListCard } from "../generic/InfoListCard"
+import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { KeyBar, KeyPieGlobalAverages } from "../stats/DeckStatsView"
 import { StatsStore } from "../stats/StatsStore"
@@ -200,7 +202,8 @@ export class AboutPage extends React.Component {
                             "The SAS rating system is a copyrighted property of Decks of Keyforge, but I'm always interested in hearing about ways you'd " +
                             "like to help make it better or collaborate! But please don't steal the system, obviously.",
                             "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
-                            "or real loss of value due to changes to the system."
+                            "or real loss of value due to changes to the system.",
+                            <LinkButton size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                         ]}/>
                         <div style={{marginBottom: spacing(4)}}/>
                         <InfoListCard title={"For Devs"} titleVariant={"h5"} infos={[

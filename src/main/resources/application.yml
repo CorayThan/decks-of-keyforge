@@ -22,6 +22,10 @@ spring:
     username: ${RDS_USERNAME:postgres}
     password: ${RDS_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 3500KB
+      max-request-size: 3500KB
   mail:
     host: email-smtp.us-west-2.amazonaws.com
     username: AKIAI7543AJ4RKGUYHBA

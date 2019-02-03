@@ -1,4 +1,4 @@
-import { Button, Popover, TextField } from "@material-ui/core"
+import { Button, Popover, TextField, Typography } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -6,6 +6,8 @@ import { Redirect } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { LinkButton } from "../mui-restyled/LinkButton"
+import { UserStore } from "../user/UserStore"
 import { DeckStore } from "./DeckStore"
 
 class DeckImportPopStore {
@@ -101,7 +103,18 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             helperText={"Id or Url from the deck url at keyforgegame.com e.g. 293f366d-af1d-46ea-9c0f-4cc956dae50d"}
                             error={this.error}
                         />
-                        <div style={{display: "flex"}}>
+                        <div style={{display: "flex", alignItems: "center"}}>
+                            {UserStore.instance.loggedIn() ? (
+                                <LinkButton
+                                    to={Routes.importUnregisteredDeck}
+                                    color={"primary"}
+                                    onClick={() => deckImportPopStore.popOpen = false}
+                                >
+                                    Import Unregistered Deck
+                                </LinkButton>
+                            ) : (
+                                <Typography>Login to import unregistered decks</Typography>
+                            )}
                             <div style={{flexGrow: 1}}/>
                             <Button
                                 variant={"outlined"}

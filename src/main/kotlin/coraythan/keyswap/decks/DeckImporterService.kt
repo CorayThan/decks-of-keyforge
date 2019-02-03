@@ -1,19 +1,20 @@
 package coraythan.keyswap.decks
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.querydsl.jpa.impl.JPAQueryFactory
-import coraythan.keyswap.KeyforgeApi
+import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.deckcard.CardIds
-import coraythan.keyswap.deckcard.DeckCard
-import coraythan.keyswap.keyforgeApiDeckPageSize
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.thirdpartyservices.KeyforgeApi
+import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
+import coraythan.keyswap.userdeck.UserDeck
+import coraythan.keyswap.userdeck.UserDeckRepo
+import coraythan.keyswap.users.CurrentUserService
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
@@ -30,6 +32,7 @@ import kotlin.system.measureTimeMillis
 private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateWinsLosses = "PT24H"
+private const val lockUpdateCleanUnregistered = "PT24H"
 
 @Transactional
 @Service
@@ -41,8 +44,9 @@ class DeckImporterService(
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
         private val statsService: StatsService,
-        private val objectMapper: ObjectMapper,
-        private val entityManager: EntityManager
+        private val currentUserService: CurrentUserService,
+        private val userDeckRepo: UserDeckRepo,
+        entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -50,9 +54,8 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Scheduled(fixedRateString = lockImportNewDecksFor)
-    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
-
         val deckCountBeforeImport = deckRepo.count()
         val importDecksDuration = measureTimeMillis {
             val decksPerPage = keyforgeApiDeckPageSize
@@ -180,7 +183,11 @@ class DeckImporterService(
             var results: Page<Deck>? = null
 
             val queryMs = measureTimeMillis {
-                results = deckRepo.findAll(PageRequest.of(currentPage, pageSize, sort))
+
+                val deckQ = QDeck.deck
+                val filterOutUnregistered = deckQ.registered.isTrue
+
+                results = deckRepo.findAll(filterOutUnregistered, PageRequest.of(currentPage, pageSize, sort))
             }
 
             msToQuery += queryMs
@@ -285,50 +292,87 @@ class DeckImporterService(
         return false
     }
 
+    fun addUnregisteredDeck(unregisteredDeck: SaveUnregisteredDeck): String {
+
+        val cardsAsList = unregisteredDeck.cards.values.flatten()
+
+        val dup = deckService.findByNameIgnoreCase(unregisteredDeck.name)
+        if (dup.isNotEmpty()) {
+            throw BadRequestException("Duplicate deck name.")
+        }
+
+        val cards = cardsAsList.map {
+            cardService.findByExpansionCardNumberHouse(it.expansion, it.cardNumber, it.house)
+        }
+        val deck = Deck(
+                keyforgeId = UUID.randomUUID().toString(),
+                name = unregisteredDeck.name,
+                expansion = cardsAsList[0].expansion,
+                registered = false
+        )
+
+        val savedDeck = saveDeck(deck, unregisteredDeck.cards.keys.toList(), cards)
+        val user = currentUserService.loggedInUser() ?: throw BadRequestException("Must be logged in to save unregistered deck.")
+        val userDeck = UserDeck(user, savedDeck, creator = true)
+        userDeckRepo.save(userDeck)
+        log.info("Added unregistered deck with name ${savedDeck.name} fake id ${savedDeck.keyforgeId}")
+        return savedDeck.keyforgeId
+    }
+
     private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         deck
                 .mapNotNull { if (deckRepo.findByKeyforgeId(it.id) == null) it else null }
                 .forEach { keyforgeDeck ->
 
-                    val cardsList = keyforgeDeck.cards?.map { cardsById[it]!! } ?: listOf()
-                    val savedDeck = deckRepo.save(keyforgeDeck.toDeck())
+                    val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
+                    val deckToSave = keyforgeDeck.toDeck()
+                    val houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
 
-                    val deckCards = cardsList.map { card ->
-                        DeckCard(savedDeck, card, card.cardTitle, cardsList.count { card.cardTitle == it.cardTitle })
-                    }
-
-                    val saveable = savedDeck
-                            .copy(
-                                    cards = deckCards,
-                                    houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses."),
-                                    cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
-                            )
-
-                    val ratedDeck = rateDeck(saveable
-                            .copy(
-                                    rawAmber = cardsList.map { it.amber }.sum(),
-                                    totalPower = cardsList.map { it.power }.sum(),
-                                    totalArmor = cardsList.map { it.armor }.sum(),
-                                    totalCreatures = cardsList.filter { it.cardType == CardType.Creature }.size,
-                                    totalActions = cardsList.filter { it.cardType == CardType.Action }.size,
-                                    totalArtifacts = cardsList.filter { it.cardType == CardType.Artifact }.size,
-                                    totalUpgrades = cardsList.filter { it.cardType == CardType.Upgrade }.size,
-                                    maverickCount = cardsList.filter { it.maverick }.size,
-                                    specialsCount = cardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
-                                    raresCount = cardsList.filter { it.rarity == Rarity.Rare }.size,
-                                    uncommonsCount = cardsList.filter { it.rarity == Rarity.Uncommon }.size
-                            )
-                    )
-
-                    if (ratedDeck.cards.size != 36) {
-                        throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
-                    }
-                    if (ratedDeck.houses.size != 3) {
-                        throw IllegalStateException("Deck doesn't have 3 houses! $deck")
-                    }
-                    deckRepo.save(ratedDeck)
+                    saveDeck(deckToSave, houses, cardsList)
                 }
+    }
+
+    @Scheduled(fixedRateString = lockUpdateCleanUnregistered)
+    // @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
+    fun cleanOutUnregisteredDecks() {
+        var unregDeckCount = 0
+        var cleanedOut = 0
+        val msToCleanUnreg = measureTimeMillis {
+            val allUnregDecks = deckRepo.findAllByRegisteredFalse()
+            unregDeckCount = allUnregDecks.size
+            allUnregDecks.forEach { unreg ->
+                val decksLike = deckRepo.findByNameIgnoreCase(unreg.name)
+                        .filter { it.id != unreg.id }
+                if (decksLike.isNotEmpty()) {
+                    log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
+                    deckRepo.deleteById(unreg.id)
+                    cleanedOut++
+                }
+            }
+        }
+
+        log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
+    }
+
+    private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
+        val savedDeck = deckRepo.save(deck)
+
+        val saveable = savedDeck
+                .withDeckCards(cardsList)
+                .copy(
+                        houses = houses
+                )
+
+        val ratedDeck = rateDeck(saveable)
+
+        if (ratedDeck.cards.size != 36) {
+            throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
+        }
+        if (ratedDeck.houses.size != 3) {
+            throw IllegalStateException("Deck doesn't have 3 houses! $deck")
+        }
+        return deckRepo.save(ratedDeck)
     }
 
     private fun rateDeck(deck: Deck): Deck {

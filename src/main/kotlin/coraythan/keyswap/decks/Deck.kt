@@ -3,11 +3,13 @@ package coraythan.keyswap.decks
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
-import coraythan.keyswap.KeyforgeDeckLinks
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
+import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.synergy.DeckSynergyInfo
+import coraythan.keyswap.thirdpartyservices.KeyforgeDeckLinks
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import javax.persistence.*
@@ -45,10 +47,12 @@ data class Deck(
 
         val name: String,
         val expansion: Int,
-        val powerLevel: Int,
-        val chains: Int,
-        val wins: Int,
-        val losses: Int,
+        val powerLevel: Int = 0,
+        val chains: Int = 0,
+        val wins: Int = 0,
+        val losses: Int = 0,
+
+        val registered: Boolean = true,
 
         val maverickCount: Int = 0,
         val specialsCount: Int = 0,
@@ -87,7 +91,7 @@ data class Deck(
         val cardIds: String = "",
 
         @JsonIgnoreProperties("deck")
-        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         val userDecks: List<UserDeck> = listOf(),
 
         @ElementCollection
@@ -113,6 +117,8 @@ data class Deck(
             chains = chains,
             wins = wins,
             losses = losses,
+
+            registered = registered,
 
             totalCreatures = totalCreatures,
             totalActions = totalActions,
@@ -149,17 +155,39 @@ data class Deck(
     }
 }
 
+fun Deck.withDeckCards(newCardsList: List<Card>): Deck {
+    val deckCards = newCardsList.map { card ->
+        DeckCard(this, card, card.cardTitle, cardsList.count { card.cardTitle == it.cardTitle })
+    }
+    return this.copy(
+            cards = deckCards,
+            rawAmber = newCardsList.map { it.amber }.sum(),
+            totalPower = newCardsList.map { it.power }.sum(),
+            totalArmor = newCardsList.map { it.armor }.sum(),
+            totalCreatures = newCardsList.filter { it.cardType == CardType.Creature }.size,
+            totalActions = newCardsList.filter { it.cardType == CardType.Action }.size,
+            totalArtifacts = newCardsList.filter { it.cardType == CardType.Artifact }.size,
+            totalUpgrades = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
+            maverickCount = newCardsList.filter { it.maverick }.size,
+            specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
+            raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
+            uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size
+    )
+}
+
 // It takes a long time to load all the crap in hibernate, so avoid that.
 data class DeckSearchResult(
-        val id: Long,
-        val keyforgeId: String,
+        val id: Long = -1,
+        val keyforgeId: String = "",
 
-        val name: String,
+        val name: String = "",
 
         val totalCreatures: Int = 0,
         val totalActions: Int = 0,
         val totalArtifacts: Int = 0,
         val totalUpgrades: Int = 0,
+
+        val registered: Boolean = true,
 
         val powerLevel: Int = 0,
         val chains: Int = 0,
@@ -203,12 +231,20 @@ data class KeyforgeDeck(
         val id: String,
         val name: String,
         val expansion: Int,
-        val power_level: Int,
-        val chains: Int,
-        val wins: Int,
-        val losses: Int,
+        val power_level: Int = 0,
+        val chains: Int = 0,
+        val wins: Int = 0,
+        val losses: Int = 0,
         val cards: List<String>? = null,
         val _links: KeyforgeDeckLinks? = null
 ) {
-    fun toDeck() = Deck(id, name, expansion, power_level, chains, wins, losses)
+    fun toDeck() = Deck(
+            keyforgeId = id,
+            name = name,
+            expansion = expansion,
+            powerLevel = power_level,
+            chains = chains,
+            wins = wins,
+            losses = losses
+    )
 }

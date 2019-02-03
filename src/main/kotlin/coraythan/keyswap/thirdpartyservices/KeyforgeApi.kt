@@ -1,6 +1,7 @@
-package coraythan.keyswap
+package coraythan.keyswap.thirdpartyservices
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.House
 import coraythan.keyswap.cards.KeyforgeCard
 import coraythan.keyswap.decks.KeyforgeDeck
 import org.slf4j.LoggerFactory

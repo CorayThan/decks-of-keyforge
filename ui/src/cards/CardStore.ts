@@ -21,10 +21,13 @@ export class CardStore {
     allCards: KCard[] = []
 
     @observable
-    cardNameToCard?: Map<string, KCard>
+    cardNameLowercaseToCard?: Map<string, KCard>
 
     @observable
     cardNames: Array<{ label: string, value: string }> = []
+
+    @observable
+    cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
 
     private constructor() {
     }
@@ -91,17 +94,21 @@ export class CardStore {
                 this.searchingForCards = false
                 this.allCards = response.data
                 this.cards = response.data.slice()
-                this.cardNameToCard = new Map()
+                this.cardNameLowercaseToCard = new Map()
+                this.cardFlavors = []
                 this.cardNames = this.allCards!.map(card => {
-                    this.cardNameToCard!.set(card.cardTitle, card)
+                    this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
+                    if (card.flavorText) {
+                        this.cardFlavors.push(card.flavorText)
+                    }
                     return {label: card.cardTitle, value: card.cardTitle}
                 })
             })
     }
 
     fullCardFromCardWithName = (card: Partial<KCard>) => {
-        if (this.cardNameToCard && card.cardTitle) {
-            return this.cardNameToCard.get(card.cardTitle)
+        if (this.cardNameLowercaseToCard && card.cardTitle) {
+            return this.cardNameLowercaseToCard.get(card.cardTitle.toLowerCase())
         }
         return card
     }

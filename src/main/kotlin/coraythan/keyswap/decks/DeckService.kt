@@ -42,17 +42,13 @@ class DeckService(
 
         val count: Long
         val preExistingCount = deckCount
-        val filtersAreEqual = filters.copy(
-                sort = defaultFilters.sort,
-                sortDirection = defaultFilters.sortDirection
-        ) == defaultFilters
-        if (preExistingCount != null && filtersAreEqual) {
+        if (preExistingCount != null && filtersAreEqual(filters)) {
             count = preExistingCount
         } else {
 
             val predicate = deckFilterPedicate(filters)
 
-            if (filtersAreEqual) {
+            if (filtersAreEqual(filters)) {
 
                 count = deckRepo.count()
                 deckCount = count
@@ -125,10 +121,19 @@ class DeckService(
         )
     }
 
+    private fun filtersAreEqual(filters: DeckFilters) = filters.copy(
+            sort = defaultFilters.sort,
+            sortDirection = defaultFilters.sortDirection
+    ) == defaultFilters
+
     private fun deckFilterPedicate(filters: DeckFilters): BooleanBuilder {
         val deckQ = QDeck.deck
         val deckCardQ = QDeckCard.deckCard
         val predicate = BooleanBuilder()
+
+        if (!filters.includeUnregistered) {
+            predicate.and(deckQ.registered.isTrue)
+        }
 
         if (filters.houses.isNotEmpty()) {
             if (filters.houses.size < 4) {
@@ -219,6 +224,8 @@ class DeckService(
         }
         return deck.toDeckSearchResult(listOf())
     }
+
+    fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name)
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")

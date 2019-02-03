@@ -31,7 +31,8 @@ class DeckSynergyService(
             cardInfo.traits
                     .plus(card.traits.mapNotNull { it.synTrait })
                     .forEach {
-                        val cardHouseCount = counts[card.house]!!
+                        val cardHouseCount = counts[card.house]
+                                ?: throw IllegalArgumentException("No house in deck for card ${card.cardTitle} house ${card.house}")
                         anyHouseCount.incrementValue(it)
                         cardHouseCount.incrementValue(it)
                     }

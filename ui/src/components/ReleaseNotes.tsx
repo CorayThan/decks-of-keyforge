@@ -8,14 +8,19 @@ export class ReleaseNotes extends React.Component {
         return (
             <div>
                 <ReleaseNote releaseNumber={"2.2"} expanded={true} releaseNotes={[
-                    "Added power level, chains, wins, and losses to decks, and sorting decks by chains."
+                    "Added power level, chains, wins, and losses to decks, and sorting decks by chains.",
+                    "You can now add unregistered decks, to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
+                    "By default unregistered decks are filtered out of searches.",
+                    "Traits are now colored teal to differentiate from synergies.",
+                    "Improved the simple deck API to return null when a deck is requested with an ID that doesn't exist in Decks of Keyforge.",
+                    "Added a privacy policy."
                 ]}/>
                 <ReleaseNote releaseNumber={"2.1"} releaseNotes={[
                     "You can now view decks in a table view with column sorting.",
                     "Added password reset.",
                     "Created a Patreon page with some donation options to help support the site!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.0"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.0"} releaseNotes={[
                     "Updated SAS Ratings.",
                     "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
                     "the increased value of how cards work together when often they don't both appear in the same game, or at the wrong time.",

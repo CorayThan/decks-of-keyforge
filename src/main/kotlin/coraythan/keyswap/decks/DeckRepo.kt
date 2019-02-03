@@ -5,4 +5,8 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor
 
 interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> {
     fun findByKeyforgeId(keyforgeId: String): Deck?
+
+    fun findByNameIgnoreCase(name: String): List<Deck>
+
+    fun findAllByRegisteredFalse(): List<Deck>
 }

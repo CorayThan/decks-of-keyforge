@@ -87,38 +87,36 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const showMyDecks = UserStore.instance.loggedIn()
         const showDecksOwner = !!owner && owner !== UserStore.instance.username
         const optionals = !showMyDecks && !showDecksOwner ? null : (
-            <ListItem>
-                <FormGroup row={true}>
-                    {!showDecksOwner && showMyDecks ? (
-                        <>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.myDecks}
-                                        onChange={handleMyDecksUpdate}
-                                    />
-                                }
-                                label={"My Decks"}
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={myFavorites}
-                                        onChange={handleMyFavoritesUpdate}
-                                    />
-                                }
-                                label={"My Favorites"}
-                            />
-                        </>
-                    ) : null}
-                    {showDecksOwner ? (
-                        <>
-                            <Typography>Owner: {owner}</Typography>
-                            <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
-                        </>
-                    ) : null}
-                </FormGroup>
-            </ListItem>
+            <>
+                {!showDecksOwner && showMyDecks ? (
+                    <>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.myDecks}
+                                    onChange={handleMyDecksUpdate}
+                                />
+                            }
+                            label={"My Decks"}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={myFavorites}
+                                    onChange={handleMyFavoritesUpdate}
+                                />
+                            }
+                            label={"My Favorites"}
+                        />
+                    </>
+                ) : null}
+                {showDecksOwner ? (
+                    <>
+                        <Typography>Owner: {owner}</Typography>
+                        <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
+                    </>
+                ) : null}
+            </>
         )
 
         return (
@@ -167,14 +165,25 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     }
                                     label={(
                                         <div style={{display: "flex", alignItems: "center"}}>
-                                            <TradeDeckIcon/>
+                                            <TradeDeckIcon style={{minWidth: 18}}/>
                                             <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For trade</Typography>
                                         </div>
                                     )}
                                 />
+                                {optionals}
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.props.filters.includeUnregistered}
+                                            onChange={(event) => this.props.filters.includeUnregistered = event.target.checked}
+                                        />
+                                    }
+                                    label={(
+                                        <Typography variant={"body2"}>Include unregistered</Typography>
+                                    )}
+                                />
                             </FormGroup>
                         </ListItem>
-                        {optionals}
                         <ListItem>
                             <ConstraintDropdowns
                                 store={this.constraintsStore}

@@ -49,6 +49,9 @@ export class DeckFilters {
         if (queryObject.forTrade) {
             queryObject.forTrade = Boolean(queryObject.forTrade)
         }
+        if (queryObject.includeUnregistered) {
+            queryObject.includeUnregistered = Boolean(queryObject.includeUnregistered)
+        }
         if (queryObject.myFavorites) {
             queryObject.myFavorites = Boolean(queryObject.myFavorites)
         }
@@ -78,6 +81,8 @@ export class DeckFilters {
     @observable
     forTrade = false
     @observable
+    includeUnregistered = false
+    @observable
     myFavorites: boolean = false
     constraints: Constraint[] = []
     @observable
@@ -96,6 +101,7 @@ export class DeckFilters {
         this.forSale = false
         this.forTrade = false
         this.myFavorites = false
+        this.includeUnregistered = false
         this.cards = [{
             cardName: "",
             quantity: 1

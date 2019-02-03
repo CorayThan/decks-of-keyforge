@@ -1,14 +1,13 @@
 import { Tooltip, Typography } from "@material-ui/core"
-import { amber, blue } from "@material-ui/core/colors"
+import { amber, blue, teal } from "@material-ui/core/colors"
 import HomeIcon from "@material-ui/icons/Home"
 import { startCase } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
 
-
 export const TraitBubble = (props: { name: string, positive: boolean, home?: boolean, trait?: boolean, rating?: number }) => {
-    const color = props.positive ? "#FFFFFF" : undefined
+    const color = props.positive && !props.trait ? "#FFFFFF" : undefined
     let title
     if (props.trait) {
         title = "Trait"
@@ -21,7 +20,7 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
         <span
             style={{
                 borderRadius: 20,
-                backgroundColor: props.positive ? blue.A400 : amber.A400,
+                backgroundColor: props.trait ? teal.A400 : (props.positive ? blue.A400 : amber.A400),
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

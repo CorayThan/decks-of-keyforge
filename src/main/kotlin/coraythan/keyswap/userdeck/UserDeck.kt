@@ -23,6 +23,11 @@ data class UserDeck(
         val funny: Boolean = false,
         val ownedBy: String? = null,
 
+        /**
+         * Only for unregistered decks
+         */
+        val creator: Boolean = false,
+
         // Deck selling info below
         val forSale: Boolean = false,
         val forTrade: Boolean = false,

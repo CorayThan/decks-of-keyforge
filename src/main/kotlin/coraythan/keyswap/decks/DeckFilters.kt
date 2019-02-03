@@ -12,6 +12,7 @@ data class DeckFilters(
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
+        val includeUnregistered: Boolean = false,
         val myFavorites: Boolean = false,
 
         val constraints: List<Constraint> = listOf(),

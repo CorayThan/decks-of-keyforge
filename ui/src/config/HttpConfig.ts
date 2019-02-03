@@ -38,7 +38,12 @@ export class HttpConfig {
     private static errorInterceptor = (error: AxiosError) => {
 
         log.error(`There was an error completing the request. ${error.code} ${error.message}`)
-        MessageStore.instance.setRequestErrorMessage()
+
+        if (error.code === "401") {
+            MessageStore.instance.setErrorMessage("You are unauthorized to make this request.")
+        } else {
+            MessageStore.instance.setRequestErrorMessage()
+        }
 
         return Promise.reject(error)
     }

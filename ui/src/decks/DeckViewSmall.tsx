@@ -15,6 +15,7 @@ import { Routes } from "../config/Routes"
 import { ChainsView } from "../generic/icons/ChainsView"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
+import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -40,7 +41,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {
             id, keyforgeId, name, houses,
             wishlistCount, funnyCount,
-            forSale, forTrade, chains
+            forSale, forTrade, chains,
+            registered
         } = deck
         const userDeck = UserStore.instance.userDeckByDeckId(id)
         let wishlist = false
@@ -85,6 +87,13 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </div>
                 <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
                     <div style={{display: "flex"}}>
+                        {registered ? null : (
+                            <Tooltip title={"Unregistered Deck"}>
+                                <div>
+                                    <UnregisteredDeckIcon style={{marginRight: spacing(1), marginTop: 3}} height={24}/>
+                                </div>
+                            </Tooltip>
+                        )}
                         <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
                             <KeyLink
                                 to={Routes.deckPage(keyforgeId)}

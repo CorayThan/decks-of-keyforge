@@ -107,8 +107,6 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                 {inner}
-                <div>
-                </div>
             </div>
         )
 

@@ -1,3 +1,4 @@
+import { amber, blue, red } from "@material-ui/core/colors"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Snackbar from "@material-ui/core/Snackbar/Snackbar"
 import CloseIcon from "@material-ui/icons/Close"
@@ -7,7 +8,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 
-export type MessageType = "Error" | "Info"
+export type MessageType = "Error" | "Warn" | "Info" | "Success"
 
 export class MessageStore {
     private static innerInstance: MessageStore
@@ -16,7 +17,10 @@ export class MessageStore {
     message = ""
 
     @observable
-    messageType?: MessageType
+    messageType: MessageType = "Success"
+
+    @observable
+    open = false
 
     private constructor() {
     }
@@ -28,13 +32,15 @@ export class MessageStore {
     setRequestErrorMessage = () => this.setMessage("There was an unexpected error making your request.", "Error")
 
     setErrorMessage = (message: string) => this.setMessage(message, "Error")
-    setWarningMessage = (message: string) => this.setMessage(message, "Error")
+    setWarningMessage = (message: string) => this.setMessage(message, "Warn")
+    setSuccessMessage = (message: string) => this.setMessage(message, "Success")
+    setInfoMessage = (message: string) => this.setMessage(message, "Info")
 
-    setSuccessMessage = (message: string) => this.setMessage(message, "Info")
-
-    setMessage = (message: string, messageType?: MessageType) => {
+    setMessage = (message: string, messageType: MessageType) => {
+        log.debug("Setting message to " + message)
         this.message = message
         this.messageType = messageType
+        this.open = true
     }
 }
 
@@ -47,7 +53,19 @@ export class SnackMessage extends React.Component {
             return
         }
 
-        MessageStore.instance.setMessage("", undefined)
+        MessageStore.instance.open = false
+
+    }
+
+    colorFromMessageType = (messageType: MessageType) => {
+        if (messageType === "Warn") {
+            return amber[700]
+        } else if (messageType === "Info") {
+            return blue.A400
+        } else if (messageType === "Error") {
+            return red[700]
+        }
+        return undefined
     }
 
     render() {
@@ -60,13 +78,13 @@ export class SnackMessage extends React.Component {
                     vertical: "bottom",
                     horizontal: "left",
                 }}
-                open={message.length > 0}
+                open={MessageStore.instance.open}
                 autoHideDuration={6000}
                 onClose={this.handleClose}
                 ContentProps={{
                     "aria-describedby": "message-id",
+                    "style": {backgroundColor: this.colorFromMessageType(MessageStore.instance.messageType)}
                 }}
-                // style={{backgroundColor: messageType === "Error" ? muiTheme.palette.error.dark : undefined}}
                 message={<span id="message-id">{message}</span>}
                 action={[
                     <IconButton

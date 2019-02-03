@@ -14,6 +14,7 @@ import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { LinkButton } from "../mui-restyled/LinkButton"
 import { MessageStore } from "../ui/MessageStore"
 import { LoginPop } from "./LoginPop"
 import { UserStore } from "./UserStore"
@@ -167,17 +168,22 @@ export class RegistrationPage extends React.Component {
                                 required={false}
                                 InputProps={{inputProps: {tabIndex: 5}}}
                             />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.allowUsersToSeeDeckOwnership}
-                                        onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
-                                        tabIndex={6}
-                                    />
-                                }
-                                style={{marginBottom: spacing(2)}}
-                                label={"Allow anyone to see which decks I own"}
-                            />
+                            <div
+                                style={{display: "flex", flexWrap: "wrap", alignItems: "center", marginBottom: spacing(2)}}
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.allowUsersToSeeDeckOwnership}
+                                            onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
+                                            tabIndex={6}
+                                        />
+                                    }
+                                    label={"Allow anyone to see which decks I own"}
+                                />
+                                <div style={{flexGrow: 1}} />
+                                <LinkButton size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
+                            </div>
                             <KeyButton
                                 variant={"contained"}
                                 color={"secondary"}

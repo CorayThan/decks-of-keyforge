@@ -1,15 +1,18 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.thirdpartyservices.AzureOcr
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import kotlin.system.measureTimeMillis
 
 @RestController
 @RequestMapping("${Api.base}/decks")
 class DeckEndpoints(
         val deckService: DeckService,
-        val deckImporterService: DeckImporterService
+        val deckImporterService: DeckImporterService,
+        val azureOcr: AzureOcr
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -48,4 +51,14 @@ class DeckEndpoints(
 
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String) = deckService.saleInfoForDeck(id)
+
+    @PostMapping("/secured/read-deck-image")
+    fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile): SaveUnregisteredDeck? {
+        return azureOcr.readDeckInfoFromImage(deckImage)
+    }
+
+    @PostMapping("/secured/add-unregistered")
+    fun addUnregistered(@RequestBody deck: SaveUnregisteredDeck): String {
+        return deckImporterService.addUnregisteredDeck(deck)
+    }
 }

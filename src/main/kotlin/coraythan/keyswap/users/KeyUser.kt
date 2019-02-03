@@ -31,11 +31,11 @@ data class KeyUser(
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         val decks: List<UserDeck> = listOf()
 ) {
-        fun toProfile(isUser: Boolean) = UserProfile(
-                id = id,
-                username = username,
-                email = if (isUser) email else null,
-                publicContactInfo = publicContactInfo,
-                allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
-        )
+    fun toProfile(isUser: Boolean) = UserProfile(
+            id = id,
+            username = username,
+            email = if (isUser) email else null,
+            publicContactInfo = publicContactInfo,
+            allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
+    )
 }

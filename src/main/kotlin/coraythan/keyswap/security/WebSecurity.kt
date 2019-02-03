@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.firewall.DefaultHttpFirewall
+import org.springframework.security.web.firewall.HttpFirewall
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -56,5 +58,16 @@ class WebSecurity(
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
         return source
+    }
+
+    /**
+     * Supposedly this is bad. I'm tired of tons of exceptions. Maybe if I get an answer here:
+     * https://stackoverflow.com/questions/54489645/spring-the-request-was-rejected-because-the-url-was-not-normalized-how-to-tel
+     */
+    @Bean
+    fun httpFirewall(): HttpFirewall {
+        val firewall = DefaultHttpFirewall()
+        firewall.setAllowUrlEncodedSlash(true)
+        return firewall
     }
 }

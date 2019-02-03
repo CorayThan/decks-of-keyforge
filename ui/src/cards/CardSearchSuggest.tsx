@@ -130,6 +130,7 @@ const components = {
 interface CardSearchSuggestProps {
     style?: React.CSSProperties
     card: DeckCardQuantity
+    placeholder?: string
 }
 
 @observer
@@ -156,7 +157,7 @@ export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
                             card.cardName = valueNonArray!.value
                         }
                     }}
-                    placeholder={"Filter on card"}
+                    placeholder={this.props.placeholder ? this.props.placeholder : "Filter on card"}
                     isClearable
                 />
             </div>

@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
-import coraythan.keyswap.KeyforgeApi
+import coraythan.keyswap.House
 import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.deckcard.CardNumberSetPair
 import coraythan.keyswap.decks.Deck
 import coraythan.keyswap.decks.KeyforgeDeck
+import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.domain.Sort
@@ -41,6 +42,8 @@ class CardService(
                 }
                 .toMap()
     }
+
+    fun findByExpansionCardNumberHouse(expansion: Int, cardNumber: Int, house: House) = cardRepo.findByExpansionAndCardNumberAndHouse(expansion, cardNumber, house)
 
     fun allFullCardsNonMaverick(): List<Card> {
         if (nonMaverickCachedCardsList == null) {
@@ -100,6 +103,9 @@ class CardService(
         val cardsToReturn = cards.toMutableList()
         val cardKeys = cards.map { it.id }.toSet()
         decks.forEach { deck ->
+            if (deck.cards == null || deck.cards.isEmpty()) {
+                log.warn("Deck from keyforge api didn't have cards!? ${deck.id}")
+            }
             if (deck.cards?.any { !cardKeys.contains(it) } == true) {
                 keyforgeApi.findDeck(deck.id)?._linked?.cards?.forEach {
                     if (!cardKeys.contains(it.id)) {
@@ -120,6 +126,9 @@ class CardService(
     private fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
 
     private fun cardsFromCardIds(cardIdsString: String): List<Card>? {
+        if (cardIdsString.isBlank()) {
+            return null
+        }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->

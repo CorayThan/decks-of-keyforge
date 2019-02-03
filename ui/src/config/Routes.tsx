@@ -6,9 +6,11 @@ import { AboutPage } from "../components/AboutPage"
 import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
+import { PrivacyPolicy } from "../components/PrivacyPolicy"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
+import { DeckImportView } from "../importdeck/DeckImportView"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserStore } from "../user/UserStore"
@@ -24,12 +26,14 @@ class Routes {
     static cards = "/cards"
     static about = "/about"
     static decks = "/decks"
+    static importUnregisteredDeck = `${Routes.decks}/import`
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
+    static privacyPolicy = "/privacy-policy"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
-    static usersDecks = () => `/decks?owner=${UserStore.instance.username}`
+    static usersDecks = () => `/decks?owner=${UserStore.instance.username}&includeUnregistered=true`
 
     /**
      * Deck filters should be cleaned.
@@ -48,6 +52,11 @@ class KeyRouter extends React.Component {
                     <KeyTopbar/>
                     <div style={{marginBottom: spacing(2)}}/>
                     <Switch>
+                        <Route
+                            exact={true}
+                            path={Routes.importUnregisteredDeck}
+                            component={DeckImportView}
+                        />
                         <Route
                             exact={true}
                             path={Routes.deckPage()}
@@ -76,6 +85,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.forgotPassword}
                             component={ForgotPasswordPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.privacyPolicy}
+                            component={PrivacyPolicy}
                         />
                         <Route
                             exact={true}

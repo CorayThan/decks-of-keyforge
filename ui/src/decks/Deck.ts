@@ -23,6 +23,8 @@ export interface Deck {
     wins: number
     losses: number
 
+    registered: boolean
+
     maverickCount: number
     specialsCount: number
     raresCount: number
