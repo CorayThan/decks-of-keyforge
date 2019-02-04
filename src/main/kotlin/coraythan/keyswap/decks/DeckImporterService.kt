@@ -134,35 +134,6 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-    var doneAddingCardIds = false
-
-    @Scheduled(fixedRateString = lockUpdateRatings)
-    fun addInCardIds() {
-        val millisTaken = measureTimeMillis {
-            if (!doneAddingCardIds) {
-                val deckQ = QDeck.deck
-
-                val deckResults = query.selectFrom(deckQ)
-                        .where(deckQ.cardIds.isEmpty)
-                        .limit(1000)
-                        .fetch()
-
-                if (deckResults.isEmpty()) {
-                    log.warn("Done updating cardIds!")
-                    doneAddingCardIds = true
-                }
-
-                val rated = deckResults.map {
-                    it.copy(
-                            cardIds = objectMapper.writeValueAsString(CardIds.fromCards(it.cards.map { it.card }))
-                    )
-                }
-                deckRepo.saveAll(rated)
-            }
-        }
-        log.info("Took $millisTaken ms to update card ids for 1000 decks.")
-    }
-
     //    @Scheduled(fixedRateString = lockUpdateRatings)
     fun rateDecks() {
 
