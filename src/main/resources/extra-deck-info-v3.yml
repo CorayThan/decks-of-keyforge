@@ -1874,7 +1874,7 @@
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: power3OrLowerCreatures
-      rating: -3
+      rating: -2
     - trait: power4OrHigherCreatures
       rating: 1
     - trait: highTotalArmor
@@ -3408,7 +3408,7 @@
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
-      rating: -3
+      rating: -2
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
       rating: 3
@@ -3698,9 +3698,6 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: [elusive, dealsDamage]
-  synergies:
-    - trait: badPenny
-      rating: 1
 
 - name: Magda the Rat
   cardNumber: 303

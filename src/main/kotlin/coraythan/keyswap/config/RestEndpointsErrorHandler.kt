@@ -37,8 +37,10 @@ class RestErrorHandler {
         log.info(
                 "In bad request response handler ${ex.message}. " +
                         "For request url: ${request.requestURI} " +
-                        "remote address ${request.remoteAddr} " +
-                        "remote host ${request.remoteHost}"
+                        "remote user: ${request.remoteUser} " +
+                        "headers: ${request.headerNames.toList().filter {
+                            !setOf("authorization", "accept", "accept-encoding", "accept-language", "connection").contains(it)
+                        }.map { "$it : " + request.getHeaders(it).toList() }}"
         )
     }
 

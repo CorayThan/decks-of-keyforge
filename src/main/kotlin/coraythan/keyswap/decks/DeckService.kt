@@ -34,21 +34,30 @@ class DeckService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val deckPageSize = 20L
     private val defaultFilters = DeckFilters()
+    private val defaultFiltersSecondPage = DeckFilters().copy(page = defaultFilters.page + 1)
     private val query = JPAQueryFactory(entityManager)
 
     var deckCount: Long? = null
+    var firstPageCached: DecksPage? = null
+    var secondPageCached: DecksPage? = null
+
+    fun clearCachedValues() {
+        deckCount = null
+        firstPageCached = null
+        secondPageCached = null
+    }
 
     fun countFilters(filters: DeckFilters): DeckCount {
 
         val count: Long
         val preExistingCount = deckCount
-        if (preExistingCount != null && filtersAreEqual(filters)) {
+        if (preExistingCount != null && filtersAreEqualForCount(filters)) {
             count = preExistingCount
         } else {
 
             val predicate = deckFilterPedicate(filters)
 
-            if (filtersAreEqual(filters)) {
+            if (filtersAreEqualForCount(filters)) {
 
                 count = deckRepo.count()
                 deckCount = count
@@ -74,6 +83,15 @@ class DeckService(
     }
 
     fun filterDecks(filters: DeckFilters): DecksPage {
+
+        val cachedFirstPage = firstPageCached
+        if (filters == defaultFilters && cachedFirstPage != null) {
+            return cachedFirstPage
+        }
+        val cachedSecondPage = secondPageCached
+        if (filters == defaultFiltersSecondPage && cachedSecondPage != null) {
+            return cachedSecondPage
+        }
 
         val predicate = deckFilterPedicate(filters)
         val deckQ = QDeck.deck
@@ -115,13 +133,24 @@ class DeckService(
             it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
         }
 
-        return DecksPage(
+        val decksPage = DecksPage(
                 decks,
                 filters.page
         )
+
+        if (filters == defaultFilters) {
+            log.info("Caching first decks page.")
+            firstPageCached = decksPage
+        }
+        if (filters == defaultFiltersSecondPage) {
+            log.info("Caching second decks page.")
+            secondPageCached = decksPage
+        }
+
+        return decksPage
     }
 
-    private fun filtersAreEqual(filters: DeckFilters) = filters.copy(
+    private fun filtersAreEqualForCount(filters: DeckFilters) = filters.copy(
             sort = defaultFilters.sort,
             sortDirection = defaultFilters.sortDirection
     ) == defaultFilters
@@ -217,6 +246,10 @@ class DeckService(
     }
 
     fun findDeckSimple(keyforgeId: String): DeckSearchResult? {
+        if (keyforgeId.length != 36) {
+            log.info("Request for deck with malformed id: $keyforgeId")
+            return null
+        }
         val deck = deckRepo.findByKeyforgeId(keyforgeId)
         if (deck == null) {
             log.info("Request for deck that doesn't exist $keyforgeId")
@@ -228,6 +261,9 @@ class DeckService(
     fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
+        if (keyforgeId.length != 36) {
+            throw BadRequestException("Request for deck with synergies with bad id: $keyforgeId")
+        }
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()

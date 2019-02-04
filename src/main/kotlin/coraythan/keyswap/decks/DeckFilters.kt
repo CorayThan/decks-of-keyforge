@@ -21,7 +21,7 @@ data class DeckFilters(
 
         val owner: String = "",
 
-        val sort: DeckSortOptions = DeckSortOptions.ADDED_DATE,
+        val sort: DeckSortOptions = DeckSortOptions.SAS_RATING,
         val sortDirection: SortDirection = SortDirection.DESC
 )
 
