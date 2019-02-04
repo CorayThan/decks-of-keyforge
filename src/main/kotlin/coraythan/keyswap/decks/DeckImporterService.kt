@@ -1,11 +1,13 @@
 package coraythan.keyswap.decks
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
@@ -46,6 +48,7 @@ class DeckImporterService(
         private val statsService: StatsService,
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
+        private val objectMapper: ObjectMapper,
         entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -129,6 +132,35 @@ class DeckImporterService(
             updateDeckStatisticsPrivate()
         }
         log.info("Updated deck statistics.")
+    }
+
+    var doneAddingCardIds = false
+
+    @Scheduled(fixedRateString = lockUpdateRatings)
+    fun addInCardIds() {
+        val millisTaken = measureTimeMillis {
+            if (!doneAddingCardIds) {
+                val deckQ = QDeck.deck
+
+                val deckResults = query.selectFrom(deckQ)
+                        .where(deckQ.cardIds.isEmpty)
+                        .limit(1000)
+                        .fetch()
+
+                if (deckResults.isEmpty()) {
+                    log.warn("Done updating cardIds!")
+                    doneAddingCardIds = true
+                }
+
+                val rated = deckResults.map {
+                    it.copy(
+                            cardIds = objectMapper.writeValueAsString(CardIds.fromCards(it.cards.map { it.card }))
+                    )
+                }
+                deckRepo.saveAll(rated)
+            }
+        }
+        log.info("Took $millisTaken ms to update card ids for 1000 decks.")
     }
 
     //    @Scheduled(fixedRateString = lockUpdateRatings)
@@ -363,13 +395,17 @@ class DeckImporterService(
         val saveable = savedDeck
                 .withDeckCards(cardsList)
                 .copy(
-                        houses = houses
+                        houses = houses,
+                        cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                 )
 
         val ratedDeck = rateDeck(saveable)
 
         if (ratedDeck.cards.size != 36) {
             throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
+        }
+        if (ratedDeck.cardIds.isBlank()) {
+            throw IllegalStateException("Can't save a deck without its card ids: $deck")
         }
         if (ratedDeck.houses.size != 3) {
             throw IllegalStateException("Deck doesn't have 3 houses! $deck")

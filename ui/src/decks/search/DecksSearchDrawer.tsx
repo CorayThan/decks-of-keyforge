@@ -11,7 +11,6 @@ import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer, KeyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
@@ -201,21 +200,22 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         </ListItem>
                         <ListItem>
                             <div>
-                                {cards.map((card, idx) => (
-                                    <div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>
-                                        <CardSearchSuggest
-                                            card={card}
-                                            style={{marginTop: 12}}
-                                        />
-                                        <TextField
-                                            style={{width: 56, marginLeft: spacing(2)}}
-                                            label={"Copies"}
-                                            type={"number"}
-                                            value={card.quantity}
-                                            onChange={event => card.quantity = Number(event.target.value)}
-                                        />
-                                    </div>
-                                ))}
+                                <Typography>Card filtering is temporarily disabled</Typography>
+                                {/*{cards.map((card, idx) => (*/}
+                                    {/*<div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>*/}
+                                        {/*<CardSearchSuggest*/}
+                                            {/*card={card}*/}
+                                            {/*style={{marginTop: 12}}*/}
+                                        {/*/>*/}
+                                        {/*<TextField*/}
+                                            {/*style={{width: 56, marginLeft: spacing(2)}}*/}
+                                            {/*label={"Copies"}*/}
+                                            {/*type={"number"}*/}
+                                            {/*value={card.quantity}*/}
+                                            {/*onChange={event => card.quantity = Number(event.target.value)}*/}
+                                        {/*/>*/}
+                                    {/*</div>*/}
+                                {/*))}*/}
                                 {/*<IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>*/}
                                 {/*<AddIcon fontSize={"small"}/>*/}
                                 {/*</IconButton>*/}
