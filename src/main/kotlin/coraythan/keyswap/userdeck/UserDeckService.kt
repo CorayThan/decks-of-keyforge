@@ -67,6 +67,7 @@ class UserDeckService(
             it.copy(
                     forSale = listingInfo.forSale,
                     forTrade = listingInfo.forTrade,
+                    forSaleInCountry = listingInfo.forSaleInCountry,
                     askingPrice = listingInfo.askingPrice,
                     listingInfo = if (listingInfo.listingInfo.isBlank()) null else listingInfo.listingInfo,
                     condition = listingInfo.condition,
@@ -108,6 +109,7 @@ class UserDeckService(
     private fun userDeckWithoutListingInfo(userDeck: UserDeck) = userDeck.copy(
             forSale = false,
             forTrade = false,
+            forSaleInCountry = null,
             askingPrice = null,
             listingInfo = null,
             condition = null,

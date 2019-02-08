@@ -81,6 +81,8 @@ export class DeckFilters {
     @observable
     forTrade = false
     @observable
+    forSaleInCountry?: string
+    @observable
     includeUnregistered = false
     @observable
     myFavorites: boolean = false
@@ -100,6 +102,7 @@ export class DeckFilters {
         this.title = ""
         this.forSale = false
         this.forTrade = false
+        this.forSaleInCountry = ""
         this.myFavorites = false
         this.includeUnregistered = false
         this.cards = [{

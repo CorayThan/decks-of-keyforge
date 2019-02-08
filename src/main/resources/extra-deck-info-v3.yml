@@ -943,7 +943,7 @@
 
 - name: Drumble
   cardNumber: 82
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -976,7 +976,7 @@
 
 - name: Ember Imp
   cardNumber: 85
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -984,10 +984,12 @@
   traits: []
   synergies:
     - trait: protectsCreatures
-      rating: 3
     - trait: discardsEnemyCards
       rating: -1
     - trait: reducesEnemyDraw
+      rating: -1
+    - trait: highTotalCreaturePower
+    - trait: lowTotalCreaturePower
       rating: -1
 
 - name: Gabos Longarms
@@ -1108,6 +1110,11 @@
       rating: 1
     - trait: increasesCreaturePower
       rating: 1
+    - trait: highTotalCreaturePower
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -1
+
 
 - name: Shooler
   cardNumber: 96
@@ -1150,7 +1157,7 @@
 
 - name: Succubus
   cardNumber: 99
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1158,7 +1165,9 @@
   traits: [reducesEnemyDraw]
   synergies:
     - trait: protectsCreatures
-      rating: 3
+    - trait: highTotalCreaturePower
+    - trait: lowTotalCreaturePower
+      rating: -1
 
 - name: Tentacus
   cardNumber: 100
@@ -1651,7 +1660,7 @@
 
 - name: Ganymede Archivist
   cardNumber: 142
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1659,6 +1668,11 @@
   traits: [archives, goodReap]
   synergies:
     - trait: protectsCreatures
+      rating: 1
+    - trait: highTotalCreaturePower
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -2
 
 - name: Harland Mindlock
   cardNumber: 143
@@ -1683,6 +1697,8 @@
   traits: [skirmish, drawsCards, goodFight]
   synergies:
     - trait: causesFighting
+      rating: 1
+    - trait: highTotalCreaturePower
       rating: 1
 
 - name: Mother
@@ -1748,6 +1764,10 @@
   artifactControl: 0.0
   traits: [goodReap]
   synergies: []
+    - trait: highTotalCreaturePower
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -1
 
 - name: Research Smoko
   cardNumber: 151
@@ -1759,7 +1779,7 @@
   traits: [archives, goodDestroyed]
   synergies:
     - trait: archives
-      rating: -1
+      rating: -2
 
 - name: Skippy Timehog
   cardNumber: 152
@@ -2306,6 +2326,12 @@
   synergies:
     - trait: protectsCreatures
       rating: 1
+    - trait: lowCreatureCount
+      type: house
+      rating: -2
+    - trait: highCreatureCount
+      type: house
+      rating: 1
 
 - name: Chuff Ape
   cardNumber: 191
@@ -2360,8 +2386,9 @@
   synergies:
     - trait: readiesCreatures
       type: house
-      rating: 1
     - trait: protectsCreatures
+      rating: 1
+    - trait: highCreatureCount
       rating: 1
     - trait: lowCreatureCount
       type: house
@@ -2438,6 +2465,10 @@
     - trait: protectsCreatures
     - trait: readiesCreatures
       type: house
+    - trait: highTotalCreaturePower
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -1
 
 - name: Uxlyx the Zookeeper
   cardNumber: 201
@@ -2956,6 +2987,10 @@
   traits: [goodReap, usesCreaturesOutOfHouse]
   synergies:
     - trait: protectsCreatures
+    - trait: highTotalCreaturePower
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -1
 
 - name: Duma the Martyr
   cardNumber: 242
@@ -3064,6 +3099,9 @@
   synergies:
     - trait: protectsCreatures
       rating: 1
+    - trait: highTotalCreaturePower
+      rating: 2
+      type: house
 
 - name: Lady Maxena
   cardNumber: 251
@@ -3711,7 +3749,7 @@
 
 - name: Mooncurser
   cardNumber: 304
-  rating: 2
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3723,6 +3761,10 @@
     - trait: protectsCreatures
     - trait: readiesCreatures
       type: house
+    - trait: highTotalCreaturePower
+      rating: 1
+    - trait: lowTotalCreaturePower
+      rating: -1
 
 - name: Nexus
   cardNumber: 305
@@ -4490,6 +4532,9 @@
   traits: [goodReap, returnsCardsFromDiscard]
   synergies:
     - trait: protectsCreatures
+    - trait: highTotalCreaturePower
+    - trait: lowTotalCreaturePower
+      rating: -1
 
 - name: Way of the Bear
   cardNumber: 369

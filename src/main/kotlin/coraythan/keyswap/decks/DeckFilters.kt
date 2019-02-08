@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.House
+import coraythan.keyswap.generic.Country
 import org.springframework.data.domain.Sort
 
 
@@ -12,6 +13,7 @@ data class DeckFilters(
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
+        val forSaleInCountry: Country? = null,
         val includeUnregistered: Boolean = false,
         val myFavorites: Boolean = false,
 

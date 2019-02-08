@@ -7,6 +7,7 @@ export interface KeyUser {
     type: UserType
     publicContactInfo?: string
     decks: UserDeck[]
+    country?: string
 }
 
 export interface UserLogin {
@@ -20,6 +21,7 @@ export interface UserRegistration {
     password: string
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
+    country?: string
 }
 
 export enum UserType {

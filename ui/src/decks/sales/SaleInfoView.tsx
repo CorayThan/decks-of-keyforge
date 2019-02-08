@@ -1,21 +1,28 @@
 import { Tooltip } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
+import { SendSellerEmailDialog } from "../../emails/SendSellerEmailDialog"
+import { countryToLabel } from "../../generic/Country"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
+import { UserStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { DeckSaleInfo } from "./DeckSaleInfo"
 
 interface SaleInfoViewProps {
     saleInfo: DeckSaleInfo[]
+    deckName: string
+    keyforgeId: string
 }
 
+@observer
 export class SaleInfoView extends React.Component<SaleInfoViewProps> {
     render() {
         if (this.props.saleInfo.length === 0) {
@@ -24,18 +31,29 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
         return (
             <div>
                 {this.props.saleInfo.map((saleInfo) => {
-                    return <div style={{marginTop: spacing(2)}} key={saleInfo.username}><SingleSaleInfoView saleInfo={saleInfo}/></div>
+                    return (
+                        <div style={{marginTop: spacing(2)}} key={saleInfo.username}>
+                            <SingleSaleInfoView saleInfo={saleInfo} deckName={this.props.deckName} keyforgeId={this.props.keyforgeId}/>
+                        </div>
+                    )
                 })}
             </div>
         )
     }
 }
 
-export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo }> {
+@observer
+export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
         const {
-            forSale, forTrade, askingPrice, condition, dateListed, dateExpires, listingInfo, username, publicContactInfo, externalLink
+            forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, dateExpires, listingInfo, username, publicContactInfo, externalLink
         } = this.props.saleInfo
+
+        const yourUsername = UserStore.instance.username
+        const yourEmail = UserStore.instance.email
+
+        const allowEmail = yourEmail && yourUsername && !externalLink
+
         return (
             <KeyCard
                 style={{width: 328}}
@@ -88,6 +106,23 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
+                    {allowEmail ? (
+                        <div style={{margin: spacing(2)}}>
+                            <SendSellerEmailDialog
+                                deckName={this.props.deckName}
+                                senderUsername={yourUsername!}
+                                senderEmail={yourEmail!}
+                                username={username}
+                                keyforgeId={this.props.keyforgeId}
+                            />
+                            <Divider style={{marginTop: spacing(2)}}/>
+                        </div>
+                    ) : null }
+                    {forSaleInCountry ? (
+                        <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
+                            Located in {countryToLabel(forSaleInCountry)}.
+                        </Typography>
+                    ) : null}
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                         Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
@@ -99,7 +134,6 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         We do not verify the authenticity or trustworthiness of any deck sales.
                         Purchase and trade decks at your own risk.
                     </Typography>
-
                 </div>
             </KeyCard>
         )

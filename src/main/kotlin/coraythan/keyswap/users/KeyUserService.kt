@@ -1,6 +1,5 @@
 package coraythan.keyswap.users
 
-import coraythan.keyswap.EmailService
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -13,7 +12,6 @@ class KeyUserService(
         private val userRepo: KeyUserRepo,
         private val currentUserService: CurrentUserService,
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
-        private val emailService: EmailService,
         private val passwordResetCodeService: PasswordResetCodeService
 ) {
 
@@ -63,21 +61,27 @@ class KeyUserService(
     fun findUserProfile(username: String) =
             userRepo.findByUsernameIgnoreCase(username)?.toProfile(currentUserService.loggedInUser()?.username == username)
 
+    fun findUserByUsername(username: String) = userRepo.findByUsernameIgnoreCase(username)
+
+    fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
+
     fun updateUserProfile(update: UserProfileUpdate) {
         val user = currentUserService.loggedInUser()
         if (user != null) {
+            val userDecks = if (update.country != user.country) {
+                user.decks.map {
+                    if (it.forSale || it.forTrade) it.copy(forSaleInCountry = update.country) else it
+                }
+            } else {
+                user.decks
+            }
+
             userRepo.save(user.copy(
                     publicContactInfo = update.publicContactInfo,
-                    allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership
+                    allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
+                    country = update.country,
+                    decks = userDecks
             ))
-        }
-    }
-
-    fun sendReset(reset: ResetEmail) {
-        val userInSystem = userRepo.findByEmailIgnoreCase(reset.email)
-        if (userInSystem != null) {
-            val resetCode = passwordResetCodeService.createCode(reset.email)
-            emailService.sendResetPassword(reset.email, resetCode)
         }
     }
 

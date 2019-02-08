@@ -3,6 +3,7 @@ import { DeckCondition } from "../../userdeck/UserDeck"
 export interface DeckSaleInfo {
     forSale: boolean
     forTrade: boolean
+    forSaleInCountry?: string
 
     askingPrice?: number
 

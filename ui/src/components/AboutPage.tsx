@@ -215,9 +215,7 @@ export class AboutPage extends React.Component {
                             "on decksofkeyforge.com) along with the rating. " +
                             `It doesn't need to be obtrusive, for example making "75 SAS" into a link, or having a small link icon next to it, is fine.`,
                             "4. Please attribute decksofkeyforge.com on your site.",
-                            "To use the api make a request to",
-                            "https://decksofkeyforge.com/api/decks/simple/v2/293f366d-af1d-46ea-9c0f-4cc956dae50d",
-                            "with the keyforge id of the deck you want to get SAS ratings for."
+                            "5. Send a message to me to get the API."
                         ]}/>
                     </AboutGridItem>
                 </Grid>

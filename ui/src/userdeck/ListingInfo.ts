@@ -4,6 +4,7 @@ export interface ListingInfo {
     deckId: number
     forSale: boolean
     forTrade: boolean
+    forSaleInCountry: string,
     condition: DeckCondition
     askingPrice?: number
     listingInfo: string

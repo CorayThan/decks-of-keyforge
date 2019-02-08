@@ -11,6 +11,7 @@ import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer, KeyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
@@ -20,6 +21,7 @@ import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
+import { KeyLink } from "../../mui-restyled/KeyLink"
 import { MessageStore } from "../../ui/MessageStore"
 import { ScreenStore } from "../../ui/ScreenStore"
 import { UserStore } from "../../user/UserStore"
@@ -80,9 +82,15 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     render() {
         const {
-            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner
+            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade
         } = this.props.filters
 
+        let myCountry: string | undefined
+        if (!!(UserStore.instance.country
+            && (forSale || forTrade))) {
+            myCountry = UserStore.instance.country
+        }
+        const showLoginForCountry = !myCountry && (forSale || forTrade)
         const showMyDecks = UserStore.instance.loggedIn()
         const showDecksOwner = !!owner && owner !== UserStore.instance.username
         const optionals = !showMyDecks && !showDecksOwner ? null : (
@@ -181,6 +189,31 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         <Typography variant={"body2"}>Include unregistered</Typography>
                                     )}
                                 />
+                                {myCountry ? (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.props.filters.forSaleInCountry}
+                                                onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
+                                            />
+                                        }
+                                        label={(
+                                            <Typography variant={"body2"}>In my country</Typography>
+                                        )}
+                                    />
+                                ) : null}
+                                {showLoginForCountry ? (
+                                    <div style={{display: "flex"}}>
+                                        <KeyLink to={Routes.userProfilePage(UserStore.instance.username)}>
+                                            <Typography variant={"body2"}>
+                                                Select your country
+                                            </Typography>
+                                        </KeyLink>
+                                        <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>
+                                            to filter decks by country
+                                        </Typography>
+                                    </div>
+                                ) : null}
                             </FormGroup>
                         </ListItem>
                         <ListItem>
@@ -200,22 +233,21 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         </ListItem>
                         <ListItem>
                             <div>
-                                <Typography>Card filtering is temporarily disabled</Typography>
-                                {/*{cards.map((card, idx) => (*/}
-                                    {/*<div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>*/}
-                                        {/*<CardSearchSuggest*/}
-                                            {/*card={card}*/}
-                                            {/*style={{marginTop: 12}}*/}
-                                        {/*/>*/}
-                                        {/*<TextField*/}
-                                            {/*style={{width: 56, marginLeft: spacing(2)}}*/}
-                                            {/*label={"Copies"}*/}
-                                            {/*type={"number"}*/}
-                                            {/*value={card.quantity}*/}
-                                            {/*onChange={event => card.quantity = Number(event.target.value)}*/}
-                                        {/*/>*/}
-                                    {/*</div>*/}
-                                {/*))}*/}
+                                {cards.map((card, idx) => (
+                                    <div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>
+                                        <CardSearchSuggest
+                                            card={card}
+                                            style={{marginTop: 12}}
+                                        />
+                                        <TextField
+                                            style={{width: 56, marginLeft: spacing(2)}}
+                                            label={"Copies"}
+                                            type={"number"}
+                                            value={card.quantity}
+                                            onChange={event => card.quantity = Number(event.target.value)}
+                                        />
+                                    </div>
+                                ))}
                                 {/*<IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>*/}
                                 {/*<AddIcon fontSize={"small"}/>*/}
                                 {/*</IconButton>*/}

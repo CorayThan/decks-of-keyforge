@@ -1,4 +1,4 @@
-import { Dialog } from "@material-ui/core"
+import { Dialog, Typography } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
@@ -11,8 +11,10 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
-import { Utils } from "../../config/Utils"
+import { Routes } from "../../config/Routes"
+import { log, Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { MessageStore } from "../../ui/MessageStore"
 import { UserStore } from "../../user/UserStore"
 import { DeckCondition, deckConditionReadableValue } from "../../userdeck/UserDeck"
@@ -73,11 +75,18 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 return
             }
         }
+        const forSaleInCountry = UserStore.instance.country
+
+        if (!forSaleInCountry) {
+            MessageStore.instance.setWarningMessage("Please set your country in your user profile.")
+            return
+        }
 
         const listingInfoDto = {
             deckId: this.props.deck.id,
             forSale,
             forTrade,
+            forSaleInCountry,
             condition,
             askingPrice: askingPriceNumber,
             listingInfo,
@@ -112,6 +121,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             )
         }
 
+        const forSaleInCountry = UserStore.instance.country
+
+        log.info(`User country is ` + forSaleInCountry)
+
         return (
             <div>
                 {saleButton}
@@ -121,6 +134,18 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 >
                     <DialogTitle>List "{deck.name}" for sale or trade</DialogTitle>
                     <DialogContent>
+                        {forSaleInCountry ? null : (
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
+                                    Please choose your country on your profile to list decks.
+                                </Typography>
+                                <LinkButton
+                                    to={Routes.userProfilePage(UserStore.instance.username)}
+                                >
+                                    Profile
+                                </LinkButton>
+                            </div>
+                        )}
                         <FormGroup row={true}>
                             <FormControlLabel
                                 control={
@@ -213,7 +238,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.list}>List</KeyButton>
+                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry}>List</KeyButton>
                     </DialogActions>
                 </Dialog>
             </div>

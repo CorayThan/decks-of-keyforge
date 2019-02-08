@@ -1,3 +1,4 @@
+import { MenuItem } from "@material-ui/core"
 import Card from "@material-ui/core/Card/Card"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
@@ -12,6 +13,7 @@ import { KeyTopbarRegistration } from "../components/KeyTopbarRegistration"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
+import { countries, countryToLabel } from "../generic/Country"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -36,6 +38,9 @@ export class RegistrationPage extends React.Component {
     publicContactInfo = ""
     @observable
     allowUsersToSeeDeckOwnership: boolean = false
+    @observable
+    country: string = ""
+
 
     signUp = (submitEvent: React.FormEvent) => {
         submitEvent.preventDefault()
@@ -66,7 +71,8 @@ export class RegistrationPage extends React.Component {
             password: this.password,
             username,
             publicContactInfo: this.publicContactInfo,
-            allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership
+            allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
+            country: this.country === "" ? undefined : this.country
         })
     }
 
@@ -153,43 +159,62 @@ export class RegistrationPage extends React.Component {
                                         />
                                     </div>
                                 </Grid>
+                                <Grid item={true} xs={12}>
+                                    <TextField
+                                        variant={"outlined"}
+                                        label={"Contact Info"}
+                                        helperText={"Optional public info for users to contact you for sales and trades."}
+                                        value={this.publicContactInfo}
+                                        onChange={(event) => this.publicContactInfo = event.target.value}
+                                        fullWidth={true}
+                                        multiline={true}
+                                        rows={2}
+                                        rowsMax={5}
+                                        style={{marginBottom: spacing(2)}}
+                                        required={false}
+                                        InputProps={{inputProps: {tabIndex: 5}}}
+                                    />
+                                </Grid>
+                                <Grid item={true} xs={6}>
+                                    <TextField
+                                        select
+                                        label="Country"
+                                        value={this.country}
+                                        onChange={event => this.country = event.target.value}
+                                        helperText="For searching decks for sale"
+                                        variant="outlined"
+                                        fullWidth={true}
+                                    >
+                                        {countries.map(country => (
+                                            <MenuItem key={country} value={country}>
+                                                {countryToLabel(country)}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item={true} xs={6}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.allowUsersToSeeDeckOwnership}
+                                                onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
+                                                tabIndex={6}
+                                            />
+                                        }
+                                        label={"Let anyone see my decks"}
+                                    />
+                                </Grid>
                             </Grid>
-                            <TextField
-                                variant={"outlined"}
-                                label={"Contact Info"}
-                                helperText={"Optional public info for users to contact you for sales and trades."}
-                                value={this.publicContactInfo}
-                                onChange={(event) => this.publicContactInfo = event.target.value}
-                                fullWidth={true}
-                                multiline={true}
-                                rows={2}
-                                rowsMax={5}
-                                style={{marginBottom: spacing(2)}}
-                                required={false}
-                                InputProps={{inputProps: {tabIndex: 5}}}
-                            />
-                            <div
-                                style={{display: "flex", flexWrap: "wrap", alignItems: "center", marginBottom: spacing(2)}}
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.allowUsersToSeeDeckOwnership}
-                                            onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
-                                            tabIndex={6}
-                                        />
-                                    }
-                                    label={"Allow anyone to see which decks I own"}
-                                />
-                                <div style={{flexGrow: 1}} />
+                            <div style={{marginTop: spacing(2), display: "flex", justifyContent: "center"}}>
                                 <LinkButton size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                             </div>
                             <KeyButton
+                                style={{marginTop: spacing(2)}}
                                 variant={"contained"}
                                 color={"secondary"}
                                 type={"submit"}
                                 fullWidth={true}
-                                tabIndex={7}
+                                tabIndex={8}
                                 loading={loginInProgress}
                             >
                                 Create Account

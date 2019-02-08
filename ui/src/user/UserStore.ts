@@ -27,9 +27,6 @@ export class UserStore {
     loginInProgress = false
 
     @observable
-    sendingReset = false
-
-    @observable
     changingPassword = false
 
     private constructor() {
@@ -125,15 +122,7 @@ export class UserStore {
         axios.post(`${UserStore.SECURE_CONTEXT}/update`, updateUserProfile)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage("Updated your profile!")
-            })
-    }
-
-    sendReset = (email: string) => {
-        this.sendingReset = true
-        axios.post(`${UserStore.CONTEXT}/send-reset`, {email})
-            .then((response: AxiosResponse) => {
-                this.sendingReset = false
-                MessageStore.instance.setSuccessMessage(`A reset email has been sent to ${email}`)
+                this.loadLoggedInUser()
             })
     }
 
@@ -175,6 +164,22 @@ export class UserStore {
     get username(): string | undefined {
         if (this.user) {
             return this.user.username
+        }
+        return undefined
+    }
+
+    @computed
+    get email(): string | undefined {
+        if (this.user) {
+            return this.user.email
+        }
+        return undefined
+    }
+
+    @computed
+    get country(): string | undefined {
+        if (this.user && this.user.country) {
+            return this.user.country
         }
         return undefined
     }

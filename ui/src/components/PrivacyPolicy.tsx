@@ -66,7 +66,7 @@ export class PrivacyPolicy extends React.Component {
                         </Typography>
                         <Typography style={{marginBottom: spacing(1)}}>
                             We use your personal information to help other users contact you when you list decks for sale. We will not show your email to other users,
-                            but we will send you an email on their behalf if you have a deck for sale and have not listed public contact info.
+                            but we will send you an email on their behalf if you have a deck for sale and your user profile allows emails.
                             We make the public information you have provided available for users to see to contact you for the
                             purchase of decks you have listed.
 

@@ -19,18 +19,13 @@ class UserEndpoints(
     fun findYourUser() = currentUserService.loggedInUser()
 
     @PostMapping("/register")
-    fun register(@RequestBody user: UserRegistration) {
-        userService.register(user)
-    }
+    fun register(@RequestBody user: UserRegistration) = userService.register(user)
 
     @GetMapping("/{username}")
     fun findUserProfile(@PathVariable username: String) = userService.findUserProfile(username)
 
     @PostMapping("/secured/update")
     fun updateProfile(@RequestBody userProfile: UserProfileUpdate) = userService.updateUserProfile(userProfile)
-
-    @PostMapping("/send-reset")
-    fun sendReset(@RequestBody reset: ResetEmail) = userService.sendReset(reset)
 
     @PostMapping("/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)

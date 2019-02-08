@@ -2,12 +2,11 @@ package coraythan.keyswap.userdeck
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.Deck
+import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 data class UserDeck(
@@ -31,6 +30,9 @@ data class UserDeck(
         // Deck selling info below
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
+
+        @Enumerated(EnumType.STRING)
+        val forSaleInCountry: Country? = null,
 
         val askingPrice: Double? = null,
 

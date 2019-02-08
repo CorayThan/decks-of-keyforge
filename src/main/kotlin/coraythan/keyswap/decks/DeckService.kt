@@ -220,6 +220,7 @@ class DeckService(
             if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         }
+        if (filters.forSaleInCountry != null) predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry) )
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
                 val pathToVal = Expressions.path(Double::class.java, deckQ, it.property)
@@ -286,6 +287,7 @@ class DeckService(
                 DeckSaleInfo(
                         forSale = it.forSale,
                         forTrade = it.forTrade,
+                        forSaleInCountry = it.forSaleInCountry,
                         askingPrice = it.askingPrice,
                         listingInfo = it.listingInfo,
                         externalLink = it.externalLink,

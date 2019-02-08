@@ -9,14 +9,19 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <div>
-                <ReleaseNote releaseNumber={"2.2"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.3"} expanded={true} releaseNotes={[
+                    "You can send an email to sellers and traders if you are logged in and they have not listed an external link for the deck.",
+                    "You can now select a country for yourself and filter decks for sale or trade by the country they are listed in. Note that " +
+                    "as of this release, no decks have a country selected, but all future decks listed for sale or trade will."
+                ]}/>
+                <ReleaseNote releaseNumber={"2.2"} releaseNotes={[
                     "Added power level, chains, wins, and losses to decks, and sorting by chains.",
                     "You can now add unregistered decks to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
                     "By default unregistered decks are filtered out of searches.",
                     "Traits are colored teal to differentiate from synergies.",
                     "Improved the simple deck API to v2, see below.",
                     <div style={{display: "flex", alignItems: "center"}}>
-                        Added a 
+                        <Typography>Added a</Typography>
                         <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                     </div>
                 ]}/>
@@ -34,8 +39,12 @@ export class ReleaseNotes extends React.Component {
                     "Added synergies, antisynergies, and changed card ratings based on community feedback.",
                     "You can view the ratings as spreadsheets on google docs. (Although I recommend toggling on full view on the Cards page for the " +
                     "current version.)",
-                    <a href={"https://docs.google.com/spreadsheets/d/1v8YYw1uTaZc_G01pFqbofgYsvKP2lADEs-5-SqGR6LY/edit?usp=sharing"}>Card Ratings V2 Spreadsheet</a>,
-                    <a href={"https://docs.google.com/spreadsheets/d/16gdzgD9Z3S6bb8NJbJCQ0A-mcOnznQnqV2wFoJublbs/edit?usp=sharing"}>Card Ratings V1 Spreadsheet</a>,
+                    <a href={"https://docs.google.com/spreadsheets/d/1v8YYw1uTaZc_G01pFqbofgYsvKP2lADEs-5-SqGR6LY/edit?usp=sharing"}>
+                        Card Ratings V2 Spreadsheet
+                    </a>,
+                    <a href={"https://docs.google.com/spreadsheets/d/16gdzgD9Z3S6bb8NJbJCQ0A-mcOnznQnqV2wFoJublbs/edit?usp=sharing"}>
+                        Card Ratings V1 Spreadsheet
+                    </a>,
                     "",
                     "Added expiration date for deck listings."
                 ]}/>

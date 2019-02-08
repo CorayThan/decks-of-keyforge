@@ -1,11 +1,13 @@
 package coraythan.keyswap.decks
 
+import coraythan.keyswap.generic.Country
 import coraythan.keyswap.userdeck.DeckCondition
 import java.time.LocalDate
 
 data class DeckSaleInfo(
         val forSale: Boolean,
         val forTrade: Boolean,
+        val forSaleInCountry: Country?,
 
         val askingPrice: Double?,
 

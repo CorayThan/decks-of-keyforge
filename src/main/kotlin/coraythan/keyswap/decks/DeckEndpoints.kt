@@ -41,7 +41,7 @@ class DeckEndpoints(
 
     @CrossOrigin
     @GetMapping("/{id}/simple")
-    fun findDeckSimple(@PathVariable id: String) = deckService.findDeckSimple(id)
+    fun findDeckSimple(@PathVariable id: String) = "Please contact me to update to the new version."
 
     @CrossOrigin
     @GetMapping("/simple/v2/{id}")

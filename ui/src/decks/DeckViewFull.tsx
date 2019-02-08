@@ -60,7 +60,7 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         }
         let saleInfoComponent = null
         if (saleInfo) {
-            saleInfoComponent = <SaleInfoView saleInfo={saleInfo}/>
+            saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId}/>
         } else {
             saleInfoComponent = <Loader/>
         }

@@ -4,8 +4,8 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
+import { emailStore } from "../emails/EmailStore"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { UserStore } from "../user/UserStore"
 
 @observer
 export class ForgotPasswordPage extends React.Component {
@@ -23,7 +23,7 @@ export class ForgotPasswordPage extends React.Component {
             log.info("Setting error true in reset password.")
             return
         }
-        UserStore.instance.sendReset(this.email.trim())
+        emailStore.sendReset(this.email.trim())
     }
 
     render() {
@@ -61,7 +61,7 @@ export class ForgotPasswordPage extends React.Component {
                             color={"primary"}
                             variant={"contained"}
                             onClick={this.sendReset}
-                            loading={UserStore.instance.sendingReset}
+                            loading={emailStore.sendingReset}
                         >
                             Send Reset Email
                         </KeyButton>
