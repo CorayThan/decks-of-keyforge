@@ -261,7 +261,11 @@ class DeckService(
 
     fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
 
-    fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo {
+    fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
+        if (keyforgeId == "simple") {
+            // quiet down the annoying constant errors
+            return null
+        }
         if (keyforgeId.length != 36) {
             throw BadRequestException("Request for deck with synergies with bad id: $keyforgeId")
         }

@@ -6,7 +6,7 @@ spring:
   application:
     name: keyswap
   profiles:
-    active: nocommit
+    active: nocommit,${ENV:dev}
   jpa:
     hibernate:
       ddl-auto: validate

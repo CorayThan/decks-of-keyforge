@@ -102,7 +102,7 @@ export class DeckFilters {
         this.title = ""
         this.forSale = false
         this.forTrade = false
-        this.forSaleInCountry = ""
+        this.forSaleInCountry = undefined
         this.myFavorites = false
         this.includeUnregistered = false
         this.cards = [{

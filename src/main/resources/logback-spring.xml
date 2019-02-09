@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="loggly" class="ch.qos.logback.ext.loggly.LogglyAppender">
+        <endpointUrl>http://logs-01.loggly.com/inputs/b46c7d77-f587-4927-87de-d3bae6f4bd40/tag/logback</endpointUrl>
+        <pattern>%d{"ISO8601", UTC} %p %t %c{0}.%M - %m%n</pattern>
+    </appender>
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <springProfile name="prod">
+            <appender-ref ref="loggly"/>
+        </springProfile>
+    </root>
+</configuration>
