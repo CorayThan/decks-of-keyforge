@@ -59,12 +59,12 @@ class CardService(
         return nonMaverickCachedCards!!
     }
 
-    fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard>? {
-        return cardsFromCardIds(cardIdsString)?.sorted()?.map { it.toDeckSearchResultCard() }
+    fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard> {
+        return cardsFromCardIds(cardIdsString).sorted().map { it.toDeckSearchResultCard() }
     }
 
     fun cardsForDeck(deck: Deck): List<Card> {
-        val cards = cardsFromCardIds(deck.cardIds) ?: fullCardsFromCards(deck.cardsList)
+        val cards = cardsFromCardIds(deck.cardIds)
         if (cards.size != 36) throw IllegalStateException("Why doesn't this deck have cards? $deck")
         return cards
     }
@@ -129,17 +129,16 @@ class CardService(
 
     private fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
 
-    private fun cardsFromCardIds(cardIdsString: String): List<Card>? {
+    private fun cardsFromCardIds(cardIdsString: String): List<Card> {
         if (cardIdsString.isBlank()) {
-            log.warn("Card id string was blank!")
-            return null
+            throw IllegalArgumentException("Card id string was blank!")
         }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->
             entry.value.map {
                 val realCard = realCards[it]
-                realCard?.copy(house = entry.key, maverick = entry.key != realCard.house) ?: return null
+                realCard?.copy(house = entry.key, maverick = entry.key != realCard.house) ?: throw java.lang.IllegalStateException("No card for $it")
             }
         }
     }

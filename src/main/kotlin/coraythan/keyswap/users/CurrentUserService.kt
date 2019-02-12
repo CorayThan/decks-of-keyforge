@@ -10,8 +10,6 @@ class CurrentUserService(
     fun loggedInUser(): KeyUser? {
         val authentication = SecurityContextHolder.getContext().authentication
         val userEmail = authentication.principal as String? ?: return null
-        return userRepo.findByEmail(userEmail)?.let { keyUser ->
-            keyUser.copy(decks = keyUser.decks.map { it.copy(deck = it.deck.copy(cards = listOf())) })
-        }
+        return userRepo.findByEmail(userEmail)
     }
 }

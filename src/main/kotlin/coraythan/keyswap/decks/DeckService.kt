@@ -9,7 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.deckcard.QDeckCard
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.userdeck.QUserDeck
@@ -29,7 +28,7 @@ class DeckService(
         private val userService: KeyUserService,
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
-        private val entityManager: EntityManager
+        entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val deckPageSize = 20L
@@ -157,7 +156,6 @@ class DeckService(
 
     private fun deckFilterPedicate(filters: DeckFilters): BooleanBuilder {
         val deckQ = QDeck.deck
-        val deckCardQ = QDeckCard.deckCard
         val predicate = BooleanBuilder()
 
         if (!filters.includeUnregistered) {
@@ -220,7 +218,7 @@ class DeckService(
             if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         }
-        if (filters.forSaleInCountry != null) predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry) )
+        if (filters.forSaleInCountry != null) predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
                 val pathToVal = Expressions.path(Double::class.java, deckQ, it.property)
@@ -228,25 +226,10 @@ class DeckService(
             }
         }
 
-//        filters.cards.forEach {
-//            predicate.and(deckQ.cardNamesString.like("%${it.cardName}${it.quantity}%"))
-//        }
-
         filters.cards.forEach {
-            if (it.quantity == 1) {
-                predicate.and(deckQ.cards.any().cardName.eq(it.cardName))
-            } else {
-                predicate.and(
-                        deckQ.cards.any().`in`(
-                                JPAExpressions.selectFrom(deckCardQ)
-                                        .where(
-                                                deckCardQ.cardName.eq(it.cardName),
-                                                deckCardQ.quantityInDeck.goe(it.quantity)
-                                        )
-                        )
-                )
-            }
+            predicate.and(deckQ.cardNamesString.like("%${it.cardName}${it.quantity}%"))
         }
+
         return predicate
     }
 

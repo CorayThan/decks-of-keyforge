@@ -111,7 +111,7 @@ class DeckImporterService(
             }
             updateDecks.forEach {
                 val preexisting = deckRepo.findByKeyforgeId(it.id)
-                val updated = preexisting?.withDeckCards(preexisting.cardsList)?.addGameStats(it)
+                val updated = preexisting?.withDeckCards(cardService.cardsForDeck(preexisting))?.addGameStats(it)
 //                log.info("Deck before: ${preexisting?.wins} after: ${updated?.wins}")
 //                log.info("Deck before: ${preexisting?.losses} after: ${updated?.losses}")
                 if (updated != null) {
@@ -366,6 +366,7 @@ class DeckImporterService(
     fun addCardNamesToDecks() {
 
         if (!doneAddingNames) {
+            log.info("Beginning to add card names to decks.")
             val millisTaken = measureTimeMillis {
                 val deckQ = QDeck.deck
 
@@ -395,6 +396,9 @@ class DeckImporterService(
         if (houses.size != 3) {
             throw IllegalStateException("Deck doesn't have 3 houses! $deck")
         }
+        if (cardsList.size != 36) {
+            throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
+        }
 
         val saveable = savedDeck
                 .withDeckCards(cardsList)
@@ -405,9 +409,6 @@ class DeckImporterService(
 
         val ratedDeck = rateDeck(saveable)
 
-        if (ratedDeck.cards.size != 36) {
-            throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
-        }
         if (ratedDeck.cardIds.isBlank()) {
             throw IllegalStateException("Can't save a deck without its card ids: $deck")
         }

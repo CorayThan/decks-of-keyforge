@@ -1,13 +1,11 @@
 package coraythan.keyswap.decks
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.deckcard.DeckCard
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.thirdpartyservices.KeyforgeDeckLinks
 import coraythan.keyswap.userdeck.UserDeck
@@ -81,10 +79,6 @@ data class Deck(
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
 
-        @JsonIgnoreProperties("deck")
-        @OneToMany(fetch = FetchType.LAZY, mappedBy = "deck", cascade = [CascadeType.ALL])
-        val cards: List<DeckCard> = listOf(),
-
         // Json of card ids for performance loading decks, loading cards from cache
         @Lob
         @Type(type = "org.hibernate.type.TextType")
@@ -106,11 +100,8 @@ data class Deck(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
 ) {
-    @get:JsonIgnore
-    val cardsList: List<Card>
-        get() = cards.map { it.card }
 
-    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>?): DeckSearchResult {
+    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>): DeckSearchResult {
         // Load the houses
         this.houses.size
         return DeckSearchResult(
@@ -142,7 +133,7 @@ data class Deck(
                 forTrade = forTrade,
                 wishlistCount = wishlistCount,
                 funnyCount = funnyCount,
-                searchResultCards = searchResultCards ?: cards.map { it.card.toDeckSearchResultCard() },
+                searchResultCards = searchResultCards,
                 houses = houses
         )
     }
@@ -163,14 +154,10 @@ data class Deck(
 
 fun Deck.withDeckCards(newCardsList: List<Card>): Deck {
     if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
-    val deckCards = newCardsList.map { card ->
-        DeckCard(this, card, card.cardTitle, cardsList.count { card.cardTitle == it.cardTitle })
-    }
     val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
         (1..entry.value.size).map { "${entry.key}$it" }
     }.joinToString()
     return this.copy(
-            cards = deckCards,
             cardNamesString = cardNamesString,
             rawAmber = newCardsList.map { it.amber }.sum(),
             totalPower = newCardsList.map { it.power }.sum(),
