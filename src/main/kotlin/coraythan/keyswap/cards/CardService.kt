@@ -63,7 +63,11 @@ class CardService(
         return cardsFromCardIds(cardIdsString)?.sorted()?.map { it.toDeckSearchResultCard() }
     }
 
-    fun cardsForDeck(deck: Deck) = cardsFromCardIds(deck.cardIds) ?: fullCardsFromCards(deck.cardsList)
+    fun cardsForDeck(deck: Deck): List<Card> {
+        val cards = cardsFromCardIds(deck.cardIds) ?: fullCardsFromCards(deck.cardsList)
+        if (cards.size != 36) throw IllegalStateException("Why doesn't this deck have cards? $deck")
+        return cards
+    }
 
     fun filterCards(filters: CardFilters): Iterable<Card> {
         val cardQ = QCard.card
@@ -127,6 +131,7 @@ class CardService(
 
     private fun cardsFromCardIds(cardIdsString: String): List<Card>? {
         if (cardIdsString.isBlank()) {
+            log.warn("Card id string was blank!")
             return null
         }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)

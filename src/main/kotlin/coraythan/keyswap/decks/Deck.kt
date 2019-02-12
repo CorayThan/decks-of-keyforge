@@ -90,6 +90,8 @@ data class Deck(
         @Type(type = "org.hibernate.type.TextType")
         val cardIds: String = "",
 
+        val cardNamesString: String? = null,
+
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         val userDecks: List<UserDeck> = listOf(),
@@ -108,38 +110,42 @@ data class Deck(
     val cardsList: List<Card>
         get() = cards.map { it.card }
 
-    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>?) = DeckSearchResult(
-            id = id,
-            keyforgeId = keyforgeId,
-            name = name,
+    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>?): DeckSearchResult {
+        // Load the houses
+        this.houses.size
+        return DeckSearchResult(
+                id = id,
+                keyforgeId = keyforgeId,
+                name = name,
 
-            powerLevel = powerLevel,
-            chains = chains,
-            wins = wins,
-            losses = losses,
+                powerLevel = powerLevel,
+                chains = chains,
+                wins = wins,
+                losses = losses,
 
-            registered = registered,
+                registered = registered,
 
-            totalCreatures = totalCreatures,
-            totalActions = totalActions,
-            totalArtifacts = totalArtifacts,
-            totalUpgrades = totalUpgrades,
-            expectedAmber = expectedAmber,
-            amberControl = amberControl,
-            creatureControl = creatureControl,
-            artifactControl = artifactControl,
-            sasRating = sasRating,
-            cardsRating = cardsRating,
-            synergyRating = synergyRating,
-            antisynergyRating = antisynergyRating,
-            totalPower = totalPower,
-            forSale = forSale,
-            forTrade = forTrade,
-            wishlistCount = wishlistCount,
-            funnyCount = funnyCount,
-            searchResultCards = searchResultCards ?: cards.map { it.card.toDeckSearchResultCard() },
-            houses = houses
-    )
+                totalCreatures = totalCreatures,
+                totalActions = totalActions,
+                totalArtifacts = totalArtifacts,
+                totalUpgrades = totalUpgrades,
+                expectedAmber = expectedAmber,
+                amberControl = amberControl,
+                creatureControl = creatureControl,
+                artifactControl = artifactControl,
+                sasRating = sasRating,
+                cardsRating = cardsRating,
+                synergyRating = synergyRating,
+                antisynergyRating = antisynergyRating,
+                totalPower = totalPower,
+                forSale = forSale,
+                forTrade = forTrade,
+                wishlistCount = wishlistCount,
+                funnyCount = funnyCount,
+                searchResultCards = searchResultCards ?: cards.map { it.card.toDeckSearchResultCard() },
+                houses = houses
+        )
+    }
 
     fun addGameStats(keyforgeDeck: KeyforgeDeck): Deck? {
         if (this.wins == keyforgeDeck.wins && this.losses == keyforgeDeck.losses
@@ -156,11 +162,16 @@ data class Deck(
 }
 
 fun Deck.withDeckCards(newCardsList: List<Card>): Deck {
+    if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
     val deckCards = newCardsList.map { card ->
         DeckCard(this, card, card.cardTitle, cardsList.count { card.cardTitle == it.cardTitle })
     }
+    val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
+        (1..entry.value.size).map { "${entry.key}$it" }
+    }.joinToString()
     return this.copy(
             cards = deckCards,
+            cardNamesString = cardNamesString,
             rawAmber = newCardsList.map { it.amber }.sum(),
             totalPower = newCardsList.map { it.power }.sum(),
             totalArmor = newCardsList.map { it.armor }.sum(),

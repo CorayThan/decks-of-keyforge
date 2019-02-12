@@ -79,11 +79,21 @@ export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
             <div>
-                {props.releaseNotes.map((note, idx) => (
-                    <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes.length - 1 ? spacing(1) : undefined}}>
-                        {note}
-                    </Typography>
-                ))}
+                {props.releaseNotes.map((note, idx) => {
+                    if (typeof note === "string") {
+                        return (
+                            <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes.length - 1 ? spacing(1) : undefined}}>
+                                {note}
+                            </Typography>
+                        )
+                    } else {
+                        return (
+                            <div key={idx}>
+                                {note}
+                            </div>
+                        )
+                    }
+                })}
             </div>
         </ExpansionPanelDetails>
     </ExpansionPanel>

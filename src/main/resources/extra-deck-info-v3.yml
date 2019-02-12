@@ -524,6 +524,9 @@
   creatureControl: 0.5
   expectedAmber: 1.0
   traits: []
+  synergies:
+    - trait: damagesFriendlyCreatures
+      rating: 1
 
 - name: Wardrummer
   cardNumber: 49
@@ -831,8 +834,6 @@
   traits: [purgesFriendlyCreatures, purgesEnemyCreatures]
   synergies:
     - trait: returnsCreaturesFromDiscard
-      rating: -2
-    - trait: goodDestroyed
       rating: -2
 
 - name: Dominator Bauble
@@ -1271,9 +1272,6 @@
   creatureControl: 1
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
-  synergies:
-    - trait: goodPlay
-      rating: 1
 
 - name: Dimension Door
   cardNumber: 108

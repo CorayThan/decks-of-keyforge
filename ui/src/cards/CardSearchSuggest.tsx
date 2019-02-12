@@ -69,6 +69,7 @@ const Placeholder = (props: any) => {
 const SingleValue = (props: any) => (
     <Typography
         style={{fontSize: 16}}
+        noWrap={true}
         {...props.innerProps}
     >
         {props.children}
@@ -80,7 +81,6 @@ const ValueContainer = (props: any) => {
         <div
             style={{
                 display: "flex",
-                flexWrap: "wrap",
                 flex: 1,
                 alignItems: "center",
                 overflow: "hidden",
@@ -141,7 +141,7 @@ export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
         return (
             <div
                 style={{
-                    width: 240,
+                    width: 200,
                     ...this.props.style
                 }}
             >

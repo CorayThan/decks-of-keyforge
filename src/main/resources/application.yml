@@ -16,6 +16,7 @@ spring:
         format_sql: false
         temp:
           use_jdbc_metadata_defaults: false
+    open-in-view: true
   datasource:
     platform: POSTGRESQL
     url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/keyswap

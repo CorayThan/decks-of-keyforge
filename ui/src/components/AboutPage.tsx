@@ -12,6 +12,7 @@ import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { BestIcon } from "../generic/icons/BestIcon"
 import { WorstIcon } from "../generic/icons/WorstIcon"
 import { InfoListCard } from "../generic/InfoListCard"
+import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { KeyBar, KeyPieGlobalAverages } from "../stats/DeckStatsView"
@@ -185,6 +186,16 @@ export class AboutPage extends React.Component {
                             "SAS is a unique rating system that reflects approximate deck power.",
                             "List decks for sale or trade, and use the search features to find available decks.",
                             "Wishlist and mark decks as funny, and see what everyone else thinks too!",
+                            <span style={{display: "flex", alignItems: "center"}}>
+                                <Typography style={{marginRight: spacing(1)}}>Join the discussion on</Typography>
+                                <KeyButton
+                                    style={{margin: spacing(1)}}
+                                    color={"inherit"}
+                                    href={"https://discord.gg/T5taTHm"}
+                                >
+                                    Discord
+                                </KeyButton>
+                            </span>,
                             <span>
                                 <Typography>For comments and suggestions contact CorayThan on Reddit, or send an email to</Typography>
                                 <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>

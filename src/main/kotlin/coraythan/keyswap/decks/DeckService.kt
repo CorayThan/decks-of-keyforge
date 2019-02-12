@@ -228,6 +228,10 @@ class DeckService(
             }
         }
 
+//        filters.cards.forEach {
+//            predicate.and(deckQ.cardNamesString.like("%${it.cardName}${it.quantity}%"))
+//        }
+
         filters.cards.forEach {
             if (it.quantity == 1) {
                 predicate.and(deckQ.cards.any().cardName.eq(it.cardName))
