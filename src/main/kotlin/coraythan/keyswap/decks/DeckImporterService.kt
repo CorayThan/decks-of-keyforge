@@ -360,7 +360,7 @@ class DeckImporterService(
         log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    var doneAddingNames = false
+//    var doneAddingNames = false
 
 //    @Scheduled(fixedRateString = lockUpdateRatings)
 //    fun addCardNamesToDecks() {

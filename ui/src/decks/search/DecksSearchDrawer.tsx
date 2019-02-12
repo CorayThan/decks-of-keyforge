@@ -246,7 +246,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             value={card.quantity}
                                             onChange={event => card.quantity = Number(event.target.value)}
                                         />
-                                        {idx === 0 ? (
+                                        {idx === 0 && cards.length < 5 ? (
                                             <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
                                                 <Add fontSize={"small"}/>
                                             </IconButton>
