@@ -362,33 +362,33 @@ class DeckImporterService(
 
     var doneAddingNames = false
 
-    @Scheduled(fixedRateString = lockUpdateRatings)
-    fun addCardNamesToDecks() {
-
-        if (!doneAddingNames) {
-            log.info("Beginning to add card names to decks.")
-            val millisTaken = measureTimeMillis {
-                val deckQ = QDeck.deck
-
-                val deckResults = query.selectFrom(deckQ)
-                        .where(deckQ.cardNamesString.isNull)
-                        .limit(1000)
-                        .fetch()
-
-                if (deckResults.isEmpty() && !doneAddingNames) {
-                    log.info("Done adding card names to decks!")
-                    doneAddingNames = true
-                }
-
-                val updated = deckResults.map { deck ->
-                    deck.withDeckCards(cardService.cardsForDeck(deck))
-                }
-                deckRepo.saveAll(updated)
-            }
-
-            log.info("Took $millisTaken ms to add card names to 1000 decks.")
-        }
-    }
+//    @Scheduled(fixedRateString = lockUpdateRatings)
+//    fun addCardNamesToDecks() {
+//
+//        if (!doneAddingNames) {
+//            log.info("Beginning to add card names to decks.")
+//            val millisTaken = measureTimeMillis {
+//                val deckQ = QDeck.deck
+//
+//                val deckResults = query.selectFrom(deckQ)
+//                        .where(deckQ.cardNamesString.isNull)
+//                        .limit(1000)
+//                        .fetch()
+//
+//                if (deckResults.isEmpty() && !doneAddingNames) {
+//                    log.info("Done adding card names to decks!")
+//                    doneAddingNames = true
+//                }
+//
+//                val updated = deckResults.map { deck ->
+//                    deck.withDeckCards(cardService.cardsForDeck(deck))
+//                }
+//                deckRepo.saveAll(updated)
+//            }
+//
+//            log.info("Took $millisTaken ms to add card names to 1000 decks.")
+//        }
+//    }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
         val savedDeck = deckRepo.save(deck)

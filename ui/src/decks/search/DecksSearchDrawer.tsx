@@ -5,7 +5,7 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { Close, Delete } from "@material-ui/icons"
+import { Add, Close, Delete } from "@material-ui/icons"
 import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
@@ -246,11 +246,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             value={card.quantity}
                                             onChange={event => card.quantity = Number(event.target.value)}
                                         />
-                                        {/*{idx === 0 ? (*/}
-                                            {/*<IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>*/}
-                                                {/*<Add fontSize={"small"}/>*/}
-                                            {/*</IconButton>*/}
-                                        {/*) : null}*/}
+                                        {idx === 0 ? (
+                                            <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
+                                                <Add fontSize={"small"}/>
+                                            </IconButton>
+                                        ) : null}
                                     </div>
                                 ))}
                             </div>
