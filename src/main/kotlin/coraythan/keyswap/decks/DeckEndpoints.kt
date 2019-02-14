@@ -1,6 +1,8 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.decks.models.DeckCount
+import coraythan.keyswap.decks.models.DecksPage
 import coraythan.keyswap.thirdpartyservices.AzureOcr
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*

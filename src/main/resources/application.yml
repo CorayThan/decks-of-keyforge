@@ -25,8 +25,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   servlet:
     multipart:
-      max-file-size: 3500KB
-      max-request-size: 3500KB
+      max-file-size: 4MB
+      max-request-size: 4MB
   mail:
     host: email-smtp.us-west-2.amazonaws.com
     username: AKIAI7543AJ4RKGUYHBA

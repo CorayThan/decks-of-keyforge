@@ -4,7 +4,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.decks.Deck
+import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.stats.incrementValue
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

@@ -1,7 +1,7 @@
 package coraythan.keyswap.userdeck
 
-import coraythan.keyswap.decks.Deck
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.now
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo

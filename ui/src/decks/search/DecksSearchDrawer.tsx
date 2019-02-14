@@ -117,10 +117,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                     </>
                 ) : null}
                 {showDecksOwner ? (
-                    <>
+                    <div style={{display: "flex", alignItems: "center"}}>
                         <Typography>Owner: {owner}</Typography>
                         <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
-                    </>
+                    </div>
                 ) : null}
             </>
         )

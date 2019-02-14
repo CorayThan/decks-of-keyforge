@@ -9,21 +9,39 @@ import { log } from "../config/Utils"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
+import { ScreenStore } from "../ui/ScreenStore"
 import { Deck } from "./Deck"
 import { DeckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
+import { SaleInfoView } from "./sales/SaleInfoView"
 
 interface DeckListViewProps {
     decks: Deck[]
 }
 
+@observer
 export class DeckListView extends React.Component<DeckListViewProps> {
     render() {
         return (
             <>
-                {this.props.decks.map((deck) => (
-                    <DeckViewSmall key={deck.id} deck={deck}/>
-                ))}
+                {this.props.decks.map((deck) => {
+
+                    let saleInfo = null
+                    if (deck.deckSaleInfo) {
+                        saleInfo = <SaleInfoView saleInfo={deck.deckSaleInfo} deckName={deck.name} keyforgeId={deck.keyforgeId}/>
+                    }
+
+                    const deckContainerStyle = ScreenStore.instance.screenSizeMd() ? undefined : {display: "flex"}
+
+                    return (
+                        <div key={deck.id} style={deckContainerStyle}>
+                            <div>
+                                <DeckViewSmall deck={deck}/>
+                            </div>
+                            {saleInfo}
+                        </div>
+                    )
+                })}
             </>
         )
     }
@@ -58,13 +76,17 @@ export const deckTableViewStore = new DeckTableViewStore()
 export class DeckTableView extends React.Component<DeckListViewProps> {
 
     render() {
+        const displayPrices = !!this.props.decks[0].deckSaleInfo
         return (
-            <Paper style={{marginBottom: spacing(2)}}>
+            <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
                 <Table padding={"checkbox"}>
                     <TableHead>
                         <TableRow>
                             <DeckHeader title={"Name"} property={"name"} minWidth={152}/>
                             <TableCell>Houses</TableCell>
+                            {displayPrices ? (
+                                <DeckHeader title={"Price"} property={"price"}/>
+                            ) : null}
                             <DeckHeader title={"SAS"} property={"sasRating"}/>
                             <DeckHeader title={"Cards"} property={"cardsRating"}/>
                             <DeckHeader title={"Synergy"} property={"synergyRating"}/>
@@ -90,6 +112,9 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     </KeyLink>
                                 </TableCell>
                                 <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
+                                {displayPrices ? (
+                                    <TableCell>{deck.deckSaleInfo && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice}</TableCell>
+                                ) : null}
                                 <TableCell>{deck.sasRating}</TableCell>
                                 <TableCell>{deck.cardsRating}</TableCell>
                                 <TableCell>{deck.synergyRating}</TableCell>

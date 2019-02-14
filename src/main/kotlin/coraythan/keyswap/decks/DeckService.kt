@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.userdeck.QUserDeck
@@ -129,7 +130,12 @@ class DeckService(
                 .fetch()
 
         val decks = deckResults.map {
-            it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
+            val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
+            if (filters.forSale || filters.forTrade) {
+                searchResult.copy(deckSaleInfo = saleInfoForDeck(searchResult.keyforgeId))
+            } else {
+                searchResult
+            }
         }
 
         val decksPage = DecksPage(

@@ -8,6 +8,10 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.deckcard.CardIds
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.decks.models.QDeck
+import coraythan.keyswap.decks.models.withDeckCards
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.stats.incrementValue
@@ -359,36 +363,6 @@ class DeckImporterService(
 
         log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
-
-//    var doneAddingNames = false
-
-//    @Scheduled(fixedRateString = lockUpdateRatings)
-//    fun addCardNamesToDecks() {
-//
-//        if (!doneAddingNames) {
-//            log.info("Beginning to add card names to decks.")
-//            val millisTaken = measureTimeMillis {
-//                val deckQ = QDeck.deck
-//
-//                val deckResults = query.selectFrom(deckQ)
-//                        .where(deckQ.cardNamesString.isNull)
-//                        .limit(1000)
-//                        .fetch()
-//
-//                if (deckResults.isEmpty() && !doneAddingNames) {
-//                    log.info("Done adding card names to decks!")
-//                    doneAddingNames = true
-//                }
-//
-//                val updated = deckResults.map { deck ->
-//                    deck.withDeckCards(cardService.cardsForDeck(deck))
-//                }
-//                deckRepo.saveAll(updated)
-//            }
-//
-//            log.info("Took $millisTaken ms to add card names to 1000 decks.")
-//        }
-//    }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
         val savedDeck = deckRepo.save(deck)

@@ -47,7 +47,7 @@ export class ProfilePage extends React.Component<ProfilePageProps> {
                     <Typography variant={"h4"} color={"primary"} style={{marginBottom: spacing(2)}}>{profile.username}</Typography>
                     {
                         profile.publicContactInfo ? (
-                            <Typography>{profile.publicContactInfo}</Typography>
+                            <Typography style={{whiteSpace: "pre-wrap"}}>{profile.publicContactInfo}</Typography>
                         ) : (
                             <Typography>{profile.username} doesn't have any public info.</Typography>
                         )

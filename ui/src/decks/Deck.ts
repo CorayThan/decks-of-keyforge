@@ -2,6 +2,7 @@ import { DeckCard, KCard } from "../cards/KCard"
 import { House } from "../houses/House"
 import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
 import { UserDeck } from "../userdeck/UserDeck"
+import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
 export interface DeckWithSynergyInfo {
     deck: Deck
@@ -56,6 +57,8 @@ export interface Deck {
     cards?: DeckCard[]
     searchResultCards?: KCard[]
     houses: House[]
+
+    deckSaleInfo?: DeckSaleInfo[]
 }
 
 export class DeckUtils {

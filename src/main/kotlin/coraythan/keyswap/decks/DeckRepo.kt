@@ -1,5 +1,6 @@
 package coraythan.keyswap.decks
 
+import coraythan.keyswap.decks.models.Deck
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.querydsl.QuerydslPredicateExecutor

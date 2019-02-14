@@ -29,6 +29,10 @@ export class DeckImportView extends React.Component {
     }
 
     componentWillUnmount(): void {
+        deckImportViewStore.deckImage = undefined
+        saveUnregisteredDeckStore.currentDeck = undefined
+        deckImportStore.readDeck = undefined
+        deckImportStore.newDeckId = undefined
         deckImportStore.stopMessages()
     }
 
@@ -71,7 +75,7 @@ export class DeckImportView extends React.Component {
                                     }}
                                 >
                                     <Typography variant={"body2"}>
-                                        Use a picture taken straight on with low glare and clear text.
+                                        Use a picture taken straight on with low glare and clear text. It must be 3mb or less in size.
                                     </Typography>
                                     <KeyButton
                                         disabled={

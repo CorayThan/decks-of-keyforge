@@ -3,7 +3,7 @@ package coraythan.keyswap.thirdpartyservices
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.KeyforgeCard
-import coraythan.keyswap.decks.KeyforgeDeck
+import coraythan.keyswap.decks.models.KeyforgeDeck
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders

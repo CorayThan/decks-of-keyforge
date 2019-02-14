@@ -1,8 +1,6 @@
 import { Tooltip } from "@material-ui/core"
-import Card from "@material-ui/core/Card/Card"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
-import { blue } from "@material-ui/core/colors"
 import Divider from "@material-ui/core/Divider/Divider"
 import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
@@ -16,6 +14,7 @@ import { ChainsView } from "../generic/icons/ChainsView"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
+import { KeyCard } from "../generic/KeyCard"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -57,23 +56,12 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         }
         const compact = ScreenStore.instance.screenSizeXs()
         return (
-            <Card
+            <KeyCard
                 style={{
                     margin: spacing(2),
-                    width: compact ? 344 : 544,
+                    width: compact ? 328 : 544,
                 }}
-            >
-                <div
-                    style={{
-                        backgroundColor: blue ["500"],
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        paddingTop: spacing(1),
-                        paddingBottom: spacing(1),
-                    }}
-                >
+                topContents={(
                     <div style={{display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-evenly"}}>
                         <div style={{flexGrow: compact ? undefined : 1, display: compact ? "flex" : undefined}}>
                             <HouseBanner houses={houses} vertical={compact}/>
@@ -84,8 +72,14 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         </div>
                         <DeckScoreView deck={deck} style={{marginRight: spacing(2)}}/>
                     </div>
-                </div>
-                <CardContent style={{paddingBottom: 0, flexGrow: 1}}>
+                )}
+                topContentsStyle={{
+                    padding: 0,
+                    paddingTop: spacing(1),
+                    paddingBottom: spacing(1)
+                }}
+            >
+                <CardContent style={{paddingBottom: 0}}>
                     <div style={{display: "flex"}}>
                         {registered ? null : (
                             <Tooltip title={"Unregistered Deck"}>
@@ -144,7 +138,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
                     </div>
                 </CardActions>
-            </Card>
+            </KeyCard>
         )
     }
 }
@@ -175,7 +169,7 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     )
 }
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[] }) => (
+const DisplayCardsInHouse = (props: { house: House, cards: KCard[], disableTextSelection?: boolean }) => (
     <List>
         {houseValues.get(props.house)!.title}
         <Divider style={{marginTop: 4}}/>

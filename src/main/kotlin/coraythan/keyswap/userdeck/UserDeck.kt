@@ -1,7 +1,7 @@
 package coraythan.keyswap.userdeck
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.decks.Deck
+import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
 import java.time.ZonedDateTime

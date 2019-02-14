@@ -96,8 +96,12 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     )
 }
 
+interface CardAsLineProps {
+    card: Partial<KCard>
+}
+
 @observer
-export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
+export class CardAsLine extends React.Component<CardAsLineProps> {
 
     @observable
     popOpen = false
@@ -145,6 +149,7 @@ export class CardAsLine extends React.Component<{ card: Partial<KCard> }> {
         return (
             <div
                 onWheel={this.handlePopoverClose}
+                onClick={() => this.popOpen = true}
             >
                 <div
                     style={{display: "flex", marginTop: 4, width: 160}}

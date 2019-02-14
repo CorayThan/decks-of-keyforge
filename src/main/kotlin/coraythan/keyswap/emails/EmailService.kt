@@ -60,9 +60,7 @@ class EmailService(
                     <br>
                     <b>$senderUsername's message</b>
                     <br>
-                    <div>
-                        $message
-                    </div>
+                    <div style="white-space: pre-wrap; color: #444444;">$message</div>
                     <br>
                     <br>
                     <i>

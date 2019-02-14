@@ -7,8 +7,8 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.House
 import coraythan.keyswap.deckcard.CardIds
 import coraythan.keyswap.deckcard.CardNumberSetPair
-import coraythan.keyswap.decks.Deck
-import coraythan.keyswap.decks.KeyforgeDeck
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource

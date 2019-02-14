@@ -9,7 +9,11 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <div>
-                <ReleaseNote releaseNumber={"2.3"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.4"} expanded={true} releaseNotes={[
+                    "Improved card search! Faster, and you can search up to 5 different cards.",
+                    "Searching decks for sale will display sale info directly in the deck search."
+                ]}/>
+                <ReleaseNote releaseNumber={"2.3"} releaseNotes={[
                     "You can send an email to sellers and traders if you are logged in and they have not listed an external link for the deck.",
                     "You can now select a country for yourself and filter decks for sale or trade by the country they are listed in. Note that " +
                     "as of this release, no decks have a country selected, but all future decks listed for sale or trade will."

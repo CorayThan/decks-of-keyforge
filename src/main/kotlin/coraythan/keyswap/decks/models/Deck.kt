@@ -1,4 +1,4 @@
-package coraythan.keyswap.decks
+package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
@@ -6,20 +6,9 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.synergy.DeckSynergyInfo
-import coraythan.keyswap.thirdpartyservices.KeyforgeDeckLinks
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import javax.persistence.*
-
-data class DeckWithSynergyInfo(
-        val deck: DeckSearchResult,
-        val deckSynergyInfo: DeckSynergyInfo,
-        val cardRatingPercentile: Int,
-        val synergyPercentile: Int,
-        val antisynergyPercentile: Int,
-        val sasPercentile: Int
-)
 
 @Entity
 @Table(
@@ -173,46 +162,6 @@ fun Deck.withDeckCards(newCardsList: List<Card>): Deck {
     )
 }
 
-// It takes a long time to load all the crap in hibernate, so avoid that.
-data class DeckSearchResult(
-        val id: Long = -1,
-        val keyforgeId: String = "",
-
-        val name: String = "",
-
-        val totalCreatures: Int = 0,
-        val totalActions: Int = 0,
-        val totalArtifacts: Int = 0,
-        val totalUpgrades: Int = 0,
-
-        val registered: Boolean = true,
-
-        val powerLevel: Int = 0,
-        val chains: Int = 0,
-        val wins: Int = 0,
-        val losses: Int = 0,
-
-        val expectedAmber: Double = 0.0,
-        val amberControl: Double = 0.0,
-        val creatureControl: Double = 0.0,
-        val artifactControl: Double = 0.0,
-        val sasRating: Int = 0,
-        val cardsRating: Int = 0,
-        val synergyRating: Int = 0,
-        val antisynergyRating: Int = 0,
-
-        val totalPower: Int = 0,
-
-        val forSale: Boolean = false,
-        val forTrade: Boolean = false,
-        val wishlistCount: Int = 0,
-        val funnyCount: Int = 0,
-
-        val searchResultCards: List<DeckSearchResultCard> = listOf(),
-
-        val houses: List<House> = listOf()
-)
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class DecksPage(
         val decks: List<DeckSearchResult>,
@@ -223,26 +172,3 @@ data class DeckCount(
         val pages: Long,
         val count: Long
 )
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeDeck(
-        val id: String,
-        val name: String,
-        val expansion: Int,
-        val power_level: Int = 0,
-        val chains: Int = 0,
-        val wins: Int = 0,
-        val losses: Int = 0,
-        val cards: List<String>? = null,
-        val _links: KeyforgeDeckLinks? = null
-) {
-    fun toDeck() = Deck(
-            keyforgeId = id,
-            name = name,
-            expansion = expansion,
-            powerLevel = power_level,
-            chains = chains,
-            wins = wins,
-            losses = losses
-    )
-}

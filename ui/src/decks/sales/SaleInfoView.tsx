@@ -32,7 +32,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
             <div>
                 {this.props.saleInfo.map((saleInfo) => {
                     return (
-                        <div style={{marginTop: spacing(2)}} key={saleInfo.username}>
+                        <div style={{marginTop: spacing(2), marginBottom: spacing(2)}} key={saleInfo.username}>
                             <SingleSaleInfoView saleInfo={saleInfo} deckName={this.props.deckName} keyforgeId={this.props.keyforgeId}/>
                         </div>
                     )
@@ -84,11 +84,11 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     )
                 }
             >
-                <div style={{maxWidth: 360}}>
+                <div>
                     {listingInfo == null ? null : (
                         <div style={{margin: spacing(2)}}>
                             <Typography variant={"subtitle2"}>Listing Details</Typography>
-                            <Typography variant={"body1"}>{listingInfo}</Typography>
+                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{listingInfo}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
@@ -102,7 +102,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     {publicContactInfo == null ? null : (
                         <div style={{margin: spacing(2)}}>
                             <Typography variant={"subtitle2"}>Seller Details</Typography>
-                            <Typography variant={"body1"}>{publicContactInfo}</Typography>
+                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{publicContactInfo}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
@@ -117,7 +117,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             />
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
-                    ) : null }
+                    ) : null}
                     {forSaleInCountry ? (
                         <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                             Located in {countryToLabel(forSaleInCountry)}.
