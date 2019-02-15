@@ -750,7 +750,7 @@
 
 - name: Key Hammer
   cardNumber: 66
-  rating: 2
+  rating: 1
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -760,7 +760,6 @@
     - trait: stealsAmber
       type: house
     - trait: increasesKeyCost
-      rating: 3
     - trait: capturesAmber
       rating: 1
       type: house
@@ -802,7 +801,7 @@
 
 - name: Red-Hot Armor
   cardNumber: 70
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -822,7 +821,6 @@
     - trait: power5OrHigherCreatures
       rating: -3
     - trait: lowTotalCreaturePower
-      rating: 1
 
 - name: Annihilation Ritual
   cardNumber: 72
@@ -1078,7 +1076,6 @@
   synergies:
     - trait: returnsFriendlyCreaturesToHand
       type: house
-      rating: 3
     - trait: lowCreatureCount
       rating: -1
       type: house
@@ -1658,7 +1655,7 @@
 
 - name: Ganymede Archivist
   cardNumber: 142
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1666,11 +1663,11 @@
   traits: [archives, goodReap]
   synergies:
     - trait: protectsCreatures
-      rating: 1
+      rating: 2
     - trait: highTotalCreaturePower
-      rating: 1
+      rating: 2
     - trait: lowTotalCreaturePower
-      rating: -2
+      rating: -1
 
 - name: Harland Mindlock
   cardNumber: 143

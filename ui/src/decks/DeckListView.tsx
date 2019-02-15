@@ -56,7 +56,17 @@ class DeckTableViewStore {
     resort = () => {
         if (DeckStore.instance.deckPage) {
             const decks: IObservableArray<Deck> = DeckStore.instance.deckPage.decks as IObservableArray<Deck>
-            decks.replace(sortBy(decks.slice(), deckTableViewStore.activeTableSort))
+            if (deckTableViewStore.activeTableSort === "price") {
+                decks.replace(sortBy(decks.slice(), (deck: Deck) => {
+                    if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice) {
+                        return deck.deckSaleInfo[0].askingPrice
+                    } else {
+                        return deckTableViewStore.tableSortDir === "desc" ? 0 : 1000000
+                    }
+                }))
+            } else {
+                decks.replace(sortBy(decks.slice(), deckTableViewStore.activeTableSort))
+            }
             if (deckTableViewStore.tableSortDir === "desc") {
                 log.info("Reversing table sort")
                 decks.replace(decks.slice().reverse())
@@ -113,7 +123,9 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 </TableCell>
                                 <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
                                 {displayPrices ? (
-                                    <TableCell>{deck.deckSaleInfo && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice}</TableCell>
+                                    <TableCell>
+                                        {deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice}
+                                    </TableCell>
                                 ) : null}
                                 <TableCell>{deck.sasRating}</TableCell>
                                 <TableCell>{deck.cardsRating}</TableCell>
