@@ -152,6 +152,7 @@ const AppLinks = () => (
             style={{margin: spacing(1)}}
             color={"inherit"}
             href={"https://www.patreon.com/decksofkeyforge"}
+            target={"_blank"}
         >
             Donate
         </KeyButton>

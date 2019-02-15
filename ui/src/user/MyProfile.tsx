@@ -12,6 +12,7 @@ import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { MessageStore } from "../ui/MessageStore"
+import { UiStore } from "../ui/UiStore"
 import { UserProfile } from "./UserProfile"
 import { UserStore } from "./UserStore"
 
@@ -46,6 +47,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
         this.country = country ? country : ""
+        UiStore.instance.setTopbarValues(`My Profile`, "My Profile", "")
     }
 
     updateProfile = (event?: React.FormEvent) => {

@@ -4,21 +4,27 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { AboutGridItem } from "./AboutPage"
 
 export class ReleaseNotes extends React.Component {
     render() {
         return (
-            <div>
+            <AboutGridItem>
+                <ReleaseNote releaseNumber={"2.5"} expanded={true} releaseNotes={[
+                    "Page titles now change with the pages.",
+                    "Created an API for stores or technically saavy sellers to list and unlist decks.",
+                    "Updated the About page. Still as meta as the first time!"
+                ]}/>
                 <ReleaseNote releaseNumber={"2.4"} expanded={true} releaseNotes={[
                     "Improved card search! Faster, and you can search up to 5 different cards.",
                     "Searching decks for sale will display sale info directly in the deck search."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.3"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.3"} expanded={true} releaseNotes={[
                     "You can send an email to sellers and traders if you are logged in and they have not listed an external link for the deck.",
                     "You can now select a country for yourself and filter decks for sale or trade by the country they are listed in. Note that " +
                     "as of this release, no decks have a country selected, but all future decks listed for sale or trade will."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.2"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.2"} expanded={true} releaseNotes={[
                     "Added power level, chains, wins, and losses to decks, and sorting by chains.",
                     "You can now add unregistered decks to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
                     "By default unregistered decks are filtered out of searches.",
@@ -29,12 +35,12 @@ export class ReleaseNotes extends React.Component {
                         <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                     </div>
                 ]}/>
-                <ReleaseNote releaseNumber={"2.1"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.1"} expanded={true} releaseNotes={[
                     "You can now view decks in a table view with column sorting.",
                     "Added password reset.",
                     "Created a Patreon page with some donation options to help support the site!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.0"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.0"} expanded={true} releaseNotes={[
                     "Updated SAS Ratings.",
                     "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
                     "the increased value of how cards work together when often they don't both appear in the same game, or at the wrong time.",
@@ -71,7 +77,7 @@ export class ReleaseNotes extends React.Component {
                     "that had the potential to bring down the database.",
                     "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
                 ]}/>
-            </div>
+            </AboutGridItem>
         )
     }
 }

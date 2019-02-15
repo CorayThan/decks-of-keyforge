@@ -7,6 +7,7 @@ import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
 import { ScreenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
+import { DeckWithSynergyInfo } from "./Deck"
 import { deckImportPopStore } from "./DeckImportPop"
 import { DeckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
@@ -19,7 +20,7 @@ export class DeckViewPage extends React.Component<DeckViewPageProps> {
     render() {
         const deckId = this.props.match.params.keyforgeDeckId
         log.debug(`Rendering deck view page with deck id: ${deckId}`)
-        return (<DeckViewFull keyforgeDeckId={deckId}/>)
+        return (<DeckViewFullContainer keyforgeDeckId={deckId}/>)
     }
 }
 
@@ -28,13 +29,13 @@ interface DeckViewFullProps {
 }
 
 @observer
-export class DeckViewFull extends React.Component<DeckViewFullProps> {
+class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
 
     constructor(props: DeckViewFullProps) {
         super(props)
         DeckStore.instance.deck = undefined
         DeckStore.instance.saleInfo = undefined
-        UiStore.instance.setTopbarValues("Deck", "Deck")
+        UiStore.instance.setTopbarValues("Deck", "Deck", "")
     }
 
     componentDidMount(): void {
@@ -50,14 +51,34 @@ export class DeckViewFull extends React.Component<DeckViewFullProps> {
         DeckStore.instance.findDeckSaleInfo(deckId)
         DeckStore.instance.importedDeck = undefined
         deckImportPopStore.popOpen = false
+        if (DeckStore.instance.deck) {
+            const deck = DeckStore.instance.deck
+            UiStore.instance.setTopbarValues("Deck " + deck.deck.name, deck.deck.name, "")
+        }
     }
 
     render() {
         log.debug("Rendering DeckViewFull")
-        const {deck, saleInfo} = DeckStore.instance
+        const {deck} = DeckStore.instance
         if (!deck) {
             return <Loader/>
         }
+        return <DeckViewFullView deck={deck}/>
+    }
+}
+
+@observer
+class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
+
+    constructor(props: { deck: DeckWithSynergyInfo }) {
+        super(props)
+        const deck = props.deck.deck
+        UiStore.instance.setTopbarValues(deck.name, deck.name, "")
+    }
+
+    render() {
+        const deck = this.props.deck
+        const {saleInfo} = DeckStore.instance
         let saleInfoComponent = null
         if (saleInfo) {
             saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId}/>

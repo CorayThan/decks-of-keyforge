@@ -1,9 +1,11 @@
 package coraythan.keyswap.userdeck
 
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.now
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -58,6 +60,7 @@ class UserDeckService(
     }
 
     fun list(listingInfo: ListingInfo) {
+        if (!listingInfo.forSale && !listingInfo.forTrade) throw BadRequestException("Listing info must be for sale or trade.")
         modOrCreateUserDeck(listingInfo.deckId, {
             it.copy(
                     forSale = it.forSale || listingInfo.forSale,
@@ -73,15 +76,19 @@ class UserDeckService(
                     condition = listingInfo.condition,
                     externalLink = if (listingInfo.externalLink.isBlank()) null else listingInfo.externalLink,
                     dateListed = now(),
-                    expiresAt = now().plusDays(listingInfo.expireInDays.toLong())
+                    expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong())
             )
         }
     }
 
     fun unlist(deckId: Long) {
         val currentUser = currentUserService.loggedInUser()!!
-        val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
-            UserDeck(currentUser, deckRepo.getOne(deckId))
+        unlistForUser(deckId, currentUser)
+    }
+
+    fun unlistForUser(deckId: Long, user: KeyUser) {
+        val userDeck = user.decks.filter { it.deck.id == deckId }.getOrElse(0) {
+            UserDeck(user, deckRepo.getOne(deckId))
         }
         unlistUserDeck(userDeck)
     }

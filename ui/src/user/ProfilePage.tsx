@@ -5,27 +5,47 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { log } from "../config/Utils"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
 import { MyProfile } from "./MyProfile"
+import { UserProfile } from "./UserProfile"
 import { UserStore } from "./UserStore"
 
 interface ProfilePageProps extends RouteComponentProps<{ username: string }> {
 }
 
-@observer
 export class ProfilePage extends React.Component<ProfilePageProps> {
+    render() {
+        log.info(`Rendering profile page with user name ${this.props.match.params.username}`)
+        return <ProfileContainer username={this.props.match.params.username} />
+    }
+}
 
-    constructor(props: ProfilePageProps) {
+interface ProfileContainerProps {
+    username: string
+}
+
+@observer
+export class ProfileContainer extends React.Component<ProfileContainerProps> {
+
+    constructor(props: ProfileContainerProps) {
         super(props)
         UserStore.instance.userProfile = undefined
+        UiStore.instance.setTopbarValues("Profile", "Profile", "")
     }
 
     componentDidMount(): void {
-        UserStore.instance.findUserProfile(this.props.match.params.username)
-        UiStore.instance.setTopbarValues("Profile")
+        UserStore.instance.findUserProfile(this.props.username)
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<ProfileContainerProps>): void {
+        log.info(`Profile will receive props next username: ${nextProps.username} this ${this.props.username}`)
+        if (this.props.username !== nextProps.username) {
+            UserStore.instance.findUserProfile(nextProps.username)
+        }
     }
 
     render() {
@@ -38,8 +58,28 @@ export class ProfilePage extends React.Component<ProfilePageProps> {
             return <MyProfile/>
         }
 
+        return <ProfileView profile={profile}/>
+    }
+}
+
+interface ProfileViewProps {
+    profile: UserProfile
+}
+
+@observer
+export class ProfileView extends React.Component<ProfileViewProps> {
+
+    constructor(props: ProfileViewProps) {
+        super(props)
+        UiStore.instance.setTopbarValues(`${props.profile.username}'s Profile`, props.profile.username, "")
+    }
+
+    render() {
+        const profile = this.props.profile
+
         const filters = new DeckFilters()
         filters.owner = profile.username
+
         const decksLink = Routes.deckSearch(filters.prepareForQueryString())
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>

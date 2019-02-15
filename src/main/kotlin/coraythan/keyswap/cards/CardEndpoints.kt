@@ -8,7 +8,7 @@ import kotlin.system.measureTimeMillis
 @RestController
 @RequestMapping("${Api.base}/cards")
 class CardEndpoints(
-        val cardService: CardService
+        private val cardService: CardService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)

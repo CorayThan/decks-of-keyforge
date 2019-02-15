@@ -25,6 +25,8 @@ export class ScreenStore {
     screenSizeMd = () => this.screenSize <= ScreenSize.md
     screenSizeLg = () => this.screenSize <= ScreenSize.lg
 
+    screenSizeMdPlus = () => this.screenSize >= ScreenSize.md
+
     private onResize = () => {
         this.screenWidth = window.innerWidth
         if (this.screenWidth < 600) {

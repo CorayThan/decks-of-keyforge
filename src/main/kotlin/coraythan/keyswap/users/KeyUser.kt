@@ -33,7 +33,9 @@ data class KeyUser(
 
         @JsonIgnoreProperties("user")
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-        val decks: List<UserDeck> = listOf()
+        val decks: List<UserDeck> = listOf(),
+
+        val apiKey: String? = null
 ) {
     fun toProfile(isUser: Boolean) = UserProfile(
             id = id,

@@ -312,6 +312,7 @@ class DeckImporterService(
 
         val cards = cardsAsList.map {
             cardService.findByExpansionCardNumberHouse(it.expansion, it.cardNumber, it.house)
+                    ?: throw BadRequestException("There is no card with expansion ${it.expansion} number ${it.cardNumber} and house ${it.house}")
         }
         val deck = Deck(
                 keyforgeId = UUID.randomUUID().toString(),

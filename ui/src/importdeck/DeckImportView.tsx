@@ -7,6 +7,7 @@ import { CardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { ScreenStore } from "../ui/ScreenStore"
+import { UiStore } from "../ui/UiStore"
 import { CreateUnregisteredDeck, saveUnregisteredDeckStore } from "./CreateUnregisteredDeck"
 import { deckImportStore } from "./DeckImportStore"
 
@@ -19,6 +20,11 @@ export const deckImportViewStore = new DeckImportViewStore()
 
 @observer
 export class DeckImportView extends React.Component {
+
+    constructor(props: {}) {
+        super(props)
+        UiStore.instance.setTopbarValues("Import Deck", "Import", "Add unregistered decks to evaluate, sell, and trade")
+    }
 
     componentDidMount(): void {
         deckImportViewStore.deckImage = undefined
