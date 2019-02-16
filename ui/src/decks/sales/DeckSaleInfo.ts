@@ -12,7 +12,7 @@ export interface DeckSaleInfo {
     condition: DeckCondition
     redeemed: boolean
     dateListed: string
-    dateExpires: string
+    dateExpires?: string
 
     username: string
     publicContactInfo?: string

@@ -38,6 +38,8 @@ class DeckImportStore {
             log.debug(`Axios error: ${prettyJson(responseData)}`)
             if (responseData.message.includes("Duplicate deck name")) {
                 MessageStore.instance.setWarningMessage("There is already a deck with this name.")
+            } else {
+                MessageStore.instance.setRequestErrorMessage()
             }
         }
         this.addingNewDeck = false

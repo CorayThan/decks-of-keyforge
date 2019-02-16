@@ -22,13 +22,13 @@ class SellerEndpoints(
     }
 
     @DeleteMapping("/unlist-deck/{id}")
-    fun unlistDeck(@RequestHeader("Api-Key") apiKey: String, @RequestParam id: String) {
+    fun unlistDeck(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String) {
         val seller = sellerService.sellerForApiKey(apiKey)
         sellerService.unlistDeckForSeller(id, seller)
     }
 
-    @DeleteMapping("/unlist-deck-with-name/{name}")
-    fun unlistDeckWithName(@RequestHeader("Api-Key") apiKey: String, @RequestParam name: String) {
+    @DeleteMapping("/unlist-deck-by-name/{name}")
+    fun unlistDeckWithName(@RequestHeader("Api-Key") apiKey: String, @PathVariable name: String) {
         val seller = sellerService.sellerForApiKey(apiKey)
         sellerService.unlistDeckForSellerWithName(name, seller)
     }

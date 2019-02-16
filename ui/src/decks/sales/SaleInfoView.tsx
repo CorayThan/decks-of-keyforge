@@ -126,9 +126,11 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                         Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
-                    <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                        Expires on {Utils.formatDate(dateExpires)}
-                    </Typography>
+                    {dateExpires != null ? (
+                        <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
+                            Expires on {Utils.formatDate(dateExpires)}
+                        </Typography>
+                    ) : null}
                     <Divider style={{marginTop: spacing(2)}}/>
                     <Typography style={{margin: spacing(2), fontStyle: "italic"}} variant={"subtitle2"}>
                         We do not verify the authenticity or trustworthiness of any deck sales.

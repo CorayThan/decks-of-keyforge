@@ -21,6 +21,7 @@ import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
 import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -299,7 +300,12 @@ class DeckImporterService(
         return false
     }
 
-    fun addUnregisteredDeck(unregisteredDeck: SaveUnregisteredDeck): String {
+    fun addUnregisteredDeck(
+            unregisteredDeck: SaveUnregisteredDeck,
+            currentUser: KeyUser? = null
+    ): String {
+
+        val user = currentUser ?: currentUserService.loggedInUser() ?: throw BadRequestException("Must be logged in to save unregistered deck.")
 
         val cardsAsList = unregisteredDeck.cards.values.flatten()
 
@@ -311,8 +317,11 @@ class DeckImporterService(
         }
 
         val cards = cardsAsList.map {
-            cardService.findByExpansionCardNumberHouse(it.expansion, it.cardNumber, it.house)
-                    ?: throw BadRequestException("There is no card with expansion ${it.expansion} number ${it.cardNumber} and house ${it.house}")
+            val cards = cardService.findByExpansionCardNumberHouse(it.expansion, it.cardNumber, it.house)
+            if (cards.isEmpty()) {
+                throw BadRequestException("There is no card with expansion ${it.expansion} number ${it.cardNumber} and house ${it.house}")
+            }
+            cards[0]
         }
         val deck = Deck(
                 keyforgeId = UUID.randomUUID().toString(),
@@ -322,7 +331,6 @@ class DeckImporterService(
         )
 
         val savedDeck = saveDeck(deck, unregisteredDeck.cards.keys.toList(), cards)
-        val user = currentUserService.loggedInUser() ?: throw BadRequestException("Must be logged in to save unregistered deck.")
         val userDeck = UserDeck(user, savedDeck, creator = true)
         userDeckRepo.save(userDeck)
         log.info("Added unregistered deck with name ${savedDeck.name} fake id ${savedDeck.keyforgeId}")

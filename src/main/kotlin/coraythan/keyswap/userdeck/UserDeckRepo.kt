@@ -5,5 +5,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor
 import java.util.*
 
 interface UserDeckRepo : JpaRepository<UserDeck, UUID>, QuerydslPredicateExecutor<UserDeck> {
-    fun findByDeckId(id: Long): List<UserDeck>
+    fun findByDeckIdAndUserId(deckId: Long, userId: UUID): UserDeck?
 }

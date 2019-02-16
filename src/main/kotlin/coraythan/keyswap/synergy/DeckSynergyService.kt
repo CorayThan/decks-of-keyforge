@@ -79,8 +79,8 @@ class DeckSynergyService(
                     SynergyCombo(
                             house = card.house,
                             cardName = card.cardTitle,
-                            synergies = matchedSynergies,
-                            antisynergies = matchedAntisynergies,
+                            synergies = matchedSynergies.toSet(),
+                            antisynergies = matchedAntisynergies.toSet(),
                             netSynergy = limitedNetSynergy,
                             synergy = synergy,
                             antisynergy = antisynergy,

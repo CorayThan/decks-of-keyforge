@@ -35,7 +35,7 @@ class UserDeckService(
     }
 
     fun addToWishlist(deckId: Long, add: Boolean = true) {
-        modOrCreateUserDeck(deckId, {
+        modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, {
             it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
         }) {
             it.copy(wishlist = add)
@@ -43,7 +43,7 @@ class UserDeckService(
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
-        modOrCreateUserDeck(deckId, {
+        modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, {
             it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)
         }) {
             it.copy(funny = mark)
@@ -51,7 +51,7 @@ class UserDeckService(
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
-        modOrCreateUserDeck(deckId, null) {
+        modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, null) {
             it.copy(ownedBy = if (mark) currentUserService.loggedInUser()!!.username else null)
         }
         if (!mark) {
@@ -59,9 +59,15 @@ class UserDeckService(
         }
     }
 
-    fun list(listingInfo: ListingInfo) {
+    fun list(
+            listingInfo: ListingInfo,
+            user: KeyUser? = null
+    ) {
+        val currentUser = user ?: (currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in"))
+
+        if (listingInfo.deckId == null) throw BadRequestException("Must include a deck ID to list a deck.")
         if (!listingInfo.forSale && !listingInfo.forTrade) throw BadRequestException("Listing info must be for sale or trade.")
-        modOrCreateUserDeck(listingInfo.deckId, {
+        modOrCreateUserDeck(listingInfo.deckId, currentUser, {
             it.copy(
                     forSale = it.forSale || listingInfo.forSale,
                     forTrade = it.forTrade || listingInfo.forTrade
@@ -72,9 +78,9 @@ class UserDeckService(
                     forTrade = listingInfo.forTrade,
                     forSaleInCountry = listingInfo.forSaleInCountry,
                     askingPrice = listingInfo.askingPrice,
-                    listingInfo = if (listingInfo.listingInfo.isBlank()) null else listingInfo.listingInfo,
+                    listingInfo = if (listingInfo.listingInfo.isNullOrBlank()) null else listingInfo.listingInfo,
                     condition = listingInfo.condition,
-                    externalLink = if (listingInfo.externalLink.isBlank()) null else listingInfo.externalLink,
+                    externalLink = if (listingInfo.externalLink.isNullOrBlank()) null else listingInfo.externalLink,
                     dateListed = now(),
                     expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong())
             )
@@ -87,10 +93,7 @@ class UserDeckService(
     }
 
     fun unlistForUser(deckId: Long, user: KeyUser) {
-        val userDeck = user.decks.filter { it.deck.id == deckId }.getOrElse(0) {
-            UserDeck(user, deckRepo.getOne(deckId))
-        }
-        unlistUserDeck(userDeck)
+        unlistUserDeck(userDeckRepo.findByDeckIdAndUserId(deckId, user.id) ?: throw IllegalStateException("Couldn't find your deck listing."))
     }
 
     fun unlistUserDeck(userDeck: UserDeck) {
@@ -126,8 +129,12 @@ class UserDeckService(
     )
 
 
-    private fun modOrCreateUserDeck(deckId: Long, modDeck: ((deck: Deck) -> Deck)?, mod: (userDeck: UserDeck) -> UserDeck) {
-        val currentUser = currentUserService.loggedInUser()!!
+    private fun modOrCreateUserDeck(
+            deckId: Long,
+            currentUser: KeyUser,
+            modDeck: ((deck: Deck) -> Deck)?,
+            mod: (userDeck: UserDeck) -> UserDeck
+    ) {
         val deck = deckRepo.getOne(deckId)
         val userDeck = currentUser.decks.filter { it.deck.id == deckId }.getOrElse(0) {
             UserDeck(currentUser, deck)
