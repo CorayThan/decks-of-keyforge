@@ -55,27 +55,33 @@ class SellerService(
             // create a new deck
             if (listDeck.keyforgeId != null) throw BadRequestException("Unregistered decks should not have a keyforge deck id.")
 
-            val cards = listDeck.deckInfo.cards.map {
-                val cardsByEch = cardRepo.findByExpansionAndCardNumberAndHouse(
-                        listDeck.deckInfo.expansion,
-                        it.cardNumber,
-                        it.house
-                )
-                if (cardsByEch.isEmpty()) {
-                    throw BadRequestException("No card for expansion ${listDeck.deckInfo.expansion} card number ${it.cardNumber} house ${it.house}")
+            val preexistingUnregisteredDeck = deckRepo.findByName(listDeck.deckInfo.name)
+
+            deckId = if (preexistingUnregisteredDeck != null) {
+                preexistingUnregisteredDeck.id
+            } else {
+                val cards = listDeck.deckInfo.cards.map {
+                    val cardsByEch = cardRepo.findByExpansionAndCardNumberAndHouse(
+                            listDeck.deckInfo.expansion,
+                            it.cardNumber,
+                            it.house
+                    )
+                    if (cardsByEch.isEmpty()) {
+                        throw BadRequestException("No card for expansion ${listDeck.deckInfo.expansion} card number ${it.cardNumber} house ${it.house}")
+                    }
+                    cardsByEch[0]
                 }
-                cardsByEch[0]
+
+                val deckKeyforgeId = deckImporterService.addUnregisteredDeck(
+                        SaveUnregisteredDeck(
+                                cards = cards.groupBy { it.house },
+                                name = listDeck.deckInfo.name
+                        ),
+                        seller
+                )
+
+                deckRepo.findByKeyforgeId(deckKeyforgeId)?.id ?: throw BadRequestException("Couldn't make the unregistered deck.")
             }
-
-            val deckKeyforgeId = deckImporterService.addUnregisteredDeck(
-                    SaveUnregisteredDeck(
-                            cards = cards.groupBy { it.house },
-                            name = listDeck.deckInfo.name
-                    ),
-                    seller
-            )
-
-            deckId = deckRepo.findByKeyforgeId(deckKeyforgeId)?.id ?: throw BadRequestException("Couldn't make the unregistered deck.")
         }
 
         userDeckService.list(
