@@ -64,8 +64,14 @@ class UserDeckService(
             user: KeyUser? = null
     ) {
         val currentUser = user ?: (currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in"))
-
         if (listingInfo.deckId == null) throw BadRequestException("Must include a deck ID to list a deck.")
+
+        // Unlist if it is currently listed to support "updates"
+        val preexisting = userDeckRepo.findByDeckIdAndUserId(listingInfo.deckId, currentUser.id)
+        if (preexisting != null) {
+            unlistUserDeck(preexisting)
+        }
+
         if (!listingInfo.forSale && !listingInfo.forTrade) throw BadRequestException("Listing info must be for sale or trade.")
         modOrCreateUserDeck(listingInfo.deckId, currentUser, {
             it.copy(

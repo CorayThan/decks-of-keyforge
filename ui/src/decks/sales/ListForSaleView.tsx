@@ -46,6 +46,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     expireInDays = "7"
 
+    @observable
+    update = false
+
     handleClose = () => this.open = false
     handleOpen = () => {
         this.open = true
@@ -55,6 +58,22 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.askingPrice = ""
         this.listingInfo = ""
         this.externalLink = ""
+        this.update = false
+    }
+
+    handleOpenForEdit = () => {
+        const userDeck = UserStore.instance.userDeckByDeckId(this.props.deck.id)
+        if (userDeck != null) {
+            const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink} = userDeck
+            this.open = true
+            this.update = true
+            this.forSale = forSale
+            this.forTrade = forTrade
+            this.condition = condition ? condition : DeckCondition.NEW_IN_PLASTIC
+            this.askingPrice = askingPrice ? askingPrice.toString() : ""
+            this.listingInfo = listingInfo ? listingInfo : ""
+            this.externalLink = externalLink ? externalLink : ""
+        }
     }
 
     list = () => {
@@ -103,12 +122,21 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         let saleButton
         if (userDeck && (userDeck.forSale || userDeck.forTrade)) {
             saleButton = (
-                <KeyButton
-                    color={"primary"}
-                    onClick={() => UserDeckStore.instance.unlist(deck.name, deck.id)}
-                >
-                    Remove listing
-                </KeyButton>
+                <>
+                    <KeyButton
+                        color={"primary"}
+                        onClick={this.handleOpenForEdit}
+                        style={{marginRight: spacing(1)}}
+                    >
+                        Edit Listing
+                    </KeyButton>
+                    <KeyButton
+                        color={"primary"}
+                        onClick={() => UserDeckStore.instance.unlist(deck.name, deck.id)}
+                    >
+                        Unlist
+                    </KeyButton>
+                </>
             )
         } else {
             saleButton = (
@@ -132,7 +160,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     open={this.open}
                     onClose={this.handleClose}
                 >
-                    <DialogTitle>List "{deck.name}" for sale or trade</DialogTitle>
+                    <DialogTitle>
+                        {this.update ? (
+                            `Update listing for "${deck.name}"`
+                        ) : (
+                            `List "${deck.name}" for sale or trade`
+                        )}
+                    </DialogTitle>
                     <DialogContent>
                         {forSaleInCountry ? null : (
                             <div style={{display: "flex", alignItems: "center"}}>
@@ -238,7 +272,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry}>List</KeyButton>
+                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry}>
+                            {this.update ? "Update Listing" : "List"}
+                        </KeyButton>
                     </DialogActions>
                 </Dialog>
             </div>

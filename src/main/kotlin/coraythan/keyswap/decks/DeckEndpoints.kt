@@ -45,6 +45,9 @@ class DeckEndpoints(
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = "Please contact me to update to the new version."
 
+    /**
+     * https://decksofkeyforge.com/decks/simple/v2/deck-id-from-master-vault
+     */
     @CrossOrigin
     @GetMapping("/simple/v2/{id}")
     fun findDeckSimple2(@PathVariable id: String): SimpleDeckResponse {

@@ -10,6 +10,11 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"2.6"} expanded={true} releaseNotes={[
+                    "Cards view for deck that shows all the cards.",
+                    "Sellers and traders can now update the listing for their decks.",
+                    "Added an asking price deck search filter if \"For Sale\" is selected."
+                ]}/>
                 <ReleaseNote releaseNumber={"2.5"} expanded={true} releaseNotes={[
                     "Page titles now change with the pages.",
                     "Created an API for stores or technically saavy sellers to list and unlist decks.",

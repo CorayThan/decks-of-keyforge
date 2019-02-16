@@ -125,6 +125,22 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             </>
         )
 
+        const constraintOptions = [
+            "amberControl",
+            "expectedAmber",
+            "artifactControl",
+            "creatureControl",
+            "synergyRating",
+            "antisynergyRating",
+            "sasRating",
+            "cardsRating",
+            "maverickCount"
+        ]
+
+        if (forSale) {
+            constraintOptions.unshift("askingPrice")
+        }
+
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -218,17 +234,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         <ListItem>
                             <ConstraintDropdowns
                                 store={this.constraintsStore}
-                                properties={[
-                                    "amberControl",
-                                    "expectedAmber",
-                                    "artifactControl",
-                                    "creatureControl",
-                                    "synergyRating",
-                                    "antisynergyRating",
-                                    "sasRating",
-                                    "cardsRating",
-                                    "maverickCount"
-                                ]}
+                                properties={constraintOptions}
                             />
                         </ListItem>
                         <ListItem>

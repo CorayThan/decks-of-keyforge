@@ -227,7 +227,13 @@ class DeckService(
         if (filters.forSaleInCountry != null) predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
-                val pathToVal = Expressions.path(Double::class.java, deckQ, it.property)
+                val entityRef = if (it.property == "askingPrice") {
+                    predicate.and(deckQ.userDecks.any().askingPrice.isNotNull)
+                    deckQ.userDecks.any()
+                } else {
+                    deckQ
+                }
+                val pathToVal = Expressions.path(Double::class.java, entityRef, it.property)
                 predicate.and(Expressions.predicate(if (it.cap == Cap.MIN) Ops.GOE else Ops.LOE, pathToVal, Expressions.constant(it.value)))
             }
         }
