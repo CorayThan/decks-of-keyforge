@@ -28,7 +28,14 @@ export class DeckListView extends React.Component<DeckListViewProps> {
 
                     let saleInfo = null
                     if (deck.deckSaleInfo) {
-                        saleInfo = <SaleInfoView saleInfo={deck.deckSaleInfo} deckName={deck.name} keyforgeId={deck.keyforgeId}/>
+                        saleInfo = (
+                            <SaleInfoView
+                                saleInfo={deck.deckSaleInfo}
+                                deckName={deck.name}
+                                keyforgeId={deck.keyforgeId}
+                                deckId={deck.id}
+                            />
+                        )
                     }
 
                     const deckContainerStyle = screenStore.screenSizeMd() ? undefined : {display: "flex"}

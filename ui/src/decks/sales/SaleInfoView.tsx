@@ -14,12 +14,13 @@ import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
 import { UserStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
-import { DeckSaleInfo } from "./DeckSaleInfo"
+import { DeckSaleInfo, deckSaleInfoFromUserDeck } from "./DeckSaleInfo"
 
 interface SaleInfoViewProps {
     saleInfo: DeckSaleInfo[]
     deckName: string
     keyforgeId: string
+    deckId: number
 }
 
 @observer
@@ -31,9 +32,20 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
         return (
             <div>
                 {this.props.saleInfo.map((saleInfo) => {
+
+                    let userDeckInfo
+                    if (saleInfo.username === UserStore.instance.username) {
+                        const userDeck = UserStore.instance.userDecks && UserStore.instance.userDecks.get(this.props.deckId)
+                        userDeckInfo = userDeck ? deckSaleInfoFromUserDeck(userDeck) : undefined
+                    }
+
                     return (
                         <div style={{marginTop: spacing(2), marginBottom: spacing(2)}} key={saleInfo.username}>
-                            <SingleSaleInfoView saleInfo={saleInfo} deckName={this.props.deckName} keyforgeId={this.props.keyforgeId}/>
+                            <SingleSaleInfoView
+                                saleInfo={userDeckInfo ? userDeckInfo : saleInfo}
+                                deckName={this.props.deckName}
+                                keyforgeId={this.props.keyforgeId}
+                            />
                         </div>
                     )
                 })}
@@ -46,7 +58,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
         const {
-            forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, dateExpires, listingInfo, username, publicContactInfo, externalLink
+            forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink
         } = this.props.saleInfo
 
         const yourUsername = UserStore.instance.username
@@ -126,9 +138,9 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                         Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
-                    {dateExpires != null ? (
+                    {expiresAt != null ? (
                         <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                            Expires on {Utils.formatDate(dateExpires)}
+                            Expires on {Utils.formatDate(expiresAt)}
                         </Typography>
                     ) : null}
                     <Divider style={{marginTop: spacing(2)}}/>

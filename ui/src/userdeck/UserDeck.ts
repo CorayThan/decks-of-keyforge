@@ -20,6 +20,9 @@ export interface UserDeck {
     externalLink?: string
     dateListed?: string
     expiresAt?: string
+
+    dateListedLocalDate?: string
+    expiresAtLocalDate?: string
 }
 
 export enum DeckCondition {

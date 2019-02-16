@@ -53,7 +53,7 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
         deckImportPopStore.popOpen = false
         if (DeckStore.instance.deck) {
             const deck = DeckStore.instance.deck
-            UiStore.instance.setTopbarValues("Deck " + deck.deck.name, deck.deck.name, "")
+            UiStore.instance.setTopbarValues(deck.deck.name, "Deck", "")
         }
     }
 
@@ -73,7 +73,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
     constructor(props: { deck: DeckWithSynergyInfo }) {
         super(props)
         const deck = props.deck.deck
-        UiStore.instance.setTopbarValues(deck.name, deck.name, "")
+        UiStore.instance.setTopbarValues(deck.name, "Deck", "")
     }
 
     render() {
@@ -81,7 +81,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
         const {saleInfo} = DeckStore.instance
         let saleInfoComponent = null
         if (saleInfo) {
-            saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId}/>
+            saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
         } else {
             saleInfoComponent = <Loader/>
         }

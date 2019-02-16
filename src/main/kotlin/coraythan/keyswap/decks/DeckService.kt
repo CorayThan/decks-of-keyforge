@@ -296,7 +296,7 @@ class DeckService(
                         externalLink = it.externalLink,
                         condition = it.condition!!,
                         dateListed = it.dateListed!!.toLocalDate(),
-                        dateExpires = it.expiresAt?.toLocalDate(),
+                        expiresAt = it.expiresAt?.toLocalDate(),
                         username = it.user.username,
                         publicContactInfo = it.user.publicContactInfo
                 )

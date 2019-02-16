@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
@@ -47,7 +48,13 @@ data class UserDeck(
 
         @Id
         val id: UUID = UUID.randomUUID()
-        )
+) {
+    val dateListedLocalDate: LocalDate?
+        get() = this.dateListed?.toLocalDate()
+
+    val expiresAtLocalDate: LocalDate?
+        get() = this.expiresAt?.toLocalDate()
+}
 
 enum class DeckCondition {
     NEW_IN_PLASTIC,
