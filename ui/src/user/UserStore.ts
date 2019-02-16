@@ -143,7 +143,7 @@ export class UserStore {
         this.loginInProgress = false
         this.setUser(undefined)
         keyLocalStorage.clear()
-        HttpConfig.setAuthHeaders()
+        HttpConfig.clearAuthHeaders()
     }
 
     loggedIn = () => !!this.user

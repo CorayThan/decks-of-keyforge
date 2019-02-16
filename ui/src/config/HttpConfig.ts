@@ -26,6 +26,10 @@ export class HttpConfig {
         }
     }
 
+    static clearAuthHeaders = () => {
+        HttpConfig.setAuthHeader(undefined)
+    }
+
     private static responseInterceptor = (response: AxiosResponse) => {
         const authHeader = response.headers.authorization
         if (authHeader) {

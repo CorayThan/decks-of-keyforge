@@ -5,22 +5,23 @@ import { spacing } from "../config/MuiConfig"
 import { InfoListCard } from "../generic/InfoListCard"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { sellerStore } from "../sellers/SellerStore"
+import { UserStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
 /* tslint:disable:jsdoc-format */
 /* tslint:disable:no-trailing-whitespace */
 /**
-  Seller api:
- 
-  Simple with deck name:
- 
-  https://decksofkeyforge.com/api/sellers/list-deck
-  POST
- 
-  Header: Api-Key = UUID
- 
-  Registered deck body:
-     Body: {
+ Seller api:
+
+ Simple with deck name:
+
+ https://decksofkeyforge.com/api/sellers/list-deck
+ POST
+
+ Header: Api-Key = UUID
+
+ Registered deck body:
+ Body: {
      	  "keyforgeId": "4624dd19-6bf2-4100-b324-38a9445901e6",
          "deckName": "Evans, Genio Arancione",
          "listingInfo": {
@@ -34,19 +35,19 @@ import { AboutGridItem } from "./AboutPage"
    		  "expireInDays": 365
          }
      }
- 
-  One of keyforgeId or deckName is required unless it is an unregistered deck. If using deckName it must be an exact match with what's on master vault.
- 
-  In "listingInfo" all values after "condition" are optional and may be left out, but asking price and external link are highly recommended.
 
-  Condition options:
-     NEW_IN_PLASTIC,
-     NEAR_MINT,
-     PLAYED,
-     HEAVILY_PLAYED
- 
-  Unregistered deck body:
-     Body: {
+ One of keyforgeId or deckName is required unless it is an unregistered deck. If using deckName it must be an exact match with what's on master vault.
+
+ In "listingInfo" all values after "condition" are optional and may be left out, but asking price and external link are highly recommended.
+
+ Condition options:
+ NEW_IN_PLASTIC,
+ NEAR_MINT,
+ PLAYED,
+ HEAVILY_PLAYED
+
+ Unregistered deck body:
+ Body: {
          "listingInfo": {
              "forSale": true,
              "forTrade": false,
@@ -63,12 +64,12 @@ import { AboutGridItem } from "./AboutPage"
 	     }
      }
 
-   Unregister a deck by keyforge id:
+ Unregister a deck by keyforge id:
 
-   https://decksofkeyforge.com/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
-   DELETE
+ https://decksofkeyforge.com/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
+ DELETE
 
-   Header: Api-Key = UUID
+ Header: Api-Key = UUID
 
  Unregister a deck by keyforge id:
 
@@ -95,7 +96,11 @@ export class ForSellers extends React.Component {
     render() {
 
         let apiKeyOrButton
-        if (sellerStore.apiKey) {
+        if (!UserStore.instance.loggedIn()) {
+            apiKeyOrButton = (
+                <Typography>Login to generate an API Key.</Typography>
+            )
+        } else if (sellerStore.apiKey) {
             apiKeyOrButton = (
                 <div>
                     <Typography variant={"h4"} style={{marginTop: spacing(2)}}>
