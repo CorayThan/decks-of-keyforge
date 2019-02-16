@@ -11,7 +11,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { CardFilters } from "./CardFilters"
 import { CardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
@@ -80,10 +80,10 @@ export class CardsSearchDrawer extends React.Component {
                                 label={"Card Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
-                                fullWidth={!ScreenStore.instance.screenSizeXs()}
+                                fullWidth={!screenStore.screenSizeXs()}
                             />
                             <div style={{flexGrow: 1}}/>
-                            {ScreenStore.instance.screenSizeXs() ? (
+                            {screenStore.screenSizeXs() ? (
                                 <IconButton onClick={() => KeyDrawerStore.open = false}>
                                     <Close/>
                                 </IconButton>

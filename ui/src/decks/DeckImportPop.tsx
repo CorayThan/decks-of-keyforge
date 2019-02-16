@@ -7,6 +7,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { screenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
 import { DeckStore } from "./DeckStore"
 
@@ -90,7 +91,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                         vertical: "top",
                         horizontal: "right",
                     }}
-                    style={{zIndex: 12000}}
+                    style={{zIndex: screenStore.zindexes.deckImportPop}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField

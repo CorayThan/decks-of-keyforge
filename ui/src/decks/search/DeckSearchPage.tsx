@@ -8,7 +8,7 @@ import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
-import { ScreenStore } from "../../ui/ScreenStore"
+import { screenStore } from "../../ui/ScreenStore"
 import { UiStore } from "../../ui/UiStore"
 import { DeckListView, DeckTableView } from "../DeckListView"
 import { DeckStore } from "../DeckStore"
@@ -99,7 +99,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     }}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        {ScreenStore.instance.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
+                        {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
                         {decksToDisplay}
                         {showMoreButton}
                     </div>

@@ -9,7 +9,7 @@ import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { TraitsView } from "../stats/TraitsView"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { CardStore } from "./CardStore"
 import { KCard } from "./KCard"
 import { MaverickIcon, rarityValues } from "./rarity/Rarity"
@@ -21,12 +21,13 @@ interface HasFrontImage {
 interface CardSimpleViewProps {
     card: HasFrontImage
     size?: number
+    style?: React.CSSProperties
 }
 
 export const CardSimpleView = (props: CardSimpleViewProps) => {
     return (
         <div>
-            <img src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2)}}/>
+            <img src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}/>
         </div>
     )
 }
@@ -38,7 +39,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     const {cardTitle, cardType, cardText, amber, extraCardInfo} = props.card
     const {rating, traits, synergies} = extraCardInfo
 
-    const wrapperStyle: React.CSSProperties = ScreenStore.instance.screenSizeXs() ? {
+    const wrapperStyle: React.CSSProperties = screenStore.screenSizeXs() ? {
         backgroundColor: "#DFDFDF",
         display: "flex",
         flexDirection: "column",
@@ -120,7 +121,7 @@ export class CardAsLine extends React.Component<CardAsLineProps> {
     render() {
         const card = this.props.card
         const fullCard = CardStore.instance.fullCardFromCardWithName(card)
-        const complex = !ScreenStore.instance.screenSizeXs()
+        const complex = !screenStore.screenSizeXs()
 
         let pop = null
         if (fullCard && fullCard.id != null) {

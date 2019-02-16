@@ -14,7 +14,7 @@ import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyCard } from "../generic/KeyCard"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { SynergyCombo } from "./DeckSynergyInfo"
 import { TraitBubble } from "./TraitBubble"
 
@@ -82,7 +82,7 @@ export const DeckSynergiesInfoView = (props: DeckSynergiesInfoViewProps) => {
 @observer
 class ColumnHeaders extends React.Component {
     render() {
-        if (ScreenStore.instance.screenSizeXs()) {
+        if (screenStore.screenSizeXs()) {
             return (
                 <>
                     <TableCell>Card Name</TableCell>
@@ -108,7 +108,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
     render() {
         const combo = this.props.combo
         const cardLine = <CardAsLine card={{cardTitle: combo.cardName}}/>
-        if (ScreenStore.instance.screenSizeXs()) {
+        if (screenStore.screenSizeXs()) {
             return (
                 <>
                     <TableCell>{cardLine}{combo.copies === 1 ? "" : ` x ${combo.copies}`}</TableCell>

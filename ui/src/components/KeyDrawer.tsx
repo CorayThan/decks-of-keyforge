@@ -6,7 +6,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 
 const panelWidth = 344
 
@@ -15,7 +15,7 @@ class KeyDrawerStoreImpl {
     open = true
 
     closeIfSmall = () => {
-        if (ScreenStore.instance.screenSizeSm()) {
+        if (screenStore.screenSizeSm()) {
             this.open = false
         }
     }
@@ -31,7 +31,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
     }
 
     render() {
-        const small = ScreenStore.instance.screenSizeSm()
+        const small = screenStore.screenSizeSm()
         if (small) {
             return (
                 <div>
@@ -45,7 +45,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
                                     left: spacing(2),
                                     top: spacing(16),
                                     opacity: 1,
-                                    zIndex: 1000,
+                                    zIndex: screenStore.zindexes.keyDrawer,
                                 }}
                                 onClick={() => KeyDrawerStore.open = true}
                             >

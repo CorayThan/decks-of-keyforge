@@ -40,9 +40,9 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
                             onClick={() => {
                                 UserDeckStore.instance.owned(name, id, !owned)
                             }}
-                            style={{marginRight: spacing(2)}}
+                            style={{marginRight: spacing(1)}}
                         >
-                            {owned ? "Not my deck" : "Add to my decks"}
+                            {owned ? "Not mine" : "Add to my decks"}
                         </KeyButton>
                     )}
                 {listButton}

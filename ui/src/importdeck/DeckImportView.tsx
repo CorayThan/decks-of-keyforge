@@ -6,7 +6,7 @@ import * as React from "react"
 import { CardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { CreateUnregisteredDeck, saveUnregisteredDeckStore } from "./CreateUnregisteredDeck"
 import { deckImportStore } from "./DeckImportStore"
@@ -110,7 +110,7 @@ export class DeckImportView extends React.Component {
                             <img
                                 style={{
                                     marginTop: spacing(4),
-                                    width: ScreenStore.instance.screenSizeXs() ? 200 : 400,
+                                    width: screenStore.screenSizeXs() ? 200 : 400,
                                 }}
                                 src={URL.createObjectURL(deckImportViewStore.deckImage)}
                             />

@@ -4,7 +4,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { ContactMe } from "./ContactMe"
 import { ForDevs } from "./ForDevs"
@@ -37,8 +37,8 @@ export class AboutPage extends React.Component {
                     <Tabs
                         value={this.currentTab}
                         onChange={this.handleTabChange}
-                        centered={ScreenStore.instance.screenSizeMdPlus()}
-                        variant={ScreenStore.instance.screenSizeSm() ? "fullWidth" : undefined}
+                        centered={screenStore.screenSizeMdPlus()}
+                        variant={screenStore.screenSizeSm() ? "fullWidth" : undefined}
                     >
                         <Tab label="SAS and AERC" value={"SAS"}/>
                         <Tab label="Contact Me" value={"Contact"}/>

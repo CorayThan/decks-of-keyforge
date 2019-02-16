@@ -6,6 +6,7 @@ import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
@@ -20,7 +21,7 @@ import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { TraitsView } from "../stats/TraitsView"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
@@ -54,7 +55,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             userDeckForSale = userDeck.forSale
             userDeckForTrade = userDeck.forTrade
         }
-        const compact = ScreenStore.instance.screenSizeXs()
+        const compact = screenStore.screenSizeXs()
         return (
             <KeyCard
                 style={{
@@ -116,7 +117,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <KeyButton
                             href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
                             color={"primary"}
-                            style={{marginRight: spacing(2)}}
+                            style={{marginRight: spacing(1)}}
                         >
                             Master Vault
                         </KeyButton>
@@ -124,12 +125,13 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <KeyLink
                             to={Routes.deckPage(keyforgeId)}
                             noStyle={true}
-                            style={{marginRight: spacing(2)}}
+                            style={{marginRight: spacing(1)}}
                         >
                             <KeyButton color={"primary"}>View Deck</KeyButton>
                         </KeyLink>
                     )}
-                    <MyDecksButton deck={this.props.deck}/>
+                    <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
+                    <MyDecksButton deck={deck}/>
                     <div style={{flexGrow: 1}}/>
                     <div style={{marginRight: spacing(1)}}>
                         <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
@@ -146,7 +148,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 const DisplayAllCardsByHouse = (props: { deck: Deck }) => {
     const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
 
-    if (ScreenStore.instance.screenSizeXs()) {
+    if (screenStore.screenSizeXs()) {
         return <DisplayAllCardsByHouseCompact {...props}/>
     }
 

@@ -9,7 +9,7 @@ import { log } from "../config/Utils"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { Deck } from "./Deck"
 import { DeckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
@@ -31,7 +31,7 @@ export class DeckListView extends React.Component<DeckListViewProps> {
                         saleInfo = <SaleInfoView saleInfo={deck.deckSaleInfo} deckName={deck.name} keyforgeId={deck.keyforgeId}/>
                     }
 
-                    const deckContainerStyle = ScreenStore.instance.screenSizeMd() ? undefined : {display: "flex"}
+                    const deckContainerStyle = screenStore.screenSizeMd() ? undefined : {display: "flex"}
 
                     return (
                         <div key={deck.id} style={deckContainerStyle}>

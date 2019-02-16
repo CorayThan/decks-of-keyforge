@@ -2,22 +2,27 @@ import { observable } from "mobx"
 
 export class ScreenStore {
 
-    private static innerInstance: ScreenStore
+    @observable
+    private screenSize: ScreenSize = ScreenSize.md
 
     @observable
     screenWidth: number
 
-    @observable
-    private screenSize: ScreenSize = ScreenSize.md
+    zindexes = {
+        cardSearchSuggest: 1,
+        keyDrawer: 1000,
+        keyTopBar: 9000,
+        topBarRegistration: 10000,
+        rightMenu: 11000,
+        loginPop: 12000,
+        deckImportPop: 12000,
+        cardsDisplay: 13000,
+    }
 
-    private constructor() {
+    constructor() {
         this.screenWidth = window.innerWidth
         this.onResize()
         window.addEventListener("resize", this.onResize)
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
     }
 
     screenSizeXs = () => this.screenSize === ScreenSize.xs
@@ -47,3 +52,5 @@ export enum ScreenSize {
     md,
     lg
 }
+
+export const screenStore = new ScreenStore()

@@ -5,6 +5,7 @@ import Select from "react-select"
 import { ValueType } from "react-select/lib/types"
 import { spacing } from "../config/MuiConfig"
 import { DeckCardQuantity } from "../decks/search/DeckFilters"
+import { screenStore } from "../ui/ScreenStore"
 import { CardStore } from "./CardStore"
 
 const inputComponent = (props: any) => {
@@ -96,7 +97,7 @@ const Menu = (props: any) => (
         square={true}
         style={{
             position: "absolute",
-            zIndex: 1,
+            zIndex: screenStore.zindexes.cardSearchSuggest,
             marginTop: spacing(1),
             left: 0,
             right: 0,

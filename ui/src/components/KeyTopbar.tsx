@@ -17,7 +17,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { UserStore } from "../user/UserStore"
@@ -45,16 +45,16 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
         return (
             <div>
-                <AppBar position={"fixed"} style={{zIndex: 9000}}>
+                <AppBar position={"fixed"} style={{zIndex: screenStore.zindexes.keyTopBar}}>
                     <Toolbar>
                         <UnstyledLink to={Routes.decks}><DokIcon/></UnstyledLink>
                         <Typography
                             variant={"h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
-                            {ScreenStore.instance.screenWidth < 1240 ? topbarShortName : topbarName}
+                            {screenStore.screenWidth < 1240 ? topbarShortName : topbarName}
                         </Typography>
-                        {ScreenStore.instance.screenWidth < 1440 ? null : subheaderNode}
+                        {screenStore.screenWidth < 1440 ? null : subheaderNode}
                         <div style={{flexGrow: 1}}/>
                         <RightMenu/>
                     </Toolbar>
@@ -80,7 +80,7 @@ const rightMenuStore = new RightMenuStore()
 class RightMenu extends React.Component {
 
     render() {
-        if (ScreenStore.instance.screenSizeSm()) {
+        if (screenStore.screenSizeSm()) {
             return (
                 <>
                     <IconButton
@@ -93,7 +93,7 @@ class RightMenu extends React.Component {
                         open={rightMenuStore.open}
                         onClose={rightMenuStore.close}
                         anchor={"right"}
-                        style={{zIndex: 11000}}
+                        style={{zIndex: screenStore.zindexes.rightMenu}}
                     >
                         <div style={{display: "flex", padding: spacing(2), flexDirection: "column"}}>
                             <AppLinks/>

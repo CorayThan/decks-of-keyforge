@@ -116,7 +116,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     color={"primary"}
                     onClick={this.handleOpen}
                 >
-                    Sell or trade
+                    Sell
                 </KeyButton>
             )
         }

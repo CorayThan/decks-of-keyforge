@@ -5,7 +5,7 @@ import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { DeckWithSynergyInfo } from "./Deck"
 import { deckImportPopStore } from "./DeckImportPop"
@@ -88,7 +88,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
 
         let inner
 
-        if (ScreenStore.instance.screenSizeMd()) {
+        if (screenStore.screenSizeMd()) {
             inner = (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                     <DeckViewSmall deck={deck.deck} fullVersion={true}/>

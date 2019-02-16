@@ -6,7 +6,7 @@ import ArrowBack from "@material-ui/icons/ArrowBack"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router-dom"
 import { spacing } from "../config/MuiConfig"
-import { ScreenStore } from "../ui/ScreenStore"
+import { screenStore } from "../ui/ScreenStore"
 
 interface KeyTopbarRegistrationProps extends RouteComponentProps<{}> {
     name: string
@@ -21,13 +21,13 @@ class KeyTopbarRegistrationBase extends React.Component<KeyTopbarRegistrationPro
 
         return (
             <div>
-                <AppBar position={"fixed"} style={{zIndex: 10000}}>
+                <AppBar position={"fixed"} style={{zIndex: screenStore.zindexes.topBarRegistration}}>
                     <Toolbar>
                         <IconButton onClick={history.goBack} style={{marginRight: spacing(2)}} color={"inherit"}>
                             <ArrowBack/>
                         </IconButton>
                         <Typography
-                            variant={ScreenStore.instance.screenSizeXs() ? "h5" : "h4"}
+                            variant={screenStore.screenSizeXs() ? "h5" : "h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
                             {name}
