@@ -10,6 +10,7 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { screenStore } from "../../ui/ScreenStore"
 import { UiStore } from "../../ui/UiStore"
+import { UserStore } from "../../user/UserStore"
 import { DeckListView, DeckTableView } from "../DeckListView"
 import { DeckStore } from "../DeckStore"
 import { DeckFilters } from "./DeckFilters"
@@ -53,7 +54,11 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
     constructor(props: DeckSearchContainerProps) {
         super(props)
-        UiStore.instance.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
+        if (props.filters.owner && props.filters.owner === UserStore.instance.username) {
+            UiStore.instance.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
+        } else {
+            UiStore.instance.setTopbarValues("My Decks", "My Decks", "Search, evaluate, sell and trade")
+        }
     }
 
     render() {
