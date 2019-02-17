@@ -63,7 +63,6 @@ class KeyRouter extends React.Component {
                             component={DeckViewPage}
                         />
                         <Route
-                            exact={true}
                             path={Routes.about}
                             component={AboutPage}
                         />
@@ -107,4 +106,12 @@ class KeyRouter extends React.Component {
             </BrowserRouter>
         )
     }
+}
+
+export class AboutSubPaths {
+    static sas = Routes.about + "/sas"
+    static contact = Routes.about + "/contact"
+    static releaseNotes = Routes.about + "/release-notes"
+    static sellers = Routes.about + "/sellers"
+    static devs = Routes.about + "/devs"
 }

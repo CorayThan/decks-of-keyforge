@@ -1,9 +1,12 @@
-import { AppBar, Grid, Tab, Tabs } from "@material-ui/core"
+import { AppBar, Grid, Tabs } from "@material-ui/core"
 import { GridProps } from "@material-ui/core/Grid"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { Route, Switch } from "react-router"
 import { spacing } from "../config/MuiConfig"
+import { AboutSubPaths } from "../config/Routes"
+import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { ContactMe } from "./ContactMe"
@@ -40,20 +43,22 @@ export class AboutPage extends React.Component {
                         centered={screenStore.screenSizeMdPlus()}
                         variant={screenStore.screenSizeSm() ? "fullWidth" : undefined}
                     >
-                        <Tab label="SAS and AERC" value={"SAS"}/>
-                        <Tab label="Contact Me" value={"Contact"}/>
-                        <Tab label="Release Notes" value={"Notes"}/>
-                        <Tab label="For Sellers" value={"Sellers"}/>
-                        <Tab label="For Devs" value={"Devs"}/>
+                        <LinkTab label="SAS and AERC" to={AboutSubPaths.sas}/>
+                        <LinkTab label="Contact Me" to={AboutSubPaths.contact}/>
+                        <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes}/>
+                        <LinkTab label="For Sellers" to={AboutSubPaths.sellers}/>
+                        <LinkTab label="For Devs" to={AboutSubPaths.devs}/>
                     </Tabs>
                 </AppBar>
                 <div style={{padding: spacing(4)}}>
                     <Grid container={true} spacing={32} style={{maxWidth: 1920}} justify={"center"}>
-                        {tab === "SAS" ? <SasAndAerc/> : null}
-                        {tab === "Contact" ? <ContactMe/> : null}
-                        {tab === "Notes" ? <ReleaseNotes/> : null}
-                        {tab === "Sellers" ? <ForSellers/> : null}
-                        {tab === "Devs" ? <ForDevs/> : null}
+                        <Switch>
+                            <Route path={AboutSubPaths.sas} component={SasAndAerc} />
+                            <Route path={AboutSubPaths.contact} component={ContactMe} />
+                            <Route path={AboutSubPaths.releaseNotes} component={ReleaseNotes} />
+                            <Route path={AboutSubPaths.sellers} component={ForSellers} />
+                            <Route path={AboutSubPaths.devs} component={ForDevs} />
+                        </Switch>
                     </Grid>
                 </div>
             </div>

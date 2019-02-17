@@ -9,7 +9,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { AboutSubPaths, Routes } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -143,7 +143,7 @@ const AppLinks = () => (
         <LinkButton
             style={{margin: spacing(1)}}
             color={"inherit"}
-            to={Routes.about}
+            to={AboutSubPaths.sas}
             onClick={rightMenuStore.close}
         >
             About
