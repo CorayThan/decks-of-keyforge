@@ -7,6 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel"
 import FormGroup from "@material-ui/core/FormGroup"
 import MenuItem from "@material-ui/core/MenuItem"
 import TextField from "@material-ui/core/TextField"
+import { differenceInDays, parse } from "date-fns"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -47,6 +48,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     expireInDays = "7"
 
     @observable
+    preExistingDays = ""
+
+    @observable
     update = false
 
     handleClose = () => this.open = false
@@ -64,7 +68,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     handleOpenForEdit = () => {
         const userDeck = UserStore.instance.userDeckByDeckId(this.props.deck.id)
         if (userDeck != null) {
-            const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink} = userDeck
+            const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expiresAtLocalDate} = userDeck
             this.open = true
             this.update = true
             this.forSale = forSale
@@ -73,6 +77,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             this.askingPrice = askingPrice ? askingPrice.toString() : ""
             this.listingInfo = listingInfo ? listingInfo : ""
             this.externalLink = externalLink ? externalLink : ""
+
+            if (expiresAtLocalDate == null) {
+                this.expireInDays = "365"
+            } else {
+                const expiresDate = parse(expiresAtLocalDate)
+                this.expireInDays = differenceInDays(expiresDate, new Date()).toString()
+                this.preExistingDays = this.expireInDays
+            }
         }
     }
 
@@ -229,6 +241,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             <MenuItem value={"365"}>
                                 One year
                             </MenuItem>
+                            {this.preExistingDays ? (
+                                <MenuItem value={this.preExistingDays}>
+                                    {this.preExistingDays} days
+                                </MenuItem>
+                            ) : null}
                         </TextField>
                         <TextField
                             select={true}
