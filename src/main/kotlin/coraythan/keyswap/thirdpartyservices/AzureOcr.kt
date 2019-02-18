@@ -2,9 +2,9 @@ package coraythan.keyswap.thirdpartyservices
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardService
-import coraythan.keyswap.deckcard.CardNumberSetPair
-import coraythan.keyswap.decks.SaveUnregisteredDeck
+import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*

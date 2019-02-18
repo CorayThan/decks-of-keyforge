@@ -1,10 +1,9 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
-import { HttpConfig } from "../config/HttpConfig"
 
-export class SellerStore {
+export class PublicApiStore {
 
-    static readonly SECURE_CONTEXT = HttpConfig.API + "/sellers/secured"
+    static readonly API_KEYS_CONTEXT = "/public-api/api-keys/secured"
 
     @observable
     apiKey?: string
@@ -14,7 +13,7 @@ export class SellerStore {
 
     generateApiKey = () => {
         this.generatingApiKey = true
-        axios.post(SellerStore.SECURE_CONTEXT)
+        axios.post(PublicApiStore.API_KEYS_CONTEXT)
             .then((response: AxiosResponse) => {
                 this.generatingApiKey = false
                 this.apiKey = response.data
@@ -23,4 +22,4 @@ export class SellerStore {
 
 }
 
-export const sellerStore = new SellerStore()
+export const publicApiStore = new PublicApiStore()

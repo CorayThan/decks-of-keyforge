@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography"
 import * as History from "history"
+import { autorun } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
@@ -39,7 +40,7 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     render() {
         const filters = this.makeFilters(this.props)
         return (
-            <DeckSearchContainer history={this.props.history} filters={filters}/>
+            <DeckSearchContainer history={this.props.history} filters={filters} queryParams={this.props.location.search}/>
         )
     }
 }
@@ -47,17 +48,24 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 interface DeckSearchContainerProps {
     history: History.History
     filters: DeckFilters
+    queryParams: string
 }
 
 @observer
 class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
-    constructor(props: DeckSearchContainerProps) {
-        super(props)
-        if (props.filters.owner && props.filters.owner === UserStore.instance.username) {
-            UiStore.instance.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
-        } else {
+    componentDidMount(): void {
+        this.setTitle()
+        autorun(() => {
+            this.setTitle()
+        })
+    }
+
+    setTitle = () => {
+        if (this.props.queryParams && this.props.queryParams.includes(`owner=${UserStore.instance.username}`)) {
             UiStore.instance.setTopbarValues("My Decks", "My Decks", "Search, evaluate, sell and trade")
+        } else {
+            UiStore.instance.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
         }
     }
 

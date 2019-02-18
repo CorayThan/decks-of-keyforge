@@ -141,7 +141,7 @@ data class Deck(
     }
 }
 
-fun Deck.withDeckCards(newCardsList: List<Card>): Deck {
+fun Deck.withCards(newCardsList: List<Card>): Deck {
     if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
     val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
         (1..entry.value.size).map { "${entry.key}$it" }

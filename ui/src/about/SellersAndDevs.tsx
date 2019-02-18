@@ -4,7 +4,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { InfoListCard } from "../generic/InfoListCard"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { sellerStore } from "../sellers/SellerStore"
+import { publicApiStore } from "../sellers/PublicApiStore"
 import { UserStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
@@ -15,7 +15,7 @@ import { AboutGridItem } from "./AboutPage"
 
  Simple with deck name:
 
- https://decksofkeyforge.com/api/sellers/list-deck
+ https://decksofkeyforge.com/public-api/sellers/list-deck
  POST
 
  Header: Api-Key = UUID
@@ -66,31 +66,31 @@ import { AboutGridItem } from "./AboutPage"
 
  Unregister a deck by keyforge id:
 
- https://decksofkeyforge.com/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
+ https://decksofkeyforge.com/public-api/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
  DELETE
 
  Header: Api-Key = UUID
 
  Unregister a deck by keyforge id:
 
- https://decksofkeyforge.com/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
+ https://decksofkeyforge.com/public-api/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
  DELETE
 
  Header: Api-Key = UUID
 
  Unregister a deck by name:
 
- https://decksofkeyforge.com/sellers/unlist-deck-by-name/Caedwen%20%22Master%20Bandit%22%20Garc%C3%ADa
+ https://decksofkeyforge.com/public-api/sellers/unlist-deck-by-name/Caedwen%20%22Master%20Bandit%22%20Garc%C3%ADa
  DELETE
 
  Header: Api-Key = UUID
 
  */
 @observer
-export class ForSellers extends React.Component {
+export class SellersAndDevs extends React.Component {
 
     componentDidMount(): void {
-        sellerStore.apiKey = undefined
+        publicApiStore.apiKey = undefined
     }
 
     render() {
@@ -100,14 +100,14 @@ export class ForSellers extends React.Component {
             apiKeyOrButton = (
                 <Typography>Login to generate an API Key.</Typography>
             )
-        } else if (sellerStore.apiKey) {
+        } else if (publicApiStore.apiKey) {
             apiKeyOrButton = (
                 <div>
                     <Typography variant={"h4"} style={{marginTop: spacing(2)}}>
                         Your secret API key:
                     </Typography>
                     <Typography variant={"h5"} color={"primary"} style={{marginTop: spacing(2)}}>
-                        {sellerStore.apiKey}
+                        {publicApiStore.apiKey}
                     </Typography>
                     <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2)}}>
                         <Typography style={{marginRight: spacing(1)}}>
@@ -133,9 +133,9 @@ export class ForSellers extends React.Component {
                     <KeyButton
                         color={"secondary"}
                         variant={"contained"}
-                        loading={sellerStore.generatingApiKey}
-                        disabled={sellerStore.generatingApiKey}
-                        onClick={sellerStore.generateApiKey}
+                        loading={publicApiStore.generatingApiKey}
+                        disabled={publicApiStore.generatingApiKey}
+                        onClick={publicApiStore.generateApiKey}
                     >
                         Generate API Key
                     </KeyButton>
@@ -144,17 +144,40 @@ export class ForSellers extends React.Component {
         }
 
         return (
-            <AboutGridItem>
-                <InfoListCard title={"List and unlist decks via API"} infos={[
-                    "If you sell decks on a website, or have the technical know-how, you can list and unlist decks " +
-                    "for sale on Decks of Keyforge via an API.",
-                    "Using the button below you can generate your Api Key. You should treat this API key as a secret, like a password. " +
-                    "You can make a new one at any time, but when " +
-                    "you do the previous Api Key immediately becomes invalid. You will only be able to see this API key " +
-                    "immediately after it is generated.",
-                    apiKeyOrButton
-                ]}/>
-            </AboutGridItem>
+            <>
+                <AboutGridItem>
+                    <InfoListCard title={"Generate your API Key"} infos={[
+                        "To use our public APIs to sell decks or get SAS and AERC stats you'll need to generate an API key.",
+                        "Using the button below you can generate your Api Key. You should treat this API key as a secret, like a password. " +
+                        "You can make a new one at any time, but when " +
+                        "you do the previous Api Key immediately becomes invalid. You will only be able to see this API key " +
+                        "immediately after it is generated.",
+                        apiKeyOrButton
+                    ]}/>
+                    <div style={{paddingBottom: spacing(4)}} />
+                    <InfoListCard title={"Deck Selling API"} infos={[
+                        "If you sell decks on a website, or have the technical know-how, you can list and unlist decks " +
+                        "for sale on Decks of Keyforge via an API.",
+                        "Generate an API key, and then contact me to get the API details."
+                    ]}/>
+                </AboutGridItem>
+                <AboutGridItem>
+                    <InfoListCard title={"SAS and AERC API"} infos={[
+                        "I've created a simple API you can use to get SAS and AERC ratings for a deck, but if you use it I would appreciate it " +
+                        "if you could follow a few rules.",
+                        "1. Don't hit the endpoint too hard. It's a fairly efficient request, but my servers aren't super robust.",
+                        "2. Please don't send requests with deck IDs that don't exist in master vault.",
+                        "3. If you display SAS or AERC values please provide a link to decksofkeyforge.com (or a link to the deck itself " +
+                        "on decksofkeyforge.com) along with the rating. " +
+                        `It doesn't need to be obtrusive, for example making "75 SAS" into a link, or having a small link icon next to it, is fine.`,
+                        "4. Please attribute decksofkeyforge.com on your site.",
+                        "5. You'll need to use the API key associated with your account.",
+                        "The url to request stats is:",
+                        "https://decksofkeyforge.com/public-api/v3/decks/{deck-id-from-master-vault}",
+                        `You'll need to include the header "Api-Key: {your-api-key}`
+                    ]}/>
+                </AboutGridItem>
+            </>
         )
     }
 }

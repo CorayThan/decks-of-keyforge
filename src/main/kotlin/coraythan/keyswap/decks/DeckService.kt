@@ -245,19 +245,6 @@ class DeckService(
         return predicate
     }
 
-    fun findDeckSimple(keyforgeId: String): DeckSearchResult? {
-        if (keyforgeId.length != 36) {
-            log.info("Request for deck with malformed id: $keyforgeId")
-            return null
-        }
-        val deck = deckRepo.findByKeyforgeId(keyforgeId)
-        if (deck == null) {
-            log.info("Request for deck that doesn't exist $keyforgeId")
-            return null
-        }
-        return deck.toDeckSearchResult(listOf())
-    }
-
     fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {

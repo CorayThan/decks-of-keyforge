@@ -1,7 +1,6 @@
-package coraythan.keyswap.deckcard
+package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 
 data class CardIds(
         val cardIds: Map<House, List<CardNumberSetPair>>

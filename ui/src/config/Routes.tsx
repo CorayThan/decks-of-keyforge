@@ -112,6 +112,5 @@ export class AboutSubPaths {
     static sas = Routes.about + "/sas"
     static contact = Routes.about + "/contact"
     static releaseNotes = Routes.about + "/release-notes"
-    static sellers = Routes.about + "/sellers"
-    static devs = Routes.about + "/devs"
+    static sellersAndDevs = Routes.about + "/sellers-and-devs"
 }

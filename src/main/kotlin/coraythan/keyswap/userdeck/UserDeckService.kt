@@ -51,11 +51,18 @@ class UserDeckService(
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
-        modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, null) {
-            it.copy(ownedBy = if (mark) currentUserService.loggedInUser()!!.username else null)
+        val user = currentUserService.loggedInUser()!!
+        modOrCreateUserDeck(deckId, user, null) {
+            it.copy(ownedBy = if (mark) user.username else null)
         }
         if (!mark) {
             this.unlist(deckId)
+        }
+    }
+
+    fun unmarkAsOwnedForSeller(deckId: Long, owner: KeyUser) {
+        modOrCreateUserDeck(deckId, owner, null) {
+            it.copy(ownedBy = null)
         }
     }
 
@@ -88,7 +95,8 @@ class UserDeckService(
                     condition = listingInfo.condition,
                     externalLink = if (listingInfo.externalLink.isNullOrBlank()) null else listingInfo.externalLink,
                     dateListed = now(),
-                    expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong())
+                    expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong()),
+                    ownedBy = currentUser.username
             )
         }
     }

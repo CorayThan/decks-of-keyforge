@@ -1,19 +1,21 @@
-package coraythan.keyswap.sellers
+package coraythan.keyswap.publicapis
 
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.decks.DeckRepo
-import coraythan.keyswap.decks.SaveUnregisteredDeck
+import coraythan.keyswap.decks.models.DeckSearchResult
+import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class SellerService(
+class PublicApiService(
         private val currentUserService: CurrentUserService,
         private val keyUserRepo: KeyUserRepo,
         private val userDeckService: UserDeckService,
@@ -21,6 +23,21 @@ class SellerService(
         private val deckImporterService: DeckImporterService,
         private val cardRepo: CardRepo
 ) {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
+
+    fun findDeckSimple(keyforgeId: String): DeckSearchResult? {
+        if (keyforgeId.length != 36) {
+            log.info("Request for deck with malformed id: $keyforgeId")
+            return null
+        }
+        val deck = deckRepo.findByKeyforgeId(keyforgeId)
+        if (deck == null) {
+            log.info("Request for deck that doesn't exist $keyforgeId")
+            return null
+        }
+        return deck.toDeckSearchResult(listOf())
+    }
 
     fun generateApiKey(): String {
         val currentUser = currentUserService.loggedInUser() ?: throw IllegalAccessError("You aren't logged in.")
@@ -30,7 +47,7 @@ class SellerService(
         return apiKey
     }
 
-    fun sellerForApiKey(apiKey: String): KeyUser {
+    fun userForApiKey(apiKey: String): KeyUser {
         return keyUserRepo.findByApiKey(apiKey) ?: throw BadRequestException("Your api key is invalid. Please generate a new one.")
     }
 
@@ -95,11 +112,16 @@ class SellerService(
 
     fun unlistDeckForSeller(keyforgeId: String, seller: KeyUser) {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Couldn't find a registered deck with id ${keyforgeId}")
-        userDeckService.unlistForUser(deck.id, seller)
+        unlist(deck.id, seller)
     }
 
     fun unlistDeckForSellerWithName(deckName: String, seller: KeyUser) {
         val deck = deckRepo.findByName(deckName) ?: throw BadRequestException("Couldn't find a deck with name ${deckName}")
-        userDeckService.unlistForUser(deck.id, seller)
+        unlist(deck.id, seller)
+    }
+
+    private fun unlist(deckId: Long, seller: KeyUser) {
+        userDeckService.unlistForUser(deckId, seller)
+        userDeckService.unmarkAsOwnedForSeller(deckId, seller)
     }
 }

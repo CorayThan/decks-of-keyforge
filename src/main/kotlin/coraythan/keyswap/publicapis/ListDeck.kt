@@ -1,4 +1,4 @@
-package coraythan.keyswap.sellers
+package coraythan.keyswap.publicapis
 
 import coraythan.keyswap.House
 import coraythan.keyswap.userdeck.ListingInfo

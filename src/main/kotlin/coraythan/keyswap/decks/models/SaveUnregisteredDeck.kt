@@ -1,4 +1,4 @@
-package coraythan.keyswap.decks
+package coraythan.keyswap.decks.models
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card

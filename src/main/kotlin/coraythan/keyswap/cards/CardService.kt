@@ -5,8 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.House
-import coraythan.keyswap.deckcard.CardIds
-import coraythan.keyswap.deckcard.CardNumberSetPair
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi

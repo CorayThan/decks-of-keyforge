@@ -3,6 +3,8 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.Api
 import coraythan.keyswap.decks.models.DeckCount
 import coraythan.keyswap.decks.models.DecksPage
+import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.publicapis.PublicApiService
 import coraythan.keyswap.thirdpartyservices.AzureOcr
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
@@ -12,9 +14,10 @@ import kotlin.system.measureTimeMillis
 @RestController
 @RequestMapping("${Api.base}/decks")
 class DeckEndpoints(
-        val deckService: DeckService,
-        val deckImporterService: DeckImporterService,
-        val azureOcr: AzureOcr
+        private val deckService: DeckService,
+        private val deckImporterService: DeckImporterService,
+        private val azureOcr: AzureOcr,
+        private val publicApiService: PublicApiService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -45,13 +48,10 @@ class DeckEndpoints(
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = "Please contact me to update to the new version."
 
-    /**
-     * https://decksofkeyforge.com/decks/simple/v2/deck-id-from-master-vault
-     */
     @CrossOrigin
     @GetMapping("/simple/v2/{id}")
     fun findDeckSimple2(@PathVariable id: String): SimpleDeckResponse {
-        val deck = deckService.findDeckSimple(id)
+        val deck = publicApiService.findDeckSimple(id)
         return SimpleDeckResponse(deck ?: Nothing())
     }
 
