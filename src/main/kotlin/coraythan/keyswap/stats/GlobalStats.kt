@@ -14,7 +14,11 @@ data class GlobalStats(
         val synergy: List<BarData> = listOf(),
         val antisynergy: List<BarData> = listOf(),
         val totalCreaturePower: List<BarData> = listOf(),
-        val totalArmor: List<BarData> = listOf()
+        val totalArmor: List<BarData> = listOf(),
+        val amberControl: List<BarData> = listOf(),
+        val expectedAmber: List<BarData> = listOf(),
+        val artifactControl: List<BarData> = listOf(),
+        val creatureControl: List<BarData> = listOf()
 )
 
 data class BarData(

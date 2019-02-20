@@ -114,8 +114,8 @@ class DeckImporterService(
         log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    //     @Scheduled(fixedRateString = lockUpdateStatistics)
-    // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStatistics, lockAtMostForString = lockUpdateStatistics)
+//    @Scheduled(fixedRateString = onceEverySixHoursLock)
+//    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         // Only update them if we have a few decks in the DB

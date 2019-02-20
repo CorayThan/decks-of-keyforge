@@ -91,6 +91,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
         if (screenStore.screenSizeMd()) {
             inner = (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                    <ExtraDeckStatsView deck={deck.deck}/>
                     <DeckViewSmall deck={deck.deck} fullVersion={true}/>
                     <DeckStatsView deck={deck.deck}/>
                     {saleInfoComponent}
@@ -98,20 +99,15 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
                         synergies={deck}
                         width={undefined}
                     />
-                    <div style={{display: "flex", flexWrap: "wrap"}}>
-                        <ExtraDeckStatsView deck={deck.deck}/>
-                    </div>
                 </div>
             )
         } else {
             const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap"}
             inner = (
                 <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
-                    <div style={{display: "flex", flexWrap: "wrap"}}>
-                        <ExtraDeckStatsView deck={deck.deck}/>
-                    </div>
+                    <ExtraDeckStatsView deck={deck.deck}/>
                     <div style={wrapperStyle}>
-                        <DeckViewSmall deck={deck.deck} fullVersion={true}/>
+                        <DeckViewSmall deck={deck.deck} fullVersion={true} style={{marginTop: 0}}/>
                         <DeckStatsView deck={deck.deck}/>
                     </div>
                     <div style={wrapperStyle}>

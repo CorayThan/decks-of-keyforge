@@ -18,6 +18,7 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
+import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
@@ -201,7 +202,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         />
                                     }
                                     label={(
-                                        <Typography variant={"body2"}>Include unregistered</Typography>
+                                        <div style={{display: "flex", alignItems: "center"}}>
+                                            <UnregisteredDeckIcon/>
+                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Include unregistered</Typography>
+                                        </div>
                                     )}
                                 />
                                 {myCountry ? (

@@ -56,7 +56,11 @@ data class DeckStatistics(
             synergy = synergy.map { BarData(it.key, it.value) },
             antisynergy = antisynergy.map { BarData(it.key, it.value) },
             totalCreaturePower = groupCreaturePowerByTens(),
-            totalArmor = armorValues.map { BarData(it.key, it.value) }
+            totalArmor = armorValues.map { BarData(it.key, it.value) },
+            amberControl = amberControl.map { BarData(it.key, it.value) },
+            expectedAmber = expectedAmber.map { BarData(it.key, it.value) },
+            artifactControl = artifactControl.map { BarData(it.key, it.value) },
+            creatureControl = creatureControl.map { BarData(it.key, it.value) }
     )
 
     fun groupCreaturePowerByTens(): List<BarData> {

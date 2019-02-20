@@ -32,12 +32,13 @@ import { DeckScoreView } from "./DeckScoreView"
 interface DeckViewSmallProps {
     deck: Deck
     fullVersion?: boolean
+    style?: React.CSSProperties
 }
 
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
-        const {deck, fullVersion} = this.props
+        const {deck, fullVersion, style} = this.props
         const {
             id, keyforgeId, name, houses,
             wishlistCount, funnyCount,
@@ -61,6 +62,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 style={{
                     margin: spacing(2),
                     width: compact ? 328 : 544,
+                    ...style
                 }}
                 topContents={(
                     <div style={{display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-evenly"}}>
@@ -85,7 +87,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         {registered ? null : (
                             <Tooltip title={"Unregistered Deck"}>
                                 <div>
-                                    <UnregisteredDeckIcon style={{marginRight: spacing(1), marginTop: 3}} height={24}/>
+                                    <UnregisteredDeckIcon style={{marginRight: spacing(1), marginTop: 3}}/>
                                 </div>
                             </Tooltip>
                         )}
@@ -113,23 +115,23 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 </CardContent>
 
                 <CardActions>
-                    {fullVersion ? (
+                    <div style={{marginRight: spacing(1)}}/>
+                    {fullVersion && deck.registered ? (
                         <KeyButton
                             href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
                             color={"primary"}
-                            style={{marginRight: spacing(1)}}
                         >
                             Master Vault
                         </KeyButton>
-                    ) : (
+                    ) : null}
+                    {!fullVersion ? (
                         <KeyLink
                             to={Routes.deckPage(keyforgeId)}
                             noStyle={true}
-                            style={{marginRight: spacing(1)}}
                         >
                             <KeyButton color={"primary"}>View Deck</KeyButton>
                         </KeyLink>
-                    )}
+                    ) : null}
                     <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
                     <MyDecksButton deck={deck}/>
                     <div style={{flexGrow: 1}}/>

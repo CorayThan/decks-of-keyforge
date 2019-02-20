@@ -37,8 +37,6 @@ class StatsService(
         updateCachedStats()
     }
 
-    fun findDeckStatsJson() = deckStatisticsRepo.findAll()
-
     private fun updateCachedStats() {
         val all = deckStatisticsRepo.findAll().toList()
         cachedStats = when {

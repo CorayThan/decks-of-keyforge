@@ -1,13 +1,15 @@
-import { Tooltip, Typography } from "@material-ui/core"
+import { Collapse, IconButton, Tooltip, Typography } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
-import { Info } from "@material-ui/icons"
+import { ExpandLess, ExpandMore, Info } from "@material-ui/icons"
+import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryContainer, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Deck } from "../decks/Deck"
 import { Loader } from "../mui-restyled/Loader"
+import { screenStore } from "../ui/ScreenStore"
 import { GlobalStats } from "./GlobalStats"
 import { StatsStore } from "./StatsStore"
 
@@ -62,11 +64,19 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     }
 }
 
+class ExtraDeckStatsStore {
+    @observable
+    displayRest = false
+}
+
+const extraDeckStatsStore = new ExtraDeckStatsStore()
+
 @observer
 export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
         const {
-            sasRating, cardsRating, synergyRating, antisynergyRating, totalPower
+            sasRating, cardsRating, synergyRating, antisynergyRating, totalPower,
+            amberControl, expectedAmber, artifactControl, creatureControl
         } = this.props.deck
         const stats = StatsStore.instance.stats
         if (!stats) {
@@ -74,14 +84,40 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
         }
         const creaturePowerCompareValue = Math.floor(totalPower / 5) * 5
         log.info(`Creature power compare value: ${creaturePowerCompareValue} total: ${totalPower}`)
+
+        const rowSize = screenStore.screenWidth / 332
+
+        const barProps: ComparisonBarProps[] = [
+            {name: "SAS", data: stats.sas, comparison: sasRating},
+            {name: "Cards Rating", data: stats.cardsRating, comparison: cardsRating},
+            {name: "Synergy", data: stats.synergy, comparison: synergyRating},
+            {name: "Antisynergy", data: stats.antisynergy, comparison: antisynergyRating},
+            {name: "Aember Control", data: stats.amberControl, comparison: Math.round(amberControl)},
+            {name: "Expected Aember", data: stats.expectedAmber, comparison: Math.round(expectedAmber)},
+            {name: "Artifact Control", data: stats.artifactControl, comparison: Math.round(artifactControl)},
+            {name: "Creature Control", data: stats.creatureControl, comparison: Math.round(creatureControl)},
+            {name: "Creature Power", data: stats.totalCreaturePower, comparison: creaturePowerCompareValue},
+        ]
+
+        const firstRowProps = barProps.slice(0, rowSize)
+        const restProps = barProps.slice(rowSize, barProps.length)
+
         return (
-            <>
-                <ComparisonBar name={"SAS"} data={stats.sas} comparison={sasRating}/>
-                <ComparisonBar name={"Cards Rating"} data={stats.cardsRating} comparison={cardsRating}/>
-                <ComparisonBar name={"Synergy"} data={stats.synergy} comparison={synergyRating}/>
-                <ComparisonBar name={"Antisynergy"} data={stats.antisynergy} comparison={antisynergyRating}/>
-                <ComparisonBar name={"Total Creature Power"} data={stats.totalCreaturePower} comparison={creaturePowerCompareValue}/>
-            </>
+            <div>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                    {firstRowProps.map(props => <ComparisonBar key={props.name} {...props} style={{paddingBottom: 0}}/>)}
+                </div>
+                <Collapse in={extraDeckStatsStore.displayRest}>
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                        {restProps.map(props => <ComparisonBar key={props.name} {...props} style={{paddingBottom: 0}}/>)}
+                    </div>
+                </Collapse>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                    <IconButton onClick={() => extraDeckStatsStore.displayRest = !extraDeckStatsStore.displayRest}>
+                        {extraDeckStatsStore.displayRest ? <ExpandLess/> : <ExpandMore/>}
+                    </IconButton>
+                </div>
+            </div>
         )
     }
 }
@@ -120,14 +156,33 @@ export const KeyBar = (props: { data: BarData[], domainPadding?: number, style?:
     </VictoryChart>
 )
 
-export const ComparisonBar = (props: { name: string, data: BarData[], comparison: number }) => (
-    <div style={{maxWidth: 400, padding: spacing(2), display: "flex", flexDirection: "column", alignItems: "center"}}>
+export interface ComparisonBarProps {
+    name: string
+    data: BarData[]
+    comparison: number
+    style?: React.CSSProperties
+}
+
+export const ComparisonBar = (props: ComparisonBarProps) => (
+    <div
+        style={{
+            maxWidth: 400,
+            padding: spacing(2),
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            ...props.style
+        }}
+    >
         <Typography variant={"h5"} color={"primary"}>{props.name}</Typography>
         <VictoryChart
             theme={VictoryTheme.material}
-            padding={32}
+            padding={{top: 24, bottom: 32, left: 32, right: 32}}
             width={300}
-            height={150}
+            height={142}
+            style={{pointerEvents: "none"}}
+            standalone={true}
+            containerComponent={<VictoryContainer responsive={false} style={{pointerEvents: "none"}}/>}
         >
             <VictoryAxis/>
             <VictoryBar

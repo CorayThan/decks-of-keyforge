@@ -15,4 +15,8 @@ export interface GlobalStats {
     antisynergy: BarData[]
     totalCreaturePower: BarData[]
     totalArmor: BarData[]
+    amberControl: BarData[]
+    expectedAmber: BarData[]
+    artifactControl: BarData[]
+    creatureControl: BarData[]
 }
