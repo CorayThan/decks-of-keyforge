@@ -35,7 +35,7 @@ class PublicApiEndpoints(
     }
 
     @CrossOrigin
-    @GetMapping("/public-api/v3/decks/{id}")
+    @GetMapping("/v3/decks/{id}")
     fun findDeckSimple3(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String): SimpleDeckResponse {
         publicApiService.userForApiKey(apiKey)
         val deck = publicApiService.findDeckSimple(id)

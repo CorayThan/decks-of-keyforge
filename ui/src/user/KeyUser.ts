@@ -8,6 +8,7 @@ export interface KeyUser {
     publicContactInfo?: string
     decks: UserDeck[]
     country?: string
+    lastVersionSeen: string
 }
 
 export interface UserLogin {
@@ -22,6 +23,7 @@ export interface UserRegistration {
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
     country?: string
+    lastVersionSeen: string
 }
 
 export enum UserType {

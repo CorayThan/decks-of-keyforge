@@ -27,6 +27,9 @@ class UserEndpoints(
     @PostMapping("/secured/update")
     fun updateProfile(@RequestBody userProfile: UserProfileUpdate) = userService.updateUserProfile(userProfile)
 
+    @PostMapping("/secured/version/{version}")
+    fun updateLatestVersion(@PathVariable version: String) = userService.updateLatestUserVersion(version)
+
     @PostMapping("/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
 }

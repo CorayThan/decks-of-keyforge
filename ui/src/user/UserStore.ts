@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { computed, observable } from "mobx"
+import { latestVersion } from "../about/ReleaseNotes"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
@@ -48,6 +49,7 @@ export class UserStore {
                 // log.debug(`Got logged in user: ${prettyJson(response.data)}`)
                 this.setUser(response.data)
                 this.loginInProgress = false
+                this.checkLastSeenVersion()
             })
             .catch((error: AxiosError) => {
                 // 401 or 403 means there is no logged in user, so logout!
@@ -59,6 +61,17 @@ export class UserStore {
                 }
                 this.loginInProgress = false
             })
+    }
+
+    checkLastSeenVersion = () => {
+        const lastSeenVersion = this.user!.lastVersionSeen
+        if (lastSeenVersion !== latestVersion) {
+            axiosWithoutErrors
+                .post(`${UserStore.SECURE_CONTEXT}/version/${latestVersion}`)
+                .then(() => {
+                    MessageStore.instance.setReleaseMessage(latestVersion)
+                })
+        }
     }
 
     registerAccount = (user: UserRegistration) => {

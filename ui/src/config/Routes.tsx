@@ -11,6 +11,7 @@ import { DeckViewPage } from "../decks/DeckViewFull"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
+import { SnackMessage } from "../ui/MessageStore"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserStore } from "../user/UserStore"
@@ -102,6 +103,7 @@ class KeyRouter extends React.Component {
                         />
                         <Route render={() => <Redirect to={Routes.decks}/>}/>
                     </Switch>
+                    <SnackMessage/>
                 </div>
             </BrowserRouter>
         )

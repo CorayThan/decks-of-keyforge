@@ -12,6 +12,7 @@ import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
+import { PatronButton } from "../generic/PatronButton"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -52,9 +53,9 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             variant={"h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
-                            {screenStore.screenWidth < 1240 ? topbarShortName : topbarName}
+                            {screenStore.screenWidth < 1300 ? topbarShortName : topbarName}
                         </Typography>
-                        {screenStore.screenWidth < 1440 ? null : subheaderNode}
+                        {screenStore.screenWidth < 1600 ? null : subheaderNode}
                         <div style={{flexGrow: 1}}/>
                         <RightMenu/>
                     </Toolbar>
@@ -148,14 +149,6 @@ const AppLinks = () => (
         >
             About
         </LinkButton>
-        <KeyButton
-            style={{margin: spacing(1)}}
-            color={"inherit"}
-            href={"https://www.patreon.com/decksofkeyforge"}
-            target={"_blank"}
-        >
-            Donate
-        </KeyButton>
     </>
 )
 
@@ -183,6 +176,9 @@ class UserLinks extends React.Component {
                     >
                         Profile
                     </LinkButton>
+                    <div style={{margin: spacing(1)}}>
+                        <PatronButton/>
+                    </div>
                     <KeyButton
                         outlinedWhite={true}
                         color={"inherit"}

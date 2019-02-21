@@ -51,7 +51,8 @@ class KeyUserService(
                 password = bCryptPasswordEncoder.encode(userRegInfo.password),
                 type = UserType.USER,
                 publicContactInfo = if (userRegInfo.publicContactInfo.isNullOrBlank()) null else userRegInfo.publicContactInfo,
-                allowUsersToSeeDeckOwnership = userRegInfo.allowUsersToSeeDeckOwnership
+                allowUsersToSeeDeckOwnership = userRegInfo.allowUsersToSeeDeckOwnership,
+                lastVersionSeen = userRegInfo.lastVersionSeen
         ))
     }
 
@@ -96,5 +97,12 @@ class KeyUserService(
         val withPassword = userAccount.copy(password = bCryptPasswordEncoder.encode(newPassword))
         userRepo.save(withPassword)
         passwordResetCodeService.delete(code)
+    }
+
+    fun updateLatestUserVersion(version: String) {
+        val user = currentUserService.loggedInUser()
+        if (user != null) {
+            userRepo.save(user.copy(lastVersionSeen = version))
+        }
     }
 }

@@ -9,7 +9,8 @@ data class UserProfile(
         val email: String?,
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
-        val country: Country?
+        val country: Country?,
+        val lastVersionSeen: String?
 )
 
 data class UserProfileUpdate(

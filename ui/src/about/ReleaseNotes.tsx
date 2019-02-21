@@ -6,12 +6,16 @@ import { Routes } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { AboutGridItem } from "./AboutPage"
 
+export const latestVersion = "2.7"
+
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
                 <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[
-                    "More graphs for the deck page. Click the expansion button to see them!"
+                    "More graphs for the deck page. Click the expansion button to see them!",
+                    "Site notifies you of new releases.",
+                    "Improved Patreon page."
                 ]}/>
                 <ReleaseNote releaseNumber={"2.6"} expanded={true} releaseNotes={[
                     "Cards view for deck that shows all the cards.",

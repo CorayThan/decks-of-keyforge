@@ -6,7 +6,9 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { AboutSubPaths } from "../config/Routes"
 import { log } from "../config/Utils"
+import { LinkButton } from "../mui-restyled/LinkButton"
 
 export type MessageType = "Error" | "Warn" | "Info" | "Success"
 
@@ -17,10 +19,16 @@ export class MessageStore {
     message = ""
 
     @observable
+    action?: React.ReactNode
+
+    @observable
     messageType: MessageType = "Success"
 
     @observable
     open = false
+
+    @observable
+    hideDuration = 6000
 
     private constructor() {
     }
@@ -36,11 +44,25 @@ export class MessageStore {
     setSuccessMessage = (message: string) => this.setMessage(message, "Success")
     setInfoMessage = (message: string) => this.setMessage(message, "Info")
 
-    setMessage = (message: string, messageType: MessageType) => {
+    setReleaseMessage = (version: string) => {
+        MessageStore.instance.setMessage(`Version ${version} has been released!`, "Info", (
+            <LinkButton
+                color={"inherit"}
+                to={AboutSubPaths.releaseNotes}
+                key={"release-notes"}
+            >
+                Release Notes
+            </LinkButton>
+        ), 20000)
+    }
+
+    setMessage = (message: string, messageType: MessageType, action?: React.ReactNode, duration?: number) => {
         log.debug("Setting message to " + message)
         this.message = message
         this.messageType = messageType
+        this.action = action
         this.open = true
+        this.hideDuration = duration ? duration : 6000
     }
 }
 
@@ -52,9 +74,7 @@ export class SnackMessage extends React.Component {
         if (reason === "clickaway") {
             return
         }
-
         MessageStore.instance.open = false
-
     }
 
     colorFromMessageType = (messageType: MessageType) => {
@@ -72,6 +92,27 @@ export class SnackMessage extends React.Component {
         const {message} = MessageStore.instance
 
         log.debug(`In snack message with message ${message}`)
+
+        const actions = []
+
+        if (MessageStore.instance.action) {
+            actions.push((
+                MessageStore.instance.action
+            ))
+        }
+
+        actions.push((
+            <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                style={{padding: spacing(1) / 2}}
+                onClick={this.handleClose}
+            >
+                <CloseIcon/>
+            </IconButton>
+        ))
+
         return (
             <Snackbar
                 anchorOrigin={{
@@ -79,24 +120,14 @@ export class SnackMessage extends React.Component {
                     horizontal: "left",
                 }}
                 open={MessageStore.instance.open}
-                autoHideDuration={6000}
+                autoHideDuration={MessageStore.instance.hideDuration}
                 onClose={this.handleClose}
                 ContentProps={{
                     "aria-describedby": "message-id",
                     "style": {backgroundColor: this.colorFromMessageType(MessageStore.instance.messageType)}
                 }}
                 message={<span id="message-id">{message}</span>}
-                action={[
-                    <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        style={{padding: spacing(1) / 2}}
-                        onClick={this.handleClose}
-                    >
-                        <CloseIcon/>
-                    </IconButton>,
-                ]}
+                action={actions}
             />
         )
     }

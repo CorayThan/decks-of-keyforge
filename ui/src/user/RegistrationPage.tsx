@@ -9,6 +9,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
+import { latestVersion } from "../about/ReleaseNotes"
 import { KeyTopbarRegistration } from "../components/KeyTopbarRegistration"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -72,7 +73,8 @@ export class RegistrationPage extends React.Component {
             username,
             publicContactInfo: this.publicContactInfo,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
-            country: this.country === "" ? undefined : this.country
+            country: this.country === "" ? undefined : this.country,
+            lastVersionSeen: latestVersion
         })
     }
 

@@ -35,6 +35,8 @@ data class KeyUser(
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         val decks: List<UserDeck> = listOf(),
 
+        val lastVersionSeen: String?,
+
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val apiKey: String? = null
 ) {
@@ -44,6 +46,7 @@ data class KeyUser(
             email = if (isUser) email else null,
             publicContactInfo = publicContactInfo,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
-            country = country
+            country = country,
+            lastVersionSeen = lastVersionSeen
     )
 }

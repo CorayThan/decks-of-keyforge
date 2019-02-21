@@ -3,6 +3,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
+import { PatronButton } from "../generic/PatronButton"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { AboutGridItem } from "./AboutPage"
@@ -26,6 +27,7 @@ export class ContactMe extends React.Component {
                                     style={{margin: spacing(1)}}
                                     color={"inherit"}
                                     href={"https://discord.gg/T5taTHm"}
+                                    variant={"contained"}
                                 >
                                     Discord
                                 </KeyButton>
@@ -33,7 +35,10 @@ export class ContactMe extends React.Component {
                             <span>
                                 <Typography>For comments and suggestions contact CorayThan on Reddit, or send an email to</Typography>
                                 <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
-                            </span>
+                            </span>,
+                            <div style={{paddingTop: spacing(1)}}>
+                                <PatronButton variant={"contained"}/>
+                            </div>
                         ]}
                     />
                 </AboutGridItem>
