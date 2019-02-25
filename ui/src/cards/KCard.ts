@@ -1,4 +1,3 @@
-import { Deck } from "../decks/Deck"
 import { House } from "../houses/House"
 import { SynTraitValue } from "../synergy/SynTraitValue"
 import { CardType } from "./CardType"
@@ -21,15 +20,18 @@ export interface KCard {
     expansion: number
     maverick: boolean
 
+    wins?: number
+    losses?: number
+    winRate?: number
+
     extraCardInfo: ExtraCardInfo
 }
 
-export interface DeckCard {
-    deck: Deck
-    card: KCard
-    cardName: string
-    quantityInDeck: number
-    id: string
+export const winPercentForCard = (card: KCard): number | undefined => {
+    if (card.wins == null || card.losses == null) {
+        return undefined
+    }
+    return (card.wins / (card.wins + card.losses))
 }
 
 export interface ExtraCardInfo {

@@ -10,7 +10,7 @@ data class SynergyCombo(
         val netSynergy: Double,
         val synergy: Double,
         val antisynergy: Double,
-        val cardRating: Int,
+        val cardRating: Double,
         val copies: Int = 1
 )
 

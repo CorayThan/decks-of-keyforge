@@ -16,4 +16,6 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
 
     fun findByNameAndRegisteredTrue(name: String): Deck?
     fun findByName(name: String): Deck?
+
+    fun findByWinsGreaterThanOrLossesGreaterThan(wins: Int, losses: Int): List<Deck>
 }

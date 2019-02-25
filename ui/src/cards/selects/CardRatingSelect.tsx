@@ -1,11 +1,10 @@
-import { range } from "lodash"
 import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardQualityIcon } from "../../generic/icons/CardQualityIcon"
 import { MultiSelect, MultiSelectOption, SelectedValues } from "../../mui-restyled/MultiSelect"
 
-const ratingOptions: MultiSelectOption[] = range(1, 6)
+const ratingOptions: MultiSelectOption[] = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
     .map(rating => ({option: <CardQualityIcon quality={rating}/>, value: (rating - 1).toString()}))
 
 @observer

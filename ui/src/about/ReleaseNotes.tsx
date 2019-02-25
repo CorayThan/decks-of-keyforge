@@ -1,4 +1,4 @@
-import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography } from "@material-ui/core"
+import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, ListItem, Typography } from "@material-ui/core"
 import { ExpandMore } from "@material-ui/icons"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -12,6 +12,37 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.0"} expanded={true} releaseNotes={[
+                    "TLDR; Updated SAS and added win rates for cards on the cards page.",
+                    "This is a major revision to SAS ratings. I've used win rates of cards from the official API to inform my card ratings for SAS. I have " +
+                    "more closely followed the win rates for commons than for uncommons, and especially rares, as we have much more data for more reliable " +
+                    "win rate statistics.",
+                    "I've also added new tiers to the card ratings, which include 0.5, 1.5, 2.5 and 3.5 for more precision in rating.",
+                    "These changes have changed the scale of SAS somewhat. 75 is still pretty close to average, but the scale has widened. " +
+                    "There are now 107 SAS decks (rather than 102) and 39 SAS decks (rather than 45).",
+                    "Some of the major card rating changes include (keep in mind synergies can make the value in a deck go up or down):",
+                    (
+                        <List>
+                            <ListItem><Typography>Relentless Assault 1 -> 3</Typography></ListItem>
+                            <ListItem><Typography>Hebe the Huge 3 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Key Hammer 2 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Restringuntus 1 -> 3</Typography></ListItem>
+                            <ListItem><Typography>Emp Blast 3 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Total Recall 3 -> 1</Typography></ListItem>
+                            <ListItem><Typography>Lights Out 2 -> 3.5</Typography></ListItem>
+                            <ListItem><Typography>Safe Place 1 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Save the Pack 2 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Murmook 1 -> 2.5</Typography></ListItem>
+                        </List>
+                    ),
+                    "Many more have been changed by 0.5 or 1 point. You can see the previous spreadsheet in the 2.0 release notes, and compare to this one.",
+                    // TODO do it
+                    "Add google sheets spreadsheet link here",
+                    "Also, you can see the win ratings for cards on the Cards page, and sort by win rating. The ratings are pretty interesting, but need " +
+                    "to be taken with a huge grain of salt. First, they are highly correlated with house win rates. Shadows wins the most, so all its cards " +
+                    "rate high, and Mars wins the least, so all its rate low. I've used the range of ratings intra-house more than I've compared across " +
+                    "houses.",
+                ]}/>
                 <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[
                     "More graphs for the deck page. Click the expansion button to see them!",
                     "Site notifies you of new releases.",

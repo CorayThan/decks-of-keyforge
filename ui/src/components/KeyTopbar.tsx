@@ -139,7 +139,7 @@ const AppLinks = () => (
             Cards
         </LinkButton>
         <DeckImportPop
-            style={{margin: spacing(1)}}
+            style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
         />
         <LinkButton
             style={{margin: spacing(1)}}

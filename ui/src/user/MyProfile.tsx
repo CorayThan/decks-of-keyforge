@@ -70,7 +70,13 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         const profile = this.props.profile
         const filters = new DeckFilters()
         filters.owner = profile.username
+        filters.includeUnregistered = true
         const decksLink = Routes.deckSearch(filters.prepareForQueryString())
+
+        filters.forSale = true
+        filters.forTrade = true
+        const decksForSaleLink = Routes.deckSearch(filters.prepareForQueryString())
+
         let shareLinkDescription
         if (this.allowUsersToSeeDeckOwnership) {
             shareLinkDescription = "Use this link to share your deck list and decks for sale and trade with other users."
@@ -126,11 +132,18 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                 label={"Allow anyone to see which decks I own"}
                             />
                             <Typography style={{marginBottom: spacing(2), marginTop: spacing(2)}}>
-                                {shareLinkDescription}
+                                Use the links below to share your decks with other users. You can also share the URL of any search you make.
                             </Typography>
-                            <LinkButton color={"primary"} to={decksLink}>
-                                {profile.username}'s Decks
-                            </LinkButton>
+                            <div style={{display: "flex"}}>
+                                {this.allowUsersToSeeDeckOwnership ? (
+                                    <LinkButton color={"primary"} to={decksLink} style={{marginRight: spacing(2)}}>
+                                        My Decks
+                                    </LinkButton>
+                                ) : null}
+                                <LinkButton color={"primary"} to={decksForSaleLink}>
+                                    For Sale and Trade
+                                </LinkButton>
+                            </div>
                             <CardActions
                                 style={{paddingLeft: 0}}
                             >

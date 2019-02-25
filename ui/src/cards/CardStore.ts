@@ -4,7 +4,7 @@ import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
-import { KCard } from "./KCard"
+import { KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
 
@@ -67,15 +67,17 @@ export class CardStore {
         })
 
         if (filters.sort === "CARD_RATING") {
-            filtered = sortBy(this.cards, (card: KCard) => card.extraCardInfo.rating)
+            filtered = sortBy(filtered, ["extraCardInfo.rating", "cardNumber"])
         } else if (filters.sort === "EXPECTED_AMBER") {
-            filtered = sortBy(this.cards, (card: KCard) => card.extraCardInfo.expectedAmber)
+            filtered = sortBy(filtered, ["extraCardInfo.expectedAmber", "cardNumber"])
         } else if (filters.sort === "AMBER_CONTROL") {
-            filtered = sortBy(this.cards, (card: KCard) => card.extraCardInfo.amberControl)
+            filtered = sortBy(filtered, ["extraCardInfo.amberControl", "cardNumber"])
         } else if (filters.sort === "CREATURE_CONTROL") {
-            filtered = sortBy(this.cards, (card: KCard) => card.extraCardInfo.creatureControl)
+            filtered = sortBy(filtered, ["extraCardInfo.creatureControl", "cardNumber"])
         } else if (filters.sort === "ARTIFACT_CONTROL") {
-            filtered = sortBy(this.cards, (card: KCard) => card.extraCardInfo.artifactControl)
+            filtered = sortBy(filtered, ["extraCardInfo.artifactControl", "cardNumber"])
+        } else if (filters.sort === "WIN_RATE") {
+            filtered = sortBy(filtered, ["winRate", "cardNumber"])
         }
         if (filters.sort === "SET_NUMBER") {
             if (filters.sortDirection === "ASC") {
@@ -84,7 +86,7 @@ export class CardStore {
         } else if (filters.sortDirection === "DESC") {
             filtered.reverse()
         }
-        this.cards = filtered
+        this.cards = filtered.slice()
     }
 
     loadAllCards = () => {
@@ -92,8 +94,15 @@ export class CardStore {
         axios.get(`${CardStore.CONTEXT}`)
             .then((response: AxiosResponse) => {
                 this.searchingForCards = false
-                this.allCards = response.data
-                this.cards = response.data.slice()
+                const basisForCards: KCard[] = response.data.slice()
+                let allWins = 0
+                basisForCards.forEach(card => {
+                    allWins += card.wins!
+                    card.winRate = winPercentForCard(card)
+                })
+                log.debug(`All wins: ${allWins}`)
+                this.allCards = basisForCards
+                this.cards = basisForCards.slice()
                 this.cardNameLowercaseToCard = new Map()
                 this.cardFlavors = []
                 this.cardNames = this.allCards!.map(card => {

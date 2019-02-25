@@ -85,21 +85,21 @@
 
 - name: Loot the Bodies
   cardNumber: 10
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   traits: []
   synergies:
     - trait: destroysEnemyCreatures
       type: house
-      rating: 3
+    - trait: causesFighting
+      type: house
+      rating: 1
     - trait: dealsDamage
       type: house
       rating: 1
     - trait: highTotalCreaturePower
       type: house
-    - trait: lowCreatureCount
-      type: house
-      rating: -2
+      rating: 3
 
 - name: Take that, Smartypants
   cardNumber: 11
@@ -267,7 +267,7 @@
 
 - name: Screechbomb
   cardNumber: 26
-  rating: 3
+  rating: 4
   expectedAmber: 0.0
   amberControl: 2.0
   creatureControl: 0.0
@@ -392,7 +392,7 @@
 
 - name: Hebe the Huge
   cardNumber: 36
-  rating: 3
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -401,7 +401,7 @@
   synergies:
     - trait: highTotalArmor
     - trait: power2OrLowerCreatures
-      rating: -2
+      rating: -3
 
 - name: Kelifi Dragon
   cardNumber: 37
@@ -524,9 +524,6 @@
   creatureControl: 0.5
   expectedAmber: 1.0
   traits: []
-  synergies:
-    - trait: damagesFriendlyCreatures
-      rating: 1
 
 - name: Wardrummer
   cardNumber: 49
@@ -625,6 +622,7 @@
   traits: [controlsHouseChoice]
   synergies:
     - trait: revealsHand
+      rating: 3
     - trait: controlsHouseChoice
       type: house
 
@@ -660,7 +658,7 @@
 
 - name: Gateway to Dis
   cardNumber: 59
-  rating: 3
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 3.0
@@ -670,7 +668,7 @@
     - trait: highTotalCreaturePower
       rating: -3
     - trait: lowTotalCreaturePower
-      rating: 3
+      rating: 2
     - trait: destroysEnemyCreatures
       rating: -2
 
@@ -750,7 +748,7 @@
 
 - name: Key Hammer
   cardNumber: 66
-  rating: 1
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -760,6 +758,7 @@
     - trait: stealsAmber
       type: house
     - trait: increasesKeyCost
+      rating: 3
     - trait: capturesAmber
       rating: 1
       type: house
@@ -801,7 +800,7 @@
 
 - name: Red-Hot Armor
   cardNumber: 70
-  rating: 2
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -821,6 +820,7 @@
     - trait: power5OrHigherCreatures
       rating: -3
     - trait: lowTotalCreaturePower
+      rating: 1
 
 - name: Annihilation Ritual
   cardNumber: 72
@@ -832,6 +832,8 @@
   traits: [purgesFriendlyCreatures, purgesEnemyCreatures]
   synergies:
     - trait: returnsCreaturesFromDiscard
+      rating: -2
+    - trait: goodDestroyed
       rating: -2
 
 - name: Dominator Bauble
@@ -942,7 +944,7 @@
 
 - name: Drumble
   cardNumber: 82
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -975,7 +977,7 @@
 
 - name: Ember Imp
   cardNumber: 85
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -983,12 +985,10 @@
   traits: []
   synergies:
     - trait: protectsCreatures
+      rating: 3
     - trait: discardsEnemyCards
       rating: -1
     - trait: reducesEnemyDraw
-      rating: -1
-    - trait: highTotalCreaturePower
-    - trait: lowTotalCreaturePower
       rating: -1
 
 - name: Gabos Longarms
@@ -1076,6 +1076,7 @@
   synergies:
     - trait: returnsFriendlyCreaturesToHand
       type: house
+      rating: 3
     - trait: lowCreatureCount
       rating: -1
       type: house
@@ -1108,11 +1109,6 @@
       rating: 1
     - trait: increasesCreaturePower
       rating: 1
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
-
 
 - name: Shooler
   cardNumber: 96
@@ -1155,7 +1151,7 @@
 
 - name: Succubus
   cardNumber: 99
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1163,9 +1159,7 @@
   traits: [reducesEnemyDraw]
   synergies:
     - trait: protectsCreatures
-    - trait: highTotalCreaturePower
-    - trait: lowTotalCreaturePower
-      rating: -1
+      rating: 3
 
 - name: Tentacus
   cardNumber: 100
@@ -1194,6 +1188,8 @@
     - trait: stealsAmber
       type: house
       rating: 1
+    - trait: increasesKeyCost
+      rating: -1
 
 - name: Tocsin
   cardNumber: 102
@@ -1205,6 +1201,7 @@
   traits: [discardsEnemyCards, goodReap]
   synergies:
     - trait: protectsCreatures
+      rating: 1
 
 - name: Tolas
   cardNumber: 103
@@ -1269,6 +1266,9 @@
   creatureControl: 1
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
+  synergies:
+    - trait: goodPlay
+      rating: 1
 
 - name: Dimension Door
   cardNumber: 108
@@ -1559,7 +1559,7 @@
 
 - name: Spectral Tunneler
   cardNumber: 133
-  rating: 2
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1663,11 +1663,6 @@
   traits: [archives, goodReap]
   synergies:
     - trait: protectsCreatures
-      rating: 2
-    - trait: highTotalCreaturePower
-      rating: 2
-    - trait: lowTotalCreaturePower
-      rating: -1
 
 - name: Harland Mindlock
   cardNumber: 143
@@ -1693,8 +1688,6 @@
   synergies:
     - trait: causesFighting
       rating: 1
-    - trait: highTotalCreaturePower
-      rating: 1
 
 - name: Mother
   cardNumber: 145
@@ -1719,7 +1712,7 @@
 
 - name: Novu Archaeologist
   cardNumber: 147
-  rating: 3
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1759,10 +1752,6 @@
   artifactControl: 0.0
   traits: [goodReap]
   synergies: []
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
 
 - name: Research Smoko
   cardNumber: 151
@@ -1774,7 +1763,7 @@
   traits: [archives, goodDestroyed]
   synergies:
     - trait: archives
-      rating: -2
+      rating: -1
 
 - name: Skippy Timehog
   cardNumber: 152
@@ -1889,7 +1878,7 @@
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: power3OrLowerCreatures
-      rating: -2
+      rating: -3
     - trait: power4OrHigherCreatures
       rating: 1
     - trait: highTotalArmor
@@ -2321,12 +2310,6 @@
   synergies:
     - trait: protectsCreatures
       rating: 1
-    - trait: lowCreatureCount
-      type: house
-      rating: -2
-    - trait: highCreatureCount
-      type: house
-      rating: 1
 
 - name: Chuff Ape
   cardNumber: 191
@@ -2372,7 +2355,7 @@
 
 - name: “John Smyth”
   cardNumber: 195
-  rating: 4
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2381,9 +2364,8 @@
   synergies:
     - trait: readiesCreatures
       type: house
-    - trait: protectsCreatures
       rating: 1
-    - trait: highCreatureCount
+    - trait: protectsCreatures
       rating: 1
     - trait: lowCreatureCount
       type: house
@@ -2460,10 +2442,6 @@
     - trait: protectsCreatures
     - trait: readiesCreatures
       type: house
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
 
 - name: Uxlyx the Zookeeper
   cardNumber: 201
@@ -2652,7 +2630,7 @@
 
 - name: Cleansing Wave
   cardNumber: 215
-  rating: 2
+  rating: 3
   expectedAmber: 2.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2665,9 +2643,8 @@
       rating: 1
     - trait: highTotalCreaturePower
       type: house
-      rating: 3
     - trait: lowTotalCreaturePower
-      rating: -2
+      rating: -3
       type: house
 
 - name: Clear Mind
@@ -2708,7 +2685,6 @@
     - trait: highCreatureCount
       rating: -3
     - trait: stuns
-      rating: 1
 
 - name: Honorable Claim
   cardNumber: 219
@@ -2982,10 +2958,6 @@
   traits: [goodReap, usesCreaturesOutOfHouse]
   synergies:
     - trait: protectsCreatures
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
 
 - name: Duma the Martyr
   cardNumber: 242
@@ -3094,9 +3066,6 @@
   synergies:
     - trait: protectsCreatures
       rating: 1
-    - trait: highTotalCreaturePower
-      rating: 2
-      type: house
 
 - name: Lady Maxena
   cardNumber: 251
@@ -3441,7 +3410,7 @@
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
-      rating: -2
+      rating: -3
     - trait: power3OrHigherCreatures
     - trait: highTotalArmor
       rating: 3
@@ -3731,6 +3700,9 @@
   creatureControl: 0.5
   artifactControl: 0.0
   traits: [elusive, dealsDamage]
+  synergies:
+    - trait: badPenny
+      rating: 1
 
 - name: Magda the Rat
   cardNumber: 303
@@ -3744,7 +3716,7 @@
 
 - name: Mooncurser
   cardNumber: 304
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3756,10 +3728,6 @@
     - trait: protectsCreatures
     - trait: readiesCreatures
       type: house
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
 
 - name: Nexus
   cardNumber: 305
@@ -3910,7 +3878,7 @@
 
 - name: Ring of Invisibility
   cardNumber: 317
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4000,7 +3968,6 @@
     - trait: lowCreatureCount
       type: house
       rating: -3
-    - trait: returnsFriendlyCreaturesToHand
 
 - name: Grasping Vines
   cardNumber: 324
@@ -4014,7 +3981,7 @@
 
 - name: Key Charge
   cardNumber: 325
-  rating: 3
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4024,7 +3991,6 @@
     - trait: archives
     - trait: highExpectedAmber
       type: house
-      rating: 3
     - trait: lowExpectedAmber
       type: house
       rating: -3
@@ -4281,6 +4247,10 @@
   creatureControl: 0.0
   artifactControl: 0.0
   traits: []
+  synergies:
+    - trait: forgesKeys
+      rating: 1
+      type: house
 
 - name: Briar Grubbling
   cardNumber: 348
@@ -4514,8 +4484,6 @@
     - trait: lowCreatureCount
       rating: -3
       type: house
-    - trait: returnsFriendlyCreaturesToHand
-      rating: 1
 
 - name: Witch of the Eye
   cardNumber: 368
@@ -4527,9 +4495,6 @@
   traits: [goodReap, returnsCardsFromDiscard]
   synergies:
     - trait: protectsCreatures
-    - trait: highTotalCreaturePower
-    - trait: lowTotalCreaturePower
-      rating: -1
 
 - name: Way of the Bear
   cardNumber: 369

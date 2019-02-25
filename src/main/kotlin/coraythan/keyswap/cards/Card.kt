@@ -26,6 +26,9 @@ data class Card(
         val expansion: Int,
         val maverick: Boolean,
 
+        val wins: Int? = 0,
+        val losses: Int? = 0,
+
         @ElementCollection
         @Enumerated(EnumType.STRING)
         val traits: Set<CardTrait> = setOf(),

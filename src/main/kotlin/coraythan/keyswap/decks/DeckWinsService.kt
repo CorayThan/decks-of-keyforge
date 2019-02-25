@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.models.withCards
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
@@ -19,6 +20,7 @@ private const val onceEverySixHoursLock = "PT6h"
 class DeckWinsService(
         private val keyforgeApi: KeyforgeApi,
         private val cardService: CardService,
+        private val cardRepo: CardRepo,
         private val deckRepo: DeckRepo
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -32,21 +34,19 @@ class DeckWinsService(
         val updateWinsLossesDuration = measureTimeMillis {
 
             val deckIds = mutableSetOf<String>()
-            val cardWins = mutableMapOf<String, Wins>()
-            val houseWins = mutableMapOf<House, Wins>()
 
-            val winPages = findAndUpdateDecksForWinRates("-wins", deckIds, cardWins, houseWins)
-            // findAndUpdateDecksForWinRates("-losses", deckIds, cardWins, houseWins)
+            val winPages = findAndUpdateDecksForWinRates("-wins", deckIds)
+            findAndUpdateDecksForWinRates("-losses", deckIds)
             log.info("Found $winPages win pages (of 10).")
         }
         log.info("It took ${updateWinsLossesDuration / 1000} seconds to update wins and losses.")
+
+        updateCardAndHouseWins()
     }
 
     private fun findAndUpdateDecksForWinRates(
             order: String,
-            deckIds: MutableSet<String>,
-            cardWins: MutableMap<String, Wins>,
-            houseWins: MutableMap<House, Wins>
+            deckIds: MutableSet<String>
     ): Int {
 
         var currentPage = 1
@@ -55,6 +55,7 @@ class DeckWinsService(
             val decks = keyforgeApi.findDecks(currentPage, order)
             val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 }
             if (updateDecks.isNullOrEmpty()) {
+                log.info("Update decks for $order was $updateDecks")
                 break
             }
             updateDecks
@@ -66,18 +67,7 @@ class DeckWinsService(
                             val cards = cardService.cardsForDeck(preexisting)
                             val updated = preexisting.withCards(cards).addGameStats(it)
 
-//                        log.info("Deck before: ${preexisting?.wins} after: ${updated?.wins}")
-//                        log.info("Deck before: ${preexisting?.losses} after: ${updated?.losses}")
-
                             if (updated != null) {
-                                cards.forEach { card ->
-                                    val wins = cardWins[card.cardTitle] ?: Wins()
-                                    cardWins[card.cardTitle] = wins.copy(wins = wins.wins + updated.wins, losses = wins.losses + updated.losses)
-                                }
-                                updated.houses.forEach { house ->
-                                    val wins = houseWins[house] ?: Wins()
-                                    houseWins[house] = wins.copy(wins = wins.wins + updated.wins, losses = wins.losses + updated.losses)
-                                }
                                 deckRepo.save(updated)
                             }
                         }
@@ -85,6 +75,57 @@ class DeckWinsService(
             currentPage++
         }
         return currentPage
+    }
+
+    @Scheduled(fixedRateString = onceEverySixHoursLock)
+    @SchedulerLock(name = "updateCardAndHouseWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
+    fun updateCardAndHouseWins() {
+        log.info("Beginning card and house win loss update")
+
+        val updateCardAndHouseWinsLossesDuration = measureTimeMillis {
+
+            val decksWithScores = deckRepo.findByWinsGreaterThanOrLossesGreaterThan(0, 0)
+            log.info("Found ${decksWithScores.size} decks with a win or loss. total wins ${decksWithScores.sumBy { it.wins }} " +
+                    "losses ${decksWithScores.sumBy { it.losses }}")
+
+            val cardWins = mutableMapOf<String, Wins>()
+            val houseWins = mutableMapOf<House, Wins>()
+
+            decksWithScores.forEach { deck ->
+                val cards = cardService.cardsForDeck(deck)
+
+                cards.forEach { card ->
+                    val wins = cardWins[card.cardTitle] ?: Wins()
+                    cardWins[card.cardTitle] = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
+                }
+                deck.houses.forEach { house ->
+                    val wins = houseWins[house] ?: Wins()
+                    houseWins[house] = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
+                }
+            }
+
+            log.info(
+                    "House wins: ${houseWins.map {
+                        val wins = it.value.wins.toDouble()
+                        "${it.key} = ${wins / (wins + it.value.losses.toDouble())} -- "
+                    }}" + "house map: $houseWins")
+
+            saveCardWins(cardWins)
+        }
+
+        log.info("It took ${updateCardAndHouseWinsLossesDuration / 1000} seconds to update wins and losses for cards and houses.")
+
+    }
+
+    private fun saveCardWins(wins: Map<String, Wins>) {
+        val cards = cardRepo.findByMaverickFalse()
+                .map {
+                    it.copy(
+                            wins = wins[it.cardTitle]?.wins ?: 0,
+                            losses = wins[it.cardTitle]?.losses ?: 0
+                    )
+                }
+        cardRepo.saveAll(cards)
     }
 }
 

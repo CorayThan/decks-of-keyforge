@@ -1,6 +1,7 @@
-import { Divider } from "@material-ui/core"
+import { Divider, Tooltip } from "@material-ui/core"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
+import { round } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -33,10 +34,11 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
 }
 
 export const CardView = (props: { card: KCard, simple?: boolean }) => {
+    const card = props.card
     if (props.simple) {
-        return <CardSimpleView card={props.card}/>
+        return <CardSimpleView card={card}/>
     }
-    const {cardTitle, cardType, cardText, amber, extraCardInfo} = props.card
+    const {cardTitle, cardType, cardText, amber, extraCardInfo} = card
     const {rating, traits, synergies} = extraCardInfo
 
     const wrapperStyle: React.CSSProperties = screenStore.screenSizeXs() ? {
@@ -58,12 +60,12 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     return (
         <div style={wrapperStyle}>
             <div>
-                <img src={props.card.frontImage}/>
+                <img src={card.frontImage}/>
             </div>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <CardQualityIcon quality={rating}/>
-                    <Typography variant={"h6"} style={{marginLeft: spacing(1)}}>{cardTitle}</Typography>
+                    <Typography variant={"h6"} style={{marginLeft: spacing(1), flexGrow: 1}}>{cardTitle}</Typography>
                 </div>
                 <div style={{display: "flex"}}>
                     <Typography variant={"subtitle1"}>{cardType}</Typography>
@@ -73,7 +75,18 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                 <Typography>{cardText}</Typography>
                 <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                 <TraitsView hasTraits={extraCardInfo} color={"rgba(0, 0, 0, 0.87)"}/>
-                <Divider style={{marginTop: spacing(2), marginBottom: spacing(1)}}/>
+                {card.winRate != null ? (
+                    <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
+                        <Tooltip
+                            title={"This win rate is affected by house win rate, so expect cards in better houses to have higher win rates."}
+                        >
+                            <Typography noWrap={true} style={{fontStyle: "italic"}}>{round(card.winRate * 100, 1)}% win rate</Typography>
+                        </Tooltip>
+                        <Typography style={{marginLeft: spacing(1), marginRight: spacing(1)}}>{card.wins} wins</Typography>
+                        <Typography>{card.losses} losses</Typography>
+                    </div>
+                ) : null}
+                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                 {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
                 <div style={{display: "flex", flexWrap: "wrap"}}>
                     {traits.map(trait => (

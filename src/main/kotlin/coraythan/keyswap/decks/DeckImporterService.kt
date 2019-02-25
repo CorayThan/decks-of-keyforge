@@ -21,9 +21,6 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -37,6 +34,7 @@ private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
+private const val lockUpdateStats = "PT7D"
 
 
 @Transactional
@@ -56,7 +54,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private val currentDeckRatingVersion = 2
+    private val currentDeckRatingVersion = 3
     private val query = JPAQueryFactory(entityManager)
 
     @Scheduled(fixedRateString = lockImportNewDecksFor)
@@ -114,8 +112,8 @@ class DeckImporterService(
         log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-//    @Scheduled(fixedRateString = onceEverySixHoursLock)
-//    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
+//    @Scheduled(fixedRateString = "PT24H")
+//    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         // Only update them if we have a few decks in the DB
@@ -125,26 +123,32 @@ class DeckImporterService(
         log.info("Updated deck statistics.")
     }
 
-    //    @Scheduled(fixedRateString = lockUpdateRatings)
+    private var doneRatingDecks = false
+
+    @Scheduled(fixedRateString = lockUpdateRatings)
     fun rateDecks() {
+
+        if (doneRatingDecks) return
 
         val millisTaken = measureTimeMillis {
             val deckQ = QDeck.deck
 
             val deckResults = query.selectFrom(deckQ)
                     .where(deckQ.ratingVersion.ne(currentDeckRatingVersion))
-                    .limit(1000)
+                    .limit(10000)
                     .fetch()
 
             if (deckResults.isEmpty()) {
-                log.warn("Done rating decks!")
+                doneRatingDecks = true
+                log.info("Done rating decks!")
+                updateDeckStats()
             }
 
             val rated = deckResults.map { rateDeck(it).copy(ratingVersion = currentDeckRatingVersion) }
             deckRepo.saveAll(rated)
         }
 
-        log.info("Took $millisTaken ms to rate 1000 decks.")
+        log.info("Took $millisTaken ms to rate 10000 decks.")
     }
 
     // Non repeatable functions
@@ -224,31 +228,34 @@ class DeckImporterService(
         val power3OrHigher: MutableMap<Int, Int> = mutableMapOf()
         val power4OrHigher: MutableMap<Int, Int> = mutableMapOf()
         val power5OrHigher: MutableMap<Int, Int> = mutableMapOf()
-        val sort = Sort.by("id")
-        var currentPage = 0
-        val pageSize = 100
+        var currentPage = 0L
+        val pageSize = 1000L
         var msToQuery = 0L
         var msToIncMaps = 0L
+        val deckQ = QDeck.deck
         while (true) {
 
-            var results: Page<Deck>? = null
+            var results: List<Deck> = listOf()
 
             val queryMs = measureTimeMillis {
 
-                val deckQ = QDeck.deck
-                val filterOutUnregistered = deckQ.registered.isTrue
+                results = query.selectFrom(deckQ)
+                        .where(deckQ.registered.isTrue)
+                        .limit(pageSize)
+                        .offset(currentPage * pageSize)
+                        .orderBy(deckQ.id.asc())
+                        .fetch()
 
-                results = deckRepo.findAll(filterOutUnregistered, PageRequest.of(currentPage, pageSize, sort))
             }
 
             msToQuery += queryMs
 
-            if (results!!.isEmpty) {
+            if (results.isEmpty()) {
                 break
             }
 
             val addToMapMs = measureTimeMillis {
-                results!!.content.forEach {
+                results.forEach {
                     val cards = cardService.cardsForDeck(it)
                     val ratedDeck = it
 
@@ -279,7 +286,7 @@ class DeckImporterService(
             msToIncMaps += addToMapMs
             currentPage++
 
-            if (currentPage % 100 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize} sec ToQuery ${msToQuery / 1000} sec ToIncMap ${msToIncMaps / 1000}")
+            if (currentPage.toInt() % 100 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize} sec ToQuery ${msToQuery / 1000} sec ToIncMap ${msToIncMaps / 1000}")
         }
         val deckStatistics = DeckStatistics(
                 armorValues = armorValues,
@@ -385,8 +392,8 @@ class DeckImporterService(
                 amberControl = extraCardInfos.map { it.amberControl }.sum(),
                 creatureControl = extraCardInfos.map { it.creatureControl }.sum(),
                 artifactControl = extraCardInfos.map { it.artifactControl }.sum(),
-                sasRating = cardsRating + synergy + antisynergy,
-                cardsRating = cardsRating,
+                sasRating = cardsRating.roundToInt() + synergy + antisynergy,
+                cardsRating = cardsRating.roundToInt(),
                 synergyRating = synergy,
                 antisynergyRating = antisynergy.absoluteValue
         )
