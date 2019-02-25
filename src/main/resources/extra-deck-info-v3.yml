@@ -987,8 +987,6 @@
   traits: []
   synergies:
     - trait: protectsCreatures
-    - trait: discardsEnemyCards
-      rating: -1
     - trait: reducesEnemyDraw
       rating: -1
     - trait: highTotalCreaturePower

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.House
+import coraythan.keyswap.decks.currentDeckRatingVersion
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
@@ -30,7 +31,7 @@ class CardService(
 
     fun loadExtraInfo() {
         val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
-                ClassPathResource("extra-deck-info.yml").inputStream
+                ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
         this.extraInfo = extraInfosFromFile
                 .map {

@@ -34,8 +34,9 @@ private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
-private const val lockUpdateStats = "PT7D"
+private const val lockUpdateStats = "PT24H"
 
+const val currentDeckRatingVersion = 3
 
 @Transactional
 @Service
@@ -54,7 +55,6 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private val currentDeckRatingVersion = 3
     private val query = JPAQueryFactory(entityManager)
 
     @Scheduled(fixedRateString = lockImportNewDecksFor)
@@ -112,8 +112,8 @@ class DeckImporterService(
         log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-//    @Scheduled(fixedRateString = "PT24H")
-//    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
+    @Scheduled(fixedRateString = "PT24H")
+    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         // Only update them if we have a few decks in the DB
@@ -228,6 +228,24 @@ class DeckImporterService(
         val power3OrHigher: MutableMap<Int, Int> = mutableMapOf()
         val power4OrHigher: MutableMap<Int, Int> = mutableMapOf()
         val power5OrHigher: MutableMap<Int, Int> = mutableMapOf()
+
+        val sasToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val cardRatingsToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val synergyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val antisynergyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val amberControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val expectedAmberToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val artifactControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+        val creatureControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf()
+
+        val creatureWins = mutableMapOf<Int, Wins>()
+        val actionWins = mutableMapOf<Int, Wins>()
+        val artifactWins = mutableMapOf<Int, Wins>()
+        val upgradeWins = mutableMapOf<Int, Wins>()
+
+        val raresWins = mutableMapOf<Int, Wins>()
+        val houseWins = mutableMapOf<House, Wins>()
+
         var currentPage = 0L
         val pageSize = 1000L
         var msToQuery = 0L
@@ -281,12 +299,36 @@ class DeckImporterService(
                     power3OrHigher.incrementValue(creatureCards.filter { card -> card.power > 2 }.size)
                     power4OrHigher.incrementValue(creatureCards.filter { card -> card.power > 3 }.size)
                     power5OrHigher.incrementValue(creatureCards.filter { card -> card.power > 4 }.size)
+
+                    if (it.wins != 0 || it.losses != 0) {
+                        val wins = Wins(it.wins, it.losses)
+                        sasToWinsLosses.addWinsLosses(it.sasRating, wins)
+                        cardRatingsToWinsLosses.addWinsLosses(it.cardsRating, wins)
+                        synergyToWinsLosses.addWinsLosses(it.synergyRating, wins)
+                        antisynergyToWinsLosses.addWinsLosses(it.antisynergyRating, wins)
+                        amberControlToWinsLosses.addWinsLosses(it.amberControl.roundToInt(), wins)
+                        expectedAmberToWinsLosses.addWinsLosses(it.expectedAmber.roundToInt(), wins)
+                        artifactControlToWinsLosses.addWinsLosses(it.artifactControl.roundToInt(), wins)
+                        creatureControlToWinsLosses.addWinsLosses(it.creatureControl.roundToInt(), wins)
+
+                        creatureWins.addWinsLosses(it.totalCreatures, wins)
+                        actionWins.addWinsLosses(it.totalActions, wins)
+                        artifactWins.addWinsLosses(it.totalArtifacts, wins)
+                        upgradeWins.addWinsLosses(it.totalUpgrades, wins)
+
+                        raresWins.addWinsLosses(it.raresCount, wins)
+                        it.houses.forEach { house ->
+                            houseWins.addWinsLosses(house, wins)
+                        }
+                    }
                 }
             }
             msToIncMaps += addToMapMs
             currentPage++
 
-            if (currentPage.toInt() % 100 == 0) log.info("Updating stats, currently on deck ${currentPage * pageSize} sec ToQuery ${msToQuery / 1000} sec ToIncMap ${msToIncMaps / 1000}")
+            if (currentPage.toInt() % 100 == 0) {
+                log.info("Updating stats, currently on deck ${currentPage * pageSize} sec ToQuery ${msToQuery / 1000} sec ToIncMap ${msToIncMaps / 1000}")
+            }
         }
         val deckStatistics = DeckStatistics(
                 armorValues = armorValues,
@@ -307,30 +349,33 @@ class DeckImporterService(
                 power3OrLower = power3OrLower,
                 power3OrHigher = power3OrHigher,
                 power4OrHigher = power4OrHigher,
-                power5OrHigher = power5OrHigher
+                power5OrHigher = power5OrHigher,
+
+                sasToWinsLosses = sasToWinsLosses,
+                cardRatingsToWinsLosses = cardRatingsToWinsLosses,
+                synergyToWinsLosses = synergyToWinsLosses,
+                antisynergyToWinsLosses = antisynergyToWinsLosses,
+                amberControlToWinsLosses = amberControlToWinsLosses,
+                expectedAmberToWinsLosses = expectedAmberToWinsLosses,
+                artifactControlToWinsLosses = artifactControlToWinsLosses,
+                creatureControlToWinsLosses = creatureControlToWinsLosses,
+
+                creatureWins = creatureWins,
+                actionWins = actionWins,
+                artifactWins = artifactWins,
+                upgradeWins = upgradeWins,
+
+                raresWins = raresWins,
+                housesWins = houseWins
         )
         statsService.setStats(deckStatistics)
         log.info(
                 "Deck stats:\n" +
-                        "armor: ${deckStatistics.armorStats}\n" +
-                        "expectedAmber: ${deckStatistics.expectedAmberStats}\n" +
-                        "amberControl: ${deckStatistics.amberControlStats}\n" +
-                        "creature control: ${deckStatistics.creatureControlStats}\n" +
-                        "artifact control: ${deckStatistics.artifactControlStats}\n" +
                         "sas stats: ${deckStatistics.sasStats}\n" +
                         "cards rating: ${deckStatistics.cardsRatingStats}\n" +
                         "synergy: ${deckStatistics.synergyStats}\n" +
                         "antisynergy: ${deckStatistics.antisynergyStats}\n" +
-                        "totalCreaturePower: ${deckStatistics.totalCreaturePowerStats}\n" +
-                        "creatureCounts: ${deckStatistics.creatureCountStats}\n" +
-                        "artifactCounts: ${deckStatistics.artifactCountStats}\n" +
-                        "actionCounts: ${deckStatistics.actionCountStats}\n" +
-                        "upgradeCounts: ${deckStatistics.upgradeCountStats}\n" +
-                        "power2OrLower: ${deckStatistics.power2OrLowerStats}\n" +
-                        "power3OrLower: ${deckStatistics.power3OrLowerStats}\n" +
-                        "power3OrHigher: ${deckStatistics.power3OrHigherStats}\n" +
-                        "power4OrHigher: ${deckStatistics.power4OrHigherStats}\n" +
-                        "power5OrHigher: ${deckStatistics.power5OrHigherStats}"
+                        "sas win rate: ${deckStatistics.sasToWinsLosses}"
         )
     }
 

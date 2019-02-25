@@ -128,10 +128,3 @@ class DeckWinsService(
         cardRepo.saveAll(cards)
     }
 }
-
-data class Wins(
-        val wins: Int = 0,
-        val losses: Int = 0
-)
-
-

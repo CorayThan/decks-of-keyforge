@@ -1,13 +1,19 @@
 import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, ListItem, Typography } from "@material-ui/core"
 import { ExpandMore } from "@material-ui/icons"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { Loader } from "../mui-restyled/Loader"
+import { BarData } from "../stats/DeckStatsView"
+import { StatsBar } from "../stats/StatsBar"
+import { StatsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
 export const latestVersion = "2.7"
 
+@observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
@@ -42,6 +48,13 @@ export class ReleaseNotes extends React.Component {
                     "to be taken with a huge grain of salt. First, they are highly correlated with house win rates. Shadows wins the most, so all its cards " +
                     "rate high, and Mars wins the least, so all its rate low. I've used the range of ratings intra-house more than I've compared across " +
                     "houses.",
+                    "Added a global stats page.",
+                    <div>
+                        {StatsStore.instance.stats == null ? <Loader/> : (
+                            <StatsBar name={"SAS v3 Win Rate"} data={StatsStore.instance.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
+                        )}
+                    </div>,
+                    <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
                 ]}/>
                 <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[
                     "More graphs for the deck page. Click the expansion button to see them!",
@@ -151,3 +164,182 @@ export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.
         </ExpansionPanelDetails>
     </ExpansionPanel>
 )
+
+const sasV2BarData: BarData[] = [
+    {
+        x: 69,
+        y: 44.74
+    },
+    {
+        x: 81,
+        y: 55.01
+    },
+    {
+        x: 78,
+        y: 55.52
+    },
+    {
+        x: 99,
+        y: 70.59
+    },
+    {
+        x: 73,
+        y: 48.12
+    },
+    {
+        x: 77,
+        y: 51.98
+    },
+    {
+        x: 90,
+        y: 62.54
+    },
+    {
+        x: 87,
+        y: 59.22
+    },
+    {
+        x: 86,
+        y: 59.45
+    },
+    {
+        x: 79,
+        y: 53.82
+    },
+    {
+        x: 84,
+        y: 59.08
+    },
+    {
+        x: 83,
+        y: 54.62
+    },
+    {
+        x: 74,
+        y: 49.93
+    },
+    {
+        x: 70,
+        y: 44.72
+    },
+    {
+        x: 72,
+        y: 45.1
+    },
+    {
+        x: 80,
+        y: 51.29
+    },
+    {
+        x: 76,
+        y: 51.99
+    },
+    {
+        x: 82,
+        y: 55.73
+    },
+    {
+        x: 85,
+        y: 59.46
+    },
+    {
+        x: 75,
+        y: 48.57
+    },
+    {
+        x: 71,
+        y: 44.31
+    },
+    {
+        x: 89,
+        y: 61.78
+    },
+    {
+        x: 68,
+        y: 44.1
+    },
+    {
+        x: 62,
+        y: 33.71
+    },
+    {
+        x: 65,
+        y: 42.29
+    },
+    {
+        x: 88,
+        y: 60.17
+    },
+    {
+        x: 63,
+        y: 39.77
+    },
+    {
+        x: 92,
+        y: 62.12
+    },
+    {
+        x: 58,
+        y: 40
+    },
+    {
+        x: 67,
+        y: 40.36
+    },
+    {
+        x: 91,
+        y: 61.35
+    },
+    {
+        x: 61,
+        y: 32.81
+    },
+    {
+        x: 66,
+        y: 41.03
+    },
+    {
+        x: 64,
+        y: 41.34
+    },
+    {
+        x: 94,
+        y: 69.77
+    },
+    {
+        x: 93,
+        y: 58.11
+    },
+    {
+        x: 60,
+        y: 30.95
+    },
+    {
+        x: 96,
+        y: 71.43
+    },
+    {
+        x: 59,
+        y: 38.46
+    },
+    {
+        x: 95,
+        y: 66.67
+    },
+    {
+        x: 57,
+        y: 42.86
+    },
+    {
+        x: 98,
+        y: 100
+    },
+    {
+        x: 56,
+        y: 50
+    },
+    {
+        x: 50,
+        y: 50
+    }
+]

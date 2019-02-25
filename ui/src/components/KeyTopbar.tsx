@@ -9,7 +9,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, Routes } from "../config/Routes"
+import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatronButton } from "../generic/PatronButton"
@@ -53,7 +53,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             variant={"h4"}
                             style={{marginLeft: spacing(2)}}
                             color={"inherit"}>
-                            {screenStore.screenWidth < 1300 ? topbarShortName : topbarName}
+                            {screenStore.screenWidth < 1400 ? topbarShortName : topbarName}
                         </Typography>
                         {screenStore.screenWidth < 1600 ? null : subheaderNode}
                         <div style={{flexGrow: 1}}/>
@@ -81,7 +81,7 @@ const rightMenuStore = new RightMenuStore()
 class RightMenu extends React.Component {
 
     render() {
-        if (screenStore.screenSizeSm()) {
+        if (screenStore.screenSizeMd()) {
             return (
                 <>
                     <IconButton
@@ -137,6 +137,14 @@ const AppLinks = () => (
             onClick={rightMenuStore.close}
         >
             Cards
+        </LinkButton>
+        <LinkButton
+            style={{margin: spacing(1)}}
+            color={"inherit"}
+            to={StatsSubPaths.winRates}
+            onClick={rightMenuStore.close}
+        >
+            Stats
         </LinkButton>
         <DeckImportPop
             style={{margin: spacing(1), display: "flex", justifyContent: "center"}}

@@ -11,6 +11,7 @@ import { DeckViewPage } from "../decks/DeckViewFull"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
+import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
@@ -27,6 +28,7 @@ class Routes {
     static cards = "/cards"
     static about = "/about"
     static decks = "/decks"
+    static stats = "/stats"
     static importUnregisteredDeck = `${Routes.decks}/import`
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
@@ -77,6 +79,10 @@ class KeyRouter extends React.Component {
                             component={DeckSearchPage}
                         />
                         <Route
+                            path={Routes.stats}
+                            component={StatsPage}
+                        />
+                        <Route
                             exact={true}
                             path={Routes.registration}
                             component={RegistrationPage}
@@ -115,4 +121,9 @@ export class AboutSubPaths {
     static contact = Routes.about + "/contact"
     static releaseNotes = Routes.about + "/release-notes"
     static sellersAndDevs = Routes.about + "/sellers-and-devs"
+}
+
+export class StatsSubPaths {
+    static winRates = Routes.stats + "/win-rates"
+    static deckStats = Routes.stats + "/deck-stats"
 }

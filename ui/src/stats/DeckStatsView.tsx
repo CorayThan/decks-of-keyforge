@@ -159,7 +159,7 @@ export const KeyBar = (props: { data: BarData[], domainPadding?: number, style?:
 export interface ComparisonBarProps {
     name: string
     data: BarData[]
-    comparison: number
+    comparison?: number
     style?: React.CSSProperties
 }
 

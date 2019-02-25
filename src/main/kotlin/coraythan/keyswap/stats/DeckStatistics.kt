@@ -1,5 +1,8 @@
 package coraythan.keyswap.stats
 
+import coraythan.keyswap.House
+import coraythan.keyswap.decks.Wins
+
 // First is value, second is occurrances for that value in all decks
 data class DeckStatistics(
         val armorValues: Map<Int, Int>,
@@ -20,7 +23,24 @@ data class DeckStatistics(
         val power3OrLower: Map<Int, Int>,
         val power3OrHigher: Map<Int, Int>,
         val power4OrHigher: Map<Int, Int>,
-        val power5OrHigher: Map<Int, Int>
+        val power5OrHigher: Map<Int, Int>,
+
+        val sasToWinsLosses: Map<Int, Wins>,
+        val cardRatingsToWinsLosses: Map<Int, Wins>,
+        val synergyToWinsLosses: Map<Int, Wins>,
+        val antisynergyToWinsLosses: Map<Int, Wins>,
+        val amberControlToWinsLosses: Map<Int, Wins>,
+        val expectedAmberToWinsLosses: Map<Int, Wins>,
+        val artifactControlToWinsLosses: Map<Int, Wins>,
+        val creatureControlToWinsLosses: Map<Int, Wins>,
+
+        val creatureWins: Map<Int, Wins>,
+        val actionWins: Map<Int, Wins>,
+        val artifactWins: Map<Int, Wins>,
+        val upgradeWins: Map<Int, Wins>,
+
+        val raresWins: Map<Int, Wins>,
+        val housesWins: Map<House, Wins>
 ) {
     val armorStats = IndividalDeckTraitStats.fromValues(armorValues)
     val totalCreaturePowerStats = IndividalDeckTraitStats.fromValues(totalCreaturePower)
@@ -60,7 +80,29 @@ data class DeckStatistics(
             amberControl = amberControl.map { BarData(it.key, it.value) },
             expectedAmber = expectedAmber.map { BarData(it.key, it.value) },
             artifactControl = artifactControl.map { BarData(it.key, it.value) },
-            creatureControl = creatureControl.map { BarData(it.key, it.value) }
+            creatureControl = creatureControl.map { BarData(it.key, it.value) },
+
+            creatures = creatureCount.map { BarData(it.key, it.value) },
+            actions = actionCount.map { BarData(it.key, it.value) },
+            artifacts = artifactCount.map { BarData(it.key, it.value) },
+            upgrades = upgradeCount.map { BarData(it.key, it.value) },
+
+            sasWinRate = sasToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            cardRatingsWinRate = cardRatingsToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            synergyWinRate = synergyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            antisynergyWinRate = antisynergyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            amberControlWinRate = amberControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            expectedAmberWinRate = expectedAmberToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            artifactControlWinRate = artifactControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            creatureControlWinRate = creatureControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+
+            creatureCountWinRate = creatureWins.map { BarData(it.key, it.value.toWinPercent()) },
+            actionCountWinRate = actionWins.map { BarData(it.key, it.value.toWinPercent()) },
+            artifactCountWinRate = artifactWins.map { BarData(it.key, it.value.toWinPercent()) },
+            upgradeCountWinRate = upgradeWins.map { BarData(it.key, it.value.toWinPercent()) },
+
+            raresWinRate = raresWins.map { BarData(it.key, it.value.toWinPercent()) },
+            houseWinRate = housesWins.map { BarData(it.key, it.value.toWinPercent()) }
     )
 
     fun groupCreaturePowerByTens(): List<BarData> {
