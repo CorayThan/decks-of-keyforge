@@ -77,8 +77,6 @@ class DeckWinsService(
         return currentPage
     }
 
-    @Scheduled(fixedRateString = onceEverySixHoursLock)
-    @SchedulerLock(name = "updateCardAndHouseWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
     fun updateCardAndHouseWins() {
         log.info("Beginning card and house win loss update")
 

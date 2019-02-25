@@ -76,7 +76,8 @@ class DeckEndpoints(
 }
 
 data class SimpleDeckResponse(
-        val deck: Any
+        val deck: Any,
+        val sasVersion: Int = currentDeckRatingVersion
 )
 
 class Nothing()

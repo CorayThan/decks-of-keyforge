@@ -27,7 +27,7 @@ export const KeyDrawerStore = new KeyDrawerStoreImpl()
 export class KeyDrawer extends React.Component<{ children: React.ReactNode }> {
 
     componentDidMount() {
-        KeyDrawerStore.open = true
+        KeyDrawerStore.open = false
     }
 
     render() {

@@ -21,8 +21,7 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"3.0"} expanded={true} releaseNotes={[
                     "TLDR; Updated SAS and added win rates for cards on the cards page.",
                     "This is a major revision to SAS ratings. I've used win rates of cards from the official API to inform my card ratings for SAS. I have " +
-                    "more closely followed the win rates for commons than for uncommons, and especially rares, as we have much more data for more reliable " +
-                    "win rate statistics.",
+                    "followed the win rates for commons more close than uncommons or rares due to the larger amount of data.",
                     "I've also added new tiers to the card ratings, which include 0.5, 1.5, 2.5 and 3.5 for more precision in rating.",
                     "These changes have changed the scale of SAS somewhat. 75 is still pretty close to average, but the scale has widened. " +
                     "There are now 107 SAS decks (rather than 102) and 39 SAS decks (rather than 45).",
@@ -34,11 +33,10 @@ export class ReleaseNotes extends React.Component {
                             <ListItem><Typography>Key Hammer 2 -> 0.5</Typography></ListItem>
                             <ListItem><Typography>Restringuntus 1 -> 3</Typography></ListItem>
                             <ListItem><Typography>Emp Blast 3 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Gatekeeper 4 -> 2.5</Typography></ListItem>
                             <ListItem><Typography>Total Recall 3 -> 1</Typography></ListItem>
-                            <ListItem><Typography>Lights Out 2 -> 3.5</Typography></ListItem>
                             <ListItem><Typography>Safe Place 1 -> 2.5</Typography></ListItem>
                             <ListItem><Typography>Save the Pack 2 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Murmook 1 -> 2.5</Typography></ListItem>
                         </List>
                     ),
                     "Many more have been changed by 0.5 or 1 point. You can see the previous spreadsheet in the 2.0 release notes, and compare to this one.",
@@ -49,12 +47,14 @@ export class ReleaseNotes extends React.Component {
                     "rate high, and Mars wins the least, so all its rate low. I've used the range of ratings intra-house more than I've compared across " +
                     "houses.",
                     "Added a global stats page.",
-                    <div>
-                        {StatsStore.instance.stats == null ? <Loader/> : (
-                            <StatsBar name={"SAS v3 Win Rate"} data={StatsStore.instance.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
-                        )}
-                    </div>,
-                    <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
+                    (
+                        <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+                            {StatsStore.instance.stats == null ? <Loader/> : (
+                                <StatsBar name={"SAS v3 Win Rate"} data={StatsStore.instance.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
+                            )}
+                            <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
+                        </div>
+                    )
                 ]}/>
                 <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[
                     "More graphs for the deck page. Click the expansion button to see them!",

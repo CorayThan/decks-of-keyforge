@@ -172,6 +172,7 @@ export class SellersAndDevs extends React.Component {
                         `It doesn't need to be obtrusive, for example making "75 SAS" into a link, or having a small link icon next to it, is fine.`,
                         "4. Please attribute decksofkeyforge.com on your site.",
                         "5. You'll need to use the API key associated with your account.",
+                        "6. I've included the version of SAS used. If possible, please cache or persist SAS scores until a new version is released.",
                         "The url to request stats is:",
                         "https://decksofkeyforge.com/public-api/v3/decks/{deck-id-from-master-vault}",
                         `You'll need to include the header "Api-Key: {your-api-key}`

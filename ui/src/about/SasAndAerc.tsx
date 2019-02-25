@@ -5,8 +5,12 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckScoreView } from "../decks/DeckScoreView"
 import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
+import { AboveAveragePlusIcon } from "../generic/icons/AboveAveragePlusIcon"
 import { AverageIcon } from "../generic/icons/AverageIcon"
+import { AverageMinusIcon } from "../generic/icons/AverageMinusIcon"
+import { AveragePlusIcon } from "../generic/icons/AveragePlusIcon"
 import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
+import { BelowAverageMinusIcon } from "../generic/icons/BelowAverageMinusIcon"
 import { BestIcon } from "../generic/icons/BestIcon"
 import { WorstIcon } from "../generic/icons/WorstIcon"
 import { InfoListCard } from "../generic/InfoListCard"
@@ -41,9 +45,13 @@ export class SasAndAerc extends React.Component {
                             <Typography>These ratings are represented, from best to worst, by the symbols:</Typography>
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
                                 <BestIcon style={{marginRight: spacing(1)}}/>
+                                <AboveAveragePlusIcon style={{marginRight: spacing(1)}}/>
                                 <AboveAverageIcon style={{marginRight: spacing(1)}}/>
+                                <AveragePlusIcon style={{marginRight: spacing(1)}}/>
                                 <AverageIcon style={{marginRight: spacing(1)}}/>
+                                <AverageMinusIcon style={{marginRight: spacing(1)}}/>
                                 <BelowAverageIcon style={{marginRight: spacing(1)}}/>
+                                <BelowAverageMinusIcon style={{marginRight: spacing(1)}}/>
                                 <WorstIcon style={{marginRight: spacing(1)}}/>
                             </div>
                         </div>,
@@ -80,8 +88,8 @@ export class SasAndAerc extends React.Component {
                         />,
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Deck and House Synergies</Typography>,
-                        "The app calculates statistics for all decks, like how many creatures are usually in a deck, or whether the creatures are high or low " +
-                        "power. Some cards synergize with the traits of a deck, or a house in a deck.",
+                        "The app calculates statistics for all decks, like how many creatures are usually in a deck, or whether the creatures are high or " +
+                        "low power. Some cards synergize with the traits of a deck, or a house in a deck.",
                         <CardExample
                             text={"Ammonia Clouds damages all creatures, but if your creatures have armor, it can prevent much of the damage dealt by " +
                             "Ammonia clouds. Ammonia Clouds synergizes with decks with high armor."}
@@ -186,14 +194,16 @@ export const CardExample = (props: { text: string, img1: string, img2: string })
         <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2), justifyContent: "center"}}>
             <div>
                 <img
-                    style={{width: 232, marginRight: spacing(2)}}
+                    style={{width: 232, margin: spacing(1)}}
                     src={props.img1}
+                    alt={"Card left."}
                 />
             </div>
             <div>
                 <img
-                    style={{width: 232}}
+                    style={{width: 232, margin: spacing(1)}}
                     src={props.img2}
+                    alt={"Card Right."}
                 />
             </div>
         </div>

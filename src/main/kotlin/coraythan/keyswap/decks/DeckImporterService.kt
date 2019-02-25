@@ -34,7 +34,7 @@ private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
-private const val lockUpdateStats = "PT24H"
+private const val lockUpdateStats = "PT72H"
 
 const val currentDeckRatingVersion = 3
 

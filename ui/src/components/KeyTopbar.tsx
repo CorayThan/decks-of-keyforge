@@ -185,7 +185,7 @@ class UserLinks extends React.Component {
                         Profile
                     </LinkButton>
                     <div style={{margin: spacing(1)}}>
-                        <PatronButton/>
+                        <PatronButton primary={screenStore.screenSizeMd()}/>
                     </div>
                     <KeyButton
                         outlinedWhite={true}

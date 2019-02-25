@@ -51,4 +51,4 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
     }
 }
 
-export const AboutGridItem = (props: GridProps) => (<Grid item={true} xs={12} md={6} xl={4} style={{maxWidth: 608}} {...props} />)
+export const AboutGridItem = (props: GridProps) => (<Grid item={true} xs={12} md={6} xl={6} style={{maxWidth: 624}} {...props} />)
