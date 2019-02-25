@@ -112,8 +112,8 @@ class DeckImporterService(
         log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    @Scheduled(fixedRateString = "PT24H")
-    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
+//    @Scheduled(fixedRateString = "PT24H")
+//    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
     fun updateDeckStats() {
         log.info("Began update to deck statistics.")
         // Only update them if we have a few decks in the DB
@@ -125,7 +125,8 @@ class DeckImporterService(
 
     private var doneRatingDecks = false
 
-    @Scheduled(fixedRateString = lockUpdateRatings)
+    // Comment this in whenever rating gets revved
+    // @Scheduled(fixedRateString = lockUpdateRatings)
     fun rateDecks() {
 
         if (doneRatingDecks) return
@@ -141,7 +142,6 @@ class DeckImporterService(
             if (deckResults.isEmpty()) {
                 doneRatingDecks = true
                 log.info("Done rating decks!")
-                updateDeckStats()
             }
 
             val rated = deckResults.map { rateDeck(it).copy(ratingVersion = currentDeckRatingVersion) }

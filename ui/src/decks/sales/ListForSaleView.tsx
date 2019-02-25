@@ -13,7 +13,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { log, Utils } from "../../config/Utils"
+import { Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { MessageStore } from "../../ui/MessageStore"
@@ -162,8 +162,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
 
         const forSaleInCountry = UserStore.instance.country
-
-        log.info(`User country is ` + forSaleInCountry)
 
         return (
             <div>

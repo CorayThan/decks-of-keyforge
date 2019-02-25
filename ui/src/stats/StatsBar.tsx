@@ -9,7 +9,7 @@ import { BarData } from "./DeckStatsView"
 
 export interface StatsBarProps {
     name: string
-    data: BarData[]
+    data?: BarData[]
     yDomain?: [number, number]
     small?: boolean
     style?: React.CSSProperties
@@ -20,7 +20,7 @@ export interface StatsBarProps {
 @observer
 export class StatsBar extends React.Component<StatsBarProps> {
     render() {
-        const {secondary} = this.props
+        const {secondary, data} = this.props
         const small = {
             width: 400,
             height: 300,
@@ -34,6 +34,11 @@ export class StatsBar extends React.Component<StatsBarProps> {
         const autoSizes = screenStore.screenSizeSm() ? small : large
 
         const sizes = this.props.small == null ? autoSizes : (this.props.small ? small : large)
+
+        if (data == null) {
+            return <Typography style={{margin: spacing(2)}}>Calculating Stats</Typography>
+        }
+
         return (
             <div
                 style={{

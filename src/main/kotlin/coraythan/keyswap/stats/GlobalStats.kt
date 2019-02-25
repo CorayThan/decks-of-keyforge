@@ -25,22 +25,22 @@ data class GlobalStats(
         val artifacts: List<BarData> = listOf(),
         val upgrades: List<BarData> = listOf(),
 
-        val sasWinRate: List<BarData> = listOf(),
-        val cardRatingsWinRate: List<BarData> = listOf(),
-        val synergyWinRate: List<BarData> = listOf(),
-        val antisynergyWinRate: List<BarData> = listOf(),
-        val amberControlWinRate: List<BarData> = listOf(),
-        val expectedAmberWinRate: List<BarData> = listOf(),
-        val artifactControlWinRate: List<BarData> = listOf(),
-        val creatureControlWinRate: List<BarData> = listOf(),
+        val sasWinRate: List<BarData>? = listOf(),
+        val cardRatingsWinRate: List<BarData>? = listOf(),
+        val synergyWinRate: List<BarData>? = listOf(),
+        val antisynergyWinRate: List<BarData>? = listOf(),
+        val amberControlWinRate: List<BarData>? = listOf(),
+        val expectedAmberWinRate: List<BarData>? = listOf(),
+        val artifactControlWinRate: List<BarData>? = listOf(),
+        val creatureControlWinRate: List<BarData>? = listOf(),
 
-        val creatureCountWinRate: List<BarData> = listOf(),
-        val actionCountWinRate: List<BarData> = listOf(),
-        val artifactCountWinRate: List<BarData> = listOf(),
-        val upgradeCountWinRate: List<BarData> = listOf(),
+        val creatureCountWinRate: List<BarData>? = listOf(),
+        val actionCountWinRate: List<BarData>? = listOf(),
+        val artifactCountWinRate: List<BarData>? = listOf(),
+        val upgradeCountWinRate: List<BarData>? = listOf(),
 
-        val raresWinRate: List<BarData> = listOf(),
-        val houseWinRate: List<BarData> = listOf()
+        val raresWinRate: List<BarData>? = listOf(),
+        val houseWinRate: List<BarData>? = listOf()
 )
 
 data class BarData(
