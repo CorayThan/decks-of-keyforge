@@ -12,7 +12,7 @@ const panelWidth = 344
 
 class KeyDrawerStoreImpl {
     @observable
-    open = true
+    open = false
 
     closeIfSmall = () => {
         if (screenStore.screenSizeSm()) {

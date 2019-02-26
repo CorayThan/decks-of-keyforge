@@ -24,7 +24,7 @@ export class ReleaseNotes extends React.Component {
                     "followed the win rates for commons more close than uncommons or rares due to the larger amount of data.",
                     "I've also added new tiers to the card ratings, which include 0.5, 1.5, 2.5 and 3.5 for more precision in rating.",
                     "These changes have changed the scale of SAS somewhat. 75 is still pretty close to average, but the scale has widened. " +
-                    "There are now 107 SAS decks (rather than 102) and 39 SAS decks (rather than 45).",
+                    "There are now 105 SAS decks (rather than 102) and 39 SAS decks (rather than 45).",
                     "Some of the major card rating changes include (keep in mind synergies can make the value in a deck go up or down):",
                     (
                         <List>
@@ -41,7 +41,9 @@ export class ReleaseNotes extends React.Component {
                     ),
                     "Many more have been changed by 0.5 or 1 point. You can see the previous spreadsheet in the 2.0 release notes, and compare to this one.",
                     // TODO do it
-                    "Add google sheets spreadsheet link here",
+                    <a href={"https://docs.google.com/spreadsheets/d/1NpRMo_uZcOh8EkiYTvSQZOPHgfAEDU88rd7VuBDkgwQ/edit?usp=sharing"}>
+                        Card Ratings v3 Spreadsheet
+                    </a>,
                     "Also, you can see the win ratings for cards on the Cards page, and sort by win rating. The ratings are pretty interesting, but need " +
                     "to be taken with a huge grain of salt. First, they are highly correlated with house win rates. Shadows wins the most, so all its cards " +
                     "rate high, and Mars wins the least, so all its rate low. I've used the range of ratings intra-house more than I've compared across " +
@@ -106,10 +108,10 @@ export class ReleaseNotes extends React.Component {
                     "You can view the ratings as spreadsheets on google docs. (Although I recommend toggling on full view on the Cards page for the " +
                     "current version.)",
                     <a href={"https://docs.google.com/spreadsheets/d/1v8YYw1uTaZc_G01pFqbofgYsvKP2lADEs-5-SqGR6LY/edit?usp=sharing"}>
-                        Card Ratings V2 Spreadsheet
+                        Card Ratings v2 Spreadsheet
                     </a>,
                     <a href={"https://docs.google.com/spreadsheets/d/16gdzgD9Z3S6bb8NJbJCQ0A-mcOnznQnqV2wFoJublbs/edit?usp=sharing"}>
-                        Card Ratings V1 Spreadsheet
+                        Card Ratings v1 Spreadsheet
                     </a>,
                     "",
                     "Added expiration date for deck listings."

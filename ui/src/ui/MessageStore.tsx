@@ -50,6 +50,7 @@ export class MessageStore {
                 color={"inherit"}
                 to={AboutSubPaths.releaseNotes}
                 key={"release-notes"}
+                onClick={() => this.open = false}
             >
                 Release Notes
             </LinkButton>

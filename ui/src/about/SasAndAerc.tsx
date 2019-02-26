@@ -5,14 +5,9 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckScoreView } from "../decks/DeckScoreView"
 import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
-import { AboveAveragePlusIcon } from "../generic/icons/AboveAveragePlusIcon"
 import { AverageIcon } from "../generic/icons/AverageIcon"
-import { AverageMinusIcon } from "../generic/icons/AverageMinusIcon"
-import { AveragePlusIcon } from "../generic/icons/AveragePlusIcon"
 import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
-import { BelowAverageMinusIcon } from "../generic/icons/BelowAverageMinusIcon"
-import { BestIcon } from "../generic/icons/BestIcon"
-import { WorstIcon } from "../generic/icons/WorstIcon"
+import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
 import { Loader } from "../mui-restyled/Loader"
 import { KeyBar, KeyPieGlobalAverages } from "../stats/DeckStatsView"
@@ -44,15 +39,15 @@ export class SasAndAerc extends React.Component {
                         <div>
                             <Typography>These ratings are represented, from best to worst, by the symbols:</Typography>
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
-                                <BestIcon style={{marginRight: spacing(1)}}/>
-                                <AboveAveragePlusIcon style={{marginRight: spacing(1)}}/>
-                                <AboveAverageIcon style={{marginRight: spacing(1)}}/>
-                                <AveragePlusIcon style={{marginRight: spacing(1)}}/>
-                                <AverageIcon style={{marginRight: spacing(1)}}/>
-                                <AverageMinusIcon style={{marginRight: spacing(1)}}/>
-                                <BelowAverageIcon style={{marginRight: spacing(1)}}/>
-                                <BelowAverageMinusIcon style={{marginRight: spacing(1)}}/>
-                                <WorstIcon style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={1} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={1.5} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={2} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={2.5} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={3} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={3.5} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={4} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={4.5} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={5} style={{marginRight: spacing(1)}}/>
                             </div>
                         </div>,
                         <CardExample

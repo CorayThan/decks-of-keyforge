@@ -370,12 +370,7 @@ class DeckImporterService(
         )
         statsService.setStats(deckStatistics)
         log.info(
-                "Deck stats:\n" +
-                        "sas stats: ${deckStatistics.sasStats}\n" +
-                        "cards rating: ${deckStatistics.cardsRatingStats}\n" +
-                        "synergy: ${deckStatistics.synergyStats}\n" +
-                        "antisynergy: ${deckStatistics.antisynergyStats}\n" +
-                        "sas win rate: ${deckStatistics.sasToWinsLosses}"
+                "Deck stats json: \n\n${objectMapper.writeValueAsString(deckStatistics)}\n\n"
         )
     }
 
