@@ -18,6 +18,7 @@ import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 import javax.persistence.EntityManager
 
 @Transactional
@@ -32,7 +33,6 @@ class DeckService(
         entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
-    private val deckPageSize = 20L
     private val defaultFilters = DeckFilters()
     private val defaultFiltersSecondPage = DeckFilters().copy(page = defaultFilters.page + 1)
     private val query = JPAQueryFactory(entityManager)
@@ -69,7 +69,7 @@ class DeckService(
                         .select(deckQ.id)
                         .from(deckQ)
                         .where(predicate)
-                        .limit(1000)
+                        .limit(if (filters.forSale || filters.forTrade) 10000 else 1000)
                         .fetch()
                         .count()
                         .toLong()
@@ -77,7 +77,7 @@ class DeckService(
         }
 
         return DeckCount(
-                pages = (count + deckPageSize - 1) / deckPageSize,
+                pages = (count + filters.pageSize - 1) / filters.pageSize,
                 count = count
         )
     }
@@ -118,8 +118,8 @@ class DeckService(
 
         val deckResults = query.selectFrom(deckQ)
                 .where(predicate)
-                .limit(deckPageSize)
-                .offset(filters.page * deckPageSize)
+                .limit(filters.pageSize)
+                .offset(filters.page * filters.pageSize)
                 .apply {
                     if (filters.sort != DeckSortOptions.ADDED_DATE) {
                         orderBy(sort, deckQ.id.asc())
@@ -227,14 +227,18 @@ class DeckService(
         if (filters.forSaleInCountry != null) predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
-                val entityRef = if (it.property == "askingPrice") {
-                    predicate.and(deckQ.userDecks.any().askingPrice.isNotNull)
-                    deckQ.userDecks.any()
+                if (it.property == "listedWithinDays") {
+                    predicate.and(deckQ.userDecks.any().dateListed.gt(ZonedDateTime.now().minusDays(it.value.toLong())))
                 } else {
-                    deckQ
+                    val entityRef = if (it.property == "askingPrice") {
+                        predicate.and(deckQ.userDecks.any().askingPrice.isNotNull)
+                        deckQ.userDecks.any()
+                    } else {
+                        deckQ
+                    }
+                    val pathToVal = Expressions.path(Double::class.java, entityRef, it.property)
+                    predicate.and(Expressions.predicate(if (it.cap == Cap.MIN) Ops.GOE else Ops.LOE, pathToVal, Expressions.constant(it.value)))
                 }
-                val pathToVal = Expressions.path(Double::class.java, entityRef, it.property)
-                predicate.and(Expressions.predicate(if (it.cap == Cap.MIN) Ops.GOE else Ops.LOE, pathToVal, Expressions.constant(it.value)))
             }
         }
 

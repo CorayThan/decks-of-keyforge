@@ -96,6 +96,7 @@ export class DeckFilters {
     sortDirection: SortDirection = "DESC"
     @observable
     owner: string = ""
+    pageSize = 20
 
     reset = () => {
         log.debug("Reseting deck filters.")

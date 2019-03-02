@@ -11,13 +11,18 @@ import { StatsBar } from "../stats/StatsBar"
 import { StatsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.0"
+export const latestVersion = "3.1"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.1"} expanded={true} releaseNotes={[
+                    "You can set page size when searching decks to be 100. Look at the bottom of the deck search drawer!",
+                    `When searching decks for sale you can set a "Listed Within Days" limit to see only more recently listed decks.`,
+                    ""
+                    ]} />
                 <ReleaseNote releaseNumber={"3.0"} expanded={true} releaseNotes={[
                     "TLDR; Updated SAS and added win rates for cards on the cards page.",
                     "This is a major revision to SAS ratings. I've used win rates of cards from the official API to inform my card ratings for SAS. I have " +

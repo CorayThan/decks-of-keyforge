@@ -4142,6 +4142,7 @@
   synergies:
     - trait: damagesMultipleEnemies
     - trait: damagesFriendlyCreatures
+      rating: -2
 
 - name: Scout
   cardNumber: 334

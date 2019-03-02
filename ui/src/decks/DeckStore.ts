@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
 import { DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
@@ -89,6 +90,7 @@ export class DeckStore {
 
     searchDecks = async (filters: DeckFilters) => {
         this.searchingForDecks = true
+        filters.pageSize = keyLocalStorage.deckPageSize
         this.currentFilters = clone(filters)
         // log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
         this.nextDeckPage = undefined

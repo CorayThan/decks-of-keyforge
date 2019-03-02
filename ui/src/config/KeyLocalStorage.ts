@@ -3,18 +3,22 @@ import { log } from "./Utils"
 
 class KeyLocalStorage {
 
-    private localStorage = window.localStorage
-
     @observable
     showTableView: boolean
 
     @observable
     showFullCardView: boolean
 
+    @observable
+    deckPageSize: number = 20
+
+    private localStorage = window.localStorage
+
     constructor() {
         const value = this.showDeckTableViewFromStorage()
         this.showTableView = Boolean(value)
         this.showFullCardView = Boolean(this.showFullCardViewFromStorage())
+        this.deckPageSizeFromStorage()
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)
@@ -48,6 +52,19 @@ class KeyLocalStorage {
         return showFullCardView === "true"
     }
 
+    setDeckPageSize = (size: number) => {
+        this.deckPageSize = size
+        this.localStorage.setItem(Keys.DECK_PAGE_SIZE, size.toString())
+    }
+
+    deckPageSizeFromStorage = () => {
+        const deckPageSizeString = this.localStorage.getItem(Keys.DECK_PAGE_SIZE)
+        const deckPageSize = Number(deckPageSizeString)
+        if (deckPageSize > 0) {
+            this.deckPageSize = deckPageSize
+        }
+    }
+
     clear = () => {
         log.debug("Clearing local storage.")
         this.localStorage.clear()
@@ -58,7 +75,8 @@ class KeyLocalStorage {
 enum Keys {
     AUTH = "AUTH",
     DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
-    FULL_CARD_VIEW = "FULL_CARD_VIEW"
+    FULL_CARD_VIEW = "FULL_CARD_VIEW",
+    DECK_PAGE_SIZE = "DECK_PAGE_SIZE"
 }
 
 export const keyLocalStorage = new KeyLocalStorage()

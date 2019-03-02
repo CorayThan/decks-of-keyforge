@@ -1,11 +1,12 @@
-import { FormGroup, IconButton, Switch } from "@material-ui/core"
+import { FormGroup, IconButton, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { Add, Close, Delete } from "@material-ui/icons"
+import { Add, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
@@ -137,9 +138,15 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "cardsRating",
             "maverickCount"
         ]
+        const hideMinMaxConstraintOptions = [
+            "listedWithinDays"
+        ]
 
         if (forSale) {
             constraintOptions.unshift("askingPrice")
+        }
+        if (forSale || forTrade) {
+            constraintOptions.unshift("listedWithinDays")
         }
 
         return (
@@ -239,6 +246,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             <ConstraintDropdowns
                                 store={this.constraintsStore}
                                 properties={constraintOptions}
+                                hideMinMax={hideMinMaxConstraintOptions}
                             />
                         </ListItem>
                         <ListItem>
@@ -303,17 +311,41 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <Typography variant={"subtitle2"}>Counting ...</Typography>
                             </ListItem>
                         ) : null}
-
                         <ListItem>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={keyLocalStorage.showTableView}
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <Tooltip title={"View type"}>
+                                    <ToggleButtonGroup
+                                        value={keyLocalStorage.showTableView}
+                                        exclusive={true}
                                         onChange={keyLocalStorage.toggleDeckTableView}
-                                    />
-                                }
-                                label={"Table view"}
-                            />
+                                        style={{marginRight: spacing(2)}}
+                                    >
+                                        <ToggleButton value={false}>
+                                            <ViewModule/>
+                                        </ToggleButton>
+                                        <ToggleButton value={true}>
+                                            <ViewList/>
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                </Tooltip>
+                                <Tooltip title={"Page size"}>
+                                    <ToggleButtonGroup
+                                        value={keyLocalStorage.deckPageSize}
+                                        exclusive={true}
+                                        onChange={(event, size) => {
+                                            keyLocalStorage.setDeckPageSize(size)
+                                            this.search()
+                                        }}
+                                    >
+                                        <ToggleButton value={20}>
+                                            20
+                                        </ToggleButton>
+                                        <ToggleButton value={100}>
+                                            100
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                </Tooltip>
+                            </div>
                         </ListItem>
                     </List>
                 </form>

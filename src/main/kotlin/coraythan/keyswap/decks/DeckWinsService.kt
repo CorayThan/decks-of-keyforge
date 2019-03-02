@@ -109,6 +109,7 @@ class DeckWinsService(
                     }}" + "house map: $houseWins")
 
             saveCardWins(cardWins)
+            cardService.reloadCachedCards()
         }
 
         log.info("It took ${updateCardAndHouseWinsLossesDuration / 1000} seconds to update wins and losses for cards and houses.")

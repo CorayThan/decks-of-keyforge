@@ -126,23 +126,7 @@ class CardService(
         return cardRepo.save(card)
     }
 
-    private fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
-
-    private fun cardsFromCardIds(cardIdsString: String): List<Card> {
-        if (cardIdsString.isBlank()) {
-            throw IllegalArgumentException("Card id string was blank!")
-        }
-        val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
-        val realCards = allFullCardsNonMaverickMap()
-        return cardIds.cardIds.flatMap { entry ->
-            entry.value.map {
-                val realCard = realCards[it]
-                realCard?.copy(house = entry.key, maverick = entry.key != realCard.house) ?: throw java.lang.IllegalStateException("No card for $it")
-            }
-        }
-    }
-
-    private fun reloadCachedCards() {
+    fun reloadCachedCards() {
         nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
             it.traits.size
             CardNumberSetPair(it.expansion, it.cardNumber) to it
@@ -169,4 +153,20 @@ class CardService(
 
     }
 
+
+    private fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
+
+    private fun cardsFromCardIds(cardIdsString: String): List<Card> {
+        if (cardIdsString.isBlank()) {
+            throw IllegalArgumentException("Card id string was blank!")
+        }
+        val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
+        val realCards = allFullCardsNonMaverickMap()
+        return cardIds.cardIds.flatMap { entry ->
+            entry.value.map {
+                val realCard = realCards[it]
+                realCard?.copy(house = entry.key, maverick = entry.key != realCard.house) ?: throw java.lang.IllegalStateException("No card for $it")
+            }
+        }
+    }
 }

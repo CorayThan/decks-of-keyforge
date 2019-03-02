@@ -22,6 +22,7 @@ data class DeckFilters(
         val cards: List<DeckCardQuantity> = listOf(),
 
         val owner: String = "",
+        val pageSize: Long = 20,
 
         val sort: DeckSortOptions = DeckSortOptions.SAS_RATING,
         val sortDirection: SortDirection = SortDirection.DESC
