@@ -12,6 +12,9 @@ class KeyLocalStorage {
     @observable
     deckPageSize: number = 20
 
+    @observable
+    displayExtraDeckStats = false
+
     private localStorage = window.localStorage
 
     constructor() {
@@ -52,6 +55,15 @@ class KeyLocalStorage {
         return showFullCardView === "true"
     }
 
+    toggleDisplayExtraDeckStats = () => {
+        this.displayExtraDeckStats = !this.displayExtraDeckStats
+        this.localStorage.setItem(Keys.DISPLAY_EXTRA_DECK_STATS, this.displayExtraDeckStats.toString())
+    }
+
+    loadDisplayExtraDeckStats = () => {
+        this.displayExtraDeckStats = this.localStorage.getItem(Keys.DISPLAY_EXTRA_DECK_STATS) === "true"
+    }
+
     setDeckPageSize = (size: number) => {
         this.deckPageSize = size
         this.localStorage.setItem(Keys.DECK_PAGE_SIZE, size.toString())
@@ -76,7 +88,8 @@ enum Keys {
     AUTH = "AUTH",
     DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
     FULL_CARD_VIEW = "FULL_CARD_VIEW",
-    DECK_PAGE_SIZE = "DECK_PAGE_SIZE"
+    DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
+    DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
 }
 
 export const keyLocalStorage = new KeyLocalStorage()

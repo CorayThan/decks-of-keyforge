@@ -1,10 +1,10 @@
 import { Collapse, IconButton, Tooltip, Typography } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
 import { ExpandLess, ExpandMore, Info } from "@material-ui/icons"
-import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryContainer, VictoryLabel, VictoryPie, VictoryStyleInterface, VictoryTheme } from "victory"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Deck } from "../decks/Deck"
@@ -64,15 +64,14 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     }
 }
 
-class ExtraDeckStatsStore {
-    @observable
-    displayRest = false
-}
-
-const extraDeckStatsStore = new ExtraDeckStatsStore()
-
 @observer
 export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
+
+    constructor(props: DeckStatsViewProps) {
+        super(props)
+        keyLocalStorage.loadDisplayExtraDeckStats()
+    }
+
     render() {
         const {
             sasRating, cardsRating, synergyRating, antisynergyRating, totalPower,
@@ -107,14 +106,14 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
                 <div style={{display: "flex", justifyContent: "center"}}>
                     {firstRowProps.map(props => <ComparisonBar key={props.name} {...props} style={{paddingBottom: 0}}/>)}
                 </div>
-                <Collapse in={extraDeckStatsStore.displayRest}>
+                <Collapse in={keyLocalStorage.displayExtraDeckStats}>
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {restProps.map(props => <ComparisonBar key={props.name} {...props} style={{paddingBottom: 0}}/>)}
                     </div>
                 </Collapse>
                 <div style={{display: "flex", justifyContent: "center"}}>
-                    <IconButton onClick={() => extraDeckStatsStore.displayRest = !extraDeckStatsStore.displayRest}>
-                        {extraDeckStatsStore.displayRest ? <ExpandLess/> : <ExpandMore/>}
+                    <IconButton onClick={keyLocalStorage.toggleDisplayExtraDeckStats}>
+                        {keyLocalStorage.displayExtraDeckStats ? <ExpandLess/> : <ExpandMore/>}
                     </IconButton>
                 </div>
             </div>
