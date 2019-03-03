@@ -1,5 +1,6 @@
 package coraythan.keyswap.stats
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
@@ -8,7 +9,9 @@ import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.QDeck
+import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZoneOffset
@@ -18,7 +21,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT1M"
+private const val lockUpdateStats = "PT10S"
 
 @Transactional
 @Service
@@ -54,13 +57,8 @@ class StatsService(
         return cachedStats
     }
 
-    fun setStats(deckStats: DeckStatistics) {
-        deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(deckStats))
-        updateCachedStats()
-    }
-
-//    @Scheduled(fixedDelayString = "PT24H")
-//    @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
+    @Scheduled(fixedDelayString = "PT24H")
+    @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
         log.info("Creating deck stats with new version.")
         val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
@@ -76,8 +74,8 @@ class StatsService(
         }
     }
 
-    // @Scheduled(fixedDelayString = lockUpdateStats)
-    // @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
+     @Scheduled(fixedDelayString = lockUpdateStats)
+     @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
     fun updateStatsForDecks() {
 
         if (!updateStats) return
@@ -93,8 +91,11 @@ class StatsService(
             else -> {
                 val millisTaken = measureTimeMillis {
                     val deckQ = QDeck.deck
+                    val predicate = BooleanBuilder()
+                            .and(deckQ.registered.isTrue)
+                            .andAnyOf(deckQ.statsVersion.isNull, deckQ.statsVersion.ne(stats.version))
                     val deckResults = query.selectFrom(deckQ)
-                            .where(deckQ.statsVersion.isNull.or(deckQ.statsVersion.ne(stats.version)))
+                            .where(predicate)
                             .limit(10000)
                             .fetch()
 

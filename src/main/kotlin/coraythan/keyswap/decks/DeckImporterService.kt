@@ -19,6 +19,7 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -148,7 +149,12 @@ class DeckImporterService(
             if (deck != null) {
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 val cards = cardService.importNewCards(deckList)
-                saveDecks(deckList, cards)
+                try {
+                    saveDecks(deckList, cards)
+                } catch (e: DataIntegrityViolationException) {
+                    // We must have a pre-existing deck nowebay
+                    return false
+                }
                 return true
             }
         }
