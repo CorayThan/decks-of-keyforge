@@ -164,9 +164,14 @@ export class SasAndAerc extends React.Component {
                         "1 point is approximately equal to destroying one artifact.",
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Creature Control (C)</Typography>,
-                        "Creature control is increased by cards that directly damage, destroy, disable or prevent the play of enemy creatures. It does " +
-                        "not account for your creatures' power, although it does account for special abilities that encourage using a creature to fight.",
+                        "Creature control is increased by cards that damage, destroy, disable or prevent the play of enemy creatures. Creatures with power " +
+                        "5-6 contribute 0.5, and 7+ contribute 1.0. Special abilities that encourage using a creature to fight contribute extra depending on " +
+                        "the ability.",
                         "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>AERC Score (AERC)</Typography>,
+                        "The AERC score of a deck is simply its AERC ratings added together. It represents how good a deck is at the core mechanics of " +
+                        "the game: creating aember, and controlling aember, artifacts, and creatures. It doesn't ",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"Using SAS and AERC"} infos={[

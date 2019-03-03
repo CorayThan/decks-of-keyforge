@@ -20,14 +20,13 @@ import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
-import { TraitsView } from "../stats/TraitsView"
 import { screenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
-import { DeckScoreView } from "./DeckScoreView"
+import { AercScoreView, DeckScoreView } from "./DeckScoreView"
 
 interface DeckViewSmallProps {
     deck: Deck
@@ -40,7 +39,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
         const {deck, fullVersion, style} = this.props
         const {
-            id, keyforgeId, name, houses,
+            id, keyforgeId, name,
             wishlistCount, funnyCount,
             forSale, forTrade, chains,
             registered
@@ -64,18 +63,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     width: compact ? 328 : 544,
                     ...style
                 }}
-                topContents={(
-                    <div style={{display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-evenly"}}>
-                        <div style={{flexGrow: compact ? undefined : 1, display: compact ? "flex" : undefined}}>
-                            <HouseBanner houses={houses} vertical={compact}/>
-                            <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: spacing(1)}}>
-                                <ChainsView chains={chains} style={{marginRight: spacing(2)}}/>
-                                <TraitsView hasTraits={deck} compact={compact} round={true}/>
-                            </div>
-                        </div>
-                        <DeckScoreView deck={deck} style={{marginRight: spacing(2)}}/>
-                    </div>
-                )}
+                topContents={<DeckViewTopContents deck={deck} compact={compact}/>}
                 topContentsStyle={{
                     padding: 0,
                     paddingTop: spacing(1),
@@ -83,7 +71,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 }}
             >
                 <CardContent style={{paddingBottom: 0}}>
-                    <div style={{display: "flex"}}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                         {registered ? null : (
                             <Tooltip title={"Unregistered Deck"}>
                                 <div>
@@ -91,7 +79,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 </div>
                             </Tooltip>
                         )}
-                        <div style={{paddingBottom: spacing(1), flexGrow: 1}}>
+                        <div style={{flexGrow: 1}}>
                             <KeyLink
                                 to={Routes.deckPage(keyforgeId)}
                                 disabled={fullVersion}
@@ -100,6 +88,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 <Typography variant={"h5"}>{name}</Typography>
                             </KeyLink>
                         </div>
+                        <ChainsView chains={chains} style={{marginLeft: spacing(1)}}/>
                         {forSale || userDeckForSale ? (
                             <Tooltip title={"For sale"}>
                                 <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
@@ -114,8 +103,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     <DisplayAllCardsByHouse deck={this.props.deck}/>
                 </CardContent>
 
-                <CardActions>
-                    <div style={{marginRight: spacing(1)}}/>
+                <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
                     {fullVersion && deck.registered ? (
                         <KeyButton
                             href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
@@ -143,6 +131,46 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     </div>
                 </CardActions>
             </KeyCard>
+        )
+    }
+}
+
+const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
+    const {deck, compact} = props
+    const {houses} = deck
+    if (compact) {
+        return (
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                padding: spacing(2),
+            }}>
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <HouseBanner houses={houses} size={48} vertical={true}/>
+                    <DeckScoreView deck={deck} style={{marginLeft: spacing(6)}}/>
+                </div>
+                <AercScoreView deck={deck} style={{marginTop: spacing(2)}}/>
+            </div>
+        )
+    } else {
+        return (
+            <div style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingLeft: spacing(2),
+                paddingRight: spacing(2),
+            }}>
+                <div style={{flexGrow: 1}}>
+                    <HouseBanner houses={houses}/>
+                    <div style={{display: "flex", justifyContent: "center"}}>
+                        <AercScoreView deck={deck} style={{marginTop: spacing(1)}}/>
+                    </div>
+                </div>
+                <DeckScoreView deck={deck} style={compact ? {alignItems: "flex-end"} : undefined}/>
+            </div>
         )
     }
 }

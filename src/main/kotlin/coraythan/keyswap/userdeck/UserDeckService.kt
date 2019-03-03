@@ -23,11 +23,12 @@ class UserDeckService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedRateString = "PT1M")
+    @Scheduled(fixedDelayString = "PT6H")
     fun unlistExpiredDecks() {
         val toUnlist = userDeckRepo.findAll(
                 QUserDeck.userDeck.expiresAt.before(now())
         )
+        log.info("Unlisting ${toUnlist.toList().size} decks.")
         toUnlist.forEach {
             unlistUserDeck(it)
             log.info("Unlisted ${it.id}")

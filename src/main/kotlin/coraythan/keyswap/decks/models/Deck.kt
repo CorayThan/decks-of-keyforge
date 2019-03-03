@@ -58,6 +58,7 @@ data class Deck(
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
+        val aercScore: Double? = 0.0,
         val sasRating: Int = 0,
         val cardsRating: Int = 0,
         val synergyRating: Int = 0,
@@ -84,6 +85,7 @@ data class Deck(
         val houses: List<House> = listOf(),
 
         val ratingVersion: Int = 0,
+        val statsVersion: Int? = 0,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
@@ -113,6 +115,7 @@ data class Deck(
                 amberControl = amberControl,
                 creatureControl = creatureControl,
                 artifactControl = artifactControl,
+                aercScore = aercScore ?: 0.0,
                 sasRating = sasRating,
                 cardsRating = cardsRating,
                 synergyRating = synergyRating,

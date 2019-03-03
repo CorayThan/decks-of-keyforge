@@ -20,7 +20,7 @@
 - name: Blood Money
   cardNumber: 3
   rating: 2
-  expectedAmber: 2
+  expectedAmber: 1.5
   traits: [capturesAmberOnEnemies]
   synergies: []
 
@@ -60,7 +60,7 @@
 - name: Coward’s End
   cardNumber: 7
   rating: 2
-  creatureControl: 2.5
+  creatureControl: 2.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
     - trait: power5OrHigherCreatures
@@ -196,7 +196,7 @@
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 1.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, damagesAllEnemies]
   synergies:
@@ -285,7 +285,7 @@
 - name: The Warchest
   cardNumber: 27
   rating: 2
-  expectedAmber: 2.0
+  expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
@@ -336,7 +336,7 @@
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 2.5
+  creatureControl: 2.0
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures, goodPlay]
   synergies:
@@ -349,7 +349,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 1
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, goodFight, damagesAllEnemies]
   synergies:
@@ -453,7 +453,7 @@
   cardNumber: 40
   rating: 4
   amberControl: 1.0
-  creatureControl: 0
+  creatureControl: 0.5
   traits: [goodPlay]
   synergies:
     - trait: capturesAmber
@@ -465,7 +465,7 @@
 - name: Looter Goblin
   cardNumber: 41
   rating: 2
-  expectedAmber: 2.0
+  expectedAmber: 1.5
   traits: [elusive, goodReap]
   synergies:
     - trait: destroysEnemyCreatures
@@ -502,14 +502,14 @@
   cardNumber: 45
   rating: 3.5
   amberControl: 0.5
-  creatureControl: 0
+  creatureControl: 0.5
   traits: [capturesAmber]
   synergies: []
 
 - name: Smaaash
   cardNumber: 46
   rating: 3
-  creatureControl: 0.5
+  creatureControl: 1.0
   traits: [stuns, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -525,7 +525,7 @@
 - name: Troll
   cardNumber: 48
   rating: 4
-  creatureControl: 0.5
+  creatureControl: 1.0
   expectedAmber: 1.0
   traits: []
   synergies:
@@ -918,7 +918,7 @@
 - name: Soul Snatcher
   cardNumber: 80
   rating: 2
-  expectedAmber: 2.0
+  expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
@@ -989,8 +989,6 @@
   traits: []
   synergies:
     - trait: protectsCreatures
-    - trait: reducesEnemyDraw
-      rating: -1
     - trait: highTotalCreaturePower
     - trait: lowTotalCreaturePower
       rating: -1
@@ -1074,7 +1072,7 @@
   rating: 1.5
   expectedAmber: 1
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [goodPlay]
   synergies:
@@ -1123,7 +1121,7 @@
   rating: 4
   expectedAmber: 0.5
   amberControl: 0.5
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [stealsAmber, goodPlay]
   synergies:
@@ -1137,7 +1135,7 @@
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 1.0
+  artifactControl: 0.5
   traits: [goodReap, returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand, returnsEnemyArtifactsToHand]
   synergies:
     - trait: protectsCreatures
@@ -1176,7 +1174,7 @@
   rating: 3
   expectedAmber: 0.5
   amberControl: 0.5
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 1
   traits: []
   synergies:
@@ -1188,7 +1186,7 @@
   rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies:
@@ -1213,7 +1211,7 @@
 - name: Tolas
   cardNumber: 103
   rating: 2
-  expectedAmber: 2.0
+  expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
@@ -1231,7 +1229,7 @@
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [protectsCreatures, goodDestroyed]
   synergies:
@@ -1613,7 +1611,7 @@
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [drawsCards, goodFight]
   synergies:
@@ -1635,7 +1633,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [drawsCards]
 
@@ -1653,7 +1651,7 @@
 - name: Dysania
   cardNumber: 141
   rating: 3
-  expectedAmber: 1.0
+  expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
@@ -1708,7 +1706,7 @@
   rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [drawsCards, increasesHandSize]
   synergies:
@@ -1812,7 +1810,7 @@
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies: []
@@ -1891,7 +1889,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 2.0
+  creatureControl: 1.5
   artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
@@ -1934,7 +1932,7 @@
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 1.5
+  artifactControl: 1.0
   traits: [destroysFriendlyArtifacts, destroysEnemyArtifacts, stuns]
   synergies:
     - trait: lowArtifactCount
@@ -2035,7 +2033,7 @@
   rating: 1.5
   expectedAmber: 1.5
   amberControl: 0
-  creatureControl: 0.5
+  creatureControl: 0.0
   artifactControl: 0.0
   traits: []
   synergies:
@@ -2079,7 +2077,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 2.0
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [chains, stuns]
   synergies:
@@ -2154,7 +2152,7 @@
 - name: Total Recall
   cardNumber: 179
   rating: 2
-  expectedAmber: 4.0
+  expectedAmber: 3.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
@@ -2337,7 +2335,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 1
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -2441,7 +2439,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies:
@@ -2531,7 +2529,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -2551,7 +2549,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [goodReap, archives]
   synergies:
@@ -2607,7 +2605,7 @@
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [goodReap]
   synergies:
@@ -2660,7 +2658,7 @@
 - name: Cleansing Wave
   cardNumber: 215
   rating: 2
-  expectedAmber: 2.5
+  expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
@@ -2783,7 +2781,7 @@
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [stuns]
   synergies: []
@@ -2920,7 +2918,7 @@
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies:
@@ -2954,7 +2952,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies:
@@ -2965,7 +2963,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -2975,7 +2973,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.5
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies: []
@@ -3010,7 +3008,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies: []
@@ -3048,7 +3046,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [goodPlay]
   synergies:
@@ -3060,7 +3058,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
@@ -3073,7 +3071,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures]
   synergies:
@@ -3084,7 +3082,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [causesFighting, goodPlay]
   synergies:
@@ -3122,7 +3120,7 @@
   rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.5
+  creatureControl: 2.0
   artifactControl: 0.0
   traits: [goodFight]
   synergies:
@@ -3133,7 +3131,7 @@
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 2.5
+  creatureControl: 2.0
   artifactControl: 0.0
   traits: [destroysEnemyCreatures, goodPlay]
   synergies:
@@ -3146,7 +3144,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [heals, preventsDamage]
   synergies: []
@@ -3166,7 +3164,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -3201,7 +3199,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies: []
@@ -3211,7 +3209,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
@@ -3456,7 +3454,7 @@
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 2
+  creatureControl: 1.5
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
@@ -3496,8 +3494,8 @@
 - name: Too Much to Protect
   cardNumber: 283
   rating: 4
-  expectedAmber: 2.5
-  amberControl: 1.5
+  expectedAmber: 2.0
+  amberControl: 1.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [stealsAmber]
@@ -3961,7 +3959,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.5
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies:
@@ -4091,7 +4089,7 @@
   rating: 5
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 1.5
+  creatureControl: 2.0
   artifactControl: 0.0
   traits: [returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand]
   synergies: []
@@ -4179,7 +4177,7 @@
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 1.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
@@ -4283,7 +4281,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 1.0
   artifactControl: 0.0
   traits: [ancientBear]
   synergies:
@@ -4379,7 +4377,7 @@
   rating: 4
   expectedAmber: 2.0
   amberControl: 0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies:
@@ -4403,7 +4401,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [skirmish]
   synergies: []
@@ -4431,7 +4429,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [skirmish]
   synergies: []
@@ -4474,7 +4472,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies: []
@@ -4493,7 +4491,7 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.0
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies:

@@ -132,6 +132,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "expectedAmber",
             "artifactControl",
             "creatureControl",
+            "aercScore",
             "synergyRating",
             "antisynergyRating",
             "sasRating",

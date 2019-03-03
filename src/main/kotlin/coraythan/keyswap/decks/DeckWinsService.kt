@@ -25,7 +25,7 @@ class DeckWinsService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedRateString = onceEverySixHoursLock)
+    @Scheduled(fixedDelayString = onceEverySixHoursLock)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 

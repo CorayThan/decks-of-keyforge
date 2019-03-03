@@ -34,17 +34,23 @@ class DeckService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
+    private val defaultFilters100Results = DeckFilters().copy(pageSize = 100)
     private val defaultFiltersSecondPage = DeckFilters().copy(page = defaultFilters.page + 1)
+    private val defaultFiltersSecondPage100Results = DeckFilters().copy(page = defaultFilters.page + 1, pageSize = 100)
     private val query = JPAQueryFactory(entityManager)
 
     var deckCount: Long? = null
     var firstPageCached: DecksPage? = null
     var secondPageCached: DecksPage? = null
+    var firstPageCached100Results: DecksPage? = null
+    var secondPageCached100Results: DecksPage? = null
 
     fun clearCachedValues() {
         deckCount = null
         firstPageCached = null
         secondPageCached = null
+        firstPageCached100Results = null
+        secondPageCached100Results = null
     }
 
     fun countFilters(filters: DeckFilters): DeckCount {
@@ -92,12 +98,21 @@ class DeckService(
         if (filters == defaultFiltersSecondPage && cachedSecondPage != null) {
             return cachedSecondPage
         }
+        val cachedFirstPage100Results = firstPageCached100Results
+        if (filters == defaultFilters100Results && cachedFirstPage100Results != null) {
+            return cachedFirstPage100Results
+        }
+        val cachedSecondPage100Results = secondPageCached100Results
+        if (filters == defaultFiltersSecondPage100Results && cachedSecondPage100Results != null) {
+            return cachedSecondPage100Results
+        }
 
         val predicate = deckFilterPedicate(filters)
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.CARDS_RATING -> deckQ.cardsRating
+            DeckSortOptions.AERC_SCORE -> deckQ.aercScore
             DeckSortOptions.CHAINS -> deckQ.chains
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
@@ -150,6 +165,14 @@ class DeckService(
         if (filters == defaultFiltersSecondPage) {
             log.info("Caching second decks page.")
             secondPageCached = decksPage
+        }
+        if (filters == defaultFilters100Results) {
+            log.info("Caching first decks page for 100 results.")
+            firstPageCached100Results = decksPage
+        }
+        if (filters == defaultFiltersSecondPage100Results) {
+            log.info("Caching second decks page for 100 results.")
+            secondPageCached100Results = decksPage
         }
 
         return decksPage

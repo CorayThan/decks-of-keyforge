@@ -16,6 +16,7 @@ import { SnackMessage } from "../ui/MessageStore"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserStore } from "../user/UserStore"
+import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 
 export {
@@ -55,7 +56,7 @@ class KeyRouter extends React.Component {
                     <KeyTopbar/>
                     <div style={{marginBottom: spacing(2)}}/>
                     <Switch>
-                        <Route
+                        <LoggedInRoute
                             exact={true}
                             path={Routes.importUnregisteredDeck}
                             component={DeckImportView}

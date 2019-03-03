@@ -108,6 +108,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             <DeckHeader title={"Cards"} property={"cardsRating"}/>
                             <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                             <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
+                            <DeckHeader title={"AERC"} property={"aercScore"}/>
                             <DeckHeader title={"A"} property={"amberControl"}/>
                             <DeckHeader title={"E"} property={"expectedAmber"}/>
                             <DeckHeader title={"R"} property={"artifactControl"}/>
@@ -138,6 +139,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <TableCell>{deck.cardsRating}</TableCell>
                                 <TableCell>{deck.synergyRating}</TableCell>
                                 <TableCell>{deck.antisynergyRating}</TableCell>
+                                <TableCell>{deck.aercScore}</TableCell>
                                 <TableCell>{deck.amberControl}</TableCell>
                                 <TableCell>{deck.expectedAmber}</TableCell>
                                 <TableCell>{deck.artifactControl}</TableCell>

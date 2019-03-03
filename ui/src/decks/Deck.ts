@@ -42,6 +42,7 @@ export interface Deck {
     amberControl: number
     creatureControl: number
     artifactControl: number
+    aercScore: number
     sasRating: number
     cardsRating: number
     synergyRating: number

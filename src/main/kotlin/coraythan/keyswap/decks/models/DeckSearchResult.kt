@@ -26,6 +26,7 @@ data class DeckSearchResult(
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
+        val aercScore: Double = 0.0,
         val sasRating: Int = 0,
         val cardsRating: Int = 0,
         val synergyRating: Int = 0,
