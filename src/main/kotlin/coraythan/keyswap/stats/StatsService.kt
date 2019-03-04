@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT10S"
+private const val lockUpdateStats = "PT1M"
 
 @Transactional
 @Service
@@ -74,8 +74,8 @@ class StatsService(
         }
     }
 
-     @Scheduled(fixedDelayString = lockUpdateStats)
-     @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
+    @Scheduled(fixedDelayString = lockUpdateStats)
+    @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
     fun updateStatsForDecks() {
 
         if (!updateStats) return

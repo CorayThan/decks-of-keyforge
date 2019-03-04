@@ -113,7 +113,7 @@ class DeckImporterService(
     private var doneRatingDecks = false
 
     // Comment this in whenever rating gets revved
-    @Scheduled(fixedDelayString = lockUpdateRatings)
+    // @Scheduled(fixedDelayString = lockUpdateRatings)
     fun rateDecks() {
 
         if (doneRatingDecks) return
