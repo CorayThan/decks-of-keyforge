@@ -47,6 +47,16 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
         DeckStore.instance.importDeck(importWith)
     }
 
+    importAndAdd = () => {
+        this.error = false
+        const importWith = this.deckIdFromUserInput()
+        if (importWith.length !== 36) {
+            this.error = true
+            return
+        }
+        DeckStore.instance.importDeckAndAddToMyDecks(importWith)
+    }
+
     deckIdFromUserInput = (): string => {
         const splitOnSlash = this.deckId.split("/")
         return splitOnSlash[splitOnSlash.length - 1]
@@ -104,7 +114,9 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             helperText={"Id or Url from the deck url at keyforgegame.com e.g. 293f366d-af1d-46ea-9c0f-4cc956dae50d"}
                             error={this.error}
                         />
-                        <div style={{display: "flex", alignItems: "center"}}>
+                        <div
+                            style={{marginBottom: spacing(2), display: "flex"}}
+                        >
                             {UserStore.instance.loggedIn() ? (
                                 <LinkButton
                                     to={Routes.importUnregisteredDeck}
@@ -116,7 +128,8 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             ) : (
                                 <Typography>Login to import unregistered decks</Typography>
                             )}
-                            <div style={{flexGrow: 1}}/>
+                        </div>
+                        <div style={{display: "flex", alignItems: "center"}}>
                             <Button
                                 variant={"outlined"}
                                 style={{marginRight: spacing(2)}}
@@ -124,13 +137,22 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             >
                                 Cancel
                             </Button>
+                            <div style={{flexGrow: 1}}/>
+                            <KeyButton
+                                variant={"contained"}
+                                onClick={this.import}
+                                loading={DeckStore.instance.importingDeck}
+                                style={{marginRight: spacing(2)}}
+                            >
+                                Import
+                            </KeyButton>
                             <KeyButton
                                 variant={"contained"}
                                 color={"primary"}
-                                onClick={this.import}
-                                loading={DeckStore.instance.importingDeck}
+                                onClick={this.importAndAdd}
+                                loading={DeckStore.instance.importingAndAddingDeck}
                             >
-                                Import Deck
+                                Import to my Decks
                             </KeyButton>
                         </div>
                     </div>

@@ -247,7 +247,14 @@ class DeckService(
             if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         }
-        if (filters.forSaleInCountry != null) predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
+        if (filters.forSaleInCountry != null) {
+            val preferredCountries = currentUserService.loggedInUser()?.preferredCountries
+            if (preferredCountries.isNullOrEmpty()) {
+                predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
+            } else {
+                predicate.andAnyOf(*preferredCountries.map { deckQ.userDecks.any().forSaleInCountry.eq(it) }.toTypedArray())
+            }
+        }
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
                 if (it.property == "listedWithinDays") {

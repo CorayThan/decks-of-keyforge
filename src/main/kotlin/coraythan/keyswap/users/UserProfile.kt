@@ -10,11 +10,13 @@ data class UserProfile(
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
         val country: Country?,
+        val preferredCountries: List<Country>? = null,
         val lastVersionSeen: String?
 )
 
 data class UserProfileUpdate(
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
-        val country: Country?
+        val country: Country?,
+        val preferredCountries: List<Country>? = null
 )

@@ -11,20 +11,26 @@ import { StatsBar } from "../stats/StatsBar"
 import { StatsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.1"
+export const latestVersion = "3.2"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.2"} expanded={true} releaseNotes={[
+                    `Europeans rejoice! You can now select "Buying Countries" in your profile. When you search decks for sale, these will be used instead of ` +
+                    "your home country for searching.",
+                    "Fixed a bug that could prevent users from removing a deck from their decks.",
+                    `Added an "Import to my decks" option to the import deck popover.`
+                ]}/>
                 <ReleaseNote releaseNumber={"3.1"} expanded={true} releaseNotes={[
                     "You can set page size when searching decks to be 100. Look at the bottom of the deck search drawer!",
                     `When searching decks for sale you can set a "Listed Within Days" limit to see only more recently listed decks.`,
                     "Updated AERC stats to give credit in the C category to creatures with high power. 5-6 power provides 0.5 C, while 7+ " +
                     "is typically 7+. Also made minor improvements to other AERC stats of cards.",
                     "Added a total AERC score, along with sorting and constraining by that."
-                    ]} />
+                ]}/>
                 <ReleaseNote releaseNumber={"3.0"} expanded={true} releaseNotes={[
                     "TLDR; Updated SAS and added win rates for cards on the cards page.",
                     "This is a major revision to SAS ratings. I've used win rates of cards from the official API to inform my card ratings for SAS. I have " +
@@ -57,12 +63,12 @@ export class ReleaseNotes extends React.Component {
                     "houses.",
                     "Added a global stats page.",
                     (
-                        <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
-                            {StatsStore.instance.stats == null ? <Loader/> : (
-                                <StatsBar name={"SAS v3 Win Rate"} data={StatsStore.instance.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
-                            )}
-                            <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
-                        </div>
+                            <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+                                {StatsStore.instance.stats == null ? <Loader/> : (
+                                    <StatsBar name={"SAS v3 Win Rate"} data={StatsStore.instance.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
+                                )}
+                                <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
+                            </div>
                     )
                 ]}/>
                 <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[

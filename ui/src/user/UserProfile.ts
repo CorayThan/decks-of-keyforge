@@ -5,10 +5,12 @@ export interface UserProfile {
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
     country?: string
+    preferredCountries?: string[]
 }
 
 export interface UserProfileUpdate {
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
     country?: string
+    preferredCountries?: string[]
 }

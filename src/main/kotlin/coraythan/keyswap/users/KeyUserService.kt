@@ -81,6 +81,7 @@ class KeyUserService(
                     publicContactInfo = update.publicContactInfo,
                     allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
                     country = update.country,
+                    preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
                     decks = userDecks
             ))
         }

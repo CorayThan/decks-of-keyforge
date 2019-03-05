@@ -5,6 +5,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
+import { UserStore } from "../user/UserStore"
 import { DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
@@ -48,6 +49,9 @@ export class DeckStore {
     @observable
     importingDeck = false
 
+    @observable
+    importingAndAddingDeck = false
+
     private constructor() {
     }
 
@@ -78,6 +82,21 @@ export class DeckStore {
                 }
 
                 this.importingDeck = false
+            })
+    }
+
+    importDeckAndAddToMyDecks = (keyforgeId: string) => {
+        this.importingAndAddingDeck = true
+        axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import-and-add`)
+            .then((response: AxiosResponse) => {
+                this.importedDeck = response.data
+                if (!response.data) {
+                    MessageStore.instance.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+                } else {
+                    UserStore.instance.loadLoggedInUser()
+                }
+
+                this.importingAndAddingDeck = false
             })
     }
 

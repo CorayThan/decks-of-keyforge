@@ -140,10 +140,10 @@ class DeckImporterService(
 
     // Non repeatable functions
 
-    fun importDeck(deckId: String): Boolean {
+    fun importDeck(deckId: String): Long? {
         val preExistingDeck = deckRepo.findByKeyforgeId(deckId)
         if (preExistingDeck != null) {
-            return true
+            return preExistingDeck.id
         } else {
             val deck = keyforgeApi.findDeck(deckId)
             if (deck != null) {
@@ -152,13 +152,13 @@ class DeckImporterService(
                 try {
                     saveDecks(deckList, cards)
                 } catch (e: DataIntegrityViolationException) {
-                    // We must have a pre-existing deck nowebay
-                    return false
+                    // We must have a pre-existing deck now
+                    return deckRepo.findByKeyforgeId(deckId)?.id
                 }
-                return true
+                return deckRepo.findByKeyforgeId(deckId)?.id
             }
         }
-        return false
+        return null
     }
 
     fun addUnregisteredDeck(

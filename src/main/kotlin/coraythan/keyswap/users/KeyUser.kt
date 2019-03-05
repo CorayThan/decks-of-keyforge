@@ -31,6 +31,10 @@ data class KeyUser(
         @Enumerated(EnumType.STRING)
         val country: Country? = null,
 
+        @ElementCollection
+        @Enumerated(EnumType.STRING)
+        val preferredCountries: List<Country>? = null,
+
         @JsonIgnoreProperties("user")
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         val decks: List<UserDeck> = listOf(),
@@ -47,6 +51,7 @@ data class KeyUser(
             publicContactInfo = publicContactInfo,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             country = country,
+            preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen
     )
 }

@@ -11,22 +11,6 @@ import org.hibernate.annotations.Type
 import javax.persistence.*
 
 @Entity
-@Table(
-        indexes = [
-            Index(name = "sas_rating_idx", columnList = "sasRating", unique = false),
-            Index(name = "cards_rating_idx", columnList = "cardsRating", unique = false),
-            Index(name = "synergy_rating_idx", columnList = "synergyRating", unique = false),
-            Index(name = "antisynergy_rating_idx", columnList = "antisynergyRating", unique = false),
-            Index(name = "expected_amber_idx", columnList = "expectedAmber", unique = false),
-            Index(name = "funny_count_idx", columnList = "funnyCount", unique = false),
-            Index(name = "wishlist_count_idx", columnList = "wishlistCount", unique = false),
-            Index(name = "for_sale_idx", columnList = "forSale", unique = false),
-            Index(name = "for_trade_idx", columnList = "forTrade", unique = false),
-            Index(name = "name_idx", columnList = "name", unique = false)
-
-            // Manual index created on deck_houses
-        ]
-)
 data class Deck(
 
         @Column(unique = true)

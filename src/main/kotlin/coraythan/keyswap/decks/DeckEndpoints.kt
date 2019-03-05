@@ -6,6 +6,7 @@ import coraythan.keyswap.decks.models.DecksPage
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import coraythan.keyswap.publicapis.PublicApiService
 import coraythan.keyswap.thirdpartyservices.AzureOcr
+import coraythan.keyswap.userdeck.UserDeckService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -17,7 +18,8 @@ class DeckEndpoints(
         private val deckService: DeckService,
         private val deckImporterService: DeckImporterService,
         private val azureOcr: AzureOcr,
-        private val publicApiService: PublicApiService
+        private val publicApiService: PublicApiService,
+        private val userDeckService: UserDeckService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -59,7 +61,14 @@ class DeckEndpoints(
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
     @PostMapping("/{id}/import")
-    fun importDeck(@PathVariable id: String) = deckImporterService.importDeck(id)
+    fun importDeck(@PathVariable id: String) = deckImporterService.importDeck(id) != null
+
+    @PostMapping("/{id}/import-and-add")
+    fun importDeckAndAddToMyDecks(@PathVariable id: String): Boolean {
+        val imported = deckImporterService.importDeck(id)
+        if (imported != null) userDeckService.markAsOwned(imported, true)
+        return imported != null
+    }
 
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String) = deckService.saleInfoForDeck(id)

@@ -22,8 +22,8 @@ export class StatsBar extends React.Component<StatsBarProps> {
     render() {
         const {secondary, data} = this.props
         const small = {
-            width: 400,
-            height: 300,
+            width: 300,
+            height: 220,
             fontVariant: "h5"
         }
         const large = {
