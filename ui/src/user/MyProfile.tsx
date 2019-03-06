@@ -4,6 +4,7 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
+    FormHelperText,
     Grid,
     InputLabel,
     ListItemText,
@@ -147,7 +148,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                     </TextField>
                                 </Grid>
                                 <Grid item={true} xs={12}>
-                                    <FormControl style={{minWidth: 176, maxWidth: 368}} variant={"outlined"}>
+                                    <FormControl fullWidth={true} variant={"outlined"}>
                                         <InputLabel
                                             htmlFor={"buying-countries-input-id"}
                                             ref={ref => this.buyingCountriesInputLabelRef = ref}
@@ -162,6 +163,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 <OutlinedInput
                                                     labelWidth={this.preferredCountriesLabelWidth}
                                                     id={"buying-countries-input-id"}
+                                                    fullWidth={true}
                                                 />
                                             }
                                             renderValue={(selected: any) => selected.join(", ")}
@@ -175,6 +177,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <FormHelperText style={{marginTop: spacing(1)}}>
+                                        Select countries to be used when searching decks for sale. Defaults to your country.
+                                    </FormHelperText>
                                 </Grid>
                                 <Grid item={true} xs={12}>
                                     <FormControlLabel

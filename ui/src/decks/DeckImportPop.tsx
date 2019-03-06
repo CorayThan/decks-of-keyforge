@@ -142,18 +142,20 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                 variant={"contained"}
                                 onClick={this.import}
                                 loading={DeckStore.instance.importingDeck}
-                                style={{marginRight: spacing(2)}}
                             >
                                 Import
                             </KeyButton>
-                            <KeyButton
-                                variant={"contained"}
-                                color={"primary"}
-                                onClick={this.importAndAdd}
-                                loading={DeckStore.instance.importingAndAddingDeck}
-                            >
-                                Import to my Decks
-                            </KeyButton>
+                            {UserStore.instance.loggedIn() ? (
+                                <KeyButton
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    onClick={this.importAndAdd}
+                                    loading={DeckStore.instance.importingAndAddingDeck}
+                                    style={{marginLeft: spacing(2)}}
+                                >
+                                    Import to my Decks
+                                </KeyButton>
+                            ) : null}
                         </div>
                     </div>
                 </Popover>
