@@ -31,6 +31,10 @@ class DeckEndpoints(
             decks = deckService.filterDecks(deckFilters)
         }
 
+        if (deckFilters.pageSize < 20) {
+            throw IllegalArgumentException("Received page size less than 20 with filters $deckFilters")
+        }
+
         if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $deckFilters")
         return decks!!
     }
@@ -40,6 +44,10 @@ class DeckEndpoints(
         var decks: DeckCount? = null
         val decksFilterTime = measureTimeMillis {
             decks = deckService.countFilters(deckFilters)
+        }
+
+        if (deckFilters.pageSize < 20) {
+            throw IllegalArgumentException("Received page size less than 20 with filters $deckFilters")
         }
 
         if (decksFilterTime > 500) log.warn("Decks counting took $decksFilterTime ms with filters $deckFilters")
