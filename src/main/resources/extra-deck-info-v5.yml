@@ -61,6 +61,7 @@
   cardNumber: 7
   rating: 2
   creatureControl: 2.0
+  deckManipulation: -1.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
     - trait: power5OrHigherCreatures
@@ -103,7 +104,7 @@
 
 - name: Take that, Smartypants
   cardNumber: 11
-  rating: 2.5
+  rating: 2
   expectedAmber: 1.5
   amberControl: 0.5
   traits: []
@@ -150,6 +151,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: []
 
 - name: Tremor
@@ -208,8 +210,9 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.0
+  creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 7.0
   traits: [protectsCreatures, increasesCreaturePower]
   synergies:
     - trait: highCreatureCount
@@ -304,7 +307,7 @@
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, dealsDamage, damagesAllEnemies]
   synergies: []
@@ -314,7 +317,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   artifactControl: 0.0
   traits: []
   synergies: []
@@ -324,7 +327,7 @@
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   artifactControl: 0.0
   traits: [goodPlay]
   synergies:
@@ -336,7 +339,7 @@
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 2.0
+  creatureControl: 1.5
   artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures, goodPlay]
   synergies:
@@ -349,7 +352,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, goodFight, damagesAllEnemies]
   synergies:
@@ -363,7 +366,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [causesFighting, goodPlay]
   synergies:
@@ -376,7 +379,7 @@
 
 - name: Grenade Snib
   cardNumber: 34
-  rating: 2.5
+  rating: 3
   amberControl: 1.5
   traits: [goodDestroyed]
   synergies:
@@ -390,7 +393,7 @@
   cardNumber: 35
   rating: 3
   expectedAmber: 1.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   traits: [goodFight]
   synergies:
     - trait: causesFighting
@@ -402,7 +405,7 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
@@ -417,6 +420,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 4
   traits: []
   synergies:
     - trait: highExpectedAmber
@@ -431,7 +435,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies: []
@@ -441,7 +445,7 @@
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   artifactControl: 0.0
   traits: [goodFight]
   synergies:
@@ -453,7 +457,7 @@
   cardNumber: 40
   rating: 4
   amberControl: 1.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   traits: [goodPlay]
   synergies:
     - trait: capturesAmber
@@ -479,7 +483,8 @@
 - name: Mugwump
   cardNumber: 42
   rating: 3
-  creatureControl: 1
+  creatureControl: 0.5
+  effectivePower: 7
   traits: []
   synergies:
     - trait: causesFighting
@@ -494,7 +499,7 @@
 - name: Rock-Hurling Giant
   cardNumber: 44
   rating: 3
-  creatureControl: 1
+  creatureControl: 0.5
   traits: [dealsDamage]
   synergies: []
 
@@ -502,14 +507,14 @@
   cardNumber: 45
   rating: 3.5
   amberControl: 0.5
-  creatureControl: 0.5
+  creatureControl: 0.0
   traits: [capturesAmber]
   synergies: []
 
 - name: Smaaash
   cardNumber: 46
   rating: 3
-  creatureControl: 1.0
+  creatureControl: 0.5
   traits: [stuns, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -518,15 +523,15 @@
 - name: Tireless Crocag
   cardNumber: 47
   rating: 2.5
-  creatureControl: 1
+  creatureControl: 1.0
   traits: []
   synergies: []
 
 - name: Troll
   cardNumber: 48
   rating: 4
-  creatureControl: 1.0
-  expectedAmber: 1.0
+  creatureControl: 0.0
+  expectedAmber: 0.0
   traits: []
   synergies:
     - trait: damagesFriendlyCreatures
@@ -555,8 +560,8 @@
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 3
   traits: [increasesCreaturePower, protectsCreatures]
   synergies:
     - trait: lowCreatureCount
@@ -602,11 +607,12 @@
 
 - name: Arise!
   cardNumber: 54
-  rating: 4
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [returnsCreaturesFromDiscard, chains]
   synergies:
     - trait: highCreatureCount
@@ -627,6 +633,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [controlsHouseChoice]
   synergies:
     - trait: revealsHand
@@ -635,7 +642,7 @@
 
 - name: Creeping Oblivion
   cardNumber: 56
-  rating: 3
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -658,8 +665,9 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.0
+  creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -670,6 +678,7 @@
   amberControl: 0.0
   creatureControl: 3.0
   artifactControl: 0.0
+  deckManipulation: -1.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
     - trait: highTotalCreaturePower
@@ -686,6 +695,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [dealsDamage]
   synergies: []
 
@@ -701,7 +711,7 @@
     - trait: capturesAmberOnEnemies
       rating: 3
     - trait: capturesAmber
-      rating: -2
+      rating: -3
 
 - name: Hand of Dis
   cardNumber: 62
@@ -746,8 +756,9 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 2.0
+  creatureControl: 1.5
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [returnsEnemyCreaturesToHand, returnsFriendlyCreaturesToHand]
   synergies:
     - trait: goodPlay
@@ -777,6 +788,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies: []
 
@@ -807,7 +819,7 @@
 
 - name: Red-Hot Armor
   cardNumber: 70
-  rating: 2.5
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -880,6 +892,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [archives, usableArtifact]
   synergies: []
 
@@ -890,6 +903,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [usableArtifact]
   synergies:
     - trait: returnsEnemyCreaturesToHand
@@ -912,6 +926,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [usableArtifact]
   synergies: []
 
@@ -986,6 +1001,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -1005,11 +1021,12 @@
 
 - name: Overlord Greking
   cardNumber: 87
-  rating: 4
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [controlsCreatures, goodFight]
   synergies:
     - trait: usesCreaturesOutOfHouse
@@ -1074,6 +1091,8 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: -1.0
+  effectivePower: 4
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -1089,6 +1108,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [controlsHouseChoice]
   synergies:
     - trait: controlsHouseChoice
@@ -1136,6 +1156,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.5
+  deckManipulation: 0.5
   traits: [goodReap, returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand, returnsEnemyArtifactsToHand]
   synergies:
     - trait: protectsCreatures
@@ -1162,6 +1183,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [reducesEnemyDraw]
   synergies:
     - trait: protectsCreatures
@@ -1171,11 +1193,11 @@
 
 - name: Tentacus
   cardNumber: 100
-  rating: 3
+  rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.5
   creatureControl: 0.5
-  artifactControl: 1
+  artifactControl: 0.5
   traits: []
   synergies:
     - trait: destroysEnemyArtifacts
@@ -1204,6 +1226,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [discardsEnemyCards, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -1231,6 +1254,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 4
   traits: [protectsCreatures, goodDestroyed]
   synergies:
     - trait: destroysFriendlyCreatures
@@ -1245,6 +1269,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [controlsCreatures]
   synergies:
     - trait: causesFighting
@@ -1258,6 +1283,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 1
   traits: [protectsCreatures, increasesCreaturePower ]
   synergies:
     - trait: highCreatureCount
@@ -1292,6 +1318,7 @@
   amberControl: 2
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: -0.5
   traits: [chains]
   synergies:
     - trait: increasesKeyCost
@@ -1319,6 +1346,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 2.0
   traits: [drawsCards]
   synergies: []
 
@@ -1342,6 +1370,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [archives]
   synergies:
     - trait: archives
@@ -1354,6 +1383,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [archives]
   synergies: []
 
@@ -1364,6 +1394,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 2.0
   traits: [drawsCards]
   synergies:
     - trait: archives
@@ -1380,6 +1411,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [stealsAmber]
   synergies:
     - trait: increasesKeyCost
@@ -1391,6 +1423,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [playsCards]
 
 - name: Positron Bolt
@@ -1405,11 +1438,12 @@
 
 - name: Random Access Archives
   cardNumber: 119
-  rating: 3
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [archives]
   synergies: []
 
@@ -1432,6 +1466,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies:
     - trait: playsCards
@@ -1444,16 +1479,18 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: []
   synergies: []
 
 - name: Sloppy Labwork
   cardNumber: 123
-  rating: 4
+  rating: 4.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 2.0
   traits: [archives]
   synergies: []
 
@@ -1474,6 +1511,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [playsCards]
   synergies:
     - trait: chains
@@ -1499,6 +1537,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [playsCards, usableArtifact]
   synergies:
     - trait: revealsTopDeck
@@ -1509,7 +1548,7 @@
 
 - name: Crazy Killing Machine
   cardNumber: 128
-  rating: 2
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -1526,6 +1565,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [drawsCards, usableArtifact]
   synergies:
     - trait: revealsTopDeck
@@ -1537,6 +1577,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [archives, usableArtifact]
   synergies: []
 
@@ -1567,6 +1608,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [drawsCards, usableArtifact]
   synergies: []
 
@@ -1587,6 +1629,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [drawsCards, increasesHandSize]
   synergies: []
 
@@ -1613,6 +1656,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [drawsCards, goodFight]
   synergies:
     - trait: increasesCreaturePower
@@ -1625,6 +1669,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: -0.5
   traits: [revealsTopDeck, capturesAmber]
   synergies: []
 
@@ -1635,6 +1680,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [drawsCards]
 
 - name: Dr. Escotera
@@ -1650,11 +1696,12 @@
 
 - name: Dysania
   cardNumber: 141
-  rating: 3
+  rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies: []
 
@@ -1665,6 +1712,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [archives, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -1681,6 +1729,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -1694,6 +1743,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [skirmish, drawsCards, goodFight]
   synergies:
     - trait: causesFighting
@@ -1708,6 +1758,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [drawsCards, increasesHandSize]
   synergies:
     - trait: protectsCreatures
@@ -1729,6 +1780,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [archives, goodAction]
   synergies:
     - trait: protectsCreatures
@@ -1776,6 +1828,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [archives, goodDestroyed]
   synergies:
     - trait: archives
@@ -1783,9 +1836,9 @@
 
 - name: Skippy Timehog
   cardNumber: 152
-  rating: 4
+  rating: 3.5
   expectedAmber: 0.0
-  amberControl: 0.0
+  amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [goodPlay]
@@ -1800,6 +1853,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [drawsCards, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -1822,6 +1876,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [elusive, archives, goodReap]
   synergies:
     - trait: revealsTopDeck
@@ -1886,7 +1941,7 @@
 
 - name: Ammonia Clouds
   cardNumber: 160
-  rating: 3
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -1906,6 +1961,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [drawsCards]
   synergies:
     - trait: increasesHandSize
@@ -1921,6 +1977,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies:
     - trait: revealsHand
@@ -1976,6 +2033,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [forgesKeys]
   synergies:
     - trait: highCreatureCount
@@ -1996,6 +2054,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 2
   traits: []
   synergies:
     - trait: damagesMultipleEnemies
@@ -2009,6 +2068,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -2079,6 +2139,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
+  deckManipulation: -0.5
   traits: [chains, stuns]
   synergies:
     - trait: highCreatureCount
@@ -2151,11 +2212,12 @@
 
 - name: Total Recall
   cardNumber: 179
-  rating: 2
+  rating: 1.5
   expectedAmber: 3.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: -1.0
   traits: [returnsFriendlyCreaturesToHand]
   synergies:
     - trait: capturesAmber
@@ -2236,6 +2298,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [usableArtifact]
   synergies: []
 
@@ -2246,6 +2309,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [usableArtifact, drawsCards]
 
 - name: Incubation Chamber
@@ -2255,6 +2319,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [usableArtifact, archives]
   synergies:
     - trait: lowCreatureCount
@@ -2335,7 +2400,7 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1
+  creatureControl: 0.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -2347,6 +2412,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 4
   traits: [capturesAmber]
   synergies: []
 
@@ -2364,9 +2430,11 @@
   cardNumber: 194
   rating: 1
   expectedAmber: 0.0
-  amberControl: 1.0
+  amberControl: 0.5
   creatureControl: 0
   artifactControl: 0.0
+  deckManipulation: -1.0
+  effectivePower: 3
   traits: []
   synergies:
     - trait: lowCreatureCount
@@ -2501,6 +2569,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 3
   traits: [capturesAmber]
   synergies:
     - trait: highTotalCreaturePower
@@ -2551,6 +2620,8 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  deckManipulation: 0.5
+  effectivePower: 4
   traits: [goodReap, archives]
   synergies:
     - trait: archivesEnemyCards
@@ -2568,6 +2639,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [archives]
   synergies:
     - trait: lowCreatureCount
@@ -2750,7 +2822,7 @@
 
 - name: Oath of Poverty
   cardNumber: 222
-  rating: 2
+  rating: 2.5
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2920,6 +2992,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 2
   traits: [protectsCreatures]
   synergies:
     - trait: knight
@@ -2952,8 +3025,9 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 8
   traits: [protectsCreatures]
   synergies:
     - trait: damagesFriendlyCreatures
@@ -3000,6 +3074,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [drawsCards, heals, goodDestroyed]
   synergies: []
 
@@ -3015,11 +3090,12 @@
 
 - name: Grey Monk
   cardNumber: 244
-  rating: 2
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 6
   traits: [heals, protectsCreatures, preventsDamage]
   synergies:
     - trait: damagesFriendlyCreatures
@@ -3046,8 +3122,9 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
+  creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -3117,7 +3194,7 @@
 
 - name: Lord Golgotha
   cardNumber: 252
-  rating: 4.5
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -3128,7 +3205,7 @@
 
 - name: Numquid the Fair
   cardNumber: 253
-  rating: 4
+  rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -3201,6 +3278,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 7
   traits: []
   synergies: []
 
@@ -3271,6 +3349,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 1
   traits: [protectsCreatures]
   synergies:
     - trait: highCreatureCount
@@ -3285,6 +3364,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  effectivePower: 3
   traits: [protectsCreatures]
   synergies:
     - trait: highCreatureCount
@@ -3323,7 +3403,7 @@
 
 - name: Finishing Blow
   cardNumber: 269
-  rating: 4
+  rating: 4.5
   expectedAmber: 2.0
   amberControl: 1.0
   creatureControl: 0.5
@@ -3337,7 +3417,7 @@
 
 - name: Ghostly Hand
   cardNumber: 270
-  rating: 4
+  rating: 3.5
   expectedAmber: 2.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -3358,6 +3438,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [archives]
   synergies: []
 
@@ -3368,6 +3449,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [revealsHand]
   synergies: []
 
@@ -3388,6 +3470,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -3481,7 +3564,7 @@
 
 - name: Routine Job
   cardNumber: 282
-  rating: 3.5
+  rating: 4
   expectedAmber: 1.5
   amberControl: 1.5
   creatureControl: 0.0
@@ -3573,6 +3656,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [usableArtifact]
   synergies:
     - trait: forgesKeys
@@ -3643,6 +3727,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [usableArtifact, discardsEnemyCards]
   synergies: []
 
@@ -3668,6 +3753,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: -1.0
   traits: [badPenny]
   synergies: []
 
@@ -3696,7 +3782,7 @@
   traits: [elusive, skirmish]
   synergies:
     - trait: lowArtifactCount
-      rating: -3
+      rating: -2
     - trait: highArtifactCount
       rating: 3
     - trait: returnsFriendlyArtifactsToHand
@@ -3720,6 +3806,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [goodReap]
   synergies:
     - trait: urchin
@@ -3753,7 +3840,7 @@
 - name: Magda the Rat
   cardNumber: 303
   rating: 2.5
-  expectedAmber: 0.0
+  expectedAmber: 0.5
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
@@ -3764,7 +3851,7 @@
   cardNumber: 304
   rating: 2.5
   expectedAmber: 0.0
-  amberControl: 0.0
+  amberControl: 0.5
   creatureControl: 1.0
   artifactControl: 0.0
   traits: [skirmish, poison, goodFight]
@@ -3880,6 +3967,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.0
+  deckManipulation: 0.5
   traits: [goodPlay]
   synergies:
     - trait: destroysEnemyArtifacts
@@ -3928,7 +4016,7 @@
 
 - name: Ring of Invisibility
   cardNumber: 317
-  rating: 3
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4027,6 +4115,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.0
+  deckManipulation: 1.0
   traits: [returnsFriendlyArtifactsToHand, returnsEnemyArtifactsToHand]
   synergies: []
 
@@ -4061,11 +4150,12 @@
 
 - name: Lost in the Woods
   cardNumber: 327
-  rating: 4.5
+  rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies:
     - trait: lowCreatureCount
@@ -4077,10 +4167,11 @@
 - name: Mimicry
   cardNumber: 328
   rating: 4
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 0.5
+  amberControl: 0.5
+  creatureControl: 0.5
+  artifactControl: 0.5
+  deckManipulation: 1.5
   traits: []
   synergies: []
 
@@ -4089,8 +4180,9 @@
   rating: 5
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 2.0
+  creatureControl: 1.5
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -4123,6 +4215,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [returnsCreaturesFromDiscard]
   synergies:
     - trait: lowCreatureCount
@@ -4136,6 +4229,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
+  deckManipulation: -0.5
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: damagesMultipleEnemies
@@ -4191,6 +4285,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: []
   synergies:
     - trait: niffle
@@ -4225,6 +4320,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [usableArtifact]
   synergies:
     - trait: ancientBear
@@ -4237,6 +4333,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: [usableArtifact, returnsCardsFromDiscard]
 
 - name: Ritual of Balance
@@ -4273,6 +4370,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 0.5
   traits: [usableArtifact, revealsTopDeck, returnsCreaturesFromDiscard]
   synergies: []
 
@@ -4290,7 +4388,7 @@
 
 - name: Bigtwig
   cardNumber: 346
-  rating: 4
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4304,6 +4402,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.5
   traits: []
 
 - name: Briar Grubbling
@@ -4474,6 +4573,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 7
   traits: []
   synergies: []
 
@@ -4493,6 +4593,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
+  effectivePower: 8
   traits: []
   synergies:
     - trait: beast
@@ -4500,7 +4601,7 @@
 
 - name: Piranha Monkeys
   cardNumber: 365
-  rating: 3
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -4548,6 +4649,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
+  deckManipulation: 1.0
   traits: [goodReap, returnsCardsFromDiscard]
   synergies:
     - trait: protectsCreatures

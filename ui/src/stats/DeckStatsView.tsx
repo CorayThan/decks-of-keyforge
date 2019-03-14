@@ -23,8 +23,7 @@ const pieColors = ["DodgerBlue", "SandyBrown", "SlateBlue", "MediumTurquoise"]
 export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
         const {
-            name, totalCreatures, totalActions, totalArtifacts, totalUpgrades, expectedAmber, amberControl, creatureControl, artifactControl,
-            sasRating
+            name, creatureCount, actionCount, artifactCount, upgradeCount, expectedAmber, amberControl, creatureControl, artifactControl
         } = this.props.deck
         const stats = StatsStore.instance.stats
         if (!stats) {
@@ -34,7 +33,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
         return (
             <div>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2), pointerEvents: "none"}}>
-                    <KeyPie name={name} creatures={totalCreatures} actions={totalActions} artifacts={totalArtifacts} upgrades={totalUpgrades}/>
+                    <KeyPie name={name} creatures={creatureCount} actions={actionCount} artifacts={artifactCount} upgrades={upgradeCount}/>
                     <KeyPieGlobalAverages stats={stats}/>
                 </div>
 
@@ -75,13 +74,15 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
         const {
             sasRating, cardsRating, synergyRating, antisynergyRating, totalPower,
-            aercScore, amberControl, expectedAmber, artifactControl, creatureControl
+            aercScore, amberControl, expectedAmber, artifactControl, creatureControl,
+            deckManipulation, effectivePower
         } = this.props.deck
         const stats = StatsStore.instance.stats
         if (!stats) {
             return <Loader/>
         }
         const creaturePowerCompareValue = Math.floor(totalPower / 5) * 5
+        const effectiveCreaturePowerCompareValue = Math.floor(effectivePower / 5) * 5
         log.info(`Creature power compare value: ${creaturePowerCompareValue} total: ${totalPower}`)
 
         const rowSize = screenStore.screenWidth / 332
@@ -97,6 +98,8 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
             {name: "Expected Aember", data: stats.expectedAmber, comparison: Math.round(expectedAmber)},
             {name: "Artifact Control", data: stats.artifactControl, comparison: Math.round(artifactControl)},
             {name: "Creature Control", data: stats.creatureControl, comparison: Math.round(creatureControl)},
+            {name: "Deck Manipulation", data: stats.deckManipulation, comparison: Math.round(deckManipulation)},
+            {name: "Effective Power", data: stats.effectivePower, comparison: effectiveCreaturePowerCompareValue},
         ]
 
         const firstRowProps = barProps.slice(0, rowSize)
@@ -143,7 +146,7 @@ export const KeyBar = (props: { data: BarData[], domainPadding?: number, style?:
         padding={32}
         width={600}
         height={400}
-        style={props.style}
+        style={{parent: props.style}}
     >
         <VictoryAxis/>
         <VictoryAxis dependentAxis={true}/>
@@ -180,7 +183,9 @@ export const ComparisonBar = (props: ComparisonBarProps) => (
             padding={{top: 24, bottom: 32, left: 32, right: 32}}
             width={300}
             height={142}
-            style={{pointerEvents: "none"}}
+            style={{
+                parent: {pointerEvents: "none"},
+            }}
             standalone={true}
             containerComponent={<VictoryContainer responsive={false} style={{pointerEvents: "none"}}/>}
         >
@@ -193,7 +198,7 @@ export const ComparisonBar = (props: ComparisonBarProps) => (
                             return d.x === props.comparison ? amber["500"] : blue["500"]
                         }
                     }
-                } as unknown as VictoryStyleInterface}
+                }}
             />
         </VictoryChart>
     </div>

@@ -4,6 +4,7 @@ import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
+import { BarData } from "./DeckStatsView"
 import { StatsBar, StatsBarProps } from "./StatsBar"
 import { StatsStore } from "./StatsStore"
 
@@ -22,6 +23,12 @@ export class WinRateStatsView extends React.Component<{}> {
             return <Loader/>
         }
 
+        let deckManipStats
+        if (stats.deckManipulationWinRate && stats.deckManipulationWinRate.length > 0) {
+            deckManipStats = stats.deckManipulationWinRate
+                .map((data: BarData) => ({x: (data.x as number) + 5, y: data.y}))
+        }
+
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                 <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate}/>
@@ -34,6 +41,14 @@ export class WinRateStatsView extends React.Component<{}> {
                 <WinRateBar name={"Expected Amber Win Rate"} data={stats.expectedAmberWinRate} secondary={true}/>
                 <WinRateBar name={"Artifact Control Win Rate"} data={stats.artifactControlWinRate} secondary={true}/>
                 <WinRateBar name={"Creature Control Win Rate"} data={stats.creatureControlWinRate} secondary={true}/>
+                <WinRateBar
+                    name={"Deck Manipulation Win Rate"}
+                    data={deckManipStats}
+                    secondary={true}
+                    xTickValues={[0, 5, 10, 15, 20, 25, 30]}
+                    xTickFormat={(tick: number) => tick - 5}
+                />
+                <WinRateBar name={"Effective Power Win Rate"} data={stats.effectivePowerWinRate} secondary={true}/>
 
                 <WinRateBar name={"Creature Count Win Rate"} data={stats.creatureCountWinRate}/>
                 <WinRateBar name={"Action Count Win Rate"} data={stats.actionCountWinRate}/>

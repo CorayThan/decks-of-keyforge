@@ -32,17 +32,19 @@ data class Deck(
 
         val rawAmber: Int = 0,
         val totalPower: Int = 0,
-        val totalCreatures: Int = 0,
-        val totalActions: Int = 0,
-        val totalArtifacts: Int = 0,
-        val totalUpgrades: Int = 0,
+        val creatureCount: Int = 0,
+        val actionCount: Int = 0,
+        val artifactCount: Int = 0,
+        val upgradeCount: Int = 0,
         val totalArmor: Int = 0,
 
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
-        val aercScore: Double? = 0.0,
+        val deckManipulation: Double? = 0.0,
+        val effectivePower: Int? = 0,
+        val aercScore: Double = 0.0,
         val sasRating: Int = 0,
         val cardsRating: Int = 0,
         val synergyRating: Int = 0,
@@ -58,7 +60,7 @@ data class Deck(
         @Type(type = "org.hibernate.type.TextType")
         val cardIds: String = "",
 
-        val cardNamesString: String? = null,
+        val cardNamesString: String = "",
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -68,8 +70,14 @@ data class Deck(
         @Enumerated(EnumType.STRING)
         val houses: List<House> = listOf(),
 
-        val ratingVersion: Int = 0,
-        val statsVersion: Int? = 0,
+        /**
+         * To redo the ratings:
+           ALTER TABLE deck DROP COLUMN rating_version;
+           ALTER TABLE deck ADD COLUMN rating_version int4;
+           CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
+         */
+        val ratingVersion: Int? = 0,
+        val statsVersion: Int = 0,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
@@ -91,15 +99,17 @@ data class Deck(
 
                 registered = registered,
 
-                totalCreatures = totalCreatures,
-                totalActions = totalActions,
-                totalArtifacts = totalArtifacts,
-                totalUpgrades = totalUpgrades,
+                creatureCount = creatureCount,
+                actionCount = actionCount,
+                artifactCount = artifactCount,
+                upgradeCount = upgradeCount,
                 expectedAmber = expectedAmber,
                 amberControl = amberControl,
                 creatureControl = creatureControl,
                 artifactControl = artifactControl,
-                aercScore = aercScore ?: 0.0,
+                deckManipulation = deckManipulation ?: 0.0,
+                effectivePower = effectivePower ?: 0,
+                aercScore = aercScore,
                 sasRating = sasRating,
                 cardsRating = cardsRating,
                 synergyRating = synergyRating,
@@ -138,10 +148,10 @@ fun Deck.withCards(newCardsList: List<Card>): Deck {
             rawAmber = newCardsList.map { it.amber }.sum(),
             totalPower = newCardsList.map { it.power }.sum(),
             totalArmor = newCardsList.map { it.armor }.sum(),
-            totalCreatures = newCardsList.filter { it.cardType == CardType.Creature }.size,
-            totalActions = newCardsList.filter { it.cardType == CardType.Action }.size,
-            totalArtifacts = newCardsList.filter { it.cardType == CardType.Artifact }.size,
-            totalUpgrades = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
+            creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,
+            actionCount = newCardsList.filter { it.cardType == CardType.Action }.size,
+            artifactCount = newCardsList.filter { it.cardType == CardType.Artifact }.size,
+            upgradeCount = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
             maverickCount = newCardsList.filter { it.maverick }.size,
             specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
             raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,

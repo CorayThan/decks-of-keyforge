@@ -10,7 +10,7 @@ import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
 import { Loader } from "../mui-restyled/Loader"
-import { KeyBar, KeyPieGlobalAverages } from "../stats/DeckStatsView"
+import { KeyBar } from "../stats/DeckStatsView"
 import { StatsStore } from "../stats/StatsStore"
 import { UiStore } from "../ui/UiStore"
 import { AboutGridItem } from "./AboutPage"
@@ -118,30 +118,25 @@ export class SasAndAerc extends React.Component {
                 </AboutGridItem>
                 <AboutGridItem>
                     <InfoListCard title={"The AERC of your Deck"} infos={[
-                        <Typography variant={"h6"}>Deck Statistics</Typography>,
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <div style={{maxWidth: 520, maxHeight: 240}}>
-                            {stats ? <KeyPieGlobalAverages stats={stats} padding={48}/> : <Loader/>}
-                        </div>,
-                        "I've calculated the average statistics for decks in many categories, like card type ratios.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>AERC Deck Traits</Typography>,
                         <div style={{maxWidth: 520, maxHeight: 320}}>
                             {stats ? (
                                 <KeyBar
                                     data={[
-                                        {x: "Aember Control", y: stats.averageAmberControl},
+                                        {x: "Aember Ctrl", y: stats.averageAmberControl},
                                         {x: "Expected Aember", y: stats.averageExpectedAmber},
-                                        {x: "Artifact Control", y: stats.averageArtifactControl},
-                                        {x: "Creature Control", y: stats.averageCreatureControl},
+                                        {x: "Artifact Ctrl", y: stats.averageArtifactControl},
+                                        {x: "Creature Ctrl", y: stats.averageCreatureControl},
+                                        {x: "Deck Manip", y: stats.averageDeckManipulation},
+                                        {x: "Effective Power", y: stats.averageEffectivePower / 10},
                                     ]}
                                     domainPadding={60}
                                 />
                             ) : <Loader/>}
                         </div>,
                         <div style={{paddingBottom: spacing(2)}}/>,
-                        "I've rated every card in key metrics, like its expected aember control (A), expected aember (E), artifact control (R), and " +
-                        "creature control (C).",
+                        "I've rated every card in key metrics, like its expected aember control (A), expected aember (E), artifact control (R), " +
+                        "creature control (C), Deck Manipulation (D) and Effective Total Creature Power (P).",
                         "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
                         "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
                         "rating.",
@@ -164,14 +159,28 @@ export class SasAndAerc extends React.Component {
                         "1 point is approximately equal to destroying one artifact.",
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Creature Control (C)</Typography>,
-                        "Creature control is increased by cards that damage, destroy, disable or prevent the play of enemy creatures. Creatures with power " +
-                        "5-6 contribute 0.5, and 7+ contribute 1.0. Special abilities that encourage using a creature to fight contribute extra depending on " +
-                        "the ability.",
+                        "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
+                        "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
                         "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>Deck Manipulation (D)</Typography>,
+                        "Deck Manipulation is increased by effects that allow you to play extra cards, or reduce the number your opponent can play. " +
+                        "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
+                        "1 point is approximately equal to drawing two cards, archiving a random card, or preventing your opponent from drawing 2.",
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>Effective Power (P)</Typography>,
+                        "While raw total creature power in a deck is a useful statistic, it has many flaws that Effective Creature Power is made to address. " +
+                        "For example, there are many powerful creatures with significant downsides, " +
+                        "like Kelifi Dragon or Grommid. These creatures have had their effective power reduced.",
+                        "There are other creatures and abilities " +
+                        "that contribute extra power, like Blood of Titans or Zyzzix the Many. These have had their effective power increased.",
+                        "Effective power is also increased by Armor at a 1:1 ratio.",
+                        "When included in total AERC score, Effective Power is divided by 5 and rounded to the nearest 0.5. This would make a vanilla 11 " +
+                        "power creature equal to a Dust Pixie in Total AERC score.",
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>AERC Score (AERC)</Typography>,
                         "The AERC score of a deck is simply its AERC ratings added together. It represents how good a deck is at the core mechanics of " +
-                        "the game: creating aember, and controlling aember, artifacts, and creatures. It doesn't ",
+                        "the game: creating aember, and controlling aember, artifacts, and creatures. It doesn't directly represent how good a deck is.",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"Using SAS and AERC"} infos={[

@@ -57,15 +57,15 @@ class StatsService(
         return cachedStats
     }
 
-    @Scheduled(fixedDelayString = "PT24H")
+    @Scheduled(fixedDelayString = "PT12H")
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
-        log.info("Creating deck stats with new version.")
         val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
         if (mostRecentVersion == null) {
             deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
             updateStats = true
         } else if (mostRecentVersion.completeDateTime != null) {
+            log.info("Creating deck stats with new version.")
             deckStatisticsRepo.save(
                     DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
                             .copy(version = mostRecentVersion.version + 1)
@@ -80,23 +80,24 @@ class StatsService(
 
         if (!updateStats) return
 
-        val stats = deckStatisticsRepo.findFirstByOrderByVersionDesc()
+        val millisTaken = measureTimeMillis {
 
-        when {
-            stats == null -> log.warn("There was no stats version for updating deck stats.")
-            stats.completeDateTime != null -> {
-                updateStats = false
-                log.info("Deck Stats were already completed updating for version ${stats.version}.")
-            }
-            else -> {
-                val millisTaken = measureTimeMillis {
+            val stats = deckStatisticsRepo.findFirstByOrderByVersionDesc()
+
+            when {
+                stats == null -> log.warn("There was no stats version for updating deck stats.")
+                stats.completeDateTime != null -> {
+                    updateStats = false
+                    log.info("Deck Stats were already completed updating for version ${stats.version}.")
+                }
+                else -> {
                     val deckQ = QDeck.deck
                     val predicate = BooleanBuilder()
                             .and(deckQ.registered.isTrue)
                             .andAnyOf(deckQ.statsVersion.isNull, deckQ.statsVersion.ne(stats.version))
                     val deckResults = query.selectFrom(deckQ)
                             .where(predicate)
-                            .limit(10000)
+                            .limit(100000)
                             .fetch()
 
                     if (deckResults.isEmpty()) {
@@ -109,9 +110,9 @@ class StatsService(
                     updateStats(stats, deckResults)
                 }
 
-                log.info("Took $millisTaken ms to update stats with 10000 decks.")
             }
         }
+        log.info("Took $millisTaken ms to update stats with 100000 decks.")
     }
 
     private fun updateStats(statsEntity: DeckStatisticsEntity, decks: List<Deck>) {
@@ -121,19 +122,21 @@ class StatsService(
 
             stats.armorValues.incrementValue(ratedDeck.totalArmor)
             stats.totalCreaturePower.incrementValue(ratedDeck.totalPower)
-            stats.aerc.incrementValue(ratedDeck.aercScore?.roundToInt() ?: 0)
+            stats.aerc.incrementValue(ratedDeck.aercScore.roundToInt())
             stats.expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
             stats.amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
             stats.creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
             stats.artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
+            stats.deckManipulation.incrementValue(ratedDeck.deckManipulation?.roundToInt() ?: 0)
+            stats.effectivePower.incrementValue(ratedDeck.effectivePower ?: 0)
             stats.sas.incrementValue(ratedDeck.sasRating)
             stats.cardsRating.incrementValue(ratedDeck.cardsRating)
             stats.synergy.incrementValue(ratedDeck.synergyRating)
             stats.antisynergy.incrementValue(ratedDeck.antisynergyRating)
-            stats.creatureCount.incrementValue(ratedDeck.totalCreatures)
-            stats.actionCount.incrementValue(ratedDeck.totalActions)
-            stats.artifactCount.incrementValue(ratedDeck.totalArtifacts)
-            stats.upgradeCount.incrementValue(ratedDeck.totalUpgrades)
+            stats.creatureCount.incrementValue(ratedDeck.creatureCount)
+            stats.actionCount.incrementValue(ratedDeck.actionCount)
+            stats.artifactCount.incrementValue(ratedDeck.artifactCount)
+            stats.upgradeCount.incrementValue(ratedDeck.upgradeCount)
 
             val creatureCards = cards.filter { card -> card.cardType == CardType.Creature }
             stats.power2OrLower.incrementValue(creatureCards.filter { card -> card.power < 3 }.size)
@@ -148,16 +151,18 @@ class StatsService(
                 stats.cardRatingsToWinsLosses.addWinsLosses(ratedDeck.cardsRating, wins)
                 stats.synergyToWinsLosses.addWinsLosses(ratedDeck.synergyRating, wins)
                 stats.antisynergyToWinsLosses.addWinsLosses(ratedDeck.antisynergyRating, wins)
-                stats.aercToWinsLosses.addWinsLosses(ratedDeck.aercScore?.roundToInt() ?: 0, wins)
+                stats.aercToWinsLosses.addWinsLosses(ratedDeck.aercScore.roundToInt(), wins)
                 stats.amberControlToWinsLosses.addWinsLosses(ratedDeck.amberControl.roundToInt(), wins)
                 stats.expectedAmberToWinsLosses.addWinsLosses(ratedDeck.expectedAmber.roundToInt(), wins)
                 stats.artifactControlToWinsLosses.addWinsLosses(ratedDeck.artifactControl.roundToInt(), wins)
                 stats.creatureControlToWinsLosses.addWinsLosses(ratedDeck.creatureControl.roundToInt(), wins)
+                stats.deckManipulationToWinsLosses.addWinsLosses(ratedDeck.deckManipulation?.roundToInt() ?: 0, wins)
+                stats.effectivePowerToWinsLosses.addWinsLosses(ratedDeck.effectivePower ?: 0, wins)
 
-                stats.creatureWins.addWinsLosses(ratedDeck.totalCreatures, wins)
-                stats.actionWins.addWinsLosses(ratedDeck.totalActions, wins)
-                stats.artifactWins.addWinsLosses(ratedDeck.totalArtifacts, wins)
-                stats.upgradeWins.addWinsLosses(ratedDeck.totalUpgrades, wins)
+                stats.creatureWins.addWinsLosses(ratedDeck.creatureCount, wins)
+                stats.actionWins.addWinsLosses(ratedDeck.actionCount, wins)
+                stats.artifactWins.addWinsLosses(ratedDeck.artifactCount, wins)
+                stats.upgradeWins.addWinsLosses(ratedDeck.upgradeCount, wins)
 
                 stats.raresWins.addWinsLosses(ratedDeck.raresCount, wins)
                 ratedDeck.houses.forEach { house ->

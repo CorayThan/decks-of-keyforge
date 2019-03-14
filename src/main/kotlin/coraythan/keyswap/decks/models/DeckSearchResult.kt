@@ -10,10 +10,10 @@ data class DeckSearchResult(
 
         val name: String = "",
 
-        val totalCreatures: Int = 0,
-        val totalActions: Int = 0,
-        val totalArtifacts: Int = 0,
-        val totalUpgrades: Int = 0,
+        val creatureCount: Int = 0,
+        val actionCount: Int = 0,
+        val artifactCount: Int = 0,
+        val upgradeCount: Int = 0,
 
         val registered: Boolean = true,
 
@@ -26,6 +26,8 @@ data class DeckSearchResult(
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
+        val deckManipulation: Double = 0.0,
+        val effectivePower: Int = 0,
         val aercScore: Double = 0.0,
         val sasRating: Int = 0,
         val cardsRating: Int = 0,

@@ -41,6 +41,9 @@ data class Card(
         return cardNumber - other.cardNumber
     }
 
+    val effectivePower: Int
+        get() = extraCardInfo?.effectivePower ?: power + armor
+
     fun toDeckSearchResultCard() = DeckSearchResultCard(
             cardTitle = cardTitle,
             house = house,

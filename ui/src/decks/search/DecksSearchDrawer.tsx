@@ -1,4 +1,4 @@
-import { FormGroup, IconButton, Tooltip } from "@material-ui/core"
+import { FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -132,12 +132,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "expectedAmber",
             "artifactControl",
             "creatureControl",
+            "deckManipulation",
+            "effectivePower",
             "aercScore",
             "synergyRating",
             "antisynergyRating",
             "sasRating",
             "cardsRating",
-            "maverickCount"
+            "creatureCount",
+            "actionCount",
+            "artifactCount",
+            "upgradeCount",
+            "maverickCount",
         ]
         const hideMinMaxConstraintOptions = [
             "listedWithinDays"
@@ -259,12 +265,20 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             style={{marginTop: 12}}
                                         />
                                         <TextField
-                                            style={{width: 48, marginLeft: spacing(2)}}
+                                            style={{width: 56, marginLeft: spacing(2)}}
                                             label={"Copies"}
-                                            type={"number"}
+                                            select={true}
                                             value={card.quantity}
                                             onChange={event => card.quantity = Number(event.target.value)}
-                                        />
+                                        >
+                                            <MenuItem value={0}>None</MenuItem>
+                                            <MenuItem value={1}>1+</MenuItem>
+                                            <MenuItem value={2}>2+</MenuItem>
+                                            <MenuItem value={3}>3+</MenuItem>
+                                            <MenuItem value={4}>4+</MenuItem>
+                                            <MenuItem value={5}>5+</MenuItem>
+                                            <MenuItem value={6}>6+</MenuItem>
+                                        </TextField>
                                         {idx === 0 && cards.length < 5 ? (
                                             <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
                                                 <Add fontSize={"small"}/>

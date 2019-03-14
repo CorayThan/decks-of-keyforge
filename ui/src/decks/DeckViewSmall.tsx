@@ -20,13 +20,14 @@ import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
+import { AercScoreView } from "../stats/AercScoreView"
 import { screenStore } from "../ui/ScreenStore"
 import { UserStore } from "../user/UserStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
-import { AercScoreView, DeckScoreView } from "./DeckScoreView"
+import { DeckScoreView } from "./DeckScoreView"
 
 interface DeckViewSmallProps {
     deck: Deck
@@ -144,13 +145,12 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                 display: "flex",
                 alignItems: "center",
                 flexDirection: "column",
-                padding: spacing(2),
             }}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <HouseBanner houses={houses} size={48} vertical={true}/>
                     <DeckScoreView deck={deck} style={{marginLeft: spacing(6)}}/>
                 </div>
-                <AercScoreView deck={deck} style={{marginTop: spacing(2)}}/>
+                <AercScoreView hasAerc={deck} style={{marginTop: spacing(2)}} includeTotal={true}/>
             </div>
         )
     } else {
@@ -160,13 +160,12 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                 flexWrap: "wrap",
                 alignItems: "center",
                 justifyContent: "space-between",
-                paddingLeft: spacing(2),
                 paddingRight: spacing(2),
             }}>
                 <div style={{flexGrow: 1}}>
                     <HouseBanner houses={houses}/>
                     <div style={{display: "flex", justifyContent: "center"}}>
-                        <AercScoreView deck={deck} style={{marginTop: spacing(1)}}/>
+                        <AercScoreView hasAerc={deck} style={{marginTop: spacing(1)}} includeTotal={true}/>
                     </div>
                 </div>
                 <DeckScoreView deck={deck} style={compact ? {alignItems: "flex-end"} : undefined}/>

@@ -9,6 +9,8 @@ data class GlobalStats(
         val averageAmberControl: Int = 0,
         val averageCreatureControl: Int = 0,
         val averageArtifactControl: Int = 0,
+        val averageDeckManipulation: Int = 0,
+        val averageEffectivePower: Int = 0,
         val sas: List<BarData> = listOf(),
         val cardsRating: List<BarData> = listOf(),
         val synergy: List<BarData> = listOf(),
@@ -20,6 +22,8 @@ data class GlobalStats(
         val expectedAmber: List<BarData> = listOf(),
         val artifactControl: List<BarData> = listOf(),
         val creatureControl: List<BarData> = listOf(),
+        val deckManipulation: List<BarData> = listOf(),
+        val effectivePower: List<BarData> = listOf(),
 
         val creatures: List<BarData> = listOf(),
         val actions: List<BarData> = listOf(),
@@ -35,6 +39,8 @@ data class GlobalStats(
         val expectedAmberWinRate: List<BarData>? = listOf(),
         val artifactControlWinRate: List<BarData>? = listOf(),
         val creatureControlWinRate: List<BarData>? = listOf(),
+        val deckManipulationWinRate: List<BarData>? = listOf(),
+        val effectivePowerWinRate: List<BarData>? = listOf(),
 
         val creatureCountWinRate: List<BarData>? = listOf(),
         val actionCountWinRate: List<BarData>? = listOf(),

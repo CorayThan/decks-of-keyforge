@@ -9,6 +9,8 @@ export interface GlobalStats {
     averageAmberControl: number
     averageCreatureControl: number
     averageArtifactControl: number
+    averageDeckManipulation: number
+    averageEffectivePower: number
     sas: BarData[]
     cardsRating: BarData[]
     synergy: BarData[]
@@ -20,6 +22,8 @@ export interface GlobalStats {
     expectedAmber: BarData[]
     artifactControl: BarData[]
     creatureControl: BarData[]
+    deckManipulation: BarData[]
+    effectivePower: BarData[]
 
     creatures: BarData[]
     actions: BarData[]
@@ -35,6 +39,8 @@ export interface GlobalStats {
     expectedAmberWinRate?: BarData[]
     artifactControlWinRate?: BarData[]
     creatureControlWinRate?: BarData[]
+    deckManipulationWinRate?: BarData[]
+    effectivePowerWinRate?: BarData[]
 
     creatureCountWinRate?: BarData[]
     actionCountWinRate?: BarData[]

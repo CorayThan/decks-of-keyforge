@@ -9,7 +9,6 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
-import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
@@ -34,7 +33,7 @@ private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 4
+const val currentDeckRatingVersion = 5
 
 @Transactional
 @Service
@@ -45,7 +44,6 @@ class DeckImporterService(
         private val deckService: DeckService,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
-        private val statsService: StatsService,
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
         private val objectMapper: ObjectMapper,
@@ -113,7 +111,7 @@ class DeckImporterService(
     private var doneRatingDecks = false
 
     // Comment this in whenever rating gets revved
-    // @Scheduled(fixedDelayString = lockUpdateRatings)
+    @Scheduled(fixedDelayString = lockUpdateRatings)
     fun rateDecks() {
 
         if (doneRatingDecks) return
@@ -122,7 +120,7 @@ class DeckImporterService(
             val deckQ = QDeck.deck
 
             val deckResults = query.selectFrom(deckQ)
-                    .where(deckQ.ratingVersion.ne(currentDeckRatingVersion))
+                    .where(deckQ.ratingVersion.ne(currentDeckRatingVersion).or(deckQ.ratingVersion.isNull))
                     .limit(10000)
                     .fetch()
 
@@ -249,18 +247,23 @@ class DeckImporterService(
         val e = extraCardInfos.map { it.expectedAmber }.sum()
         val r = extraCardInfos.map { it.artifactControl }.sum()
         val c = extraCardInfos.map { it.creatureControl }.sum()
+        val d = extraCardInfos.map { it.deckManipulation }.sum()
+        val p = cards.map { it.effectivePower }.sum()
+        val powerValue = (p.toDouble() / 5).roundToInt().toDouble() / 2
         return deck.copy(
 
-                totalCreatures = cards.filter { it.cardType == CardType.Creature }.size,
-                totalActions = cards.filter { it.cardType == CardType.Action }.size,
-                totalArtifacts = cards.filter { it.cardType == CardType.Artifact }.size,
-                totalUpgrades = cards.filter { it.cardType == CardType.Upgrade }.size,
+                creatureCount = cards.filter { it.cardType == CardType.Creature }.size,
+                actionCount = cards.filter { it.cardType == CardType.Action }.size,
+                artifactCount = cards.filter { it.cardType == CardType.Artifact }.size,
+                upgradeCount = cards.filter { it.cardType == CardType.Upgrade }.size,
 
                 amberControl = a,
                 expectedAmber = e,
                 artifactControl = r,
                 creatureControl = c,
-                aercScore = a + e + r + c,
+                deckManipulation = d,
+                effectivePower = p,
+                aercScore = a + e + r + c + d + powerValue,
                 sasRating = cardsRating.roundToInt() + synergy + antisynergy,
                 cardsRating = cardsRating.roundToInt(),
                 synergyRating = synergy,

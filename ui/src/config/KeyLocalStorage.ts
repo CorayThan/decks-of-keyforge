@@ -65,6 +65,9 @@ class KeyLocalStorage {
     }
 
     setDeckPageSize = (size: number) => {
+        if (size < 1) {
+            return
+        }
         this.deckPageSize = size
         this.localStorage.setItem(Keys.DECK_PAGE_SIZE, size.toString())
     }

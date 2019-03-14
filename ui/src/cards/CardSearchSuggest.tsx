@@ -142,7 +142,7 @@ export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
         return (
             <div
                 style={{
-                    width: 200,
+                    width: 192,
                     ...this.props.style
                 }}
             >

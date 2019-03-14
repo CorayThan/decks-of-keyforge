@@ -15,6 +15,8 @@ export interface StatsBarProps {
     style?: React.CSSProperties
     hideY?: boolean
     secondary?: boolean
+    xTickValues?: number[]
+    xTickFormat?: (tick: number) => number
 }
 
 @observer
@@ -56,12 +58,18 @@ export class StatsBar extends React.Component<StatsBarProps> {
                     padding={32}
                     width={sizes.width}
                     height={sizes.height}
-                    domainPadding={16}
-                    style={{pointerEvents: "none"}}
-                    standalone={true}
+                    domainPadding={{x: 16}}
+                    style={{
+                        parent: {
+                            border: "1px solid #ccc"
+                        }
+                    }}                    standalone={true}
                     containerComponent={<VictoryContainer responsive={false} style={{pointerEvents: "none"}}/>}
                 >
-                    <VictoryAxis/>
+                    <VictoryAxis
+                        tickValues={this.props.xTickValues}
+                        tickFormat={this.props.xTickFormat}
+                    />
                     {this.props.hideY ? null : (
                         <VictoryAxis
                             dependentAxis={true}

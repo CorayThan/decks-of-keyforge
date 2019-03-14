@@ -7,7 +7,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
-import { TraitsView } from "../stats/TraitsView"
+import { AercScoreView, HasAerc } from "../stats/AercScoreView"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
@@ -38,8 +38,8 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     if (props.simple) {
         return <CardSimpleView card={card}/>
     }
-    const {cardTitle, cardType, cardText, amber, extraCardInfo} = card
-    const {rating, traits, synergies} = extraCardInfo
+    const {cardTitle, cardType, cardText, amber, extraCardInfo, effectivePower, aercScore} = card
+    const {rating, traits, synergies, amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation} = extraCardInfo
 
     const wrapperStyle: React.CSSProperties = screenStore.screenSizeXs() ? {
         backgroundColor: "#DFDFDF",
@@ -55,6 +55,11 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
         minHeight: 420,
         margin: spacing(1),
         borderRadius: "20px"
+    }
+
+    const cardAerc: HasAerc = {
+        amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation, aercScore: aercScore == null ? 0 : aercScore,
+        effectivePower
     }
 
     return (
@@ -73,8 +78,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                     {amber > 0 ? <Typography variant={"subtitle1"}>{amber} aember</Typography> : null}
                 </div>
                 <Typography>{cardText}</Typography>
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <TraitsView hasTraits={extraCardInfo} color={"rgba(0, 0, 0, 0.87)"}/>
+                <AercScoreView hasAerc={cardAerc} style={{marginTop: spacing(1)}} dark={true} narrow={true}/>
                 {card.winRate != null ? (
                     <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
                         <Tooltip

@@ -191,31 +191,31 @@ class DeckSynergyService(
             else -> 1
         }
 
-        if (deck.totalArtifacts > 4) traits[SynTrait.highArtifactCount] = when {
-            deck.totalArtifacts > 7 -> 4
-            deck.totalArtifacts > 6 -> 3
-            deck.totalArtifacts > 5 -> 2
+        if (deck.artifactCount > 4) traits[SynTrait.highArtifactCount] = when {
+            deck.artifactCount > 7 -> 4
+            deck.artifactCount > 6 -> 3
+            deck.artifactCount > 5 -> 2
             else -> 1
         }
 
-        if (deck.totalArtifacts < 4) traits[SynTrait.lowArtifactCount] = when {
-            deck.totalArtifacts < 1 -> 4
-            deck.totalArtifacts < 2 -> 3
-            deck.totalArtifacts < 3 -> 2
+        if (deck.artifactCount < 4) traits[SynTrait.lowArtifactCount] = when {
+            deck.artifactCount < 1 -> 4
+            deck.artifactCount < 2 -> 3
+            deck.artifactCount < 3 -> 2
             else -> 1
         }
 
-        if (deck.totalCreatures > 16) traits[SynTrait.highCreatureCount] = when {
-            deck.totalCreatures > 20 -> 4
-            deck.totalCreatures > 18 -> 3
-            deck.totalCreatures > 17 -> 2
+        if (deck.creatureCount > 16) traits[SynTrait.highCreatureCount] = when {
+            deck.creatureCount > 20 -> 4
+            deck.creatureCount > 18 -> 3
+            deck.creatureCount > 17 -> 2
             else -> 1
         }
 
-        if (deck.totalCreatures < 15) traits[SynTrait.lowCreatureCount] = when {
-            deck.totalCreatures < 12 -> 4
-            deck.totalCreatures < 13 -> 3
-            deck.totalCreatures < 14 -> 2
+        if (deck.creatureCount < 15) traits[SynTrait.lowCreatureCount] = when {
+            deck.creatureCount < 12 -> 4
+            deck.creatureCount < 13 -> 3
+            deck.creatureCount < 14 -> 2
             else -> 1
         }
 

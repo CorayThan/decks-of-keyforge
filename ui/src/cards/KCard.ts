@@ -19,10 +19,12 @@ export interface KCard {
     cardNumber: number
     expansion: number
     maverick: boolean
+    effectivePower: number
 
     wins?: number
     losses?: number
     winRate?: number
+    aercScore?: number
 
     extraCardInfo: ExtraCardInfo
 }
@@ -41,6 +43,7 @@ export interface ExtraCardInfo {
     amberControl: number
     creatureControl: number
     artifactControl: number
+    deckManipulation: number
 
     traits: string[]
     synergies: SynTraitValue[]

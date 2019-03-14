@@ -12,6 +12,8 @@ data class DeckStatistics(
         val amberControl: MutableMap<Int, Int> = mutableMapOf(),
         val creatureControl: MutableMap<Int, Int> = mutableMapOf(),
         val artifactControl: MutableMap<Int, Int> = mutableMapOf(),
+        val deckManipulation: MutableMap<Int, Int> = mutableMapOf(),
+        val effectivePower: MutableMap<Int, Int> = mutableMapOf(),
         val sas: MutableMap<Int, Int> = mutableMapOf(),
         val cardsRating: MutableMap<Int, Int> = mutableMapOf(),
         val synergy: MutableMap<Int, Int> = mutableMapOf(),
@@ -35,6 +37,8 @@ data class DeckStatistics(
         val expectedAmberToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val artifactControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val creatureControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
+        val deckManipulationToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
+        val effectivePowerToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
 
         val creatureWins: MutableMap<Int, Wins> = mutableMapOf(),
         val actionWins: MutableMap<Int, Wins> = mutableMapOf(),
@@ -52,6 +56,10 @@ data class DeckStatistics(
             get() = IndividalDeckTraitStats.fromValues(creatureControl)
     val artifactControlStats: IndividalDeckTraitStats
             get() = IndividalDeckTraitStats.fromValues(artifactControl)
+    val deckManipulationStats: IndividalDeckTraitStats
+        get() = IndividalDeckTraitStats.fromValues(deckManipulation)
+    val effectivePowerStats: IndividalDeckTraitStats
+        get() = IndividalDeckTraitStats.fromValues(effectivePower)
     val sasStats: IndividalDeckTraitStats
             get() = IndividalDeckTraitStats.fromValues(sas)
     val cardsRatingStats: IndividalDeckTraitStats
@@ -78,6 +86,8 @@ data class DeckStatistics(
             averageAmberControl = amberControlStats.median,
             averageCreatureControl = creatureControlStats.median,
             averageArtifactControl = artifactControlStats.median,
+            averageDeckManipulation = deckManipulationStats.median,
+            averageEffectivePower = effectivePowerStats.median,
             sas = sas.map { BarData(it.key, it.value) },
             cardsRating = cardsRating.map { BarData(it.key, it.value) },
             synergy = synergy.map { BarData(it.key, it.value) },
@@ -89,6 +99,8 @@ data class DeckStatistics(
             expectedAmber = expectedAmber.map { BarData(it.key, it.value) },
             artifactControl = artifactControl.map { BarData(it.key, it.value) },
             creatureControl = creatureControl.map { BarData(it.key, it.value) },
+            deckManipulation = deckManipulation.map { BarData(it.key, it.value) },
+            effectivePower = groupEffectiveCreaturePowerByTens(),
 
             creatures = creatureCount.map { BarData(it.key, it.value) },
             actions = actionCount.map { BarData(it.key, it.value) },
@@ -104,6 +116,8 @@ data class DeckStatistics(
             expectedAmberWinRate = expectedAmberToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             artifactControlWinRate = artifactControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             creatureControlWinRate = creatureControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            deckManipulationWinRate = deckManipulationToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            effectivePowerWinRate = effectivePowerToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
 
             creatureCountWinRate = creatureWins.map { BarData(it.key, it.value.toWinPercent()) },
             actionCountWinRate = actionWins.map { BarData(it.key, it.value.toWinPercent()) },
@@ -114,8 +128,12 @@ data class DeckStatistics(
             houseWinRate = housesWins.map { BarData(it.key, it.value.toWinPercent()) }.sortedBy { it.x as House }
     )
 
-    fun groupCreaturePowerByTens(): List<BarData> {
+    private fun groupCreaturePowerByTens(): List<BarData> {
         return totalCreaturePower.keys.groupBy { it / 5 }.toList().map { BarData(it.first * 5, it.second.map { totalCreaturePower[it]!! }.sum()) }
+    }
+
+    private fun groupEffectiveCreaturePowerByTens(): List<BarData> {
+        return effectivePower.keys.groupBy { it / 5 }.toList().map { BarData(it.first * 5, it.second.map { effectivePower[it]!! }.sum()) }
     }
 }
 

@@ -136,7 +136,7 @@ export class DeckFilters {
         })
 
         if (copied.cards) {
-            copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardName.length > 0 && card.quantity > 0)
+            copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardName.length > 0)
             copied.cards = DeckFilters.cardsAsParam(copied.cards)
         }
         if (copied.constraints) {
@@ -147,7 +147,7 @@ export class DeckFilters {
 
     cleaned = () => {
         const cloned = clone(this)
-        cloned.cards = cloned.cards.filter(card => card.cardName.length > 0 && card.quantity > 0)
+        cloned.cards = cloned.cards.filter(card => card.cardName.length > 0)
         return cloned
     }
 }

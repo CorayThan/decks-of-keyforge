@@ -11,13 +11,21 @@ import { StatsBar } from "../stats/StatsBar"
 import { StatsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.2"
+export const latestVersion = "3.3"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.3"} expanded={true} releaseNotes={[
+                    "Added two new AERC traits, deck manipulation and effective creature power. Read more about them on the SAS and AERC about page!",
+                    "Added those two new traits to the total AERC score. This causes a major change to those scores.",
+                    "Minor update to SAS based on latest card win rates. No card was changed by more than 0.5 card rating.",
+                    "You can now search by card quantity \"none\" to exclude cards you don't want.",
+                    "Added new \"filter on\" options to deck search. You can now filter on deck manipulation, effective creature power, as well as " +
+                    "card type quantity."
+                ]}/>
                 <ReleaseNote releaseNumber={"3.2"} expanded={true} releaseNotes={[
                     `Europeans rejoice! You can now select "Buying Countries" in your profile. When you search decks for sale, these will be used instead of ` +
                     "your home country for searching.",

@@ -273,7 +273,11 @@ class DeckService(
         }
 
         filters.cards.forEach {
-            predicate.and(deckQ.cardNamesString.like("%${it.cardName}${it.quantity}%"))
+            if (it.quantity == 0) {
+                predicate.and(deckQ.cardNamesString.notLike("%${it.cardName}1%"))
+            } else {
+                predicate.and(deckQ.cardNamesString.like("%${it.cardName}${it.quantity}%"))
+            }
         }
 
         return predicate
