@@ -26,32 +26,35 @@ class DeckEndpoints(
 
     @PostMapping("/filter")
     fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
-        var decks: DecksPage? = null
-        val decksFilterTime = measureTimeMillis {
-            decks = deckService.filterDecks(deckFilters)
+        try {
+            val cleanFilters = deckFilters.clean()
+            var decks: DecksPage? = null
+            val decksFilterTime = measureTimeMillis {
+                decks = deckService.filterDecks(cleanFilters)
+            }
+
+            if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $cleanFilters")
+            return decks!!
+        } catch (ex: Exception) {
+            throw RuntimeException("Couldn't filter decks with filters $deckFilters", ex)
         }
 
-        if (deckFilters.pageSize < 20) {
-            throw IllegalArgumentException("Received page size less than 20 with filters $deckFilters")
-        }
-
-        if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $deckFilters")
-        return decks!!
     }
 
     @PostMapping("/filter-count")
     fun decksCount(@RequestBody deckFilters: DeckFilters): DeckCount {
-        var decks: DeckCount? = null
-        val decksFilterTime = measureTimeMillis {
-            decks = deckService.countFilters(deckFilters)
-        }
+        try {
+            var decks: DeckCount? = null
+            val cleanFilters = deckFilters.clean()
+            val decksFilterTime = measureTimeMillis {
+                decks = deckService.countFilters(cleanFilters)
+            }
 
-        if (deckFilters.pageSize < 20) {
-            throw IllegalArgumentException("Received page size less than 20 with filters $deckFilters")
+            if (decksFilterTime > 500) log.warn("Decks counting took $decksFilterTime ms with filters $cleanFilters")
+            return decks!!
+        } catch (ex: Exception) {
+            throw RuntimeException("Couldn't count decks with filters $deckFilters", ex)
         }
-
-        if (decksFilterTime > 500) log.warn("Decks counting took $decksFilterTime ms with filters $deckFilters")
-        return decks!!
     }
 
     @CrossOrigin

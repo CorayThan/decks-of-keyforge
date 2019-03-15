@@ -15,6 +15,16 @@ class StatsEndpoints(
     @GetMapping
     fun findGlobalStats() = statsService.findGlobalStats()
 
+    @PostMapping
+    fun setGlobalStatsManually(@RequestBody deckStats: DeckStatistics, @RequestParam apiKey: String) {
+
+        check(apiKey == "crazybunnypantssalad") {
+            "Wrong api key! it was $apiKey"
+        }
+
+        return statsService.setStats(deckStats)
+    }
+
     @PostMapping("/start-new")
     fun startNewStats(@RequestParam apiKey: String) {
 

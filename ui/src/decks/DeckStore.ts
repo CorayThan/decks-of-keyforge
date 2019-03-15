@@ -67,8 +67,12 @@ export class DeckStore {
         axios.get(`${DeckStore.CONTEXT}/${keyforgeId}`)
             .then((response: AxiosResponse) => {
                 const deck: DeckWithSynergyInfo = response.data
-                deck.deck.houses.sort()
-                this.deck = deck
+                if (!deck || !deck.deck) {
+                    MessageStore.instance.setWarningMessage(`You might need to import this deck. We couldn't find a deck with the id: ${keyforgeId}`)
+                } else {
+                    deck.deck.houses.sort()
+                    this.deck = deck
+                }
             })
     }
 

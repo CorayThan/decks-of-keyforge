@@ -26,7 +26,9 @@ data class DeckFilters(
 
         val sort: DeckSortOptions = DeckSortOptions.SAS_RATING,
         val sortDirection: SortDirection = SortDirection.DESC
-)
+) {
+    fun clean() = if (this.pageSize < 20) this.copy(pageSize = 20) else this
+}
 
 data class DeckCardQuantity(
         val cardName: String,

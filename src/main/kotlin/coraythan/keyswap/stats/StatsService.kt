@@ -57,6 +57,21 @@ class StatsService(
         return cachedStats
     }
 
+    fun setStats(deckStats: DeckStatistics) {
+        val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
+        if (mostRecentVersion?.completeDateTime != null) {
+            log.info("Setting deck stats manually.")
+            deckStatisticsRepo.save(
+                    DeckStatisticsEntity.fromDeckStatistics(deckStats)
+                            .copy(version = mostRecentVersion.version + 1, completeDateTime = ZonedDateTime.now(ZoneOffset.UTC))
+            )
+            updateStats = true
+        updateCachedStats()
+        } else {
+            throw IllegalStateException("Can't set stats manually with no previous stats or while in progress.")
+        }
+    }
+
     @Scheduled(fixedDelayString = "PT12H")
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
@@ -97,7 +112,7 @@ class StatsService(
                             .andAnyOf(deckQ.statsVersion.isNull, deckQ.statsVersion.ne(stats.version))
                     val deckResults = query.selectFrom(deckQ)
                             .where(predicate)
-                            .limit(10000)
+                            .limit(1000)
                             .fetch()
 
                     if (deckResults.isEmpty()) {
@@ -111,7 +126,7 @@ class StatsService(
                 }
             }
         }
-        log.info("Took $millisTaken ms to update stats with 10000 decks.")
+        log.info("Took $millisTaken ms to update stats with 1000 decks.")
     }
 
     private fun updateStats(statsEntity: DeckStatisticsEntity, decks: List<Deck>) {

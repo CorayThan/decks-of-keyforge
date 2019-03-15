@@ -23,13 +23,23 @@ const pieColors = ["DodgerBlue", "SandyBrown", "SlateBlue", "MediumTurquoise"]
 export class DeckStatsView extends React.Component<DeckStatsViewProps> {
     render() {
         const {
-            name, creatureCount, actionCount, artifactCount, upgradeCount, expectedAmber, amberControl, creatureControl, artifactControl
+            name, creatureCount, actionCount, artifactCount, upgradeCount,
+            expectedAmber, amberControl, creatureControl, artifactControl,
+            deckManipulation, effectivePower
         } = this.props.deck
         const stats = StatsStore.instance.stats
         if (!stats) {
             return <Loader/>
         }
-        const {averageExpectedAmber, averageAmberControl, averageCreatureControl, averageArtifactControl, sas} = stats
+        const {
+            averageExpectedAmber, averageAmberControl, averageCreatureControl,
+            averageArtifactControl, averageDeckManipulation, averageEffectivePower
+
+        } = stats
+
+        const avgDeckManToUse = averageDeckManipulation == null ? 4 : averageDeckManipulation
+        const avgEffPowToUse = averageEffectivePower == null ? 7 : Math.round(averageEffectivePower / 5) / 2
+
         return (
             <div>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2), pointerEvents: "none"}}>
@@ -48,11 +58,19 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                             {x: "Avg R", y: averageArtifactControl},
                             {x: "C", y: creatureControl},
                             {x: "Avg C", y: averageCreatureControl},
+                            {x: "D", y: deckManipulation},
+                            {x: "Avg D", y: avgDeckManToUse},
+                            {x: "P", y: Math.round(effectivePower / 5) / 2},
+                            {x: "Avg P", y: avgEffPowToUse},
                         ]}
                         style={{pointerEvents: "none"}}
                     />
                     <Tooltip
-                        title={"A = Aember Control, E = Expected Aember, R = Artifact Control, C = Creature Control"}
+                        title={
+                            "A = Aember Control, E = Expected Aember, " +
+                            "R = Artifact Control, C = Creature Control, " +
+                            "D = Deck Manipulation, P = Effective Creature Power divided by 10 rounded to 0.5"
+                        }
                         style={{marginBottom: spacing(1)}}
                     >
                         <Info color={"primary"}/>

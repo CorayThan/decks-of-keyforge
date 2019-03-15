@@ -288,12 +288,13 @@ class DeckService(
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
         if (keyforgeId == "simple") {
             // quiet down the annoying constant errors
+            log.warn("Still receiving dumb simple deck requests.")
             return null
         }
         if (keyforgeId.length != 36) {
             throw BadRequestException("Request for deck with synergies with bad id: $keyforgeId")
         }
-        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Can't find a deck with id $keyforgeId")
+        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return null
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
         return DeckWithSynergyInfo(

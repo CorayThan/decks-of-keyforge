@@ -175,12 +175,13 @@ export class SasAndAerc extends React.Component {
                         "There are other creatures and abilities " +
                         "that contribute extra power, like Blood of Titans or Zyzzix the Many. These have had their effective power increased.",
                         "Effective power is also increased by Armor at a 1:1 ratio.",
-                        "When included in total AERC score, Effective Power is divided by 5 and rounded to the nearest 0.5. This would make a vanilla 11 " +
-                        "power creature equal to a Dust Pixie in Total AERC score.",
+                        "When included in total AERC score, Effective Power is divided by 10 and rounded to the nearest 0.5.",
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>AERC Score (AERC)</Typography>,
-                        "The AERC score of a deck is simply its AERC ratings added together. It represents how good a deck is at the core mechanics of " +
-                        "the game: creating aember, and controlling aember, artifacts, and creatures. It doesn't directly represent how good a deck is.",
+                        "To calculate the AERC score divide Effective Power by 10, round to the nearest 0.5, then add that with the other AERC scores. " +
+                        "The AERC score represents how good a deck is at the core mechanics of " +
+                        "the game: generating and controlling aember, controlling artifacts, controlling creatures, " +
+                        "drawing cards, and building a board of creatures. It doesn't directly represent how good a deck is.",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"Using SAS and AERC"} infos={[

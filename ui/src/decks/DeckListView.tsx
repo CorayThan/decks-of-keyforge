@@ -99,7 +99,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 <Table padding={"checkbox"}>
                     <TableHead>
                         <TableRow>
-                            <DeckHeader title={"Name"} property={"name"} minWidth={152}/>
+                            <DeckHeader title={"Name"} property={"name"} minWidth={144}/>
                             <TableCell>Houses</TableCell>
                             {displayPrices ? (
                                 <DeckHeader title={"Price"} property={"price"}/>
@@ -113,6 +113,8 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             <DeckHeader title={"E"} property={"expectedAmber"}/>
                             <DeckHeader title={"R"} property={"artifactControl"}/>
                             <DeckHeader title={"C"} property={"creatureControl"}/>
+                            <DeckHeader title={"D"} property={"deckManipulation"}/>
+                            <DeckHeader title={"P"} property={"effectivePower"}/>
                             <DeckHeader title={"Creature Power"} property={"totalPower"}/>
                             <DeckHeader title={"Power"} property={"powerLevel"}/>
                             <DeckHeader title={"Chains"} property={"chains"}/>
@@ -144,6 +146,8 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <TableCell>{deck.expectedAmber}</TableCell>
                                 <TableCell>{deck.artifactControl}</TableCell>
                                 <TableCell>{deck.creatureControl}</TableCell>
+                                <TableCell>{deck.deckManipulation}</TableCell>
+                                <TableCell>{deck.effectivePower}</TableCell>
                                 <TableCell>{deck.totalPower}</TableCell>
                                 <TableCell>{deck.powerLevel}</TableCell>
                                 <TableCell>{deck.chains}</TableCell>

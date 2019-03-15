@@ -17,6 +17,7 @@ import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
+import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
@@ -149,11 +150,16 @@ class DeckImporterService(
                 val cards = cardService.importNewCards(deckList)
                 try {
                     saveDecks(deckList, cards)
-                } catch (e: DataIntegrityViolationException) {
-                    // We must have a pre-existing deck now
                     return deckRepo.findByKeyforgeId(deckId)?.id
+                } catch (e: RuntimeException) {
+                    if (e::class.java == DataIntegrityViolationException::class.java || e::class.java == ConstraintViolationException::class.java) {
+                        // We must have a pre-existing deck now
+                        log.info("Encountered exception saving deck to import, but it was just the deck already being saved")
+                        return deckRepo.findByKeyforgeId(deckId)?.id
+                    } else {
+                        throw e
+                    }
                 }
-                return deckRepo.findByKeyforgeId(deckId)?.id
             }
         }
         return null
