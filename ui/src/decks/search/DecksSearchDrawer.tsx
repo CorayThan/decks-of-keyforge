@@ -143,6 +143,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "actionCount",
             "artifactCount",
             "upgradeCount",
+            "powerLevel",
             "maverickCount",
         ]
         const hideMinMaxConstraintOptions = [

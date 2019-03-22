@@ -716,7 +716,7 @@
 - name: Hand of Dis
   cardNumber: 62
   rating: 2.5
-  expectedAmber: 1.0
+  expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
@@ -3872,7 +3872,7 @@
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
-  artifactControl: 1.5
+  artifactControl: 1.0
   traits: [elusive, goodReap]
   synergies:
     - trait: destroysEnemyArtifacts

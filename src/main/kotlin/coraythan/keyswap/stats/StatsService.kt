@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT1M"
+private const val lockUpdateStats = "PT10M"
 
 @Transactional
 @Service
@@ -112,7 +112,7 @@ class StatsService(
                             .andAnyOf(deckQ.statsVersion.isNull, deckQ.statsVersion.ne(stats.version))
                     val deckResults = query.selectFrom(deckQ)
                             .where(predicate)
-                            .limit(1000)
+                            .limit(10000)
                             .fetch()
 
                     if (deckResults.isEmpty()) {
@@ -126,7 +126,7 @@ class StatsService(
                 }
             }
         }
-        log.info("Took $millisTaken ms to update stats with 1000 decks.")
+        if (updateStats) log.info("Took $millisTaken ms to update stats with 10000 decks.")
     }
 
     private fun updateStats(statsEntity: DeckStatisticsEntity, decks: List<Deck>) {
