@@ -110,7 +110,7 @@ class KeyRouter extends React.Component {
                             path={Routes.userProfilePage()}
                             component={ProfilePage}
                         />
-                        <Route
+                        <LoggedInRoute
                             exact={true}
                             path={Routes.myProfile}
                             component={MyProfile}

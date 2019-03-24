@@ -1,6 +1,9 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
+import * as React from "react"
 import { HttpConfig } from "../../config/HttpConfig"
+import { Routes } from "../../config/Routes"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { MessageStore } from "../../ui/MessageStore"
 import { UserStore } from "../../user/UserStore"
 import { ForSaleQuery } from "./ForSaleQuery"
@@ -18,7 +21,15 @@ export class ForSaleNotificationsStore {
 
         axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/add-query`, query)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(`Created deck notification filter "${query.queryName}".`)
+                MessageStore.instance.setMessage(
+                    `Created deck notification filter "${query.queryName}". See your settings on your `,
+                    "Success",
+                    <LinkButton
+                        to={Routes.myProfile}
+                    >
+                        Profile
+                    </LinkButton>
+                    )
                 UserStore.instance.loadLoggedInUser()
             })
     }
