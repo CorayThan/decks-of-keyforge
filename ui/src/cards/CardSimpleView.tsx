@@ -1,4 +1,4 @@
-import { Divider, Tooltip } from "@material-ui/core"
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, Tooltip } from "@material-ui/core"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
 import { round } from "lodash"
@@ -7,12 +7,13 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
-import { AercScoreView, HasAerc } from "../stats/AercScoreView"
+import { KeyButton } from "../mui-restyled/KeyButton"
+import { AercScoreView } from "../stats/AercScoreView"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { CardStore } from "./CardStore"
-import { KCard } from "./KCard"
+import { hasAercFromCard, KCard } from "./KCard"
 import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 interface HasFrontImage {
@@ -38,8 +39,8 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     if (props.simple) {
         return <CardSimpleView card={card}/>
     }
-    const {cardTitle, cardType, cardText, amber, extraCardInfo, effectivePower, aercScore} = card
-    const {rating, traits, synergies, amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation} = extraCardInfo
+    const {cardTitle, cardType, cardText, amber, extraCardInfo} = card
+    const {rating, traits, synergies} = extraCardInfo
 
     const wrapperStyle: React.CSSProperties = screenStore.screenSizeXs() ? {
         backgroundColor: "#DFDFDF",
@@ -57,10 +58,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
         borderRadius: "20px"
     }
 
-    const cardAerc: HasAerc = {
-        amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation, aercScore: aercScore == null ? 0 : aercScore,
-        effectivePower
-    }
+    const cardAerc = hasAercFromCard(card)
 
     return (
         <div style={wrapperStyle}>
@@ -121,6 +119,68 @@ interface CardAsLineProps {
 @observer
 export class CardAsLine extends React.Component<CardAsLineProps> {
 
+    render() {
+        const card = this.props.card
+        const complex = screenStore.screenSizeMdPlus()
+
+        if (complex) {
+            return <CardAsLineComplex card={card}/>
+        } else {
+            return <CardAsLineSimple card={card}/>
+        }
+    }
+}
+
+@observer
+class CardAsLineSimple extends React.Component<CardAsLineProps> {
+    @observable
+    open = false
+
+    handleClose = () => this.open = false
+    handleOpen = () => {
+        this.open = true
+    }
+
+    render() {
+        const card = this.props.card
+        const fullCard = CardStore.instance.fullCardFromCardWithName(card)
+
+        let dialog = null
+        if (fullCard && fullCard.id != null) {
+            const cardAerc = hasAercFromCard(fullCard as KCard)
+            dialog = (
+                <Dialog
+                    open={this.open}
+                    onClose={this.handleClose}
+                    style={{zIndex: screenStore.zindexes.cardsDisplay}}
+                >
+                    <DialogTitle disableTypography={true} style={{display: "flex", justifyContent: "center"}}>
+                        <Typography variant={"h5"}>{card.cardTitle}</Typography>
+                    </DialogTitle>
+                    <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                        <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
+                        <AercScoreView hasAerc={cardAerc} style={{marginTop: spacing(2)}} dark={true} narrow={true}/>
+                    </DialogContent>
+                    <DialogActions style={{display: "flex", justifyContent: "center"}}>
+                        <KeyButton color={"primary"} onClick={this.handleClose}>Close</KeyButton>
+                    </DialogActions>
+                </Dialog>
+            )
+        }
+        return (
+            <div>
+                <div onClick={this.handleOpen}>
+                    <CardLine card={card}/>
+                </div>
+                {dialog}
+            </div>
+        )
+    }
+}
+
+@observer
+class CardAsLineComplex extends React.Component<CardAsLineProps> {
+
     @observable
     popOpen = false
     anchorElement?: HTMLDivElement
@@ -138,7 +198,6 @@ export class CardAsLine extends React.Component<CardAsLineProps> {
     render() {
         const card = this.props.card
         const fullCard = CardStore.instance.fullCardFromCardWithName(card)
-        const complex = !screenStore.screenSizeXs()
 
         let pop = null
         if (fullCard && fullCard.id != null) {
@@ -159,7 +218,7 @@ export class CardAsLine extends React.Component<CardAsLineProps> {
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
                 >
-                    {complex ? <CardView card={fullCard as KCard}/> : <CardSimpleView card={fullCard as KCard}/>}
+                    <CardView card={fullCard as KCard}/>
                 </Popover>
             )
         }
@@ -168,24 +227,28 @@ export class CardAsLine extends React.Component<CardAsLineProps> {
             <div
                 onWheel={this.handlePopoverClose}
                 onClick={() => this.popOpen = true}
+                onMouseEnter={this.handlePopoverOpen}
+                onMouseLeave={this.handlePopoverClose}
             >
-                <div
-                    style={{display: "flex", marginTop: 4, width: 160}}
-                    onMouseEnter={this.handlePopoverOpen}
-                    onMouseLeave={this.handlePopoverClose}
-                >
-                    {card.rarity ? rarityValues.get(card.rarity)!.icon! : null}
-                    <Typography
-                        variant={"body2"}
-                        style={{marginLeft: spacing(1)}}
-                        noWrap={true}
-                    >
-                        {card.cardTitle}
-                    </Typography>
-                    {card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
-                </div>
+                <CardLine card={card}/>
                 {pop}
             </div>
         )
     }
 }
+
+const CardLine = (props: CardAsLineProps) => (
+    <div
+        style={{display: "flex", marginTop: 4, width: 160}}
+    >
+        {props.card.rarity ? rarityValues.get(props.card.rarity)!.icon! : null}
+        <Typography
+            variant={"body2"}
+            style={{marginLeft: spacing(1)}}
+            noWrap={true}
+        >
+            {props.card.cardTitle}
+        </Typography>
+        {props.card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
+    </div>
+)

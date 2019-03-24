@@ -1,4 +1,5 @@
 import { House } from "../houses/House"
+import { HasAerc } from "../stats/AercScoreView"
 import { SynTraitValue } from "../synergy/SynTraitValue"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
@@ -34,6 +35,16 @@ export const winPercentForCard = (card: KCard): number | undefined => {
         return undefined
     }
     return (card.wins / (card.wins + card.losses))
+}
+
+export const hasAercFromCard = (card: KCard): HasAerc => {
+    const {extraCardInfo, effectivePower, aercScore} = card
+    const {amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation} = extraCardInfo
+
+    return {
+        amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation, aercScore: aercScore == null ? 0 : aercScore,
+        effectivePower
+    }
 }
 
 export interface ExtraCardInfo {
