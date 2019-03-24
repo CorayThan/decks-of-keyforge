@@ -1,3 +1,4 @@
+import { ForSaleQueryEntity } from "../decks/salenotifications/ForSaleQuery"
 import { UserDeck } from "../userdeck/UserDeck"
 
 export interface KeyUser {
@@ -6,9 +7,12 @@ export interface KeyUser {
     email: string
     type: UserType
     publicContactInfo?: string
+    allowUsersToSeeDeckOwnership: boolean
+    preferredCountries?: string[]
     decks: UserDeck[]
     country?: string
     lastVersionSeen: string
+    forSaleQueries: ForSaleQueryEntity[]
 }
 
 export interface UserLogin {

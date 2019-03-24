@@ -54,7 +54,7 @@ export class SendSellerEmailDialog extends React.Component<SendSellerEmailDialog
     }
 
     render() {
-        const {username} = this.props
+        const {username, deckName} = this.props
 
         return (
             <div>
@@ -74,13 +74,16 @@ export class SendSellerEmailDialog extends React.Component<SendSellerEmailDialog
                             Before you send this seller an email, please make sure they don't have a different preferred contact method in their contact
                             info.
                         </Typography>
+                        <Typography>
+                            The deck name "{deckName}" and a link will be included in the message automatically.
+                        </Typography>
                         <TextField
                             variant={"outlined"}
                             label={"Message"}
                             value={this.message}
                             onChange={(event) => this.message = event.target.value}
                             multiline={true}
-                            rows={3}
+                            rows={5}
                             fullWidth={true}
                             helperText={"We will send this message to the seller in an email, and give them your email to reply to your message."}
                             style={{marginTop: spacing(4)}}

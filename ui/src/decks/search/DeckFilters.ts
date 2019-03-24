@@ -1,7 +1,7 @@
 import { clone, isEqual } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
-import { log, prettyJson } from "../../config/Utils"
+import { log, prettyJson, Utils } from "../../config/Utils"
 import { SortDirection } from "../../generic/SortDirection"
 import { House } from "../../houses/House"
 import { UserStore } from "../../user/UserStore"
@@ -62,14 +62,6 @@ export class DeckFilters {
         return filters
     }
 
-    private static constraintsAsParam = (constraints: Constraint[]) => (
-        constraints.map(constraint => `${constraint.property}-${constraint.cap}-${constraint.value}`)
-    )
-
-    private static cardsAsParam = (cards: DeckCardQuantity[]) => (
-        cards.map(card => `${card.cardName}-${card.quantity}`)
-    )
-
     houses: House[] = []
     @observable
     title: string = ""
@@ -126,31 +118,43 @@ export class DeckFilters {
     }
     handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.myFavorites = event.target.checked
 
-    prepareForQueryString = (): DeckFilters => {
-        const copied = JSON.parse(JSON.stringify(this))
-
-        Object.keys(copied).forEach((key: string) => {
-            if (isEqual(copied[key], DefaultDeckFilters[key])) {
-                delete copied[key]
-            }
-        })
-
-        if (copied.cards) {
-            copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardName.length > 0)
-            copied.cards = DeckFilters.cardsAsParam(copied.cards)
-        }
-        if (copied.constraints) {
-            copied.constraints = DeckFilters.constraintsAsParam(copied.constraints)
-        }
-        return copied
-    }
-
     cleaned = () => {
         const cloned = clone(this)
         cloned.cards = cloned.cards.filter(card => card.cardName.length > 0)
         return cloned
     }
 }
+
+export const prepareDeckFiltersForQueryString = (filters: DeckFilters) => {
+    const copied = Utils.jsonCopy(filters)
+
+    Object.keys(copied).forEach((key: string) => {
+        if (isEqual(copied[key], DefaultDeckFilters[key])) {
+            delete copied[key]
+        }
+    })
+
+    if (copied.forSaleInCountry == null || copied.forSaleInCountry === "") {
+        delete copied.forSaleInCountry
+    }
+
+    if (copied.cards) {
+        copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardName.length > 0)
+        copied.cards = cardsAsParam(copied.cards)
+    }
+    if (copied.constraints) {
+        copied.constraints = constraintsAsParam(copied.constraints)
+    }
+    return copied
+}
+
+const constraintsAsParam = (constraints: Constraint[]) => (
+    constraints.map(constraint => `${constraint.property}-${constraint.cap}-${constraint.value}`)
+)
+
+const cardsAsParam = (cards: DeckCardQuantity[]) => (
+    cards.map(card => `${card.cardName}-${card.quantity}`)
+)
 
 const DefaultDeckFilters: any = new DeckFilters()
 

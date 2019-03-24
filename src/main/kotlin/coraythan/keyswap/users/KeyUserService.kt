@@ -1,6 +1,7 @@
 package coraythan.keyswap.users
 
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -58,7 +59,7 @@ class KeyUserService(
 
     fun userFromEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
-    fun findUser(id: UUID) = userRepo.getOne(id)
+    fun findByIdOrNull(id: UUID) = userRepo.findByIdOrNull(id)
     fun findUserProfile(username: String) =
             userRepo.findByUsernameIgnoreCase(username)?.toProfile(currentUserService.loggedInUser()?.username == username)
 

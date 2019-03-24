@@ -69,7 +69,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                         vertical: "top",
                         horizontal: "right",
                     }}
-                    style={{zIndex: screenStore.zindexes.loginPop}}
+                    style={{zIndex: screenStore.zindexes.menuPops}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField

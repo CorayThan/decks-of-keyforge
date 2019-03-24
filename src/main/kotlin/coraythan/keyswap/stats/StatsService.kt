@@ -112,7 +112,7 @@ class StatsService(
                             .andAnyOf(deckQ.statsVersion.isNull, deckQ.statsVersion.ne(stats.version))
                     val deckResults = query.selectFrom(deckQ)
                             .where(predicate)
-                            .limit(10000)
+                            .limit(1000)
                             .fetch()
 
                     if (deckResults.isEmpty()) {
@@ -126,7 +126,7 @@ class StatsService(
                 }
             }
         }
-        if (updateStats) log.info("Took $millisTaken ms to update stats with 10000 decks.")
+        if (updateStats) log.info("Took $millisTaken ms to update stats with 1000 decks.")
     }
 
     private fun updateStats(statsEntity: DeckStatisticsEntity, decks: List<Deck>) {

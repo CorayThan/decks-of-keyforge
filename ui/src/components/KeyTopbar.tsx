@@ -1,8 +1,9 @@
-import { Divider, IconButton } from "@material-ui/core"
+import { Divider, IconButton, Menu, MenuItem } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
+import { MoreVert } from "@material-ui/icons"
 import MenuIcon from "@material-ui/icons/Menu"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -14,8 +15,8 @@ import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatronButton } from "../generic/PatronButton"
 import { UnstyledLink } from "../generic/UnstyledLink"
-import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
@@ -162,6 +163,10 @@ const AppLinks = () => (
 
 @observer
 class UserLinks extends React.Component {
+
+    @observable
+    buttonAnchor?: HTMLElement
+
     render() {
         if (UserStore.instance.loginInProgress) {
             return <Loader/>
@@ -176,25 +181,44 @@ class UserLinks extends React.Component {
                     >
                         My Decks
                     </LinkButton>
-                    <LinkButton
-                        color={"inherit"}
-                        to={Routes.userProfilePage(UserStore.instance.username)}
-                        style={{margin: spacing(1)}}
-                        onClick={rightMenuStore.close}
-                    >
-                        Profile
-                    </LinkButton>
                     <div style={{margin: spacing(1)}}>
                         <PatronButton primary={screenStore.screenSizeMd()}/>
                     </div>
-                    <KeyButton
-                        outlinedWhite={true}
-                        color={"inherit"}
-                        onClick={UserStore.instance.logout}
-                        style={{margin: spacing(1)}}
+                    <div style={{display: "flex", justifyContent: "center"}}>
+                        <IconButton
+                            color={"inherit"}
+                            onClick={(event) => this.buttonAnchor = event.currentTarget}
+                        >
+                            <MoreVert/>
+                        </IconButton>
+                    </div>
+                    <Menu
+                        open={this.buttonAnchor != null}
+                        onClose={() => this.buttonAnchor = undefined}
+                        anchorEl={this.buttonAnchor}
+                        style={{zIndex: screenStore.zindexes.menuPops}}
                     >
-                        Logout
-                    </KeyButton>
+                        <LinkMenuItem
+                            to={Routes.myProfile}
+                            style={{margin: spacing(1)}}
+                            onClick={() => {
+                                rightMenuStore.close()
+                                this.buttonAnchor = undefined
+                            }}
+                        >
+                            Profile
+                        </LinkMenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                rightMenuStore.close()
+                                this.buttonAnchor = undefined
+                                UserStore.instance.logout()
+                            }}
+                            style={{margin: spacing(1)}}
+                        >
+                            Logout
+                        </MenuItem>
+                    </Menu>
                 </>
             )
         } else {

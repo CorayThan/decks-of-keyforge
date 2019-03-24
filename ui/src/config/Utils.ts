@@ -23,6 +23,11 @@ export class Utils {
     static formatDate = (date: string) => format(parse(date), "MMM D, YYYY")
 
     static isDev = () => process.env.NODE_ENV === "development"
+
+    // tslint:disable-next-line
+    static jsonCopy = (toCopy: any) => {
+        return JSON.parse(JSON.stringify(toCopy))
+    }
 }
 
 type EnumType = string | number

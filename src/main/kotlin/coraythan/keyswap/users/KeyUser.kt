@@ -2,6 +2,7 @@ package coraythan.keyswap.users
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.userdeck.UserDeck
 import java.util.*
@@ -38,6 +39,10 @@ data class KeyUser(
         @JsonIgnoreProperties("user")
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         val decks: List<UserDeck> = listOf(),
+
+        @JsonIgnoreProperties("user")
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+        val forSaleQueries: List<ForSaleQueryEntity> = listOf(),
 
         val lastVersionSeen: String?,
 

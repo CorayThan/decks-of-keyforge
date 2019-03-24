@@ -55,7 +55,6 @@ class DeckWinsService(
             val decks = keyforgeApi.findDecks(currentPage, order)
             val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 }
             if (updateDecks.isNullOrEmpty()) {
-                log.info("Update decks for $order was $updateDecks")
                 break
             }
             updateDecks

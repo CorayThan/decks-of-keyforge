@@ -184,7 +184,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                     Please choose your country on your profile to list decks.
                                 </Typography>
                                 <LinkButton
-                                    to={Routes.userProfilePage(UserStore.instance.username)}
+                                    to={Routes.myProfile}
                                 >
                                     Profile
                                 </LinkButton>
@@ -284,6 +284,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             helperText={"Trade requests, detailed condition info, etc."}
                             style={{marginTop: spacing(2)}}
                         />
+                        <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
+                            <Typography>
+                                Add generic info for all decks listings on your
+                            </Typography>
+                            <LinkButton
+                                to={Routes.myProfile}
+                                style={{margin: spacing(1)}}
+                            >
+                                Profile
+                            </LinkButton>
+                        </div>
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>

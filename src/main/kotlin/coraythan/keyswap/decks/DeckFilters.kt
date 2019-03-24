@@ -4,29 +4,44 @@ import coraythan.keyswap.House
 import coraythan.keyswap.generic.Country
 import org.springframework.data.domain.Sort
 
+interface DeckQuery {
+    val houses: Set<House>
+    val title: String
+
+    val forSale: Boolean
+    val forTrade: Boolean
+    val forSaleInCountry: Country?
+    val includeUnregistered: Boolean
+    val myFavorites: Boolean
+
+    val constraints: List<Constraint>
+    val cards: List<DeckCardQuantity>
+
+    val owner: String
+}
 
 data class DeckFilters(
-        val houses: Set<House> = setOf(),
-        val title: String = "",
+        override val houses: Set<House> = setOf(),
+        override val title: String = "",
 
         val page: Long = 0,
 
-        val forSale: Boolean = false,
-        val forTrade: Boolean = false,
-        val forSaleInCountry: Country? = null,
-        val includeUnregistered: Boolean = false,
-        val myFavorites: Boolean = false,
+        override val forSale: Boolean = false,
+        override val forTrade: Boolean = false,
+        override val forSaleInCountry: Country? = null,
+        override val includeUnregistered: Boolean = false,
+        override val myFavorites: Boolean = false,
 
-        val constraints: List<Constraint> = listOf(),
+        override val constraints: List<Constraint> = listOf(),
 
-        val cards: List<DeckCardQuantity> = listOf(),
+        override val cards: List<DeckCardQuantity> = listOf(),
 
-        val owner: String = "",
+        override val owner: String = "",
         val pageSize: Long = 20,
 
         val sort: DeckSortOptions = DeckSortOptions.SAS_RATING,
         val sortDirection: SortDirection = SortDirection.DESC
-) {
+) : DeckQuery {
     fun clean() = if (this.pageSize < 20) this.copy(pageSize = 20) else this
 }
 

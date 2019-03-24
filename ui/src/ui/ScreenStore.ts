@@ -14,8 +14,7 @@ export class ScreenStore {
         keyTopBar: 9000,
         topBarRegistration: 10000,
         rightMenu: 11000,
-        loginPop: 12000,
-        deckImportPop: 12000,
+        menuPops: 12000,
         cardsDisplay: 13000,
     }
 

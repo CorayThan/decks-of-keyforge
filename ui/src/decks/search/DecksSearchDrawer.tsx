@@ -28,9 +28,10 @@ import { screenStore } from "../../ui/ScreenStore"
 import { UserStore } from "../../user/UserStore"
 import { deckTableViewStore } from "../DeckListView"
 import { DeckStore } from "../DeckStore"
+import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
-import { DeckFilters } from "./DeckFilters"
+import { DeckFilters, prepareDeckFiltersForQueryString } from "./DeckFilters"
 
 interface DecksSearchDrawerProps {
     history: History.History
@@ -52,7 +53,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.props.filters.houses = this.selectedHouses.toArray()
         this.props.filters.sort = this.selectedSortStore.toEnumValue()
         this.props.filters.constraints = this.constraintsStore.cleanConstraints()
-        const cleaned = this.props.filters.prepareForQueryString()
+        const cleaned = prepareDeckFiltersForQueryString(this.props.filters)
 
         if (!cleaned.forSale && !cleaned.forTrade && !cleaned.myFavorites && !cleaned.owner) {
             // search is broad, so disable bad searches
@@ -83,7 +84,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     render() {
         const {
-            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade
+            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade,
+            forSaleInCountry
         } = this.props.filters
 
         let myCountry: string | undefined
@@ -227,7 +229,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={this.props.filters.forSaleInCountry}
+                                                checked={forSaleInCountry === myCountry}
                                                 onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
                                             />
                                         }
@@ -238,7 +240,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 ) : null}
                                 {showLoginForCountry ? (
                                     <div style={{display: "flex"}}>
-                                        <KeyLink to={Routes.userProfilePage(UserStore.instance.username)}>
+                                        <KeyLink to={Routes.myProfile}>
                                             <Typography variant={"body2"}>
                                                 Select your country
                                             </Typography>
@@ -304,6 +306,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 >
                                     Clear
                                 </KeyButton>
+                                <CreateForSaleQuery
+                                    filters={this.props.filters}
+                                    houses={this.selectedHouses}
+                                    constraints={this.constraintsStore}
+                                />
                                 <KeyButton
                                     variant={"contained"}
                                     color={"secondary"}

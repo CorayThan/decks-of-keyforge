@@ -20,20 +20,21 @@ import * as React from "react"
 import ReactDOM from "react-dom"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { DeckFilters } from "../decks/search/DeckFilters"
+import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
+import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { countries, countryToLabel } from "../generic/Country"
 import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { MessageStore } from "../ui/MessageStore"
 import { UiStore } from "../ui/UiStore"
-import { UserProfile } from "./UserProfile"
+import { KeyUser } from "./KeyUser"
 import { UserStore } from "./UserStore"
 
 @observer
 export class MyProfile extends React.Component {
     render() {
-        const profile = UserStore.instance.userProfile
+        const profile = UserStore.instance.user
         if (!profile) {
             return <Loader/>
         }
@@ -42,7 +43,7 @@ export class MyProfile extends React.Component {
 }
 
 interface MyProfileInnerProps {
-    profile: UserProfile
+    profile: KeyUser
 }
 
 @observer
@@ -98,129 +99,138 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         const filters = new DeckFilters()
         filters.owner = profile.username
         filters.includeUnregistered = true
-        const decksLink = Routes.deckSearch(filters.prepareForQueryString())
+        const decksLink = Routes.deckSearch(prepareDeckFiltersForQueryString(filters))
 
         filters.forSale = true
         filters.forTrade = true
-        const decksForSaleLink = Routes.deckSearch(filters.prepareForQueryString())
+        const decksForSaleLink = Routes.deckSearch(prepareDeckFiltersForQueryString(filters))
 
         return (
-            <div style={{marginTop: spacing(2), display: "flex", justifyContent: "center"}}>
-                <form onSubmit={this.updateProfile}>
-                    <KeyCard
-                        topContents={(
-                            <div>
-                                <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1)}}>{profile.username}</Typography>
-                                <Typography style={{color: "#FFFFFF"}}>{profile.email}</Typography>
-                            </div>
-                        )}
-                        style={{maxWidth: 400}}
-                    >
-                        <div style={{padding: spacing(2)}}>
-                            <Grid container={true} spacing={16}>
-                                <Grid item={true} xs={12}>
-                                    <TextField
-                                        label={"Public contact and trade info"}
-                                        value={this.contactInfo}
-                                        multiline={true}
-                                        rows={4}
-                                        onChange={(event) => this.contactInfo = event.target.value}
-                                        fullWidth={true}
-                                        variant={"outlined"}
-                                        style={{marginBottom: spacing(2)}}
-                                    />
-                                </Grid>
-                                <Grid item={true} xs={12} sm={6}>
-                                    <TextField
-                                        select
-                                        label="Country"
-                                        value={this.country}
-                                        onChange={event => this.country = event.target.value}
-                                        variant="outlined"
-                                        fullWidth={true}
-                                        style={{marginBottom: spacing(2)}}
-                                    >
-                                        {countries.map(country => (
-                                            <MenuItem key={country} value={country}>
-                                                {countryToLabel(country)}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                <Grid item={true} xs={12}>
-                                    <FormControl fullWidth={true} variant={"outlined"}>
-                                        <InputLabel
-                                            htmlFor={"buying-countries-input-id"}
-                                            ref={ref => this.buyingCountriesInputLabelRef = ref}
-                                        >
-                                            Buying Countries
-                                        </InputLabel>
-                                        <Select
-                                            multiple={true}
-                                            value={this.preferredCountries}
-                                            onChange={(event: any) => this.preferredCountries = event.target.value}
-                                            input={
-                                                <OutlinedInput
-                                                    labelWidth={this.preferredCountriesLabelWidth}
-                                                    id={"buying-countries-input-id"}
-                                                    fullWidth={true}
-                                                />
-                                            }
-                                            renderValue={(selected: any) => selected.join(", ")}
-                                            variant={"outlined"}
-                                        >
-                                            {countries.map(country => (
-                                                <MenuItem key={country} value={country}>
-                                                    <Checkbox checked={this.preferredCountries.indexOf(country) > -1}/>
-                                                    <ListItemText primary={countryToLabel(country)}/>
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <FormHelperText style={{marginTop: spacing(1)}}>
-                                        Select countries to be used when searching decks for sale. Defaults to your country.
-                                    </FormHelperText>
-                                </Grid>
-                                <Grid item={true} xs={12}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.allowUsersToSeeDeckOwnership}
-                                                onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
-                                                tabIndex={6}
-                                            />
-                                        }
-                                        label={"Allow anyone to see which decks I own"}
-                                    />
-                                    <Typography style={{marginBottom: spacing(2), marginTop: spacing(2)}}>
-                                        Use the links below to share your decks with other users. You can also share the URL of any search you make.
-                                    </Typography>
-                                    <div style={{display: "flex"}}>
-                                        {this.allowUsersToSeeDeckOwnership ? (
-                                            <LinkButton color={"primary"} to={decksLink} style={{marginRight: spacing(2)}}>
-                                                My Decks
-                                            </LinkButton>
-                                        ) : null}
-                                        <LinkButton color={"primary"} to={decksForSaleLink}>
-                                            For Sale and Trade
-                                        </LinkButton>
+            <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
+                <Grid container={true} spacing={16} justify={"center"}>
+                    <Grid item={true}>
+                        <form onSubmit={this.updateProfile}>
+                            <KeyCard
+                                topContents={(
+                                    <div>
+                                        <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1)}}>{profile.username}</Typography>
+                                        <Typography style={{color: "#FFFFFF"}}>{profile.email}</Typography>
                                     </div>
-                                </Grid>
-                            </Grid>
-                            <CardActions
-                                style={{paddingLeft: 0}}
+                                )}
+                                style={{maxWidth: 400, margin: 0}}
                             >
-                                <div style={{flexGrow: 1}}/>
-                                <Button
-                                    variant={"contained"}
-                                    type={"submit"}
-                                >
-                                    Save
-                                </Button>
-                            </CardActions>
-                        </div>
-                    </KeyCard>
-                </form>
+                                <div style={{padding: spacing(2)}}>
+                                    <Grid container={true} spacing={16}>
+                                        <Grid item={true} xs={12}>
+                                            <TextField
+                                                label={"Public contact and trade info"}
+                                                value={this.contactInfo}
+                                                multiline={true}
+                                                rows={4}
+                                                onChange={(event) => this.contactInfo = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                style={{marginBottom: spacing(2)}}
+                                            />
+                                        </Grid>
+                                        <Grid item={true} xs={12} sm={6}>
+                                            <TextField
+                                                select
+                                                label="Country"
+                                                value={this.country}
+                                                onChange={event => this.country = event.target.value}
+                                                variant="outlined"
+                                                fullWidth={true}
+                                                style={{marginBottom: spacing(2)}}
+                                            >
+                                                {countries.map(country => (
+                                                    <MenuItem key={country} value={country}>
+                                                        {countryToLabel(country)}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item={true} xs={12}>
+                                            <FormControl fullWidth={true} variant={"outlined"}>
+                                                <InputLabel
+                                                    htmlFor={"buying-countries-input-id"}
+                                                    ref={ref => this.buyingCountriesInputLabelRef = ref}
+                                                >
+                                                    Buying Countries
+                                                </InputLabel>
+                                                <Select
+                                                    multiple={true}
+                                                    value={this.preferredCountries}
+                                                    onChange={(event: any) => this.preferredCountries = event.target.value}
+                                                    input={
+                                                        <OutlinedInput
+                                                            labelWidth={this.preferredCountriesLabelWidth}
+                                                            id={"buying-countries-input-id"}
+                                                            fullWidth={true}
+                                                        />
+                                                    }
+                                                    renderValue={(selected: any) => selected.join(", ")}
+                                                    variant={"outlined"}
+                                                >
+                                                    {countries.map(country => (
+                                                        <MenuItem key={country} value={country}>
+                                                            <Checkbox checked={this.preferredCountries.indexOf(country) > -1}/>
+                                                            <ListItemText primary={countryToLabel(country)}/>
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                            <FormHelperText style={{marginTop: spacing(1)}}>
+                                                Select countries to be used when searching decks for sale. Defaults to your country.
+                                            </FormHelperText>
+                                        </Grid>
+                                        <Grid item={true} xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.allowUsersToSeeDeckOwnership}
+                                                        onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
+                                                        tabIndex={6}
+                                                    />
+                                                }
+                                                label={"Allow anyone to see which decks I own"}
+                                            />
+                                            <Typography style={{marginBottom: spacing(2), marginTop: spacing(2)}}>
+                                                Use the links below to share your decks with other users. You can also share the URL of any search you make.
+                                            </Typography>
+                                            <div style={{display: "flex"}}>
+                                                {this.allowUsersToSeeDeckOwnership ? (
+                                                    <LinkButton color={"primary"} to={decksLink} style={{marginRight: spacing(2)}}>
+                                                        My Decks
+                                                    </LinkButton>
+                                                ) : null}
+                                                <LinkButton color={"primary"} to={decksForSaleLink}>
+                                                    For Sale and Trade
+                                                </LinkButton>
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                    <CardActions
+                                        style={{paddingLeft: 0}}
+                                    >
+                                        <div style={{flexGrow: 1}}/>
+                                        <Button
+                                            variant={"contained"}
+                                            type={"submit"}
+                                        >
+                                            Save
+                                        </Button>
+                                    </CardActions>
+                                </div>
+                            </KeyCard>
+                        </form>
+                    </Grid>
+                    {profile.forSaleQueries && profile.forSaleQueries.length > 0 ? (
+                        <Grid item={true}>
+                            <ForSaleQueryTable queries={profile.forSaleQueries}/>
+                        </Grid>
+                    ) : null}
+                </Grid>
             </div>
         )
     }

@@ -3,6 +3,7 @@ package coraythan.keyswap.userdeck
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.now
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -18,7 +19,8 @@ class UserDeckService(
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
-        private val userDeckRepo: UserDeckRepo
+        private val userDeckRepo: UserDeckRepo,
+        private val forSaleNotificationsService: ForSaleNotificationsService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -76,6 +78,10 @@ class UserDeckService(
 
         // Unlist if it is currently listed to support "updates"
         val preexisting = userDeckRepo.findByDeckIdAndUserId(listingInfo.deckId, currentUser.id)
+        if (preexisting == null || (!preexisting.forSale && !preexisting.forTrade)) {
+            // Send email since this is a new listing
+            forSaleNotificationsService.sendNotifications(listingInfo)
+        }
         if (preexisting != null) {
             unlistUserDeck(preexisting)
         }

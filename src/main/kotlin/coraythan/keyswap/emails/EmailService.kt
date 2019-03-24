@@ -1,9 +1,13 @@
 package coraythan.keyswap.emails
 
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.userdeck.ListingInfo
+import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
 import coraythan.keyswap.users.PasswordResetCodeService
 import coraythan.keyswap.users.ResetEmail
+import org.slf4j.LoggerFactory
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
@@ -16,26 +20,52 @@ class EmailService(
         private val passwordResetCodeService: PasswordResetCodeService
 ) {
 
+    private val log = LoggerFactory.getLogger(this::class.java)
+
     fun sendResetPassword(reset: ResetEmail) {
         val userInSystem = keyUserService.findByEmail(reset.email)
         if (userInSystem != null) {
             val resetCode = passwordResetCodeService.createCode(reset.email)
-            val resetEmailLink = makeLink("/reset-password/$resetCode")
             sendEmail(reset.email, "Reset your decksofkeyforge.com password",
                     """
                 <div>
                     Use this link to reset your password. It will expire in 24 hours.
-                    <a href="$resetEmailLink">$resetEmailLink</a>
+                    ${makeLink("/reset-password/$resetCode", "Reset Email Link")}
                 </div>
             """.trimIndent()
             )
         }
     }
 
+    fun sendDeckListedNotification(recipient: KeyUser, listingInfo: ListingInfo, deck: Deck, queryName: String) {
+
+        log.info("Sending deck listed notification.")
+        sendEmail(
+                recipient.email,
+                "A new deck listed on Decks of Keyforge matches $queryName",
+                """
+                    <div>
+                        <div>
+                            The deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} matches the query "$queryName" you've set up to
+                            email you whenever a new deck is listed for sale.
+                        </div>
+                        <br>
+                        <div>
+                            ${if (listingInfo.askingPrice == null) "" else "Its price is ${listingInfo.askingPrice}."}
+                        </div>
+                        <br>
+                        <div>
+                            To turn off these notifications login to Decks of Keyforge and go to your ${makeLink("/my-profile", "profile")}.
+                        </div>
+                    </div>
+                """.trimIndent()
+        )
+    }
+
     fun sendMessageToSeller(sellerMessage: SellerMessage) {
 
         val seller = keyUserService.findUserByUsername(sellerMessage.username)
-                ?: throw BadRequestException("Couldn't find user with username $sellerMessage.username")
+                ?: throw BadRequestException("Couldn't find user with username ${sellerMessage.username}")
         val email = seller.email
 
         val senderUsername = sellerMessage.senderUsername
@@ -49,8 +79,8 @@ class EmailService(
                 <div>
                     <div>
                         $senderUsername has sent you a message about
-                        <a href="${makeLink("/decks/$deckKeyforgeId")}">$deckName</a>, which you have listed for sale or trade on
-                        <a href="${makeLink("")}">decksofkeyforge.com</a>.
+                        ${makeLink("/decks/$deckKeyforgeId", deckName)}, which you have listed for sale or trade on
+                        ${makeLink("", "decksofkeyforge.com")}
                     </div>
                     <br>
                     <div>
@@ -75,7 +105,7 @@ class EmailService(
         )
     }
 
-    private fun makeLink(path: String) = "https://decksofkeyforge.com$path"
+    private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path}\">$name</a>"
 
     private fun sendEmail(email: String, subject: String, content: String) {
         val mimeMessage = emailSender.createMimeMessage()

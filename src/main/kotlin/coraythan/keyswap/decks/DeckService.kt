@@ -14,11 +14,13 @@ import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
+import java.util.*
 import javax.persistence.EntityManager
 
 @Transactional
@@ -61,7 +63,7 @@ class DeckService(
             count = preExistingCount
         } else {
 
-            val predicate = deckFilterPedicate(filters)
+            val predicate = deckFilterPredicate(filters)
 
             if (filtersAreEqualForCount(filters)) {
 
@@ -107,7 +109,7 @@ class DeckService(
             return cachedSecondPage100Results
         }
 
-        val predicate = deckFilterPedicate(filters)
+        val predicate = deckFilterPredicate(filters)
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
@@ -183,7 +185,14 @@ class DeckService(
             sortDirection = defaultFilters.sortDirection
     ) == defaultFilters
 
-    private fun deckFilterPedicate(filters: DeckFilters): BooleanBuilder {
+    data class UserHolder(private val id: UUID? = null, private val currentUserService: CurrentUserService, private val userService: KeyUserService) {
+        val user: KeyUser? by lazy {
+            if (id == null) currentUserService.loggedInUser() else userService.findByIdOrNull(id)
+        }
+    }
+
+    fun deckFilterPredicate(filters: DeckQuery, userId: UUID? = null): BooleanBuilder {
+        val userHolder = UserHolder(userId, currentUserService, userService)
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
 
@@ -204,11 +213,10 @@ class DeckService(
 
         if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title.toLowerCase()}%"))
         if (filters.owner.isNotBlank()) {
-
-            if (currentUserService.loggedInUser()?.username == filters.owner) {
+            val username = userHolder.user?.username
+            if (username == filters.owner) {
                 // it's me
-                val user = currentUserService.loggedInUser()
-                if (user != null) predicate.and(deckQ.userDecks.any().ownedBy.eq(user.username))
+                predicate.and(deckQ.userDecks.any().ownedBy.eq(username))
             } else {
                 val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
 
@@ -230,16 +238,19 @@ class DeckService(
             }
         }
         if (filters.myFavorites) {
-            val userDeckQ = QUserDeck.userDeck
-            predicate.and(
-                    deckQ.userDecks.any().`in`(
-                            JPAExpressions.selectFrom(userDeckQ)
-                                    .where(
-                                            userDeckQ.user.id.eq(currentUserService.loggedInUser()?.id),
-                                            userDeckQ.wishlist.isTrue
-                                    )
-                    )
-            )
+            val favsUserId = userHolder.user?.id
+            if (favsUserId != null) {
+                val userDeckQ = QUserDeck.userDeck
+                predicate.and(
+                        deckQ.userDecks.any().`in`(
+                                JPAExpressions.selectFrom(userDeckQ)
+                                        .where(
+                                                userDeckQ.user.id.eq(favsUserId),
+                                                userDeckQ.wishlist.isTrue
+                                        )
+                        )
+                )
+            }
         }
         if (filters.forSale && filters.forTrade) {
             predicate.and(forSaleOrTrade)
@@ -248,7 +259,7 @@ class DeckService(
             if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
         }
         if (filters.forSaleInCountry != null) {
-            val preferredCountries = currentUserService.loggedInUser()?.preferredCountries
+            val preferredCountries = userHolder.user?.preferredCountries
             if (preferredCountries.isNullOrEmpty()) {
                 predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
             } else {
@@ -288,7 +299,7 @@ class DeckService(
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
         if (keyforgeId == "simple") {
             // quiet down the annoying constant errors
-            log.warn("Still receiving dumb simple deck requests.")
+//            log.warn("Still receiving dumb simple deck requests.")
             return null
         }
         if (keyforgeId.length != 36) {

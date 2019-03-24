@@ -101,7 +101,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                         vertical: "top",
                         horizontal: "right",
                     }}
-                    style={{zIndex: screenStore.zindexes.deckImportPop}}
+                    style={{zIndex: screenStore.zindexes.menuPops}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField

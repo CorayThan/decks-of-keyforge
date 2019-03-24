@@ -13,6 +13,7 @@ import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
+import { MyProfile } from "../user/MyProfile"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserStore } from "../user/UserStore"
@@ -26,6 +27,7 @@ export {
 
 class Routes {
     static users = "/users"
+    static myProfile = "/my-profile"
     static cards = "/cards"
     static about = "/about"
     static decks = "/decks"
@@ -107,6 +109,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.userProfilePage()}
                             component={ProfilePage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.myProfile}
+                            component={MyProfile}
                         />
                         <Route render={() => <Redirect to={Routes.decks}/>}/>
                     </Switch>
