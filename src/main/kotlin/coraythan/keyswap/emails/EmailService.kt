@@ -105,7 +105,7 @@ class EmailService(
         )
     }
 
-    private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path}\">$name</a>"
+    private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path\">$name</a>"
 
     private fun sendEmail(email: String, subject: String, content: String) {
         val mimeMessage = emailSender.createMimeMessage()

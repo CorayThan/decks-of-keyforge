@@ -10,6 +10,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.userdeck.QUserDeck
@@ -19,7 +20,6 @@ import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.EntityManager
 
@@ -269,7 +269,7 @@ class DeckService(
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
                 if (it.property == "listedWithinDays") {
-                    predicate.and(deckQ.userDecks.any().dateListed.gt(ZonedDateTime.now().minusDays(it.value.toLong())))
+                    predicate.and(deckQ.userDecks.any().dateListed.gt(now().minusDays(it.value.toLong())))
                 } else {
                     val entityRef = if (it.property == "askingPrice") {
                         predicate.and(deckQ.userDecks.any().askingPrice.isNotNull)

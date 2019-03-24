@@ -9,13 +9,12 @@ import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.QDeck
+import coraythan.keyswap.now
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 import javax.persistence.EntityManager
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
@@ -63,7 +62,7 @@ class StatsService(
             log.info("Setting deck stats manually.")
             deckStatisticsRepo.save(
                     DeckStatisticsEntity.fromDeckStatistics(deckStats)
-                            .copy(version = mostRecentVersion.version + 1, completeDateTime = ZonedDateTime.now(ZoneOffset.UTC))
+                            .copy(version = mostRecentVersion.version + 1, completeDateTime = now())
             )
             updateStats = true
         updateCachedStats()
@@ -117,7 +116,7 @@ class StatsService(
 
                     if (deckResults.isEmpty()) {
                         updateStats = false
-                        deckStatisticsRepo.save(stats.copy(completeDateTime = ZonedDateTime.now(ZoneOffset.UTC)))
+                        deckStatisticsRepo.save(stats.copy(completeDateTime = now()))
                         updateCachedStats()
                         log.info("Done updating deck stats! Final stats are: \n\n$stats\n\n")
                     }
