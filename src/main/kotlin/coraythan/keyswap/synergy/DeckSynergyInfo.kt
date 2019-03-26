@@ -11,6 +11,14 @@ data class SynergyCombo(
         val synergy: Double,
         val antisynergy: Double,
         val cardRating: Double,
+
+        val expectedAmber: Double,
+        val amberControl: Double,
+        val creatureControl: Double,
+        val artifactControl: Double,
+        val deckManipulation: Double,
+        val effectivePower: Int,
+
         val copies: Int = 1
 )
 

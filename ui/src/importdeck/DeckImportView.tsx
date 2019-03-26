@@ -81,7 +81,9 @@ export class DeckImportView extends React.Component {
                                     }}
                                 >
                                     <Typography variant={"body2"}>
-                                        Use a picture taken straight on with low glare and clear text. It must be 3mb or less in size.
+                                        Use a picture taken straight on with low glare and clear text. 1mb or less in size is best, but it must be less than 3mb.
+                                        Setting your phone camera to the lowest quality setting is often best. Leave about 1/4 inch around the edges after
+                                        cropping it.
                                     </Typography>
                                     <KeyButton
                                         disabled={

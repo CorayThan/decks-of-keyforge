@@ -78,10 +78,8 @@ class UserDeckService(
 
         // Unlist if it is currently listed to support "updates"
         val preexisting = userDeckRepo.findByDeckIdAndUserId(listingInfo.deckId, currentUser.id)
-        if (preexisting == null || (!preexisting.forSale && !preexisting.forTrade)) {
-            // Send email since this is a new listing
-            forSaleNotificationsService.sendNotifications(listingInfo)
-        }
+        val preexistingForSale = preexisting?.forSale
+        val preexistingForTrade = preexisting?.forTrade
         if (preexisting != null) {
             unlistUserDeck(preexisting)
         }
@@ -105,6 +103,10 @@ class UserDeckService(
                     expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong()),
                     ownedBy = currentUser.username
             )
+        }
+        if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false)) {
+            // Send email since this is a new listing
+            forSaleNotificationsService.sendNotifications(listingInfo)
         }
     }
 

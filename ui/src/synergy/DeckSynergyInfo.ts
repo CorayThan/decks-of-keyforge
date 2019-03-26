@@ -12,5 +12,13 @@ export interface SynergyCombo {
     antisynergy: number
     netSynergy: number
     cardRating: number
+
+    expectedAmber: number
+    amberControl: number
+    creatureControl: number
+    artifactControl: number
+    deckManipulation: number
+    effectivePower: number
+    
     copies: number
 }

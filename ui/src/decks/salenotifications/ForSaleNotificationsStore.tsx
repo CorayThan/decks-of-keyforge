@@ -22,9 +22,10 @@ export class ForSaleNotificationsStore {
         axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/add-query`, query)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setMessage(
-                    `Created deck notification filter "${query.queryName}". See your settings on your `,
+                    `Created deck notification "${query.queryName}". See it on your `,
                     "Success",
                     <LinkButton
+                        color={"inherit"}
                         to={Routes.myProfile}
                     >
                         Profile

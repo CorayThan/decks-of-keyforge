@@ -73,20 +73,23 @@ class DeckSynergyService(
                 }
                 val matchedSynergies = matchedTraits.filter { it.second > 0 }.map { it.first }
                 val matchedAntisynergies = matchedTraits.filter { it.second < 0 }.map { it.first }
-                if (matchedSynergies.isEmpty() && matchedAntisynergies.isEmpty()) {
-                    null
-                } else {
-                    SynergyCombo(
-                            house = card.house,
-                            cardName = card.cardTitle,
-                            synergies = matchedSynergies.toSet(),
-                            antisynergies = matchedAntisynergies.toSet(),
-                            netSynergy = limitedNetSynergy,
-                            synergy = synergy,
-                            antisynergy = antisynergy,
-                            cardRating = card.extraCardInfo!!.rating - 1
-                    )
-                }
+                SynergyCombo(
+                        house = card.house,
+                        cardName = card.cardTitle,
+                        synergies = matchedSynergies.toSet(),
+                        antisynergies = matchedAntisynergies.toSet(),
+                        netSynergy = limitedNetSynergy,
+                        synergy = synergy,
+                        antisynergy = antisynergy,
+                        cardRating = card.extraCardInfo!!.rating - 1,
+
+                        amberControl = card.extraCardInfo?.amberControl ?: 0.0,
+                        expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,
+                        creatureControl = card.extraCardInfo?.creatureControl ?: 0.0,
+                        artifactControl = card.extraCardInfo?.artifactControl ?: 0.0,
+                        deckManipulation = card.extraCardInfo?.deckManipulation ?: 0.0,
+                        effectivePower = card.effectivePower
+                )
             }
         }
 

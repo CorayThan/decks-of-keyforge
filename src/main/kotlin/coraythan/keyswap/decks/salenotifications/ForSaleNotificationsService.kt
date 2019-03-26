@@ -90,7 +90,9 @@ class ForSaleNotificationsService(
         val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
         val predicate = deckService.deckFilterPredicate(query, queryEntity.user!!.id)
                 .and(QDeck.deck.id.eq(deckId))
-        return deckRepo.exists(predicate)
+        val match = deckRepo.findOne(predicate).orElse(null)
+        log.info("Query $query is a match ${match?.name} for deck")
+        return match != null
     }
 
     private fun reloadQueries() {

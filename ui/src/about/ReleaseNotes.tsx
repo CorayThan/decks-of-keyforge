@@ -11,13 +11,16 @@ import { StatsBar } from "../stats/StatsBar"
 import { StatsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.3"
+export const latestVersion = "3.4"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.4"} expanded={true} releaseNotes={[
+                    "Synergy Details table now includes all cards, aerc scores, and is sortable, in desktop mode.",
+                ]}/>
                 <ReleaseNote releaseNumber={"3.3"} expanded={true} releaseNotes={[
                     "Added two new AERC traits, deck manipulation and effective creature power. Read more about them on the SAS and AERC about page!",
                     "Added those two new traits to the total AERC score. This causes a major change to those scores.",
