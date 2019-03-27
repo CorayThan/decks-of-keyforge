@@ -16,7 +16,7 @@ class UserEndpoints(
 ) {
 
     @GetMapping("/secured/your-user")
-    fun findYourUser() = currentUserService.loggedInUser()
+    fun findYourUser() = currentUserService.loggedInUserDto()
 
     @PostMapping("/register")
     fun register(@RequestBody user: UserRegistration) = userService.register(user)

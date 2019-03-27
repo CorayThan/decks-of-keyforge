@@ -12,4 +12,6 @@ class CurrentUserService(
         val userEmail = authentication.principal as String? ?: return null
         return userRepo.findByEmail(userEmail)
     }
+
+    fun loggedInUserDto(): KeyUserDto? = loggedInUser()?.toDto()
 }

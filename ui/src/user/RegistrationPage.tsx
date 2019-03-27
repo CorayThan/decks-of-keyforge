@@ -20,7 +20,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { MessageStore } from "../ui/MessageStore"
 import { LoginPop } from "./LoginPop"
-import { UserStore } from "./UserStore"
+import { userStore } from "./UserStore"
 
 @observer
 export class RegistrationPage extends React.Component {
@@ -67,7 +67,7 @@ export class RegistrationPage extends React.Component {
             MessageStore.instance.setErrorMessage(error)
             return
         }
-        UserStore.instance.registerAccount({
+        userStore.registerAccount({
             email: this.email,
             password: this.password,
             username,
@@ -79,11 +79,11 @@ export class RegistrationPage extends React.Component {
     }
 
     componentDidMount() {
-        UserStore.instance.loginInProgress = false
+        userStore.loginInProgress = false
     }
 
     render() {
-        const {loginInProgress, user} = UserStore.instance
+        const {loginInProgress, user} = userStore
         log.debug(`Render reg page, user ${prettyJson(user)} loginInProgress: ${loginInProgress}`)
         if (user) {
             return <Redirect to={Routes.decks}/>

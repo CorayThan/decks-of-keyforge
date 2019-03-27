@@ -1,5 +1,5 @@
-import { UserStore } from "../../user/UserStore"
-import { DeckCondition, UserDeck } from "../../userdeck/UserDeck"
+import { userStore } from "../../user/UserStore"
+import { DeckCondition, UserDeckDto } from "../../userdeck/UserDeck"
 
 export interface DeckSaleInfo {
     forSale: boolean
@@ -18,11 +18,11 @@ export interface DeckSaleInfo {
     publicContactInfo?: string
 }
 
-export const deckSaleInfoFromUserDeck = (userDeck: UserDeck): DeckSaleInfo | undefined => {
+export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo | undefined => {
 
     const {forSale, forTrade, askingPrice, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate} = userDeck
 
-    const user = UserStore.instance.user
+    const user = userStore.user
 
     if ((!userDeck.forSale && !userDeck.forTrade) || user == null) {
         return undefined

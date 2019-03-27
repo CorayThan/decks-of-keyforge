@@ -25,7 +25,7 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { MessageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
-import { UserStore } from "../../user/UserStore"
+import { userStore } from "../../user/UserStore"
 import { deckTableViewStore } from "../DeckListView"
 import { DeckStore } from "../DeckStore"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
@@ -79,7 +79,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     @computed
     get myDecks(): boolean {
-        return this.props.filters.owner === UserStore.instance.username
+        return this.props.filters.owner === userStore.username
     }
 
     render() {
@@ -89,13 +89,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         } = this.props.filters
 
         let myCountry: string | undefined
-        if (!!(UserStore.instance.country
+        if (!!(userStore.country
             && (forSale || forTrade))) {
-            myCountry = UserStore.instance.country
+            myCountry = userStore.country
         }
         const showLoginForCountry = !myCountry && (forSale || forTrade)
-        const showMyDecks = UserStore.instance.loggedIn()
-        const showDecksOwner = !!owner && owner !== UserStore.instance.username
+        const showMyDecks = userStore.loggedIn()
+        const showDecksOwner = !!owner && owner !== userStore.username
         const optionals = !showMyDecks && !showDecksOwner ? null : (
             <>
                 {!showDecksOwner && showMyDecks ? (
@@ -240,7 +240,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 ) : null}
                                 {showLoginForCountry ? (
                                     <div style={{display: "flex"}}>
-                                        <KeyLink to={Routes.myProfile}>
+                                        <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>
                                             <Typography variant={"body2"}>
                                                 Select your country
                                             </Typography>

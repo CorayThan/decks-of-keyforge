@@ -1,35 +1,38 @@
 import axios, { AxiosResponse } from "axios"
+import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { log } from "../config/Utils"
 import { DeckStore } from "../decks/DeckStore"
 import { MessageStore } from "../ui/MessageStore"
-import { UserStore } from "../user/UserStore"
 import { ListingInfo } from "./ListingInfo"
+import { UserDeckDto } from "./UserDeck"
 
 export class UserDeckStore {
 
     static readonly CONTEXT = HttpConfig.API + "/userdeck/secured"
-    private static innerInstance: UserDeckStore
 
-    private constructor() {
-    }
+    @observable
+    userDecks?: Map<number, UserDeckDto>
 
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
+    @observable
+    loadingDecks: boolean = false
 
     wishlist = (deckName: string, deckId: number, wishlist: boolean) => {
+        this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
-                UserStore.instance.loadLoggedInUser()
+                this.findAllForUser()
             })
     }
 
     funny = (deckName: string, deckId: number, funny: boolean) => {
+        this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${funny ? "" : "un"}funny`)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
-                UserStore.instance.loadLoggedInUser()
+                this.findAllForUser()
             })
     }
 
@@ -37,7 +40,7 @@ export class UserDeckStore {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${owned ? "" : "un"}owned`)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
-                UserStore.instance.loadLoggedInUser()
+                this.findAllForUser()
             })
     }
 
@@ -45,7 +48,7 @@ export class UserDeckStore {
         axios.post(`${UserDeckStore.CONTEXT}/list`, listingInfo)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(`Listed ${deckName} for sale or trade.`)
-                UserStore.instance.loadLoggedInUser()
+                this.findAllForUser()
                 this.refreshDeckInfo()
             })
     }
@@ -54,10 +57,31 @@ export class UserDeckStore {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/unlist`)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(`${deckName} is no longer listed for sale or trade.`)
-                UserStore.instance.loadLoggedInUser()
+                this.findAllForUser()
                 this.refreshDeckInfo()
             })
     }
+
+    findAllForUser = () => {
+        if (keyLocalStorage.hasAuthKey()) {
+            this.loadingDecks = true
+            axios.get(`${UserDeckStore.CONTEXT}/for-user`)
+                .then((response: AxiosResponse) => {
+                    const userDecksList: UserDeckDto[] = response.data
+
+                    this.userDecks = new Map()
+                    userDecksList.forEach((userDeck) => this.userDecks!.set(userDeck.deckId, userDeck))
+                    log.debug(`User decks loaded`)
+
+                    this.refreshDeckInfo()
+                    this.loadingDecks = false
+                })
+        }
+    }
+
+    userDecksLoaded = () => this.userDecks != null && !this.loadingDecks
+
+    userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
 
     private refreshDeckInfo = () => {
         if (DeckStore.instance.deck) {
@@ -67,3 +91,5 @@ export class UserDeckStore {
         }
     }
 }
+
+export const userDeckStore = new UserDeckStore()

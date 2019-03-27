@@ -25,6 +25,9 @@ class KeyLocalStorage {
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)
+
+    hasAuthKey = () => this.findAuthKey() != null
+
     findAuthKey = (): string | undefined => {
         const key = this.localStorage.getItem(Keys.AUTH)
         if (key === null) {

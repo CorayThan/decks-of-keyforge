@@ -5,11 +5,13 @@ import { CardStore } from "./cards/CardStore"
 import { HttpConfig } from "./config/HttpConfig"
 import { TextConfig } from "./config/TextConfig"
 import { StatsStore } from "./stats/StatsStore"
-import { UserStore } from "./user/UserStore"
+import { userStore } from "./user/UserStore"
+import { userDeckStore } from "./userdeck/UserDeckStore"
 
 TextConfig.loadFonts()
 HttpConfig.setupAxios()
-UserStore.instance.loadLoggedInUser()
+userStore.loadLoggedInUser()
+userDeckStore.findAllForUser()
 CardStore.instance.loadAllCards()
 StatsStore.instance.findGlobalStats()
 

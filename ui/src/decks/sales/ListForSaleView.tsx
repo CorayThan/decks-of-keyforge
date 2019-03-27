@@ -17,9 +17,9 @@ import { Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { MessageStore } from "../../ui/MessageStore"
-import { UserStore } from "../../user/UserStore"
+import { userStore } from "../../user/UserStore"
 import { DeckCondition, deckConditionReadableValue } from "../../userdeck/UserDeck"
-import { UserDeckStore } from "../../userdeck/UserDeckStore"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { Deck } from "../Deck"
 
 interface ListForSaleViewProps {
@@ -66,7 +66,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     handleOpenForEdit = () => {
-        const userDeck = UserStore.instance.userDeckByDeckId(this.props.deck.id)
+        const userDeck = userDeckStore.userDeckByDeckId(this.props.deck.id)
         if (userDeck != null) {
             const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expiresAtLocalDate} = userDeck
             this.open = true
@@ -106,7 +106,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 return
             }
         }
-        const forSaleInCountry = UserStore.instance.country
+        const forSaleInCountry = userStore.country
 
         if (!forSaleInCountry) {
             MessageStore.instance.setWarningMessage("Please set your country in your user profile.")
@@ -124,13 +124,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             externalLink,
             expireInDays: Number(expireInDays)
         }
-        UserDeckStore.instance.listDeck(this.props.deck.name, listingInfoDto)
+        userDeckStore.listDeck(this.props.deck.name, listingInfoDto)
         this.handleClose()
     }
 
     render() {
         const deck = this.props.deck
-        const userDeck = UserStore.instance.userDeckByDeckId(deck.id)
+        const userDeck = userDeckStore.userDeckByDeckId(deck.id)
         let saleButton
         if (userDeck && (userDeck.forSale || userDeck.forTrade)) {
             saleButton = (
@@ -144,7 +144,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </KeyButton>
                     <KeyButton
                         color={"primary"}
-                        onClick={() => UserDeckStore.instance.unlist(deck.name, deck.id)}
+                        onClick={() => userDeckStore.unlist(deck.name, deck.id)}
                     >
                         Unlist
                     </KeyButton>
@@ -161,7 +161,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             )
         }
 
-        const forSaleInCountry = UserStore.instance.country
+        const forSaleInCountry = userStore.country
 
         return (
             <div>

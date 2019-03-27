@@ -2,6 +2,7 @@ package coraythan.keyswap.userdeck
 
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.DeckService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.now
@@ -20,6 +21,7 @@ class UserDeckService(
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val userDeckRepo: UserDeckRepo,
+        private val deckService: DeckService,
         private val forSaleNotificationsService: ForSaleNotificationsService
 ) {
 
@@ -37,12 +39,30 @@ class UserDeckService(
         }
     }
 
+    @Scheduled(fixedDelayString = "PT144H")
+    fun correctCounts() {
+        log.info("Starting to correct counts.")
+        userDeckRepo
+                .findAll(QUserDeck.userDeck.wishlist.isTrue)
+                .groupBy { it.deck.id }
+                .map { it.value.first().deck to it.value.size }
+                .forEach { if (it.first.wishlistCount != it.second) deckRepo.save(it.first.copy(wishlistCount = it.second)) }
+
+        userDeckRepo
+                .findAll(QUserDeck.userDeck.funny.isTrue)
+                .groupBy { it.deck.id }
+                .map { it.value.first().deck to it.value.size }
+                .forEach { if (it.first.funnyCount != it.second) deckRepo.save(it.first.copy(funnyCount = it.second)) }
+        log.info("Done correcting counts.")
+    }
+
     fun addToWishlist(deckId: Long, add: Boolean = true) {
         modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, {
             it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
         }) {
             it.copy(wishlist = add)
         }
+        deckService.clearCachedValuesIfDeckIdMatches(deckId)
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
@@ -51,6 +71,7 @@ class UserDeckService(
         }) {
             it.copy(funny = mark)
         }
+        deckService.clearCachedValuesIfDeckIdMatches(deckId)
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
@@ -171,5 +192,10 @@ class UserDeckService(
         if (modDeck != null) {
             deckRepo.save(modDeck(deck))
         }
+    }
+
+    fun findAllForUser(): List<UserDeckDto> {
+        val currentUser = currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in")
+        return userDeckRepo.findByUserId(currentUser.id).map { it.toDto() }
     }
 }

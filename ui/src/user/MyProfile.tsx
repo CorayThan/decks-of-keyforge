@@ -28,13 +28,13 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { MessageStore } from "../ui/MessageStore"
 import { UiStore } from "../ui/UiStore"
-import { KeyUser } from "./KeyUser"
-import { UserStore } from "./UserStore"
+import { KeyUserDto } from "./KeyUser"
+import { userStore } from "./UserStore"
 
 @observer
 export class MyProfile extends React.Component {
     render() {
-        const profile = UserStore.instance.user
+        const profile = userStore.user
         if (!profile) {
             return <Loader/>
         }
@@ -43,7 +43,7 @@ export class MyProfile extends React.Component {
 }
 
 interface MyProfileInnerProps {
-    profile: KeyUser
+    profile: KeyUserDto
 }
 
 @observer
@@ -86,7 +86,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             MessageStore.instance.setWarningMessage("Please make your public contact info 2000 or fewer characters long.")
             return
         }
-        UserStore.instance.updateUserProfile({
+        userStore.updateUserProfile({
             publicContactInfo,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,

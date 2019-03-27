@@ -13,7 +13,7 @@ import { SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { MessageStore } from "../../ui/MessageStore"
-import { UserStore } from "../../user/UserStore"
+import { userStore } from "../../user/UserStore"
 import { FiltersConstraintsStore } from "../search/ConstraintDropdowns"
 import { DeckFilters } from "../search/DeckFilters"
 import { forSaleNotificationsStore } from "./ForSaleNotificationsStore"
@@ -55,7 +55,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
     }
 
     render() {
-        const user = UserStore.instance.user
+        const user = userStore.user
         if (
             user == null
             || user.email !== "coraythan@gmail.com"
@@ -66,7 +66,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
             return null
         }
 
-        const forSaleInCountry = UserStore.instance.country
+        const forSaleInCountry = userStore.country
 
         return (
             <div>

@@ -10,6 +10,7 @@ import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -34,6 +35,8 @@ class ForSaleNotificationsService(
 
     fun sendNotifications(listingInfo: ListingInfo) {
         GlobalScope.launch {
+            // Delay 10 seconds to make sure DB is finished saving the user deck
+            delay(30000)
             if (queries == null) {
                 reloadQueries()
             }
@@ -90,9 +93,7 @@ class ForSaleNotificationsService(
         val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
         val predicate = deckService.deckFilterPredicate(query, queryEntity.user!!.id)
                 .and(QDeck.deck.id.eq(deckId))
-        val match = deckRepo.findOne(predicate).orElse(null)
-        log.info("Query $query is a match ${match?.name} for deck")
-        return match != null
+        return deckRepo.exists(predicate)
     }
 
     private fun reloadQueries() {

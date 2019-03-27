@@ -5,24 +5,20 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
-import { UserDeck } from "../userdeck/UserDeck"
-import { KeyUser, UserLogin, UserRegistration } from "./KeyUser"
+import { userDeckStore } from "../userdeck/UserDeckStore"
+import { KeyUserDto, UserLogin, UserRegistration } from "./KeyUser"
 import { UserProfile, UserProfileUpdate } from "./UserProfile"
 
 export class UserStore {
 
     static readonly CONTEXT = HttpConfig.API + "/users"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/users/secured"
-    private static innerInstance: UserStore
 
     @observable
-    user?: KeyUser
+    user?: KeyUserDto
 
     @observable
     userProfile?: UserProfile
-
-    @observable
-    userDecks?: Map<number, UserDeck>
 
     @observable
     loginInProgress = false
@@ -30,15 +26,8 @@ export class UserStore {
     @observable
     changingPassword = false
 
-    private constructor() {
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
-
     loadLoggedInUser = () => {
-        if (!keyLocalStorage.findAuthKey()) {
+        if (!keyLocalStorage.hasAuthKey()) {
             return
         }
         HttpConfig.setAuthHeaders()
@@ -106,6 +95,7 @@ export class UserStore {
                 log.info("Logged in!")
                 keyLocalStorage.saveAuthKey(response.headers.authorization)
                 this.loadLoggedInUser()
+                userDeckStore.findAllForUser()
             })
             .catch((error: AxiosError) => {
                 this.loginInProgress = false
@@ -155,23 +145,16 @@ export class UserStore {
     logout = () => {
         this.loginInProgress = false
         this.setUser(undefined)
+        userDeckStore.userDecks = undefined
         keyLocalStorage.clear()
         HttpConfig.clearAuthHeaders()
     }
 
     loggedIn = () => !!this.user
 
-    setUser = (user?: KeyUser) => {
+    setUser = (user?: KeyUserDto) => {
         this.user = user
-        if (user) {
-            this.userDecks = new Map()
-            user.decks.forEach((userDeck) => this.userDecks!.set(userDeck.deck.id, userDeck))
-        } else {
-            this.userDecks = undefined
-        }
     }
-
-    userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
 
     @computed
     get username(): string | undefined {
@@ -197,3 +180,5 @@ export class UserStore {
         return undefined
     }
 }
+
+export const userStore = new UserStore()

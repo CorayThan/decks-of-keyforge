@@ -8,7 +8,7 @@ import { Routes } from "../config/Routes"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
-import { UserStore } from "../user/UserStore"
+import { userStore } from "../user/UserStore"
 import { DeckStore } from "./DeckStore"
 
 class DeckImportPopStore {
@@ -117,7 +117,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                         <div
                             style={{marginBottom: spacing(2), display: "flex"}}
                         >
-                            {UserStore.instance.loggedIn() ? (
+                            {userStore.loggedIn() ? (
                                 <LinkButton
                                     to={Routes.importUnregisteredDeck}
                                     color={"primary"}
@@ -145,7 +145,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             >
                                 Import
                             </KeyButton>
-                            {UserStore.instance.loggedIn() ? (
+                            {userStore.loggedIn() ? (
                                 <KeyButton
                                     variant={"contained"}
                                     color={"primary"}

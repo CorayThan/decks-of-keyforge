@@ -2,8 +2,8 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { KeyButton } from "../../mui-restyled/KeyButton"
-import { UserStore } from "../../user/UserStore"
-import { UserDeckStore } from "../../userdeck/UserDeckStore"
+import { userStore } from "../../user/UserStore"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { Deck } from "../Deck"
 import { ListForSaleView } from "../sales/ListForSaleView"
 
@@ -16,10 +16,10 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
 
     render() {
         const {id, name} = this.props.deck
-        if (!UserStore.instance.loggedIn()) {
+        if (!userStore.loggedIn()) {
             return null
         }
-        const userDeck = UserStore.instance.userDeckByDeckId(id)
+        const userDeck = userDeckStore.userDeckByDeckId(id)
         const owned = userDeck ? !!userDeck.ownedBy : false
         const forSale = userDeck && userDeck.forSale
         const forTrade = userDeck && userDeck.forTrade
@@ -38,7 +38,7 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
                         <KeyButton
                             color={"primary"}
                             onClick={() => {
-                                UserDeckStore.instance.owned(name, id, !owned)
+                                userDeckStore.owned(name, id, !owned)
                             }}
                             style={{marginRight: spacing(1)}}
                         >

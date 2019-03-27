@@ -5,7 +5,7 @@ import { HttpConfig } from "../../config/HttpConfig"
 import { Routes } from "../../config/Routes"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { MessageStore } from "../../ui/MessageStore"
-import { UserStore } from "../../user/UserStore"
+import { userStore } from "../../user/UserStore"
 import { ForSaleQuery } from "./ForSaleQuery"
 
 export class ForSaleNotificationsStore {
@@ -31,7 +31,7 @@ export class ForSaleNotificationsStore {
                         Profile
                     </LinkButton>
                     )
-                UserStore.instance.loadLoggedInUser()
+                userStore.loadLoggedInUser()
             })
     }
 
@@ -39,7 +39,7 @@ export class ForSaleNotificationsStore {
         axios.delete(`${ForSaleNotificationsStore.SECURE_CONTEXT}/${queryId}`)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(`Deleted deck notification filter.`)
-                UserStore.instance.loadLoggedInUser()
+                userStore.loadLoggedInUser()
             })
     }
 }

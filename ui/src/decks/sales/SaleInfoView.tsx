@@ -12,9 +12,10 @@ import { countryToLabel } from "../../generic/Country"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
-import { UserStore } from "../../user/UserStore"
+import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
-import { DeckSaleInfo, deckSaleInfoFromUserDeck } from "./DeckSaleInfo"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
+import { DeckSaleInfo, deckSaleInfoFromUserDeckDto } from "./DeckSaleInfo"
 
 interface SaleInfoViewProps {
     saleInfo: DeckSaleInfo[]
@@ -34,9 +35,9 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
                 {this.props.saleInfo.map((saleInfo) => {
 
                     let userDeckInfo
-                    if (saleInfo.username === UserStore.instance.username) {
-                        const userDeck = UserStore.instance.userDecks && UserStore.instance.userDecks.get(this.props.deckId)
-                        userDeckInfo = userDeck ? deckSaleInfoFromUserDeck(userDeck) : undefined
+                    if (saleInfo.username === userStore.username) {
+                        const userDeck = userDeckStore.userDecks && userDeckStore.userDecks.get(this.props.deckId)
+                        userDeckInfo = userDeck ? deckSaleInfoFromUserDeckDto(userDeck) : undefined
                     }
 
                     return (
@@ -61,8 +62,8 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
             forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink
         } = this.props.saleInfo
 
-        const yourUsername = UserStore.instance.username
-        const yourEmail = UserStore.instance.email
+        const yourUsername = userStore.username
+        const yourEmail = userStore.email
 
         const allowEmail = yourEmail && yourUsername && !externalLink
 

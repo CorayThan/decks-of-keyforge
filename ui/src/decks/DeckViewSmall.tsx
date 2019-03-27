@@ -22,7 +22,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { AercScoreView } from "../stats/AercScoreView"
 import { screenStore } from "../ui/ScreenStore"
-import { UserStore } from "../user/UserStore"
+import { userDeckStore } from "../userdeck/UserDeckStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
@@ -45,14 +45,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             forSale, forTrade, chains,
             registered
         } = deck
-        const userDeck = UserStore.instance.userDeckByDeckId(id)
-        let wishlist = false
-        let funny = false
+        const userDeck = userDeckStore.userDeckByDeckId(id)
         let userDeckForSale = false
         let userDeckForTrade = false
         if (userDeck) {
-            wishlist = userDeck.wishlist
-            funny = userDeck.funny
             userDeckForSale = userDeck.forSale
             userDeckForTrade = userDeck.forTrade
         }
@@ -125,10 +121,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     <MyDecksButton deck={deck}/>
                     <div style={{flexGrow: 1}}/>
                     <div style={{marginRight: spacing(1)}}>
-                        <WishlistDeck deckName={name} wishlisted={wishlist} deckId={id} wishlistCount={wishlistCount}/>
+                        <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
                     </div>
                     <div style={{marginRight: spacing(1)}}>
-                        <FunnyDeck deckName={name} funny={funny} deckId={id} funnyCount={funnyCount}/>
+                        <FunnyDeck deckName={name} funny={false} deckId={id} funnyCount={funnyCount}/>
                     </div>
                 </CardActions>
             </KeyCard>

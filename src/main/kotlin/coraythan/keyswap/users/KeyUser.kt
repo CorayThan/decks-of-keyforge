@@ -37,7 +37,7 @@ data class KeyUser(
         val preferredCountries: List<Country>? = null,
 
         @JsonIgnoreProperties("user")
-        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val decks: List<UserDeck> = listOf(),
 
         @JsonIgnoreProperties("user")
@@ -59,4 +59,39 @@ data class KeyUser(
             preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen
     )
+
+    fun toDto() = KeyUserDto(
+            id = id,
+            username = username,
+            email = email,
+            type = type,
+            publicContactInfo = publicContactInfo,
+            allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
+            country = country,
+            preferredCountries = preferredCountries,
+            forSaleQueries = forSaleQueries,
+            lastVersionSeen = lastVersionSeen
+    )
 }
+
+data class KeyUserDto(
+        val id: UUID,
+
+        val username: String,
+
+        val email: String,
+
+        val type: UserType,
+
+        val publicContactInfo: String? = null,
+        val allowUsersToSeeDeckOwnership: Boolean,
+
+        val country: Country? = null,
+
+        val preferredCountries: List<Country>? = null,
+
+        val forSaleQueries: List<ForSaleQueryEntity> = listOf(),
+
+        val lastVersionSeen: String?
+
+)

@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { MessageStore } from "../ui/MessageStore"
-import { UserStore } from "../user/UserStore"
+import { userStore } from "../user/UserStore"
 
 export class ChangePasswordPage extends React.Component<RouteComponentProps<{resetCode: string}>> {
     render() {
@@ -35,7 +35,7 @@ export class ChangePasswordView extends React.Component<{resetCode: string}> {
             MessageStore.instance.setErrorMessage(error)
             return
         }
-        UserStore.instance.changePassword(this.props.resetCode, this.password.trim())
+        userStore.changePassword(this.props.resetCode, this.password.trim())
     }
 
     render() {
@@ -68,7 +68,7 @@ export class ChangePasswordView extends React.Component<{resetCode: string}> {
                             onChange={(event) => this.confirmPassword = event.target.value}
                             style={{marginBottom: spacing(2)}}
                         />
-                        <KeyButton color={"primary"} variant={"contained"} onClick={this.sendReset} loading={UserStore.instance.changingPassword}>
+                        <KeyButton color={"primary"} variant={"contained"} onClick={this.sendReset} loading={userStore.changingPassword}>
                             Change Password
                         </KeyButton>
                     </Paper>

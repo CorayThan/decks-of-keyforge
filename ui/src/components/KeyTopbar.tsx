@@ -22,7 +22,7 @@ import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
-import { UserStore } from "../user/UserStore"
+import { userStore } from "../user/UserStore"
 
 interface KeyTopbarProps extends RouteComponentProps<{}> {
 }
@@ -168,9 +168,9 @@ class UserLinks extends React.Component {
     buttonAnchor?: HTMLElement
 
     render() {
-        if (UserStore.instance.loginInProgress) {
+        if (userStore.loginInProgress) {
             return <Loader/>
-        } else if (UserStore.instance.loggedIn()) {
+        } else if (userStore.loggedIn()) {
             return (
                 <>
                     <LinkButton
@@ -212,7 +212,7 @@ class UserLinks extends React.Component {
                             onClick={() => {
                                 rightMenuStore.close()
                                 this.buttonAnchor = undefined
-                                UserStore.instance.logout()
+                                userStore.logout()
                             }}
                             style={{margin: spacing(1)}}
                         >

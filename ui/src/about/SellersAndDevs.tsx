@@ -5,7 +5,7 @@ import { spacing } from "../config/MuiConfig"
 import { InfoListCard } from "../generic/InfoListCard"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { publicApiStore } from "../sellers/PublicApiStore"
-import { UserStore } from "../user/UserStore"
+import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
 /* tslint:disable:jsdoc-format */
@@ -96,7 +96,7 @@ export class SellersAndDevs extends React.Component {
     render() {
 
         let apiKeyOrButton
-        if (!UserStore.instance.loggedIn()) {
+        if (!userStore.loggedIn()) {
             apiKeyOrButton = (
                 <Typography>Login to generate an API Key.</Typography>
             )

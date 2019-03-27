@@ -4,7 +4,7 @@ import * as React from "react"
 import { log, prettyJson, Utils } from "../../config/Utils"
 import { SortDirection } from "../../generic/SortDirection"
 import { House } from "../../houses/House"
-import { UserStore } from "../../user/UserStore"
+import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
 import { Constraint } from "./ConstraintDropdowns"
 
@@ -110,7 +110,7 @@ export class DeckFilters {
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const username = UserStore.instance.username
+            const username = userStore.username
             this.owner = username ? username : ""
         } else {
             this.owner = ""

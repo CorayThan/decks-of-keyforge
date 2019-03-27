@@ -11,7 +11,7 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
 import { UserProfile } from "./UserProfile"
-import { UserStore } from "./UserStore"
+import { userStore } from "./UserStore"
 
 interface ProfilePageProps extends RouteComponentProps<{ username: string }> {
 }
@@ -32,23 +32,23 @@ export class ProfileContainer extends React.Component<ProfileContainerProps> {
 
     constructor(props: ProfileContainerProps) {
         super(props)
-        UserStore.instance.userProfile = undefined
+        userStore.userProfile = undefined
         UiStore.instance.setTopbarValues("Profile", "Profile", "")
     }
 
     componentDidMount(): void {
-        UserStore.instance.findUserProfile(this.props.username)
+        userStore.findUserProfile(this.props.username)
     }
 
     componentWillReceiveProps(nextProps: Readonly<ProfileContainerProps>): void {
         log.info(`Profile will receive props next username: ${nextProps.username} this ${this.props.username}`)
         if (this.props.username !== nextProps.username) {
-            UserStore.instance.findUserProfile(nextProps.username)
+            userStore.findUserProfile(nextProps.username)
         }
     }
 
     render() {
-        const profile = UserStore.instance.userProfile
+        const profile = userStore.userProfile
         if (!profile) {
             return <Loader/>
         }

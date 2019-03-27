@@ -5,7 +5,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
-import { UserStore } from "../user/UserStore"
+import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
@@ -97,7 +97,7 @@ export class DeckStore {
                 if (!response.data) {
                     MessageStore.instance.setErrorMessage("Sorry, we couldn't find a deck with the given id")
                 } else {
-                    UserStore.instance.loadLoggedInUser()
+                    userDeckStore.findAllForUser()
                 }
 
                 this.importingAndAddingDeck = false

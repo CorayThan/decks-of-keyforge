@@ -35,4 +35,7 @@ class UserDeckEndpoints(
 
     @PostMapping("/{id}/unlist")
     fun unlist(@PathVariable id: Long) = userDeckService.unlist(id)
+
+    @GetMapping("/for-user")
+    fun findAllForUser() = userDeckService.findAllForUser()
 }

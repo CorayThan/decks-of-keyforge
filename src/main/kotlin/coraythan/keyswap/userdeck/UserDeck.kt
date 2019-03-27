@@ -54,6 +54,28 @@ data class UserDeck(
 
     val expiresAtLocalDate: LocalDate?
         get() = this.expiresAt?.toLocalDate()
+
+    fun toDto() = UserDeckDto(
+            wishlist = wishlist,
+            funny = funny,
+            ownedBy = ownedBy,
+            creator = creator,
+            forSale = forSale,
+            forTrade = forTrade,
+            forSaleInCountry = forSaleInCountry,
+            askingPrice = askingPrice,
+            listingInfo = listingInfo,
+            condition = condition,
+            redeemed = redeemed,
+            externalLink = externalLink,
+            dateListed = dateListed,
+            expiresAt = expiresAt,
+            id = id,
+            deckId = deck.id,
+
+            username = user.username,
+            publicContactInfo = user.publicContactInfo
+    )
 }
 
 enum class DeckCondition {
@@ -61,4 +83,42 @@ enum class DeckCondition {
     NEAR_MINT,
     PLAYED,
     HEAVILY_PLAYED
+}
+
+data class UserDeckDto(
+
+        val wishlist: Boolean = false,
+        val funny: Boolean = false,
+        val ownedBy: String? = null,
+
+        val creator: Boolean = false,
+
+        val forSale: Boolean = false,
+        val forTrade: Boolean = false,
+
+        val forSaleInCountry: Country? = null,
+
+        val askingPrice: Double? = null,
+
+        val listingInfo: String? = null,
+
+        val condition: DeckCondition? = null,
+        val redeemed: Boolean = true,
+        val externalLink: String? = null,
+
+        val dateListed: ZonedDateTime? = null,
+        val expiresAt: ZonedDateTime? = null,
+
+        val id: UUID = UUID.randomUUID(),
+
+        val deckId: Long,
+
+        val username: String,
+        val publicContactInfo: String?
+) {
+    val dateListedLocalDate: LocalDate?
+        get() = this.dateListed?.toLocalDate()
+
+    val expiresAtLocalDate: LocalDate?
+        get() = this.expiresAt?.toLocalDate()
 }

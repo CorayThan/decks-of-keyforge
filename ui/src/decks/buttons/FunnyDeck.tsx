@@ -5,11 +5,9 @@ import TagFacesIcon from "@material-ui/icons/TagFaces"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { UserStore } from "../../user/UserStore"
-import { UserDeckStore } from "../../userdeck/UserDeckStore"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
 
 interface FunnyDeckProps {
-    funny: boolean
     funnyCount: number
     deckId: number
     deckName: string
@@ -19,21 +17,20 @@ interface FunnyDeckProps {
 export class FunnyDeck extends React.Component<FunnyDeckProps> {
 
     @observable
-    funny = false
-
-    @observable
     funnyCount = 0
 
     componentDidMount(): void {
-        this.funny = this.props.funny
         this.funnyCount = this.props.funnyCount
     }
 
     render() {
         const {deckId, deckName} = this.props
         let title
-        if (UserStore.instance.loggedIn()) {
-            title = (this.funny ? "Remove as" : "Mark as") + " a funny deck"
+        let funny = false
+        if (userDeckStore.userDecksLoaded()) {
+            const deck = userDeckStore.userDeckByDeckId(deckId)
+            funny = deck == null ? false : deck.funny
+            title = (funny ? "Remove as" : "Mark as") + " a funny deck"
         } else {
             title = "Login to mark decks as funny"
         }
@@ -43,13 +40,13 @@ export class FunnyDeck extends React.Component<FunnyDeckProps> {
                     <div>
                         <IconButton
                             onClick={() => {
-                                this.funny = !this.funny
-                                this.funnyCount += (this.funny ? 1 : -1)
-                                UserDeckStore.instance.funny(deckName, deckId, this.funny)
+                                funny = !funny
+                                this.funnyCount += (funny ? 1 : -1)
+                                userDeckStore.funny(deckName, deckId, funny)
                             }}
-                            disabled={!UserStore.instance.loggedIn()}
+                            disabled={!userDeckStore.userDecksLoaded()}
                         >
-                            {this.funny ? <TagFacesIcon color={"primary"}/> : <TagFacesIcon/>}
+                            {funny ? <TagFacesIcon color={"primary"}/> : <TagFacesIcon/>}
                         </IconButton>
                     </div>
                 </Tooltip>

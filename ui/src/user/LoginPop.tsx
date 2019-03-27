@@ -8,7 +8,7 @@ import { Utils } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
-import { UserStore } from "./UserStore"
+import { userStore } from "./UserStore"
 
 @observer
 export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
@@ -23,12 +23,12 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
     password = Utils.isDev() ? "stuffstuff" : ""
 
     componentDidMount() {
-        UserStore.instance.loginInProgress = false
+        userStore.loginInProgress = false
         this.popOpen = false
     }
 
     login = () => {
-        UserStore.instance.login({email: this.email, password: this.password})
+        userStore.login({email: this.email, password: this.password})
     }
 
     handlePopoverOpen = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
     }
 
     render() {
-        if (UserStore.instance.user) {
+        if (userStore.user) {
             return null
         }
         return (
@@ -101,7 +101,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                                 variant={"contained"}
                                 color={"primary"}
                                 onClick={this.login}
-                                loading={UserStore.instance.loginInProgress}
+                                loading={userStore.loginInProgress}
                             >
                                 Login
                             </KeyButton>

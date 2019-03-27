@@ -16,7 +16,7 @@ import { SnackMessage } from "../ui/MessageStore"
 import { MyProfile } from "../user/MyProfile"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
-import { UserStore } from "../user/UserStore"
+import { userStore } from "../user/UserStore"
 import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 
@@ -39,7 +39,7 @@ class Routes {
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
-    static usersDecks = () => `/decks?owner=${UserStore.instance.username}&includeUnregistered=true`
+    static usersDecks = () => `/decks?owner=${userStore.username}&includeUnregistered=true`
 
     /**
      * Deck filters should be cleaned.

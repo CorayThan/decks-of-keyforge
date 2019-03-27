@@ -47,6 +47,17 @@ class DeckService(
     var firstPageCached100Results: DecksPage? = null
     var secondPageCached100Results: DecksPage? = null
 
+    fun clearCachedValuesIfDeckIdMatches(deckId: Long) {
+        if (
+                firstPageCached?.decks?.any { it.id == deckId } == true
+                || secondPageCached?.decks?.any { it.id == deckId } == true
+                || firstPageCached100Results?.decks?.any { it.id == deckId } == true
+                || secondPageCached100Results?.decks?.any { it.id == deckId } == true
+        ) {
+            clearCachedValues()
+        }
+    }
+
     fun clearCachedValues() {
         deckCount = null
         firstPageCached = null

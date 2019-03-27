@@ -34,3 +34,16 @@ export enum UserType {
     USER,
     ADMIN
 }
+
+export interface KeyUserDto {
+    id: string
+    username: string
+    email: string
+    type: UserType
+    publicContactInfo?: string
+    allowUsersToSeeDeckOwnership: boolean
+    country?: string
+    preferredCountries?: string[]
+    forSaleQueries?: ForSaleQueryEntity[]
+    lastVersionSeen: string
+}
