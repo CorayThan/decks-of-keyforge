@@ -124,7 +124,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
                     </div>
                     <div style={{marginRight: spacing(1)}}>
-                        <FunnyDeck deckName={name} funny={false} deckId={id} funnyCount={funnyCount}/>
+                        <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
                     </div>
                 </CardActions>
             </KeyCard>

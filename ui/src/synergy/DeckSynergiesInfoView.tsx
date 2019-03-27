@@ -11,12 +11,10 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { log, prettyJson } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyCard } from "../generic/KeyCard"
-import { AercScoreView } from "../stats/AercScoreView"
 import { screenStore } from "../ui/ScreenStore"
 import { SynergyCombo } from "./DeckSynergyInfo"
 import { TraitBubble } from "./TraitBubble"
@@ -87,7 +85,6 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
 class ColumnHeaders extends React.Component {
     render() {
         if (screenStore.screenSizeSm()) {
-            log.info("Column headers screen size small")
             return (
                 <>
                     <TableCell>Card Name</TableCell>
@@ -103,7 +100,12 @@ class ColumnHeaders extends React.Component {
                     <SynergiesHeader title={"Synergy (-2 to 2)"} property={"netSynergy"}/>
                     <SynergiesHeader title={"Value"} property={"value"}/>
                     <TableCell>Synergies</TableCell>
-                    <SynergiesHeader title={"AERC"} property={"aerc"}/>
+                    <SynergiesHeader title={"Aember Control"} property={"amberControl"}/>
+                    <SynergiesHeader title={"Expected Aember"} property={"expectedAmber"}/>
+                    <SynergiesHeader title={"Artifact Control"} property={"artifactControl"}/>
+                    <SynergiesHeader title={"Creature Control"} property={"creatureControl"}/>
+                    <SynergiesHeader title={"Deck Manipulation"} property={"deckManipulation"}/>
+                    <SynergiesHeader title={"Effective Power"} property={"effectivePower"}/>
                 </>
             )
         }
@@ -115,7 +117,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
     render() {
         const combo = this.props.combo
         const cardLine = <CardAsLine card={{cardTitle: combo.cardName}}/>
-        if (screenStore.screenSizeXs()) {
+        if (screenStore.screenSizeSm()) {
             return (
                 <>
                     <TableCell>{cardLine}{combo.copies === 1 ? "" : ` x ${combo.copies}`}</TableCell>
@@ -145,17 +147,12 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                             ))}
                         </div>
                     </TableCell>
-                    <TableCell>
-                        <AercScoreView
-                            hasAerc={{
-                                aercScore: combo.amberControl + combo.expectedAmber + combo.artifactControl
-                                    + combo.deckManipulation + combo.creatureControl + combo.effectivePower,
-                                ...combo
-                            }}
-                            dark={true}
-                            narrow={true}
-                        />
-                    </TableCell>
+                    <TableCell>{combo.amberControl}</TableCell>
+                    <TableCell>{combo.expectedAmber}</TableCell>
+                    <TableCell>{combo.artifactControl}</TableCell>
+                    <TableCell>{combo.creatureControl}</TableCell>
+                    <TableCell>{combo.deckManipulation}</TableCell>
+                    <TableCell>{combo.effectivePower}</TableCell>
                 </>
             )
         }
@@ -176,18 +173,10 @@ class SynergiesTableViewStore {
                 this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), (synergy: SynergyCombo) => {
                     return synergy.netSynergy + synergy.cardRating
                 }))
-            } else if (synergiesTableViewStore.activeTableSort === "aerc") {
-                this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), (combo: SynergyCombo) => {
-                    return combo.amberControl + combo.expectedAmber + combo.artifactControl + combo.deckManipulation + combo.creatureControl
-                        + combo.effectivePower
-                }))
             } else {
-                log.debug(`Synergy combos right now: ${prettyJson(this.synergyCombos)}`)
                 this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), synergiesTableViewStore.activeTableSort))
-                log.debug(`Synergy combos right now: ${prettyJson(this.synergyCombos)}`)
             }
             if (synergiesTableViewStore.tableSortDir === "desc") {
-                log.info("Reversing table sort")
                 this.synergyCombos.replace(this.synergyCombos.slice().reverse())
             }
         }
@@ -223,4 +212,3 @@ const SynergiesHeader = (props: { title: string, property: string, minWidth?: nu
         </TableSortLabel>
     </TableCell>
 )
-

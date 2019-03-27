@@ -102,7 +102,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
                 </div>
             )
         } else {
-            const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap"}
+            const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap", justifyContent: "center"}
             inner = (
                 <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
                     <ExtraDeckStatsView deck={deck.deck}/>
@@ -114,7 +114,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
                         {saleInfoComponent}
                         <DeckSynergiesInfoView
                             synergies={deck}
-                            width={(saleInfo && saleInfo.length !== 0 ? 840 : 1200)}
+                            width={1200}
                         />
                     </div>
                 </div>
