@@ -19,4 +19,7 @@ class ForSaleNotificationsEndpoints(
     fun deleteQuery(@PathVariable id: UUID) {
         forSaleNotificationsService.deleteQuery(id)
     }
+
+    @GetMapping("/secured")
+    fun findAllForUser() = forSaleNotificationsService.findAllForUser()
 }

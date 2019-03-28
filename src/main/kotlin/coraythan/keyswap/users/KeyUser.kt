@@ -69,7 +69,6 @@ data class KeyUser(
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             country = country,
             preferredCountries = preferredCountries,
-            forSaleQueries = forSaleQueries,
             lastVersionSeen = lastVersionSeen
     )
 }
@@ -89,8 +88,6 @@ data class KeyUserDto(
         val country: Country? = null,
 
         val preferredCountries: List<Country>? = null,
-
-        val forSaleQueries: List<ForSaleQueryEntity> = listOf(),
 
         val lastVersionSeen: String?
 

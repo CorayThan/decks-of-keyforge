@@ -9,6 +9,7 @@ export interface UserProfile {
 }
 
 export interface UserProfileUpdate {
+    email?: string
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
     country?: string

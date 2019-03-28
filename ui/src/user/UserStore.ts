@@ -124,8 +124,13 @@ export class UserStore {
     updateUserProfile = (updateUserProfile: UserProfileUpdate) => {
         axios.post(`${UserStore.SECURE_CONTEXT}/update`, updateUserProfile)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage("Updated your profile!")
-                this.loadLoggedInUser()
+                if (updateUserProfile.email) {
+                    this.logout()
+                    MessageStore.instance.setSuccessMessage("Updated your profile! Please sign back in.")
+                } else {
+                    MessageStore.instance.setSuccessMessage("Updated your profile!")
+                    this.loadLoggedInUser()
+                }
             })
     }
 

@@ -2,13 +2,13 @@ package coraythan.keyswap.decks.salenotifications
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckService
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
-import coraythan.keyswap.users.KeyUserRepo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,8 +26,7 @@ class ForSaleNotificationsService(
         private val deckService: DeckService,
         private val deckRepo: DeckRepo,
         private val emailService: EmailService,
-        private val objectMapper: ObjectMapper,
-        private val userRepo: KeyUserRepo
+        private val objectMapper: ObjectMapper
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -98,5 +97,10 @@ class ForSaleNotificationsService(
 
     private fun reloadQueries() {
         this.queries = forSaleQueryRepo.findAll()
+    }
+
+    fun findAllForUser(): List<ForSaleQuery> {
+        val currentUser = currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in.")
+        return forSaleQueryRepo.findByUserId(currentUser.id).map { objectMapper.readValue<ForSaleQuery>(it.json).copy(id = it.id) }
     }
 }

@@ -31,6 +31,7 @@ data class ForSaleQueryEntity(
 )
 
 data class ForSaleQuery(
+
         val queryName: String,
 
         override val houses: Set<House> = setOf(),
@@ -46,7 +47,9 @@ data class ForSaleQuery(
 
         override val cards: List<DeckCardQuantity> = listOf(),
 
-        override val owner: String = ""
+        override val owner: String = "",
+
+        val id: UUID? = null
 
 ) : DeckQuery {
         override val myFavorites: Boolean

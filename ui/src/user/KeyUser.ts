@@ -44,6 +44,5 @@ export interface KeyUserDto {
     allowUsersToSeeDeckOwnership: boolean
     country?: string
     preferredCountries?: string[]
-    forSaleQueries?: ForSaleQueryEntity[]
     lastVersionSeen: string
 }

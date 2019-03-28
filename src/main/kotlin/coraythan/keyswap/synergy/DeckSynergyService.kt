@@ -37,7 +37,7 @@ class DeckSynergyService(
                         cardHouseCount.incrementValue(it)
                     }
         }
-        val synergyCombos: List<SynergyCombo> = cards.mapNotNull { card ->
+        val synergyCombos: List<SynergyCombo> = cards.map { card ->
             val cardInfo = card.extraCardInfo ?: throw IllegalStateException("Oh no, ${card.cardTitle} had null extra info! $card")
             val positiveSynergies = cardInfo.synergies.filter { it.rating > 0 }
             val negativeSynergies = cardInfo.synergies.filter { it.rating < 0 }
@@ -60,37 +60,33 @@ class DeckSynergyService(
                         (if (cardInfo.traits.contains(synTraitValue.trait)) 1 else 0)
                 synTraitValue.trait to synTraitValue.synergyValue(matches)
             }
-            if (matchedTraits.isEmpty()) {
-                null
-            } else {
-                val synergy = matchedTraits.map { it.second }.filter { it > 0 }.sum()
-                val antisynergy = matchedTraits.map { it.second }.filter { it < 0 }.sum()
-                val netSynergy = synergy + antisynergy
-                val limitedNetSynergy = when {
-                    netSynergy > maxSynergy -> maxSynergy
-                    netSynergy < minSynergy -> minSynergy
-                    else -> netSynergy
-                }
-                val matchedSynergies = matchedTraits.filter { it.second > 0 }.map { it.first }
-                val matchedAntisynergies = matchedTraits.filter { it.second < 0 }.map { it.first }
-                SynergyCombo(
-                        house = card.house,
-                        cardName = card.cardTitle,
-                        synergies = matchedSynergies.toSet(),
-                        antisynergies = matchedAntisynergies.toSet(),
-                        netSynergy = limitedNetSynergy,
-                        synergy = synergy,
-                        antisynergy = antisynergy,
-                        cardRating = card.extraCardInfo!!.rating - 1,
-
-                        amberControl = card.extraCardInfo?.amberControl ?: 0.0,
-                        expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,
-                        creatureControl = card.extraCardInfo?.creatureControl ?: 0.0,
-                        artifactControl = card.extraCardInfo?.artifactControl ?: 0.0,
-                        deckManipulation = card.extraCardInfo?.deckManipulation ?: 0.0,
-                        effectivePower = card.effectivePower
-                )
+            val synergy = matchedTraits.map { it.second }.filter { it > 0 }.sum()
+            val antisynergy = matchedTraits.map { it.second }.filter { it < 0 }.sum()
+            val netSynergy = synergy + antisynergy
+            val limitedNetSynergy = when {
+                netSynergy > maxSynergy -> maxSynergy
+                netSynergy < minSynergy -> minSynergy
+                else -> netSynergy
             }
+            val matchedSynergies = matchedTraits.filter { it.second > 0 }.map { it.first }
+            val matchedAntisynergies = matchedTraits.filter { it.second < 0 }.map { it.first }
+            SynergyCombo(
+                    house = card.house,
+                    cardName = card.cardTitle,
+                    synergies = matchedSynergies.toSet(),
+                    antisynergies = matchedAntisynergies.toSet(),
+                    netSynergy = limitedNetSynergy,
+                    synergy = synergy,
+                    antisynergy = antisynergy,
+                    cardRating = card.extraCardInfo!!.rating - 1,
+
+                    amberControl = card.extraCardInfo?.amberControl ?: 0.0,
+                    expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,
+                    creatureControl = card.extraCardInfo?.creatureControl ?: 0.0,
+                    artifactControl = card.extraCardInfo?.artifactControl ?: 0.0,
+                    deckManipulation = card.extraCardInfo?.deckManipulation ?: 0.0,
+                    effectivePower = card.effectivePower
+            )
         }
 
         val synergyValues = synergyCombos.map { it.netSynergy }

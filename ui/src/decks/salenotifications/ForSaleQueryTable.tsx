@@ -17,10 +17,10 @@ import { HouseBanner } from "../../houses/HouseBanner"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { forSaleNotificationsStore } from "./ForSaleNotificationsStore"
-import { ForSaleQuery, ForSaleQueryEntity, prepareForSaleQueryForQueryString } from "./ForSaleQuery"
+import { ForSaleQuery, prepareForSaleQueryForQueryString } from "./ForSaleQuery"
 
 interface ForSaleQueryTableProps {
-    queries: ForSaleQueryEntity[]
+    queries: ForSaleQuery[]
 }
 
 @observer
@@ -47,17 +47,16 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.queries.map((queryEntity) => {
-                            const query: ForSaleQuery = JSON.parse(queryEntity.json)
+                        {this.props.queries.map((query) => {
                             const preparedForQuery = prepareForSaleQueryForQueryString(query)
                             return (
-                                <TableRow key={queryEntity.id}>
+                                <TableRow key={query.id}>
                                     <TableCell>
                                         <LinkButton
                                             to={Routes.deckSearch(preparedForQuery)}
                                             color={"primary"}
                                         >
-                                            {queryEntity.name.length === 0 ? "Unnamed" : queryEntity.name}
+                                            {query.queryName.length === 0 ? "Unnamed" : query.queryName}
                                         </LinkButton>
                                     </TableCell>
                                     <TableCell>
@@ -94,7 +93,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                     )}
                                     <TableCell>
                                         <IconButton
-                                            onClick={() => forSaleNotificationsStore.deleteQuery(queryEntity.id)}
+                                            onClick={() => forSaleNotificationsStore.deleteQuery(query.id!)}
                                         >
                                             <Delete/>
                                         </IconButton>

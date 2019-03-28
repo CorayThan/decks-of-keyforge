@@ -222,7 +222,17 @@ class DeckService(
 
         val forSaleOrTrade = BooleanBuilder().andAnyOf(deckQ.forSale.isTrue, deckQ.forTrade.isTrue)
 
-        if (filters.title.isNotBlank()) predicate.and(deckQ.name.likeIgnoreCase("%${filters.title.toLowerCase()}%"))
+        if (filters.title.isNotBlank()) {
+            val trimmed = filters.title
+                    .toLowerCase()
+                    .trim()
+            val tokenized = trimmed
+                    .split("\\W+".toRegex())
+                    .filter { it.length > 2 }
+
+            val toUse = if (tokenized.isEmpty()) listOf(trimmed) else tokenized
+            toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
+        }
         if (filters.owner.isNotBlank()) {
             val username = userHolder.user?.username
             if (username == filters.owner) {

@@ -2,6 +2,11 @@ import {
     Button,
     CardActions,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -20,6 +25,8 @@ import * as React from "react"
 import ReactDOM from "react-dom"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { Utils } from "../config/Utils"
+import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { countries, countryToLabel } from "../generic/Country"
@@ -29,6 +36,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { MessageStore } from "../ui/MessageStore"
 import { UiStore } from "../ui/UiStore"
 import { KeyUserDto } from "./KeyUser"
+import { UserProfileUpdate } from "./UserProfile"
 import { userStore } from "./UserStore"
 
 @observer
@@ -50,6 +58,8 @@ interface MyProfileInnerProps {
 class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     @observable
+    email: string
+    @observable
     contactInfo: string
     @observable
     allowUsersToSeeDeckOwnership: boolean
@@ -61,20 +71,30 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     preferredCountriesLabelWidth = 0
 
+    @observable
+    confirmOpen = false
+
+    update?: UserProfileUpdate
+
     buyingCountriesInputLabelRef: any
 
     constructor(props: MyProfileInnerProps) {
         super(props)
-        const {publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries} = props.profile
+        const {publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email} = props.profile
+        this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
         this.country = country ? country : ""
         this.preferredCountries = preferredCountries ? preferredCountries : []
         UiStore.instance.setTopbarValues(`My Profile`, "My Profile", "")
+
+        forSaleNotificationsStore.queries = undefined
     }
 
     componentDidMount(): void {
         this.preferredCountriesLabelWidth = (ReactDOM.findDOMNode(this.buyingCountriesInputLabelRef) as any).offsetWidth
+        forSaleNotificationsStore.findAllForUser()
+        this.update = undefined
     }
 
     updateProfile = (event?: React.FormEvent) => {
@@ -86,12 +106,31 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             MessageStore.instance.setWarningMessage("Please make your public contact info 2000 or fewer characters long.")
             return
         }
-        userStore.updateUserProfile({
+        const email = this.email.trim() === this.props.profile.email ? undefined : this.email.trim()
+        if (email != null && (email.length < 1 || !Utils.validateEmail(email))) {
+            MessageStore.instance.setWarningMessage("Please enter a valid email address.")
+            return
+        }
+
+        const toUpdate = {
+            email,
             publicContactInfo,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries
-        })
+        }
+
+        if (email == null) {
+            this.actuallyUpdate(toUpdate)
+        } else {
+            // display modal confirmation
+            this.update = toUpdate
+            this.confirmOpen = true
+        }
+    }
+
+    actuallyUpdate = (update: UserProfileUpdate) => {
+        userStore.updateUserProfile(update)
     }
 
     render() {
@@ -105,22 +144,57 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         filters.forTrade = true
         const decksForSaleLink = Routes.deckSearch(prepareDeckFiltersForQueryString(filters))
 
+        const forSaleQueries = forSaleNotificationsStore.queries
+
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
+                <Dialog
+                    open={this.confirmOpen}
+                    onClose={() => this.confirmOpen = false}
+                >
+                    <DialogTitle>Change your email?</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to change your email to "{this.update && this.update.email}"? This will be your new login for the site.
+                            You will need to sign in again after making this change.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => this.confirmOpen = false} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={() => {
+                            this.confirmOpen = false
+                            this.actuallyUpdate(this.update!)
+                            this.update = undefined
+                        }} color="primary" autoFocus>
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <Grid container={true} spacing={16} justify={"center"}>
                     <Grid item={true}>
                         <form onSubmit={this.updateProfile}>
                             <KeyCard
                                 topContents={(
                                     <div>
-                                        <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1)}}>{profile.username}</Typography>
-                                        <Typography style={{color: "#FFFFFF"}}>{profile.email}</Typography>
+                                        <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
                                     </div>
                                 )}
                                 style={{maxWidth: 400, margin: 0}}
                             >
                                 <div style={{padding: spacing(2)}}>
                                     <Grid container={true} spacing={16}>
+                                        <Grid item={true} xs={12}>
+                                            <TextField
+                                                label={"email"}
+                                                value={this.email}
+                                                onChange={(event) => this.email = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                style={{marginBottom: spacing(2)}}
+                                            />
+                                        </Grid>
                                         <Grid item={true} xs={12}>
                                             <TextField
                                                 label={"Public contact and trade info"}
@@ -225,9 +299,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                             </KeyCard>
                         </form>
                     </Grid>
-                    {profile.forSaleQueries && profile.forSaleQueries.length > 0 ? (
+                    {forSaleQueries && forSaleQueries.length > 0 ? (
                         <Grid item={true}>
-                            <ForSaleQueryTable queries={profile.forSaleQueries}/>
+                            <ForSaleQueryTable queries={forSaleQueries}/>
                         </Grid>
                     ) : null}
                 </Grid>

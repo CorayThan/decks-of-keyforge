@@ -19,6 +19,8 @@ export interface ForSaleQuery {
     constraints: Constraint[]
 
     cards: DeckCardQuantity[]
+
+    id?: string
 }
 
 export interface ForSaleQueryEntity {

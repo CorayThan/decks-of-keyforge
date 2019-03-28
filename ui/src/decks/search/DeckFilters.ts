@@ -20,10 +20,10 @@ export class DeckFilters {
                 queryObject.cards = [queryObject.cards]
             }
             queryObject.cards = queryObject.cards.map((forQuery: string) => {
-                const split = forQuery.split("-")
+                const lastIndexOf = forQuery.lastIndexOf("-")
                 return {
-                    cardName: split[0],
-                    quantity: Number(split[1])
+                    cardName: forQuery.substring(0, lastIndexOf),
+                    quantity: Number(forQuery.substring(lastIndexOf + 1))
                 }
             })
         }

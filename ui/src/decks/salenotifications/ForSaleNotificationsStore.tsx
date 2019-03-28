@@ -39,7 +39,14 @@ export class ForSaleNotificationsStore {
         axios.delete(`${ForSaleNotificationsStore.SECURE_CONTEXT}/${queryId}`)
             .then((response: AxiosResponse) => {
                 MessageStore.instance.setSuccessMessage(`Deleted deck notification filter.`)
-                userStore.loadLoggedInUser()
+                this.findAllForUser()
+            })
+    }
+
+    findAllForUser = () => {
+        axios.get(`${ForSaleNotificationsStore.SECURE_CONTEXT}`)
+            .then((response: AxiosResponse) => {
+                this.queries = response.data
             })
     }
 }

@@ -24,20 +24,13 @@ class KeyUserService(
         check(userRegInfo.password.length > 7) {
             "Password is too short."
         }
-        check(userRegInfo.email.isNotBlank()) {
-            "Email is blank."
-        }
+        validateEmail(userRegInfo.email)
         check(userRegInfo.username.isNotBlank()) {
             "Username is blank."
         }
 
         check(userRegInfo.username.matches(usernameRegex)) {
             "Username is malformed: ${userRegInfo.username}"
-        }
-
-        check(userRepo.findByEmailIgnoreCase(userRegInfo.email) == null) {
-            log.info("${userRegInfo.email} email is already taken.")
-            "This email is already taken."
         }
 
         check(userRepo.findByUsernameIgnoreCase(userRegInfo.username) == null) {
@@ -78,7 +71,10 @@ class KeyUserService(
                 user.decks
             }
 
+            if (update.email != null) validateEmail(update.email)
+
             userRepo.save(user.copy(
+                    email = update.email ?: user.email,
                     publicContactInfo = update.publicContactInfo,
                     allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
                     country = update.country,
@@ -105,6 +101,16 @@ class KeyUserService(
         val user = currentUserService.loggedInUser()
         if (user != null) {
             userRepo.save(user.copy(lastVersionSeen = version))
+        }
+    }
+
+    private fun validateEmail(email: String) {
+        check(email.isNotBlank()) {
+            "Email is blank."
+        }
+        check(userRepo.findByEmailIgnoreCase(email) == null) {
+            log.info("${email} email is already taken.")
+            "This email is already taken."
         }
     }
 }
