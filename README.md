@@ -1,3 +1,16 @@
+
+Running the project:
+
+```
+./gradlew bootRun
+```
+
+```
+cd ui
+npm run start
+```
+
+
 making the db in RDS:
 
 RDS create database
