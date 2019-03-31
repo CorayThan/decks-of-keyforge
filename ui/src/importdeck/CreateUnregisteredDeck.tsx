@@ -182,7 +182,7 @@ class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards:
                 <Divider style={{marginTop: 4}}/>
                 {this.props.cards.map((card, idx) => (
                     <div key={idx} style={{display: "flex", alignItems: "center"}}>
-                        <CardAsLine card={card}/>
+                        <CardAsLine card={card}  width={160} marginTop={4}/>
                         <div style={{flexGrow: 1}}/>
                         <Button
                             size={"small"}

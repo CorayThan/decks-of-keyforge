@@ -71,6 +71,9 @@ class DeckEndpoints(
     @GetMapping("/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
+    @GetMapping("/search-result-with-cards/{id}")
+    fun findDeckSearchResultWithCards(@PathVariable id: String) = deckService.findDeckSearchResultWithCards(id)
+
     @PostMapping("/{id}/import")
     fun importDeck(@PathVariable id: String) = deckImporterService.importDeck(id) != null
 

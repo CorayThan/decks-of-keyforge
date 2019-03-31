@@ -122,6 +122,10 @@ export class CardStore {
             })
     }
 
+    fullCardFromCardName = (cardTitle: string) => {
+        return this.fullCardFromCardWithName({cardTitle})
+    }
+
     fullCardFromCardWithName = (card: Partial<KCard>) => {
         if (this.cardNameLowercaseToCard && card.cardTitle) {
             return this.cardNameLowercaseToCard.get(card.cardTitle.toLowerCase())

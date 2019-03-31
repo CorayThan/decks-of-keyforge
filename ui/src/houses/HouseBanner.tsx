@@ -9,12 +9,15 @@ export const HouseBanner = (props: { houses: House[], vertical?: boolean, size?:
     return (
         <div style={{display: "flex", flexDirection: props.vertical ? "column" : undefined, justifyContent: "space-evenly", ...props.style}}>
             {props.houses.map((house) => (
-                <img
-                    key={house}
-                    src={houseValues.get(house)!.img}
-                    style={{width: size, height: size}}
-                />
+                <HouseImage house={house} key={house}/>
             ))}
         </div>
     )
 }
+
+export const HouseImage = (props: { house: House, size?: number, style?: React.CSSProperties }) => (
+    <img
+        src={houseValues.get(props.house)!.img}
+        style={{width: props.size == null ? 64 : props.size, height: props.size == null ? 64 : props.size, ...props.style}}
+    />
+)

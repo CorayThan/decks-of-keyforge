@@ -317,6 +317,11 @@ class DeckService(
 
     fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
 
+    fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
+        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
+        return deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds))
+    }
+
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
         if (keyforgeId == "simple") {
             // quiet down the annoying constant errors

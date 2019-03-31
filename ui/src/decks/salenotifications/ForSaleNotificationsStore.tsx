@@ -25,7 +25,7 @@ export class ForSaleNotificationsStore {
                     `Created deck notification "${query.queryName}". See it on your `,
                     "Success",
                     <LinkButton
-                        color={"inherit"}
+                        color={"secondary"}
                         to={Routes.myProfile}
                     >
                         Profile

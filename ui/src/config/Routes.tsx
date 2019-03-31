@@ -3,6 +3,7 @@ import * as React from "react"
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import { AboutPage } from "../about/AboutPage"
 import { PrivacyPolicy } from "../about/PrivacyPolicy"
+import { ArticlesPage } from "../articles/ArticlesPage"
 import { CardsPage } from "../cards/CardsPage"
 import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
@@ -32,6 +33,7 @@ class Routes {
     static about = "/about"
     static decks = "/decks"
     static stats = "/stats"
+    static articles = "/articles"
     static importUnregisteredDeck = `${Routes.decks}/import`
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
@@ -40,6 +42,7 @@ class Routes {
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
     static usersDecks = () => `/decks?owner=${userStore.username}&includeUnregistered=true`
+    static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
 
     /**
      * Deck filters should be cleaned.
@@ -84,6 +87,16 @@ class KeyRouter extends React.Component {
                         <Route
                             path={Routes.stats}
                             component={StatsPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.articles}
+                            component={ArticlesPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.articlePage()}
+                            component={ArticlesPage}
                         />
                         <Route
                             exact={true}

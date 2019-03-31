@@ -19,7 +19,8 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote releaseNumber={"3.4"} expanded={true} releaseNotes={[
-                    "Synergy Details table now includes all cards, aerc scores, and is sortable, in desktop mode.",
+                    "Synergy Details table now includes all cards, AERC scores, and is sortable in desktop mode.",
+                    "Deck name search now ignores punctuation."
                 ]}/>
                 <ReleaseNote releaseNumber={"3.3"} expanded={true} releaseNotes={[
                     "Added two new AERC traits, deck manipulation and effective creature power. Read more about them on the SAS and AERC about page!",

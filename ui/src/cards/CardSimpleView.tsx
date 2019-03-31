@@ -114,19 +114,21 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
 
 interface CardAsLineProps {
     card: Partial<KCard>
+    width?: number
+    marginTop?: number
+    hideRarity?: boolean
 }
 
 @observer
 export class CardAsLine extends React.Component<CardAsLineProps> {
 
     render() {
-        const card = this.props.card
         const complex = screenStore.screenSizeMdPlus()
 
         if (complex) {
-            return <CardAsLineComplex card={card}/>
+            return <CardAsLineComplex {...this.props}/>
         } else {
-            return <CardAsLineSimple card={card}/>
+            return <CardAsLineSimple  {...this.props}/>
         }
     }
 }
@@ -170,7 +172,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
         return (
             <div>
                 <div onClick={this.handleOpen}>
-                    <CardLine card={card}/>
+                    <CardLine {...this.props}/>
                 </div>
                 {dialog}
             </div>
@@ -230,7 +232,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine card={card}/>
+                <CardLine  {...this.props}/>
                 {pop}
             </div>
         )
@@ -239,9 +241,9 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
 
 const CardLine = (props: CardAsLineProps) => (
     <div
-        style={{display: "flex", marginTop: 4, width: 160}}
+        style={{display: "flex", marginTop: props.marginTop,  width: props.width}}
     >
-        {props.card.rarity ? rarityValues.get(props.card.rarity)!.icon! : null}
+        {!props.hideRarity && props.card.rarity ? rarityValues.get(props.card.rarity)!.icon! : null}
         <Typography
             variant={"body2"}
             style={{marginLeft: spacing(1)}}

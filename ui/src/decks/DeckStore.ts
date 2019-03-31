@@ -6,7 +6,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { MessageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
+import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
 
@@ -15,6 +15,9 @@ export class DeckStore {
     static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
     private static innerInstance: DeckStore
+
+    @observable
+    simpleDecks: Map<string, Deck> = new Map()
 
     @observable
     deckPage?: DeckPage
@@ -74,6 +77,17 @@ export class DeckStore {
                     this.deck = deck
                 }
             })
+    }
+
+    findDeckWithCards = (keyforgeId: string) => {
+        if (this.simpleDecks.get(keyforgeId) == null) {
+            axios.get(`${DeckStore.CONTEXT}/search-result-with-cards/${keyforgeId}`)
+                .then((response: AxiosResponse) => {
+                    const deck: Deck = response.data
+                    deck.houses.sort()
+                    this.simpleDecks.set(keyforgeId, deck)
+                })
+        }
     }
 
     importDeck = (keyforgeId: string) => {

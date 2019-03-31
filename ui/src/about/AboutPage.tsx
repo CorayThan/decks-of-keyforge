@@ -37,7 +37,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                     </Tabs>
                 </AppBar>
                 <div style={{padding: spacing(4)}}>
-                    <Grid container={true} spacing={32} style={{maxWidth: 1920}} justify={"center"}>
+                    <Grid container={true} spacing={32} justify={"center"}>
                         <Switch>
                             <Route path={AboutSubPaths.sas} component={SasAndAerc}/>
                             <Route path={AboutSubPaths.contact} component={ContactMe}/>

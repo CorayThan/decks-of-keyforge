@@ -32,13 +32,14 @@ import { DeckScoreView } from "./DeckScoreView"
 interface DeckViewSmallProps {
     deck: Deck
     fullVersion?: boolean
+    hideActions?: boolean
     style?: React.CSSProperties
 }
 
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
-        const {deck, fullVersion, style} = this.props
+        const {deck, fullVersion, hideActions, style} = this.props
         const {
             id, keyforgeId, name,
             wishlistCount, funnyCount,
@@ -99,34 +100,35 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     </div>
                     <DisplayAllCardsByHouse deck={this.props.deck}/>
                 </CardContent>
-
-                <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                    {fullVersion && deck.registered ? (
-                        <KeyButton
-                            href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
-                            color={"primary"}
-                        >
-                            Master Vault
-                        </KeyButton>
-                    ) : null}
-                    {!fullVersion ? (
-                        <KeyLink
-                            to={Routes.deckPage(keyforgeId)}
-                            noStyle={true}
-                        >
-                            <KeyButton color={"primary"}>View Deck</KeyButton>
-                        </KeyLink>
-                    ) : null}
-                    <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
-                    <MyDecksButton deck={deck}/>
-                    <div style={{flexGrow: 1}}/>
-                    <div style={{marginRight: spacing(1)}}>
-                        <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
-                    </div>
-                    <div style={{marginRight: spacing(1)}}>
-                        <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
-                    </div>
-                </CardActions>
+                {hideActions ? null : (
+                    <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
+                        {fullVersion && deck.registered ? (
+                            <KeyButton
+                                href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
+                                color={"primary"}
+                            >
+                                Master Vault
+                            </KeyButton>
+                        ) : null}
+                        {!fullVersion ? (
+                            <KeyLink
+                                to={Routes.deckPage(keyforgeId)}
+                                noStyle={true}
+                            >
+                                <KeyButton color={"primary"}>View Deck</KeyButton>
+                            </KeyLink>
+                        ) : null}
+                        <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
+                        <MyDecksButton deck={deck}/>
+                        <div style={{flexGrow: 1}}/>
+                        <div style={{marginRight: spacing(1)}}>
+                            <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
+                        </div>
+                        <div style={{marginRight: spacing(1)}}>
+                            <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
+                        </div>
+                    </CardActions>
+                )}
             </KeyCard>
         )
     }
@@ -200,6 +202,6 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], disableTextS
     <List>
         {houseValues.get(props.house)!.title}
         <Divider style={{marginTop: 4}}/>
-        {props.cards.map((card, idx) => (<CardAsLine key={idx} card={card}/>))}
+        {props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))}
     </List>
 )
