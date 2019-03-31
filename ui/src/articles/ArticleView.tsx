@@ -27,7 +27,7 @@ export class ArticleView extends React.Component<Article> {
                     <div style={{display: "flex", alignItems: "center", marginBottom: spacing(4)}}>
                         <img alt={"Writer Image"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
                         <Typography>by</Typography>
-                        <LinkButton to={`/users/${author.username}`} style={{marginTop: 4}}>
+                        <LinkButton to={`/users/${author.username}`} style={{marginTop: 4, marginLeft: spacing(1)}}>
                             {author.name}
                         </LinkButton>
                         <div style={{flexGrow: 1}}/>
