@@ -11,13 +11,18 @@ import { StatsBar } from "../stats/StatsBar"
 import { StatsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.4"
+export const latestVersion = "3.5"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.5"} expanded={true} releaseNotes={[
+                    "Created an articles section with two new articles by Dunkoro and Big Z! If you're interested in contributing articles send me a " +
+                    "short summary of your idea and an example paragraph! But keep in mind most suggestions will probably not be selected for inclusion " +
+                    "on the site."
+                ]}/>
                 <ReleaseNote releaseNumber={"3.4"} expanded={true} releaseNotes={[
                     "Synergy Details table now includes all cards, AERC scores, and is sortable in desktop mode.",
                     "Deck name search now ignores punctuation."

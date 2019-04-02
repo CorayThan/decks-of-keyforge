@@ -23,6 +23,14 @@ import { screenStore } from "../ui/ScreenStore"
 import { UiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { userStore } from "../user/UserStore"
+import { HamburgerOpen } from "./KeyDrawer"
+
+class KeyTopbarStore {
+    @observable
+    displayLeftHamburger = false
+}
+
+export const keyTopbarStore = new KeyTopbarStore()
 
 interface KeyTopbarProps extends RouteComponentProps<{}> {
 }
@@ -49,6 +57,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             <div>
                 <AppBar position={"fixed"} style={{zIndex: screenStore.zindexes.keyTopBar}}>
                     <Toolbar>
+                        {keyTopbarStore.displayLeftHamburger && screenStore.screenSizeSm() ? <HamburgerOpen/> : null}
                         <UnstyledLink to={Routes.decks}><DokIcon/></UnstyledLink>
                         <Typography
                             variant={"h4"}
@@ -87,6 +96,7 @@ class RightMenu extends React.Component {
                 <>
                     <IconButton
                         onClick={() => rightMenuStore.open = !rightMenuStore.open}
+                        color={"inherit"}
                     >
                         <MenuIcon/>
                     </IconButton>
@@ -146,6 +156,14 @@ const AppLinks = () => (
             onClick={rightMenuStore.close}
         >
             Stats
+        </LinkButton>
+        <LinkButton
+            style={{margin: spacing(1)}}
+            color={"inherit"}
+            to={Routes.articles}
+            onClick={rightMenuStore.close}
+        >
+            Articles
         </LinkButton>
         <DeckImportPop
             style={{margin: spacing(1), display: "flex", justifyContent: "center"}}

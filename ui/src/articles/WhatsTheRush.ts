@@ -1,27 +1,14 @@
 /* tslint:disable:max-line-length */
-import { Article, EntryType } from "./Article"
+import { Article, ArticleType, EntryType } from "./Article"
 import { dunkoro } from "./Authors"
 
 export const whatsTheRush: Article = {
     author: dunkoro,
     title: "What's the Rush?",
     urlTitle: "whats-the-rush",
-    date: "March 1, 2019",
+    date: "April 2, 2019",
+    type: ArticleType.STRATEGY,
     sections: [
-        {
-            sectionTitle: "Acknowledgement",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "Before I begin, I want to mention that this article is in part inspired by a seminal article on Magic: The Gathering strategy “Who’s the Beatdown?” by Mike Flores. I’ve adapted some of that article’s concepts and added my own to address a similar strategic decision in KeyForge.",
-                },
-                {
-                    type: EntryType.LINK,
-                    text: "Who's the Beatdown?",
-                    externalLink: "http://www.starcitygames.com/magic/fundamentals/3692_Whos_The_Beatdown.html"
-                },
-            ]
-        },        
         {
             sectionTitle: "What is rush",
             entries: [
@@ -34,7 +21,7 @@ export const whatsTheRush: Article = {
                     text: "I will refer to these two players as ‘Rush’ and ‘Control’, because these are the roles they fill in in the match.",
                 },
             ]
-        },     
+        },
         {
             sectionTitle: "Why is this important?",
             entries: [
@@ -43,7 +30,7 @@ export const whatsTheRush: Article = {
                     text: "Realising whether you are supposed to be playing Rush or Control can make a huge difference in how the game plays out. If you misconstrue your role as Rush where it was supposed to be Control you will often get outraced. If you see yourself as Control while you were supposed to Rush you might find yourself out of resources as your opponent controls the game.",
                 },
             ]
-        },     
+        },
         {
             sectionTitle: "Is my deck a Rush deck?",
             entries: [
@@ -55,7 +42,7 @@ export const whatsTheRush: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     /* not sure if this will work, just experimenting as I don't know the full format :D */
-                    italicize: true,
+                    italic: true,
                     text: "You should always evaluate the decks in a match in relation to one another. Don’t ask ‘how fast is this deck’ but ‘which deck is the faster one’.",
                 },
                 {
@@ -63,7 +50,7 @@ export const whatsTheRush: Article = {
                     text: "This is a big part of why being able to look at your opponent’s identity card at the beginning of an archon match is critical. It isn’t only about noticing meaningful cards to play around but also about seeing what kind of gameplay the deck prefers; closing out the game as quickly as possible or prolonging the game to outvalue the opponent.",
                 },
             ]
-        },        
+        },
         {
             sectionTitle: "How to tell the difference?",
             entries: [
@@ -156,6 +143,21 @@ export const whatsTheRush: Article = {
                 {
                     type: EntryType.PARAGRAPH,
                     text: "If you’re the Rush, rush for the win, if you’re the Control, try your best to prolong the game and outvalue your opponent.",
+                },
+            ]
+        },
+        {
+            sectionTitle: "Acknowledgement",
+            entries: [
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "This article is in part inspired by a seminal article on Magic: The Gathering strategy “Who’s the Beatdown?” by Mike Flores. " +
+                        "I adapted some of that article’s concepts and added my own to address a similar strategic decision in KeyForge.",
+                },
+                {
+                    type: EntryType.LINK,
+                    text: "Who's the Beatdown?",
+                    externalLink: "http://www.starcitygames.com/magic/fundamentals/3692_Whos_The_Beatdown.html"
                 },
             ]
         },

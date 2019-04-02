@@ -1,10 +1,28 @@
-import { List, ListItem, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@material-ui/core"
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    List,
+    ListItem,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core"
+import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { CardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { SimpleDeckView } from "../decks/SimpleDeckView"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { House } from "../houses/House"
@@ -16,20 +34,58 @@ import { Article, ArticleEntry, ArticleSection, EntryType, MuiColors } from "./A
 
 @observer
 export class ArticleView extends React.Component<Article> {
+
+    @observable
+    bioOpen = false
+
     render() {
         const {title, urlTitle, date, sections, author} = this.props
+        const filters = new DeckFilters()
+        filters.forSale = true
+        filters.forTrade = true
+        filters.owner = author.username
+
         return (
-            <div style={{maxWidth: 800, marginBottom: spacing(4)}}>
+            <div style={{maxWidth: 800, marginBottom: spacing(4)}} id={urlTitle}>
+
+                <Dialog
+                    open={this.bioOpen}
+                    onClose={() => this.bioOpen = false}
+                >
+                    <DialogTitle>{author.name}</DialogTitle>
+                    <DialogContent>
+                        {author.bio.map((bio, idx) => (
+                            <DialogContentText style={{marginTop: idx === 0 ? 0 : spacing(1)}}>
+                                {bio}
+                            </DialogContentText>
+                        ))}
+                    </DialogContent>
+                    <DialogActions>
+                        <LinkButton color="primary" to={Routes.userProfilePage(author.username)}>
+                            {author.name}'s Profile
+                        </LinkButton>
+                        <LinkButton color="primary" to={Routes.deckSearch(filters)}>
+                            {author.name}'s Store
+                        </LinkButton>
+                        <div style={{flexGrow: 1}}/>
+                        <Button onClick={() => this.bioOpen = false} color="primary" autoFocus>
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Paper style={{padding: spacing(4)}}>
                     <UnstyledLink to={Routes.articlePage(urlTitle)}>
-                        <Typography variant={"h3"} color={"primary"} style={{marginBottom: spacing(2)}}>{title}</Typography>
+                        <Typography variant={"h3"} color={"primary"} style={{marginBottom: spacing(2)}}>
+                            {title}
+                        </Typography>
                     </UnstyledLink>
                     <div style={{display: "flex", alignItems: "center", marginBottom: spacing(4)}}>
                         <img alt={"Writer Image"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
                         <Typography>by</Typography>
-                        <LinkButton to={`/users/${author.username}`} style={{marginTop: 4, marginLeft: spacing(1)}}>
+                        <Button style={{marginTop: 4, marginLeft: spacing(1)}} onClick={() => this.bioOpen = true}>
                             {author.name}
-                        </LinkButton>
+                        </Button>
                         <div style={{flexGrow: 1}}/>
                         <Typography>{date}</Typography>
                     </div>
@@ -59,14 +115,15 @@ export class ArticleView extends React.Component<Article> {
                                                     return <UnorderedList {...entry} key={entryIdx}/>
                                                 case EntryType.DECK:
                                                     if (screenStore.screenSizeXs()) {
-                                                        return <ArticleInternalLink internalLink={`/decks/${entry.deckId!}`} text={entry.deckName!} key={entryIdx}/>
+                                                        return <ArticleInternalLink internalLink={`/decks/${entry.deckId!}`} text={entry.deckName!}
+                                                                                    key={entryIdx}/>
                                                     }
                                                     return <Deck deckId={entry.deckId!} key={entryIdx}/>
                                                 case EntryType.TABLE:
                                                     if (screenStore.screenSizeXs()) {
                                                         return null
                                                     }
-                                                    return <ArticleTable headers={entry.tableHeaders!} rows={entry.tableRows!} key={entryIdx} />
+                                                    return <ArticleTable headers={entry.tableHeaders!} rows={entry.tableRows!} key={entryIdx}/>
                                                 default:
                                                     throw new Error("No case for entry type " + entry.type)
                                             }
@@ -109,7 +166,7 @@ const Paragraph = (props: ArticleEntry) => (
     </div>
 )
 
-const ArticleExternalLink = (props: {externalLink: string, text: string}) => (
+const ArticleExternalLink = (props: { externalLink: string, text: string }) => (
     <KeyButton
         color={"primary"}
         href={props.externalLink}
@@ -120,7 +177,7 @@ const ArticleExternalLink = (props: {externalLink: string, text: string}) => (
     </KeyButton>
 )
 
-const ArticleInternalLink = (props:  {internalLink: string, text: string}) => (
+const ArticleInternalLink = (props: { internalLink: string, text: string }) => (
     <LinkButton
         color={"primary"}
         to={props.internalLink!}
@@ -194,7 +251,7 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
     )
 }
 
-const ArticleTable = (props: {headers: string[], rows: string[][]}) => (
+const ArticleTable = (props: { headers: string[], rows: string[][] }) => (
     <Table padding={"checkbox"} style={{marginBottom: spacing(2)}}>
         <TableHead>
             <TableRow>

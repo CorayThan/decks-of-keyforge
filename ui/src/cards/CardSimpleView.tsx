@@ -27,6 +27,9 @@ interface CardSimpleViewProps {
 }
 
 export const CardSimpleView = (props: CardSimpleViewProps) => {
+    if (props.card == null) {
+        return null
+    }
     return (
         <div>
             <img src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}/>
@@ -147,6 +150,10 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
         const card = this.props.card
         const fullCard = CardStore.instance.fullCardFromCardWithName(card)
 
+        if (card == null) {
+            return null
+        }
+
         let dialog = null
         if (fullCard && fullCard.id != null) {
             const cardAerc = hasAercFromCard(fullCard as KCard)
@@ -200,6 +207,10 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     render() {
         const card = this.props.card
         const fullCard = CardStore.instance.fullCardFromCardWithName(card)
+
+        if (card == null) {
+            return null
+        }
 
         let pop = null
         if (fullCard && fullCard.id != null) {

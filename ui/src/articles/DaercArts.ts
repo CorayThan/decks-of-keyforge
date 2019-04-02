@@ -1,12 +1,13 @@
 /* tslint:disable:max-line-length */
-import { Article, EntryType } from "./Article"
+import { Article, ArticleType, EntryType } from "./Article"
 import { bigZ } from "./Authors"
 
 export const daercArts: Article = {
     author: bigZ,
     title: "The DAERC Arts of Deck Evaluation",
     urlTitle: "the-daerc-arts-of-deck-evaluation",
-    date: "March 1, 2019",
+    date: "April 2, 2019",
+    type: ArticleType.EVALUATION,
     sections: [
         {
             sectionTitle: "Deck Evaluation",
@@ -377,7 +378,6 @@ export const daercArts: Article = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    italic: true,
                     text: "It may surprise some players, but there is such a thing as too many creatures. There are many great actions in this game and they all provide immediate effects. Every creature that takes a slot outside of the Play Effect creatures and Speed Sigil shenanigans are delayed. At 16 to 20 creatures, I feel like I can regularly utilize my Battle Line to reap, fight, and establish board presence. Mass creature decks are a lot of fun and definitely can be really tough to contend with, but your opponent always having the knowledge of what they need to deal with is quite a big benefit to them when playing highly skilled players. And as stated earlier, competitive players bring board wipe."
                 },
                 {

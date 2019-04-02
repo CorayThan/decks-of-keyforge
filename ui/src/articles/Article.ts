@@ -6,6 +6,12 @@ export interface Article {
     urlTitle: string
     date: string
     sections: ArticleSection[]
+    type: ArticleType
+}
+
+export enum ArticleType {
+    STRATEGY,
+    EVALUATION
 }
 
 export interface ArticleSection {

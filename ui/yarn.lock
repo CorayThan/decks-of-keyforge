@@ -1324,7 +1324,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-router-dom@^4.3.1":
+"@types/react-router-dom@*", "@types/react-router-dom@^4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-4.3.1.tgz#71fe2918f8f60474a891520def40a63997dafe04"
   integrity sha512-GbztJAScOmQ/7RsQfO4cd55RuH1W4g6V1gDW3j4riLlt+8yxYLqqsiMzmyuXBLzdFmDtX/uU2Bpcm0cmudv44A==
@@ -1332,6 +1332,14 @@
     "@types/history" "*"
     "@types/react" "*"
     "@types/react-router" "*"
+
+"@types/react-router-hash-link@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/react-router-hash-link/-/react-router-hash-link-1.2.1.tgz#fba7dc351cef2985791023018b7a5dbd0653c843"
+  integrity sha512-jdzPGE8jFGq7fHUpPaKrJvLW1Yhoe5MQCrmgeesC+eSLseMj3cGCTYMDA4BNWG8JQmwO8NTYt/oT3uBZ77pmBA==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-router-dom" "*"
 
 "@types/react-router@*":
   version "4.4.3"
@@ -8906,6 +8914,13 @@ react-router-dom@^4.3.1:
     prop-types "^15.6.1"
     react-router "^4.3.1"
     warning "^4.0.1"
+
+react-router-hash-link@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-router-hash-link/-/react-router-hash-link-1.2.1.tgz#da3b6384e5bff90e9b2172d2e689a994646f2f45"
+  integrity sha512-ddkCtmk/JwMmuU087TGShQHYyNjsJ+/9CTyuVdvvKf6ACgqk2Ma9ndX2xogo7WWmyq9AjuziBm5bmJ12zBxtsQ==
+  dependencies:
+    prop-types "^15.6.0"
 
 react-router@^4.3.1:
   version "4.3.1"
