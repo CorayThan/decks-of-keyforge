@@ -43,18 +43,14 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
             <div style={{display: "flex"}}>
                 <KeyDrawer width={240} hamburgerMenu={true}>
                     <List>
-                        <ListItem>
-                            <ListSubheader>
-                                Strategy
-                            </ListSubheader>
-                        </ListItem>
+                        <ListSubheader>
+                            Strategy
+                        </ListSubheader>
                         <ArticleLinksForType type={ArticleType.STRATEGY}/>
                         <Divider style={{marginTop: spacing(2)}}/>
-                        <ListItem>
-                            <ListSubheader>
-                                Evaluation
-                            </ListSubheader>
-                        </ListItem>
+                        <ListSubheader>
+                            Evaluation
+                        </ListSubheader>
                         <ArticleLinksForType type={ArticleType.EVALUATION}/>
                     </List>
                 </KeyDrawer>
@@ -83,6 +79,7 @@ const ArticleLinksForType = (props: { type: ArticleType }) => {
                                     window.scrollBy(0, -80)
                                 }
                             }
+                            key={article.urlTitle}
                         >
                             <ListItem
                                 button={true}

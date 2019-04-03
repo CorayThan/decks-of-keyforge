@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
-import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { UiStore } from "../ui/UiStore"
@@ -75,7 +75,7 @@ export class ProfileView extends React.Component<ProfileViewProps> {
         const filters = new DeckFilters()
         filters.owner = profile.username
 
-        const decksLink = Routes.deckSearch(prepareDeckFiltersForQueryString(filters))
+        const decksLink = Routes.deckSearch(filters)
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
                 <Card style={{padding: spacing(2), maxWidth: 400}}>

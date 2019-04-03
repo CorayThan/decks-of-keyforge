@@ -125,7 +125,7 @@ export class DeckFilters {
     }
 }
 
-export const prepareDeckFiltersForQueryString = (filters: DeckFilters) => {
+export const prepareDeckFiltersForQueryString = (filters: DeckFilters): DeckFilters => {
     const copied = Utils.jsonCopy(filters)
 
     Object.keys(copied).forEach((key: string) => {

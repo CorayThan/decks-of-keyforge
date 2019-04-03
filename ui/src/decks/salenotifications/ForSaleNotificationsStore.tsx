@@ -27,6 +27,7 @@ export class ForSaleNotificationsStore {
                     <LinkButton
                         color={"secondary"}
                         to={Routes.myProfile}
+                        key={"profile"}
                     >
                         Profile
                     </LinkButton>

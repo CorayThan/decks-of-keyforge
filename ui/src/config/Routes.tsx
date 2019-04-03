@@ -9,7 +9,8 @@ import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
 import { DeckViewPage } from "../decks/DeckViewFull"
-import { DeckFilters } from "../decks/search/DeckFilters"
+import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleQuery"
+import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { StatsPage } from "../stats/StatsPage"
@@ -49,7 +50,13 @@ class Routes {
      * @param filters
      */
     static deckSearch = (filters: DeckFilters) => {
-        return `${Routes.decks}?${QueryString.stringify(filters)}`
+        const cleaned = prepareDeckFiltersForQueryString(filters)
+        return `${Routes.decks}?${QueryString.stringify(cleaned)}`
+    }
+
+    static deckSearchForSaleQuery = (filters: ForSaleQuery) => {
+        const cleaned = prepareForSaleQueryForQueryString(filters)
+        return `${Routes.decks}?${QueryString.stringify(cleaned)}`
     }
 }
 

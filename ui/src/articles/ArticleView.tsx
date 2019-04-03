@@ -55,7 +55,7 @@ export class ArticleView extends React.Component<Article> {
                     <DialogTitle>{author.name}</DialogTitle>
                     <DialogContent>
                         {author.bio.map((bio, idx) => (
-                            <DialogContentText style={{marginTop: idx === 0 ? 0 : spacing(1)}}>
+                            <DialogContentText style={{marginTop: idx === 0 ? 0 : spacing(1)}} key={idx}>
                                 {bio}
                             </DialogContentText>
                         ))}

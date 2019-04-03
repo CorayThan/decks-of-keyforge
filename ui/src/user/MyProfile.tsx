@@ -28,7 +28,7 @@ import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
-import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { countries, countryToLabel } from "../generic/Country"
 import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -138,11 +138,11 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         const filters = new DeckFilters()
         filters.owner = profile.username
         filters.includeUnregistered = true
-        const decksLink = Routes.deckSearch(prepareDeckFiltersForQueryString(filters))
+        const decksLink = Routes.deckSearch(filters)
 
         filters.forSale = true
         filters.forTrade = true
-        const decksForSaleLink = Routes.deckSearch(prepareDeckFiltersForQueryString(filters))
+        const decksForSaleLink = Routes.deckSearch(filters)
 
         const forSaleQueries = forSaleNotificationsStore.queries
 

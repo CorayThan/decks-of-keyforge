@@ -17,7 +17,7 @@ import { HouseBanner } from "../../houses/HouseBanner"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { forSaleNotificationsStore } from "./ForSaleNotificationsStore"
-import { ForSaleQuery, prepareForSaleQueryForQueryString } from "./ForSaleQuery"
+import { ForSaleQuery } from "./ForSaleQuery"
 
 interface ForSaleQueryTableProps {
     queries: ForSaleQuery[]
@@ -48,12 +48,11 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                     </TableHead>
                     <TableBody>
                         {this.props.queries.map((query) => {
-                            const preparedForQuery = prepareForSaleQueryForQueryString(query)
                             return (
                                 <TableRow key={query.id}>
                                     <TableCell>
                                         <LinkButton
-                                            to={Routes.deckSearch(preparedForQuery)}
+                                            to={Routes.deckSearchForSaleQuery(query)}
                                             color={"primary"}
                                         >
                                             {query.queryName.length === 0 ? "Unnamed" : query.queryName}

@@ -141,6 +141,9 @@ const AppLinks = () => (
         >
             Decks
         </LinkButton>
+        <DeckImportPop
+            style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+        />
         <LinkButton
             style={{margin: spacing(1)}}
             color={"inherit"}
@@ -165,9 +168,6 @@ const AppLinks = () => (
         >
             Articles
         </LinkButton>
-        <DeckImportPop
-            style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
-        />
         <LinkButton
             style={{margin: spacing(1)}}
             color={"inherit"}

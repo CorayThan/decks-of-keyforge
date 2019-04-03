@@ -31,7 +31,7 @@ import { DeckStore } from "../DeckStore"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
-import { DeckFilters, prepareDeckFiltersForQueryString } from "./DeckFilters"
+import { DeckFilters } from "./DeckFilters"
 
 interface DecksSearchDrawerProps {
     history: History.History
@@ -50,21 +50,21 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         if (event) {
             event.preventDefault()
         }
-        this.props.filters.houses = this.selectedHouses.toArray()
-        this.props.filters.sort = this.selectedSortStore.toEnumValue()
-        this.props.filters.constraints = this.constraintsStore.cleanConstraints()
-        const cleaned = prepareDeckFiltersForQueryString(this.props.filters)
+        const filters = this.props.filters
+        filters.houses = this.selectedHouses.toArray()
+        filters.sort = this.selectedSortStore.toEnumValue()
+        filters.constraints = this.constraintsStore.cleanConstraints()
 
-        if (!cleaned.forSale && !cleaned.forTrade && !cleaned.myFavorites && !cleaned.owner) {
+        if (!filters.forSale && !filters.forTrade && !filters.myFavorites && !filters.owner) {
             // search is broad, so disable bad searches
-            if (cleaned.sort === "NAME") {
+            if (filters.sort === "NAME") {
                 MessageStore.instance.setWarningMessage("To use the name sort please check for sale, for trade, my decks, or my favorites.")
                 return
             }
         }
 
         this.props.history.push(
-            Routes.deckSearch(cleaned)
+            Routes.deckSearch(filters)
         )
         KeyDrawerStore.closeIfSmall()
         deckTableViewStore.reset()

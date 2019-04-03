@@ -47,7 +47,7 @@ export class MessageStore {
     setReleaseMessage = (version: string) => {
         MessageStore.instance.setMessage(`Version ${version} has been released!`, "Info", (
             <LinkButton
-                color={"secondary"}
+                color={"inherit"}
                 to={AboutSubPaths.releaseNotes}
                 key={"release-notes"}
                 onClick={() => this.open = false}
