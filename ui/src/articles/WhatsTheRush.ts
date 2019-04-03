@@ -139,11 +139,7 @@ export const whatsTheRush: Article = {
                 {
                     type: EntryType.PARAGRAPH,
                     text: "If you’re the Rush, rush for the win, if you’re the Control, try your best to prolong the game and outvalue your opponent.",
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "If you’re the Rush, rush for the win, if you’re the Control, try your best to prolong the game and outvalue your opponent.",
-                },
+                }
             ]
         },
         {
