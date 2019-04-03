@@ -15,7 +15,14 @@ export interface Author {
 export const dunkoro: Author = {
     name: "Dunkoro",
     username: "Dunkoro",
-    bio: [""],
+    bio: [
+        "Dunkoro is a member of the SAS team.",
+        "Dunkoro has a long history working with card games, beginning with Magic: the Gathering, playing Yu-Gi-Oh! competitively for a few years and creating the first competitive team in Gwent, which has left lasting effect on the game as a whole.",
+        "In all of these games he has been dilligently seeking optimization, trying to understand the game mechanics as much as possible and put to words theories that professionals have been using intuitively.",
+        "His theorycraft has not been without an impact. He has created multiple top-tier decks in Gwent and discovered multiple hidden mechanics the game operated by.",
+        "He's also a big fan of board games and roleplaying games.",
+        "If you have any questions, contact him on Discord at Dunkoro#8003"
+    ],
     img: dunkoroImg
 }
 
