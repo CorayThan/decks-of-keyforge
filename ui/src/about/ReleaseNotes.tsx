@@ -20,8 +20,7 @@ export class ReleaseNotes extends React.Component {
             <AboutGridItem>
                 <ReleaseNote releaseNumber={"3.5"} expanded={true} releaseNotes={[
                     "Created an articles section with two new articles by Dunkoro and Big Z! If you're interested in contributing articles send me a " +
-                    "short summary of your idea and an example paragraph! But keep in mind most suggestions will probably not be selected for inclusion " +
-                    "on the site."
+                    "short summary of your idea and an example paragraph. But keep in mind I'm going to be selective about what articles are added to the site."
                 ]}/>
                 <ReleaseNote releaseNumber={"3.4"} expanded={true} releaseNotes={[
                     "Synergy Details table now includes all cards, AERC scores, and is sortable in desktop mode.",
