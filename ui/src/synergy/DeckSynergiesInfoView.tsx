@@ -44,7 +44,7 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                 topContents={(
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center"}}>
                         <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
-                            Synergy Details
+                            Card Details
                         </Typography>
                         <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
                             <PercentRatingRow value={sasPercentile} name={"SAS"}/>

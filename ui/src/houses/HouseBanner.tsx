@@ -9,7 +9,7 @@ export const HouseBanner = (props: { houses: House[], vertical?: boolean, size?:
     return (
         <div style={{display: "flex", flexDirection: props.vertical ? "column" : undefined, justifyContent: "space-evenly", ...props.style}}>
             {props.houses.map((house) => (
-                <HouseImage house={house} key={house}/>
+                <HouseImage house={house} key={house} size={size}/>
             ))}
         </div>
     )

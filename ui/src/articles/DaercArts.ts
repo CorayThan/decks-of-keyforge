@@ -6,7 +6,7 @@ export const daercArts: Article = {
     author: bigZ,
     title: "The DAERC Arts of Deck Evaluation",
     urlTitle: "the-daerc-arts-of-deck-evaluation",
-    date: "April 2, 2019",
+    date: "March 27, 2019",
     type: ArticleType.EVALUATION,
     sections: [
         {
@@ -400,7 +400,7 @@ export const daercArts: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "With all that in play I am happy to share some searches that take this all into account. Currently (3/27/19), only 26 registered decks hit the gold standard of all identified desired metrics."
+                    text: "With all that in play I am happy to share a search that take this all into account. Currently (3/27/19), only 26 registered decks hit the gold standard of all identified desired metrics."
                 },
                 {
                     type: EntryType.LINK,

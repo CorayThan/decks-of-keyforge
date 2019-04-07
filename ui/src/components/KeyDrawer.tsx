@@ -1,7 +1,7 @@
 import { IconButton } from "@material-ui/core"
 import Drawer from "@material-ui/core/Drawer"
 import Fab from "@material-ui/core/Fab/Fab"
-import { Menu } from "@material-ui/icons"
+import { Menu, Search } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -86,7 +86,7 @@ const SearchOpen = () => {
             }}
             onClick={() => KeyDrawerStore.open = true}
         >
-            <Menu style={{marginLeft: spacing(1)}}/>
+            <Search style={{marginLeft: spacing(1)}}/>
         </Fab>
     )
 }

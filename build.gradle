@@ -23,7 +23,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'coraythan'
-version = '91'
+version = '92'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions {
@@ -66,6 +66,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.8.1")
     implementation("org.logback-extensions:logback-ext-loggly:0.1.2")
     implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1')
+    implementation("com.patreon:patreon:0.4.2")
 
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion")

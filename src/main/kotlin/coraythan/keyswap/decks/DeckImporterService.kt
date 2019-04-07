@@ -205,14 +205,14 @@ class DeckImporterService(
     private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         deck
-                .mapNotNull { if (deckRepo.findByKeyforgeId(it.id) == null) it else null }
                 .forEach { keyforgeDeck ->
+                    if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
+                        val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
+                        val houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                        val deckToSave = keyforgeDeck.toDeck()
 
-                    val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
-                    val houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
-                    val deckToSave = keyforgeDeck.toDeck()
-
-                    saveDeck(deckToSave, houses, cardsList)
+                        saveDeck(deckToSave, houses, cardsList)
+                    }
                 }
     }
 

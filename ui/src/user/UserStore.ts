@@ -4,6 +4,7 @@ import { latestVersion } from "../about/ReleaseNotes"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
+import { findPatronRewardLevel } from "../patreon/PatreonRewardsTier"
 import { MessageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration } from "./KeyUser"
@@ -183,6 +184,36 @@ export class UserStore {
             return this.user.country
         }
         return undefined
+    }
+
+    @computed
+    get patron(): boolean {
+        if (this.user) {
+            return !!this.user.patreonId
+        }
+        return false
+    }
+
+    @computed
+    get deckNotificationsAllowed(): boolean {
+        if (this.user) {
+            if (this.user.email === "coraythan@gmail.com") {
+                return true
+            }
+            return findPatronRewardLevel(this.user.patreonTier) > 0
+        }
+        return false
+    }
+
+    @computed
+    get featuredSeller(): boolean {
+        if (this.user) {
+            if (this.user.email === "coraythan@gmail.com") {
+                return true
+            }
+            return findPatronRewardLevel(this.user.patreonTier) > 1
+        }
+        return false
     }
 }
 

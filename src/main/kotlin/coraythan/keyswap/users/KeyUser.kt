@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
+import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.userdeck.UserDeck
 import java.util.*
 import javax.persistence.*
@@ -47,7 +48,13 @@ data class KeyUser(
         val lastVersionSeen: String?,
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-        val apiKey: String? = null
+        val apiKey: String? = null,
+
+        val patreonId: String? = null,
+
+        @Enumerated(EnumType.STRING)
+        val patreonTier: PatreonRewardsTier? = null
+
 ) {
     fun toProfile(isUser: Boolean) = UserProfile(
             id = id,
@@ -69,7 +76,9 @@ data class KeyUser(
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             country = country,
             preferredCountries = preferredCountries,
-            lastVersionSeen = lastVersionSeen
+            lastVersionSeen = lastVersionSeen,
+            patreonId = patreonId,
+            patreonTier = patreonTier
     )
 }
 
@@ -89,6 +98,9 @@ data class KeyUserDto(
 
         val preferredCountries: List<Country>? = null,
 
-        val lastVersionSeen: String?
+        val lastVersionSeen: String?,
+
+        val patreonId: String?,
+        val patreonTier: PatreonRewardsTier?
 
 )

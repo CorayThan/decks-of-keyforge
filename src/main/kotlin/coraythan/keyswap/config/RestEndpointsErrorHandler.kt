@@ -33,20 +33,32 @@ class RestErrorHandler {
         return ErrorResponse(ex.message!!)
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UnauthorizedException::class)
+    fun unauthorized(ex: UnauthorizedException, request: HttpServletRequest): ErrorResponse {
+        logBadRequestInfo(ex, request)
+        return ErrorResponse(ex.message ?: "Unauthorized")
+    }
+
     private fun logBadRequestInfo(ex: Exception, request: HttpServletRequest) {
         log.info(
-                "In bad request response handler ${ex.message}. " +
-                        "For request url: ${request.requestURI} " +
-                        "remote user: ${request.remoteUser} " +
-                        "headers: ${request.headerNames.toList().filter {
-                            !setOf("authorization", "accept", "accept-encoding", "accept-language", "connection").contains(it)
-                        }.map { "$it : " + request.getHeaders(it).toList() }}"
+                """
+    In bad request response handler.
+    Exception type: ${ex::class.java}
+    Message: ${ex.message}.
+    For request url: ${request.requestURI}
+    remote user: ${request.remoteUser}
+    headers: ${request.headerNames.toList().filter {
+                    !setOf("authorization", "accept", "accept-encoding", "accept-language", "connection").contains(it)
+                }.map { "$it : " + request.getHeaders(it).toList() }}
+                """
         )
     }
 
 }
 
 class BadRequestException(message: String) : RuntimeException(message)
+class UnauthorizedException(message: String) : RuntimeException(message)
 
 data class ErrorResponse(
         val message: String

@@ -58,7 +58,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
         const user = userStore.user
         if (
             user == null
-            || user.email !== "coraythan@gmail.com"
+            || !userStore.deckNotificationsAllowed
             || (!this.props.filters.forSale && !this.props.filters.forTrade)
             || this.props.filters.owner === user.username
         ) {

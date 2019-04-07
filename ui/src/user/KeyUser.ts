@@ -1,4 +1,5 @@
 import { ForSaleQueryEntity } from "../decks/salenotifications/ForSaleQuery"
+import { PatreonRewardsTier } from "../patreon/PatreonRewardsTier"
 import { UserDeck } from "../userdeck/UserDeck"
 
 export interface KeyUser {
@@ -13,6 +14,8 @@ export interface KeyUser {
     country?: string
     lastVersionSeen: string
     forSaleQueries: ForSaleQueryEntity[]
+    patreonId?: string
+    patreonTier?: PatreonRewardsTier
 }
 
 export interface UserLogin {
@@ -45,4 +48,6 @@ export interface KeyUserDto {
     country?: string
     preferredCountries?: string[]
     lastVersionSeen: string
+    patreonId?: string
+    patreonTier?: PatreonRewardsTier
 }

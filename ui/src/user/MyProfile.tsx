@@ -19,13 +19,16 @@ import {
 } from "@material-ui/core"
 import TextField from "@material-ui/core/es/TextField"
 import Typography from "@material-ui/core/Typography"
+import * as History from "history"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
+import * as QueryString from "query-string"
 import * as React from "react"
 import ReactDOM from "react-dom"
+import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { Utils } from "../config/Utils"
+import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
 import { DeckFilters } from "../decks/search/DeckFilters"
@@ -33,25 +36,37 @@ import { countries, countryToLabel } from "../generic/Country"
 import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
+import { LinkPatreon } from "../patreon/LinkPatreon"
+import { patronRewardLevelName } from "../patreon/PatreonRewardsTier"
+import { patreonStore } from "../patreon/PatreonStore"
 import { MessageStore } from "../ui/MessageStore"
 import { UiStore } from "../ui/UiStore"
 import { KeyUserDto } from "./KeyUser"
 import { UserProfileUpdate } from "./UserProfile"
 import { userStore } from "./UserStore"
 
+interface MyProfileProps extends RouteComponentProps<{}> {
+
+}
+
 @observer
-export class MyProfile extends React.Component {
+export class MyProfile extends React.Component<MyProfileProps> {
+
     render() {
         const profile = userStore.user
         if (!profile) {
             return <Loader/>
         }
-        return <MyProfileInner profile={profile}/>
+        const queryParams = QueryString.parse(this.props.location.search) as { code?: string }
+        const patreonCode = queryParams == null ? undefined : queryParams.code
+        return <MyProfileInner profile={profile} patreonCode={patreonCode} history={this.props.history}/>
     }
 }
 
 interface MyProfileInnerProps {
     profile: KeyUserDto
+    patreonCode?: string
+    history: History.History
 }
 
 @observer
@@ -95,6 +110,12 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.preferredCountriesLabelWidth = (ReactDOM.findDOMNode(this.buyingCountriesInputLabelRef) as any).offsetWidth
         forSaleNotificationsStore.findAllForUser()
         this.update = undefined
+        const {patreonCode, history} = this.props
+        if (patreonCode != null && this.props.profile.patreonTier == null) {
+            log.debug(`Linking patreon account with access code ${patreonCode}`)
+            patreonStore.linkAccount(patreonCode)
+            history.replace("/my-profile")
+        }
     }
 
     updateProfile = (event?: React.FormEvent) => {
@@ -181,10 +202,11 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                         <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
                                     </div>
                                 )}
-                                style={{maxWidth: 400, margin: 0}}
+                                style={{maxWidth: 440, margin: 0}}
                             >
                                 <div style={{padding: spacing(2)}}>
                                     <Grid container={true} spacing={16}>
+                                        <PatreonSupporter profile={profile} />
                                         <Grid item={true} xs={12}>
                                             <TextField
                                                 label={"email"}
@@ -287,6 +309,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                     <CardActions
                                         style={{paddingLeft: 0}}
                                     >
+                                        <LinkPatreon/>
                                         <div style={{flexGrow: 1}}/>
                                         <Button
                                             variant={"contained"}
@@ -308,4 +331,17 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             </div>
         )
     }
+}
+
+const PatreonSupporter = (props: {profile: KeyUserDto}) => {
+    if (props.profile.patreonId == null) {
+        return null
+    }
+    log.info(`user profile info: ${prettyJson(props.profile)}`)
+    return (
+        <Grid item={true}>
+            <Typography>Thanks for being a supporter!</Typography>
+            <Typography>Your tier is: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
+        </Grid>
+    )
 }

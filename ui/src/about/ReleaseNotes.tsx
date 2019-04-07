@@ -18,6 +18,11 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.6"} expanded={true} releaseNotes={[
+                    "Real Patron reward! This one is pretty sweet. Become a $5 a month patron to save deck searches, and get email notifications when new " +
+                    "decks are listed for sale or trade that match your search.",
+                    "I've added a new public API for getting the stats used to build the charts and graphs on this site."
+                ]}/>
                 <ReleaseNote releaseNumber={"3.5"} expanded={true} releaseNotes={[
                     "Created an articles section with two new articles by Dunkoro and Big Z! If you're interested in contributing articles send me a " +
                     "short summary of your idea and an example paragraph. But keep in mind I'm going to be selective about what articles are added to the site."

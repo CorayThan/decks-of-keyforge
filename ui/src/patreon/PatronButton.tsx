@@ -1,8 +1,8 @@
 import { ButtonProps } from "@material-ui/core/Button"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { PatreonIcon } from "./icons/PatreonIcon"
 
 export const PatronButton = (props: ButtonProps & { primary?: boolean }) => {
     const {primary, ...rest} = props

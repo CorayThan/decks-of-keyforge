@@ -173,8 +173,21 @@ export class SellersAndDevs extends React.Component {
                         "4. Please attribute decksofkeyforge.com on your site.",
                         "5. You'll need to use the API key associated with your account.",
                         "6. I've included the version of SAS used. If possible, please cache or persist SAS scores until a new version is released.",
-                        "The url to request stats is:",
+                        "The url to request deck info is:",
                         "https://decksofkeyforge.com/public-api/v3/decks/{deck-id-from-master-vault}",
+                        `You'll need to include the header "Api-Key: {your-api-key}`
+                    ]}/>
+                </AboutGridItem>
+                <AboutGridItem>
+                    <InfoListCard title={"Deck Statistics API"} infos={[
+                        "In addition to the SAS and AERC API, I've provided an API with the data I use to build the graphs and charts you see on the site.",
+                        "Again, please read the following rules for using this API:",
+                        "1. Statistics are updated once every 3 days. You shouldn't need to request them more often than that.",
+                        "2. Please provide a link to decksofkeyforge.com on your site. " +
+                        "3. Please attribute decksofkeyforge.com as a source of data for your site.",
+                        "4. You'll need to use the API key associated with your account.",
+                        "The url to request stats is:",
+                        "https://decksofkeyforge.com/public-api/v1/stats",
                         `You'll need to include the header "Api-Key: {your-api-key}`
                     ]}/>
                 </AboutGridItem>
