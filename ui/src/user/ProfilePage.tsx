@@ -9,7 +9,7 @@ import { log } from "../config/Utils"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { UserProfile } from "./UserProfile"
 import { userStore } from "./UserStore"
 
@@ -33,7 +33,7 @@ export class ProfileContainer extends React.Component<ProfileContainerProps> {
     constructor(props: ProfileContainerProps) {
         super(props)
         userStore.userProfile = undefined
-        UiStore.instance.setTopbarValues("Profile", "Profile", "")
+        uiStore.setTopbarValues("Profile", "Profile", "")
     }
 
     componentDidMount(): void {
@@ -66,7 +66,7 @@ export class ProfileView extends React.Component<ProfileViewProps> {
 
     constructor(props: ProfileViewProps) {
         super(props)
-        UiStore.instance.setTopbarValues(`${props.profile.username}'s Profile`, props.profile.username, "")
+        uiStore.setTopbarValues(`${props.profile.username}'s Profile`, props.profile.username, "")
     }
 
     render() {

@@ -16,7 +16,7 @@ import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
-import { MessageStore } from "../../ui/MessageStore"
+import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { DeckCondition, deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
@@ -91,25 +91,25 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     list = () => {
         const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expireInDays} = this
         if (!forSale && !forTrade) {
-            MessageStore.instance.setWarningMessage("The deck must be listed for sale or trade.")
+            messageStore.setWarningMessage("The deck must be listed for sale or trade.")
             return
         }
         if (listingInfo.length > 2000) {
-            MessageStore.instance.setWarningMessage("The listing info must be less than 2000 characters long.")
+            messageStore.setWarningMessage("The listing info must be less than 2000 characters long.")
             return
         }
         let askingPriceNumber
         if (askingPrice.length > 0) {
             askingPriceNumber = Number(askingPrice)
             if (isNaN(askingPriceNumber)) {
-                MessageStore.instance.setWarningMessage("The asking price must be a number.")
+                messageStore.setWarningMessage("The asking price must be a number.")
                 return
             }
         }
         const forSaleInCountry = userStore.country
 
         if (!forSaleInCountry) {
-            MessageStore.instance.setWarningMessage("Please set your country in your user profile.")
+            messageStore.setWarningMessage("Please set your country in your user profile.")
             return
         }
 

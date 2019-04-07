@@ -3,11 +3,11 @@ import { DropzoneArea } from "material-ui-dropzone"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardStore } from "../cards/CardStore"
+import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { CreateUnregisteredDeck, saveUnregisteredDeckStore } from "./CreateUnregisteredDeck"
 import { deckImportStore } from "./DeckImportStore"
 
@@ -23,7 +23,7 @@ export class DeckImportView extends React.Component {
 
     constructor(props: {}) {
         super(props)
-        UiStore.instance.setTopbarValues("Import Deck", "Import", "Add unregistered decks to evaluate, sell, and trade")
+        uiStore.setTopbarValues("Import Deck", "Import", "Add unregistered decks to evaluate, sell, and trade")
     }
 
     componentDidMount(): void {
@@ -89,7 +89,7 @@ export class DeckImportView extends React.Component {
                                         disabled={
                                             !deckImportViewStore.deckImage
                                             || deckImportStore.readingDeckImage
-                                            || !CardStore.instance.cardNameLowercaseToCard
+                                            || !cardStore.cardNameLowercaseToCard
                                             || !!saveUnregisteredDeckStore.currentDeck
                                         }
                                         variant={"contained"}

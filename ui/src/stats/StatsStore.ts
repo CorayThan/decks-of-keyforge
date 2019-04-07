@@ -6,17 +6,9 @@ import { GlobalStats } from "./GlobalStats"
 export class StatsStore {
 
     static readonly CONTEXT = HttpConfig.API + "/stats"
-    private static innerInstance: StatsStore
 
     @observable
     stats?: GlobalStats
-
-    private constructor() {
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
 
     findGlobalStats = () => {
         axios.get(`${StatsStore.CONTEXT}`)
@@ -26,3 +18,5 @@ export class StatsStore {
     }
 
 }
+
+export const statsStore = new StatsStore()

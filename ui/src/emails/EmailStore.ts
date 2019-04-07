@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { SellerMessage } from "./SellerMessage"
 
 class EmailStore {
@@ -22,7 +22,7 @@ class EmailStore {
         await axios.post(`${EmailStore.CONTEXT}/seller-message`, message)
         this.sendingSellerMessage = false
         this.sentSellerMessage = true
-        MessageStore.instance.setSuccessMessage(`We've sent your message to the user who listed this deck.`)
+        messageStore.setSuccessMessage(`We've sent your message to the user who listed this deck.`)
     }
 
     sendReset = (email: string) => {
@@ -30,7 +30,7 @@ class EmailStore {
         axios.post(`${EmailStore.CONTEXT}/send-reset`, {email})
             .then((response: AxiosResponse) => {
                 this.sendingReset = false
-                MessageStore.instance.setSuccessMessage(`A reset email has been sent to ${email}`)
+                messageStore.setSuccessMessage(`A reset email has been sent to ${email}`)
             })
     }
 

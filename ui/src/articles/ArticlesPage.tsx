@@ -7,7 +7,7 @@ import { keyTopbarStore } from "../components/KeyTopbar"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { UnstyledHashLink } from "../generic/UnstyledLink"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { Article, ArticleType } from "./Article"
 import { ArticleView } from "./ArticleView"
 import { daercArts } from "./DaercArts"
@@ -21,7 +21,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
 
     constructor(props: ArticlesPageProps) {
         super(props)
-        UiStore.instance.setTopbarValues("Articles", "Articles", "Learn strategy and evaluation")
+        uiStore.setTopbarValues("Articles", "Articles", "Learn strategy and evaluation")
     }
 
     componentDidMount(): void {

@@ -8,7 +8,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { emailStore } from "./EmailStore"
 
 interface SendSellerEmailDialogProps {
@@ -38,7 +38,7 @@ export class SendSellerEmailDialog extends React.Component<SendSellerEmailDialog
         const {message} = this
         const {senderEmail, senderUsername, username, deckName, keyforgeId} = this.props
         if (message.trim().length === 0) {
-            MessageStore.instance.setWarningMessage("Please include a message.")
+            messageStore.setWarningMessage("Please include a message.")
             return
         }
 

@@ -10,10 +10,10 @@ import { spacing } from "../../config/MuiConfig"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { screenStore } from "../../ui/ScreenStore"
-import { UiStore } from "../../ui/UiStore"
+import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
 import { DeckListView, DeckTableView } from "../DeckListView"
-import { DeckStore } from "../DeckStore"
+import { deckStore } from "../DeckStore"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
@@ -34,7 +34,7 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     search = (props: RouteComponentProps<{}>) => {
         // log.debug(`Search with filters ${prettyJson(this.makeFilters(props).cleaned())}`)
-        DeckStore.instance.searchDecks(this.makeFilters(props).cleaned())
+        deckStore.searchDecks(this.makeFilters(props).cleaned())
     }
 
     render() {
@@ -63,14 +63,14 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
     setTitle = () => {
         if (this.props.queryParams && this.props.queryParams.includes(`owner=${userStore.username}`)) {
-            UiStore.instance.setTopbarValues("My Decks", "My Decks", "Search, evaluate, sell and trade")
+            uiStore.setTopbarValues("My Decks", "My Decks", "Search, evaluate, sell and trade")
         } else {
-            UiStore.instance.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
+            uiStore.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
         }
     }
 
     render() {
-        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = DeckStore.instance
+        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
 
         let decksToDisplay = null
         if (deckPage != null) {

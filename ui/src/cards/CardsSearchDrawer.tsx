@@ -13,7 +13,7 @@ import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
 import { CardFilters } from "./CardFilters"
-import { CardStore } from "./CardStore"
+import { cardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
 import { CardRatingSelect, SelectedCardRatings } from "./selects/CardRatingSelect"
@@ -25,7 +25,7 @@ import { RaritySelect, SelectedRarities } from "./selects/RaritySelect"
 @observer
 export class CardsSearchDrawer extends React.Component {
 
-    cardStore = CardStore.instance
+    cardStore = cardStore
     filters = new CardFilters()
     selectedHouses = new SelectedHouses()
     selectedCardTypes = new SelectedCardTypes()

@@ -6,10 +6,10 @@ import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
 import { screenStore } from "../ui/ScreenStore"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { DeckWithSynergyInfo } from "./Deck"
 import { deckImportPopStore } from "./DeckImportPop"
-import { DeckStore } from "./DeckStore"
+import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
@@ -33,9 +33,9 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
 
     constructor(props: DeckViewFullProps) {
         super(props)
-        DeckStore.instance.deck = undefined
-        DeckStore.instance.saleInfo = undefined
-        UiStore.instance.setTopbarValues("Deck", "Deck", "")
+        deckStore.deck = undefined
+        deckStore.saleInfo = undefined
+        uiStore.setTopbarValues("Deck", "Deck", "")
     }
 
     componentDidMount(): void {
@@ -47,19 +47,19 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
     }
 
     refreshDeck = (deckId: string) => {
-        DeckStore.instance.findDeck(deckId)
-        DeckStore.instance.findDeckSaleInfo(deckId)
-        DeckStore.instance.importedDeck = undefined
+        deckStore.findDeck(deckId)
+        deckStore.findDeckSaleInfo(deckId)
+        deckStore.importedDeck = undefined
         deckImportPopStore.popOpen = false
-        if (DeckStore.instance.deck) {
-            const deck = DeckStore.instance.deck
-            UiStore.instance.setTopbarValues(deck.deck.name, "Deck", "")
+        if (deckStore.deck) {
+            const deck = deckStore.deck
+            uiStore.setTopbarValues(deck.deck.name, "Deck", "")
         }
     }
 
     render() {
         log.debug("Rendering DeckViewFull")
-        const {deck} = DeckStore.instance
+        const {deck} = deckStore
         if (!deck) {
             return <Loader/>
         }
@@ -73,12 +73,12 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
     constructor(props: { deck: DeckWithSynergyInfo }) {
         super(props)
         const deck = props.deck.deck
-        UiStore.instance.setTopbarValues(deck.name, "Deck", "")
+        uiStore.setTopbarValues(deck.name, "Deck", "")
     }
 
     render() {
         const deck = this.props.deck
-        const {saleInfo} = DeckStore.instance
+        const {saleInfo} = deckStore
         let saleInfoComponent = null
         if (saleInfo) {
             saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>

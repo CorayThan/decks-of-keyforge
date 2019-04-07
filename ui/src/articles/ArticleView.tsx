@@ -19,7 +19,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
-import { CardStore } from "../cards/CardStore"
+import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
@@ -224,7 +224,7 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
                 // log.debug(`Card name is "${cardName}"`)
                 pushNode = (
                     <div key={cardName}>
-                        <CardAsLine card={CardStore.instance.fullCardFromCardName(cardName)!} marginTop={1} hideRarity={true}/>
+                        <CardAsLine card={cardStore.fullCardFromCardName(cardName)!} marginTop={1} hideRarity={true}/>
                     </div>
                 )
             }

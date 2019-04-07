@@ -11,8 +11,8 @@ import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
 import { Loader } from "../mui-restyled/Loader"
 import { KeyBar } from "../stats/DeckStatsView"
-import { StatsStore } from "../stats/StatsStore"
-import { UiStore } from "../ui/UiStore"
+import { statsStore } from "../stats/StatsStore"
+import { uiStore } from "../ui/UiStore"
 import { AboutGridItem } from "./AboutPage"
 
 @observer
@@ -20,11 +20,11 @@ export class SasAndAerc extends React.Component {
 
     constructor(props: {}) {
         super(props)
-        UiStore.instance.setTopbarValues("About", "About", "What it's for and how it works")
+        uiStore.setTopbarValues("About", "About", "What it's for and how it works")
     }
 
     render() {
-        const stats = StatsStore.instance.stats
+        const stats = statsStore.stats
 
         return (
             <>

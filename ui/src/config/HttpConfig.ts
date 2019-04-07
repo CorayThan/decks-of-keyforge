@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { keyLocalStorage } from "./KeyLocalStorage"
 import { log } from "./Utils"
 
@@ -44,9 +44,9 @@ export class HttpConfig {
         log.error(`There was an error completing the request. ${error.code} ${error.message}`)
 
         if (error.code === "401") {
-            MessageStore.instance.setErrorMessage("You are unauthorized to make this request.")
+            messageStore.setErrorMessage("You are unauthorized to make this request.")
         } else {
-            MessageStore.instance.setRequestErrorMessage()
+            messageStore.setRequestErrorMessage()
         }
 
         return Promise.reject(error)

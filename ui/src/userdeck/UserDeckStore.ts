@@ -3,8 +3,8 @@ import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
-import { DeckStore } from "../decks/DeckStore"
-import { MessageStore } from "../ui/MessageStore"
+import { deckStore } from "../decks/DeckStore"
+import { messageStore } from "../ui/MessageStore"
 import { ListingInfo } from "./ListingInfo"
 import { UserDeckDto } from "./UserDeck"
 
@@ -22,7 +22,7 @@ export class UserDeckStore {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
+                messageStore.setSuccessMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
                 this.findAllForUser()
             })
     }
@@ -31,7 +31,7 @@ export class UserDeckStore {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${funny ? "" : "un"}funny`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
+                messageStore.setSuccessMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
                 this.findAllForUser()
             })
     }
@@ -39,7 +39,7 @@ export class UserDeckStore {
     owned = (deckName: string, deckId: number, owned: boolean) => {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${owned ? "" : "un"}owned`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
+                messageStore.setSuccessMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
                 this.findAllForUser()
             })
     }
@@ -47,7 +47,7 @@ export class UserDeckStore {
     listDeck = (deckName: string, listingInfo: ListingInfo) => {
         axios.post(`${UserDeckStore.CONTEXT}/list`, listingInfo)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(`Listed ${deckName} for sale or trade.`)
+                messageStore.setSuccessMessage(`Listed ${deckName} for sale or trade.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()
             })
@@ -56,7 +56,7 @@ export class UserDeckStore {
     unlist = (deckName: string, deckId: number) => {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/unlist`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(`${deckName} is no longer listed for sale or trade.`)
+                messageStore.setSuccessMessage(`${deckName} is no longer listed for sale or trade.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()
             })
@@ -84,10 +84,10 @@ export class UserDeckStore {
     userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
 
     private refreshDeckInfo = () => {
-        if (DeckStore.instance.deck) {
-            const keyforgeId = DeckStore.instance.deck.deck.keyforgeId
-            DeckStore.instance.findDeck(keyforgeId)
-            DeckStore.instance.findDeckSaleInfo(keyforgeId)
+        if (deckStore.deck) {
+            const keyforgeId = deckStore.deck.deck.keyforgeId
+            deckStore.findDeck(keyforgeId)
+            deckStore.findDeckSaleInfo(keyforgeId)
         }
     }
 }

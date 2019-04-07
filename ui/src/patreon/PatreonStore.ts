@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 
 export class PatreonStore {
@@ -14,7 +14,7 @@ export class PatreonStore {
     linkAccount = (code: string) => {
         axios.post(`${PatreonStore.SECURE_CONTEXT}/link/${code}`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setInfoMessage("You've linked your Patreon account!")
+                messageStore.setInfoMessage("You've linked your Patreon account!")
                 userStore.loadLoggedInUser()
             })
     }
@@ -22,7 +22,7 @@ export class PatreonStore {
     unlinkAccount = () => {
         axios.post(`${PatreonStore.SECURE_CONTEXT}/unlink`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setInfoMessage("You've removed your Patreon account.")
+                messageStore.setInfoMessage("You've removed your Patreon account.")
                 userStore.loadLoggedInUser()
             })
     }

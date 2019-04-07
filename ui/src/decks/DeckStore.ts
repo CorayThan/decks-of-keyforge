@@ -4,7 +4,7 @@ import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
@@ -14,7 +14,6 @@ export class DeckStore {
 
     static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
-    private static innerInstance: DeckStore
 
     @observable
     simpleDecks: Map<string, Deck> = new Map()
@@ -55,13 +54,6 @@ export class DeckStore {
     @observable
     importingAndAddingDeck = false
 
-    private constructor() {
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
-
     reset = () => {
         this.deckPage = undefined
     }
@@ -71,7 +63,7 @@ export class DeckStore {
             .then((response: AxiosResponse) => {
                 const deck: DeckWithSynergyInfo = response.data
                 if (!deck || !deck.deck) {
-                    MessageStore.instance.setWarningMessage(`You might need to import this deck. We couldn't find a deck with the id: ${keyforgeId}`)
+                    messageStore.setWarningMessage(`You might need to import this deck. We couldn't find a deck with the id: ${keyforgeId}`)
                 } else {
                     deck.deck.houses.sort()
                     this.deck = deck
@@ -96,7 +88,7 @@ export class DeckStore {
             .then((response: AxiosResponse) => {
                 this.importedDeck = response.data
                 if (!response.data) {
-                    MessageStore.instance.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+                    messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
                 }
 
                 this.importingDeck = false
@@ -109,7 +101,7 @@ export class DeckStore {
             .then((response: AxiosResponse) => {
                 this.importedDeck = response.data
                 if (!response.data) {
-                    MessageStore.instance.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+                    messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
                 } else {
                     userDeckStore.findAllForUser()
                 }
@@ -195,3 +187,5 @@ export class DeckStore {
     }
 
 }
+
+export const deckStore = new DeckStore()

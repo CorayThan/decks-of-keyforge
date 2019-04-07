@@ -20,7 +20,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { PatronButton } from "../patreon/PatronButton"
 import { screenStore } from "../ui/ScreenStore"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { userStore } from "../user/UserStore"
 import { HamburgerOpen } from "./KeyDrawer"
@@ -39,7 +39,7 @@ interface KeyTopbarProps extends RouteComponentProps<{}> {
 class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
     render() {
-        const {topbarName, topbarShortName, topbarSubheader} = UiStore.instance
+        const {topbarName, topbarShortName, topbarSubheader} = uiStore
 
         let subheaderNode
         if (topbarSubheader) {

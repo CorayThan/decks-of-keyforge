@@ -12,7 +12,7 @@ import { AercScoreView } from "../stats/AercScoreView"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
-import { CardStore } from "./CardStore"
+import { cardStore } from "./CardStore"
 import { hasAercFromCard, KCard } from "./KCard"
 import { MaverickIcon, rarityValues } from "./rarity/Rarity"
 
@@ -148,7 +148,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
 
     render() {
         const card = this.props.card
-        const fullCard = CardStore.instance.fullCardFromCardWithName(card)
+        const fullCard = cardStore.fullCardFromCardWithName(card)
 
         if (card == null) {
             return null
@@ -206,7 +206,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
 
     render() {
         const card = this.props.card
-        const fullCard = CardStore.instance.fullCardFromCardWithName(card)
+        const fullCard = cardStore.fullCardFromCardWithName(card)
 
         if (card == null) {
             return null

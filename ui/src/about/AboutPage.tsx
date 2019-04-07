@@ -7,7 +7,7 @@ import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { ContactMe } from "./ContactMe"
 import { ReleaseNotes } from "./ReleaseNotes"
 import { SasAndAerc } from "./SasAndAerc"
@@ -18,7 +18,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
 
     constructor(props: RouteComponentProps<{}>) {
         super(props)
-        UiStore.instance.setTopbarValues("About", "About", "What it's for and how it works")
+        uiStore.setTopbarValues("About", "About", "What it's for and how it works")
     }
 
     render() {

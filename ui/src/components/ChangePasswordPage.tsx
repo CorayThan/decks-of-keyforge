@@ -5,7 +5,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 
 export class ChangePasswordPage extends React.Component<RouteComponentProps<{resetCode: string}>> {
@@ -32,7 +32,7 @@ export class ChangePasswordView extends React.Component<{resetCode: string}> {
             error = "Please choose a password at least 8 characters long."
         }
         if (error) {
-            MessageStore.instance.setErrorMessage(error)
+            messageStore.setErrorMessage(error)
             return
         }
         userStore.changePassword(this.props.resetCode, this.password.trim())

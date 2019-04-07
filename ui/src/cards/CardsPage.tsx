@@ -4,22 +4,22 @@ import * as React from "react"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Loader } from "../mui-restyled/Loader"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { CardView } from "./CardSimpleView"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
-import { CardStore } from "./CardStore"
+import { cardStore } from "./CardStore"
 
 @observer
 export class CardsPage extends React.Component {
 
     constructor(props: {}) {
         super(props)
-        UiStore.instance.setTopbarValues("Cards of Keyforge", "Cards", "Search and sort")
+        uiStore.setTopbarValues("Cards of Keyforge", "Cards", "Search and sort")
     }
 
     render() {
 
-        const {cards, searchingForCards} = CardStore.instance
+        const {cards, searchingForCards} = cardStore
 
         let cardsDisplay
         if (!searchingForCards && cards) {

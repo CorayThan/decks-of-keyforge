@@ -18,7 +18,7 @@ import { countries, countryToLabel } from "../generic/Country"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { LoginPop } from "./LoginPop"
 import { userStore } from "./UserStore"
 
@@ -64,7 +64,7 @@ export class RegistrationPage extends React.Component {
         }
 
         if (error) {
-            MessageStore.instance.setErrorMessage(error)
+            messageStore.setErrorMessage(error)
             return
         }
         userStore.registerAccount({

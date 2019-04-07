@@ -1,10 +1,10 @@
 import axios from "axios"
 import { sample } from "lodash"
 import { observable } from "mobx"
-import { CardStore } from "../cards/CardStore"
+import { cardStore } from "../cards/CardStore"
 import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
 
 class DeckImportStore {
@@ -37,18 +37,18 @@ class DeckImportStore {
             const responseData = error.response.data
             log.debug(`Axios error: ${prettyJson(responseData)}`)
             if (responseData.message.includes("Duplicate deck name")) {
-                MessageStore.instance.setWarningMessage("There is already a deck with this name.")
+                messageStore.setWarningMessage("There is already a deck with this name.")
             } else {
-                MessageStore.instance.setRequestErrorMessage()
+                messageStore.setRequestErrorMessage()
             }
         }
         this.addingNewDeck = false
     }
 
     startMessages = () => {
-        this.readingDeckMessage = sample(CardStore.instance.cardFlavors)!
+        this.readingDeckMessage = sample(cardStore.cardFlavors)!
         this.messageIntervalId = window.setInterval(() => {
-            this.readingDeckMessage = sample(CardStore.instance.cardFlavors)!
+            this.readingDeckMessage = sample(cardStore.cardFlavors)!
         }, 8000)
     }
 
@@ -73,7 +73,7 @@ class DeckImportStore {
 
         if (!this.readDeck) {
             this.readDeck = undefined
-            MessageStore.instance.setWarningMessage("Please try a higher quality image.")
+            messageStore.setWarningMessage("Please try a higher quality image.")
         }
 
         log.debug(`Found deck: ${prettyJson(this.readDeck)}`)

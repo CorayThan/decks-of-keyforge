@@ -12,7 +12,7 @@ import { Utils } from "../../config/Utils"
 import { SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
-import { MessageStore } from "../../ui/MessageStore"
+import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { FiltersConstraintsStore } from "../search/ConstraintDropdowns"
 import { DeckFilters } from "../search/DeckFilters"
@@ -43,7 +43,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
     addQuery = () => {
         const name = this.name.trim()
         if (name.length > 200) {
-            MessageStore.instance.setWarningMessage("For sale notification names must be less than 200 characters.")
+            messageStore.setWarningMessage("For sale notification names must be less than 200 characters.")
             return
         }
         const forSaleQuery: ForSaleQuery = Utils.jsonCopy(this.props.filters)

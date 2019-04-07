@@ -13,7 +13,6 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 export type MessageType = "Error" | "Warn" | "Info" | "Success"
 
 export class MessageStore {
-    private static innerInstance: MessageStore
 
     @observable
     message = ""
@@ -30,13 +29,6 @@ export class MessageStore {
     @observable
     hideDuration = 6000
 
-    private constructor() {
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
-
     setRequestErrorMessage = () => this.setMessage("There was an unexpected error making your request.", "Error")
 
     setErrorMessage = (message: string) => this.setMessage(message, "Error")
@@ -45,7 +37,7 @@ export class MessageStore {
     setInfoMessage = (message: string) => this.setMessage(message, "Info")
 
     setReleaseMessage = (version: string) => {
-        MessageStore.instance.setMessage(`Version ${version} has been released!`, "Info", (
+        messageStore.setMessage(`Version ${version} has been released!`, "Info", (
             <LinkButton
                 color={"inherit"}
                 to={AboutSubPaths.releaseNotes}
@@ -75,7 +67,7 @@ export class SnackMessage extends React.Component {
         if (reason === "clickaway") {
             return
         }
-        MessageStore.instance.open = false
+        messageStore.open = false
     }
 
     colorFromMessageType = (messageType: MessageType) => {
@@ -90,15 +82,15 @@ export class SnackMessage extends React.Component {
     }
 
     render() {
-        const {message} = MessageStore.instance
+        const {message} = messageStore
 
         log.debug(`In snack message with message ${message}`)
 
         const actions = []
 
-        if (MessageStore.instance.action) {
+        if (messageStore.action) {
             actions.push((
-                MessageStore.instance.action
+                messageStore.action
             ))
         }
 
@@ -120,12 +112,12 @@ export class SnackMessage extends React.Component {
                     vertical: "bottom",
                     horizontal: "left",
                 }}
-                open={MessageStore.instance.open}
-                autoHideDuration={MessageStore.instance.hideDuration}
+                open={messageStore.open}
+                autoHideDuration={messageStore.hideDuration}
                 onClose={this.handleClose}
                 ContentProps={{
                     "aria-describedby": "message-id",
-                    "style": {backgroundColor: this.colorFromMessageType(MessageStore.instance.messageType)}
+                    "style": {backgroundColor: this.colorFromMessageType(messageStore.messageType)}
                 }}
                 message={<span id="message-id">{message}</span>}
                 action={actions}
@@ -133,3 +125,5 @@ export class SnackMessage extends React.Component {
         )
     }
 }
+
+export const messageStore = new MessageStore()

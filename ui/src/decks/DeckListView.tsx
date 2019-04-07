@@ -11,7 +11,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { screenStore } from "../ui/ScreenStore"
 import { Deck } from "./Deck"
-import { DeckStore } from "./DeckStore"
+import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
@@ -61,8 +61,8 @@ class DeckTableViewStore {
     tableSortDir: "desc" | "asc" = "desc"
 
     resort = () => {
-        if (DeckStore.instance.deckPage) {
-            const decks: IObservableArray<Deck> = DeckStore.instance.deckPage.decks as IObservableArray<Deck>
+        if (deckStore.deckPage) {
+            const decks: IObservableArray<Deck> = deckStore.deckPage.decks as IObservableArray<Deck>
             if (deckTableViewStore.activeTableSort === "price") {
                 decks.replace(sortBy(decks.slice(), (deck: Deck) => {
                     if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice) {

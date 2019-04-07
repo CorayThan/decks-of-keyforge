@@ -9,7 +9,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
-import { DeckStore } from "./DeckStore"
+import { deckStore } from "./DeckStore"
 
 class DeckImportPopStore {
     @observable
@@ -30,8 +30,8 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
     error = false
 
     componentDidMount() {
-        DeckStore.instance.importedDeck = false
-        DeckStore.instance.importingDeck = false
+        deckStore.importedDeck = false
+        deckStore.importingDeck = false
         this.deckId = ""
         deckImportPopStore.popOpen = false
         this.error = false
@@ -44,7 +44,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
             this.error = true
             return
         }
-        DeckStore.instance.importDeck(importWith)
+        deckStore.importDeck(importWith)
     }
 
     importAndAdd = () => {
@@ -54,7 +54,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
             this.error = true
             return
         }
-        DeckStore.instance.importDeckAndAddToMyDecks(importWith)
+        deckStore.importDeckAndAddToMyDecks(importWith)
     }
 
     deckIdFromUserInput = (): string => {
@@ -72,7 +72,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
 
     render() {
 
-        if (DeckStore.instance.importedDeck) {
+        if (deckStore.importedDeck) {
             return <Redirect to={Routes.deckPage(this.deckIdFromUserInput())}/>
         }
 
@@ -141,7 +141,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             <KeyButton
                                 variant={"contained"}
                                 onClick={this.import}
-                                loading={DeckStore.instance.importingDeck}
+                                loading={deckStore.importingDeck}
                             >
                                 Import
                             </KeyButton>
@@ -150,7 +150,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                     variant={"contained"}
                                     color={"primary"}
                                     onClick={this.importAndAdd}
-                                    loading={DeckStore.instance.importingAndAddingDeck}
+                                    loading={deckStore.importingAndAddingDeck}
                                     style={{marginLeft: spacing(2)}}
                                 >
                                     Import to my Decks

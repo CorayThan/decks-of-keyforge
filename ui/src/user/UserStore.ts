@@ -5,7 +5,7 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { findPatronRewardLevel } from "../patreon/PatreonRewardsTier"
-import { MessageStore } from "../ui/MessageStore"
+import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration } from "./KeyUser"
 import { UserProfile, UserProfileUpdate } from "./UserProfile"
@@ -47,7 +47,7 @@ export class UserStore {
                     this.logout()
                 } else {
                     log.error(`Error loading logged in user ${error}`)
-                    MessageStore.instance.setRequestErrorMessage()
+                    messageStore.setRequestErrorMessage()
                 }
                 this.loginInProgress = false
             })
@@ -59,7 +59,7 @@ export class UserStore {
             axiosWithoutErrors
                 .post(`${UserStore.SECURE_CONTEXT}/version/${latestVersion}`)
                 .then(() => {
-                    MessageStore.instance.setReleaseMessage(latestVersion)
+                    messageStore.setReleaseMessage(latestVersion)
                 })
         }
     }
@@ -71,18 +71,18 @@ export class UserStore {
             .post(UserStore.CONTEXT + "/register", user)
             .then((response: AxiosResponse) => {
                 log.info("Registered!")
-                MessageStore.instance.setSuccessMessage("Welcome to decks of keyforge! You are now being logged in.")
+                messageStore.setSuccessMessage("Welcome to decks of keyforge! You are now being logged in.")
                 this.login({...user})
             })
             .catch((error: AxiosError) => {
                 const message = error.response && error.response.data.message
                 log.debug(`Registration error ${message}`)
                 if (message === "This email is already taken.") {
-                    MessageStore.instance.setMessage("This email is already in use.", "Error")
+                    messageStore.setMessage("This email is already in use.", "Error")
                 } else if (message === "This username is already taken.") {
-                    MessageStore.instance.setMessage("This username is already in use.", "Error")
+                    messageStore.setMessage("This username is already in use.", "Error")
                 } else {
-                    MessageStore.instance.setRequestErrorMessage()
+                    messageStore.setRequestErrorMessage()
                 }
                 this.loginInProgress = false
             })
@@ -102,10 +102,10 @@ export class UserStore {
                 this.loginInProgress = false
 
                 if (error.message === "Request failed with status code 401") {
-                    MessageStore.instance.setErrorMessage("Your email or password was incorrect.")
+                    messageStore.setErrorMessage("Your email or password was incorrect.")
                 } else {
                     log.error(`Error loggin in ${error}`)
-                    MessageStore.instance.setRequestErrorMessage()
+                    messageStore.setRequestErrorMessage()
                 }
             })
     }
@@ -115,7 +115,7 @@ export class UserStore {
             .then((response: AxiosResponse) => {
                 log.debug("Got the user profile.")
                 if (!response.data) {
-                    MessageStore.instance.setErrorMessage(`Couldn't find a user with the username ${username}.`)
+                    messageStore.setErrorMessage(`Couldn't find a user with the username ${username}.`)
                 } else {
                     this.userProfile = response.data
                 }
@@ -127,9 +127,9 @@ export class UserStore {
             .then((response: AxiosResponse) => {
                 if (updateUserProfile.email) {
                     this.logout()
-                    MessageStore.instance.setSuccessMessage("Updated your profile! Please sign back in.")
+                    messageStore.setSuccessMessage("Updated your profile! Please sign back in.")
                 } else {
-                    MessageStore.instance.setSuccessMessage("Updated your profile!")
+                    messageStore.setSuccessMessage("Updated your profile!")
                     this.loadLoggedInUser()
                 }
             })
@@ -140,11 +140,11 @@ export class UserStore {
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
             .then((response: AxiosResponse) => {
                 this.changingPassword = false
-                MessageStore.instance.setSuccessMessage("Your password has been changed!")
+                messageStore.setSuccessMessage("Your password has been changed!")
             })
             .catch((error: AxiosError) => {
                 this.changingPassword = false
-                MessageStore.instance.setErrorMessage("Your password could not be changed. Try sending another reset request.")
+                messageStore.setErrorMessage("Your password could not be changed. Try sending another reset request.")
             })
     }
 

@@ -1,7 +1,6 @@
 import { observable } from "mobx"
 
 export class UiStore {
-    private static innerInstance: UiStore
 
     @observable
     topbarName = ""
@@ -11,13 +10,6 @@ export class UiStore {
 
     @observable
     topbarSubheader?: string
-
-    private constructor() {
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
 
     setTopbarValues = (name: string, shortName: string, subheader: string) => {
         document.title = name + (name === "Decks of Keyforge" || name === "Cards of Keyforge" ? "" : " – Decks of Keyforge")
@@ -33,3 +25,5 @@ export class UiStore {
         this.topbarSubheader = subheader
     }
 }
+
+export const uiStore = new UiStore()

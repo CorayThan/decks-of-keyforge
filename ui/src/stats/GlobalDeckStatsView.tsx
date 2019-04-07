@@ -3,21 +3,21 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Loader } from "../mui-restyled/Loader"
-import { UiStore } from "../ui/UiStore"
+import { uiStore } from "../ui/UiStore"
 import { StatsBar, StatsBarProps } from "./StatsBar"
-import { StatsStore } from "./StatsStore"
+import { statsStore } from "./StatsStore"
 
 @observer
 export class GlobalDeckStatsView extends React.Component<{}> {
 
     constructor(props: RouteComponentProps<{}>) {
         super(props)
-        UiStore.instance.setTopbarValues("Stats of Keyforge", "Stats", "Global deck stats")
+        uiStore.setTopbarValues("Stats of Keyforge", "Stats", "Global deck stats")
     }
 
     render() {
 
-        const stats = StatsStore.instance.stats
+        const stats = statsStore.stats
         if (stats == null) {
             return <Loader/>
         }

@@ -39,8 +39,8 @@ import { Loader } from "../mui-restyled/Loader"
 import { LinkPatreon } from "../patreon/LinkPatreon"
 import { patronRewardLevelName } from "../patreon/PatreonRewardsTier"
 import { patreonStore } from "../patreon/PatreonStore"
-import { MessageStore } from "../ui/MessageStore"
-import { UiStore } from "../ui/UiStore"
+import { messageStore } from "../ui/MessageStore"
+import { uiStore } from "../ui/UiStore"
 import { KeyUserDto } from "./KeyUser"
 import { UserProfileUpdate } from "./UserProfile"
 import { userStore } from "./UserStore"
@@ -101,7 +101,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
         this.country = country ? country : ""
         this.preferredCountries = preferredCountries ? preferredCountries : []
-        UiStore.instance.setTopbarValues(`My Profile`, "My Profile", "")
+        uiStore.setTopbarValues(`My Profile`, "My Profile", "")
 
         forSaleNotificationsStore.queries = undefined
     }
@@ -124,12 +124,12 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         }
         const publicContactInfo = this.contactInfo.trim().length === 0 ? undefined : this.contactInfo.trim()
         if (publicContactInfo && publicContactInfo.length > 2000) {
-            MessageStore.instance.setWarningMessage("Please make your public contact info 2000 or fewer characters long.")
+            messageStore.setWarningMessage("Please make your public contact info 2000 or fewer characters long.")
             return
         }
         const email = this.email.trim() === this.props.profile.email ? undefined : this.email.trim()
         if (email != null && (email.length < 1 || !Utils.validateEmail(email))) {
-            MessageStore.instance.setWarningMessage("Please enter a valid email address.")
+            messageStore.setWarningMessage("Please enter a valid email address.")
             return
         }
 

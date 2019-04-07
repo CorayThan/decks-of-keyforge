@@ -75,7 +75,7 @@ class EmailService(
         val message = sellerMessage.message
 
         sendEmail(email, "A deck you listed on Decks of Keyforge has a message",
-            """
+                """
                 <div>
                     <div>
                         $senderUsername has sent you a message about
@@ -101,19 +101,20 @@ class EmailService(
                         <a href="mailto:decksofkeyforge@gmail.com">decksofkeyforge@gmail.com</a>
                     </i>
                 </div>
-            """.trimIndent()
+            """.trimIndent(),
+                senderEmail
         )
     }
 
     private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path\">$name</a>"
 
-    private fun sendEmail(email: String, subject: String, content: String) {
+    private fun sendEmail(email: String, subject: String, content: String, replyTo: String? = null) {
         val mimeMessage = emailSender.createMimeMessage()
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         mimeMessage.setContent(content, "text/html")
         val from = "noreply@decksofkeyforge.com"
         helper.setFrom(from)
-        helper.setReplyTo(from)
+        helper.setReplyTo(replyTo ?: from)
         mimeMessage.addFrom(InternetAddress.parse(from))
         helper.setTo(email)
         helper.setSubject(subject)

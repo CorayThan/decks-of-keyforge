@@ -23,11 +23,11 @@ import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
-import { MessageStore } from "../../ui/MessageStore"
+import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { deckTableViewStore } from "../DeckListView"
-import { DeckStore } from "../DeckStore"
+import { deckStore } from "../DeckStore"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
 import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
@@ -41,7 +41,6 @@ interface DecksSearchDrawerProps {
 @observer
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
-    deckStore = DeckStore.instance
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedSortStore = new DeckSortSelectStore(this.props.filters.sort)
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
@@ -58,7 +57,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         if (!filters.forSale && !filters.forTrade && !filters.myFavorites && !filters.owner) {
             // search is broad, so disable bad searches
             if (filters.sort === "NAME") {
-                MessageStore.instance.setWarningMessage("To use the name sort please check for sale, for trade, my decks, or my favorites.")
+                messageStore.setWarningMessage("To use the name sort please check for sale, for trade, my decks, or my favorites.")
                 return
             }
         }
@@ -315,21 +314,21 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     variant={"contained"}
                                     color={"secondary"}
                                     type={"submit"}
-                                    loading={this.deckStore.searchingForDecks}
-                                    disabled={this.deckStore.searchingForDecks}
+                                    loading={deckStore.searchingForDecks}
+                                    disabled={deckStore.searchingForDecks}
                                 >
                                     Search
                                 </KeyButton>
                             </div>
                         </ListItem>
-                        {this.deckStore.decksCount ? (
+                        {deckStore.decksCount ? (
                             <ListItem>
                                 <Typography variant={"subtitle2"}>
-                                    You found {this.deckStore.decksCount.count}{this.deckStore.decksCount.count === 1000 ? "+ " : ""} decks
+                                    You found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 ? "+ " : ""} decks
                                 </Typography>
                             </ListItem>
                         ) : null}
-                        {this.deckStore.countingDecks ? (
+                        {deckStore.countingDecks ? (
                             <ListItem>
                                 <Typography variant={"subtitle2"}>Counting ...</Typography>
                             </ListItem>

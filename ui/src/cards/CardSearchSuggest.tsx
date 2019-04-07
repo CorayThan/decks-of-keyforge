@@ -6,7 +6,7 @@ import { ValueType } from "react-select/lib/types"
 import { spacing } from "../config/MuiConfig"
 import { DeckCardQuantity } from "../decks/search/DeckFilters"
 import { screenStore } from "../ui/ScreenStore"
-import { CardStore } from "./CardStore"
+import { cardStore } from "./CardStore"
 
 const inputComponent = (props: any) => {
     const {inputRef, ...rest} = props
@@ -147,7 +147,7 @@ export class CardSearchSuggest extends React.Component<CardSearchSuggestProps> {
                 }}
             >
                 <Select
-                    options={CardStore.instance.cardNames}
+                    options={cardStore.cardNames}
                     components={components}
                     value={card.cardName ? {label: card.cardName, value: card.cardName} : null}
                     onChange={(value: ValueType<{ label: string, value: string }>) => {

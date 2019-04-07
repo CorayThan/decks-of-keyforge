@@ -7,7 +7,7 @@ import * as React from "react"
 import { Redirect } from "react-router"
 import { CardSearchSuggest } from "../cards/CardSearchSuggest"
 import { CardAsLine } from "../cards/CardSimpleView"
-import { CardStore } from "../cards/CardStore"
+import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -64,7 +64,7 @@ class SaveUnregisteredDeckStore {
 
         autorun(() => {
             if (cardHolder.cardName !== "") {
-                const foundCard = CardStore.instance.cardNameLowercaseToCard!.get(cardHolder.cardName.toLowerCase())!
+                const foundCard = cardStore.cardNameLowercaseToCard!.get(cardHolder.cardName.toLowerCase())!
                 const copiedCard = cloneDeep(foundCard)
                 if (copiedCard.house !== house) {
                     copiedCard.maverick = true
@@ -109,7 +109,7 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
             return <Redirect to={Routes.deckPage(deckImportStore.newDeckId)}/>
         }
 
-        if (saveUnregisteredDeckStore.currentDeck == null || CardStore.instance.cardNameLowercaseToCard == null) {
+        if (saveUnregisteredDeckStore.currentDeck == null || cardStore.cardNameLowercaseToCard == null) {
             return null
         }
         const {name, cards} = saveUnregisteredDeckStore.currentDeck

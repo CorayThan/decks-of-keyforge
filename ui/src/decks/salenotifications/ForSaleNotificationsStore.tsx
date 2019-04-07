@@ -4,7 +4,7 @@ import * as React from "react"
 import { HttpConfig } from "../../config/HttpConfig"
 import { Routes } from "../../config/Routes"
 import { LinkButton } from "../../mui-restyled/LinkButton"
-import { MessageStore } from "../../ui/MessageStore"
+import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { ForSaleQuery } from "./ForSaleQuery"
 
@@ -21,7 +21,7 @@ export class ForSaleNotificationsStore {
 
         axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/add-query`, query)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setMessage(
+                messageStore.setMessage(
                     `Created deck notification "${query.queryName}". See it on your `,
                     "Success",
                     <LinkButton
@@ -39,7 +39,7 @@ export class ForSaleNotificationsStore {
     deleteQuery = (queryId: string) => {
         axios.delete(`${ForSaleNotificationsStore.SECURE_CONTEXT}/${queryId}`)
             .then((response: AxiosResponse) => {
-                MessageStore.instance.setSuccessMessage(`Deleted deck notification filter.`)
+                messageStore.setSuccessMessage(`Deleted deck notification filter.`)
                 this.findAllForUser()
             })
     }

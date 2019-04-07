@@ -9,7 +9,6 @@ import { KCard, winPercentForCard } from "./KCard"
 export class CardStore {
 
     static readonly CONTEXT = HttpConfig.API + "/cards"
-    private static innerInstance: CardStore
 
     @observable
     cards?: KCard[]
@@ -28,13 +27,6 @@ export class CardStore {
 
     @observable
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
-
-    private constructor() {
-    }
-
-    static get instance() {
-        return this.innerInstance || (this.innerInstance = new this())
-    }
 
     reset = () => {
         if (this.cards) {
@@ -133,3 +125,5 @@ export class CardStore {
         return card
     }
 }
+
+export const cardStore = new CardStore()
