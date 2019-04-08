@@ -25,10 +25,10 @@ class SellerService(
     fun refreshFeaturedSellers() {
         featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
                 .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
-                .filter { user -> user.decks.filter { it.forSale || it.forTrade }.size > 9 }
                 .sortedByDescending { it.mostRecentDeckListing }
                 .plus(userRepo.findByEmailIgnoreCase("coraythan@gmail.com"))
                 .filterNotNull()
+                .filter { user -> user.decks.filter { it.forSale || it.forTrade }.size > 9 }
                 .map { user ->
                     SellerDetailsWithFullDate(
                      user.mostRecentDeckListing,
