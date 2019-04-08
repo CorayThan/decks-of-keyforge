@@ -62,7 +62,6 @@ export class ContactMe extends React.Component {
                         </div>,
                         "Without their support, as well as the support of all the other patrons, this site would not be possible. If you aren't already a " +
                         "patron, please consider becoming one to support the site and get some exclusive benefits on the site!",
-                        <PatronButton />
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>

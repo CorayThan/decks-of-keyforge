@@ -4,6 +4,8 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.models.withCards
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
@@ -29,7 +31,7 @@ class DeckWinsService(
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 
-        log.info("Beginning deck win loss update")
+        log.info("$scheduledStart deck win loss update")
 
         val updateWinsLossesDuration = measureTimeMillis {
 
@@ -39,7 +41,7 @@ class DeckWinsService(
             findAndUpdateDecksForWinRates("-losses", deckIds)
             log.info("Found $winPages win pages (of 10).")
         }
-        log.info("It took ${updateWinsLossesDuration / 1000} seconds to update wins and losses.")
+        log.info("$scheduledStop It took ${updateWinsLossesDuration / 1000} seconds to update wins and losses.")
 
         updateCardAndHouseWins()
     }
@@ -77,7 +79,7 @@ class DeckWinsService(
     }
 
     fun updateCardAndHouseWins() {
-        log.info("Beginning card and house win loss update")
+        log.info("$scheduledStart card and house win loss update")
 
         val updateCardAndHouseWinsLossesDuration = measureTimeMillis {
 
@@ -111,7 +113,7 @@ class DeckWinsService(
             cardService.reloadCachedCards()
         }
 
-        log.info("It took ${updateCardAndHouseWinsLossesDuration / 1000} seconds to update wins and losses for cards and houses.")
+        log.info("$scheduledStop It took ${updateCardAndHouseWinsLossesDuration / 1000} seconds to update wins and losses for cards and houses.")
 
     }
 

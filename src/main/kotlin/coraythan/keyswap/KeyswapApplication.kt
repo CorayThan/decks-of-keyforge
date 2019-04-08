@@ -90,3 +90,6 @@ fun main(args: Array<String>) {
 object Api {
     const val base = "/api"
 }
+
+val scheduledStart = "Starting scheduled task:"
+val scheduledStop = "Scheduled task complete:"

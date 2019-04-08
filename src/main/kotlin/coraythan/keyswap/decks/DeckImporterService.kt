@@ -9,6 +9,8 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
@@ -57,6 +59,7 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockImportNewDecksFor)
     @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
+        log.info("$scheduledStart new deck import.")
         val deckCountBeforeImport = deckRepo.count()
         val importDecksDuration = measureTimeMillis {
             val decksPerPage = keyforgeApiDeckPageSize
@@ -82,13 +85,14 @@ class DeckImporterService(
             deckPageService.setCurrentPage(currentPage - 1)
         }
         val deckCountNow = deckRepo.count()
-        log.info("Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
+        log.info("$scheduledStop Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
         deckService.countFilters(DeckFilters())
     }
 
     @Scheduled(fixedDelayString = onceEverySixHoursLock)
     @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
+        log.info("$scheduledStart clean out unregistered decks.")
         var unregDeckCount = 0
         var cleanedOut = 0
         val msToCleanUnreg = measureTimeMillis {
@@ -105,7 +109,7 @@ class DeckImporterService(
             }
         }
 
-        log.info("Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
+        log.info("$scheduledStop Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
     private var doneRatingDecks = false
@@ -115,6 +119,8 @@ class DeckImporterService(
     fun rateDecks() {
 
         if (doneRatingDecks) return
+
+        log.info("$scheduledStart rate decks.")
 
         val millisTaken = measureTimeMillis {
             val deckQ = QDeck.deck
@@ -133,7 +139,7 @@ class DeckImporterService(
             deckRepo.saveAll(rated)
         }
 
-        log.info("Took $millisTaken ms to rate 10000 decks.")
+        log.info("$scheduledStop Took $millisTaken ms to rate 10000 decks.")
     }
 
     // Non repeatable functions

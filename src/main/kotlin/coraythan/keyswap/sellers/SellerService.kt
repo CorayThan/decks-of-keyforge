@@ -2,8 +2,11 @@ package coraythan.keyswap.sellers
 
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.users.KeyUserRepo
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,11 +21,13 @@ class SellerService(
         private val userRepo: KeyUserRepo
 ) {
 
+    private val log = LoggerFactory.getLogger(this::class.java)
     private var featuredSellersCache: List<SellerDetailsWithFullDate> = listOf()
     private val placeholderDate = LocalDate.parse("2019-04-07")
 
     @Scheduled(fixedDelayString = "PT5M")
     fun refreshFeaturedSellers() {
+        log.info("$scheduledStart refresh featured sellers.")
         featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
                 .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
                 .sortedByDescending { it.mostRecentDeckListing }
@@ -44,6 +49,7 @@ class SellerService(
                             )
                     )
                 }
+        log.info("$scheduledStop refreshing featured sellers.")
     }
 
     fun featuredSellers(offsetMinutes: Int): List<SellerDetails> {

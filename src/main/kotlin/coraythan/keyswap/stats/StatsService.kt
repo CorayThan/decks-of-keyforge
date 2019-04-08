@@ -10,6 +10,8 @@ import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.now
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -74,6 +76,7 @@ class StatsService(
     @Scheduled(fixedDelayString = "PT12H")
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
+        log.info("$scheduledStart start new deck stats.")
         val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
         if (mostRecentVersion == null) {
             deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
@@ -86,6 +89,7 @@ class StatsService(
             )
             updateStats = true
         }
+        log.info("$scheduledStop starting new deck stats.")
     }
 
     @Scheduled(fixedDelayString = lockUpdateStats)
@@ -93,6 +97,8 @@ class StatsService(
     fun updateStatsForDecks() {
 
         if (!updateStats) return
+
+        log.info("$scheduledStart update stats for decks.")
 
         val millisTaken = measureTimeMillis {
 
@@ -125,7 +131,7 @@ class StatsService(
                 }
             }
         }
-        if (updateStats) log.info("Took $millisTaken ms to update stats with 1000 decks.")
+        if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with 1000 decks.")
     }
 
     private fun updateStats(statsEntity: DeckStatisticsEntity, decks: List<Deck>) {

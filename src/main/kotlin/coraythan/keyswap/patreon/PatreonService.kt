@@ -1,6 +1,8 @@
 package coraythan.keyswap.patreon
 
 import com.patreon.PatreonOAuth
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -37,11 +39,11 @@ class PatreonService(
 
     @Scheduled(fixedDelayString = "PT6H")
     fun refreshCreatorAccount() {
+        log.info("$scheduledStart refresh patreon creator account.")
         val creatorAccount = patreonAccountRepo.findAll().toList().firstOrNull()
         if (creatorAccount != null) {
             val updated = updateCreatorAccount(creatorAccount.refreshToken)
             refreshCampaignInfo(updated.accessToken)
-            log.info("Done refreshing patreon creator account.")
         } else {
             log.warn("Couldn't refresh patreon creator account.")
         }
@@ -49,6 +51,7 @@ class PatreonService(
         topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
                 .plus(userRepo.findByPatreonTier(PatreonRewardsTier.SUPPORT_SOPHISTICATION))
                 .map { it.username }
+        log.info("$scheduledStop Done refreshing patreon creator account.")
     }
 
     fun topPatrons() = topPatrons

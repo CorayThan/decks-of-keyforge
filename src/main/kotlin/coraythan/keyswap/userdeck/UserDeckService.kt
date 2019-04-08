@@ -5,6 +5,8 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.now
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -27,6 +29,7 @@ class UserDeckService(
 
     @Scheduled(fixedDelayString = "PT6H")
     fun unlistExpiredDecks() {
+        log.info("$scheduledStart unlisting expired decks.")
         val toUnlist = userDeckRepo.findAll(
                 QUserDeck.userDeck.expiresAt.before(now())
         )
@@ -35,12 +38,13 @@ class UserDeckService(
             unlistUserDeck(it)
             log.info("Unlisted ${it.id}")
         }
+        log.info("$scheduledStop unlisting expired decks.")
     }
 
     // Don't want this running regularly
     // @Scheduled(fixedDelayString = "PT144H")
     fun correctCounts() {
-        log.info("Starting to correct counts.")
+        log.info("$scheduledStart to correct counts.")
         userDeckRepo
                 .findAll(QUserDeck.userDeck.wishlist.isTrue)
                 .groupBy { it.deck.id }
@@ -52,7 +56,7 @@ class UserDeckService(
                 .groupBy { it.deck.id }
                 .map { it.value.first().deck to it.value.size }
                 .forEach { if (it.first.funnyCount != it.second) deckRepo.save(it.first.copy(funnyCount = it.second)) }
-        log.info("Done correcting counts.")
+        log.info("$scheduledStop correcting counts.")
     }
 
     fun addToWishlist(deckId: Long, add: Boolean = true) {
