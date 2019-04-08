@@ -1,5 +1,8 @@
 import {
     Button,
+    Card,
+    CardContent,
+    Collapse,
     Dialog,
     DialogActions,
     DialogContent,
@@ -7,7 +10,6 @@ import {
     DialogTitle,
     List,
     ListItem,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -32,22 +34,42 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
 import { Article, ArticleEntry, ArticleSection, EntryType, MuiColors } from "./Article"
 
+interface ArticleViewProps {
+    article: Article
+    snippet?: boolean
+}
+
 @observer
-export class ArticleView extends React.Component<Article> {
+export class ArticleView extends React.Component<ArticleViewProps> {
 
     @observable
     bioOpen = false
 
+    @observable
+    collapsed = true
+
+    constructor(props: ArticleViewProps) {
+        super(props)
+        this.collapsed = !!props.snippet
+    }
+
     render() {
-        const {title, urlTitle, date, sections, author} = this.props
+        const {article} = this.props
+        const {title, urlTitle, date, sections, author} = article
         const filters = new DeckFilters()
         filters.forSale = true
         filters.forTrade = true
         filters.owner = author.username
+        const link = Routes.articlePage(urlTitle)
 
         return (
-            <div style={{maxWidth: 800, marginBottom: spacing(4)}} id={urlTitle}>
-
+            <Card
+                style={{
+                    maxWidth: 800,
+                    marginBottom: spacing(4),
+                }}
+                id={urlTitle}
+            >
                 <Dialog
                     open={this.bioOpen}
                     onClose={() => this.bioOpen = false}
@@ -74,72 +96,82 @@ export class ArticleView extends React.Component<Article> {
                     </DialogActions>
                 </Dialog>
 
-                <Paper style={{padding: spacing(4)}}>
-                    <UnstyledLink to={Routes.articlePage(urlTitle)}>
-                        <Typography variant={"h3"} color={"primary"} style={{marginBottom: spacing(2)}}>
-                            {title}
-                        </Typography>
-                    </UnstyledLink>
-                    <div style={{display: "flex", alignItems: "center", marginBottom: spacing(4)}}>
-                        <img alt={"Writer Image"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
-                        <Typography>by</Typography>
-                        <Button style={{marginTop: 4, marginLeft: spacing(1)}} onClick={() => this.bioOpen = true}>
-                            {author.name}
-                        </Button>
-                        <div style={{flexGrow: 1}}/>
-                        <Typography>{date}</Typography>
-                    </div>
+                <CardContent>
+                    <Collapse in={!this.collapsed} collapsedHeight={"400px"}>
+                        <UnstyledLink to={link}>
+                            <Typography variant={"h3"} color={"primary"} style={{marginBottom: spacing(2)}}>
+                                {title}
+                            </Typography>
+                        </UnstyledLink>
+                        <div style={{display: "flex", alignItems: "center", marginBottom: spacing(4)}}>
+                            <img alt={"Writer Image"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
+                            <Typography>by</Typography>
+                            <Button style={{marginTop: 4, marginLeft: spacing(1)}} onClick={() => this.bioOpen = true}>
+                                {author.name}
+                            </Button>
+                            <div style={{flexGrow: 1}}/>
+                            <Typography>{date}</Typography>
+                        </div>
 
-                    {sections.map((section: ArticleSection, idx: number) => {
-                        const {sectionTitle, entries, cards} = section
-                        return (
-                            <div key={idx}>
-                                {sectionTitle == null ? null : (
-                                    <Typography variant={"h5"} style={{marginBottom: spacing(2), marginTop: idx !== 0 ? spacing(4) : 0}}>
-                                        {sectionTitle}
-                                    </Typography>
-                                )}
-                                <div style={{display: "flex"}}>
-                                    <div>
-                                        {entries.map((entry: ArticleEntry, entryIdx: number) => {
-                                            switch (entry.type) {
-                                                case EntryType.PARAGRAPH:
-                                                    return <Paragraph {...entry} key={entryIdx}/>
-                                                case EntryType.LINK:
-                                                    if (entry.externalLink) {
-                                                        return <ArticleExternalLink externalLink={entry.externalLink!} text={entry.text!} key={entryIdx}/>
-                                                    } else {
-                                                        return <ArticleInternalLink internalLink={entry.internalLink!} text={entry.text!} key={entryIdx}/>
-                                                    }
-                                                case EntryType.UNORDERED_LIST:
-                                                    return <UnorderedList {...entry} key={entryIdx}/>
-                                                case EntryType.DECK:
-                                                    if (screenStore.screenSizeXs()) {
-                                                        return <ArticleInternalLink internalLink={`/decks/${entry.deckId!}`} text={entry.deckName!}
-                                                                                    key={entryIdx}/>
-                                                    }
-                                                    return <Deck deckId={entry.deckId!} key={entryIdx}/>
-                                                case EntryType.TABLE:
-                                                    if (screenStore.screenSizeXs()) {
-                                                        return null
-                                                    }
-                                                    return <ArticleTable headers={entry.tableHeaders!} rows={entry.tableRows!} key={entryIdx}/>
-                                                default:
-                                                    throw new Error("No case for entry type " + entry.type)
-                                            }
-                                        })}
-                                    </div>
-                                    {cards == null || screenStore.screenSizeXs() ? null : (
-                                        <div style={{marginLeft: spacing(2)}}>
-                                            {cards.map((card: string) => <SideCard cardImg={card} key={card}/>)}
-                                        </div>
+                        {sections.map((section: ArticleSection, idx: number) => {
+                            const {sectionTitle, entries, cards} = section
+                            return (
+                                <div key={idx}>
+                                    {sectionTitle == null ? null : (
+                                        <Typography variant={"h5"} style={{marginBottom: spacing(2), marginTop: idx !== 0 ? spacing(4) : 0}}>
+                                            {sectionTitle}
+                                        </Typography>
                                     )}
+                                    <div style={{display: "flex"}}>
+                                        <div>
+                                            {entries.map((entry: ArticleEntry, entryIdx: number) => {
+                                                switch (entry.type) {
+                                                    case EntryType.PARAGRAPH:
+                                                        return <Paragraph {...entry} key={entryIdx}/>
+                                                    case EntryType.LINK:
+                                                        if (entry.externalLink) {
+                                                            return <ArticleExternalLink externalLink={entry.externalLink!} text={entry.text!} key={entryIdx}/>
+                                                        } else {
+                                                            return <ArticleInternalLink internalLink={entry.internalLink!} text={entry.text!} key={entryIdx}/>
+                                                        }
+                                                    case EntryType.UNORDERED_LIST:
+                                                        return <UnorderedList {...entry} key={entryIdx}/>
+                                                    case EntryType.DECK:
+                                                        if (screenStore.screenSizeXs()) {
+                                                            return <ArticleInternalLink internalLink={`/decks/${entry.deckId!}`} text={entry.deckName!}
+                                                                                        key={entryIdx}/>
+                                                        }
+                                                        return <Deck deckId={entry.deckId!} key={entryIdx}/>
+                                                    case EntryType.TABLE:
+                                                        if (screenStore.screenSizeXs()) {
+                                                            return null
+                                                        }
+                                                        return <ArticleTable headers={entry.tableHeaders!} rows={entry.tableRows!} key={entryIdx}/>
+                                                    default:
+                                                        throw new Error("No case for entry type " + entry.type)
+                                                }
+                                            })}
+                                        </div>
+                                        {cards == null || screenStore.screenSizeXs() ? null : (
+                                            <div style={{marginLeft: spacing(2)}}>
+                                                {cards.map((card: string) => <SideCard cardImg={card} key={card}/>)}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    })}
-                </Paper>
-            </div>
+                            )
+                        })}
+                    </Collapse>
+
+                </CardContent>
+                {this.collapsed ? (
+                    <div style={{display: "flex", justifyContent: "center", marginBottom: spacing(2)}}>
+                        <div>
+                            <KeyButton onClick={() => this.collapsed = false}>Read more</KeyButton>
+                        </div>
+                    </div>
+                ) : null}
+            </Card>
         )
     }
 }

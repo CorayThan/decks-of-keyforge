@@ -1,10 +1,13 @@
 import { observable } from "mobx"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 
+@observer
 export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore }> {
     render() {
-        return (<KeySelect name={"Sort By"} options={deckSortOptions.map(option => option.name)} selected={this.props.store}/>)
+        const options = this.props.store.forSaleOrTrade ? forSaleDeckSortOptions : deckSortOptions
+        return (<KeySelect name={"Sort By"} options={options.map(option => option.name)} selected={this.props.store}/>)
     }
 }
 
@@ -13,20 +16,23 @@ export class DeckSortSelectStore implements SelectedStore {
     @observable
     selectedValue: string
 
-    constructor(initialSort?: string) {
+    @observable
+    forSaleOrTrade: boolean
+
+    constructor(forSaleOrTrade: boolean, initialSort?: string) {
         if (initialSort) {
-            this.selectedValue = deckSortOptions.filter(option => option.value === initialSort)[0].name
+            this.selectedValue = forSaleDeckSortOptions.filter(option => option.value === initialSort)[0].name
         } else {
             this.selectedValue = defaultSort.name
         }
-
+        this.forSaleOrTrade = forSaleOrTrade
     }
 
     toEnumValue = () => {
         if (!this.selectedValue) {
             return defaultSort.value
         }
-        return deckSortOptions.filter(option => option.name === this.selectedValue)[0].value
+        return forSaleDeckSortOptions.filter(option => option.name === this.selectedValue)[0].value
     }
 }
 
@@ -35,15 +41,27 @@ export interface SortOption {
     value: string
 }
 
+export const DeckSorts = {
+    sas: "SAS_RATING",
+    aerc: "AERC_SCORE",
+    funniest: "FUNNIEST",
+    wishlisted: "MOST_WISHLISTED",
+    chains: "CHAINS",
+    recentlyListed: "RECENTLY_LISTED"
+}
+
 const deckSortOptions: SortOption[] = [
     {value: "ADDED_DATE", name: "Date Added"},
-    {value: "SAS_RATING", name: "SAS Rating"},
+    {value: DeckSorts.sas, name: "SAS Rating"},
     {value: "CARDS_RATING", name: "Card Rating"},
-    {value: "AERC_SCORE", name: "AERC Score"},
-    {value: "CHAINS", name: "Chains"},
-    {value: "FUNNIEST", name: "Funniest"},
-    {value: "MOST_WISHLISTED", name: "Most Wishlisted"},
+    {value: DeckSorts.aerc, name: "AERC Score"},
+    {value: DeckSorts.chains, name: "Chains"},
+    {value: DeckSorts.funniest, name: "Funniest"},
+    {value: DeckSorts.wishlisted, name: "Most Wishlisted"},
     {value: "NAME", name: "Name"},
 ]
+
+const forSaleDeckSortOptions: SortOption[] = deckSortOptions.slice()
+forSaleDeckSortOptions.push({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 
 export const defaultSort = deckSortOptions[1]

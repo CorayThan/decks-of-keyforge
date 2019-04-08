@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField/TextField"
 import { Close } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { KeyDrawer, KeyDrawerStore } from "../components/KeyDrawer"
+import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
@@ -54,7 +54,7 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.armors = this.selectedArmors.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
         this.cardStore.searchCards(this.filters)
-        KeyDrawerStore.closeIfSmall()
+        keyDrawerStore.closeIfSmall()
     }
 
     clearSearch = () => {
@@ -84,7 +84,7 @@ export class CardsSearchDrawer extends React.Component {
                             />
                             <div style={{flexGrow: 1}}/>
                             {screenStore.screenSizeXs() ? (
-                                <IconButton onClick={() => KeyDrawerStore.open = false}>
+                                <IconButton onClick={() => keyDrawerStore.open = false}>
                                     <Close/>
                                 </IconButton>
                             ) : null}

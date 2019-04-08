@@ -19,5 +19,8 @@ data class UserProfileUpdate(
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
         val country: Country?,
-        val preferredCountries: List<Country>? = null
+        val preferredCountries: List<Country>? = null,
+        val sellerEmail: String? = null,
+        val discord: String? = null,
+        val storeName: String? = null
 )

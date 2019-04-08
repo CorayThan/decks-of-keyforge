@@ -66,7 +66,7 @@ class EmailService(
 
         val seller = keyUserService.findUserByUsername(sellerMessage.username)
                 ?: throw BadRequestException("Couldn't find user with username ${sellerMessage.username}")
-        val email = seller.email
+        val email = seller.sellerEmail ?: seller.email
 
         val senderUsername = sellerMessage.senderUsername
         val deckKeyforgeId = sellerMessage.deckKeyforgeId

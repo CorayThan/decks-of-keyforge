@@ -79,7 +79,10 @@ class KeyUserService(
                     allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
                     country = update.country,
                     preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
-                    decks = userDecks
+                    decks = userDecks,
+                    sellerEmail = update.sellerEmail,
+                    discord = update.discord,
+                    storeName = update.storeName
             ))
         }
     }

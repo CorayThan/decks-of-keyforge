@@ -2,7 +2,7 @@ import { Divider, List, ListItem, ListItemText, ListSubheader } from "@material-
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { KeyDrawer, KeyDrawerStore } from "../components/KeyDrawer"
+import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { keyTopbarStore } from "../components/KeyTopbar"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -30,7 +30,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
 
     componentWillUnmount(): void {
         keyTopbarStore.displayLeftHamburger = false
-        KeyDrawerStore.open = false
+        keyDrawerStore.open = false
     }
 
     render() {
@@ -55,7 +55,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
                     </List>
                 </KeyDrawer>
                 <div style={{margin: spacing(4), display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
-                    {articles.map((article: Article, idx: number) => <ArticleView {...article} key={idx}/>)}
+                    {articles.map((article: Article, idx: number) => <ArticleView article={article} snippet={true} key={idx}/>)}
                 </div>
             </div>
         )
@@ -63,6 +63,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
 }
 
 export const allArticles = [whatsTheRush, daercArts]
+export const latestTwoArticles = allArticles.slice(0, 2)
 
 const ArticleLinksForType = (props: { type: ArticleType }) => {
     return (

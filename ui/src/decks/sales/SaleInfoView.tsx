@@ -9,6 +9,7 @@ import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendSellerEmailDialog } from "../../emails/SendSellerEmailDialog"
 import { countryToLabel } from "../../generic/Country"
+import { DiscordUser } from "../../generic/DiscordUser"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
@@ -59,13 +60,15 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
         const {
-            forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink
+            forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink, discord
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
         const yourEmail = userStore.email
 
         const allowEmail = yourEmail && yourUsername && !externalLink
+
+        const allowEmailOrDiscord = allowEmail || discord
 
         return (
             <KeyCard
@@ -99,35 +102,47 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
             >
                 <div>
                     {listingInfo == null ? null : (
-                        <div style={{margin: spacing(2)}}>
+                        <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Listing Details</Typography>
                             <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{listingInfo}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
                     {externalLink == null ? null : (
-                        <div style={{margin: spacing(2)}}>
+                        <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>External listing — Be careful using this link!</Typography>
                             <a href={externalLink} target={"_blank"}><Typography>{externalLink}</Typography></a>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
                     {publicContactInfo == null ? null : (
-                        <div style={{margin: spacing(2)}}>
+                        <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Seller Details</Typography>
                             <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{publicContactInfo}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
-                    {allowEmail ? (
-                        <div style={{margin: spacing(2)}}>
-                            <SendSellerEmailDialog
-                                deckName={this.props.deckName}
-                                senderUsername={yourUsername!}
-                                senderEmail={yourEmail!}
-                                username={username}
-                                keyforgeId={this.props.keyforgeId}
-                            />
+                    {allowEmailOrDiscord ? (
+                        <div style={{margin: spacing(2), marginTop: 0}}>
+                            <div style={{display: "flex", flexWrap: "wrap"}}>
+                                {discord ? (
+                                    <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
+                                ) : null}
+                                {allowEmail ? (
+                                    <>
+                                        {discord ? <div style={{flexGrow: 1}}/> : null}
+                                        <SendSellerEmailDialog
+                                            deckName={this.props.deckName}
+                                            senderUsername={yourUsername!}
+                                            senderEmail={yourEmail!}
+                                            username={username}
+                                            keyforgeId={this.props.keyforgeId}
+                                            style={{marginTop: spacing(2)}}
+                                        />
+                                    </>
+                                ) : null}
+                            </div>
+
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     ) : null}
@@ -145,7 +160,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         </Typography>
                     ) : null}
                     <Divider style={{marginTop: spacing(2)}}/>
-                    <Typography style={{margin: spacing(2), fontStyle: "italic"}} variant={"subtitle2"}>
+                    <Typography style={{margin: spacing(2), fontStyle: "italic"}} variant={"subtitle2"} color={"textSecondary"}>
                         We do not verify the authenticity or trustworthiness of any deck sales.
                         Purchase and trade decks at your own risk.
                     </Typography>

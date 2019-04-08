@@ -20,5 +20,6 @@ data class DeckSaleInfo(
         val expiresAt: LocalDate?,
 
         val username: String,
-        val publicContactInfo: String?
+        val publicContactInfo: String?,
+        val discord: String?
 )

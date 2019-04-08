@@ -17,6 +17,10 @@ import org.springframework.web.client.RestTemplate
 class PatreonService(
         @Value("\${patreon-secret-key}")
         private val patreonSecretKey: String,
+        @Value("\${patreon-client-id}")
+        private val patreonClientId: String,
+        @Value("\${env}")
+        private val env: String,
         private val restTemplate: RestTemplate,
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
@@ -25,9 +29,9 @@ class PatreonService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val patreonClient = PatreonOAuth(
-            "5dTatoZIqm7HxUDiu2FXHsiP8BQtULk0JECv2DTUb6gpju4HVaRYzisY1aX_dXEG",
+            patreonClientId,
             patreonSecretKey,
-            "https://decksofkeyforge.com/my-profile"
+            if (env == "dev") "http://localhost:3000/my-profile" else "https://decksofkeyforge.com/my-profile"
     )
     private var topPatrons = listOf<String>()
 
@@ -35,8 +39,8 @@ class PatreonService(
     fun refreshCreatorAccount() {
         val creatorAccount = patreonAccountRepo.findAll().toList().firstOrNull()
         if (creatorAccount != null) {
-            refreshCampaignInfo(creatorAccount.accessToken)
-            updateCreatorAccount(creatorAccount)
+            val updated = updateCreatorAccount(creatorAccount.refreshToken)
+            refreshCampaignInfo(updated.accessToken)
             log.info("Done refreshing patreon creator account.")
         } else {
             log.warn("Couldn't refresh patreon creator account.")
@@ -82,15 +86,15 @@ class PatreonService(
         userRepo.save(user.copy(patreonId = patreonUser.data.id))
     }
 
-    fun saveCreatorAccount(account: PatreonAccount) {
+    fun saveCreatorAccount(account: PatreonAccount): PatreonAccount {
         patreonAccountRepo.deleteAll()
-        patreonAccountRepo.save(account)
+        return patreonAccountRepo.save(account)
     }
 
-    fun updateCreatorAccount(patAccount: PatreonAccount) {
-        val refreshToken = patAccount.refreshToken
+    fun updateCreatorAccount(refreshToken: String): PatreonAccount {
+        log.info("client id: $patreonClientId refresh: $refreshToken")
         val newAccount = PatreonAccount.fromToken(patreonClient.refreshTokens(refreshToken))
-        saveCreatorAccount(newAccount)
+        return saveCreatorAccount(newAccount)
     }
 
     fun refreshCampaignInfo(token: String) {

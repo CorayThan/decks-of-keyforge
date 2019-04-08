@@ -1,9 +1,8 @@
-import { Divider, IconButton, Menu, MenuItem } from "@material-ui/core"
+import { Divider, IconButton } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
-import { MoreVert } from "@material-ui/icons"
 import MenuIcon from "@material-ui/icons/Menu"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -14,8 +13,8 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
+import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { PatronButton } from "../patreon/PatronButton"
@@ -23,7 +22,6 @@ import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { userStore } from "../user/UserStore"
-import { HamburgerOpen } from "./KeyDrawer"
 
 class KeyTopbarStore {
     @observable
@@ -53,21 +51,46 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             )
         }
 
+        let menuContents
+        if (screenStore.screenSizeMd()) {
+            menuContents = (
+                <>
+                    <RightMenu/>
+                    <Typography
+                        variant={"h4"}
+                        style={{marginLeft: spacing(2)}}
+                        color={"inherit"}>
+                        {screenStore.screenWidth < 1400 ? topbarShortName : topbarName}
+                    </Typography>
+                    {screenStore.screenWidth < 1600 ? null : subheaderNode}
+                    <div style={{flexGrow: 1}}/>
+                    <div style={{marginLeft: spacing(2), marginRight: spacing(2)}}>
+                        <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
+                    </div>
+                </>
+            )
+        } else {
+            menuContents = (
+                <>
+                    <UnstyledLink to={Routes.decks}><DokIcon/></UnstyledLink>
+                    <Typography
+                        variant={"h4"}
+                        style={{marginLeft: spacing(2)}}
+                        color={"inherit"}>
+                        {screenStore.screenWidth < 1400 ? topbarShortName : topbarName}
+                    </Typography>
+                    {screenStore.screenWidth < 1600 ? null : subheaderNode}
+                    <div style={{flexGrow: 1}}/>
+                    <RightMenu/>
+                </>
+            )
+        }
+
         return (
             <div>
                 <AppBar position={"fixed"} style={{zIndex: screenStore.zindexes.keyTopBar}}>
                     <Toolbar>
-                        {keyTopbarStore.displayLeftHamburger && screenStore.screenSizeSm() ? <HamburgerOpen/> : null}
-                        <UnstyledLink to={Routes.decks}><DokIcon/></UnstyledLink>
-                        <Typography
-                            variant={"h4"}
-                            style={{marginLeft: spacing(2)}}
-                            color={"inherit"}>
-                            {screenStore.screenWidth < 1400 ? topbarShortName : topbarName}
-                        </Typography>
-                        {screenStore.screenWidth < 1600 ? null : subheaderNode}
-                        <div style={{flexGrow: 1}}/>
-                        <RightMenu/>
+                        {menuContents}
                     </Toolbar>
                 </AppBar>
                 <ToolbarSpacer/>
@@ -104,7 +127,7 @@ class RightMenu extends React.Component {
                     <Drawer
                         open={rightMenuStore.open}
                         onClose={rightMenuStore.close}
-                        anchor={"right"}
+                        anchor={"left"}
                         style={{zIndex: screenStore.zindexes.rightMenu}}
                     >
                         <div style={{display: "flex", padding: spacing(2), flexDirection: "column"}}>
@@ -199,44 +222,25 @@ class UserLinks extends React.Component {
                     >
                         My Decks
                     </LinkButton>
+                    <LinkButton
+                        color={"inherit"}
+                        to={Routes.userProfilePage(userStore.username)}
+                        style={{margin: spacing(1)}}
+                        onClick={rightMenuStore.close}
+                    >
+                        Profile
+                    </LinkButton>
                     <div style={{margin: spacing(1)}}>
                         <PatronButton primary={screenStore.screenSizeMd()}/>
                     </div>
-                    <div style={{display: "flex", justifyContent: "center"}}>
-                        <IconButton
-                            color={"inherit"}
-                            onClick={(event) => this.buttonAnchor = event.currentTarget}
-                        >
-                            <MoreVert/>
-                        </IconButton>
-                    </div>
-                    <Menu
-                        open={this.buttonAnchor != null}
-                        onClose={() => this.buttonAnchor = undefined}
-                        anchorEl={this.buttonAnchor}
-                        style={{zIndex: screenStore.zindexes.menuPops}}
+                    <KeyButton
+                        outlinedWhite={true}
+                        color={"inherit"}
+                        onClick={userStore.logout}
+                        style={{margin: spacing(1)}}
                     >
-                        <LinkMenuItem
-                            to={Routes.myProfile}
-                            style={{margin: spacing(1)}}
-                            onClick={() => {
-                                rightMenuStore.close()
-                                this.buttonAnchor = undefined
-                            }}
-                        >
-                            Profile
-                        </LinkMenuItem>
-                        <MenuItem
-                            onClick={() => {
-                                rightMenuStore.close()
-                                this.buttonAnchor = undefined
-                                userStore.logout()
-                            }}
-                            style={{margin: spacing(1)}}
-                        >
-                            Logout
-                        </MenuItem>
-                    </Menu>
+                        Logout
+                    </KeyButton>
                 </>
             )
         } else {

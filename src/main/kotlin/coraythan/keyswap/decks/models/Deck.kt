@@ -8,6 +8,7 @@ import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
+import java.time.ZonedDateTime
 import javax.persistence.*
 
 @Entity
@@ -78,6 +79,8 @@ data class Deck(
          */
         val ratingVersion: Int? = 0,
         val statsVersion: Int? = 0,
+
+        val listedOn: ZonedDateTime? = null,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

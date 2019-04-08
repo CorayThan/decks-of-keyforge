@@ -36,35 +36,9 @@ class DeckService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
-    private val defaultFilters100Results = DeckFilters().copy(pageSize = 100)
-    private val defaultFiltersSecondPage = DeckFilters().copy(page = defaultFilters.page + 1)
-    private val defaultFiltersSecondPage100Results = DeckFilters().copy(page = defaultFilters.page + 1, pageSize = 100)
     private val query = JPAQueryFactory(entityManager)
 
     var deckCount: Long? = null
-    var firstPageCached: DecksPage? = null
-    var secondPageCached: DecksPage? = null
-    var firstPageCached100Results: DecksPage? = null
-    var secondPageCached100Results: DecksPage? = null
-
-    fun clearCachedValuesIfDeckIdMatches(deckId: Long) {
-        if (
-                firstPageCached?.decks?.any { it.id == deckId } == true
-                || secondPageCached?.decks?.any { it.id == deckId } == true
-                || firstPageCached100Results?.decks?.any { it.id == deckId } == true
-                || secondPageCached100Results?.decks?.any { it.id == deckId } == true
-        ) {
-            clearCachedValues()
-        }
-    }
-
-    fun clearCachedValues() {
-        deckCount = null
-        firstPageCached = null
-        secondPageCached = null
-        firstPageCached100Results = null
-        secondPageCached100Results = null
-    }
 
     fun countFilters(filters: DeckFilters): DeckCount {
 
@@ -103,23 +77,6 @@ class DeckService(
 
     fun filterDecks(filters: DeckFilters): DecksPage {
 
-        val cachedFirstPage = firstPageCached
-        if (filters == defaultFilters && cachedFirstPage != null) {
-            return cachedFirstPage
-        }
-        val cachedSecondPage = secondPageCached
-        if (filters == defaultFiltersSecondPage && cachedSecondPage != null) {
-            return cachedSecondPage
-        }
-        val cachedFirstPage100Results = firstPageCached100Results
-        if (filters == defaultFilters100Results && cachedFirstPage100Results != null) {
-            return cachedFirstPage100Results
-        }
-        val cachedSecondPage100Results = secondPageCached100Results
-        if (filters == defaultFiltersSecondPage100Results && cachedSecondPage100Results != null) {
-            return cachedSecondPage100Results
-        }
-
         val predicate = deckFilterPredicate(filters)
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
@@ -131,6 +88,7 @@ class DeckService(
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
             DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
             DeckSortOptions.NAME -> deckQ.name
+            DeckSortOptions.RECENTLY_LISTED -> deckQ.listedOn
         }
 
         val sort = if (
@@ -138,6 +96,7 @@ class DeckService(
                 || filters.sort == DeckSortOptions.FUNNIEST
                 || filters.sort == DeckSortOptions.MOST_WISHLISTED
                 || filters.sort == DeckSortOptions.CHAINS
+                || filters.sort == DeckSortOptions.RECENTLY_LISTED
         ) {
             (sortProperty as ComparableExpressionBase).desc()
         } else {
@@ -170,23 +129,6 @@ class DeckService(
                 decks,
                 filters.page
         )
-
-        if (filters == defaultFilters) {
-            log.info("Caching first decks page.")
-            firstPageCached = decksPage
-        }
-        if (filters == defaultFiltersSecondPage) {
-            log.info("Caching second decks page.")
-            secondPageCached = decksPage
-        }
-        if (filters == defaultFilters100Results) {
-            log.info("Caching first decks page for 100 results.")
-            firstPageCached100Results = decksPage
-        }
-        if (filters == defaultFiltersSecondPage100Results) {
-            log.info("Caching second decks page for 100 results.")
-            secondPageCached100Results = decksPage
-        }
 
         return decksPage
     }
@@ -361,7 +303,8 @@ class DeckService(
                         dateListed = it.dateListed!!.toLocalDate(),
                         expiresAt = it.expiresAt?.toLocalDate(),
                         username = it.user.username,
-                        publicContactInfo = it.user.publicContactInfo
+                        publicContactInfo = it.user.publicContactInfo,
+                        discord = it.user.discord
                 )
             }
         }.sortedByDescending { it.dateListed }

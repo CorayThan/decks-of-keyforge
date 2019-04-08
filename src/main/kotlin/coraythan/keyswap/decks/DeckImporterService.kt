@@ -83,7 +83,6 @@ class DeckImporterService(
         }
         val deckCountNow = deckRepo.count()
         log.info("Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
-        deckService.clearCachedValues()
         deckService.countFilters(DeckFilters())
     }
 

@@ -1,6 +1,6 @@
 import * as QueryString from "query-string"
 import * as React from "react"
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { AboutPage } from "../about/AboutPage"
 import { PrivacyPolicy } from "../about/PrivacyPolicy"
 import { ArticlesPage } from "../articles/ArticlesPage"
@@ -13,6 +13,7 @@ import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/saleno
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
+import { LandingPage } from "../landing/LandingPage"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
 import { MyProfile } from "../user/MyProfile"
@@ -28,6 +29,7 @@ export {
 }
 
 class Routes {
+    static landing = ""
     static users = "/users"
     static myProfile = "/my-profile"
     static cards = "/cards"
@@ -48,6 +50,7 @@ class Routes {
     /**
      * Deck filters should be cleaned.
      * @param filters
+     * @param removeAuto
      */
     static deckSearch = (filters: DeckFilters) => {
         const cleaned = prepareDeckFiltersForQueryString(filters)
@@ -135,7 +138,10 @@ class KeyRouter extends React.Component {
                             path={Routes.myProfile}
                             component={MyProfile}
                         />
-                        <Route render={() => <Redirect to={Routes.decks}/>}/>
+                        <Route
+                            path={Routes.landing}
+                            component={LandingPage}
+                        />
                     </Switch>
                     <SnackMessage/>
                 </div>

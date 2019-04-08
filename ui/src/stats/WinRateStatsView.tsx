@@ -62,4 +62,4 @@ export class WinRateStatsView extends React.Component<{}> {
     }
 }
 
-const WinRateBar = (props: StatsBarProps) => <StatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>
+export const WinRateBar = (props: StatsBarProps) => <StatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>

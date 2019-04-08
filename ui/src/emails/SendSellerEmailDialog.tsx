@@ -17,6 +17,7 @@ interface SendSellerEmailDialogProps {
     senderUsername: string
     senderEmail: string
     username: string
+    style?: React.CSSProperties
 }
 
 @observer
@@ -54,14 +55,14 @@ export class SendSellerEmailDialog extends React.Component<SendSellerEmailDialog
     }
 
     render() {
-        const {username, deckName} = this.props
+        const {username, deckName, style} = this.props
 
         return (
-            <div>
+            <div style={style}>
                 <KeyButton
                     onClick={this.handleOpen}
                 >
-                    Send Message
+                    Send Email
                 </KeyButton>
                 <Dialog
                     open={this.open}

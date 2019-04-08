@@ -11,7 +11,7 @@ import { Deck } from "../decks/Deck"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
 import { GlobalStats } from "./GlobalStats"
-import { StatsStore } from "./StatsStore"
+import { statsStore } from "./StatsStore"
 
 interface DeckStatsViewProps {
     deck: Deck
@@ -27,7 +27,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
             expectedAmber, amberControl, creatureControl, artifactControl,
             deckManipulation, effectivePower
         } = this.props.deck
-        const stats = StatsStore.instance.stats
+        const stats = statsStore.stats
         if (!stats) {
             return <Loader/>
         }
@@ -95,7 +95,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
             aercScore, amberControl, expectedAmber, artifactControl, creatureControl,
             deckManipulation, effectivePower
         } = this.props.deck
-        const stats = StatsStore.instance.stats
+        const stats = statsStore.stats
         if (!stats) {
             return <Loader/>
         }

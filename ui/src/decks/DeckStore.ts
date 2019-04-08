@@ -54,8 +54,14 @@ export class DeckStore {
     @observable
     importingAndAddingDeck = false
 
+    @observable
+    autoSearch = true
+
     reset = () => {
         this.deckPage = undefined
+        this.nextDeckPage = undefined
+        this.decksCount = undefined
+        this.currentFilters = undefined
     }
 
     findDeck = (keyforgeId: string) => {
@@ -127,7 +133,7 @@ export class DeckStore {
         const countPromise = this.findDecksCount(filters)
         const decks = await decksPromise
         if (decks) {
-            // log.debug(`Replacing decks page with decks:  ${decks.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
+            log.debug(`Replacing decks page with decks:  ${decks.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
             this.deckPage = decks
         }
         this.searchingForDecks = false

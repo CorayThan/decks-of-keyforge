@@ -34,7 +34,11 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     search = (props: RouteComponentProps<{}>) => {
         // log.debug(`Search with filters ${prettyJson(this.makeFilters(props).cleaned())}`)
-        deckStore.searchDecks(this.makeFilters(props).cleaned())
+        if (deckStore.autoSearch) {
+            deckStore.searchDecks(this.makeFilters(props).cleaned())
+        } else {
+            deckStore.autoSearch = true
+        }
     }
 
     render() {

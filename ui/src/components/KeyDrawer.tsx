@@ -1,11 +1,11 @@
-import { IconButton } from "@material-ui/core"
 import Drawer from "@material-ui/core/Drawer"
 import Fab from "@material-ui/core/Fab/Fab"
-import { Menu, Search } from "@material-ui/icons"
+import { Search } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { deckStore } from "../decks/DeckStore"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
 
@@ -22,13 +22,13 @@ class KeyDrawerStoreImpl {
     }
 }
 
-export const KeyDrawerStore = new KeyDrawerStoreImpl()
+export const keyDrawerStore = new KeyDrawerStoreImpl()
 
 @observer
 export class KeyDrawer extends React.Component<{ children: React.ReactNode, width?: number, hamburgerMenu?: boolean }> {
 
     componentDidMount() {
-        KeyDrawerStore.open = false
+        keyDrawerStore.open = !deckStore.autoSearch
     }
 
     render() {
@@ -36,19 +36,19 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode, widt
         const panelWidth = width ? width : standardPanelWidth
         const small = screenStore.screenSizeSm()
         if (small) {
+            if (hamburgerMenu) {
+                return null
+            }
             return (
                 <div>
-                    {KeyDrawerStore.open || hamburgerMenu ? null : (
-                        <div>
-                            <ToolbarSpacer/>
-                            <SearchOpen/>
-                        </div>
+                    {keyDrawerStore.open ? null : (
+                        <SearchOpen/>
                     )}
                     <Drawer
                         style={{width: panelWidth}}
                         anchor={"left"}
-                        open={KeyDrawerStore.open}
-                        onClose={() => KeyDrawerStore.open = false}
+                        open={keyDrawerStore.open}
+                        onClose={() => keyDrawerStore.open = false}
                         PaperProps={{style: {width: panelWidth}}}
                     >
                         <ToolbarSpacer/>
@@ -80,26 +80,13 @@ const SearchOpen = () => {
             style={{
                 position: "fixed",
                 left: spacing(2),
-                top: spacing(16),
+                bottom: spacing(2),
                 opacity: 1,
                 zIndex: screenStore.zindexes.keyDrawer,
             }}
-            onClick={() => KeyDrawerStore.open = true}
+            onClick={() => keyDrawerStore.open = true}
         >
             <Search style={{marginLeft: spacing(1)}}/>
         </Fab>
-    )
-}
-
-export const HamburgerOpen = () => {
-    return (
-        <IconButton
-            aria-label="Open drawer"
-            onClick={() => KeyDrawerStore.open = !KeyDrawerStore.open}
-            color={"inherit"}
-            style={{marginRight: spacing(2)}}
-        >
-            <Menu/>
-        </IconButton>
     )
 }

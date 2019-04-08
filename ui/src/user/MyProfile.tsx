@@ -89,18 +89,30 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     confirmOpen = false
 
+    @observable
+    sellerEmail: string
+
+    @observable
+    discord: string
+
+    @observable
+    storeName: string
+
     update?: UserProfileUpdate
 
     buyingCountriesInputLabelRef: any
 
     constructor(props: MyProfileInnerProps) {
         super(props)
-        const {publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email} = props.profile
+        const {publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, sellerEmail, discord, storeName} = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
         this.country = country ? country : ""
         this.preferredCountries = preferredCountries ? preferredCountries : []
+        this.sellerEmail = sellerEmail ? sellerEmail : ""
+        this.discord = discord ? discord : ""
+        this.storeName = storeName ? storeName : ""
         uiStore.setTopbarValues(`My Profile`, "My Profile", "")
 
         forSaleNotificationsStore.queries = undefined
@@ -132,10 +144,32 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             messageStore.setWarningMessage("Please enter a valid email address.")
             return
         }
+        const sellerEmailTrimmed = this.sellerEmail.trim()
+        const sellerEmail = sellerEmailTrimmed.length === 0 ? undefined : sellerEmailTrimmed
+        if (sellerEmail != null && (sellerEmail.length < 1 || !Utils.validateEmail(sellerEmail))) {
+            messageStore.setWarningMessage("Please enter a valid seller email address.")
+            return
+        }
+        const discordTrimmed = this.discord.trim()
+        const discord = discordTrimmed.length === 0 ? undefined : discordTrimmed
+        if (discord != null && !discord.includes("#")) {
+            messageStore.setWarningMessage(`Please include a valid discord user id, e.g. "CorayThan#9734"`)
+            return
+        }
+
+        const storeNameTrimmed = this.storeName.trim()
+        const storeName = storeNameTrimmed.length === 0 ? undefined : storeNameTrimmed
+        if (storeNameTrimmed != null && storeNameTrimmed.length > 40) {
+            messageStore.setWarningMessage(`Please make your store name 40 characters or less.`)
+            return
+        }
 
         const toUpdate = {
             email,
             publicContactInfo,
+            sellerEmail,
+            discord,
+            storeName,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries
@@ -212,6 +246,38 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 label={"email"}
                                                 value={this.email}
                                                 onChange={(event) => this.email = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                style={{marginBottom: spacing(2)}}
+                                            />
+                                        </Grid>
+                                        {userStore.featuredSeller ? (
+                                            <Grid item={true} xs={12}>
+                                                <TextField
+                                                    label={"store name"}
+                                                    value={this.storeName}
+                                                    onChange={(event) => this.storeName = event.target.value}
+                                                    fullWidth={true}
+                                                    variant={"outlined"}
+                                                    style={{marginBottom: spacing(2)}}
+                                                />
+                                            </Grid>
+                                        ) : null}
+                                        <Grid item={true} xs={12} sm={6}>
+                                            <TextField
+                                                label={"public email"}
+                                                value={this.sellerEmail}
+                                                onChange={(event) => this.sellerEmail = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                style={{marginBottom: spacing(2)}}
+                                            />
+                                        </Grid>
+                                        <Grid item={true} xs={12} sm={6}>
+                                            <TextField
+                                                label={"discord"}
+                                                value={this.discord}
+                                                onChange={(event) => this.discord = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                                 style={{marginBottom: spacing(2)}}

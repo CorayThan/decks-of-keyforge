@@ -39,8 +39,28 @@ class UserDeckService(
         }
     }
 
-    // Don't want this running regularly
+    // TODO delete this after they're done being added
     @Scheduled(fixedDelayString = "PT144H")
+    fun correctDatesListed() {
+        log.info("Starting to correct dates listed.")
+        userDeckRepo
+                .findAll(QUserDeck.userDeck.forSale.isTrue.or(QUserDeck.userDeck.forTrade.isTrue))
+                .groupBy { it.deck.id }
+                .map { it.value.first().deck }
+                .forEach {
+                    val dateListed = it.userDecks
+                            .mapNotNull { it.dateListed }
+                            .sortedDescending()
+                            .first()
+                    if (it.listedOn != dateListed) {
+                        deckRepo.save(it.copy(listedOn = dateListed))
+                    }
+                }
+        log.info("Done correcting dates listed.")
+    }
+
+    // Don't want this running regularly
+    // @Scheduled(fixedDelayString = "PT144H")
     fun correctCounts() {
         log.info("Starting to correct counts.")
         userDeckRepo
@@ -63,7 +83,6 @@ class UserDeckService(
         }) {
             it.copy(wishlist = add)
         }
-        deckService.clearCachedValuesIfDeckIdMatches(deckId)
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
@@ -72,7 +91,6 @@ class UserDeckService(
         }) {
             it.copy(funny = mark)
         }
-        deckService.clearCachedValuesIfDeckIdMatches(deckId)
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
@@ -110,7 +128,8 @@ class UserDeckService(
         modOrCreateUserDeck(listingInfo.deckId, currentUser, {
             it.copy(
                     forSale = it.forSale || listingInfo.forSale,
-                    forTrade = it.forTrade || listingInfo.forTrade
+                    forTrade = it.forTrade || listingInfo.forTrade,
+                    listedOn = now()
             )
         }) {
             it.copy(
@@ -155,9 +174,12 @@ class UserDeckService(
                         .and(userDeckQ.deck.id.eq(deckId))
                         .and(userDeckQ.id.ne(userDeck.id))
         )
+        val forSale = userDecksForSale.toList().isNotEmpty()
+        val forTrade = userDecksForTrade.toList().isNotEmpty()
         deckRepo.save(userDeck.deck.copy(
-                forSale = userDecksForSale.toList().isNotEmpty(),
-                forTrade = userDecksForTrade.toList().isNotEmpty()
+                forSale = forSale,
+                forTrade = forTrade,
+                listedOn = if (forSale || forTrade) userDeck.deck.listedOn else null
         ))
     }
 

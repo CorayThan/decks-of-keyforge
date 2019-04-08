@@ -58,7 +58,8 @@ enum class DeckSortOptions {
     CHAINS,
     FUNNIEST,
     MOST_WISHLISTED,
-    NAME
+    NAME,
+    RECENTLY_LISTED
 }
 
 enum class SortDirection(val direction: Sort.Direction) {

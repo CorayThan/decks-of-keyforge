@@ -7,6 +7,7 @@
         </encoder>
     </appender>
     <appender name="loggly" class="ch.qos.logback.ext.loggly.LogglyAppender">
+        <filter class="coraythan.keyswap.config.IgnoreLogsFilter" />
         <endpointUrl>http://logs-01.loggly.com/inputs/b46c7d77-f587-4927-87de-d3bae6f4bd40/tag/logback</endpointUrl>
         <pattern>%d{"ISO8601", UTC} %p %t %c{0}.%M - %m%n</pattern>
     </appender>

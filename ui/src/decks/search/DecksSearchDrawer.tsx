@@ -12,7 +12,7 @@ import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
-import { KeyDrawer, KeyDrawerStore } from "../../components/KeyDrawer"
+import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
@@ -29,7 +29,7 @@ import { userStore } from "../../user/UserStore"
 import { deckTableViewStore } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
-import { DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
+import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
 import { DeckFilters } from "./DeckFilters"
 
@@ -42,7 +42,7 @@ interface DecksSearchDrawerProps {
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     selectedHouses = new SelectedHouses(this.props.filters.houses)
-    selectedSortStore = new DeckSortSelectStore(this.props.filters.sort)
+    selectedSortStore = new DeckSortSelectStore(this.props.filters.forTrade || this.props.filters.forSale, this.props.filters.sort)
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
 
     search = (event?: React.FormEvent) => {
@@ -62,10 +62,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             }
         }
 
-        this.props.history.push(
-            Routes.deckSearch(filters)
-        )
-        KeyDrawerStore.closeIfSmall()
+        this.props.history.push(Routes.deckSearch(filters))
+        keyDrawerStore.closeIfSmall()
         deckTableViewStore.reset()
     }
 
@@ -74,6 +72,26 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.selectedSortStore.selectedValue = ""
         this.props.filters.reset()
         this.constraintsStore.reset()
+    }
+
+    updateForSaleOrTrade = (forSale?: boolean, forTrade?: boolean) => {
+        const filters = this.props.filters
+        if (forSale != null) {
+            filters.forSale = forSale
+        }
+        if (forTrade != null) {
+            filters.forTrade = forTrade
+        }
+        if (filters.forSale || filters.forTrade) {
+            this.selectedSortStore.forSaleOrTrade = true
+
+        } else {
+            this.selectedSortStore.forSaleOrTrade = false
+            filters.forSaleInCountry = undefined
+            if (filters.sort === DeckSorts.recentlyListed) {
+                filters.sort = DeckSorts.sas
+            }
+        }
     }
 
     @computed
@@ -171,7 +189,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             />
                             <div style={{flexGrow: 1}}/>
                             {screenStore.screenSizeXs() ? (
-                                <IconButton onClick={() => KeyDrawerStore.open = false}>
+                                <IconButton onClick={() => keyDrawerStore.open = false}>
                                     <Close/>
                                 </IconButton>
                             ) : null}
@@ -185,7 +203,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     control={
                                         <Checkbox
                                             checked={this.props.filters.forSale}
-                                            onChange={(event) => this.props.filters.forSale = event.target.checked}
+                                            onChange={(event) => this.updateForSaleOrTrade(event.target.checked)}
                                         />
                                     }
                                     label={(
@@ -199,7 +217,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     control={
                                         <Checkbox
                                             checked={this.props.filters.forTrade}
-                                            onChange={(event) => this.props.filters.forTrade = event.target.checked}
+                                            onChange={(event) => this.updateForSaleOrTrade(undefined, event.target.checked)}
                                         />
                                     }
                                     label={(

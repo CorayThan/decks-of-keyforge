@@ -50,4 +50,7 @@ export interface KeyUserDto {
     lastVersionSeen: string
     patreonId?: string
     patreonTier?: PatreonRewardsTier
+    sellerEmail?: string
+    discord?: string
+    storeName?: string
 }

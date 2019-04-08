@@ -8,7 +8,7 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { BarData } from "../stats/DeckStatsView"
 import { StatsBar } from "../stats/StatsBar"
-import { StatsStore } from "../stats/StatsStore"
+import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
 export const latestVersion = "3.5"
@@ -84,12 +84,12 @@ export class ReleaseNotes extends React.Component {
                     "houses.",
                     "Added a global stats page.",
                     (
-                            <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
-                                {StatsStore.instance.stats == null ? <Loader/> : (
-                                    <StatsBar name={"SAS v3 Win Rate"} data={StatsStore.instance.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
-                                )}
-                                <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
-                            </div>
+                        <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+                            {statsStore.stats == null ? <Loader/> : (
+                                <StatsBar name={"SAS v3 Win Rate"} data={statsStore.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
+                            )}
+                            <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
+                        </div>
                     )
                 ]}/>
                 <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[

@@ -14,4 +14,7 @@ export interface UserProfileUpdate {
     allowUsersToSeeDeckOwnership: boolean
     country?: string
     preferredCountries?: string[]
+    sellerEmail?: string
+    discord?: string
+    storeName?: string
 }

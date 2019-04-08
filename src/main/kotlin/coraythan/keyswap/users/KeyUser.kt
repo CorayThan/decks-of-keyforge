@@ -6,6 +6,7 @@ import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.userdeck.UserDeck
+import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -53,7 +54,13 @@ data class KeyUser(
         val patreonId: String? = null,
 
         @Enumerated(EnumType.STRING)
-        val patreonTier: PatreonRewardsTier? = null
+        val patreonTier: PatreonRewardsTier? = null,
+
+        val mostRecentDeckListing: ZonedDateTime? = null,
+
+        val sellerEmail: String? = null,
+        val discord: String? = null,
+        val storeName: String? = null
 
 ) {
     fun toProfile(isUser: Boolean) = UserProfile(
@@ -78,7 +85,10 @@ data class KeyUser(
             preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen,
             patreonId = patreonId,
-            patreonTier = patreonTier
+            patreonTier = patreonTier,
+            sellerEmail = sellerEmail,
+            discord = discord,
+            storeName = storeName
     )
 }
 
@@ -101,6 +111,10 @@ data class KeyUserDto(
         val lastVersionSeen: String?,
 
         val patreonId: String?,
-        val patreonTier: PatreonRewardsTier?
+        val patreonTier: PatreonRewardsTier?,
+
+        val sellerEmail: String? = null,
+        val discord: String? = null,
+        val storeName: String? = null
 
 )

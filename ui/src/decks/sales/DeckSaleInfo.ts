@@ -16,6 +16,7 @@ export interface DeckSaleInfo {
 
     username: string
     publicContactInfo?: string
+    discord?: string
 }
 
 export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo | undefined => {
@@ -42,6 +43,7 @@ export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo
 
         condition: condition == null ? DeckCondition.NEW_IN_PLASTIC : condition,
         username: user.username,
-        publicContactInfo: user.publicContactInfo
+        publicContactInfo: user.publicContactInfo,
+        discord: user.discord
     }
 }
