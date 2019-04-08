@@ -37,26 +37,6 @@ class UserDeckService(
         }
     }
 
-    // TODO delete this after they're done being added
-    @Scheduled(fixedDelayString = "PT144H")
-    fun correctDatesListed() {
-        log.info("Starting to correct dates listed.")
-        userDeckRepo
-                .findAll(QUserDeck.userDeck.forSale.isTrue.or(QUserDeck.userDeck.forTrade.isTrue))
-                .groupBy { it.deck.id }
-                .map { it.value.first().deck }
-                .forEach {
-                    val dateListed = it.userDecks
-                            .mapNotNull { it.dateListed }
-                            .sortedDescending()
-                            .first()
-                    if (it.listedOn != dateListed) {
-                        deckRepo.save(it.copy(listedOn = dateListed))
-                    }
-                }
-        log.info("Done correcting dates listed.")
-    }
-
     // Don't want this running regularly
     // @Scheduled(fixedDelayString = "PT144H")
     fun correctCounts() {

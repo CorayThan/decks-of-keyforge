@@ -224,7 +224,7 @@ class UserLinks extends React.Component {
                     </LinkButton>
                     <LinkButton
                         color={"inherit"}
-                        to={Routes.userProfilePage(userStore.username)}
+                        to={Routes.myProfile}
                         style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >

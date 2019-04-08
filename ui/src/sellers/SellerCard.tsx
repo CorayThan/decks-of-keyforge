@@ -1,4 +1,5 @@
 import { Card, CardActions, CardContent, Divider, Typography } from "@material-ui/core"
+import { startCase } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -40,7 +41,7 @@ export class SellerCard extends React.Component<SellerCardProps> {
                             </UnstyledLink>
                         </div>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                        <Typography variant={"subtitle1"} color={"textSecondary"}>Shipping from {country}</Typography>
+                        <Typography variant={"subtitle1"} color={"textSecondary"}>Shipping from {startCase(country)}</Typography>
                         <Typography variant={"subtitle1"} color={"textSecondary"}>{decksAvailable} decks available</Typography>
                         <Typography variant={"subtitle1"} color={"textSecondary"}>Most recent listing {mostRecentListing}</Typography>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
