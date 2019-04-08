@@ -61,30 +61,28 @@ class KeyUserService(
     fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
     fun updateUserProfile(update: UserProfileUpdate) {
-        val user = currentUserService.loggedInUser()
-        if (user != null) {
-            val userDecks = if (update.country != user.country) {
-                user.decks.map {
-                    if (it.forSale || it.forTrade) it.copy(forSaleInCountry = update.country) else it
-                }
-            } else {
-                user.decks
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val userDecks = if (update.country != user.country) {
+            user.decks.map {
+                if (it.forSale || it.forTrade) it.copy(forSaleInCountry = update.country) else it
             }
-
-            if (update.email != null) validateEmail(update.email)
-
-            userRepo.save(user.copy(
-                    email = update.email ?: user.email,
-                    publicContactInfo = update.publicContactInfo,
-                    allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
-                    country = update.country,
-                    preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
-                    decks = userDecks,
-                    sellerEmail = update.sellerEmail,
-                    discord = update.discord,
-                    storeName = update.storeName
-            ))
+        } else {
+            user.decks
         }
+
+        if (update.email != null) validateEmail(update.email)
+
+        userRepo.save(user.copy(
+                email = update.email ?: user.email,
+                publicContactInfo = update.publicContactInfo,
+                allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
+                country = update.country,
+                preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
+                decks = userDecks,
+                sellerEmail = update.sellerEmail,
+                discord = update.discord,
+                storeName = update.storeName
+        ))
     }
 
     fun resetPasswordTo(code: String, newPassword: String) {

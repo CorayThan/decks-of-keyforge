@@ -12,7 +12,6 @@ import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
-import { sellerStore } from "../sellers/SellerStore"
 import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
 import { screenStore } from "../ui/ScreenStore"
@@ -50,8 +49,7 @@ worstSas.sortDirection = "ASC"
 export class LandingPage extends React.Component<{}> {
 
     componentDidMount(): void {
-        uiStore.setTopbarValues("Decks of Keyforge", "", "Search, evaluate, sell and trade")
-        sellerStore.findFeaturedSellers()
+        uiStore.setTopbarValues("Decks of Keyforge", "DoK", "Search, evaluate, sell and trade")
     }
 
     render() {
@@ -83,10 +81,9 @@ export class LandingPage extends React.Component<{}> {
                             <ListSubheader>
                                 Fun Searches
                             </ListSubheader>
-                            <DeckSearchLink name={"Funniest"} filters={topFunny} color={"secondary"} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Most Favorited"} filters={topWishlisted} color={"secondary"}/>
+                            <DeckSearchLink name={"Funniest"} filters={topFunny} color={"secondary"}/>
+                            <DeckSearchLink name={"Most Favorited"} filters={topWishlisted} color={"secondary"} style={{marginTop: spacing(2)}}/>
                             <DeckSearchLink name={"Worst by SAS"} filters={worstSas} color={"secondary"} style={{marginTop: spacing(2)}}/>
-                            <Divider style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>
@@ -96,25 +93,8 @@ export class LandingPage extends React.Component<{}> {
                                 <DeckSearchLink name={"Decks For Sale"} filters={saleOrTrade} style={{margin: spacing(2)}}/>
                             </div>
                         ) : null}
-                        <Typography
-                            variant={"h4"}
-                            color={"primary"}
-                            style={{margin: spacing(4), marginBottom: spacing(2)}}
-                        >
-                            Featured Sellers
-                        </Typography>
                         <FeaturedSellersView/>
                         <div style={{margin: spacing(4)}}>
-                            <UnstyledLink to={Routes.articles}>
-                                <Typography
-                                    variant={"h4"}
-                                    color={"primary"}
-                                    style={{marginBottom: spacing(4)}}
-                                >
-                                    Articles
-                                </Typography>
-                            </UnstyledLink>
-                            {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
                             <UnstyledLink to={Routes.stats}>
                                 <Typography
                                     variant={"h4"}
@@ -130,6 +110,16 @@ export class LandingPage extends React.Component<{}> {
                                     <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true}/>
                                 </div>
                             )}
+                            <UnstyledLink to={Routes.articles}>
+                                <Typography
+                                    variant={"h4"}
+                                    color={"primary"}
+                                    style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+                                >
+                                    Articles
+                                </Typography>
+                            </UnstyledLink>
+                            {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
                         </div>
                     </div>
                 </div>

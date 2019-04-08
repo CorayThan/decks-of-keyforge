@@ -1,3 +1,4 @@
+import { Card } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
@@ -62,4 +63,8 @@ export class WinRateStatsView extends React.Component<{}> {
     }
 }
 
-export const WinRateBar = (props: StatsBarProps) => <StatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>
+export const WinRateBar = (props: StatsBarProps) => (
+    <Card style={{margin: spacing(2)}}>
+        <StatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>
+    </Card>
+)

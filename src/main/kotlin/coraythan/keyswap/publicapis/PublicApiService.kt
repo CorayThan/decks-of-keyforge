@@ -40,7 +40,7 @@ class PublicApiService(
     }
 
     fun generateApiKey(): String {
-        val currentUser = currentUserService.loggedInUser() ?: throw IllegalAccessError("You aren't logged in.")
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val apiKey = UUID.randomUUID().toString()
         val updatedUser = currentUser.copy(apiKey = apiKey)
         keyUserRepo.save(updatedUser)

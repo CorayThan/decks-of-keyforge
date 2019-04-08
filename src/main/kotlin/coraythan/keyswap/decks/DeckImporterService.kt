@@ -169,7 +169,7 @@ class DeckImporterService(
             currentUser: KeyUser? = null
     ): String {
 
-        val user = currentUser ?: currentUserService.loggedInUser() ?: throw BadRequestException("Must be logged in to save unregistered deck.")
+        val user = currentUser ?: currentUserService.loggedInUserOrUnauthorized()
 
         val cardsAsList = unregisteredDeck.cards.values.flatten()
 

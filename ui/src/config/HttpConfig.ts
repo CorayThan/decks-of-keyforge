@@ -13,6 +13,12 @@ export class HttpConfig {
     static setupAxios = () => {
         axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.errorInterceptor)
         axiosWithoutErrors.interceptors.response.use(HttpConfig.responseInterceptor)
+        let timezoneOffset = new Date().getTimezoneOffset()
+        if (timezoneOffset == null || isNaN(timezoneOffset)) {
+            log.warn("No timezone offset available.")
+            timezoneOffset = 0
+        }
+        axios.defaults.headers.common.Timezone = timezoneOffset
     }
 
     static setAuthHeader = (authHeader?: string) => {

@@ -25,12 +25,12 @@ class DeckEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/filter")
-    fun decks(@RequestBody deckFilters: DeckFilters): DecksPage {
+    fun decks(@RequestBody deckFilters: DeckFilters, @RequestHeader(value = "Timezone") offsetMinutes: Int): DecksPage {
         try {
             val cleanFilters = deckFilters.clean()
             var decks: DecksPage? = null
             val decksFilterTime = measureTimeMillis {
-                decks = deckService.filterDecks(cleanFilters)
+                decks = deckService.filterDecks(cleanFilters, offsetMinutes)
             }
 
             if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $cleanFilters")
@@ -85,7 +85,7 @@ class DeckEndpoints(
     }
 
     @GetMapping("/{id}/sale-info")
-    fun findDeckSaleInfo(@PathVariable id: String) = deckService.saleInfoForDeck(id)
+    fun findDeckSaleInfo(@PathVariable id: String, @RequestHeader(value = "Timezone") offsetMinutes: Int) = deckService.saleInfoForDeck(id, offsetMinutes)
 
     @PostMapping("/secured/read-deck-image")
     fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile): SaveUnregisteredDeck? {

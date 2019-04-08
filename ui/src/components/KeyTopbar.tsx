@@ -60,9 +60,9 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                         variant={"h4"}
                         style={{marginLeft: spacing(2)}}
                         color={"inherit"}>
-                        {screenStore.screenWidth < 1400 ? topbarShortName : topbarName}
+                        {screenStore.screenWidth < 440 ? topbarShortName : topbarName}
                     </Typography>
-                    {screenStore.screenWidth < 1600 ? null : subheaderNode}
+                    {screenStore.screenWidth < 800 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
                     <div style={{marginLeft: spacing(2), marginRight: spacing(2)}}>
                         <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
@@ -72,14 +72,14 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         } else {
             menuContents = (
                 <>
-                    <UnstyledLink to={Routes.decks}><DokIcon/></UnstyledLink>
+                    <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
                     <Typography
                         variant={"h4"}
                         style={{marginLeft: spacing(2)}}
                         color={"inherit"}>
-                        {screenStore.screenWidth < 1400 ? topbarShortName : topbarName}
+                        {screenStore.screenWidth < 1480 ? topbarShortName : topbarName}
                     </Typography>
-                    {screenStore.screenWidth < 1600 ? null : subheaderNode}
+                    {screenStore.screenWidth < 1700 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
                     <RightMenu/>
                 </>

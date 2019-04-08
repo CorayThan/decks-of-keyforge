@@ -2,7 +2,6 @@ package coraythan.keyswap.decks.salenotifications
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckService
 import coraythan.keyswap.decks.models.QDeck
@@ -73,7 +72,7 @@ class ForSaleNotificationsService(
     }
 
     fun addForSaleQuery(query: ForSaleQuery) {
-        val user = currentUserService.loggedInUser()!!
+        val user = currentUserService.loggedInUserOrUnauthorized()
         if (user.email != "coraythan@gmail.com") {
             throw IllegalStateException("You must be a patron to save for sale queries.")
         }
@@ -100,7 +99,7 @@ class ForSaleNotificationsService(
     }
 
     fun findAllForUser(): List<ForSaleQuery> {
-        val currentUser = currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in.")
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return forSaleQueryRepo.findByUserId(currentUser.id).map { objectMapper.readValue<ForSaleQuery>(it.json).copy(id = it.id) }
     }
 }

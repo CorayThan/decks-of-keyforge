@@ -2,7 +2,6 @@ package coraythan.keyswap.userdeck
 
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
-import coraythan.keyswap.decks.DeckService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.now
@@ -21,7 +20,6 @@ class UserDeckService(
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val userDeckRepo: UserDeckRepo,
-        private val deckService: DeckService,
         private val forSaleNotificationsService: ForSaleNotificationsService
 ) {
 
@@ -78,7 +76,7 @@ class UserDeckService(
     }
 
     fun addToWishlist(deckId: Long, add: Boolean = true) {
-        modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, {
+        modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), {
             it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
         }) {
             it.copy(wishlist = add)
@@ -86,7 +84,7 @@ class UserDeckService(
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
-        modOrCreateUserDeck(deckId, currentUserService.loggedInUser()!!, {
+        modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), {
             it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)
         }) {
             it.copy(funny = mark)
@@ -94,7 +92,7 @@ class UserDeckService(
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
-        val user = currentUserService.loggedInUser()!!
+        val user = currentUserService.loggedInUserOrUnauthorized()
         modOrCreateUserDeck(deckId, user, null) {
             it.copy(ownedBy = if (mark) user.username else null)
         }
@@ -113,7 +111,7 @@ class UserDeckService(
             listingInfo: ListingInfo,
             user: KeyUser? = null
     ) {
-        val currentUser = user ?: (currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in"))
+        val currentUser = user ?: (currentUserService.loggedInUserOrUnauthorized())
         if (listingInfo.deckId == null) throw BadRequestException("Must include a deck ID to list a deck.")
 
         // Unlist if it is currently listed to support "updates"
@@ -148,11 +146,12 @@ class UserDeckService(
         if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false)) {
             // Send email since this is a new listing
             forSaleNotificationsService.sendNotifications(listingInfo)
+            userRepo.save(userRepo.getOne(currentUser.id).copy(mostRecentDeckListing = now()))
         }
     }
 
     fun unlist(deckId: Long) {
-        val currentUser = currentUserService.loggedInUser()!!
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
         unlistForUser(deckId, currentUser)
     }
 
@@ -218,7 +217,7 @@ class UserDeckService(
     }
 
     fun findAllForUser(): List<UserDeckDto> {
-        val currentUser = currentUserService.loggedInUser() ?: throw BadRequestException("You aren't logged in")
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return userDeckRepo.findByUserId(currentUser.id).map { it.toDto() }
     }
 }

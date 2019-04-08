@@ -1,6 +1,8 @@
 package coraythan.keyswap
 
+import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -18,3 +20,7 @@ object TimeUtils {
 }
 
 fun now() = ZonedDateTime.now(TimeUtils.zoneId)
+
+fun ZonedDateTime.toLocalDateWithOffsetMinutes(offsetMinutes: Int): LocalDate {
+    return toOffsetDateTime().withOffsetSameInstant(ZoneOffset.ofHoursMinutes(offsetMinutes / 60, offsetMinutes % 60)).toLocalDate()
+}

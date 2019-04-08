@@ -29,8 +29,8 @@ export class StatsBar extends React.Component<StatsBarProps> {
             fontVariant: "h5"
         }
         const large = {
-            width: 580,
-            height: 390,
+            width: 544,
+            height: 360,
             fontVariant: "h4"
         }
         const autoSizes = screenStore.screenSizeSm() ? small : large

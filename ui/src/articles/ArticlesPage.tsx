@@ -36,8 +36,10 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
     render() {
         const urlTitle = this.props.match.params.urlTitle
         let articles = allArticles
+        let snippet = true
         if (urlTitle) {
             articles = allArticles.filter((article) => article.urlTitle === urlTitle)
+            snippet = false
         }
         return (
             <div style={{display: "flex"}}>
@@ -55,7 +57,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
                     </List>
                 </KeyDrawer>
                 <div style={{margin: spacing(4), display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
-                    {articles.map((article: Article, idx: number) => <ArticleView article={article} snippet={true} key={idx}/>)}
+                    {articles.map((article: Article, idx: number) => <ArticleView article={article} snippet={snippet} key={idx}/>)}
                 </div>
             </div>
         )

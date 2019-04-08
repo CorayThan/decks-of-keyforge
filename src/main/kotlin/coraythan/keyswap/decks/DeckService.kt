@@ -13,6 +13,7 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -20,6 +21,7 @@ import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.util.*
 import javax.persistence.EntityManager
 
@@ -75,7 +77,7 @@ class DeckService(
         )
     }
 
-    fun filterDecks(filters: DeckFilters): DecksPage {
+    fun filterDecks(filters: DeckFilters, timezoneOffsetMinutes: Int): DecksPage {
 
         val predicate = deckFilterPredicate(filters)
         val deckQ = QDeck.deck
@@ -119,7 +121,7 @@ class DeckService(
         val decks = deckResults.map {
             val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
             if (filters.forSale || filters.forTrade) {
-                searchResult.copy(deckSaleInfo = saleInfoForDeck(searchResult.keyforgeId))
+                searchResult.copy(deckSaleInfo = saleInfoForDeck(searchResult.keyforgeId, timezoneOffsetMinutes))
             } else {
                 searchResult
             }
@@ -286,7 +288,7 @@ class DeckService(
         )
     }
 
-    fun saleInfoForDeck(keyforgeId: String): List<DeckSaleInfo> {
+    fun saleInfoForDeck(keyforgeId: String, offsetMinutes: Int): List<DeckSaleInfo> {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
         return deck.userDecks.mapNotNull {
             if (!it.forSale && !it.forTrade) {
@@ -300,8 +302,8 @@ class DeckService(
                         listingInfo = it.listingInfo,
                         externalLink = it.externalLink,
                         condition = it.condition!!,
-                        dateListed = it.dateListed!!.toLocalDate(),
-                        expiresAt = it.expiresAt?.toLocalDate(),
+                        dateListed = it.dateListed?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: LocalDate.parse("2019-04-07"),
+                        expiresAt = it.expiresAt?.toLocalDateWithOffsetMinutes(offsetMinutes),
                         username = it.user.username,
                         publicContactInfo = it.user.publicContactInfo,
                         discord = it.user.discord

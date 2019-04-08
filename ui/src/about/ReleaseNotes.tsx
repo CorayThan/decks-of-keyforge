@@ -11,7 +11,7 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.5"
+export const latestVersion = "3.6"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -19,8 +19,13 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote releaseNumber={"3.6"} expanded={true} releaseNotes={[
-                    "Real Patron reward! This one is pretty sweet. Become a $5 a month patron to save deck searches, and get email notifications when new " +
+                    "Real Patron rewards! " +
+                    "First one is pretty sweet. Become a $5 a month patron to save deck searches, and get email notifications when new " +
                     "decks are listed for sale or trade that match your search.",
+                    `If you're a seller, you can become a $10 a month patron to have your "Store" link be featured on the landing page with a custom ` +
+                    "store name and picture. (Please email me a 48px height image to get a custom image.)",
+                    "Speaking of which, there's a new landing page! You won't need to wait to see the same top SAS decks you've seen a 100 times before " +
+                    "anymore. It also provides some suggested deck searches, featured sellers, articles, and a couple graphs.",
                     "I've added a new public API for getting the stats used to build the charts and graphs on this site."
                 ]}/>
                 <ReleaseNote releaseNumber={"3.5"} expanded={true} releaseNotes={[
