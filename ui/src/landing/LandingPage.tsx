@@ -95,21 +95,6 @@ export class LandingPage extends React.Component<{}> {
                         ) : null}
                         <FeaturedSellersView/>
                         <div style={{margin: spacing(4)}}>
-                            <UnstyledLink to={Routes.stats}>
-                                <Typography
-                                    variant={"h4"}
-                                    color={"primary"}
-                                    style={{marginBottom: spacing(4)}}
-                                >
-                                    Stats
-                                </Typography>
-                            </UnstyledLink>
-                            {stats == null ? <Loader/> : (
-                                <div style={{display: "flex", flexWrap: "wrap"}}>
-                                    <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate}/>
-                                    <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true}/>
-                                </div>
-                            )}
                             <UnstyledLink to={Routes.articles}>
                                 <Typography
                                     variant={"h4"}
@@ -120,6 +105,21 @@ export class LandingPage extends React.Component<{}> {
                                 </Typography>
                             </UnstyledLink>
                             {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
+                            <UnstyledLink to={Routes.stats}>
+                                <Typography
+                                    variant={"h4"}
+                                    color={"primary"}
+                                    style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+                                >
+                                    Stats
+                                </Typography>
+                            </UnstyledLink>
+                            {stats == null ? <Loader/> : (
+                                <div style={{display: "flex", flexWrap: "wrap"}}>
+                                    <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate}/>
+                                    <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true}/>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
