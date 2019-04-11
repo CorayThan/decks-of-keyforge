@@ -40,16 +40,23 @@ class PatreonService(
     @Scheduled(fixedDelayString = "PT6H")
     fun refreshCreatorAccount() {
         log.info("$scheduledStart refresh patreon creator account.")
-        val creatorAccount = patreonAccountRepo.findAll().toList().firstOrNull()
-        if (creatorAccount != null) {
-            val updated = updateCreatorAccount(creatorAccount.refreshToken)
-            refreshCampaignInfo(updated.accessToken)
-        } else {
-            log.warn("Couldn't refresh patreon creator account.")
-        }
+        try {
+            val creatorAccount = patreonAccountRepo.findAll().toList().firstOrNull()
+            log.info("Found creator account.")
+            if (creatorAccount != null) {
+                val updated = updateCreatorAccount(creatorAccount.refreshToken)
+                log.info("updated creator account")
+                refreshCampaignInfo(updated.accessToken)
+                log.info("refreshed campaign info")
+            } else {
+                log.warn("Couldn't refresh patreon creator account.")
+            }
 
-        topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
-                .map { it.username }
+            topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
+                    .map { it.username }
+        } catch (e: Exception) {
+            log.error("Couldn't refresh creator account due to exception.", e)
+        }
         log.info("$scheduledStop Done refreshing patreon creator account.")
     }
 
@@ -89,8 +96,22 @@ class PatreonService(
     }
 
     fun saveCreatorAccount(account: PatreonAccount): PatreonAccount {
-        patreonAccountRepo.deleteAll()
-        return patreonAccountRepo.save(account)
+        val preexistingAccounts = patreonAccountRepo.findAll()
+
+        val preexistingAccount = preexistingAccounts.firstOrNull()
+        if (preexistingAccounts.toList().size > 1) {
+            patreonAccountRepo.delete(preexistingAccounts.toList()[1])
+        }
+
+        val updatedAccount = preexistingAccount?.copy(
+                accessToken = account.accessToken,
+                refreshToken = account.refreshToken,
+                scope = account.scope,
+                tokenType = account.tokenType,
+                refreshedAt = account.refreshedAt
+        ) ?: account
+
+        return patreonAccountRepo.save(updatedAccount)
     }
 
     fun updateCreatorAccount(refreshToken: String): PatreonAccount {
@@ -135,10 +156,16 @@ class PatreonService(
 
         listOf(userRepo.findByUsernameIgnoreCase("coraythan"))
                 .mapNotNull { if (it?.patreonTier == PatreonRewardsTier.MERCHANT_AEMBERMAKER) null else it?.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER) }
-                .forEach { userRepo.save(it) }
+                .forEach {
+                    log.info("Updating user ${it.username} to tier ${it.patreonTier}")
+                    userRepo.save(it)
+                }
 
         listOf(userRepo.findByUsernameIgnoreCase("Zarathustra05"))
                 .mapNotNull { if (it?.patreonTier == PatreonRewardsTier.ALWAYS_GENEROUS) null else it?.copy(patreonTier = PatreonRewardsTier.ALWAYS_GENEROUS) }
-                .forEach { userRepo.save(it) }
+                .forEach {
+                    log.info("Updating user ${it.username} to tier ${it.patreonTier}")
+                    userRepo.save(it)
+                }
     }
 }
