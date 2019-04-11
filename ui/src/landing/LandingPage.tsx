@@ -31,16 +31,19 @@ topWishlisted.sort = DeckSorts.wishlisted
 const saleOrTrade = new DeckFilters()
 saleOrTrade.forSale = true
 saleOrTrade.forTrade = true
+saleOrTrade.includeUnregistered = true
 
 const saleOrTradeAERC = new DeckFilters()
 saleOrTradeAERC.forSale = true
 saleOrTradeAERC.forTrade = true
 saleOrTradeAERC.sort = DeckSorts.aerc
+saleOrTradeAERC.includeUnregistered = true
 
 const saleOrTradeRecent = new DeckFilters()
 saleOrTradeRecent.forSale = true
 saleOrTradeRecent.forTrade = true
 saleOrTradeRecent.sort = DeckSorts.recentlyListed
+saleOrTradeRecent.includeUnregistered = true
 
 const worstSas = new DeckFilters()
 worstSas.sortDirection = "ASC"

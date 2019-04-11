@@ -17,6 +17,18 @@ export class SellerStore {
             })
     }
 
+    findSellerWithUsername = (username: string) => {
+        const sellers = this.featuredSellers
+        if (sellers == null) {
+            return undefined
+        }
+        const matches = sellers.filter(seller => seller.username === username)
+        if (matches.length === 0) {
+            return undefined
+        }
+        return matches[0]
+    }
+
 }
 
 export const sellerStore = new SellerStore()

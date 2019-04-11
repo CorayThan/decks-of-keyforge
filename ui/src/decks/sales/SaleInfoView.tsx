@@ -13,6 +13,8 @@ import { DiscordUser } from "../../generic/DiscordUser"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
+import { SellerImg } from "../../sellers/imgs/SellerImgs"
+import { sellerStore } from "../../sellers/SellerStore"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
@@ -70,6 +72,8 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
 
         const allowEmailOrDiscord = allowEmail || discord
 
+        const sellerDetails = sellerStore.findSellerWithUsername(username)
+
         return (
             <KeyCard
                 style={{width: 328}}
@@ -101,6 +105,12 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                 }
             >
                 <div>
+                    {sellerDetails == null ? null : (
+                        <div style={{display: "flex", alignItems: "center", margin: spacing(2), marginBottom: 0}}>
+                            <SellerImg sellerUsername={username}/>
+                            <Typography variant={"h5"}>{sellerDetails.storeName}</Typography>
+                        </div>
+                    )}
                     {listingInfo == null ? null : (
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Listing Details</Typography>

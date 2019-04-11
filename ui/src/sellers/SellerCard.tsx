@@ -8,7 +8,7 @@ import { DiscordUser } from "../generic/DiscordUser"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { sellerImgs } from "./imgs/SellerImgs"
+import { SellerImg } from "./imgs/SellerImgs"
 import { SellerDetails } from "./SellerDetails"
 
 interface SellerCardProps {
@@ -23,9 +23,9 @@ export class SellerCard extends React.Component<SellerCardProps> {
         const filters = new DeckFilters()
         filters.forSale = true
         filters.forTrade = true
+        filters.includeUnregistered = true
         filters.owner = username
 
-        const sellerImg = sellerImgs.get(username.toLowerCase())
         const storeLink = Routes.deckSearch(filters)
 
         return (
@@ -33,17 +33,13 @@ export class SellerCard extends React.Component<SellerCardProps> {
                 <Card style={{display: "flex", flexDirection: "column", width: 344, height: 400, margin: spacing(2)}}>
                     <CardContent>
                         <div style={{display: "flex", alignItems: "flex-end"}}>
-                            {sellerImg ? (
-                                <img alt={"Seller Image"} src={sellerImg} style={{height: 48, marginRight: spacing(2)}}/>
-                            ) : null}
+                            <SellerImg sellerUsername={username}/>
                             <UnstyledLink to={storeLink}>
                                 <Typography variant={"h5"}>{storeName}</Typography>
                             </UnstyledLink>
                         </div>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                        <Typography variant={"subtitle1"} color={"textSecondary"}>Shipping from {startCase(country)}</Typography>
-                        <Typography variant={"subtitle1"} color={"textSecondary"}>{decksAvailable} decks available</Typography>
-                        <Typography variant={"subtitle1"} color={"textSecondary"}>Most recent listing {mostRecentListing}</Typography>
+                        <SellerCardSecondaryInfo sellerDetails={this.props.sellerDetails}/>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
 
                         <DiscordUser discord={discord} style={{marginBottom: spacing(2)}}/>
@@ -73,3 +69,11 @@ export class SellerCard extends React.Component<SellerCardProps> {
         )
     }
 }
+
+export const SellerCardSecondaryInfo = (props: { sellerDetails: SellerDetails }) => (
+    <>
+        <Typography variant={"subtitle1"} color={"textSecondary"}>Shipping from {startCase(props.sellerDetails.country)}</Typography>
+        <Typography variant={"subtitle1"} color={"textSecondary"}>{props.sellerDetails.decksAvailable} decks available</Typography>
+        <Typography variant={"subtitle1"} color={"textSecondary"}>Most recent listing {props.sellerDetails.mostRecentListing}</Typography>
+    </>
+)

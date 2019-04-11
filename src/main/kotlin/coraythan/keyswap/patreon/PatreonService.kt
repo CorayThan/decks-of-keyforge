@@ -49,7 +49,6 @@ class PatreonService(
         }
 
         topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
-                .plus(userRepo.findByPatreonTier(PatreonRewardsTier.SUPPORT_SOPHISTICATION))
                 .map { it.username }
         log.info("$scheduledStop Done refreshing patreon creator account.")
     }
@@ -129,9 +128,17 @@ class PatreonService(
             }
             val user = userRepo.findByPatreonId(patreonId)
             if (user != null && user.patreonTier != bestTier) {
-                log.info("Found patreon user to save: ${user.email}.")
+                log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier.")
                 userRepo.save(user.copy(patreonTier = bestTier))
             }
         }
+
+        listOf(userRepo.findByUsernameIgnoreCase("coraythan"))
+                .mapNotNull { if (it?.patreonTier == PatreonRewardsTier.MERCHANT_AEMBERMAKER) null else it?.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER) }
+                .forEach { userRepo.save(it) }
+
+        listOf(userRepo.findByUsernameIgnoreCase("Zarathustra05"))
+                .mapNotNull { if (it?.patreonTier == PatreonRewardsTier.ALWAYS_GENEROUS) null else it?.copy(patreonTier = PatreonRewardsTier.ALWAYS_GENEROUS) }
+                .forEach { userRepo.save(it) }
     }
 }

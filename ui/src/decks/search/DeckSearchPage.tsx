@@ -1,6 +1,6 @@
 import Typography from "@material-ui/core/Typography"
 import * as History from "history"
-import { autorun } from "mobx"
+import { autorun, IReactionDisposer } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
@@ -9,6 +9,8 @@ import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
+import { SellerDetails } from "../../sellers/SellerDetails"
+import { sellerStore } from "../../sellers/SellerStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
@@ -58,16 +60,38 @@ interface DeckSearchContainerProps {
 @observer
 class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
+    titleUpdateDisposer?: IReactionDisposer
+
     componentDidMount(): void {
         this.setTitle()
-        autorun(() => {
+        this.titleUpdateDisposer = autorun(() => {
             this.setTitle()
         })
     }
 
+    componentWillUnmount(): void {
+        if (this.titleUpdateDisposer) {
+            this.titleUpdateDisposer()
+        }
+    }
+
     setTitle = () => {
-        if (this.props.queryParams && this.props.queryParams.includes(`owner=${userStore.username}`)) {
+        const {filters, queryParams} = this.props
+
+        let owner: string | undefined
+        let sellerDetails: SellerDetails | undefined
+        if (queryParams) {
+            const queryValues = QueryString.parse(queryParams)
+            owner = queryValues.owner as (string | undefined)
+            if (owner) {
+                sellerDetails = sellerStore.findSellerWithUsername(owner)
+            }
+        }
+
+        if (userStore.username != null && owner === userStore.username) {
             uiStore.setTopbarValues("My Decks", "My Decks", "Search, evaluate, sell and trade")
+        } else if (sellerDetails && (filters.forSale || filters.forTrade)) {
+            uiStore.setTopbarValues(sellerDetails.storeName, sellerDetails.storeName, "A featured seller store")
         } else {
             uiStore.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
         }
@@ -75,6 +99,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
     render() {
         const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
+        const {filters, history} = this.props
 
         let decksToDisplay = null
         if (deckPage != null) {
@@ -108,7 +133,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
         return (
             <div style={{display: "flex"}}>
-                <DecksSearchDrawer history={this.props.history} filters={this.props.filters}/>
+                <DecksSearchDrawer history={history} filters={filters}/>
                 <div
                     style={{
                         flexGrow: 1,

@@ -31,9 +31,6 @@ class SellerService(
         featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
                 .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
                 .sortedByDescending { it.mostRecentDeckListing }
-                .plus(userRepo.findByEmailIgnoreCase("coraythan@gmail.com"))
-                .plus(userRepo.findByUsernameIgnoreCase("Zarathustra05"))
-                .filterNotNull()
                 .filter { user -> user.decks.filter { it.forSale || it.forTrade }.size > 9 }
                 .map { user ->
                     SellerDetailsWithFullDate(

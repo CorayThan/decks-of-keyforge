@@ -189,7 +189,7 @@ export class UserStore {
     @computed
     get patron(): boolean {
         if (this.user) {
-            return !!this.user.patreonId
+            return !!this.user.patreonTier
         }
         return false
     }
@@ -197,9 +197,6 @@ export class UserStore {
     @computed
     get deckNotificationsAllowed(): boolean {
         if (this.user) {
-            if (this.user.email === "coraythan@gmail.com") {
-                return true
-            }
             return findPatronRewardLevel(this.user.patreonTier) > 0
         }
         return false
@@ -208,9 +205,6 @@ export class UserStore {
     @computed
     get featuredSeller(): boolean {
         if (this.user) {
-            if (this.user.email === "coraythan@gmail.com") {
-                return true
-            }
             return findPatronRewardLevel(this.user.patreonTier) > 1
         }
         return false

@@ -73,7 +73,7 @@ class ForSaleNotificationsService(
 
     fun addForSaleQuery(query: ForSaleQuery) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        if (user.email != "coraythan@gmail.com" && user.patreonTier?.canSaveNotifications != true) {
+        if (user.patreonTier?.canSaveNotifications != true) {
             throw IllegalStateException("You must be a patron to save for sale queries.")
         }
 

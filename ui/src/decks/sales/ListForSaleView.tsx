@@ -224,6 +224,12 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             onChange={(event) => this.expireInDays = event.target.value}
                             style={{marginRight: spacing(2)}}
                         >
+                            <MenuItem value={"1"}>
+                                1 day
+                            </MenuItem>
+                            <MenuItem value={"2"}>
+                                2 days
+                            </MenuItem>
                             <MenuItem value={"3"}>
                                 3 days
                             </MenuItem>
