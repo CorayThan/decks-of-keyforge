@@ -33,7 +33,7 @@ class ForSaleNotificationsService(
 
     fun sendNotifications(listingInfo: ListingInfo) {
         GlobalScope.launch {
-            // Delay 10 seconds to make sure DB is finished saving the user deck
+            // Delay 30 seconds to make sure DB is finished saving the user deck
             delay(30000)
             if (queries == null) {
                 reloadQueries()

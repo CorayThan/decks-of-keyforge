@@ -60,6 +60,21 @@ class PatreonService(
         log.info("$scheduledStop Done refreshing patreon creator account.")
     }
 
+    @Scheduled(fixedDelayString = "PT168H")
+    fun addMeAndZ() {
+
+        // TODO wtf why does this blow up?
+
+        userRepo.findByUsernameIgnoreCase("coraythan")?.let {
+            log.info("Save me with new tier")
+            userRepo.save(it.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER))
+        }
+        userRepo.findByUsernameIgnoreCase("Zarathustra05")?.let {
+            log.info("Save Z with new tier")
+            userRepo.save(it.copy(patreonTier = PatreonRewardsTier.ALWAYS_GENEROUS))
+        }
+    }
+
     fun topPatrons() = topPatrons
 
     fun linkAccount(code: String) {
@@ -153,19 +168,5 @@ class PatreonService(
                 userRepo.save(user.copy(patreonTier = bestTier))
             }
         }
-
-        listOf(userRepo.findByUsernameIgnoreCase("coraythan"))
-                .mapNotNull { if (it?.patreonTier == PatreonRewardsTier.MERCHANT_AEMBERMAKER) null else it?.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER) }
-                .forEach {
-                    log.info("Updating user ${it.username} to tier ${it.patreonTier}")
-                    userRepo.save(it)
-                }
-
-        listOf(userRepo.findByUsernameIgnoreCase("Zarathustra05"))
-                .mapNotNull { if (it?.patreonTier == PatreonRewardsTier.ALWAYS_GENEROUS) null else it?.copy(patreonTier = PatreonRewardsTier.ALWAYS_GENEROUS) }
-                .forEach {
-                    log.info("Updating user ${it.username} to tier ${it.patreonTier}")
-                    userRepo.save(it)
-                }
     }
 }
