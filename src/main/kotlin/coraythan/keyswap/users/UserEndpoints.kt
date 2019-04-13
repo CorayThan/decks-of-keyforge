@@ -1,6 +1,8 @@
 package coraythan.keyswap.users
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.security.SecretApiKeyValidator
 import org.springframework.web.bind.annotation.*
 
 const val users = "users"
@@ -12,7 +14,8 @@ const val users = "users"
 @RequestMapping("${Api.base}/$users")
 class UserEndpoints(
         private val userService: KeyUserService,
-        private val currentUserService: CurrentUserService
+        private val currentUserService: CurrentUserService,
+        val apiKeys: SecretApiKeyValidator
 ) {
 
     @GetMapping("/secured/your-user")
@@ -32,4 +35,10 @@ class UserEndpoints(
 
     @PostMapping("/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
+
+    @PostMapping("/update-tier/{username}/{tier}")
+    fun updatePatreonTier(@PathVariable username: String, @PathVariable tier: PatreonRewardsTier, @RequestParam apiKey: String) {
+        apiKeys.checkApiKey(apiKey)
+        userService.setContributionLevel(username, tier)
+    }
 }

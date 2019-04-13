@@ -1,5 +1,7 @@
 package coraythan.keyswap.users
 
+import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.patreon.PatreonRewardsTier
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -103,6 +105,11 @@ class KeyUserService(
         if (user != null) {
             userRepo.save(user.copy(lastVersionSeen = version))
         }
+    }
+
+    fun setContributionLevel(username: String, patreonRewardsTier: PatreonRewardsTier) {
+        val toUpdate = userRepo.findByUsernameIgnoreCase(username) ?: throw BadRequestException("No user for user name $username")
+        userRepo.save(toUpdate.copy(patreonTier = patreonRewardsTier))
     }
 
     private fun validateEmail(email: String) {
