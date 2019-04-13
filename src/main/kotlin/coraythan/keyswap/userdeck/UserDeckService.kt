@@ -42,7 +42,7 @@ class UserDeckService(
     }
 
     // Don't want this running regularly
-    // @Scheduled(fixedDelayString = "PT144H")
+    @Scheduled(fixedDelayString = "PT144H")
     fun correctCounts() {
         log.info("$scheduledStart to correct counts.")
         userDeckRepo

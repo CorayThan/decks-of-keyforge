@@ -13,10 +13,12 @@ export class HttpConfig {
     static setupAxios = () => {
         axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.errorInterceptor)
         axiosWithoutErrors.interceptors.response.use(HttpConfig.responseInterceptor)
-        let timezoneOffset = new Date().getTimezoneOffset()
+        let timezoneOffset = new Date().getTimezoneOffset() * -1
         if (timezoneOffset == null || isNaN(timezoneOffset)) {
             log.warn("No timezone offset available.")
             timezoneOffset = 0
+        } else {
+            log.debug(`Time zone offset is ${timezoneOffset}`)
         }
         axios.defaults.headers.common.Timezone = timezoneOffset
     }

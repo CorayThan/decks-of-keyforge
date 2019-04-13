@@ -60,21 +60,6 @@ class PatreonService(
         log.info("$scheduledStop Done refreshing patreon creator account.")
     }
 
-    @Scheduled(fixedDelayString = "PT168H")
-    fun addMeAndZ() {
-
-        // TODO wtf why does this blow up?
-
-        userRepo.findByUsernameIgnoreCase("coraythan")?.let {
-            log.info("Save me with new tier")
-            userRepo.save(it.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER))
-        }
-        userRepo.findByUsernameIgnoreCase("Zarathustra05")?.let {
-            log.info("Save Z with new tier")
-            userRepo.save(it.copy(patreonTier = PatreonRewardsTier.ALWAYS_GENEROUS))
-        }
-    }
-
     fun topPatrons() = topPatrons
 
     fun linkAccount(code: String) {

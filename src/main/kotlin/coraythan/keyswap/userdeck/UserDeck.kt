@@ -31,6 +31,11 @@ data class UserDeck(
         // Deck selling info below
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
+//        val forAuction: Boolean = false,
+
+//        @OneToOne(cascade = [CascadeType.ALL])
+//        @PrimaryKeyJoinColumn
+//        val auction: Auction? = null,
 
         @Enumerated(EnumType.STRING)
         val forSaleInCountry: Country? = null,

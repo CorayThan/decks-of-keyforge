@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import kotlin.system.measureTimeMillis
 
 data class SellerDetailsWithFullDate(val mostRecent: ZonedDateTime?, val sellerDetails: SellerDetails)
 
@@ -28,26 +29,28 @@ class SellerService(
     @Scheduled(fixedDelayString = "PT5M")
     fun refreshFeaturedSellers() {
         log.info("$scheduledStart refresh featured sellers.")
-        featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
-                .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
-                .sortedByDescending { it.mostRecentDeckListing }
-                .filter { user -> user.decks.filter { it.forSale || it.forTrade }.size > 9 }
-                .map { user ->
-                    SellerDetailsWithFullDate(
-                     user.mostRecentDeckListing,
-                            SellerDetails(
-                                    storeName = user.storeName ?: "${user.username}'s Store",
-                                    username = user.username,
-                                    decksAvailable = user.decks.filter { it.forSale || it.forTrade }.size,
-                                    country = user.country ?: Country.UnitedStates,
-                                    mostRecentListing = placeholderDate,
-                                    storeDescription = user.publicContactInfo,
-                                    discord = user.discord,
-                                    email = user.sellerEmail
-                            )
-                    )
-                }
-        log.info("$scheduledStop refreshing featured sellers.")
+        val millisTaken = measureTimeMillis {
+            featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
+                    .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
+                    .sortedByDescending { it.mostRecentDeckListing }
+                    .filter { user -> user.decks.filter { it.forSale || it.forTrade }.size > 9 }
+                    .map { user ->
+                        SellerDetailsWithFullDate(
+                                user.mostRecentDeckListing,
+                                SellerDetails(
+                                        storeName = user.storeName ?: "${user.username}'s Store",
+                                        username = user.username,
+                                        decksAvailable = user.decks.filter { it.forSale || it.forTrade }.size,
+                                        country = user.country ?: Country.UnitedStates,
+                                        mostRecentListing = placeholderDate,
+                                        storeDescription = user.publicContactInfo,
+                                        discord = user.discord,
+                                        email = user.sellerEmail
+                                )
+                        )
+                    }
+        }
+        log.info("$scheduledStop refreshing featured sellers. It took millis: $millisTaken")
     }
 
     fun featuredSellers(offsetMinutes: Int): List<SellerDetails> {
