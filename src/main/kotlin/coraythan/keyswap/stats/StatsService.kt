@@ -73,7 +73,7 @@ class StatsService(
         }
     }
 
-    @Scheduled(fixedDelayString = "PT12H")
+    @Scheduled(fixedDelayString = "PT12H", initialDelayString = "PT15M")
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
         log.info("$scheduledStart start new deck stats.")

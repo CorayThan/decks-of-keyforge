@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateWinsLosses = "PT24H"
-private const val onceEverySixHoursLock = "PT6h"
+private const val onceEverySixHoursLock = "PT6H"
 
 @Transactional
 @Service
@@ -27,7 +27,7 @@ class DeckWinsService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = onceEverySixHoursLock)
+    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = "PT10M")
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 

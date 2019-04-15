@@ -96,12 +96,12 @@ class UserDeckService(
             user: KeyUser? = null
     ) {
         val currentUser = user ?: (currentUserService.loggedInUserOrUnauthorized())
-        if (listingInfo.deckId == null) throw BadRequestException("Must include a deck ID to list a deck.")
 
         // Unlist if it is currently listed to support "updates"
         val preexisting = userDeckRepo.findByDeckIdAndUserId(listingInfo.deckId, currentUser.id)
         val preexistingForSale = preexisting?.forSale
         val preexistingForTrade = preexisting?.forTrade
+        val preexistingAuction = preexisting?.forAuction
         if (preexisting != null) {
             unlistUserDeck(preexisting)
         }
@@ -111,13 +111,17 @@ class UserDeckService(
             it.copy(
                     forSale = it.forSale || listingInfo.forSale,
                     forTrade = it.forTrade || listingInfo.forTrade,
+                    forAuction = it.forAuction || listingInfo.auctionListingInfo != null,
                     listedOn = now()
             )
         }) {
             it.copy(
                     forSale = listingInfo.forSale,
                     forTrade = listingInfo.forTrade,
+                    forAuction = listingInfo.auctionListingInfo != null,
                     forSaleInCountry = listingInfo.forSaleInCountry,
+                    currencySymbol = listingInfo.currencySymbol,
+                    language = listingInfo.language,
                     askingPrice = listingInfo.askingPrice,
                     listingInfo = if (listingInfo.listingInfo.isNullOrBlank()) null else listingInfo.listingInfo,
                     condition = listingInfo.condition,
@@ -127,7 +131,7 @@ class UserDeckService(
                     ownedBy = currentUser.username
             )
         }
-        if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false)) {
+        if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false && preexistingAuction == false)) {
             // Send email since this is a new listing
             forSaleNotificationsService.sendNotifications(listingInfo)
             userRepo.save(userRepo.getOne(currentUser.id).copy(mostRecentDeckListing = now()))
@@ -169,6 +173,7 @@ class UserDeckService(
     private fun userDeckWithoutListingInfo(userDeck: UserDeck) = userDeck.copy(
             forSale = false,
             forTrade = false,
+            forAuction = false,
             forSaleInCountry = null,
             askingPrice = null,
             listingInfo = null,

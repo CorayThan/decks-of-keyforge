@@ -61,6 +61,15 @@ class Routes {
         const cleaned = prepareForSaleQueryForQueryString(filters)
         return `${Routes.decks}?${QueryString.stringify(cleaned)}`
     }
+
+    static userDecksForSale = (username: string) => {
+        const filters = new DeckFilters()
+        filters.forSale = true
+        filters.forTrade = true
+        filters.includeUnregistered = true
+        filters.owner = username
+        return Routes.deckSearch(filters)
+    }
 }
 
 class KeyRouter extends React.Component {

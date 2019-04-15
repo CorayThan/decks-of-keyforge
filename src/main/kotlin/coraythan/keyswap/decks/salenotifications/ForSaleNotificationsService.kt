@@ -38,7 +38,7 @@ class ForSaleNotificationsService(
             if (queries == null) {
                 reloadQueries()
             }
-            val deckId = listingInfo.deckId!!
+            val deckId = listingInfo.deckId
             val deck = deckRepo.findByIdOrNull(deckId)!!
             val toSend: List<ForSaleQueryEntity> = queries!!
                     .filter { it.active && queryMatchesDeck(it, deckId) }

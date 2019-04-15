@@ -7,9 +7,16 @@ import java.time.LocalDate
 data class DeckSaleInfo(
         val forSale: Boolean,
         val forTrade: Boolean,
+        val auction: Boolean,
+
         val forSaleInCountry: Country?,
+        val currencySymbol: String? = "$",
+        val language: DeckLanguage? = null,
 
         val askingPrice: Double?,
+
+        val highestBid: Int?,
+        val buyItNow: Int?,
 
         val listingInfo: String?,
         val externalLink: String?,

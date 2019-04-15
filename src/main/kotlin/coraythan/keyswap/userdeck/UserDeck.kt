@@ -1,7 +1,10 @@
 package coraythan.keyswap.userdeck
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.auctions.Auction
+import coraythan.keyswap.auctions.AuctionDto
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckLanguage
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
@@ -31,14 +34,19 @@ data class UserDeck(
         // Deck selling info below
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
-//        val forAuction: Boolean = false,
+        val forAuction: Boolean = false,
 
-//        @OneToOne(cascade = [CascadeType.ALL])
-//        @PrimaryKeyJoinColumn
-//        val auction: Auction? = null,
+        @OneToOne(cascade = [CascadeType.ALL])
+        @PrimaryKeyJoinColumn
+        val auction: Auction? = null,
 
         @Enumerated(EnumType.STRING)
         val forSaleInCountry: Country? = null,
+
+        val currencySymbol: String? = "$",
+
+        @Enumerated(EnumType.STRING)
+        val language: DeckLanguage? = null,
 
         val askingPrice: Double? = null,
 
@@ -67,7 +75,10 @@ data class UserDeck(
             creator = creator,
             forSale = forSale,
             forTrade = forTrade,
+            forAuction = forAuction,
             forSaleInCountry = forSaleInCountry,
+            language = language,
+            currencySymbol = currencySymbol,
             askingPrice = askingPrice,
             listingInfo = listingInfo,
             condition = condition,
@@ -79,7 +90,9 @@ data class UserDeck(
             deckId = deck.id,
 
             username = user.username,
-            publicContactInfo = user.publicContactInfo
+            publicContactInfo = user.publicContactInfo,
+
+            auction = auction?.toDto()
     )
 }
 
@@ -100,8 +113,11 @@ data class UserDeckDto(
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
+        val forAuction: Boolean = false,
 
         val forSaleInCountry: Country? = null,
+        val language: DeckLanguage? = DeckLanguage.ENGLISH,
+        val currencySymbol: String? = "$",
 
         val askingPrice: Double? = null,
 
@@ -119,7 +135,9 @@ data class UserDeckDto(
         val deckId: Long,
 
         val username: String,
-        val publicContactInfo: String?
+        val publicContactInfo: String?,
+
+        val auction: AuctionDto?
 ) {
     val dateListedLocalDate: LocalDate?
         get() = this.dateListed?.toLocalDate()

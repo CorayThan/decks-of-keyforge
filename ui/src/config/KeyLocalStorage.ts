@@ -15,12 +15,16 @@ class KeyLocalStorage {
     @observable
     displayExtraDeckStats = false
 
+    @observable
+    defaultCurrencySymbol: string = "$"
+
     private localStorage = window.localStorage
 
     constructor() {
         const value = this.showDeckTableViewFromStorage()
         this.showTableView = Boolean(value)
         this.showFullCardView = Boolean(this.showFullCardViewFromStorage())
+        this.defaultCurrencySymbol = this.defaultCurrencySymbolFromStorage()
         this.deckPageSizeFromStorage()
     }
 
@@ -46,6 +50,14 @@ class KeyLocalStorage {
     showDeckTableViewFromStorage = () => {
         const showTableView = this.localStorage.getItem(Keys.DECK_TABLE_VIEW)
         return showTableView === "true"
+    }
+
+    defaultCurrencySymbolFromStorage = () => {
+        const defaultCurrencySymbol = this.localStorage.getItem(Keys.DEFAULT_CURRENCY_SYMBOL)
+        if (!defaultCurrencySymbol) {
+            return "$"
+        }
+        return defaultCurrencySymbol
     }
 
     toggleFullCardView = () => {
@@ -75,6 +87,14 @@ class KeyLocalStorage {
         this.localStorage.setItem(Keys.DECK_PAGE_SIZE, size.toString())
     }
 
+    setDefaultCurrencySymbol = (symbol: string) => {
+        const symbolTrimmed = symbol.trim()
+        if (symbolTrimmed.length > 0) {
+            this.defaultCurrencySymbol = symbolTrimmed
+            this.localStorage.setItem(Keys.DEFAULT_CURRENCY_SYMBOL, symbol)
+        }
+    }
+
     deckPageSizeFromStorage = () => {
         const deckPageSizeString = this.localStorage.getItem(Keys.DECK_PAGE_SIZE)
         const deckPageSize = Number(deckPageSizeString)
@@ -93,6 +113,7 @@ class KeyLocalStorage {
 enum Keys {
     AUTH = "AUTH",
     DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
+    DEFAULT_CURRENCY_SYMBOL = "DEFAULT_CURRENCY_SYMBOL",
     FULL_CARD_VIEW = "FULL_CARD_VIEW",
     DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",

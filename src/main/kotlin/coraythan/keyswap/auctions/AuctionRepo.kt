@@ -1,3 +1,6 @@
 package coraythan.keyswap.auctions
 
-// interface AuctionRepo : CrudRepository<Auction, UUID>
+import org.springframework.data.repository.CrudRepository
+import java.util.*
+
+interface AuctionRepo : CrudRepository<Auction, UUID>

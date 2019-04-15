@@ -1,12 +1,20 @@
 import { userStore } from "../../user/UserStore"
 import { DeckCondition, UserDeckDto } from "../../userdeck/UserDeck"
+import { DeckLanguage } from "../DeckLanguage"
 
 export interface DeckSaleInfo {
     forSale: boolean
     forTrade: boolean
+    auction: boolean
+
     forSaleInCountry?: string
+    currencySymbol?: string
+    language?: DeckLanguage
 
     askingPrice?: number
+
+    highestBid?: number
+    buyItNow?: number
 
     listingInfo?: string
     externalLink?: string
@@ -21,7 +29,10 @@ export interface DeckSaleInfo {
 
 export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo | undefined => {
 
-    const {forSale, forTrade, askingPrice, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate} = userDeck
+    const {
+        forSale, forTrade, forAuction, askingPrice, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol,
+        language, auction
+    } = userDeck
 
     const user = userStore.user
 
@@ -31,9 +42,16 @@ export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo
     return {
         forSale,
         forTrade,
+        auction: forAuction,
+
         forSaleInCountry: user.country,
+        currencySymbol,
+        language,
 
         askingPrice,
+
+        highestBid: auction ? auction.highestBid : undefined,
+        buyItNow: auction ? auction.buyItNow : undefined,
 
         listingInfo,
         externalLink,

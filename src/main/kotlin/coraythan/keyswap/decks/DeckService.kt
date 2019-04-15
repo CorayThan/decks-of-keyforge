@@ -297,7 +297,12 @@ class DeckService(
                 DeckSaleInfo(
                         forSale = it.forSale,
                         forTrade = it.forTrade,
+                        auction = it.forAuction,
+                        buyItNow = it.auction?.buyItNow,
+                        highestBid = it.auction?.highestBid,
                         forSaleInCountry = it.forSaleInCountry,
+                        language = it.language,
+                        currencySymbol = it.currencySymbol,
                         askingPrice = it.askingPrice,
                         listingInfo = it.listingInfo,
                         externalLink = it.externalLink,

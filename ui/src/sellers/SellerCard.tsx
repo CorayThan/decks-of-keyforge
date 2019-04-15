@@ -3,7 +3,6 @@ import { startCase } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { DeckFilters } from "../decks/search/DeckFilters"
 import { DiscordUser } from "../generic/DiscordUser"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -20,13 +19,9 @@ export class SellerCard extends React.Component<SellerCardProps> {
     render() {
         const {storeName, username, decksAvailable, mostRecentListing, country, storeDescription, discord, email} = this.props.sellerDetails
 
-        const filters = new DeckFilters()
-        filters.forSale = true
-        filters.forTrade = true
-        filters.includeUnregistered = true
-        filters.owner = username
 
-        const storeLink = Routes.deckSearch(filters)
+
+        const storeLink = Routes.userDecksForSale(username)
 
         return (
             <div style={this.props.style}>

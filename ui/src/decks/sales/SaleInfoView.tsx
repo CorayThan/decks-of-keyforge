@@ -1,6 +1,7 @@
 import { Tooltip } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
+import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
@@ -10,9 +11,11 @@ import { Utils } from "../../config/Utils"
 import { SendSellerEmailDialog } from "../../emails/SendSellerEmailDialog"
 import { countryToLabel } from "../../generic/Country"
 import { DiscordUser } from "../../generic/DiscordUser"
+import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
+import { UnstyledLink } from "../../generic/UnstyledLink"
 import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { userStore } from "../../user/UserStore"
@@ -62,7 +65,8 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
         const {
-            forSale, forTrade, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink, discord
+            forSale, forTrade, auction, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
+            discord, language, currencySymbol, highestBid, buyItNow
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
@@ -92,10 +96,15 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                         <div><TradeDeckIcon height={48}/></div>
                                     </Tooltip>
                                 ) : null}
+                                {auction ? (
+                                    <Tooltip title={"Auction"}>
+                                        <div><AuctionDeckIcon height={48}/></div>
+                                    </Tooltip>
+                                ) : null}
                             </div>
                             {askingPrice == null ? null :
                                 <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                    ${askingPrice}
+                                    {currencySymbol ? currencySymbol : "$"}{askingPrice}
                                 </Typography>}
                             <Typography variant={"subtitle1"} style={{color: "#FFFFFF"}}>
                                 {deckConditionReadableValue(condition)}
@@ -108,7 +117,9 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     {sellerDetails == null ? null : (
                         <div style={{display: "flex", alignItems: "center", margin: spacing(2), marginBottom: 0}}>
                             <SellerImg sellerUsername={username}/>
-                            <Typography variant={"h5"}>{sellerDetails.storeName}</Typography>
+                            <UnstyledLink to={Routes.userDecksForSale(username)}>
+                                <Typography variant={"h5"}>{sellerDetails.storeName}</Typography>
+                            </UnstyledLink>
                         </div>
                     )}
                     {listingInfo == null ? null : (
@@ -159,6 +170,11 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     {forSaleInCountry ? (
                         <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                             Located in {countryToLabel(forSaleInCountry)}.
+                        </Typography>
+                    ) : null}
+                    {language ? (
+                        <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
+                            Deck language: {startCase(language.toString().toLowerCase())}
                         </Typography>
                     ) : null}
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>

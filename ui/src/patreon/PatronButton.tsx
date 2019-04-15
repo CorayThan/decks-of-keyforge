@@ -10,9 +10,6 @@ import { userStore } from "../user/UserStore"
 export class PatronButton extends React.Component<ButtonProps & { primary?: boolean }> {
     render() {
         const {primary, ...rest} = this.props
-        if (userStore.patron) {
-            return null
-        }
         return (
             <KeyButton
                 color={"inherit"}
@@ -22,7 +19,7 @@ export class PatronButton extends React.Component<ButtonProps & { primary?: bool
             >
                 <PatreonIcon primary={primary}/>
                 <div style={{marginRight: spacing(1)}}/>
-                Become a Patron
+                {userStore.patron ? "Patreon" : "Become a Patron"}
             </KeyButton>
         )
     }

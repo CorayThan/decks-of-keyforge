@@ -1,4 +1,6 @@
+import { AuctionDto } from "../auctions/AuctionDto"
 import { Deck } from "../decks/Deck"
+import { DeckLanguage } from "../decks/DeckLanguage"
 import { KeyUser } from "../user/KeyUser"
 
 export interface UserDeck {
@@ -11,6 +13,11 @@ export interface UserDeck {
 
     forSale: boolean
     forTrade: boolean
+    forAuction: boolean
+
+    forSaleInCountry?: string,
+    language?: DeckLanguage,
+    currencySymbol?: string,
 
     askingPrice?: number
 
@@ -54,6 +61,11 @@ export interface UserDeckDto {
 
     forSale: boolean
     forTrade: boolean
+    forAuction: boolean
+
+    forSaleInCountry?: string,
+    language?: DeckLanguage,
+    currencySymbol?: string,
 
     askingPrice?: number
 
@@ -72,4 +84,6 @@ export interface UserDeckDto {
 
     username: string
     publicContactInfo?: string
+
+    auction: AuctionDto
 }

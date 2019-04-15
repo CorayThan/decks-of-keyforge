@@ -1,3 +1,5 @@
+import { AuctionListingInfo } from "../auctions/AuctionListingInfo"
+import { DeckLanguage } from "../decks/DeckLanguage"
 import { DeckCondition } from "./UserDeck"
 
 export interface ListingInfo {
@@ -5,9 +7,12 @@ export interface ListingInfo {
     forSale: boolean
     forTrade: boolean
     forSaleInCountry: string,
+    currencySymbol: string
+    language: DeckLanguage
     condition: DeckCondition
     askingPrice?: number
     listingInfo: string
     externalLink: string
     expireInDays: number
+    auctionListingInfo?: AuctionListingInfo
 }

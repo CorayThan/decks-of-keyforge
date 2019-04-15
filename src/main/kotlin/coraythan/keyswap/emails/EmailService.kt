@@ -39,6 +39,14 @@ class EmailService(
 
     fun sendDeckListedNotification(recipient: KeyUser, listingInfo: ListingInfo, deck: Deck, queryName: String) {
 
+        val availableFor = when {
+            listingInfo.auctionListingInfo != null -> "as an auction"
+            listingInfo.forSale && listingInfo.forTrade -> "for sale or trade"
+            listingInfo.forSale -> "for sale"
+            listingInfo.forTrade -> "for trade"
+            else -> throw BadRequestException("Deck must be available for sale, trade, or auction.")
+        }
+
         log.info("Sending deck listed notification.")
         sendEmail(
                 recipient.email,
@@ -48,6 +56,10 @@ class EmailService(
                         <div>
                             The deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} matches the query "$queryName" you've set up to
                             email you whenever a new deck is listed for sale.
+                        </div>
+                        <br>
+                        <div>
+                            It is available $availableFor.
                         </div>
                         <br>
                         <div>
