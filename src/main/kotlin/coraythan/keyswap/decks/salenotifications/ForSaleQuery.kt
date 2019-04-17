@@ -40,6 +40,7 @@ data class ForSaleQuery(
 
         override val forSale: Boolean = false,
         override val forTrade: Boolean = false,
+        override val forAuction: Boolean = false,
         override val forSaleInCountry: Country? = null,
         override val includeUnregistered: Boolean = false,
 

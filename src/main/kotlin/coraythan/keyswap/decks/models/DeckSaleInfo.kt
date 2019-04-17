@@ -16,7 +16,9 @@ data class DeckSaleInfo(
         val askingPrice: Double?,
 
         val highestBid: Int?,
+        val startingBid: Int?,
         val buyItNow: Int?,
+        val auctionEndDateTime: String?,
 
         val listingInfo: String?,
         val externalLink: String?,

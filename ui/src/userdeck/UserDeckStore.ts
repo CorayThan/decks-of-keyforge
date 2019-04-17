@@ -83,7 +83,7 @@ export class UserDeckStore {
 
     userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
 
-    private refreshDeckInfo = () => {
+    refreshDeckInfo = () => {
         if (deckStore.deck) {
             const keyforgeId = deckStore.deck.deck.keyforgeId
             deckStore.findDeck(keyforgeId)

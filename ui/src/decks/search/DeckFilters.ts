@@ -10,6 +10,15 @@ import { Constraint } from "./ConstraintDropdowns"
 
 export class DeckFilters {
 
+    static forSaleOrTrade = () => {
+        const filters = new DeckFilters()
+        filters.forSale = true
+        filters.forTrade = true
+        filters.forAuction = true
+        filters.includeUnregistered = true
+        return filters
+    }
+
     static rehydrateFromQuery = (queryObject: any): DeckFilters => {
         log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
         if (typeof queryObject.houses === "string") {
@@ -49,6 +58,9 @@ export class DeckFilters {
         if (queryObject.forTrade) {
             queryObject.forTrade = Boolean(queryObject.forTrade)
         }
+        if (queryObject.forAuction) {
+            queryObject.forAuction = Boolean(queryObject.forAuction)
+        }
         if (queryObject.includeUnregistered) {
             queryObject.includeUnregistered = Boolean(queryObject.includeUnregistered)
         }
@@ -73,6 +85,8 @@ export class DeckFilters {
     @observable
     forTrade = false
     @observable
+    forAuction = false
+    @observable
     forSaleInCountry?: string
     @observable
     includeUnregistered = false
@@ -95,6 +109,7 @@ export class DeckFilters {
         this.title = ""
         this.forSale = false
         this.forTrade = false
+        this.forAuction = false
         this.forSaleInCountry = undefined
         this.myFavorites = false
         this.includeUnregistered = false

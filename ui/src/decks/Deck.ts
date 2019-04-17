@@ -52,6 +52,7 @@ export interface Deck {
 
     forSale: boolean
     forTrade: boolean
+    forAuction: boolean
     wishlistCount: number
     funnyCount: number
 

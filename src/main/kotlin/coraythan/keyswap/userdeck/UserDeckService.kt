@@ -106,7 +106,9 @@ class UserDeckService(
             unlistUserDeck(preexisting)
         }
 
-        if (!listingInfo.forSale && !listingInfo.forTrade) throw BadRequestException("Listing info must be for sale or trade.")
+        if (!listingInfo.forSale && !listingInfo.forTrade && listingInfo.auctionListingInfo == null) {
+            throw BadRequestException("Listing info must be for sale, trade or auction.")
+        }
         modOrCreateUserDeck(listingInfo.deckId, currentUser, {
             it.copy(
                     forSale = it.forSale || listingInfo.forSale,
@@ -161,11 +163,18 @@ class UserDeckService(
                         .and(userDeckQ.deck.id.eq(deckId))
                         .and(userDeckQ.id.ne(userDeck.id))
         )
+        val userDecksForAuction = userDeckRepo.findAll(
+                userDeckQ.forAuction.isTrue
+                        .and(userDeckQ.deck.id.eq(deckId))
+                        .and(userDeckQ.id.ne(userDeck.id))
+        )
         val forSale = userDecksForSale.toList().isNotEmpty()
         val forTrade = userDecksForTrade.toList().isNotEmpty()
+        val forAuction = userDecksForAuction.toList().isNotEmpty()
         deckRepo.save(userDeck.deck.copy(
                 forSale = forSale,
                 forTrade = forTrade,
+                forAuction = forAuction,
                 listedOn = if (forSale || forTrade) userDeck.deck.listedOn else null
         ))
     }

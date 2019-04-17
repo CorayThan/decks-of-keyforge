@@ -63,10 +63,7 @@ class Routes {
     }
 
     static userDecksForSale = (username: string) => {
-        const filters = new DeckFilters()
-        filters.forSale = true
-        filters.forTrade = true
-        filters.includeUnregistered = true
+        const filters = DeckFilters.forSaleOrTrade()
         filters.owner = username
         return Routes.deckSearch(filters)
     }

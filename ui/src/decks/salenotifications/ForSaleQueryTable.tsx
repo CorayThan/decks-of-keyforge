@@ -10,6 +10,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
@@ -61,6 +62,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                     <TableCell>
                                         {query.forSale ? <SellDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                         {query.forTrade ? <TradeDeckIcon style={{marginRight: spacing(1)}}/> : null}
+                                        {query.forAuction ? <AuctionDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                         {query.includeUnregistered ? <UnregisteredDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                     </TableCell>
                                     {small ? null : (

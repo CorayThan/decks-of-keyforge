@@ -6,8 +6,10 @@ import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 @Transactional
@@ -19,7 +21,9 @@ class AuctionService(
         private val userDeckRepo: UserDeckRepo
 ) {
 
-    fun listAuction(listingInfo: ListingInfo) {
+    private val log = LoggerFactory.getLogger(this::class.java)
+
+    fun list(listingInfo: ListingInfo) {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val auctionListingInfo = listingInfo.auctionListingInfo ?: throw BadRequestException("Auction listing info can't be null.")
         if (listingInfo.forSale || listingInfo.forTrade) {
@@ -32,28 +36,29 @@ class AuctionService(
 
         val endDateTime = now().plusDays(listingInfo.expireInDays.toLong())
         val endMinutesMod = endDateTime.minute % 15
-        val endMinutesRounded = if (endMinutesMod < 8) -endMinutesMod else (15 - endMinutesMod)
+        val endMinutes = endDateTime.minute - endMinutesMod
+//        val endMinutesRounded = if (endMinutesMod < 8) -endMinutesMod else (15 - endMinutesMod)
+        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
         val auction = Auction(
                 durationDays = listingInfo.expireInDays,
-                endDateTime = endDateTime.withMinute(endMinutesRounded),
+                endDateTime = endDateTime.withMinute(endMinutes),
                 bidIncrement = auctionListingInfo.bidIncrement,
                 startingBid = auctionListingInfo.startingBid,
-                buyItNow = auctionListingInfo.buyItNow,
-                userDeck = userDeck
+                buyItNow = auctionListingInfo.buyItNow
         )
-        auctionRepo.save(auction)
+        userDeckRepo.save(userDeck.copy(auction = auction))
     }
 
-    fun bidOnAuction() {
-
-    }
-
-    fun buyAuctionNow() {
+    fun bid() {
 
     }
 
-    fun cancelAuction() {
+    fun buyNow() {
+
+    }
+
+    fun cancel(id: UUID) {
 
     }
 }

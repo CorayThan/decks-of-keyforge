@@ -23,6 +23,7 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
         const owned = userDeck ? !!userDeck.ownedBy : false
         const forSale = userDeck && userDeck.forSale
         const forTrade = userDeck && userDeck.forTrade
+        const forAuction = userDeck && userDeck.forAuction
 
         let listButton = null
         if (owned) {
@@ -33,7 +34,7 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
 
         return (
             <div style={{display: "flex"}}>
-                {forSale || forTrade ? null :
+                {forSale || forTrade || forAuction ? null :
                     (
                         <KeyButton
                             color={"primary"}

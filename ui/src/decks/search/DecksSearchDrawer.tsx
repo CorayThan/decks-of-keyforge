@@ -17,6 +17,7 @@ import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
@@ -54,7 +55,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         filters.sort = this.selectedSortStore.toEnumValue()
         filters.constraints = this.constraintsStore.cleanConstraints()
 
-        if (!filters.forSale && !filters.forTrade && !filters.myFavorites && !filters.owner) {
+        if (!filters.forSale && !filters.forTrade && !filters.forAuction && !filters.myFavorites && !filters.owner) {
             // search is broad, so disable bad searches
             if (filters.sort === "NAME") {
                 messageStore.setWarningMessage("To use the name sort please check for sale, for trade, my decks, or my favorites.")
@@ -74,7 +75,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.constraintsStore.reset()
     }
 
-    updateForSaleOrTrade = (forSale?: boolean, forTrade?: boolean) => {
+    updateForSaleOrTrade = (forSale?: boolean, forTrade?: boolean, forAuction?: boolean) => {
         const filters = this.props.filters
         if (forSale != null) {
             filters.forSale = forSale
@@ -82,9 +83,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         if (forTrade != null) {
             filters.forTrade = forTrade
         }
-        if (filters.forSale || filters.forTrade) {
+        if (forAuction != null) {
+            filters.forAuction = forAuction
+        }
+        if (filters.forSale || filters.forTrade || filters.forAuction) {
             this.selectedSortStore.forSaleOrTrade = true
-
         } else {
             this.selectedSortStore.forSaleOrTrade = false
             filters.forSaleInCountry = undefined
@@ -101,13 +104,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     render() {
         const {
-            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade,
+            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade, forAuction,
             forSaleInCountry
         } = this.props.filters
 
         let myCountry: string | undefined
         if (!!(userStore.country
-            && (forSale || forTrade))) {
+            && (forSale || forTrade || forAuction))) {
             myCountry = userStore.country
         }
         const showLoginForCountry = !myCountry && (forSale || forTrade)
@@ -116,7 +119,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const optionals = !showMyDecks && !showDecksOwner ? null : (
             <>
                 {!showDecksOwner && showMyDecks ? (
-                    <>
+                    <div style={{display: "flex"}}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -125,6 +128,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 />
                             }
                             label={"My Decks"}
+                            style={{width: 144}}
                         />
                         <FormControlLabel
                             control={
@@ -135,7 +139,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             }
                             label={"My Favorites"}
                         />
-                    </>
+                    </div>
                 ) : null}
                 {showDecksOwner ? (
                     <div style={{display: "flex", alignItems: "center"}}>
@@ -209,9 +213,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     label={(
                                         <div style={{display: "flex", alignItems: "center"}}>
                                             <SellDeckIcon/>
-                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For sale</Typography>
+                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Sale</Typography>
                                         </div>
                                     )}
+                                    style={{width: 144}}
                                 />
                                 <FormControlLabel
                                     control={
@@ -223,25 +228,41 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     label={(
                                         <div style={{display: "flex", alignItems: "center"}}>
                                             <TradeDeckIcon style={{minWidth: 18}}/>
-                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For trade</Typography>
+                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Trade</Typography>
                                         </div>
                                     )}
                                 />
-                                {optionals}
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.props.filters.includeUnregistered}
-                                            onChange={(event) => this.props.filters.includeUnregistered = event.target.checked}
-                                        />
-                                    }
-                                    label={(
-                                        <div style={{display: "flex", alignItems: "center"}}>
-                                            <UnregisteredDeckIcon/>
-                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Include unregistered</Typography>
-                                        </div>
-                                    )}
-                                />
+                                <div style={{display: "flex"}}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.props.filters.forAuction}
+                                                onChange={(event) => this.updateForSaleOrTrade(undefined, undefined, event.target.checked)}
+                                            />
+                                        }
+                                        label={(
+                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                <AuctionDeckIcon style={{minWidth: 18}}/>
+                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Auctions</Typography>
+                                            </div>
+                                        )}
+                                        style={{width: 144}}
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.props.filters.includeUnregistered}
+                                                onChange={(event) => this.props.filters.includeUnregistered = event.target.checked}
+                                            />
+                                        }
+                                        label={(
+                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                <UnregisteredDeckIcon/>
+                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Unregistered</Typography>
+                                            </div>
+                                        )}
+                                    />
+                                </div>
                                 {myCountry ? (
                                     <FormControlLabel
                                         control={
@@ -250,11 +271,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
                                             />
                                         }
-                                        label={(
-                                            <Typography variant={"body2"}>In my country</Typography>
-                                        )}
+                                        label={"In my country"}
+                                        style={{width: 144}}
                                     />
                                 ) : null}
+                                {optionals}
                                 {showLoginForCountry ? (
                                     <div style={{display: "flex"}}>
                                         <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>

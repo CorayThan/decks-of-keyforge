@@ -24,7 +24,6 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { DeckFilters } from "../decks/search/DeckFilters"
 import { SimpleDeckView } from "../decks/SimpleDeckView"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { House } from "../houses/House"
@@ -56,10 +55,6 @@ export class ArticleView extends React.Component<ArticleViewProps> {
     render() {
         const {article} = this.props
         const {title, urlTitle, date, sections, author} = article
-        const filters = new DeckFilters()
-        filters.forSale = true
-        filters.forTrade = true
-        filters.owner = author.username
         const link = Routes.articlePage(urlTitle)
 
         return (
@@ -86,7 +81,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                         <LinkButton color="primary" to={Routes.userProfilePage(author.username)}>
                             {author.name}'s Profile
                         </LinkButton>
-                        <LinkButton color="primary" to={Routes.deckSearch(filters)}>
+                        <LinkButton color="primary" to={Routes.userDecksForSale(author.username)}>
                             {author.name}'s Store
                         </LinkButton>
                         <div style={{flexGrow: 1}}/>

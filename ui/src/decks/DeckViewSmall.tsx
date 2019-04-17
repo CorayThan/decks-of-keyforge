@@ -11,6 +11,7 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { ChainsView } from "../generic/icons/ChainsView"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
@@ -43,15 +44,17 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {
             id, keyforgeId, name,
             wishlistCount, funnyCount,
-            forSale, forTrade, chains,
+            forSale, forTrade, forAuction, chains,
             registered
         } = deck
         const userDeck = userDeckStore.userDeckByDeckId(id)
         let userDeckForSale = false
         let userDeckForTrade = false
+        let userDeckForAuction = false
         if (userDeck) {
             userDeckForSale = userDeck.forSale
             userDeckForTrade = userDeck.forTrade
+            userDeckForAuction = userDeck.forAuction
         }
         const compact = screenStore.screenSizeXs()
         return (
@@ -95,6 +98,11 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         {forTrade || userDeckForTrade ? (
                             <Tooltip title={"For trade"}>
                                 <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                            </Tooltip>
+                        ) : null}
+                        {forAuction || userDeckForAuction ? (
+                            <Tooltip title={"On auction"}>
+                                <div style={{marginLeft: spacing(1)}}><AuctionDeckIcon/></div>
                             </Tooltip>
                         ) : null}
                     </div>

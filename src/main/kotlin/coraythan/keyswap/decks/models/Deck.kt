@@ -121,6 +121,7 @@ data class Deck(
                 totalPower = totalPower,
                 forSale = forSale,
                 forTrade = forTrade,
+                forAuction = forAuction,
                 wishlistCount = wishlistCount,
                 funnyCount = funnyCount,
                 searchResultCards = searchResultCards,

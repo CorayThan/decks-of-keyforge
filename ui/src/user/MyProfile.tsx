@@ -195,9 +195,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         filters.includeUnregistered = true
         const decksLink = Routes.deckSearch(filters)
 
-        filters.forSale = true
-        filters.forTrade = true
-        const decksForSaleLink = Routes.deckSearch(filters)
+        const decksForSaleLink = Routes.userDecksForSale(profile.username)
 
         const forSaleQueries = forSaleNotificationsStore.queries
 

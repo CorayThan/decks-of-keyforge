@@ -2,6 +2,7 @@ package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
 import coraythan.keyswap.decks.models.DeckCount
+import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.decks.models.DecksPage
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import coraythan.keyswap.publicapis.PublicApiService
@@ -85,7 +86,10 @@ class DeckEndpoints(
     }
 
     @GetMapping("/{id}/sale-info")
-    fun findDeckSaleInfo(@PathVariable id: String, @RequestHeader(value = "Timezone") offsetMinutes: Int) = deckService.saleInfoForDeck(id, offsetMinutes)
+    fun findDeckSaleInfo(@PathVariable id: String, @RequestHeader(value = "Timezone") offsetMinutes: Int): List<DeckSaleInfo> {
+        log.info("Find deck sale info endpoint")
+        return deckService.saleInfoForDeck(id, offsetMinutes)
+    }
 
     @PostMapping("/secured/read-deck-image")
     fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile): SaveUnregisteredDeck? {

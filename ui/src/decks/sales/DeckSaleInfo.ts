@@ -15,6 +15,8 @@ export interface DeckSaleInfo {
 
     highestBid?: number
     buyItNow?: number
+    startingBid?: number
+    auctionEndDateTime?: string
 
     listingInfo?: string
     externalLink?: string

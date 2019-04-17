@@ -12,10 +12,11 @@ import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { auctionStore } from "../../auctions/AuctionStore"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { Utils } from "../../config/Utils"
+import { log, Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { messageStore } from "../../ui/MessageStore"
@@ -74,6 +75,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.open = true
         this.forSale = true
         this.forTrade = true
+        this.auction = false
         this.currencySymbol = keyLocalStorage.defaultCurrencySymbol
         this.language = DeckLanguage.ENGLISH
         this.condition = DeckCondition.NEW_IN_PLASTIC
@@ -119,10 +121,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     list = () => {
         const {
             forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expireInDays, currencySymbol, language, auction, bidIncrement,
-            startingBid
+            startingBid, buyItNow
         } = this
-        if (!forSale && !forTrade) {
-            messageStore.setWarningMessage("The deck must be listed for sale or trade.")
+        if (!forSale && !forTrade && !auction) {
+            messageStore.setWarningMessage("The deck must be listed for sale, trade or auction.")
             return
         }
         if (listingInfo.length > 2000) {
@@ -139,6 +141,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
         let bidIncrementNumber
         let startingBidNumber
+        let buyItNowNumber
         if (auction) {
             if (bidIncrement.trim().length > 0) {
                 bidIncrementNumber = Number(bidIncrement.trim())
@@ -159,6 +162,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             } else {
                 messageStore.setWarningMessage("You must include a starting bid.")
                 return
+            }
+            if (buyItNow.trim().length > 0) {
+                buyItNowNumber = Number(buyItNow.trim())
+                if (isNaN(buyItNowNumber)) {
+                    messageStore.setWarningMessage("The buy it now must be a number.")
+                    return
+                }
             }
         }
         const forSaleInCountry = userStore.country
@@ -189,12 +199,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         if (auction) {
             listingInfoDto.auctionListingInfo = {
                 startingBid: startingBidNumber as number,
-                bidIncrement: bidIncrementNumber as number
+                bidIncrement: bidIncrementNumber as number,
+                buyItNow: buyItNowNumber as number
             }
+            auctionStore.createAuction(this.props.deck.name, listingInfoDto)
         } else {
             listingInfoDto.askingPrice = askingPriceNumber
+            userDeckStore.listDeck(this.props.deck.name, listingInfoDto)
         }
-        userDeckStore.listDeck(this.props.deck.name, listingInfoDto)
         this.handleClose()
     }
 
@@ -202,22 +214,33 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         const deck = this.props.deck
         const userDeck = userDeckStore.userDeckByDeckId(deck.id)
         let saleButton
-        if (userDeck && (userDeck.forSale || userDeck.forTrade)) {
+        if (userDeck && (userDeck.forSale || userDeck.forTrade || userDeck.forAuction)) {
             saleButton = (
                 <>
-                    <KeyButton
-                        color={"primary"}
-                        onClick={this.handleOpenForEdit}
-                        style={{marginRight: spacing(1)}}
-                    >
-                        Edit Listing
-                    </KeyButton>
-                    <KeyButton
-                        color={"primary"}
-                        onClick={() => userDeckStore.unlist(deck.name, deck.id)}
-                    >
-                        Unlist
-                    </KeyButton>
+                    {userDeck.forAuction ? (
+                        <KeyButton
+                            color={"primary"}
+                            onClick={() => log.debug("Implement view auction.")}
+                        >
+                            View Auction
+                        </KeyButton>
+                    ) : (
+                        <>
+                            <KeyButton
+                                color={"primary"}
+                                onClick={this.handleOpenForEdit}
+                                style={{marginRight: spacing(1)}}
+                            >
+                                Edit Listing
+                            </KeyButton>
+                            <KeyButton
+                                color={"primary"}
+                                onClick={() => userDeckStore.unlist(deck.name, deck.id)}
+                            >
+                                Unlist
+                            </KeyButton>
+                        </>
+                    )}
                 </>
             )
         } else {

@@ -13,7 +13,6 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -21,7 +20,6 @@ import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import java.util.*
 import javax.persistence.EntityManager
 
@@ -64,7 +62,7 @@ class DeckService(
                         .select(deckQ.id)
                         .from(deckQ)
                         .where(predicate)
-                        .limit(if (filters.forSale || filters.forTrade) 10000 else 1000)
+                        .limit(if (filters.forSale || filters.forTrade || filters.forAuction) 10000 else 1000)
                         .fetch()
                         .count()
                         .toLong()
@@ -120,7 +118,7 @@ class DeckService(
 
         val decks = deckResults.map {
             val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
-            if (filters.forSale || filters.forTrade) {
+            if (filters.forSale || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(searchResult.keyforgeId, timezoneOffsetMinutes))
             } else {
                 searchResult
@@ -163,8 +161,6 @@ class DeckService(
                 excludeHouses.forEach { predicate.and(deckQ.houses.contains(it).not()) }
             }
         }
-
-        val forSaleOrTrade = BooleanBuilder().andAnyOf(deckQ.forSale.isTrue, deckQ.forTrade.isTrue)
 
         if (filters.title.isNotBlank()) {
             val trimmed = filters.title
@@ -217,11 +213,14 @@ class DeckService(
                 )
             }
         }
-        if (filters.forSale && filters.forTrade) {
-            predicate.and(forSaleOrTrade)
-        } else {
-            if (filters.forSale) predicate.and(deckQ.forSale.isTrue)
-            if (filters.forTrade) predicate.and(deckQ.forTrade.isTrue)
+        if (filters.forSale || filters.forTrade || filters.forAuction) {
+            predicate.and(BooleanBuilder().andAnyOf(
+                    *listOf(
+                            if (filters.forSale) deckQ.forSale.isTrue else null,
+                            if (filters.forTrade) deckQ.forTrade.isTrue else null,
+                            if (filters.forAuction) deckQ.forAuction.isTrue else null
+                    ).filterNotNull().toTypedArray()
+            ))
         }
         if (filters.forSaleInCountry != null) {
             val preferredCountries = userHolder.user?.preferredCountries
@@ -291,29 +290,8 @@ class DeckService(
     fun saleInfoForDeck(keyforgeId: String, offsetMinutes: Int): List<DeckSaleInfo> {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
         return deck.userDecks.mapNotNull {
-            if (!it.forSale && !it.forTrade) {
-                null
-            } else {
-                DeckSaleInfo(
-                        forSale = it.forSale,
-                        forTrade = it.forTrade,
-                        auction = it.forAuction,
-                        buyItNow = it.auction?.buyItNow,
-                        highestBid = it.auction?.highestBid,
-                        forSaleInCountry = it.forSaleInCountry,
-                        language = it.language,
-                        currencySymbol = it.currencySymbol,
-                        askingPrice = it.askingPrice,
-                        listingInfo = it.listingInfo,
-                        externalLink = it.externalLink,
-                        condition = it.condition!!,
-                        dateListed = it.dateListed?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: LocalDate.parse("2019-04-07"),
-                        expiresAt = it.expiresAt?.toLocalDateWithOffsetMinutes(offsetMinutes),
-                        username = it.user.username,
-                        publicContactInfo = it.user.publicContactInfo,
-                        discord = it.user.discord
-                )
-            }
+            it.auction?.id
+            it.toDeckSaleInfo(offsetMinutes)
         }.sortedByDescending { it.dateListed }
     }
 

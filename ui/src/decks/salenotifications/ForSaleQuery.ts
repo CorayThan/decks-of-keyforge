@@ -11,6 +11,7 @@ export interface ForSaleQuery {
 
     forSale: boolean
     forTrade: boolean
+    forAuction: boolean
     forSaleInCountry?: string
     includeUnregistered: boolean
 

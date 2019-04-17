@@ -44,6 +44,16 @@ ALTER TABLE IF EXISTS auction_bid
 ALTER TABLE IF EXISTS auction_bid
     ADD CONSTRAINT auction_bid_key_user_fk FOREIGN KEY (bidder_id) REFERENCES key_user;
 
+CREATE INDEX for_auction_idx ON deck(for_auction);
+
+ALTER TABLE IF EXISTS public.user_deck
+    ADD COLUMN auction_id UUID;
+
+ALTER TABLE
+    IF EXISTS user_deck
+    ADD
+        CONSTRAINT user_deck_auction_fk FOREIGN KEY (auction_id) REFERENCES auction;
+
 -- rollback:
 
 -- DROP TABLE IF EXISTS auction CASCADE;
@@ -56,3 +66,5 @@ ALTER TABLE IF EXISTS auction_bid
 --     DROP COLUMN for_auction;
 -- ALTER TABLE user_deck
 --     DROP COLUMN language;
+-- ALTER TABLE user_deck
+--     DROP COLUMN auction_id;

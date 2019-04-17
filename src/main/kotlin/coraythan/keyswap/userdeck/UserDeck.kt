@@ -5,7 +5,10 @@ import coraythan.keyswap.auctions.Auction
 import coraythan.keyswap.auctions.AuctionDto
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckLanguage
+import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.generic.Country
+import coraythan.keyswap.toLocalDateWithOffsetMinutes
+import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -37,7 +40,6 @@ data class UserDeck(
         val forAuction: Boolean = false,
 
         @OneToOne(cascade = [CascadeType.ALL])
-        @PrimaryKeyJoinColumn
         val auction: Auction? = null,
 
         @Enumerated(EnumType.STRING)
@@ -62,6 +64,10 @@ data class UserDeck(
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
+
+    val availableToBuy: Boolean
+        get() = this.forSale || this.forAuction || this.forTrade
+
     val dateListedLocalDate: LocalDate?
         get() = this.dateListed?.toLocalDate()
 
@@ -94,6 +100,34 @@ data class UserDeck(
 
             auction = auction?.toDto()
     )
+    
+    fun toDeckSaleInfo(offsetMinutes: Int): DeckSaleInfo? {
+        return if (!availableToBuy) {
+            null
+        } else {
+            DeckSaleInfo(
+                    forSale = forSale,
+                    forTrade = forTrade,
+                    auction = forAuction,
+                    buyItNow = auction?.buyItNow,
+                    highestBid = auction?.highestBid,
+                    startingBid = auction?.startingBid,
+                    forSaleInCountry = forSaleInCountry,
+                    language = language,
+                    currencySymbol = currencySymbol,
+                    askingPrice = askingPrice,
+                    listingInfo = listingInfo,
+                    externalLink = externalLink,
+                    condition = condition!!,
+                    dateListed = dateListed?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: LocalDate.parse("2019-04-07"),
+                    expiresAt = expiresAt?.toLocalDateWithOffsetMinutes(offsetMinutes),
+                    auctionEndDateTime = auction?.endDateTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+                    username = user.username,
+                    publicContactInfo = user.publicContactInfo,
+                    discord = user.discord
+            )
+        }
+    }
 }
 
 enum class DeckCondition {

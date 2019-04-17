@@ -22,7 +22,7 @@ data class Auction(
         val complete: Boolean = false,
 
         @OneToOne(mappedBy = "auction")
-        val userDeck: UserDeck,
+        val userDeck: UserDeck? = null,
 
         @JsonIgnoreProperties("auction")
         @OneToMany(mappedBy = "auction", cascade = [CascadeType.ALL])

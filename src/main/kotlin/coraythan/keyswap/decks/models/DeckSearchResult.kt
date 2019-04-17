@@ -38,6 +38,7 @@ data class DeckSearchResult(
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
+        val forAuction: Boolean = false,
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
 
