@@ -29,6 +29,10 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
         this.search(nextProps)
     }
 
+    componentWillUnmount(): void {
+        deckStore.reset()
+    }
+
     makeFilters = (props: Readonly<RouteComponentProps<{}>>): DeckFilters => {
         const queryValues = QueryString.parse(props.location.search)
         return DeckFilters.rehydrateFromQuery(queryValues)

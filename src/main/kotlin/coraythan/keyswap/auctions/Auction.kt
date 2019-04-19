@@ -31,8 +31,32 @@ data class Auction(
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
+    fun realMaxBid() = bids.sortedBy { it.bid }.reversed()[0].bid
+
     val highestBid: Int?
-        get() = bids.sortedByDescending { it.bid }.firstOrNull()?.bid
+        get() {
+            val bidsFiltered = bids
+                    .groupBy { it.bidder }
+                    .map { bid -> bid.value.sortedByDescending { it.bid }.first() }
+            return when {
+                bidsFiltered.isEmpty() -> null
+                bidsFiltered.size == 1 -> startingBid
+                else -> bidsFiltered.sortedByDescending { it.bid }[1].bid
+            }
+        }
+
+    val highestBidderUsername: String?
+        get() = bids.sortedByDescending { it.bid }.firstOrNull()?.bidder?.username
+
+    val nextBid: Int
+        get() {
+            val highBid = highestBid
+            return if (highBid == null) {
+                startingBid
+            } else {
+                highBid + bidIncrement
+            }
+        }
 
     fun toDto() = AuctionDto(
             durationDays = durationDays,

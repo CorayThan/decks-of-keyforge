@@ -6,6 +6,7 @@ import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
+import { BidButton } from "../../auctions/BidButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -67,7 +68,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
     render() {
         const {
             forSale, forTrade, auction, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
-            discord, language, currencySymbol, highestBid, buyItNow, startingBid, auctionEndDateTime
+            discord, language, currencySymbol, highestBid, buyItNow, startingBid, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
@@ -75,32 +76,8 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
 
         const allowEmail = yourEmail && yourUsername && !externalLink
 
-        const allowEmailOrDiscord = allowEmail || discord
-
         const sellerDetails = sellerStore.findSellerWithUsername(username)
         const realCurSymbol = currencySymbol ? currencySymbol : "$"
-        let nextBid
-        if (auction) {
-            if (highestBid) {
-                nextBid = (
-                    <Typography
-                        variant={"h5"}
-                        style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                    >
-                        Bid: {realCurSymbol}{highestBid}
-                    </Typography>
-                )
-            } else {
-                nextBid = (
-                    <Typography
-                        variant={"h5"}
-                        style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                    >
-                        Bid: {realCurSymbol}{startingBid}
-                    </Typography>
-                )
-            }
-        }
 
         return (
             <KeyCard
@@ -136,7 +113,12 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             {auction == null ? null :
                                 (
                                     <div>
-                                        {nextBid}
+                                        <Typography
+                                            variant={"h5"}
+                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+                                        >
+                                            Bid: {realCurSymbol}{nextBid}
+                                        </Typography>
                                         {buyItNow == null ? null : (
                                             <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
                                                 BIN: {realCurSymbol}{buyItNow}
@@ -159,19 +141,26 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                 <Typography variant={"subtitle2"} style={{marginRight: spacing(2)}}>Ending on:</Typography>
                                 <Typography variant={"subtitle2"}>{auctionEndDateTime}</Typography>
                             </div>
+                            {youAreHighestBidder ? (
+                                <Typography style={{marginTop: spacing(2)}}>
+                                    You are the highest bidder! Your max bid: {realCurSymbol}{yourMaxBid}
+                                </Typography>
+                            ) : null}
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
+                                <BidButton
+                                    currencySymbol={realCurSymbol}
+                                    auctionId={auctionId!}
+                                    nextValidBid={nextBid!}
+                                    sellerUsername={username}
+                                    youAreHighestBidder={!!youAreHighestBidder}
+                                />
                                 {buyItNow == null ? null : (
                                     <div>
-                                        <Button color={"primary"} variant={"outlined"} style={{marginRight: spacing(2)}}>
+                                        <Button color={"primary"} style={{marginLeft: spacing(2)}}>
                                             Buy it Now
                                         </Button>
                                     </div>
                                 )}
-                                <div>
-                                    <Button color={"primary"}>
-                                        Bid
-                                    </Button>
-                                </div>
                                 <div style={{flexGrow: 1}}/>
                                 <IconButton>
                                     <History/>
@@ -209,7 +198,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
-                    {allowEmailOrDiscord ? (
+                    {discord || (allowEmail && !auction) ? (
                         <div style={{margin: spacing(2), marginTop: 0}}>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 {discord ? (
@@ -229,9 +218,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                     </>
                                 ) : null}
                             </div>
-                            {discord || (allowEmail && !auction ? (
-                                <Divider style={{marginTop: spacing(2)}}/>
-                            ) : null)}
+                            <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     ) : null}
                     {forSaleInCountry ? (

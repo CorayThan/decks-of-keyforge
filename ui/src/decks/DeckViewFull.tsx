@@ -46,6 +46,10 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
         this.refreshDeck(nextProps.keyforgeDeckId)
     }
 
+    componentWillUnmount(): void {
+        deckStore.deck = undefined
+    }
+
     refreshDeck = (deckId: string) => {
         deckStore.findDeck(deckId)
         deckStore.findDeckSaleInfo(deckId)

@@ -3,6 +3,7 @@ package coraythan.keyswap.decks.models
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.userdeck.DeckCondition
 import java.time.LocalDate
+import java.util.*
 
 data class DeckSaleInfo(
         val forSale: Boolean,
@@ -19,6 +20,10 @@ data class DeckSaleInfo(
         val startingBid: Int?,
         val buyItNow: Int?,
         val auctionEndDateTime: String?,
+        val auctionId: UUID?,
+        val nextBid: Int?,
+        val youAreHighestBidder: Boolean?,
+        val yourMaxBid: Int?,
 
         val listingInfo: String?,
         val externalLink: String?,

@@ -123,6 +123,12 @@ export class DeckStore {
             })
     }
 
+    refreshDeckSearch = () => {
+        if (this.currentFilters) {
+            return this.searchDecks(this.currentFilters)
+        }
+    }
+
     searchDecks = async (filters: DeckFilters) => {
         this.searchingForDecks = true
         filters.pageSize = keyLocalStorage.deckPageSize

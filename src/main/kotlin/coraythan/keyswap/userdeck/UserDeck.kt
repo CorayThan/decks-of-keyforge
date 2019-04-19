@@ -101,10 +101,11 @@ data class UserDeck(
             auction = auction?.toDto()
     )
     
-    fun toDeckSaleInfo(offsetMinutes: Int): DeckSaleInfo? {
+    fun toDeckSaleInfo(offsetMinutes: Int, currentUser: KeyUser? = null): DeckSaleInfo? {
         return if (!availableToBuy) {
             null
         } else {
+            val youAreHighest = auction?.highestBidderUsername == currentUser?.username && currentUser != null
             DeckSaleInfo(
                     forSale = forSale,
                     forTrade = forTrade,
@@ -122,6 +123,10 @@ data class UserDeck(
                     dateListed = dateListed?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: LocalDate.parse("2019-04-07"),
                     expiresAt = expiresAt?.toLocalDateWithOffsetMinutes(offsetMinutes),
                     auctionEndDateTime = auction?.endDateTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+                    auctionId = auction?.id,
+                    nextBid = auction?.nextBid,
+                    youAreHighestBidder = youAreHighest,
+                    yourMaxBid = if (youAreHighest) auction?.realMaxBid() else null,
                     username = user.username,
                     publicContactInfo = user.publicContactInfo,
                     discord = user.discord

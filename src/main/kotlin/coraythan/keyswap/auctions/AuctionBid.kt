@@ -8,10 +8,10 @@ import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.ManyToOne
 
- @Entity
+@Entity
 data class AuctionBid(
 
-         @ManyToOne
+        @ManyToOne
         val bidder: KeyUser,
 
         val bidTime: ZonedDateTime,
@@ -20,18 +20,18 @@ data class AuctionBid(
 
         @JsonIgnoreProperties("bids")
         @ManyToOne
-        val auction: Auction,
+        val auction: Auction? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
-     fun toDto() = AuctionBidDto(
-             bidderUsername = bidder.username,
-             bidTime = bidTime,
-             bid = bid,
-             id = id
-     )
- }
+    fun toDto() = AuctionBidDto(
+            bidderUsername = bidder.username,
+            bidTime = bidTime,
+            bid = bid,
+            id = id
+    )
+}
 
 data class AuctionBidDto(
         val bidderUsername: String,

@@ -1,12 +1,14 @@
 package coraythan.keyswap.auctions
 
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.now
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -50,8 +52,43 @@ class AuctionService(
         userDeckRepo.save(userDeck.copy(auction = auction))
     }
 
-    fun bid() {
+    fun bid(auctionId: UUID, bid: Int): BidPlacementResult {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val auction = auctionRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
+        val requiredBid = auction.nextBid
+        val now = now()
+        if (auction.complete) {
+            return BidPlacementResult(false, false, "Sorry, your bid could not be placed because the auction has ended.")
+        }
+        if (bid < requiredBid) {
+            return BidPlacementResult(false, false, "Your bid was too low. Please refresh the page and try again.")
+        }
+        if (user.username == auction.userDeck?.ownedBy) {
+            throw UnauthorizedException("You can't bid on your own deck.")
+        }
+        val withBid = auction.copy(
+                bids = auction.bids.plus(AuctionBid(
+                        bidder = user,
+                        bid = bid,
+                        bidTime = now,
+                        auction = auction
+                )),
+                endDateTime = if (now.plusMinutes(15) > auction.endDateTime) {
+                    auction.endDateTime.plusMinutes(15)
+                } else {
+                    auction.endDateTime
+                }
+        )
 
+        val saved = auctionRepo.save(withBid)
+        val newHighBidder = saved.highestBidderUsername
+        val highBid = saved.highestBid
+
+        return BidPlacementResult(
+                true,
+                newHighBidder == user.username,
+                "You are now the highest bidder with a bid of $highBid."
+        )
     }
 
     fun buyNow() {

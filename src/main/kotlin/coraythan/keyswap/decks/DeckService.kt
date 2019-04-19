@@ -291,7 +291,7 @@ class DeckService(
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
         return deck.userDecks.mapNotNull {
             it.auction?.id
-            it.toDeckSaleInfo(offsetMinutes)
+            it.toDeckSaleInfo(offsetMinutes, currentUserService.loggedInUser())
         }.sortedByDescending { it.dateListed }
     }
 

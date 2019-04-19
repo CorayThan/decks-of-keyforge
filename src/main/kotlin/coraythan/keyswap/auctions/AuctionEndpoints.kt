@@ -19,4 +19,7 @@ class AuctionEndpoints(
 
     @PostMapping("/{id}/cancel")
     fun cancel(@PathVariable id: UUID) = auctionService.cancel(id)
+
+    @PostMapping("/bid/{auctionId}/{bid}")
+    fun bid(@PathVariable auctionId: UUID, @PathVariable bid: Int) = auctionService.bid(auctionId, bid)
 }
