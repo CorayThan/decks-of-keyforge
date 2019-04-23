@@ -11,10 +11,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
-import java.io.UnsupportedEncodingException
-import javax.mail.Message
-import javax.mail.MessagingException
-import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
 
 @Service
@@ -27,26 +23,43 @@ class EmailService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int, currencySymbol: String) {
-        val emails = listOf(buyer.primaryEmail, seller.primaryEmail)
         sendEmail(
-                emails,
-                "Auction results for the deck ${deck.name}",
+                seller.primaryEmail,
+                "${deck.name} has sold on auction!",
                 """
                     <div>
                         ${buyer.username} has won the deck ${deck.name} for $currencySymbol$price plus any shipping listed in the auction description.
                     </div>
                     <br>
+                    <br>
                     <div>
-                        Both buyer and seller are included in this email, so you can use it to arrange payment and delivery.
+                        You can reply to this email to contact the buyer.
                     </div>
                 """.trimIndent(),
-                emails
+                buyer.primaryEmail
+        )
+        sendEmail(
+                buyer.primaryEmail,
+                "You have won the auction for ${deck.name}!",
+                """
+                    <div>
+                        You have won the deck ${deck.name} for $currencySymbol$price plus any shipping listed in the auction description.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        You can reply to this email to contact the seller, or use any listed seller contact information on the
+                        ${makeLink("/decks?completedAuctions=true&forAuction=true&title=${deck.name}", "auction")}
+
+                    </div>
+                """.trimIndent(),
+                seller.primaryEmail
         )
     }
 
     fun sendAuctionDidNotSellEmail(seller: KeyUser, deck: Deck) {
         sendEmail(
-                listOf(seller.primaryEmail),
+                seller.primaryEmail,
                 "Your deck for auction ${deck.name} did not sell",
                 """
                     <div>
@@ -60,7 +73,7 @@ class EmailService(
         val userInSystem = keyUserService.findByEmail(reset.email)
         if (userInSystem != null) {
             val resetCode = passwordResetCodeService.createCode(reset.email)
-            sendEmail(listOf(reset.email), "Reset your decksofkeyforge.com password",
+            sendEmail(reset.email, "Reset your decksofkeyforge.com password",
                     """
                 <div>
                     Use this link to reset your password. It will expire in 24 hours.
@@ -83,7 +96,7 @@ class EmailService(
 
         log.info("Sending deck listed notification.")
         sendEmail(
-                listOf(recipient.email),
+                recipient.email,
                 "A new deck listed on Decks of Keyforge matches $queryName",
                 """
                     <div>
@@ -120,7 +133,7 @@ class EmailService(
         val senderEmail = sellerMessage.senderEmail
         val message = sellerMessage.message
 
-        sendEmail(listOf(email), "A deck you listed on Decks of Keyforge has a message",
+        sendEmail(email, "A deck you listed on Decks of Keyforge has a message",
                 """
                 <div>
                     <div>
@@ -148,46 +161,24 @@ class EmailService(
                     </i>
                 </div>
             """.trimIndent(),
-                listOf(senderEmail)
+                senderEmail
         )
     }
 
     private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path\">$name</a>"
 
-    private fun sendEmail(email: List<String>, subject: String, content: String, replyTo: List<String>? = null) {
+    private fun sendEmail(email: String, subject: String, content: String, replyTo: String? = null) {
         val mimeMessage = emailSender.createMimeMessage()
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         mimeMessage.setContent(content, "text/html")
         val fromEmail = "noreply@decksofkeyforge.com"
         val fromAddress = InternetAddress(fromEmail, "Decks of Keyforge")
         helper.setFrom(fromAddress)
-        if (replyTo != null) {
-            mimeMessage.replyTo = replyTo.map { parseAddress(it, mimeMessage.encoding) }.toTypedArray()
-        }
+        helper.setFrom(fromAddress)
+        if (replyTo != null) helper.setReplyTo(replyTo)
         mimeMessage.addFrom(listOf(fromAddress).toTypedArray())
-        mimeMessage.setRecipients(Message.RecipientType.TO, email.map { InternetAddress(it) }.toTypedArray())
+        helper.setTo(email)
         helper.setSubject(subject)
-        email.forEach {
-            helper.addTo(it)
-        }
         emailSender.send(mimeMessage)
-    }
-
-    @Throws(MessagingException::class)
-    private fun parseAddress(address: String, encoding: String?): InternetAddress {
-        val parsed = InternetAddress.parse(address)
-        if (parsed.size != 1) {
-            throw AddressException("Illegal address", address)
-        }
-        val raw = parsed[0]
-        try {
-            return if (encoding != null)
-                InternetAddress(raw.address, raw.personal, encoding)
-            else
-                raw
-        } catch (ex: UnsupportedEncodingException) {
-            throw MessagingException("Failed to parse embedded personal name to correct encoding", ex)
-        }
-
     }
 }

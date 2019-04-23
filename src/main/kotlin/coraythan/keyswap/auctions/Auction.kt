@@ -128,6 +128,5 @@ data class AuctionDto(
 
 enum class AuctionStatus {
     ACTIVE,
-    COMPLETE,
-    CANCELLED
+    COMPLETE
 }

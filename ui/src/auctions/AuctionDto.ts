@@ -16,6 +16,5 @@ export interface AuctionDto {
 
 export enum AuctionStatus {
     ACTIVE = "ACTIVE",
-    COMPLETE = "COMPLETE",
-    CANCELLED = "CANCELLED"
+    COMPLETE = "COMPLETE"
 }

@@ -19,7 +19,7 @@ spring:
     open-in-view: true
   datasource:
     platform: POSTGRESQL
-    url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/keytest
+    url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/keyswap
     username: ${RDS_USERNAME:postgres}
     password: ${RDS_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver

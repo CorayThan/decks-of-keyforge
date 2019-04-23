@@ -49,10 +49,15 @@ export class HttpConfig {
 
     private static errorInterceptor = (error: AxiosError) => {
 
-        log.error(`There was an error completing the request. ${error.code} ${error.message}`)
+        log.error(`There was an error completing the request. ${error.message}`)
 
-        if (error.code === "401") {
+        const code = error.response && error.response.status
+
+        if (code === 401) {
             messageStore.setErrorMessage("You are unauthorized to make this request.")
+        } else if (code === 417) {
+            const message = error.response && error.response.data && error.response.data.message
+            messageStore.setErrorMessage(message)
         } else {
             messageStore.setRequestErrorMessage()
         }

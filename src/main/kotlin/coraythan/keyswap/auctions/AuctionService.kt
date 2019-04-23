@@ -44,9 +44,9 @@ class AuctionService(
         val auctionsToCompleteFromCode = allAuctions
                 .filter { it.status == AuctionStatus.ACTIVE && it.endDateTime < now().plusDays(1) }
 
-        log.info("Decks in complete: ${auctionsToComplete.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
-        log.info("Decks in complete from code: ${auctionsToCompleteFromCode.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
-        log.info("All auctions: ${allAuctions.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
+//        log.info("Decks in complete: ${auctionsToComplete.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
+//        log.info("Decks in complete from code: ${auctionsToCompleteFromCode.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
+//        log.info("All auctions: ${allAuctions.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
 
         auctionsToComplete.forEach {
             val buyer = it.highestBidder()
@@ -72,8 +72,7 @@ class AuctionService(
         val endDateTime = now().plusDays(listingInfo.expireInDays.toLong())
         val endMinutesMod = endDateTime.minute % 15
         val endMinutes = endDateTime.minute - endMinutesMod
-//        val endMinutesRounded = if (endMinutesMod < 8) -endMinutesMod else (15 - endMinutesMod)
-        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
+//        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
         val auction = Auction(
                 durationDays = listingInfo.expireInDays,
@@ -176,11 +175,6 @@ class AuctionService(
         return dto.copy(bids = dto.bids.map { it.copy(bidderUsername = "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}") })
     }
 
-    fun sellerAuctions(status: AuctionStatus, offsetMinutes: Int): List<AuctionDto> {
-        val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        return auctionRepo.findAllBySellerIdAndStatus(currentUser.id, status).map { it.toDto(offsetMinutes) }
-    }
-
     private fun endAuction(sold: Boolean, auction: Auction, buyItNowUser: KeyUser? = null) {
 
         auctionRepo.save(auction.copy(
@@ -197,7 +191,7 @@ class AuctionService(
                         auction.seller,
                         auction.deck,
                         if (buyItNowUser != null) auction.buyItNow!! else auction.highestBid!!,
-                        "$"
+                        auction.seller.currencySymbol
                 )
             } else {
                 emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck)

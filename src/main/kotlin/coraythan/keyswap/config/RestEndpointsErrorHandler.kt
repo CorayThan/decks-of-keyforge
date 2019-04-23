@@ -12,7 +12,7 @@ class RestErrorHandler {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     @ExceptionHandler(BadRequestException::class)
     fun badRequestException(ex: BadRequestException, request: HttpServletRequest): ErrorResponse {
         logBadRequestInfo(ex, request)

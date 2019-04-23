@@ -27,7 +27,4 @@ class AuctionEndpoints(
     fun auctionInfo(@PathVariable auctionId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int)
             = auctionService.auctionInfo(auctionId, offsetMinutes)
 
-    @GetMapping("/secured/seller/{status}")
-    fun sellerAuctions(@PathVariable status: AuctionStatus, @RequestHeader(value = "Timezone") offsetMinutes: Int)
-            = auctionService.sellerAuctions(status, offsetMinutes)
 }

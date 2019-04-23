@@ -12,7 +12,6 @@ sellerImgs.set("wyzman", reapout)
 sellerImgs.set("zarathustra05", bigz)
 sellerImgs.set("TiggerClone", tiggerClone)
 
-
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())
     return (

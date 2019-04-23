@@ -48,14 +48,6 @@ class KeyLocalStorage {
         return showTableView === "true"
     }
 
-    defaultCurrencySymbolFromStorage = () => {
-        const defaultCurrencySymbol = this.localStorage.getItem(Keys.DEFAULT_CURRENCY_SYMBOL)
-        if (!defaultCurrencySymbol) {
-            return "$"
-        }
-        return defaultCurrencySymbol
-    }
-
     toggleFullCardView = () => {
         const newValue = !this.showFullCardView
         this.showFullCardView = newValue
@@ -101,7 +93,6 @@ class KeyLocalStorage {
 enum Keys {
     AUTH = "AUTH",
     DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
-    DEFAULT_CURRENCY_SYMBOL = "DEFAULT_CURRENCY_SYMBOL",
     FULL_CARD_VIEW = "FULL_CARD_VIEW",
     DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",

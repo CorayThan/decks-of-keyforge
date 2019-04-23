@@ -6,5 +6,6 @@ enum class DeckLanguage {
     ITALIAN,
     GERMAN,
     SPANISH,
-    POLISH
+    POLISH,
+    OTHER
 }

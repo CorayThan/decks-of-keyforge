@@ -4,7 +4,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { ListingInfo } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { AuctionDto, AuctionStatus } from "./AuctionDto"
+import { AuctionDto } from "./AuctionDto"
 import { BidPlacementResult } from "./BidPlacementResult"
 
 export class AuctionStore {
@@ -14,9 +14,6 @@ export class AuctionStore {
 
     @observable
     auctionInfo?: AuctionDto
-
-    @observable
-    sellerAuctions?: Map<number, AuctionDto>
 
     createAuction = (deckName: string, listingInfo: ListingInfo) => {
         axios.post(`${AuctionStore.SECURE_CONTEXT}/list`, listingInfo)
@@ -58,17 +55,6 @@ export class AuctionStore {
             })
     }
 
-    findMyActiveAuctions = () => {
-        axios.get(`${AuctionStore.SECURE_CONTEXT}/seller/${AuctionStatus.ACTIVE}`)
-            .then((response: AxiosResponse<AuctionDto[]>) => {
-                const auctionsList: AuctionDto[] = response.data
-
-                this.sellerAuctions = new Map()
-                auctionsList.forEach((auction) => this.sellerAuctions!.set(auction.deckId, auction))
-            })
-    }
-
-    auctionByDeckId = (deckId: number) => this.sellerAuctions ? this.sellerAuctions.get(deckId) : undefined
 }
 
 export const auctionStore = new AuctionStore()

@@ -1,5 +1,7 @@
 package coraythan.keyswap.users
 
+import coraythan.keyswap.auctions.AuctionRepo
+import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
@@ -16,7 +18,8 @@ class KeyUserService(
         private val userRepo: KeyUserRepo,
         private val currentUserService: CurrentUserService,
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
-        private val passwordResetCodeService: PasswordResetCodeService
+        private val passwordResetCodeService: PasswordResetCodeService,
+        private val auctionRepo: AuctionRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -68,6 +71,10 @@ class KeyUserService(
         val user = currentUserService.loggedInUserOrUnauthorized()
         var userDecks = user.decks
         var auctions = user.auctions
+
+        if (update.currencySymbol != user.currencySymbol && auctionRepo.findAllBySellerIdAndStatus(user.id, AuctionStatus.ACTIVE).isNotEmpty()) {
+            throw BadRequestException("You cannot update your currency symbol while you have active auctions.")
+        }
 
         if (update.country != user.country || update.currencySymbol != user.currencySymbol) {
             userDecks = user.decks.map {
@@ -125,7 +132,7 @@ class KeyUserService(
             "Email is blank."
         }
         check(userRepo.findByEmailIgnoreCase(email) == null) {
-            log.info("${email} email is already taken.")
+            log.info("$email email is already taken.")
             "This email is already taken."
         }
     }

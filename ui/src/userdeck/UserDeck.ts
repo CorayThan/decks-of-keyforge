@@ -12,7 +12,6 @@ export interface UserDeck {
 
     forSale: boolean
     forTrade: boolean
-    forAuction: boolean
 
     forSaleInCountry?: string,
     language?: DeckLanguage,
@@ -85,5 +84,4 @@ export interface UserDeckDto {
 
     username: string
     publicContactInfo?: string
-
 }
