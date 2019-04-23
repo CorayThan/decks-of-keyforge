@@ -1,6 +1,7 @@
 package coraythan.keyswap.users
 
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -48,7 +49,8 @@ class KeyUserService(
                 type = UserType.USER,
                 publicContactInfo = if (userRegInfo.publicContactInfo.isNullOrBlank()) null else userRegInfo.publicContactInfo,
                 allowUsersToSeeDeckOwnership = userRegInfo.allowUsersToSeeDeckOwnership,
-                lastVersionSeen = userRegInfo.lastVersionSeen
+                lastVersionSeen = userRegInfo.lastVersionSeen,
+                currencySymbol = "$"
         ))
     }
 
@@ -64,12 +66,16 @@ class KeyUserService(
 
     fun updateUserProfile(update: UserProfileUpdate) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val userDecks = if (update.country != user.country) {
-            user.decks.map {
-                if (it.forSale || it.forTrade) it.copy(forSaleInCountry = update.country) else it
+        var userDecks = user.decks
+        var auctions = user.auctions
+
+        if (update.country != user.country || update.currencySymbol != user.currencySymbol) {
+            userDecks = user.decks.map {
+                it.copy(forSaleInCountry = update.country, currencySymbol = update.currencySymbol)
             }
-        } else {
-            user.decks
+            auctions = user.auctions.map {
+                it.copy(forSaleInCountry = update.country ?: Country.UnitedStates, currencySymbol = update.currencySymbol)
+            }
         }
 
         if (update.email != null) validateEmail(update.email)
@@ -78,9 +84,11 @@ class KeyUserService(
                 email = update.email ?: user.email,
                 publicContactInfo = update.publicContactInfo,
                 allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
+                currencySymbol = update.currencySymbol,
                 country = update.country,
                 preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
                 decks = userDecks,
+                auctions = auctions,
                 sellerEmail = update.sellerEmail,
                 discord = update.discord,
                 storeName = update.storeName

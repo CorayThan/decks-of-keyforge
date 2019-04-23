@@ -2,6 +2,7 @@ package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
+import coraythan.keyswap.auctions.Auction
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
@@ -54,6 +55,7 @@ data class Deck(
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
         val forAuction: Boolean = false,
+        val completedAuction: Boolean = false,
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
 
@@ -71,6 +73,10 @@ data class Deck(
         @ElementCollection
         @Enumerated(EnumType.STRING)
         val houses: List<House> = listOf(),
+
+        @JsonIgnoreProperties("deck")
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        val auctions: List<Auction> = listOf(),
 
         /**
          * To redo the ratings:

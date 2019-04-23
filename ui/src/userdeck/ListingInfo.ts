@@ -7,7 +7,6 @@ export interface ListingInfo {
     forSale: boolean
     forTrade: boolean
     forSaleInCountry: string,
-    currencySymbol: string
     language: DeckLanguage
     condition: DeckCondition
     askingPrice?: number

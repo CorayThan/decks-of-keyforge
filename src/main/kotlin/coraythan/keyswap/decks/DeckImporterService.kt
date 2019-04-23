@@ -201,7 +201,7 @@ class DeckImporterService(
         )
 
         val savedDeck = saveDeck(deck, unregisteredDeck.cards.keys.toList(), cards)
-        val userDeck = UserDeck(user, savedDeck, creator = true)
+        val userDeck = UserDeck(user, savedDeck, creator = true, currencySymbol = user.currencySymbol)
         userDeckRepo.save(userDeck)
         log.info("Added unregistered deck with name ${savedDeck.name} fake id ${savedDeck.keyforgeId}")
         return savedDeck.keyforgeId

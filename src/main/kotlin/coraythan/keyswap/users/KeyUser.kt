@@ -2,6 +2,7 @@ package coraythan.keyswap.users
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import coraythan.keyswap.auctions.Auction
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
@@ -31,6 +32,8 @@ data class KeyUser(
         val publicContactInfo: String? = null,
         val allowUsersToSeeDeckOwnership: Boolean,
 
+        val currencySymbol: String,
+
         @Enumerated(EnumType.STRING)
         val country: Country? = null,
 
@@ -43,8 +46,12 @@ data class KeyUser(
         val decks: List<UserDeck> = listOf(),
 
         @JsonIgnoreProperties("user")
-        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val forSaleQueries: List<ForSaleQueryEntity> = listOf(),
+
+        @JsonIgnoreProperties("boughtWithBuyItNow")
+        @OneToMany(mappedBy = "boughtWithBuyItNow", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        val buyItNows: List<Auction> = listOf(),
 
         val lastVersionSeen: String?,
 
@@ -60,9 +67,16 @@ data class KeyUser(
 
         val sellerEmail: String? = null,
         val discord: String? = null,
-        val storeName: String? = null
+        val storeName: String? = null,
+
+        @JsonIgnoreProperties("seller")
+        @OneToMany(mappedBy = "seller", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        val auctions: List<Auction> = listOf()
 
 ) {
+    val primaryEmail: String
+        get() = sellerEmail ?: email
+
     fun toProfile(isUser: Boolean) = UserProfile(
             id = id,
             username = username,
@@ -81,6 +95,7 @@ data class KeyUser(
             type = type,
             publicContactInfo = publicContactInfo,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
+            currencySymbol = currencySymbol,
             country = country,
             preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen,
@@ -104,6 +119,7 @@ data class KeyUserDto(
         val publicContactInfo: String? = null,
         val allowUsersToSeeDeckOwnership: Boolean,
 
+        val currencySymbol: String = "$",
         val country: Country? = null,
 
         val preferredCountries: List<Country>? = null,

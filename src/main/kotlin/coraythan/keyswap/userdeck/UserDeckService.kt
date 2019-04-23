@@ -1,5 +1,7 @@
 package coraythan.keyswap.userdeck
 
+import coraythan.keyswap.auctions.AuctionRepo
+import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
@@ -22,7 +24,8 @@ class UserDeckService(
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val userDeckRepo: UserDeckRepo,
-        private val forSaleNotificationsService: ForSaleNotificationsService
+        private val forSaleNotificationsService: ForSaleNotificationsService,
+        private val auctionRepo: AuctionRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -101,7 +104,6 @@ class UserDeckService(
         val preexisting = userDeckRepo.findByDeckIdAndUserId(listingInfo.deckId, currentUser.id)
         val preexistingForSale = preexisting?.forSale
         val preexistingForTrade = preexisting?.forTrade
-        val preexistingAuction = preexisting?.forAuction
         if (preexisting != null) {
             unlistUserDeck(preexisting)
         }
@@ -120,9 +122,7 @@ class UserDeckService(
             it.copy(
                     forSale = listingInfo.forSale,
                     forTrade = listingInfo.forTrade,
-                    forAuction = listingInfo.auctionListingInfo != null,
                     forSaleInCountry = listingInfo.forSaleInCountry,
-                    currencySymbol = listingInfo.currencySymbol,
                     language = listingInfo.language,
                     askingPrice = listingInfo.askingPrice,
                     listingInfo = if (listingInfo.listingInfo.isNullOrBlank()) null else listingInfo.listingInfo,
@@ -130,10 +130,11 @@ class UserDeckService(
                     externalLink = if (listingInfo.externalLink.isNullOrBlank()) null else listingInfo.externalLink,
                     dateListed = now(),
                     expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong()),
-                    ownedBy = currentUser.username
+                    ownedBy = currentUser.username,
+                    currencySymbol = currentUser.currencySymbol
             )
         }
-        if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false && preexistingAuction == false)) {
+        if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false)) {
             // Send email since this is a new listing
             forSaleNotificationsService.sendNotifications(listingInfo)
             userRepo.save(userRepo.getOne(currentUser.id).copy(mostRecentDeckListing = now()))
@@ -163,18 +164,11 @@ class UserDeckService(
                         .and(userDeckQ.deck.id.eq(deckId))
                         .and(userDeckQ.id.ne(userDeck.id))
         )
-        val userDecksForAuction = userDeckRepo.findAll(
-                userDeckQ.forAuction.isTrue
-                        .and(userDeckQ.deck.id.eq(deckId))
-                        .and(userDeckQ.id.ne(userDeck.id))
-        )
         val forSale = userDecksForSale.toList().isNotEmpty()
         val forTrade = userDecksForTrade.toList().isNotEmpty()
-        val forAuction = userDecksForAuction.toList().isNotEmpty()
         deckRepo.save(userDeck.deck.copy(
                 forSale = forSale,
                 forTrade = forTrade,
-                forAuction = forAuction,
                 listedOn = if (forSale || forTrade) userDeck.deck.listedOn else null
         ))
     }
@@ -182,7 +176,6 @@ class UserDeckService(
     private fun userDeckWithoutListingInfo(userDeck: UserDeck) = userDeck.copy(
             forSale = false,
             forTrade = false,
-            forAuction = false,
             forSaleInCountry = null,
             askingPrice = null,
             listingInfo = null,
@@ -216,6 +209,7 @@ class UserDeckService(
 
     fun findAllForUser(): List<UserDeckDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        return userDeckRepo.findByUserId(currentUser.id).map { it.toDto() }
+        val activeAuctionDeckIds = auctionRepo.findAllBySellerIdAndStatus(currentUser.id, AuctionStatus.ACTIVE).map { it.deck.id }.toSet()
+        return userDeckRepo.findByUserId(currentUser.id).map { it.toDto(activeAuctionDeckIds.contains(it.deck.id)) }
     }
 }

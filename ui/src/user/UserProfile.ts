@@ -12,6 +12,7 @@ export interface UserProfileUpdate {
     email?: string
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
+    currencySymbol: string
     country?: string
     preferredCountries?: string[]
     sellerEmail?: string

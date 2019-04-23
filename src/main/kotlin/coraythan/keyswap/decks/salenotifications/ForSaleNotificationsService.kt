@@ -8,6 +8,7 @@ import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUserService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import java.util.*
 class ForSaleNotificationsService(
         private val forSaleQueryRepo: ForSaleQueryRepo,
         private val currentUserService: CurrentUserService,
+        private val userService: KeyUserService,
         private val deckService: DeckService,
         private val deckRepo: DeckRepo,
         private val emailService: EmailService,
@@ -89,7 +91,8 @@ class ForSaleNotificationsService(
 
     private fun queryMatchesDeck(queryEntity: ForSaleQueryEntity, deckId: Long): Boolean {
         val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
-        val predicate = deckService.deckFilterPredicate(query, queryEntity.user!!.id)
+        val userHolder = DeckService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
+        val predicate = deckService.deckFilterPredicate(query, userHolder)
                 .and(QDeck.deck.id.eq(deckId))
         return deckRepo.exists(predicate)
     }

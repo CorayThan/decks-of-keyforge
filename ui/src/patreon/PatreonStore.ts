@@ -14,7 +14,7 @@ export class PatreonStore {
     linkAccount = (code: string) => {
         axios.post(`${PatreonStore.SECURE_CONTEXT}/link/${code}`)
             .then((response: AxiosResponse) => {
-                messageStore.setInfoMessage("You've linked your Patreon account!")
+                messageStore.setSuccessMessage("You've linked your Patreon account!")
                 userStore.loadLoggedInUser()
             })
     }

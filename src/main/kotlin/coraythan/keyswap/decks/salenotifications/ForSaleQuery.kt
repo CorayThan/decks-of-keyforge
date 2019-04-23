@@ -55,4 +55,6 @@ data class ForSaleQuery(
 ) : DeckQuery {
         override val myFavorites: Boolean
                 get() = false
+        override val completedAuctions: Boolean
+                get() = false
 }

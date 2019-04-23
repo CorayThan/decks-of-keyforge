@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
+import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
@@ -48,7 +49,8 @@ class DeckService(
             count = preExistingCount
         } else {
 
-            val predicate = deckFilterPredicate(filters)
+            val userHolder = UserHolder(null, currentUserService, userService)
+            val predicate = deckFilterPredicate(filters, userHolder)
 
             if (filtersAreEqualForCount(filters)) {
 
@@ -77,7 +79,8 @@ class DeckService(
 
     fun filterDecks(filters: DeckFilters, timezoneOffsetMinutes: Int): DecksPage {
 
-        val predicate = deckFilterPredicate(filters)
+        val userHolder = UserHolder(null, currentUserService, userService)
+        val predicate = deckFilterPredicate(filters, userHolder)
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
@@ -119,18 +122,22 @@ class DeckService(
         val decks = deckResults.map {
             val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
             if (filters.forSale || filters.forTrade || filters.forAuction) {
-                searchResult.copy(deckSaleInfo = saleInfoForDeck(searchResult.keyforgeId, timezoneOffsetMinutes))
+                searchResult.copy(deckSaleInfo = saleInfoForDeck(
+                        searchResult.keyforgeId,
+                        timezoneOffsetMinutes,
+                        it,
+                        userHolder.user,
+                        filters.completedAuctions
+                ))
             } else {
                 searchResult
             }
         }
 
-        val decksPage = DecksPage(
+        return DecksPage(
                 decks,
                 filters.page
         )
-
-        return decksPage
     }
 
     private fun filtersAreEqualForCount(filters: DeckFilters) = filters.copy(
@@ -144,8 +151,7 @@ class DeckService(
         }
     }
 
-    fun deckFilterPredicate(filters: DeckQuery, userId: UUID? = null): BooleanBuilder {
-        val userHolder = UserHolder(userId, currentUserService, userService)
+    fun deckFilterPredicate(filters: DeckQuery, userHolder: UserHolder): BooleanBuilder {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
 
@@ -213,13 +219,15 @@ class DeckService(
                 )
             }
         }
-        if (filters.forSale || filters.forTrade || filters.forAuction) {
+        if (filters.completedAuctions) {
+            predicate.and(deckQ.completedAuction.isTrue)
+        } else if (filters.forSale || filters.forTrade || filters.forAuction) {
             predicate.and(BooleanBuilder().andAnyOf(
-                    *listOf(
+                    *listOfNotNull(
                             if (filters.forSale) deckQ.forSale.isTrue else null,
                             if (filters.forTrade) deckQ.forTrade.isTrue else null,
                             if (filters.forAuction) deckQ.forAuction.isTrue else null
-                    ).filterNotNull().toTypedArray()
+                    ).toTypedArray()
             ))
         }
         if (filters.forSaleInCountry != null) {
@@ -287,12 +295,29 @@ class DeckService(
         )
     }
 
-    fun saleInfoForDeck(keyforgeId: String, offsetMinutes: Int): List<DeckSaleInfo> {
-        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
-        return deck.userDecks.mapNotNull {
-            it.auction?.id
-            it.toDeckSaleInfo(offsetMinutes, currentUserService.loggedInUser())
-        }.sortedByDescending { it.dateListed }
+    fun saleInfoForDeck(keyforgeId: String, offsetMinutes: Int, deckParam: Deck? = null, userParam: KeyUser? = null, completedAuctionsOnly: Boolean = false): List<DeckSaleInfo> {
+        val deck = deckParam ?: deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
+        val currentUser = userParam ?: currentUserService.loggedInUser()
+
+        val mapped = if (completedAuctionsOnly) {
+            deck.auctions.filter { it.status == AuctionStatus.COMPLETE }
+                    .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
+        } else {
+            deck.userDecks
+                    .mapNotNull {
+                        DeckSaleInfo.fromUserDeck(
+                                offsetMinutes = offsetMinutes,
+                                userDeck = it
+                        )
+                    }
+                    .plus(
+                            deck.auctions.filter { it.status == AuctionStatus.ACTIVE }
+                                    .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
+                    )
+        }
+
+        return mapped
+                .sortedByDescending { it.dateListed }
     }
 
 }

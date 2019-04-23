@@ -77,7 +77,8 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
     constructor(props: { deck: DeckWithSynergyInfo }) {
         super(props)
         const deck = props.deck.deck
-        uiStore.setTopbarValues(deck.name, "Deck", "")
+        uiStore.setTopbarValues("Deck", "Deck", "")
+        uiStore.setDocTitleAndDescription(deck.name)
     }
 
     render() {

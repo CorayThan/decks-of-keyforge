@@ -127,9 +127,9 @@ export class UserStore {
             .then((response: AxiosResponse) => {
                 if (updateUserProfile.email) {
                     this.logout()
-                    messageStore.setSuccessMessage("Updated your profile! Please sign back in.")
+                    messageStore.setInfoMessage("Updated your profile! Please sign back in.")
                 } else {
-                    messageStore.setSuccessMessage("Updated your profile!")
+                    messageStore.setInfoMessage("Updated your profile!")
                     this.loadLoggedInUser()
                 }
             })
@@ -140,7 +140,7 @@ export class UserStore {
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
             .then((response: AxiosResponse) => {
                 this.changingPassword = false
-                messageStore.setSuccessMessage("Your password has been changed!")
+                messageStore.setInfoMessage("Your password has been changed!")
             })
             .catch((error: AxiosError) => {
                 this.changingPassword = false

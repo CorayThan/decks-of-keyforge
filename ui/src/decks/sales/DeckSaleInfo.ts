@@ -1,3 +1,4 @@
+import { AuctionStatus } from "../../auctions/AuctionDto"
 import { userStore } from "../../user/UserStore"
 import { DeckCondition, UserDeckDto } from "../../userdeck/UserDeck"
 import { DeckLanguage } from "../DeckLanguage"
@@ -5,10 +6,10 @@ import { DeckLanguage } from "../DeckLanguage"
 export interface DeckSaleInfo {
     forSale: boolean
     forTrade: boolean
-    auction: boolean
+    forAuction: boolean
 
     forSaleInCountry?: string
-    currencySymbol?: string
+    currencySymbol: string
     language?: DeckLanguage
 
     askingPrice?: number
@@ -21,6 +22,10 @@ export interface DeckSaleInfo {
     nextBid?: number
     youAreHighestBidder?: boolean
     yourMaxBid?: number
+    bidIncrement?: number
+    auctionStatus?: AuctionStatus
+    boughtBy?: string
+    boughtNowOn?: string
 
     listingInfo?: string
     externalLink?: string
@@ -37,7 +42,7 @@ export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo
 
     const {
         forSale, forTrade, forAuction, askingPrice, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol,
-        language, auction
+        language
     } = userDeck
 
     const user = userStore.user
@@ -48,16 +53,13 @@ export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo
     return {
         forSale,
         forTrade,
-        auction: forAuction,
+        forAuction,
 
         forSaleInCountry: user.country,
         currencySymbol,
         language,
 
         askingPrice,
-
-        highestBid: auction ? auction.highestBid : undefined,
-        buyItNow: auction ? auction.buyItNow : undefined,
 
         listingInfo,
         externalLink,

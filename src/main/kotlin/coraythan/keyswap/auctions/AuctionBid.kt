@@ -1,6 +1,7 @@
 package coraythan.keyswap.auctions
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.KeyUser
 import java.time.ZonedDateTime
 import java.util.*
@@ -25,9 +26,9 @@ data class AuctionBid(
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
-    fun toDto() = AuctionBidDto(
+    fun toDto(offsetMinutes: Int = 0) = AuctionBidDto(
             bidderUsername = bidder.username,
-            bidTime = bidTime,
+            bidTime = bidTime.toReadableStringWithOffsetMinutes(offsetMinutes),
             bid = bid,
             id = id
     )
@@ -35,7 +36,7 @@ data class AuctionBid(
 
 data class AuctionBidDto(
         val bidderUsername: String,
-        val bidTime: ZonedDateTime,
+        val bidTime: String,
         val bid: Int,
         val id: UUID = UUID.randomUUID()
 )

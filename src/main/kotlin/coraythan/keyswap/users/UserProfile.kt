@@ -18,6 +18,7 @@ data class UserProfileUpdate(
         val email: String?,
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
+        val currencySymbol: String,
         val country: Country?,
         val preferredCountries: List<Country>? = null,
         val sellerEmail: String? = null,

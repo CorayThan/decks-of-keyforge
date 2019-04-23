@@ -13,10 +13,9 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { auctionStore } from "../../auctions/AuctionStore"
-import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { log, Utils } from "../../config/Utils"
+import { Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { messageStore } from "../../ui/MessageStore"
@@ -48,8 +47,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     buyItNow = ""
     @observable
-    currencySymbol = "$"
-    @observable
     language = DeckLanguage.ENGLISH
     @observable
     askingPrice = ""
@@ -76,7 +73,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.forSale = true
         this.forTrade = true
         this.auction = false
-        this.currencySymbol = keyLocalStorage.defaultCurrencySymbol
         this.language = DeckLanguage.ENGLISH
         this.condition = DeckCondition.NEW_IN_PLASTIC
         this.askingPrice = ""
@@ -89,22 +85,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     handleOpenForEdit = () => {
         const userDeck = userDeckStore.userDeckByDeckId(this.props.deck.id)
         if (userDeck != null) {
-            const {forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expiresAtLocalDate, currencySymbol, language, auction} = userDeck
-            let currencySymbolToUse = "$"
-            if (currencySymbol) {
-                currencySymbolToUse = currencySymbol
-            }
+            const {forSale, forTrade, forAuction, condition, askingPrice, listingInfo, externalLink, expiresAtLocalDate, language} = userDeck
             this.open = true
             this.update = true
             this.forSale = forSale
             this.forTrade = forTrade
             this.language = language ? language : DeckLanguage.ENGLISH
-            this.currencySymbol = currencySymbolToUse
             this.condition = condition ? condition : DeckCondition.NEW_IN_PLASTIC
             this.askingPrice = askingPrice ? askingPrice.toString() : ""
             this.listingInfo = listingInfo ? listingInfo : ""
             this.externalLink = externalLink ? externalLink : ""
-            if (auction) {
+            if (forAuction) {
                 throw new Error("Can't edit auctions.")
             }
 
@@ -118,9 +109,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
     }
 
+    handleChangeDays = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.expireInDays = event.target.value
+    }
+
     list = () => {
         const {
-            forSale, forTrade, condition, askingPrice, listingInfo, externalLink, expireInDays, currencySymbol, language, auction, bidIncrement,
+            forSale, forTrade, auction, condition, askingPrice, listingInfo, externalLink, expireInDays, language, bidIncrement,
             startingBid, buyItNow
         } = this
         if (!forSale && !forTrade && !auction) {
@@ -178,19 +173,12 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             return
         }
 
-        const currencySymbolTrimmed = currencySymbol.trim()
-        if (currencySymbol.length === 0) {
-            messageStore.setWarningMessage("Include a currency symbol such as $ or €.")
-            return
-        }
-
         const listingInfoDto: ListingInfo = {
             deckId: this.props.deck.id,
             forSale,
             forTrade,
             forSaleInCountry,
             language,
-            currencySymbol: currencySymbolTrimmed,
             condition,
             listingInfo,
             externalLink,
@@ -217,14 +205,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         if (userDeck && (userDeck.forSale || userDeck.forTrade || userDeck.forAuction)) {
             saleButton = (
                 <>
-                    {userDeck.forAuction ? (
-                        <KeyButton
-                            color={"primary"}
-                            onClick={() => log.debug("Implement view auction.")}
-                        >
-                            View Auction
-                        </KeyButton>
-                    ) : (
+                    {userDeck.forAuction ? null : (
                         <>
                             <KeyButton
                                 color={"primary"}
@@ -331,6 +312,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                             this.auction = auction
                                             this.forSale = !auction
                                             this.forTrade = !auction
+                                            if (auction) {
+                                                this.expireInDays = "3"
+                                            }
                                         }}
                                         color={"primary"}
                                     />
@@ -342,7 +326,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             select={true}
                             label={this.auction ? "Duration" : "Expires In"}
                             value={this.expireInDays}
-                            onChange={(event) => this.expireInDays = event.target.value}
+                            onChange={this.handleChangeDays}
                             style={marginTopRight}
                         >
                             <MenuItem value={"1"}>
@@ -358,24 +342,24 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 7 days
                             </MenuItem>
                             {this.auction ? null : (
-                                <>
-                                    <MenuItem value={"10"}>
+                                [
+                                    <MenuItem value={"10"} key={"10"}>
                                         10 days
-                                    </MenuItem>
-                                    <MenuItem value={"30"}>
+                                    </MenuItem>,
+                                    <MenuItem value={"30"} key={"30"}>
                                         30 days
-                                    </MenuItem>
-                                    {userStore.patron ? (
-                                        <MenuItem value={"365"}>
-                                            One year
-                                        </MenuItem>
-                                    ) : null}
-                                    {this.preExistingDays ? (
-                                        <MenuItem value={this.preExistingDays}>
-                                            {this.preExistingDays} days
-                                        </MenuItem>
-                                    ) : null}
-                                </>
+                                    </MenuItem>,
+                                ]
+                            )}
+                            {this.auction || !userStore.patron ? null : (
+                                <MenuItem value={"365"}>
+                                    One year
+                                </MenuItem>
+                            )}
+                            {this.auction || !this.preExistingDays ? null : (
+                                <MenuItem value={this.preExistingDays}>
+                                    {this.preExistingDays} days
+                                </MenuItem>
                             )}
                         </TextField>
                         <TextField
@@ -409,30 +393,19 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             })}
                         </TextField>
                         {forSaleOrAuction ? (
-                            <>
-                                <TextField
-                                    label={"Currency"}
-                                    value={this.currencySymbol}
-                                    onChange={(event) => {
-                                        this.currencySymbol = event.target.value
-                                        keyLocalStorage.setDefaultCurrencySymbol(this.currencySymbol)
-                                    }}
-                                    style={{width: 80, ...marginTopRight}}
-                                />
-                                <TextField
-                                    label={this.auction ? "Starting bid" : "Asking price"}
-                                    type={"number"}
-                                    value={this.auction ? this.startingBid : this.askingPrice}
-                                    onChange={(event) => {
-                                        if (this.auction) {
-                                            this.startingBid = event.target.value
-                                        } else {
-                                            this.askingPrice = event.target.value
-                                        }
-                                    }}
-                                    style={{width: 120, ...marginTopRight}}
-                                />
-                            </>
+                            <TextField
+                                label={this.auction ? "Starting bid" : "Asking price"}
+                                type={"number"}
+                                value={this.auction ? this.startingBid : this.askingPrice}
+                                onChange={(event) => {
+                                    if (this.auction) {
+                                        this.startingBid = event.target.value
+                                    } else {
+                                        this.askingPrice = event.target.value
+                                    }
+                                }}
+                                style={{width: 120, ...marginTopRight}}
+                            />
                         ) : null}
                         {this.auction ? (
                             <>

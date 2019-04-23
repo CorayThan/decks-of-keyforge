@@ -7,19 +7,27 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("${Api.base}/auctions/secured")
+@RequestMapping("${Api.base}/auctions")
 class AuctionEndpoints(
         val auctionService: AuctionService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/list")
+    @PostMapping("/secured/list")
     fun list(@RequestBody listingInfo: ListingInfo) = auctionService.list(listingInfo)
 
-    @PostMapping("/{id}/cancel")
-    fun cancel(@PathVariable id: UUID) = auctionService.cancel(id)
-
-    @PostMapping("/bid/{auctionId}/{bid}")
+    @PostMapping("/secured/bid/{auctionId}/{bid}")
     fun bid(@PathVariable auctionId: UUID, @PathVariable bid: Int) = auctionService.bid(auctionId, bid)
+
+    @PostMapping("/secured/buy-it-now/{auctionId}")
+    fun buyItNow(@PathVariable auctionId: UUID) = auctionService.buyItNow(auctionId)
+
+    @GetMapping("/{auctionId}")
+    fun auctionInfo(@PathVariable auctionId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int)
+            = auctionService.auctionInfo(auctionId, offsetMinutes)
+
+    @GetMapping("/secured/seller/{status}")
+    fun sellerAuctions(@PathVariable status: AuctionStatus, @RequestHeader(value = "Timezone") offsetMinutes: Int)
+            = auctionService.sellerAuctions(status, offsetMinutes)
 }

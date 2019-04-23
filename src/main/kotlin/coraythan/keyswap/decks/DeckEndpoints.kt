@@ -87,7 +87,6 @@ class DeckEndpoints(
 
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String, @RequestHeader(value = "Timezone") offsetMinutes: Int): List<DeckSaleInfo> {
-        log.info("Find deck sale info endpoint")
         return deckService.saleInfoForDeck(id, offsetMinutes)
     }
 

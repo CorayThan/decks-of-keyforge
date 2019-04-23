@@ -15,16 +15,12 @@ class KeyLocalStorage {
     @observable
     displayExtraDeckStats = false
 
-    @observable
-    defaultCurrencySymbol: string = "$"
-
     private localStorage = window.localStorage
 
     constructor() {
         const value = this.showDeckTableViewFromStorage()
         this.showTableView = Boolean(value)
         this.showFullCardView = Boolean(this.showFullCardViewFromStorage())
-        this.defaultCurrencySymbol = this.defaultCurrencySymbolFromStorage()
         this.deckPageSizeFromStorage()
     }
 
@@ -85,14 +81,6 @@ class KeyLocalStorage {
         }
         this.deckPageSize = size
         this.localStorage.setItem(Keys.DECK_PAGE_SIZE, size.toString())
-    }
-
-    setDefaultCurrencySymbol = (symbol: string) => {
-        const symbolTrimmed = symbol.trim()
-        if (symbolTrimmed.length > 0) {
-            this.defaultCurrencySymbol = symbolTrimmed
-            this.localStorage.setItem(Keys.DEFAULT_CURRENCY_SYMBOL, symbol)
-        }
     }
 
     deckPageSizeFromStorage = () => {

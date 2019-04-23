@@ -80,6 +80,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     allowUsersToSeeDeckOwnership: boolean
     @observable
     country: string
+
+    @observable
+    currencySymbol = "$"
     @observable
     preferredCountries: string[]
 
@@ -104,7 +107,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     constructor(props: MyProfileInnerProps) {
         super(props)
-        const {publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, sellerEmail, discord, storeName} = props.profile
+        const {
+            publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, sellerEmail, discord, storeName, currencySymbol
+        } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
@@ -113,6 +118,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.sellerEmail = sellerEmail ? sellerEmail : ""
         this.discord = discord ? discord : ""
         this.storeName = storeName ? storeName : ""
+        this.currencySymbol = currencySymbol
         uiStore.setTopbarValues(`My Profile`, "My Profile", "")
 
         forSaleNotificationsStore.queries = undefined
@@ -159,17 +165,27 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
         const storeNameTrimmed = this.storeName.trim()
         const storeName = storeNameTrimmed.length === 0 ? undefined : storeNameTrimmed
-        if (storeNameTrimmed != null && storeNameTrimmed.length > 40) {
-            messageStore.setWarningMessage(`Please make your store name 40 characters or less.`)
+        if (storeNameTrimmed.length > 40) {
+            messageStore.setWarningMessage(`Please make your store name 40 or fewer characters.`)
             return
         }
 
-        const toUpdate = {
+        const currencySymbolTrimmed = this.currencySymbol.trim()
+        if (currencySymbolTrimmed.length > 5) {
+            messageStore.setWarningMessage(`Currency symbol must be five or fewer characters.`)
+            return
+        } else if (currencySymbolTrimmed.length === 0) {
+            messageStore.setWarningMessage(`Currency symbol be at least one character.`)
+            return
+        }
+
+        const toUpdate: UserProfileUpdate = {
             email,
             publicContactInfo,
             sellerEmail,
             discord,
             storeName,
+            currencySymbol: currencySymbolTrimmed,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries
@@ -238,7 +254,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                             >
                                 <div style={{padding: spacing(2)}}>
                                     <Grid container={true} spacing={16}>
-                                        <PatreonSupporter profile={profile} />
+                                        <PatreonSupporter profile={profile}/>
                                         <Grid item={true} xs={12}>
                                             <TextField
                                                 label={"email"}
@@ -246,7 +262,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 onChange={(event) => this.email = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
-                                                style={{marginBottom: spacing(2)}}
                                             />
                                         </Grid>
                                         {userStore.featuredSeller ? (
@@ -257,7 +272,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     onChange={(event) => this.storeName = event.target.value}
                                                     fullWidth={true}
                                                     variant={"outlined"}
-                                                    style={{marginBottom: spacing(2)}}
                                                 />
                                             </Grid>
                                         ) : null}
@@ -268,7 +282,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 onChange={(event) => this.sellerEmail = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
-                                                style={{marginBottom: spacing(2)}}
                                             />
                                         </Grid>
                                         <Grid item={true} xs={12} sm={6}>
@@ -278,7 +291,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 onChange={(event) => this.discord = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
-                                                style={{marginBottom: spacing(2)}}
                                             />
                                         </Grid>
                                         <Grid item={true} xs={12}>
@@ -290,7 +302,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 onChange={(event) => this.contactInfo = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
-                                                style={{marginBottom: spacing(2)}}
                                             />
                                         </Grid>
                                         <Grid item={true} xs={12} sm={6}>
@@ -301,7 +312,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 onChange={event => this.country = event.target.value}
                                                 variant="outlined"
                                                 fullWidth={true}
-                                                style={{marginBottom: spacing(2)}}
                                             >
                                                 {countries.map(country => (
                                                     <MenuItem key={country} value={country}>
@@ -309,6 +319,16 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
+                                        </Grid>
+                                        <Grid item={true} xs={12} sm={6}>
+                                            <TextField
+                                                label={"Currency Symbol"}
+                                                value={this.currencySymbol}
+                                                onChange={(event) => this.currencySymbol = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                helperText={"For selling decks. e.g. $, €"}
+                                            />
                                         </Grid>
                                         <Grid item={true} xs={12}>
                                             <FormControl fullWidth={true} variant={"outlined"}>
@@ -341,7 +361,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 </Select>
                                             </FormControl>
                                             <FormHelperText style={{marginTop: spacing(1)}}>
-                                                Select countries to be used when searching decks for sale. Defaults to your country.
+                                                Countries to be used when searching decks for sale. Defaults to your country.
                                             </FormHelperText>
                                         </Grid>
                                         <Grid item={true} xs={12}>
@@ -355,10 +375,10 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 }
                                                 label={"Allow anyone to see which decks I own"}
                                             />
-                                            <Typography style={{marginBottom: spacing(2), marginTop: spacing(2)}}>
+                                            <Typography style={{marginBottom: spacing(2)}}>
                                                 Use the links below to share your decks with other users. You can also share the URL of any search you make.
                                             </Typography>
-                                            <div style={{display: "flex"}}>
+                                            <div style={{display: "flex", marginBottom: spacing(2)}}>
                                                 {this.allowUsersToSeeDeckOwnership ? (
                                                     <LinkButton color={"primary"} to={decksLink} style={{marginRight: spacing(2)}}>
                                                         My Decks
@@ -397,7 +417,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     }
 }
 
-const PatreonSupporter = (props: {profile: KeyUserDto}) => {
+const PatreonSupporter = (props: { profile: KeyUserDto }) => {
     if (props.profile.patreonId == null) {
         return null
     }

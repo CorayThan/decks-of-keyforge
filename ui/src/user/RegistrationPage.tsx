@@ -86,7 +86,7 @@ export class RegistrationPage extends React.Component {
         const {loginInProgress, user} = userStore
         log.debug(`Render reg page, user ${prettyJson(user)} loginInProgress: ${loginInProgress}`)
         if (user) {
-            return <Redirect to={Routes.decks}/>
+            return <Redirect to={Routes.landing}/>
         }
         return (
             <KeyTopbarRegistration

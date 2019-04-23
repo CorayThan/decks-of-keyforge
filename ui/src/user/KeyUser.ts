@@ -11,6 +11,7 @@ export interface KeyUser {
     allowUsersToSeeDeckOwnership: boolean
     preferredCountries?: string[]
     decks: UserDeck[]
+    currencySymbol: string
     country?: string
     lastVersionSeen: string
     forSaleQueries: ForSaleQueryEntity[]
@@ -45,6 +46,7 @@ export interface KeyUserDto {
     type: UserType
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
+    currencySymbol: string
     country?: string
     preferredCountries?: string[]
     lastVersionSeen: string

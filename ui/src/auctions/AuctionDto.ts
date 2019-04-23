@@ -6,8 +6,16 @@ export interface AuctionDto {
     bidIncrement: number
     startingBid: number
     buyItNow?: number
-    complete: boolean
+    status: AuctionStatus
     bids: AuctionBidDto[]
     highestBid?: number
+    currencySymbol: string
+    deckId: number
     id: string
+}
+
+export enum AuctionStatus {
+    ACTIVE = "ACTIVE",
+    COMPLETE = "COMPLETE",
+    CANCELLED = "CANCELLED"
 }

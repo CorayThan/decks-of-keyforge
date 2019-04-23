@@ -61,6 +61,9 @@ export class DeckFilters {
         if (queryObject.forAuction) {
             queryObject.forAuction = Boolean(queryObject.forAuction)
         }
+        if (queryObject.completedAuctions) {
+            queryObject.completedAuctions = Boolean(queryObject.completedAuctions)
+        }
         if (queryObject.includeUnregistered) {
             queryObject.includeUnregistered = Boolean(queryObject.includeUnregistered)
         }
@@ -87,6 +90,8 @@ export class DeckFilters {
     @observable
     forAuction = false
     @observable
+    completedAuctions = false
+    @observable
     forSaleInCountry?: string
     @observable
     includeUnregistered = false
@@ -110,6 +115,7 @@ export class DeckFilters {
         this.forSale = false
         this.forTrade = false
         this.forAuction = false
+        this.completedAuctions = false
         this.forSaleInCountry = undefined
         this.myFavorites = false
         this.includeUnregistered = false
@@ -132,6 +138,12 @@ export class DeckFilters {
         }
     }
     handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.myFavorites = event.target.checked
+
+    handleCompletedAuctionsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.completedAuctions = event.target.checked
+        this.forSale = false
+        this.forTrade = false
+    }
 
     cleaned = () => {
         const cloned = clone(this)

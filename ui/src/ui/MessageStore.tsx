@@ -1,11 +1,11 @@
-import { amber, blue, red } from "@material-ui/core/colors"
+import { amber } from "@material-ui/core/colors"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Snackbar from "@material-ui/core/Snackbar/Snackbar"
 import CloseIcon from "@material-ui/icons/Close"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { muiTheme, spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { log } from "../config/Utils"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -37,7 +37,7 @@ export class MessageStore {
     setInfoMessage = (message: string) => this.setMessage(message, "Info")
 
     setReleaseMessage = (version: string) => {
-        messageStore.setMessage(`Version ${version} has been released!`, "Info", (
+        messageStore.setMessage(`Version ${version} has been released!`, "Success", (
             <LinkButton
                 color={"inherit"}
                 to={AboutSubPaths.releaseNotes}
@@ -73,10 +73,10 @@ export class SnackMessage extends React.Component {
     colorFromMessageType = (messageType: MessageType) => {
         if (messageType === "Warn") {
             return amber[700]
-        } else if (messageType === "Info") {
-            return blue.A400
         } else if (messageType === "Error") {
-            return red[700]
+            return muiTheme.palette.error.dark
+        } else if (messageType === "Success") {
+            return muiTheme.palette.primary.dark
         }
         return undefined
     }

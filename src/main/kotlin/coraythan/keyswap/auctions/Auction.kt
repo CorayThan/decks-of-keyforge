@@ -1,7 +1,12 @@
 package coraythan.keyswap.auctions
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.userdeck.UserDeck
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckLanguage
+import coraythan.keyswap.generic.Country
+import coraythan.keyswap.now
+import coraythan.keyswap.userdeck.DeckCondition
+import coraythan.keyswap.users.KeyUser
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
@@ -19,19 +24,48 @@ data class Auction(
 
         val buyItNow: Int? = null,
 
-        val complete: Boolean = false,
+        @JsonIgnoreProperties("buyItNows")
+        @ManyToOne
+        val boughtWithBuyItNow: KeyUser? = null,
 
-        @OneToOne(mappedBy = "auction")
-        val userDeck: UserDeck? = null,
+        val boughtNowOn: ZonedDateTime? = null,
+
+        @Enumerated(EnumType.STRING)
+        val status: AuctionStatus = AuctionStatus.ACTIVE,
 
         @JsonIgnoreProperties("auction")
         @OneToMany(mappedBy = "auction", cascade = [CascadeType.ALL])
         val bids: List<AuctionBid> = listOf(),
 
+        @JsonIgnoreProperties("auctions")
+        @ManyToOne
+        val deck: Deck,
+
+        @JsonIgnoreProperties("auctions")
+        @ManyToOne
+        val seller: KeyUser,
+
+        val currencySymbol: String,
+
+        @Enumerated(EnumType.STRING)
+        val forSaleInCountry: Country,
+
+        @Enumerated(EnumType.STRING)
+        val language: DeckLanguage,
+
+        val condition: DeckCondition? = null,
+        val redeemed: Boolean = true,
+        val externalLink: String? = null,
+        val listingInfo: String? = null,
+
+        val dateListed: ZonedDateTime = now(),
+
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
     fun realMaxBid() = bids.sortedBy { it.bid }.reversed()[0].bid
+
+    fun highestBidder() = bids.sortedByDescending { it.bid }.firstOrNull()?.bidder
 
     val highestBid: Int?
         get() {
@@ -46,7 +80,7 @@ data class Auction(
         }
 
     val highestBidderUsername: String?
-        get() = bids.sortedByDescending { it.bid }.firstOrNull()?.bidder?.username
+        get() = highestBidder()?.username
 
     val nextBid: Int
         get() {
@@ -58,17 +92,24 @@ data class Auction(
             }
         }
 
-    fun toDto() = AuctionDto(
-            durationDays = durationDays,
-            endDateTime = endDateTime,
-            bidIncrement = bidIncrement,
-            startingBid = startingBid,
-            buyItNow = buyItNow,
-            complete = complete,
-            highestBid = highestBid,
-            bids = bids.map { it.toDto() }.sortedByDescending { it.bidTime },
-            id = id
-    )
+    fun toDto(offsetMinutes: Int = 0): AuctionDto {
+        val highestBid = highestBid
+        return AuctionDto(
+                durationDays = durationDays,
+                endDateTime = endDateTime,
+                bidIncrement = bidIncrement,
+                startingBid = startingBid,
+                buyItNow = buyItNow,
+                status = status,
+                highestBid = highestBid,
+                bids = bids.map {
+                    it.toDto(offsetMinutes).copy(bid = if (highestBid != null && it.bid > highestBid) highestBid else it.bid)
+                }.sortedByDescending { it.bidTime },
+                deckId = deck.id,
+                currencySymbol = currencySymbol,
+                id = id
+        )
+    }
 }
 
 data class AuctionDto(
@@ -77,8 +118,16 @@ data class AuctionDto(
         val bidIncrement: Int = 5,
         val startingBid: Int = 0,
         val buyItNow: Int? = null,
-        val complete: Boolean = false,
+        val status: AuctionStatus = AuctionStatus.ACTIVE,
         val highestBid: Int? = null,
         val bids: List<AuctionBidDto> = listOf(),
+        val deckId: Long,
+        val currencySymbol: String,
         val id: UUID
 )
+
+enum class AuctionStatus {
+    ACTIVE,
+    COMPLETE,
+    CANCELLED
+}

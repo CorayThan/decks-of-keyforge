@@ -1,12 +1,14 @@
-import { Button, IconButton, Tooltip } from "@material-ui/core"
+import { Tooltip } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
-import History from "@material-ui/icons/History"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
+import { AuctionStatus } from "../../auctions/AuctionDto"
 import { BidButton } from "../../auctions/BidButton"
+import { BidHistoryButton } from "../../auctions/BidHistoryButton"
+import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -24,6 +26,7 @@ import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckSaleInfo, deckSaleInfoFromUserDeckDto } from "./DeckSaleInfo"
+import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
 interface SaleInfoViewProps {
     saleInfo: DeckSaleInfo[]
@@ -66,9 +69,15 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 @observer
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
+
+        if (this.props.saleInfo.auctionStatus === AuctionStatus.COMPLETE) {
+            return <SingleSaleInfoViewCompleteAuction {...this.props} />
+        }
+
         const {
-            forSale, forTrade, auction, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
-            discord, language, currencySymbol, highestBid, buyItNow, startingBid, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid
+            forSale, forTrade, forAuction, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
+            discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
+            startingBid
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
@@ -77,7 +86,6 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const allowEmail = yourEmail && yourUsername && !externalLink
 
         const sellerDetails = sellerStore.findSellerWithUsername(username)
-        const realCurSymbol = currencySymbol ? currencySymbol : "$"
 
         return (
             <KeyCard
@@ -97,7 +105,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                         <div><TradeDeckIcon height={48}/></div>
                                     </Tooltip>
                                 ) : null}
-                                {auction ? (
+                                {forAuction ? (
                                     <Tooltip title={"Auction"}>
                                         <div><AuctionDeckIcon height={48}/></div>
                                     </Tooltip>
@@ -106,22 +114,22 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             {askingPrice == null ? null :
                                 (
                                     <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                        {realCurSymbol}{askingPrice}
+                                        {currencySymbol}{askingPrice}
                                     </Typography>
                                 )
                             }
-                            {auction == null ? null :
+                            {!forAuction ? null :
                                 (
                                     <div>
                                         <Typography
                                             variant={"h5"}
                                             style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
                                         >
-                                            Bid: {realCurSymbol}{nextBid}
+                                            Bid: {currencySymbol}{highestBid ? highestBid : startingBid}
                                         </Typography>
                                         {buyItNow == null ? null : (
                                             <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                                BIN: {realCurSymbol}{buyItNow}
+                                                BIN: {currencySymbol}{buyItNow}
                                             </Typography>
                                         )}
                                     </div>
@@ -135,7 +143,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                 }
             >
                 <div>
-                    {!auction ? null : (
+                    {!forAuction ? null : (
                         <div style={{margin: spacing(2)}}>
                             <div style={{display: "flex"}}>
                                 <Typography variant={"subtitle2"} style={{marginRight: spacing(2)}}>Ending on:</Typography>
@@ -143,28 +151,25 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             </div>
                             {youAreHighestBidder ? (
                                 <Typography style={{marginTop: spacing(2)}}>
-                                    You are the highest bidder! Your max bid: {realCurSymbol}{yourMaxBid}
+                                    You are the highest bidder! Your max bid: {currencySymbol}{yourMaxBid}
                                 </Typography>
                             ) : null}
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
                                 <BidButton
-                                    currencySymbol={realCurSymbol}
+                                    currentBid={highestBid}
+                                    bidIncrement={bidIncrement!}
+                                    currencySymbol={currencySymbol}
                                     auctionId={auctionId!}
                                     nextValidBid={nextBid!}
                                     sellerUsername={username}
                                     youAreHighestBidder={!!youAreHighestBidder}
+                                    style={{marginRight: spacing(2)}}
                                 />
                                 {buyItNow == null ? null : (
-                                    <div>
-                                        <Button color={"primary"} style={{marginLeft: spacing(2)}}>
-                                            Buy it Now
-                                        </Button>
-                                    </div>
+                                    <BuyItNowButton currencySymbol={currencySymbol} auctionId={auctionId!} sellerUsername={username} buyItNow={buyItNow}/>
                                 )}
                                 <div style={{flexGrow: 1}}/>
-                                <IconButton>
-                                    <History/>
-                                </IconButton>
+                                <BidHistoryButton auctionId={auctionId!}/>
                             </div>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
@@ -177,34 +182,34 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             </UnstyledLink>
                         </div>
                     )}
-                    {listingInfo == null ? null : (
+                    {!listingInfo ? null : (
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Listing Details</Typography>
                             <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{listingInfo}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
-                    {externalLink == null ? null : (
+                    {!externalLink ? null : (
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>External listing — Be careful using this link!</Typography>
                             <a href={externalLink} target={"_blank"}><Typography>{externalLink}</Typography></a>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
-                    {publicContactInfo == null ? null : (
+                    {!publicContactInfo ? null : (
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Seller Details</Typography>
                             <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{publicContactInfo}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
-                    {discord || (allowEmail && !auction) ? (
+                    {discord || (allowEmail && !forAuction) ? (
                         <div style={{margin: spacing(2), marginTop: 0}}>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 {discord ? (
                                     <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
                                 ) : null}
-                                {allowEmail && !auction ? (
+                                {allowEmail && !forAuction ? (
                                     <>
                                         {discord ? <div style={{flexGrow: 1}}/> : null}
                                         <SendSellerEmailDialog
@@ -234,18 +239,21 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                         Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
-                    {expiresAt != null && !auction ? (
+                    {expiresAt != null && !forAuction ? (
                         <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
                             Expires on {Utils.formatDate(expiresAt)}
                         </Typography>
                     ) : null}
                     <Divider style={{marginTop: spacing(2)}}/>
-                    <Typography style={{margin: spacing(2), fontStyle: "italic"}} variant={"subtitle2"} color={"textSecondary"}>
-                        We do not verify the authenticity or trustworthiness of any deck sales.
-                        Purchase and trade decks at your own risk.
-                    </Typography>
+                    <BuyingDisclaimer style={{margin: spacing(2)}}/>
                 </div>
             </KeyCard>
         )
     }
 }
+
+export const BuyingDisclaimer = (props: { style?: React.CSSProperties }) => (
+    <Typography color={"textSecondary"} style={{fontStyle: "italic", ...props.style}}>
+        Decks of Keyforge does not verify the authenticity or trustworthiness of any deck sales. Purchase and trade decks at your own risk.
+    </Typography>
+)

@@ -275,7 +275,7 @@ export const daercArts: Article = {
                 },
             ],
             cards: [
-                "https://cdn.keyforgegame.com/media/card_front/en/341_313_XW5J3RPG585M_en.png",
+                "https://cdn.keyforgegame.com/media/card_front/en/341_59_WW6PQP2CGM8H_en.png",
             ]
         },
         {

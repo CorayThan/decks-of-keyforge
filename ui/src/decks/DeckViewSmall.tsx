@@ -42,10 +42,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
         const {deck, fullVersion, hideActions, style} = this.props
         const {
-            id, keyforgeId, name,
-            wishlistCount, funnyCount,
-            forSale, forTrade, forAuction, chains,
-            registered
+            id, keyforgeId, name, wishlistCount, funnyCount,
+            forSale, forTrade, forAuction, chains, registered
         } = deck
         const userDeck = userDeckStore.userDeckByDeckId(id)
         let userDeckForSale = false

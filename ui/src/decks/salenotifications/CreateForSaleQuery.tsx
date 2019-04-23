@@ -59,7 +59,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
         if (
             user == null
             || !userStore.deckNotificationsAllowed
-            || (!this.props.filters.forSale && !this.props.filters.forTrade)
+            || (!this.props.filters.forSale && !this.props.filters.forTrade && !this.props.filters.forAuction)
             || this.props.filters.owner === user.username
         ) {
             // Not allowed to create queries

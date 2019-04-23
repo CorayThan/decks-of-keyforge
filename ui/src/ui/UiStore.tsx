@@ -12,6 +12,15 @@ export class UiStore {
     topbarSubheader?: string
 
     setTopbarValues = (name: string, shortName: string, subheader: string) => {
+
+        this.setDocTitleAndDescription(name)
+
+        this.topbarName = name
+        this.topbarShortName = shortName
+        this.topbarSubheader = subheader
+    }
+
+    setDocTitleAndDescription = (name: string) => {
         document.title = name + (name === "Decks of Keyforge" || name === "Cards of Keyforge" ? "" : " – Decks of Keyforge")
         const description = document.getElementsByTagName("meta").namedItem("description")
         if (description) {
@@ -19,10 +28,6 @@ export class UiStore {
                 (name.length > 0 ? (name + " – ") : "") +
                 "Search, evaluate, buy and sell Keyforge decks. Find synergies and antisynergies for your decks with the SAS rating system."
         }
-
-        this.topbarName = name
-        this.topbarShortName = shortName
-        this.topbarSubheader = subheader
     }
 }
 

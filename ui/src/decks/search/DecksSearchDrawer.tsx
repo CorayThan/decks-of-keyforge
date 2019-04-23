@@ -95,6 +95,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                 filters.sort = DeckSorts.sas
             }
         }
+        filters.completedAuctions = false
     }
 
     @computed
@@ -113,12 +114,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             && (forSale || forTrade || forAuction))) {
             myCountry = userStore.country
         }
-        const showLoginForCountry = !myCountry && (forSale || forTrade)
+        const showLoginForCountry = !myCountry && (forSale || forTrade || forAuction)
         const showMyDecks = userStore.loggedIn()
         const showDecksOwner = !!owner && owner !== userStore.username
         const optionals = !showMyDecks && !showDecksOwner ? null : (
             <>
-                {!showDecksOwner && showMyDecks ? (
+                {showMyDecks ? (
                     <div style={{display: "flex"}}>
                         <FormControlLabel
                             control={
@@ -263,18 +264,32 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         )}
                                     />
                                 </div>
-                                {myCountry ? (
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={forSaleInCountry === myCountry}
-                                                onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
-                                            />
-                                        }
-                                        label={"In my country"}
-                                        style={{width: 144}}
-                                    />
-                                ) : null}
+                                <div style={{display: "flex"}}>
+                                    {this.props.filters.forAuction ? (
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.completedAuctions}
+                                                    onChange={this.props.filters.handleCompletedAuctionsUpdate}
+                                                />
+                                            }
+                                            label={"Completed auctions"}
+                                            style={{width: 144}}
+                                        />
+                                    ) : null}
+                                    {myCountry ? (
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={forSaleInCountry === myCountry}
+                                                    onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
+                                                />
+                                            }
+                                            label={"In my country"}
+                                            style={{width: 144}}
+                                        />
+                                    ) : null}
+                                </div>
                                 {optionals}
                                 {showLoginForCountry ? (
                                     <div style={{display: "flex"}}>

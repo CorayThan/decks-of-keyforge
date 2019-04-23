@@ -30,7 +30,7 @@ class EmailStore {
         axios.post(`${EmailStore.CONTEXT}/send-reset`, {email})
             .then((response: AxiosResponse) => {
                 this.sendingReset = false
-                messageStore.setSuccessMessage(`A reset email has been sent to ${email}`)
+                messageStore.setInfoMessage(`A reset email has been sent to ${email}`)
             })
     }
 

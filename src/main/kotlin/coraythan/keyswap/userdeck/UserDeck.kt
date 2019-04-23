@@ -1,14 +1,9 @@
 package coraythan.keyswap.userdeck
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.auctions.Auction
-import coraythan.keyswap.auctions.AuctionDto
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckLanguage
-import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.generic.Country
-import coraythan.keyswap.toLocalDateWithOffsetMinutes
-import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -37,15 +32,11 @@ data class UserDeck(
         // Deck selling info below
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
-        val forAuction: Boolean = false,
-
-        @OneToOne(cascade = [CascadeType.ALL])
-        val auction: Auction? = null,
 
         @Enumerated(EnumType.STRING)
         val forSaleInCountry: Country? = null,
 
-        val currencySymbol: String? = "$",
+        val currencySymbol: String? = null,
 
         @Enumerated(EnumType.STRING)
         val language: DeckLanguage? = null,
@@ -66,7 +57,7 @@ data class UserDeck(
 ) {
 
     val availableToBuy: Boolean
-        get() = this.forSale || this.forAuction || this.forTrade
+        get() = this.forSale || this.forTrade
 
     val dateListedLocalDate: LocalDate?
         get() = this.dateListed?.toLocalDate()
@@ -74,7 +65,7 @@ data class UserDeck(
     val expiresAtLocalDate: LocalDate?
         get() = this.expiresAt?.toLocalDate()
 
-    fun toDto() = UserDeckDto(
+    fun toDto(forAuction: Boolean = false) = UserDeckDto(
             wishlist = wishlist,
             funny = funny,
             ownedBy = ownedBy,
@@ -84,7 +75,6 @@ data class UserDeck(
             forAuction = forAuction,
             forSaleInCountry = forSaleInCountry,
             language = language,
-            currencySymbol = currencySymbol,
             askingPrice = askingPrice,
             listingInfo = listingInfo,
             condition = condition,
@@ -94,45 +84,11 @@ data class UserDeck(
             expiresAt = expiresAt,
             id = id,
             deckId = deck.id,
+            currencySymbol = currencySymbol ?: "$",
 
             username = user.username,
-            publicContactInfo = user.publicContactInfo,
-
-            auction = auction?.toDto()
+            publicContactInfo = user.publicContactInfo
     )
-    
-    fun toDeckSaleInfo(offsetMinutes: Int, currentUser: KeyUser? = null): DeckSaleInfo? {
-        return if (!availableToBuy) {
-            null
-        } else {
-            val youAreHighest = auction?.highestBidderUsername == currentUser?.username && currentUser != null
-            DeckSaleInfo(
-                    forSale = forSale,
-                    forTrade = forTrade,
-                    auction = forAuction,
-                    buyItNow = auction?.buyItNow,
-                    highestBid = auction?.highestBid,
-                    startingBid = auction?.startingBid,
-                    forSaleInCountry = forSaleInCountry,
-                    language = language,
-                    currencySymbol = currencySymbol,
-                    askingPrice = askingPrice,
-                    listingInfo = listingInfo,
-                    externalLink = externalLink,
-                    condition = condition!!,
-                    dateListed = dateListed?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: LocalDate.parse("2019-04-07"),
-                    expiresAt = expiresAt?.toLocalDateWithOffsetMinutes(offsetMinutes),
-                    auctionEndDateTime = auction?.endDateTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
-                    auctionId = auction?.id,
-                    nextBid = auction?.nextBid,
-                    youAreHighestBidder = youAreHighest,
-                    yourMaxBid = if (youAreHighest) auction?.realMaxBid() else null,
-                    username = user.username,
-                    publicContactInfo = user.publicContactInfo,
-                    discord = user.discord
-            )
-        }
-    }
 }
 
 enum class DeckCondition {
@@ -156,7 +112,7 @@ data class UserDeckDto(
 
         val forSaleInCountry: Country? = null,
         val language: DeckLanguage? = DeckLanguage.ENGLISH,
-        val currencySymbol: String? = "$",
+        val currencySymbol: String,
 
         val askingPrice: Double? = null,
 
@@ -174,9 +130,7 @@ data class UserDeckDto(
         val deckId: Long,
 
         val username: String,
-        val publicContactInfo: String?,
-
-        val auction: AuctionDto?
+        val publicContactInfo: String?
 ) {
     val dateListedLocalDate: LocalDate?
         get() = this.dateListed?.toLocalDate()

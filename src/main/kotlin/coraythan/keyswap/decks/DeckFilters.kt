@@ -11,6 +11,7 @@ interface DeckQuery {
     val forSale: Boolean
     val forTrade: Boolean
     val forAuction: Boolean
+    val completedAuctions: Boolean
     val forSaleInCountry: Country?
     val includeUnregistered: Boolean
     val myFavorites: Boolean
@@ -30,6 +31,7 @@ data class DeckFilters(
         override val forSale: Boolean = false,
         override val forTrade: Boolean = false,
         override val forAuction: Boolean = false,
+        override val completedAuctions: Boolean = false,
         override val forSaleInCountry: Country? = null,
         override val includeUnregistered: Boolean = false,
         override val myFavorites: Boolean = false,
