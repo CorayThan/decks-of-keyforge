@@ -33,7 +33,11 @@ class PatreonService(
     private val patreonClient = PatreonOAuth(
             patreonClientId,
             patreonSecretKey,
-            if (env == "dev") "http://localhost:3000/my-profile" else "https://decksofkeyforge.com/my-profile"
+            when (env) {
+                "dev" -> "http://localhost:3000/my-profile"
+                "qa" -> "http://decks-of-keyforge-qa.us-west-2.elasticbeanstalk.com/my-profile"
+                else -> "https://decksofkeyforge.com/my-profile"
+            }
     )
     private var topPatrons = listOf<String>()
 

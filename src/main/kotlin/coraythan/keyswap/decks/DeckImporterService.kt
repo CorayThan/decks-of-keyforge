@@ -21,6 +21,7 @@ import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -50,6 +51,8 @@ class DeckImporterService(
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
         private val objectMapper: ObjectMapper,
+        @Value("\${env}")
+        private val env: String,
         entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -61,6 +64,12 @@ class DeckImporterService(
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
         val deckCountBeforeImport = deckRepo.count()
+
+        if (env == "qa" && deckCountBeforeImport > 100000) {
+            log.info("Aborting import decks auto because env is QA and deck count is greater than 100k")
+            return
+        }
+
         val importDecksDuration = measureTimeMillis {
             val decksPerPage = keyforgeApiDeckPageSize
             var currentPage = deckPageService.findCurrentPage()
@@ -153,14 +162,14 @@ class DeckImporterService(
             if (deck != null) {
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 val cards = cardService.importNewCards(deckList)
-                try {
+                return try {
                     saveDecks(deckList, cards)
-                    return deckRepo.findByKeyforgeId(deckId)?.id
+                    deckRepo.findByKeyforgeId(deckId)?.id
                 } catch (e: RuntimeException) {
                     if (e::class.java == DataIntegrityViolationException::class.java || e::class.java == ConstraintViolationException::class.java) {
                         // We must have a pre-existing deck now
                         log.info("Encountered exception saving deck to import, but it was just the deck already being saved")
-                        return deckRepo.findByKeyforgeId(deckId)?.id
+                        deckRepo.findByKeyforgeId(deckId)?.id
                     } else {
                         throw e
                     }

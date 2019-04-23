@@ -11,13 +11,19 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.6"
+export const latestVersion = "3.7"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"3.7"} expanded={true} releaseNotes={[
+                    "Auctions added as a selling and buying option!",
+                    "Choose a currency symbol on your profile so you can sell your decks with € or any other currency.",
+                    "Select a deck language when selling a deck to help users know what language your deck is in. This " +
+                    "defaults to English, so be sure to set it to another language if needed."
+                ]}/>
                 <ReleaseNote releaseNumber={"3.6"} expanded={true} releaseNotes={[
                     "Real Patron rewards! " +
                     "First one is pretty sweet. Become a $5 a month patron to save deck searches, and get email notifications when new " +
