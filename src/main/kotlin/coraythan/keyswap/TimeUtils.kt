@@ -9,6 +9,7 @@ object TimeUtils {
     val zoneId: ZoneId
 
     val localDateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, h:mm a")
+    val localDateTimeFormatterWithSeconds = DateTimeFormatter.ofPattern("MMM d, h:mm:ss a")
 
     init {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
@@ -29,6 +30,6 @@ fun ZonedDateTime.toLocalDateWithOffsetMinutes(offsetMinutes: Int): LocalDate {
     return toLocalDateTimeWithOffsetMinutes(offsetMinutes).toLocalDate()
 }
 
-fun ZonedDateTime.toReadableStringWithOffsetMinutes(offsetMinutes: Int): String {
-    return toLocalDateTimeWithOffsetMinutes(offsetMinutes).format(TimeUtils.localDateTimeFormatter)
+fun ZonedDateTime.toReadableStringWithOffsetMinutes(offsetMinutes: Int, format: DateTimeFormatter = TimeUtils.localDateTimeFormatter): String {
+    return toLocalDateTimeWithOffsetMinutes(offsetMinutes).format(format)
 }

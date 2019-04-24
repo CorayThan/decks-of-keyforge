@@ -42,7 +42,6 @@ export class RegistrationPage extends React.Component {
     @observable
     country: string = ""
 
-
     signUp = (submitEvent: React.FormEvent) => {
         submitEvent.preventDefault()
         let error
@@ -67,13 +66,14 @@ export class RegistrationPage extends React.Component {
             messageStore.setErrorMessage(error)
             return
         }
+        const country = this.country === "" ? undefined : this.country
         userStore.registerAccount({
             email: this.email,
             password: this.password,
             username,
             publicContactInfo: this.publicContactInfo,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
-            country: this.country === "" ? undefined : this.country,
+            country,
             lastVersionSeen: latestVersion
         })
     }

@@ -30,9 +30,8 @@ export class BidButton extends React.Component<BidButtonProps> {
     @observable
     currentBid = ""
 
-    constructor(props: BidButtonProps) {
-        super(props)
-        this.currentBid = props.nextValidBid.toString()
+    componentDidMount(): void {
+        this.currentBid = this.props.nextValidBid.toString()
     }
 
     bid = () => {

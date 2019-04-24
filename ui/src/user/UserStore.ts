@@ -4,6 +4,7 @@ import { latestVersion } from "../about/ReleaseNotes"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
+import { deckStore } from "../decks/DeckStore"
 import { findPatronRewardLevel } from "../patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -152,6 +153,7 @@ export class UserStore {
         this.loginInProgress = false
         this.setUser(undefined)
         userDeckStore.userDecks = undefined
+        deckStore.refreshDeckSearch()
         keyLocalStorage.clear()
         HttpConfig.clearAuthHeaders()
     }

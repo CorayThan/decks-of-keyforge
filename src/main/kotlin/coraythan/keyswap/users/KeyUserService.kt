@@ -53,7 +53,8 @@ class KeyUserService(
                 publicContactInfo = if (userRegInfo.publicContactInfo.isNullOrBlank()) null else userRegInfo.publicContactInfo,
                 allowUsersToSeeDeckOwnership = userRegInfo.allowUsersToSeeDeckOwnership,
                 lastVersionSeen = userRegInfo.lastVersionSeen,
-                currencySymbol = "$"
+                currencySymbol = "$",
+                country = userRegInfo.country
         ))
     }
 

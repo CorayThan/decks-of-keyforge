@@ -107,11 +107,18 @@ class AuctionService(
         if (bid < requiredBid) {
             return BidPlacementResult(false, false, "Your bid was too low. Please refresh the page and try again.")
         }
-        if (auction.highestBidderUsername == user.username && bid <= auction.realMaxBid()) {
+        if (auction.highestBidderUsername == user.username && bid <= auction.realMaxBid() ?: -1) {
             return BidPlacementResult(
                     false,
                     true,
                     "Your new bid must be greater than your previous bid."
+            )
+        }
+        if (auction.buyItNow != null && bid >= auction.buyItNow) {
+            return BidPlacementResult(
+                    false,
+                    false,
+                    "Use buy it now instead of bidding higher than the buy it now."
             )
         }
         val withBid = auction.copy(
@@ -171,8 +178,14 @@ class AuctionService(
             // auction is two weeks old, show real usernames
             return dto
         }
-        val fakeUsernames = dto.bids.map { it.bidderUsername }.toSortedSet()
-        return dto.copy(bids = dto.bids.map { it.copy(bidderUsername = "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}") })
+        val highestBidId = auction.realMaxBidObject()?.id
+        val fakeUsernames = dto.bids.map { it.bidderUsername }.toSortedSet().reversed()
+        return dto.copy(bids = dto.bids.map {
+            it.copy(
+                    bidderUsername = "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}",
+                    highest = it.id == highestBidId
+            )
+        })
     }
 
     private fun endAuction(sold: Boolean, auction: Auction, buyItNowUser: KeyUser? = null) {

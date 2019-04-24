@@ -335,7 +335,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             <MenuItem value={5}>5+</MenuItem>
                                             <MenuItem value={6}>6+</MenuItem>
                                         </TextField>
-                                        {idx === 0 && cards.length < 5 ? (
+                                        {idx === 0 && cards.length < 10 ? (
                                             <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
                                                 <Add fontSize={"small"}/>
                                             </IconButton>

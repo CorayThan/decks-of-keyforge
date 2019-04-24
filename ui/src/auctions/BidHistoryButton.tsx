@@ -65,23 +65,27 @@ export class BidHistoryButton extends React.Component<BidHistoryButtonProps> {
                                     <Typography>No bids have been placed on this auction.</Typography>
                                 ) : (
                                     <Paper>
-                                        <Table>
+                                        <Table padding={"dense"}>
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>User</TableCell>
                                                     <TableCell>Bid</TableCell>
+                                                    <TableCell>Highest</TableCell>
                                                     <TableCell>Time</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {auctionInfo.bids.map((bid: AuctionBidDto, idx: number) => {
+                                                {auctionInfo.bids.map((bid: AuctionBidDto) => {
                                                     return (
                                                         <TableRow key={bid.id}>
                                                             <TableCell>
                                                                 {bid.bidderUsername}
                                                             </TableCell>
                                                             <TableCell>
-                                                                {auctionInfo.currencySymbol}{bid.bid} {idx === 0 ? "or more" : ""}
+                                                                {auctionInfo.currencySymbol}{bid.bid} {bid.highest ? "or more" : ""}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {bid.highest ? "Yes" : ""}
                                                             </TableCell>
                                                             <TableCell>
                                                                 {bid.bidTime}
