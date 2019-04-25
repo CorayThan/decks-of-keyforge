@@ -143,6 +143,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 if (isNaN(bidIncrementNumber)) {
                     messageStore.setWarningMessage("The bid increment must be a number.")
                     return
+                } else if (bidIncrementNumber < 1) {
+                    messageStore.setWarningMessage("Bid increment must be greater than 0.")
+                    return
                 }
             } else {
                 messageStore.setWarningMessage("You must include a bid increment.")

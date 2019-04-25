@@ -158,6 +158,7 @@ class KeyRouter extends React.Component {
 
 export class AboutSubPaths {
     static sas = Routes.about + "/sas"
+    static patreon = Routes.about + "/patreon"
     static contact = Routes.about + "/contact"
     static releaseNotes = Routes.about + "/release-notes"
     static sellersAndDevs = Routes.about + "/sellers-and-devs"

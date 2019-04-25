@@ -4,7 +4,6 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { userStore } from "../user/UserStore"
 
 @observer
 export class PatronButton extends React.Component<ButtonProps & { primary?: boolean }> {
@@ -12,14 +11,14 @@ export class PatronButton extends React.Component<ButtonProps & { primary?: bool
         const {primary, ...rest} = this.props
         return (
             <KeyButton
-                color={"inherit"}
+                color={primary ? "primary" : "inherit"}
                 href={"https://www.patreon.com/decksofkeyforge"}
                 target={"_blank"}
                 {...rest}
             >
-                <PatreonIcon primary={primary}/>
+                <PatreonIcon primary={false}/>
                 <div style={{marginRight: spacing(1)}}/>
-                {userStore.patron ? "Patreon" : "Become a Patron"}
+                Become a Patron
             </KeyButton>
         )
     }

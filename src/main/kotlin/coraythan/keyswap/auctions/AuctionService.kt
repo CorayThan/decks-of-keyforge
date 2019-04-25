@@ -39,10 +39,10 @@ class AuctionService(
         log.info("$scheduledStart complete auctions.")
 
         val auctionsToComplete = auctionRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(AuctionStatus.ACTIVE, now())
-        val allAuctions = auctionRepo.findAll()
-                .toList()
-        val auctionsToCompleteFromCode = allAuctions
-                .filter { it.status == AuctionStatus.ACTIVE && it.endDateTime < now().plusDays(1) }
+//        val allAuctions = auctionRepo.findAll()
+//                .toList()
+//        val auctionsToCompleteFromCode = allAuctions
+//                .filter { it.status == AuctionStatus.ACTIVE && it.endDateTime < now().plusDays(1) }
 
 //        log.info("Decks in complete: ${auctionsToComplete.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
 //        log.info("Decks in complete from code: ${auctionsToCompleteFromCode.map { "${it.deck.name} ${it.status} ${it.endDateTime} ${now().plusDays(1)}" }}")
@@ -63,6 +63,7 @@ class AuctionService(
         if (listingInfo.forSale || listingInfo.forTrade) {
             throw BadRequestException("Can't be for sale or trade if it is an auction.")
         }
+        if (auctionListingInfo.bidIncrement < 1) throw BadRequestException("Bid increment must be 1 or more.")
         listingInfo.expireInDays ?: throw BadRequestException("Must include expires in days for auctions.")
 
         val deck = deckRepo.findByIdOrNull(listingInfo.deckId) ?: throw IllegalStateException("No deck with id ${listingInfo.deckId}")

@@ -1,5 +1,6 @@
 package coraythan.keyswap.sellers
 
+import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledStart
@@ -33,7 +34,9 @@ class SellerService(
             featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
                     .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
                     .sortedByDescending { it.mostRecentDeckListing }
-                    .filter { user -> user.decks.filter { it.forSale || it.forTrade }.size > 9 }
+                    .filter { user ->
+                        (user.decks.filter { it.forSale || it.forTrade }.size + user.auctions.filter { it.status == AuctionStatus.ACTIVE }.size) > 9
+                    }
                     .map { user ->
                         SellerDetailsWithFullDate(
                                 user.mostRecentDeckListing,

@@ -25,7 +25,7 @@ export const patronRewardLevelName =  (tier?: PatreonRewardsTier) => {
         case PatreonRewardsTier.NOTICE_BARGAINS:
             return "It that Fastidiously Notices Bargains"
         case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
-            return "They who Artfully Support Sophistication"
+            return "The Archon that Purchases the Paradigm"
         case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
             return "Merchant Æmbermaker"
         case PatreonRewardsTier.ALWAYS_GENEROUS:

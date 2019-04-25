@@ -27,12 +27,13 @@ import * as React from "react"
 import ReactDOM from "react-dom"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { AboutSubPaths, Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { countries, countryToLabel } from "../generic/Country"
+import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -418,14 +419,23 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 }
 
 const PatreonSupporter = (props: { profile: KeyUserDto }) => {
-    if (props.profile.patreonId == null) {
+    if (props.profile.patreonTier == null) {
         return null
     }
     log.info(`user profile info: ${prettyJson(props.profile)}`)
     return (
         <Grid item={true}>
-            <Typography>Thanks for being a supporter!</Typography>
-            <Typography>Your tier is: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
+            <div>
+                <Typography style={{marginBottom: spacing(2)}}>Your patreon support tier is: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
+                <LinkButton
+                    to={AboutSubPaths.patreon}
+                    variant={"contained"}
+                    color={"primary"}
+                >
+                    <PatreonIcon style={{marginRight: spacing(1)}}/>
+                    Patreon Rewards
+                </LinkButton>
+            </div>
         </Grid>
     )
 }

@@ -12,12 +12,12 @@ import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
+import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
-import { PatronButton } from "../patreon/PatronButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
@@ -230,9 +230,15 @@ class UserLinks extends React.Component {
                     >
                         Profile
                     </LinkButton>
-                    <div style={{margin: spacing(1)}}>
-                        <PatronButton primary={screenStore.screenSizeMd()}/>
-                    </div>
+                    <LinkButton
+                        color={"inherit"}
+                        to={AboutSubPaths.patreon}
+                        style={{margin: spacing(1)}}
+                        onClick={rightMenuStore.close}
+                    >
+                        <PatreonIcon style={{marginRight: spacing(1)}} />
+                        Patron Rewards
+                    </LinkButton>
                     <KeyButton
                         outlinedWhite={true}
                         color={"inherit"}
