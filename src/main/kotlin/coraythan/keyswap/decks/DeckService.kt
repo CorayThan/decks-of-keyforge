@@ -233,9 +233,17 @@ class DeckService(
         if (filters.forSaleInCountry != null) {
             val preferredCountries = userHolder.user?.preferredCountries
             if (preferredCountries.isNullOrEmpty()) {
-                predicate.and(deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry))
+                predicate.andAnyOf(
+                        deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry),
+                        deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
+                )
             } else {
-                predicate.andAnyOf(*preferredCountries.map { deckQ.userDecks.any().forSaleInCountry.eq(it) }.toTypedArray())
+                predicate.andAnyOf(*preferredCountries.flatMap {
+                    listOf(
+                            deckQ.userDecks.any().forSaleInCountry.eq(it),
+                            deckQ.auctions.any().forSaleInCountry.eq(it)
+                    )
+                }.toTypedArray())
             }
         }
         if (filters.constraints.isNotEmpty()) {

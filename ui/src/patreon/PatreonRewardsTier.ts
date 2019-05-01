@@ -34,3 +34,16 @@ export const patronRewardLevelName =  (tier?: PatreonRewardsTier) => {
             return ""
     }
 }
+
+export const patronAuctionLimit =  (tier?: PatreonRewardsTier) => {
+    switch (tier) {
+        case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
+            return 5
+        case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
+            return 10
+        case PatreonRewardsTier.ALWAYS_GENEROUS:
+            return undefined
+        default:
+            return 1
+    }
+}

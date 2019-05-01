@@ -18,6 +18,7 @@ import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
+import { PatronButton } from "../../patreon/PatronButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { ListingInfo } from "../../userdeck/ListingInfo"
@@ -241,6 +242,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         const forSaleInCountry = userStore.country
         const forSaleOrAuction = this.forSale || this.auction
 
+        const auctionAllowed = userStore.auctionsAllowed == null || userStore.auctionsAllowed > userStore.auctionsListed
+
         const marginTopRight: React.CSSProperties = {
             marginTop: spacing(2), marginRight: spacing(2)
         }
@@ -270,6 +273,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 >
                                     Profile
                                 </LinkButton>
+                            </div>
+                        )}
+                        {!this.auction || auctionAllowed ? null : (
+                            <div style={{marginBottom: spacing(2)}}>
+                                <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
+                                    Upgrade your patron level to list more auctions. You can have {userStore.auctionsAllowed} simultaneous auctions.
+                                </Typography>
+                                <PatronButton variant={"contained"}/>
                             </div>
                         )}
                         <FormGroup row={true}>
@@ -469,7 +480,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry}>
+                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry || !auctionAllowed}>
                             {this.update ? "Update Listing" : "List"}
                         </KeyButton>
                     </DialogActions>

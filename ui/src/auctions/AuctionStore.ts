@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
+import { userStore } from "../user/UserStore"
 import { ListingInfo } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { AuctionDto } from "./AuctionDto"
@@ -19,6 +20,7 @@ export class AuctionStore {
         axios.post(`${AuctionStore.SECURE_CONTEXT}/list`, listingInfo)
             .then((response: AxiosResponse) => {
                 messageStore.setSuccessMessage(`Created an auction for ${deckName}.`)
+                userStore.loadLoggedInUser()
                 userDeckStore.findAllForUser()
                 userDeckStore.refreshDeckInfo()
             })

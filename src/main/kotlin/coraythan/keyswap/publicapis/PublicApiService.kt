@@ -69,6 +69,8 @@ class PublicApiService(
             deckId = deck.id
 
         } else {
+            listDeck.deckInfo.cards.groupBy { it.house }
+                    .forEach { if (it.value.size != 12) throw BadRequestException("${it.key} has the wrong number of cards") }
             // create a new deck
             if (listDeck.keyforgeId != null) throw BadRequestException("Unregistered decks should not have a keyforge deck id.")
 

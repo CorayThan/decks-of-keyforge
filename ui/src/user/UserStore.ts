@@ -5,7 +5,7 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
-import { findPatronRewardLevel } from "../patreon/PatreonRewardsTier"
+import { findPatronRewardLevel, patronAuctionLimit } from "../patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration } from "./KeyUser"
@@ -202,6 +202,22 @@ export class UserStore {
             return findPatronRewardLevel(this.user.patreonTier) > 0
         }
         return false
+    }
+
+    @computed
+    get auctionsListed(): number {
+        if (this.user) {
+            return this.user.auctionCount
+        }
+        return 0
+    }
+
+    @computed
+    get auctionsAllowed(): number | undefined {
+        if (this.user) {
+            return patronAuctionLimit(this.user.patreonTier)
+        }
+        return 0
     }
 
     @computed

@@ -209,7 +209,7 @@ class UserLinks extends React.Component {
     buttonAnchor?: HTMLElement
 
     render() {
-        if (userStore.loginInProgress) {
+        if (!userStore.loggedIn() && userStore.loginInProgress) {
             return <Loader/>
         } else if (userStore.loggedIn()) {
             return (

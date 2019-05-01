@@ -74,7 +74,7 @@ export class PatreonRewards extends React.Component {
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
                             "After your first month send me your real address and I'll send you a set of cardboard keys promoting the site!",
-                            "List up to five simultaneous auctions."
+                            "List up to five simultaneous auctions. (By default you are only allowed one.)"
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>

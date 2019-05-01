@@ -55,4 +55,5 @@ export interface KeyUserDto {
     sellerEmail?: string
     discord?: string
     storeName?: string
+    auctionCount: number
 }

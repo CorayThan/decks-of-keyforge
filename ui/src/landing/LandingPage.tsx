@@ -30,6 +30,15 @@ topWishlisted.sort = DeckSorts.wishlisted
 
 const saleOrTrade = DeckFilters.forSaleOrTrade()
 
+const auctions = new DeckFilters()
+auctions.forAuction = true
+auctions.includeUnregistered = true
+
+const completedAuctions = new DeckFilters()
+completedAuctions.forAuction = true
+completedAuctions.includeUnregistered = true
+completedAuctions.completedAuctions = true
+
 const saleOrTradeAERC = DeckFilters.forSaleOrTrade()
 saleOrTradeAERC.sort = DeckSorts.aerc
 
@@ -68,8 +77,9 @@ export class LandingPage extends React.Component<{}> {
                                 Decks for Sale
                             </ListSubheader>
                             <DeckSearchLink name={"For Sale or Trade"} filters={saleOrTrade}/>
-                            <DeckSearchLink name={"By AERC"} filters={saleOrTradeAERC} style={{marginTop: spacing(2)}}/>
                             <DeckSearchLink name={"Recently Listed"} filters={saleOrTradeRecent} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Completed Auctions"} filters={completedAuctions} style={{marginTop: spacing(2)}}/>
 
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
