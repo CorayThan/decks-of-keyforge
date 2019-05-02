@@ -102,7 +102,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             <DeckHeader title={"Name"} property={"name"} minWidth={144}/>
                             <TableCell>Houses</TableCell>
                             {displayPrices ? (
-                                <DeckHeader title={"Price"} property={"price"}/>
+                                <DeckHeader title={"Price / Bid"} property={"price"}/>
                             ) : null}
                             <DeckHeader title={"SAS"} property={"sasRating"}/>
                             <DeckHeader title={"Cards"} property={"cardsRating"}/>
@@ -134,7 +134,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
                                 {displayPrices ? (
                                     <TableCell>
-                                        {deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice}
+                                        {findPriceForDeck(deck)}
                                     </TableCell>
                                 ) : null}
                                 <TableCell>{deck.sasRating}</TableCell>
@@ -192,3 +192,16 @@ const DeckHeader = (props: { title: string, property: string, minWidth?: number 
         </TableSortLabel>
     </TableCell>
 )
+
+const findPriceForDeck = (deck: Deck): number | null => {
+
+    if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0]) {
+        const firstSaleInfo = deck.deckSaleInfo[0]
+        if (firstSaleInfo.askingPrice) {
+            return firstSaleInfo.askingPrice
+        } else if (firstSaleInfo.nextBid) {
+            return firstSaleInfo.nextBid
+        }
+    }
+    return null
+}

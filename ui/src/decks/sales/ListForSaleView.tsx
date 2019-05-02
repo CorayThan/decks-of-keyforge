@@ -317,24 +317,26 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 }
                                 label={"For trade"}
                             />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.auction}
-                                        onChange={(event) => {
-                                            const auction = event.target.checked
-                                            this.auction = auction
-                                            this.forSale = !auction
-                                            this.forTrade = !auction
-                                            if (auction) {
-                                                this.expireInDays = "3"
-                                            }
-                                        }}
-                                        color={"primary"}
-                                    />
-                                }
-                                label={"Auction"}
-                            />
+                            {this.update ? null : (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.auction}
+                                            onChange={(event) => {
+                                                const auction = event.target.checked
+                                                this.auction = auction
+                                                this.forSale = !auction
+                                                this.forTrade = !auction
+                                                if (auction) {
+                                                    this.expireInDays = "3"
+                                                }
+                                            }}
+                                            color={"primary"}
+                                        />
+                                    }
+                                    label={"Auction"}
+                                />
+                            )}
                         </FormGroup>
                         <TextField
                             select={true}
@@ -480,7 +482,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry || !auctionAllowed}>
+                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry || (this.auction && !auctionAllowed)}>
                             {this.update ? "Update Listing" : "List"}
                         </KeyButton>
                     </DialogActions>

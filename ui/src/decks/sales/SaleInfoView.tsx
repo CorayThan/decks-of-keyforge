@@ -143,7 +143,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                 }
             >
                 <div>
-                    {!forAuction ? null : (
+                    {!forAuction || auctionId == null ? null : (
                         <div style={{margin: spacing(2)}}>
                             <div style={{display: "flex"}}>
                                 <Typography variant={"subtitle2"} style={{marginRight: spacing(2)}}>Ending on:</Typography>
