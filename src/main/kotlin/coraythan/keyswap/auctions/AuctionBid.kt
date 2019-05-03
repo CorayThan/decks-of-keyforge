@@ -26,7 +26,14 @@ data class AuctionBid(
 
         @Id
         val id: UUID = UUID.randomUUID()
-) {
+) : Comparable<AuctionBid> {
+    override fun compareTo(other: AuctionBid): Int {
+        if (this.bid == other.bid) {
+            return this.bidTime.compareTo(other.bidTime)
+        }
+        return -this.bid.compareTo(other.bid)
+    }
+
     fun toDto(offsetMinutes: Int = 0) = AuctionBidDto(
             bidderUsername = bidder.username,
             bidTime = bidTime.toReadableStringWithOffsetMinutes(offsetMinutes, TimeUtils.localDateTimeFormatter),

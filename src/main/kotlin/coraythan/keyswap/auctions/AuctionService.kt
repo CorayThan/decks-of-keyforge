@@ -177,17 +177,20 @@ class AuctionService(
 
     fun auctionInfo(auctionId: UUID, offsetMinutes: Int): AuctionDto {
         val auction = auctionRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction with id $auctionId")
+        val fakeUsernames = auction.bids.sortedBy { it.bidTime }.map { it.bidder.username }
         val dto = auction.toDto(offsetMinutes)
         if (auction.endDateTime.plusDays(14) < now()) {
             // auction is two weeks old, show real usernames
             return dto
         }
-        val highestBidId = auction.realMaxBidObject()?.id
-        val fakeUsernames = dto.bids.map { it.bidderUsername }.toSortedSet().reversed()
+        val currentUser = currentUserService.loggedInUser()
         return dto.copy(bids = dto.bids.map {
             it.copy(
-                    bidderUsername = "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}",
-                    highest = it.id == highestBidId
+                    bidderUsername = if (currentUser?.username == it.bidderUsername) {
+                        it.bidderUsername
+                    } else {
+                        "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}"
+                    }
             )
         })
     }

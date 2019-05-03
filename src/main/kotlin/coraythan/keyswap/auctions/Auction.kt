@@ -63,20 +63,19 @@ data class Auction(
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
-    fun realMaxBidObject() = bids.sortedBy { it.bid }.reversed().firstOrNull()
+    private fun realMaxBidObject() = bids.sorted().firstOrNull()
     fun realMaxBid() = realMaxBidObject()?.bid
-
-    fun highestBidder() = bids.sortedByDescending { it.bid }.firstOrNull()?.bidder
+    fun highestBidder() = realMaxBidObject()?.bidder
 
     val highestBid: Int?
         get() {
             val bidsFiltered = bids
                     .groupBy { it.bidder }
-                    .map { bid -> bid.value.sortedByDescending { it.bid }.first() }
+                    .map { bid -> bid.value.sorted().first() }
             return when {
                 bidsFiltered.isEmpty() -> null
                 bidsFiltered.size == 1 -> startingBid
-                else -> bidsFiltered.sortedByDescending { it.bid }[1].bid
+                else -> bidsFiltered.sorted()[1].bid
             }
         }
 
@@ -106,7 +105,10 @@ data class Auction(
                 bids = bids
                         .sortedByDescending { it.bidTime }
                         .map {
-                            it.toDto(offsetMinutes).copy(bid = if (highestBid != null && it.bid > highestBid) highestBid else it.bid)
+                            it.toDto(offsetMinutes).copy(
+                                    bid = if (highestBid != null && it.bid > highestBid) highestBid else it.bid,
+                                    highest = it == realMaxBidObject()
+                            )
                         },
                 deckId = deck.id,
                 currencySymbol = currencySymbol,
