@@ -10,6 +10,7 @@ import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
+import coraythan.keyswap.users.KeyUserRepo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.javacrumbs.shedlock.core.SchedulerLock
@@ -28,7 +29,8 @@ class AuctionService(
         private val auctionRepo: AuctionRepo,
         private val currentUserService: CurrentUserService,
         private val deckRepo: DeckRepo,
-        private val emailService: EmailService
+        private val emailService: EmailService,
+        private val userRepo: KeyUserRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -92,6 +94,7 @@ class AuctionService(
         )
         auctionRepo.save(auction)
         deckRepo.save(deck.copy(forAuction = true))
+        userRepo.save(currentUser.copy(mostRecentDeckListing = now()))
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {

@@ -71,6 +71,14 @@ class DeckTableViewStore {
                         return deckTableViewStore.tableSortDir === "desc" ? 0 : 1000000
                     }
                 }))
+            } else if (deckTableViewStore.activeTableSort === "buyItNow") {
+                decks.replace(sortBy(decks.slice(), (deck: Deck) => {
+                    const buyItNow = findBuyItNowForDeck(deck)
+                    if (buyItNow) {
+                        return buyItNow
+                    }
+                    return deckTableViewStore.tableSortDir === "desc" ? 0 : 1000000
+                }))
             } else {
                 decks.replace(sortBy(decks.slice(), deckTableViewStore.activeTableSort))
             }
@@ -102,7 +110,10 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             <DeckHeader title={"Name"} property={"name"} minWidth={144}/>
                             <TableCell>Houses</TableCell>
                             {displayPrices ? (
-                                <DeckHeader title={"Price / Bid"} property={"price"}/>
+                                <>
+                                    <DeckHeader title={"Price / Bid"} property={"price"}/>
+                                    <DeckHeader title={"BIN"} property={"buyItNow"}/>
+                                </>
                             ) : null}
                             <DeckHeader title={"SAS"} property={"sasRating"}/>
                             <DeckHeader title={"Cards"} property={"cardsRating"}/>
@@ -133,9 +144,15 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 </TableCell>
                                 <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
                                 {displayPrices ? (
-                                    <TableCell>
-                                        {findPriceForDeck(deck)}
-                                    </TableCell>
+                                    <>
+                                        <TableCell>
+                                            {findPriceForDeck(deck)}
+                                            {highestBidder(deck) ? " High Bidder" : ""}
+                                        </TableCell>
+                                        <TableCell>
+                                            {findBuyItNowForDeck(deck)}
+                                        </TableCell>
+                                    </>
                                 ) : null}
                                 <TableCell>{deck.sasRating}</TableCell>
                                 <TableCell>{deck.cardsRating}</TableCell>
@@ -204,4 +221,28 @@ const findPriceForDeck = (deck: Deck): number | null => {
         }
     }
     return null
+}
+
+const findBuyItNowForDeck = (deck: Deck): number | null => {
+
+    if (deck.deckSaleInfo) {
+        for (const saleInfo of deck.deckSaleInfo) {
+            if (saleInfo.buyItNow) {
+                return saleInfo.buyItNow
+            }
+        }
+    }
+    return null
+}
+
+const highestBidder = (deck: Deck): boolean => {
+
+    if (deck.deckSaleInfo) {
+        for (const saleInfo of deck.deckSaleInfo) {
+            if (saleInfo.youAreHighestBidder) {
+                return true
+            }
+        }
+    }
+    return false
 }

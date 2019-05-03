@@ -236,7 +236,7 @@ class UserLinks extends React.Component {
                         style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >
-                        <PatreonIcon style={{marginRight: spacing(1)}} />
+                        <PatreonIcon style={{marginRight: spacing(1)}} primary={screenStore.screenSizeMd()}/>
                         Patron Rewards
                     </LinkButton>
                     <KeyButton

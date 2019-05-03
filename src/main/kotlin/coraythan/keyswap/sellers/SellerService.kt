@@ -43,7 +43,8 @@ class SellerService(
                                 SellerDetails(
                                         storeName = user.storeName ?: "${user.username}'s Store",
                                         username = user.username,
-                                        decksAvailable = user.decks.filter { it.forSale || it.forTrade }.size,
+                                        decksAvailable = user.decks.filter { it.forSale || it.forTrade }.size +
+                                                user.auctions.filter { it.status ==  AuctionStatus.ACTIVE}.size,
                                         country = user.country ?: Country.UnitedStates,
                                         mostRecentListing = placeholderDate,
                                         storeDescription = user.publicContactInfo,

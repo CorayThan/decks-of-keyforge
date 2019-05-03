@@ -45,7 +45,7 @@ export class ContactMe extends React.Component {
                                 <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                             </span>,
                             <div style={{paddingTop: spacing(1)}}>
-                                <PatronButton primary={true} variant={"contained"}/>
+                                <PatronButton/>
                             </div>
                         ]}
                     />

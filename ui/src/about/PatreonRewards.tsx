@@ -26,7 +26,7 @@ export class PatreonRewards extends React.Component {
                             "Become a patron with Patreon to support the site and gain rewards!",
                             "All tiers have the benefits of all lower tiers.",
                             <div style={{paddingTop: spacing(1), display: "flex", justifyContent: "center"}}>
-                                <PatronButton primary={true} variant={"contained"}/>
+                                <PatronButton/>
                             </div>
                         ]}
                     />

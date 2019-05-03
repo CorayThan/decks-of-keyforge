@@ -150,9 +150,14 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                 <Typography variant={"subtitle2"}>{auctionEndDateTime}</Typography>
                             </div>
                             {youAreHighestBidder ? (
-                                <Typography style={{marginTop: spacing(2)}}>
-                                    You are the highest bidder! Your max bid: {currencySymbol}{yourMaxBid}
-                                </Typography>
+                                <div style={{marginTop: spacing(2)}}>
+                                    <Typography variant={"h4"} color={"primary"}>
+                                        High Bidder!
+                                    </Typography>
+                                    <Typography style={{marginTop: spacing(1)}}>
+                                        Your max bid: {currencySymbol}{yourMaxBid}
+                                    </Typography>
+                                </div>
                             ) : null}
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
                                 <BidButton

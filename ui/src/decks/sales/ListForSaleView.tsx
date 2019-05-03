@@ -275,12 +275,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </LinkButton>
                             </div>
                         )}
+                        {this.auction ? (
+                            <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
+                                Auctions cannot be cancelled or modified after they are created.
+                            </Typography>
+                        ) : null}
                         {!this.auction || auctionAllowed ? null : (
                             <div style={{marginBottom: spacing(2)}}>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
                                     Upgrade your patron level to list more auctions. You can have {userStore.auctionsAllowed} simultaneous auctions.
                                 </Typography>
-                                <PatronButton variant={"contained"}/>
+                                <PatronButton/>
                             </div>
                         )}
                         <FormGroup row={true}>
