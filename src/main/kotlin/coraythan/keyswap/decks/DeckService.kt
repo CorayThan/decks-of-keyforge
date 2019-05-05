@@ -92,9 +92,17 @@ class DeckService(
             DeckSortOptions.MOST_WISHLISTED -> deckQ.wishlistCount
             DeckSortOptions.NAME -> deckQ.name
             DeckSortOptions.RECENTLY_LISTED -> deckQ.listedOn
+            DeckSortOptions.ENDING_SOONEST -> deckQ.auctionEnd
+            DeckSortOptions.COMPLETED_RECENTLY -> deckQ.auctionEndedOn
         }
 
-        val sort = if (
+        val sort = if (filters.sort == DeckSortOptions.ENDING_SOONEST) {
+            if (filters.sortDirection == SortDirection.ASC) {
+                (sortProperty as ComparableExpressionBase).desc()
+            } else {
+                (sortProperty as ComparableExpressionBase).asc()
+            }
+        } else if (
                 filters.sortDirection == SortDirection.DESC
                 || filters.sort == DeckSortOptions.FUNNIEST
                 || filters.sort == DeckSortOptions.MOST_WISHLISTED

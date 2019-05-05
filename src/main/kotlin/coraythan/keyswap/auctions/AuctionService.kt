@@ -35,6 +35,8 @@ class AuctionService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    var updateAuctionsMissingData = true
+
     @Scheduled(cron = "0 */15 * * * *")
     @SchedulerLock(name = "completeAuctions", lockAtMostForString = fourteenMin, lockAtLeastForString = fourteenMin)
     fun completeAuctions() {
@@ -57,6 +59,18 @@ class AuctionService(
         }
 
         log.info("$scheduledStop complete auctions.")
+
+        if (updateAuctionsMissingData) {
+            auctionRepo.findAll().forEach {
+                if (it.status == AuctionStatus.ACTIVE) {
+                    deckRepo.save(it.deck.copy(auctionEnd = it.endDateTime))
+                } else if (it.status == AuctionStatus.COMPLETE) {
+                    deckRepo.save(it.deck.copy(auctionEndedOn = it.boughtNowOn ?: it.endDateTime))
+                }
+            }
+        }
+
+        updateAuctionsMissingData = false
     }
 
     fun list(listingInfo: ListingInfo) {
@@ -125,6 +139,8 @@ class AuctionService(
                     "Use buy it now instead of bidding higher than the buy it now."
             )
         }
+        val updateEndDateTime = now.plusMinutes(15) > auction.endDateTime
+        val newAuctionEnd = auction.endDateTime.plusMinutes(15)
         val withBid = auction.copy(
                 bids = auction.bids.plus(AuctionBid(
                         bidder = user,
@@ -132,14 +148,11 @@ class AuctionService(
                         bidTime = now,
                         auction = auction
                 )),
-                endDateTime = if (now.plusMinutes(15) > auction.endDateTime) {
-                    auction.endDateTime.plusMinutes(15)
-                } else {
-                    auction.endDateTime
-                }
+                endDateTime = if (updateEndDateTime) newAuctionEnd else auction.endDateTime
         )
 
         val saved = auctionRepo.save(withBid)
+        if (updateEndDateTime) deckRepo.save(auction.deck.copy(auctionEnd = newAuctionEnd))
         val newHighBidder = saved.highestBidderUsername
         val highBid = saved.highestBid
 
@@ -197,10 +210,11 @@ class AuctionService(
 
     private fun endAuction(sold: Boolean, auction: Auction, buyItNowUser: KeyUser? = null) {
 
+        val end = now()
         auctionRepo.save(auction.copy(
                 status = AuctionStatus.COMPLETE,
                 boughtWithBuyItNow = buyItNowUser,
-                boughtNowOn = if (buyItNowUser == null) null else now()
+                boughtNowOn = if (buyItNowUser == null) null else end
         ))
         deckRepo.save(auction.deck.copy(forAuction = false, completedAuction = sold))
 

@@ -149,7 +149,10 @@ class PatreonService(
                 tierIds.any { PatreonRewardsTier.MERCHANT_AEMBERMAKER.tierIds.contains(it) } -> PatreonRewardsTier.MERCHANT_AEMBERMAKER
                 tierIds.any { PatreonRewardsTier.SUPPORT_SOPHISTICATION.tierIds.contains(it) } -> PatreonRewardsTier.SUPPORT_SOPHISTICATION
                 tierIds.any { PatreonRewardsTier.NOTICE_BARGAINS.tierIds.contains(it) } -> PatreonRewardsTier.NOTICE_BARGAINS
-                else -> null
+                else -> {
+                    if (tierIds.isNotEmpty()) log.warn("Couldn't find patreon tier for member with id $patreonId tiers $tierIds member: $member")
+                    null
+                }
             }
             val user = userRepo.findByPatreonId(patreonId)
             if (user != null && user.patreonTier != bestTier) {

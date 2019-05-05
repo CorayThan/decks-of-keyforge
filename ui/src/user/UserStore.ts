@@ -188,6 +188,15 @@ export class UserStore {
         return undefined
     }
 
+    // TODO delete this when $1 tier works
+    @computed
+    get hasPatronId(): boolean {
+        if (this.user) {
+            return !!this.user.patreonId
+        }
+        return false
+    }
+
     @computed
     get patron(): boolean {
         if (this.user) {

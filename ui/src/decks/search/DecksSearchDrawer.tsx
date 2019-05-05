@@ -43,7 +43,12 @@ interface DecksSearchDrawerProps {
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     selectedHouses = new SelectedHouses(this.props.filters.houses)
-    selectedSortStore = new DeckSortSelectStore(this.props.filters.forTrade || this.props.filters.forSale, this.props.filters.sort)
+    selectedSortStore = new DeckSortSelectStore(
+        this.props.filters.forTrade || this.props.filters.forSale,
+        this.props.filters.forAuction && !(this.props.filters.forTrade || this.props.filters.forSale),
+        this.props.filters.completedAuctions,
+        this.props.filters.sort
+    )
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
 
     search = (event?: React.FormEvent) => {
@@ -95,6 +100,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                 filters.sort = DeckSorts.sas
             }
         }
+        this.selectedSortStore.forAuctionOnly = filters.forAuction && !filters.forSale && !filters.forTrade
         filters.completedAuctions = false
     }
 
@@ -270,7 +276,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             control={
                                                 <Checkbox
                                                     checked={this.props.filters.completedAuctions}
-                                                    onChange={this.props.filters.handleCompletedAuctionsUpdate}
+                                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                        this.props.filters.handleCompletedAuctionsUpdate(event)
+                                                        this.selectedSortStore.completedAuctions = this.props.filters.completedAuctions
+                                                    }}
                                                 />
                                             }
                                             label={"Completed auctions"}

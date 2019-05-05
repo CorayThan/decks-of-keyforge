@@ -1,12 +1,21 @@
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { log } from "../../config/Utils"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 
 @observer
 export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore }> {
     render() {
-        const options = this.props.store.forSaleOrTrade ? forSaleDeckSortOptions : deckSortOptions
+        let options = deckSortOptions
+
+        if (this.props.store.forSaleOrTrade) {
+            options = forSaleDeckSortOptions
+        } else if (this.props.store.completedAuctions) {
+            options = completedAuctionDeckSortOptions
+        } else if (this.props.store.forAuctionOnly) {
+            options = forAuctionDeckSortOptions
+        }
         return (<KeySelect name={"Sort By"} options={options.map(option => option.name)} selected={this.props.store}/>)
     }
 }
@@ -19,20 +28,29 @@ export class DeckSortSelectStore implements SelectedStore {
     @observable
     forSaleOrTrade: boolean
 
-    constructor(forSaleOrTrade: boolean, initialSort?: string) {
+    @observable
+    forAuctionOnly: boolean
+
+    @observable
+    completedAuctions: boolean
+
+    constructor(forSaleOrTrade: boolean, forAuctionOnly: boolean, completedAuctions: boolean, initialSort?: string) {
         if (initialSort) {
-            this.selectedValue = forSaleDeckSortOptions.filter(option => option.value === initialSort)[0].name
+            this.selectedValue = allDeckSortOptions.filter(option => option.value === initialSort)[0].name
         } else {
             this.selectedValue = defaultSort.name
         }
+        log.info(`Deck stot store ${forSaleOrTrade} ${forAuctionOnly} ${completedAuctions}`)
         this.forSaleOrTrade = forSaleOrTrade
+        this.forAuctionOnly = forAuctionOnly
+        this.completedAuctions = completedAuctions
     }
 
     toEnumValue = () => {
         if (!this.selectedValue) {
             return defaultSort.value
         }
-        return forSaleDeckSortOptions.filter(option => option.name === this.selectedValue)[0].value
+        return allDeckSortOptions.filter(option => option.name === this.selectedValue)[0].value
     }
 }
 
@@ -47,21 +65,37 @@ export const DeckSorts = {
     funniest: "FUNNIEST",
     wishlisted: "MOST_WISHLISTED",
     chains: "CHAINS",
-    recentlyListed: "RECENTLY_LISTED"
+    recentlyListed: "RECENTLY_LISTED",
+    endingSoonest: "ENDING_SOONEST",
+    addedDate: "ADDED_DATE",
+    cardsRating: "CARDS_RATING",
+    name: "NAME",
+    completedRecently: "COMPLETED_RECENTLY"
 }
 
 const deckSortOptions: SortOption[] = [
-    {value: "ADDED_DATE", name: "Date Added"},
+    {value: DeckSorts.addedDate, name: "Date Added"},
     {value: DeckSorts.sas, name: "SAS Rating"},
-    {value: "CARDS_RATING", name: "Card Rating"},
+    {value: DeckSorts.cardsRating, name: "Card Rating"},
     {value: DeckSorts.aerc, name: "AERC Score"},
     {value: DeckSorts.chains, name: "Chains"},
     {value: DeckSorts.funniest, name: "Funniest"},
     {value: DeckSorts.wishlisted, name: "Most Wishlisted"},
-    {value: "NAME", name: "Name"},
+    {value: DeckSorts.name, name: "Name"},
 ]
 
 const forSaleDeckSortOptions: SortOption[] = deckSortOptions.slice()
-forSaleDeckSortOptions.push({value: DeckSorts.recentlyListed, name: "Recently Listed"})
+forSaleDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
+
+const forAuctionDeckSortOptions: SortOption[] = deckSortOptions.slice()
+forAuctionDeckSortOptions.unshift({value: DeckSorts.endingSoonest, name: "Ending Soonest"})
+
+const completedAuctionDeckSortOptions: SortOption[] = deckSortOptions.slice()
+completedAuctionDeckSortOptions.unshift({value: DeckSorts.completedRecently, name: "Completed Recently"})
+
+const allDeckSortOptions: SortOption[] = deckSortOptions.slice()
+allDeckSortOptions.unshift({value: DeckSorts.completedRecently, name: "Completed Recently"})
+allDeckSortOptions.unshift({value: DeckSorts.endingSoonest, name: "Ending Soonest"})
+allDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 
 export const defaultSort = deckSortOptions[1]

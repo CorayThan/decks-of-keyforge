@@ -13,7 +13,7 @@ sellerImgs.set("coraythan".toLowerCase(), coraythan)
 sellerImgs.set("wyzman".toLowerCase(), reapout)
 sellerImgs.set("zarathustra05".toLowerCase(), bigz)
 sellerImgs.set("TiggerClone".toLowerCase(), tiggerClone)
-sellerImgs.set("chad".toLowerCase(), neverOutGamed)
+sellerImgs.set("NeveroutGamed".toLowerCase(), neverOutGamed)
 sellerImgs.set("Jupiter".toLowerCase(), fifthPlanet)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {

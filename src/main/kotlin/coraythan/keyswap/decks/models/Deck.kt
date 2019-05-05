@@ -88,6 +88,8 @@ data class Deck(
         val statsVersion: Int? = 0,
 
         val listedOn: ZonedDateTime? = null,
+        val auctionEnd: ZonedDateTime? = null,
+        val auctionEndedOn: ZonedDateTime? = null,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

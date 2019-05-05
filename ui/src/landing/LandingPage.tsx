@@ -33,11 +33,13 @@ const saleOrTrade = DeckFilters.forSaleOrTrade()
 const auctions = new DeckFilters()
 auctions.forAuction = true
 auctions.includeUnregistered = true
+auctions.sort = DeckSorts.endingSoonest
 
 const completedAuctions = new DeckFilters()
 completedAuctions.forAuction = true
 completedAuctions.includeUnregistered = true
 completedAuctions.completedAuctions = true
+completedAuctions.sort = DeckSorts.completedRecently
 
 const saleOrTradeAERC = DeckFilters.forSaleOrTrade()
 saleOrTradeAERC.sort = DeckSorts.aerc
@@ -93,8 +95,9 @@ export class LandingPage extends React.Component<{}> {
                     <div style={{flexGrow: 1}}>
                         {screenStore.screenSizeSm() ? (
                             <div style={{marginTop: spacing(4), display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                                <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{margin: spacing(2)}}/>
-                                <DeckSearchLink name={"Decks For Sale"} filters={saleOrTrade} style={{margin: spacing(2)}}/>
+                                <DeckSearchLink name={"Search"} filters={topSas} dontSearch={true} style={{margin: spacing(2)}}/>
+                                <DeckSearchLink name={"For Sale"} filters={saleOrTrade} style={{margin: spacing(2)}}/>
+                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(2)}}/>
                             </div>
                         ) : null}
                         <FeaturedSellersView/>

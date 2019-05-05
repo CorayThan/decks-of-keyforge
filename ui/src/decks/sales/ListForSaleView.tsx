@@ -372,7 +372,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                     </MenuItem>,
                                 ]
                             )}
-                            {this.auction || !userStore.patron ? null : (
+                            {this.auction || !userStore.hasPatronId ? null : (
                                 <MenuItem value={"365"}>
                                     One year
                                 </MenuItem>
