@@ -3,6 +3,7 @@ package coraythan.keyswap.userdeck
 import coraythan.keyswap.auctions.AuctionRepo
 import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
@@ -30,7 +31,7 @@ class UserDeckService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = "PT6H")
+    @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
     fun unlistExpiredDecks() {
         log.info("$scheduledStart unlisting expired decks.")
         val toUnlist = userDeckRepo.findAll(

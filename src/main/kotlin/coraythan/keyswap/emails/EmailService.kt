@@ -28,7 +28,8 @@ class EmailService(
                 "${deck.name} has sold on auction!",
                 """
                     <div>
-                        ${buyer.username} has won the deck ${deck.name} for $currencySymbol$price plus any shipping listed in the auction description.
+                        ${buyer.username} has won the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} for $currencySymbol$price plus any shipping
+                        listed in the auction description.
                     </div>
                     <br>
                     <br>
@@ -43,7 +44,8 @@ class EmailService(
                 "You have won the auction for ${deck.name}!",
                 """
                     <div>
-                        You have won the deck ${deck.name} for $currencySymbol$price plus any shipping listed in the auction description.
+                        You have won the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} for $currencySymbol$price plus any shipping listed in
+                        the auction description.
                     </div>
                     <br>
                     <br>
@@ -63,7 +65,7 @@ class EmailService(
                 "Your deck for auction ${deck.name} did not sell",
                 """
                     <div>
-                        The minimum bid for ${deck.name} was not met before the end of the auction.
+                        The minimum bid for ${makeLink("/decks/${deck.keyforgeId}", deck.name)} was not met before the end of the auction.
                     </div>
                 """.trimIndent()
         )

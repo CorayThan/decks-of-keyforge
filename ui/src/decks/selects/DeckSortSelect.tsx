@@ -9,11 +9,14 @@ export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore
     render() {
         let options = deckSortOptions
 
-        if (this.props.store.forSaleOrTrade) {
+        const {forSaleOrTrade, forAuction, completedAuctions} = this.props.store
+
+        log.debug(`Deck sort select ${forSaleOrTrade} ${forAuction} ${completedAuctions}`)
+        if (forSaleOrTrade && !forAuction) {
             options = forSaleDeckSortOptions
-        } else if (this.props.store.completedAuctions) {
+        } else if (completedAuctions) {
             options = completedAuctionDeckSortOptions
-        } else if (this.props.store.forAuctionOnly) {
+        } else if (forAuction) {
             options = forAuctionDeckSortOptions
         }
         return (<KeySelect name={"Sort By"} options={options.map(option => option.name)} selected={this.props.store}/>)
@@ -29,7 +32,7 @@ export class DeckSortSelectStore implements SelectedStore {
     forSaleOrTrade: boolean
 
     @observable
-    forAuctionOnly: boolean
+    forAuction: boolean
 
     @observable
     completedAuctions: boolean
@@ -42,7 +45,7 @@ export class DeckSortSelectStore implements SelectedStore {
         }
         log.info(`Deck stot store ${forSaleOrTrade} ${forAuctionOnly} ${completedAuctions}`)
         this.forSaleOrTrade = forSaleOrTrade
-        this.forAuctionOnly = forAuctionOnly
+        this.forAuction = forAuctionOnly
         this.completedAuctions = completedAuctions
     }
 
@@ -88,6 +91,7 @@ const forSaleDeckSortOptions: SortOption[] = deckSortOptions.slice()
 forSaleDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 
 const forAuctionDeckSortOptions: SortOption[] = deckSortOptions.slice()
+forAuctionDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 forAuctionDeckSortOptions.unshift({value: DeckSorts.endingSoonest, name: "Ending Soonest"})
 
 const completedAuctionDeckSortOptions: SortOption[] = deckSortOptions.slice()

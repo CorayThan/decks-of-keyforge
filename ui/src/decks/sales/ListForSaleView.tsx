@@ -58,7 +58,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     expireInDays = "7"
     @observable
-    bidIncrement = "5"
+    bidIncrement = "1"
     @observable
     startingBid = "1"
 

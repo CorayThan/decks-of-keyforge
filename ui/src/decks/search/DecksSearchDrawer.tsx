@@ -100,7 +100,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                 filters.sort = DeckSorts.sas
             }
         }
-        this.selectedSortStore.forAuctionOnly = filters.forAuction && !filters.forSale && !filters.forTrade
+        this.selectedSortStore.forAuction = filters.forAuction
         filters.completedAuctions = false
     }
 

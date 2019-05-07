@@ -86,14 +86,16 @@ class AuctionService(
 
         if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
 
-        val endDateTime = now().plusDays(listingInfo.expireInDays.toLong())
+        val listingDate = now()
+        val endDateTime = listingDate.plusDays(listingInfo.expireInDays.toLong())
         val endMinutesMod = endDateTime.minute % 15
         val endMinutes = endDateTime.minute - endMinutesMod
+        val realEnd = endDateTime.withMinute(endMinutes)
 //        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
         val auction = Auction(
                 durationDays = listingInfo.expireInDays,
-                endDateTime = endDateTime.withMinute(endMinutes),
+                endDateTime = realEnd,
                 bidIncrement = auctionListingInfo.bidIncrement,
                 startingBid = auctionListingInfo.startingBid,
                 buyItNow = auctionListingInfo.buyItNow,
@@ -107,8 +109,8 @@ class AuctionService(
                 currencySymbol = currentUser.currencySymbol
         )
         auctionRepo.save(auction)
-        deckRepo.save(deck.copy(forAuction = true))
-        userRepo.save(currentUser.copy(mostRecentDeckListing = now()))
+        deckRepo.save(deck.copy(forAuction = true, auctionEnd = realEnd, listedOn = listingDate))
+        userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate))
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {

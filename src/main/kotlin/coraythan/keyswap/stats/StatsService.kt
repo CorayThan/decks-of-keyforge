@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.addWinsLosses
@@ -73,7 +74,7 @@ class StatsService(
         }
     }
 
-    @Scheduled(fixedDelayString = "PT12H", initialDelayString = "PT15M")
+    @Scheduled(fixedDelayString = "PT12H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
         log.info("$scheduledStart start new deck stats.")

@@ -3,6 +3,7 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.withCards
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
@@ -27,7 +28,7 @@ class DeckWinsService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = "PT10M")
+    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 
