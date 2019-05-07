@@ -17,6 +17,7 @@ import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { log } from "../../config/Utils"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -91,17 +92,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         if (forAuction != null) {
             filters.forAuction = forAuction
         }
-        if (filters.forSale || filters.forTrade || filters.forAuction) {
-            this.selectedSortStore.forSaleOrTrade = true
-        } else {
-            this.selectedSortStore.forSaleOrTrade = false
+        if (!(filters.forSale || filters.forTrade || filters.forAuction)) {
             filters.forSaleInCountry = undefined
-            if (filters.sort === DeckSorts.recentlyListed) {
-                filters.sort = DeckSorts.sas
-            }
         }
+        this.selectedSortStore.forSaleOrTrade = filters.forSale || filters.forTrade
         this.selectedSortStore.forAuction = filters.forAuction
+        this.selectedSortStore.completedAuctions = false
         filters.completedAuctions = false
+
+        if (!this.selectedSortStore.sortIsValid()) {
+            log.debug("Sort not defined")
+            filters.sort = DeckSorts.sas
+        }
     }
 
     @computed

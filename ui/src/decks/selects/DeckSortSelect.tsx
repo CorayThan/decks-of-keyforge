@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { log } from "../../config/Utils"
@@ -7,19 +7,7 @@ import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 @observer
 export class DeckSortSelect extends React.Component<{ store: DeckSortSelectStore }> {
     render() {
-        let options = deckSortOptions
-
-        const {forSaleOrTrade, forAuction, completedAuctions} = this.props.store
-
-        log.debug(`Deck sort select ${forSaleOrTrade} ${forAuction} ${completedAuctions}`)
-        if (forSaleOrTrade && !forAuction) {
-            options = forSaleDeckSortOptions
-        } else if (completedAuctions) {
-            options = completedAuctionDeckSortOptions
-        } else if (forAuction) {
-            options = forAuctionDeckSortOptions
-        }
-        return (<KeySelect name={"Sort By"} options={options.map(option => option.name)} selected={this.props.store}/>)
+        return (<KeySelect name={"Sort By"} options={this.props.store.currentOptions} selected={this.props.store}/>)
     }
 }
 
@@ -54,6 +42,36 @@ export class DeckSortSelectStore implements SelectedStore {
             return defaultSort.value
         }
         return allDeckSortOptions.filter(option => option.name === this.selectedValue)[0].value
+    }
+
+    sortIsValid = () => {
+        const valid = this.currentOptions.includes(this.selectedValue)
+        if (!valid) {
+            this.selectedValue = defaultSort.name
+        }
+        return valid
+    }
+
+    @computed
+    get currentOptions(): string[] {
+
+        let options = deckSortOptions
+
+        const {forSaleOrTrade, forAuction, completedAuctions} = this
+
+        log.debug(`Deck sort select ${forSaleOrTrade} ${forAuction} ${completedAuctions}`)
+        if (completedAuctions) {
+            log.debug("completed auctions")
+            options = completedAuctionDeckSortOptions
+        } else if (forAuction && !forSaleOrTrade) {
+            log.debug("for auction only")
+            options = forAuctionDeckSortOptions
+        } else if (forSaleOrTrade) {
+            log.debug("For sale not auction")
+            options = forSaleDeckSortOptions
+        }
+
+        return options.map(option => option.name)
     }
 }
 
