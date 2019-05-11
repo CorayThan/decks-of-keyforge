@@ -7,6 +7,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.synergy.SynTrait
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import java.time.ZonedDateTime
@@ -80,9 +81,9 @@ data class Deck(
 
         /**
          * To redo the ratings:
-           ALTER TABLE deck DROP COLUMN rating_version;
-           ALTER TABLE deck ADD COLUMN rating_version int4;
-           CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
+        ALTER TABLE deck DROP COLUMN rating_version;
+        ALTER TABLE deck ADD COLUMN rating_version int4;
+        CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
          */
         val ratingVersion: Int? = 0,
         val statsVersion: Int? = 0,
@@ -96,7 +97,7 @@ data class Deck(
         val id: Long = -1
 ) {
 
-    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>): DeckSearchResult {
+    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>, cards: List<Card>?): DeckSearchResult {
         // Load the houses
         this.houses.size
         return DeckSearchResult(
@@ -115,6 +116,16 @@ data class Deck(
                 actionCount = actionCount,
                 artifactCount = artifactCount,
                 upgradeCount = upgradeCount,
+
+                cardDrawCount = cards?.filter {
+                    it.extraCardInfo?.traits?.contains(SynTrait.drawsCards) == true
+                            || it.extraCardInfo?.traits?.contains(SynTrait.increasesHandSize) == true
+                }?.size,
+                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.contains(SynTrait.archives) == true }?.size,
+                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.contains(SynTrait.forgesKeys) == true }?.size,
+                rawAmber = rawAmber,
+                totalArmor = totalArmor,
+
                 expectedAmber = expectedAmber,
                 amberControl = amberControl,
                 creatureControl = creatureControl,

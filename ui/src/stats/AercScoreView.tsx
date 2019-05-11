@@ -62,23 +62,28 @@ export const AercScoreView = (props: AercScoreViewProps) => {
                 <AercValue value={effectivePower} name={"P"} tooltip={"Effective Creature Power"} textStyle={textStyle}/>
             </div>
             {verticalLine}
-            <Tooltip title={"AERC score. Read more on the about page!"}>
-                <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", margin: spacing(1)}}>
-                    <Typography
-                        variant={"h4"}
-                        style={{marginRight: spacing(1), ...textStyle}}>{aercScore}
-                    </Typography>
-                    <Typography
-                        variant={"h5"}
-                        style={{...textStyle}}
-                    >
-                        {"AERC"}
-                    </Typography>
-                </div>
-            </Tooltip>
+            <AercScore aercScore={aercScore} textStyle={textStyle}/>
         </div>
     )
 }
+
+export const AercScore = (props: {aercScore: number, textStyle: React.CSSProperties}) => (
+    <Tooltip title={"AERC score. Read more on the about page!"}>
+        <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", margin: spacing(1)}}>
+            <Typography
+                variant={"h4"}
+                style={{marginRight: spacing(1), ...props.textStyle}}>{props.aercScore}
+            </Typography>
+            <Typography
+                variant={"h5"}
+                style={{...props.textStyle}}
+            >
+                {"AERC"}
+            </Typography>
+        </div>
+    </Tooltip>
+)
+
 const AercValue = (props: { value: number, name: string, tooltip: string, textStyle: React.CSSProperties }) => {
     return (
         <Tooltip title={props.tooltip}>

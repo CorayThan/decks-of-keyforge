@@ -6,6 +6,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { AercScoreView } from "../stats/AercScoreView"
@@ -61,10 +62,17 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
         borderRadius: "20px"
     }
 
+    const sidebarProps = screenStore.screenSizeXs() ? {
+        vertical: true,
+        width: 300,
+    } : {
+        width: 600,
+    }
+
     const cardAerc = hasAercFromCard(card)
 
     return (
-        <div style={wrapperStyle}>
+        <GraySidebar {...sidebarProps} >
             <div>
                 <img src={card.frontImage}/>
             </div>
@@ -111,7 +119,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                     ))}
                 </div>
             </div>
-        </div>
+        </GraySidebar>
     )
 }
 

@@ -1,21 +1,28 @@
-import { Tooltip } from "@material-ui/core"
+import { IconButton, Tooltip } from "@material-ui/core"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
 import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
+import { ExpandLess, ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { TextConfig } from "../config/TextConfig"
+import { AmberIcon } from "../generic/icons/AmberIcon"
+import { ArchiveIcon } from "../generic/icons/ArchiveIcon"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
-import { ChainsView } from "../generic/icons/ChainsView"
+import { DrawIcon } from "../generic/icons/DrawIcon"
+import { KeyCheatIcon } from "../generic/icons/KeyCheatIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
+import { InfoIconList } from "../generic/InfoIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
@@ -29,6 +36,7 @@ import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
 import { DeckScoreView } from "./DeckScoreView"
+import { OrganizedPlayStats } from "./OrganizedPlayStats"
 
 interface DeckViewSmallProps {
     deck: Deck
@@ -43,7 +51,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {deck, fullVersion, hideActions, style} = this.props
         const {
             id, keyforgeId, name, wishlistCount, funnyCount,
-            forSale, forTrade, forAuction, chains, registered
+            forSale, forTrade, forAuction, registered
         } = deck
         const userDeck = userDeckStore.userDeckByDeckId(id)
         let userDeckForSale = false
@@ -55,11 +63,20 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             userDeckForAuction = userDeck.forAuction
         }
         const compact = screenStore.screenSizeXs()
+
+        let width
+        if (compact) {
+            width = 328
+        } else if (keyLocalStorage.displayOldDeckView) {
+            width = 544
+        } else {
+            width = 652
+        }
         return (
             <KeyCard
                 style={{
+                    width,
                     margin: spacing(2),
-                    width: compact ? 328 : 544,
                     ...style
                 }}
                 topContents={<DeckViewTopContents deck={deck} compact={compact}/>}
@@ -69,75 +86,163 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     paddingBottom: spacing(1)
                 }}
             >
-                <CardContent style={{paddingBottom: 0}}>
-                    <div style={{display: "flex", alignItems: "center"}}>
-                        {registered ? null : (
-                            <Tooltip title={"Unregistered Deck"}>
-                                <div>
-                                    <UnregisteredDeckIcon style={{marginRight: spacing(1), marginTop: 3}}/>
+                <div style={{display: "flex"}}>
+                    <div style={{flexGrow: 1}}>
+                        <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                {registered ? null : (
+                                    <Tooltip title={"Unregistered Deck"}>
+                                        <div>
+                                            <UnregisteredDeckIcon style={{marginRight: spacing(1), marginTop: 3}}/>
+                                        </div>
+                                    </Tooltip>
+                                )}
+                                <div style={{flexGrow: 1}}>
+                                    <KeyLink
+                                        to={Routes.deckPage(keyforgeId)}
+                                        disabled={fullVersion}
+                                        noStyle={true}
+                                    >
+                                        <Typography variant={"h5"}>{name}</Typography>
+                                    </KeyLink>
                                 </div>
-                            </Tooltip>
+                                {forSale || userDeckForSale ? (
+                                    <Tooltip title={"For sale"}>
+                                        <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
+                                    </Tooltip>
+                                ) : null}
+                                {forTrade || userDeckForTrade ? (
+                                    <Tooltip title={"For trade"}>
+                                        <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                                    </Tooltip>
+                                ) : null}
+                                {forAuction || userDeckForAuction ? (
+                                    <Tooltip title={"On auction"}>
+                                        <div style={{marginLeft: spacing(1)}}><AuctionDeckIcon/></div>
+                                    </Tooltip>
+                                ) : null}
+                                {keyLocalStorage.displayOldDeckView && !compact ? (
+                                    <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
+                                        <ExpandLess fontSize={"small"}/>
+                                    </IconButton>
+                                ) : null}
+                            </div>
+                            <DisplayAllCardsByHouse deck={this.props.deck}/>
+                        </CardContent>
+                        {hideActions ? null : (
+                            <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
+                                {fullVersion && deck.registered ? (
+                                    <KeyButton
+                                        href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
+                                        color={"primary"}
+                                    >
+                                        Master Vault
+                                    </KeyButton>
+                                ) : null}
+                                {!fullVersion ? (
+                                    <KeyLink
+                                        to={Routes.deckPage(keyforgeId)}
+                                        noStyle={true}
+                                    >
+                                        <KeyButton color={"primary"}>View Deck</KeyButton>
+                                    </KeyLink>
+                                ) : null}
+                                <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
+                                <MyDecksButton deck={deck}/>
+                                <div style={{flexGrow: 1}}/>
+                                <div style={{marginRight: spacing(1)}}>
+                                    <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
+                                </div>
+                                <div style={{marginRight: spacing(1)}}>
+                                    <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
+                                </div>
+                            </CardActions>
                         )}
-                        <div style={{flexGrow: 1}}>
-                            <KeyLink
-                                to={Routes.deckPage(keyforgeId)}
-                                disabled={fullVersion}
-                                noStyle={true}
-                            >
-                                <Typography variant={"h5"}>{name}</Typography>
-                            </KeyLink>
-                        </div>
-                        <ChainsView chains={chains} style={{marginLeft: spacing(1)}}/>
-                        {forSale || userDeckForSale ? (
-                            <Tooltip title={"For sale"}>
-                                <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
-                            </Tooltip>
-                        ) : null}
-                        {forTrade || userDeckForTrade ? (
-                            <Tooltip title={"For trade"}>
-                                <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
-                            </Tooltip>
-                        ) : null}
-                        {forAuction || userDeckForAuction ? (
-                            <Tooltip title={"On auction"}>
-                                <div style={{marginLeft: spacing(1)}}><AuctionDeckIcon/></div>
-                            </Tooltip>
-                        ) : null}
                     </div>
-                    <DisplayAllCardsByHouse deck={this.props.deck}/>
-                </CardContent>
-                {hideActions ? null : (
-                    <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                        {fullVersion && deck.registered ? (
-                            <KeyButton
-                                href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
-                                color={"primary"}
-                            >
-                                Master Vault
-                            </KeyButton>
-                        ) : null}
-                        {!fullVersion ? (
-                            <KeyLink
-                                to={Routes.deckPage(keyforgeId)}
-                                noStyle={true}
-                            >
-                                <KeyButton color={"primary"}>View Deck</KeyButton>
-                            </KeyLink>
-                        ) : null}
-                        <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
-                        <MyDecksButton deck={deck}/>
-                        <div style={{flexGrow: 1}}/>
-                        <div style={{marginRight: spacing(1)}}>
-                            <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
-                        </div>
-                        <div style={{marginRight: spacing(1)}}>
-                            <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
-                        </div>
-                    </CardActions>
-                )}
+                    {keyLocalStorage.displayOldDeckView || compact ? null : (
+                        <SideBarInfo deck={deck}/>
+                    )}
+                </div>
             </KeyCard>
         )
     }
+}
+
+const SideBarInfo = (props: { deck: Deck }) => {
+    const {deck} = props
+    const aercInfos = [
+        {
+            icon: <Typography variant={"h5"} color={"primary"}>A</Typography>,
+            info: deck.amberControl,
+            tooltip: "Aember Control"
+        },
+        {
+            icon: <Typography variant={"h5"} color={"primary"}>E</Typography>,
+            info: deck.expectedAmber,
+            tooltip: "Expected Aember"
+        },
+        {
+            icon: <Typography variant={"h5"} color={"primary"}>R</Typography>,
+            info: deck.artifactControl,
+            tooltip: "Artifact Control"
+        },
+        {
+            icon: <Typography variant={"h5"} color={"primary"}>C</Typography>,
+            info: deck.creatureControl,
+            tooltip: "Creature Control"
+        },
+        {
+            icon: <Typography variant={"h5"} color={"primary"}>D</Typography>,
+            info: deck.deckManipulation,
+            tooltip: "Deck Manipulation Control"
+        },
+        {
+            icon: <Typography variant={"h5"} color={"primary"}>P</Typography>,
+            info: deck.effectivePower / 10,
+            tooltip: "Effective Creature Power (divided by 10)"
+        }
+    ]
+    const extraInfos = [
+        {
+            icon: <AmberIcon/>,
+            info: deck.rawAmber,
+            tooltip: "Bonus Aember"
+        },
+        {
+            icon: <KeyCheatIcon/>,
+            info: deck.keyCheatCount,
+            tooltip: "Key Cheat Cards"
+        },
+        {
+            icon: <DrawIcon/>,
+            info: deck.cardDrawCount,
+            tooltip: "Extra Draw Cards"
+        },
+        {
+            icon: <ArchiveIcon/>,
+            info: deck.cardArchiveCount,
+            tooltip: "Archive Cards"
+        }
+    ]
+
+    return (
+        <div style={{padding: spacing(2), paddingTop: 0, paddingBottom: 0, backgroundColor: "#DFDFDF"}}>
+            <div style={{display: "flex", justifyContent: "center"}}>
+                <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
+                    <ExpandMore fontSize={"small"}/>
+                </IconButton>
+            </div>
+            <InfoIconList values={aercInfos}/>
+            <Divider/>
+            <Tooltip title={"Total AERC Score (rounded)"}>
+                <div style={{display: "flex", alignItems: "flex-end", marginBottom: spacing(2)}}>
+                    <Typography variant={"h5"} style={{marginRight: spacing(1)}}>{Math.round(deck.aercScore)}</Typography>
+                    <p style={{fontFamily: TextConfig.TITLE, fontSize: 16, margin: 0, marginBottom: 4}}>AERC</p>
+                </div>
+            </Tooltip>
+            <InfoIconList values={extraInfos}/>
+        </div>
+    )
 }
 
 const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
@@ -167,10 +272,14 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                 paddingRight: spacing(2),
             }}>
                 <div style={{flexGrow: 1}}>
-                    <HouseBanner houses={houses}/>
-                    <div style={{display: "flex", justifyContent: "center"}}>
-                        <AercScoreView hasAerc={deck} style={{marginTop: spacing(1)}} includeTotal={true}/>
-                    </div>
+                    <HouseBanner houses={houses} size={keyLocalStorage.displayOldDeckView ? 64 : 72}/>
+                    {keyLocalStorage.displayOldDeckView ? (
+                        <div style={{display: "flex", justifyContent: "center"}}>
+                            <AercScoreView hasAerc={deck} style={{marginTop: spacing(1)}} includeTotal={true}/>
+                        </div>
+                    ) : (
+                        <OrganizedPlayStats deck={deck}/>
+                    )}
                 </div>
                 <DeckScoreView deck={deck} style={compact ? {alignItems: "flex-end"} : undefined}/>
             </div>
@@ -198,16 +307,29 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     return (
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
             {cardsByHouse.map((cardsForHouse) => (
-                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse}/>
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true}/>
             ))}
         </div>
     )
 }
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[], disableTextSelection?: boolean }) => (
+const DisplayCardsInHouse = (props: { house: House, cards: KCard[], disableTextSelection?: boolean, compact?: boolean }) => (
     <List>
         {houseValues.get(props.house)!.title}
         <Divider style={{marginTop: 4}}/>
-        {props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))}
+        {props.compact ?
+            (
+                <div style={{display: "flex"}}>
+                    <div>
+                        {props.cards.slice(0, 6).map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))}
+                    </div>
+                    <div>
+                        {props.cards.slice(6).map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))}
+                    </div>
+                </div>
+            )
+            :
+            props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))
+        }
     </List>
 )

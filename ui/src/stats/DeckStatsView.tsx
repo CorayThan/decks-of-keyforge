@@ -47,7 +47,16 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                     <KeyPieGlobalAverages stats={stats}/>
                 </div>
 
-                <div style={{maxWidth: 616, maxHeight: 400, display: "flex", alignItems: "flex-end", margin: spacing(2)}}>
+                <div
+                    style={{
+                        maxWidth: 616,
+                        maxHeight: 392,
+                        display: "flex",
+                        alignItems: "flex-end",
+                        margin: spacing(2),
+                        marginTop: spacing(1)
+                    }}
+                >
                     <KeyBar
                         data={[
                             {x: "A", y: amberControl},
@@ -86,7 +95,6 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
 
     constructor(props: DeckStatsViewProps) {
         super(props)
-        keyLocalStorage.loadDisplayExtraDeckStats()
     }
 
     render() {

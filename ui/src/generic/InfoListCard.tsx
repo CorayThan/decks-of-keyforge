@@ -2,7 +2,10 @@ import { Divider, Paper, Typography } from "@material-ui/core"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
-export const InfoListCard = (props: { title?: string, titleVariant?: "h4" | "h5", subtitle?: string, infos: React.ReactNode[], noDivider?: boolean, style?: React.CSSProperties }) => (
+export const InfoListCard = (props: {
+    title?: string, titleVariant?: "h4" | "h5", subtitle?: string, infos: React.ReactNode[], noDivider?: boolean, style?: React.CSSProperties
+}) => (
+
     <Paper style={{padding: spacing(4), paddingBottom: spacing(3), ...props.style}}>
         {props.title ? (
             <>

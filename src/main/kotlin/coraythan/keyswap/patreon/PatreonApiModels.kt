@@ -11,7 +11,20 @@ data class PatreonUserData(
 )
 
 data class PatreonCampaigns(
-        val data: List<PatreonCampaignMember>
+        val data: List<PatreonCampaignMember>,
+        val meta: PatreonCampaignsMeta
+)
+
+data class PatreonCampaignsMeta(
+        val pagination: PatreonPagination
+)
+
+data class PatreonPagination(
+        val cursors: PatreonNext?
+)
+
+data class PatreonNext(
+        val next: String
 )
 
 data class PatreonCampaignMember(

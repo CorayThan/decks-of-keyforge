@@ -38,6 +38,11 @@ export interface Deck {
     artifactCount: number
     upgradeCount: number
 
+    cardDrawCount: number
+    cardArchiveCount: number
+    keyCheatCount: number
+    totalArmor: number
+
     expectedAmber: number
     amberControl: number
     creatureControl: number

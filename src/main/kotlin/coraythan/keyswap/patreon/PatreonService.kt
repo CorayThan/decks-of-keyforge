@@ -124,10 +124,12 @@ class PatreonService(
         return saveCreatorAccount(newAccount)
     }
 
-    fun refreshCampaignInfo(token: String) {
+    fun refreshCampaignInfo(token: String, nextPage: String? = null) {
+
+        val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
         val patreonCampaignResponse = restTemplate.exchange(
-                "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user",
+                "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user$paging",
                 HttpMethod.GET,
                 HttpEntity<Unit>(HttpHeaders().apply {
                     setBearerAuth(token)
@@ -159,6 +161,10 @@ class PatreonService(
                 log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier.")
                 userRepo.save(user.copy(patreonTier = bestTier))
             }
+        }
+        if (patreonCampaign.meta.pagination.cursors != null) {
+            log.info("Next page of patreon campaign members.")
+            this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
         }
     }
 }

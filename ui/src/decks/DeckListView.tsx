@@ -1,8 +1,10 @@
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@material-ui/core"
+import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@material-ui/core"
+import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
@@ -126,12 +128,25 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             <DeckHeader title={"C"} property={"creatureControl"}/>
                             <DeckHeader title={"D"} property={"deckManipulation"}/>
                             <DeckHeader title={"P"} property={"effectivePower"}/>
-                            <DeckHeader title={"Creature Power"} property={"totalPower"}/>
-                            <DeckHeader title={"Power"} property={"powerLevel"}/>
-                            <DeckHeader title={"Chains"} property={"chains"}/>
-                            <DeckHeader title={"Wins"} property={"wins"}/>
-                            <DeckHeader title={"Losses"} property={"losses"}/>
-                            <TableCell/>
+                            {keyLocalStorage.smallTableView ? null : (
+                                <>
+                                    <DeckHeader title={"Bonus Aember"} property={"rawAmber"}/>
+                                    <DeckHeader title={"Key Cheats"} property={"keyCheatCount"}/>
+                                    <DeckHeader title={"Draw Cards"} property={"cardDrawCount"}/>
+                                    <DeckHeader title={"Archive Cards"} property={"archiveCardCount"}/>
+                                    <DeckHeader title={"Creature Power"} property={"totalPower"}/>
+                                    <DeckHeader title={"Total Armor"} property={"totalArmor"}/>
+                                    <DeckHeader title={"Power"} property={"powerLevel"}/>
+                                    <DeckHeader title={"Chains"} property={"chains"}/>
+                                    <DeckHeader title={"Wins"} property={"wins"}/>
+                                    <DeckHeader title={"Losses"} property={"losses"}/>
+                                </>
+                            )}
+                            <TableCell>
+                                <IconButton onClick={keyLocalStorage.toggleSmallTableView}>
+                                    {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
+                                </IconButton>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -165,11 +180,20 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <TableCell>{deck.creatureControl}</TableCell>
                                 <TableCell>{deck.deckManipulation}</TableCell>
                                 <TableCell>{deck.effectivePower}</TableCell>
-                                <TableCell>{deck.totalPower}</TableCell>
-                                <TableCell>{deck.powerLevel}</TableCell>
-                                <TableCell>{deck.chains}</TableCell>
-                                <TableCell>{deck.wins}</TableCell>
-                                <TableCell>{deck.losses}</TableCell>
+                                {keyLocalStorage.smallTableView ? null : (
+                                    <>
+                                        <TableCell>{deck.rawAmber}</TableCell>
+                                        <TableCell>{deck.keyCheatCount}</TableCell>
+                                        <TableCell>{deck.cardDrawCount}</TableCell>
+                                        <TableCell>{deck.cardArchiveCount}</TableCell>
+                                        <TableCell>{deck.totalPower}</TableCell>
+                                        <TableCell>{deck.totalArmor}</TableCell>
+                                        <TableCell>{deck.powerLevel}</TableCell>
+                                        <TableCell>{deck.chains}</TableCell>
+                                        <TableCell>{deck.wins}</TableCell>
+                                        <TableCell>{deck.losses}</TableCell>
+                                    </>
+                                )}
                                 <TableCell>
                                     <KeyLink
                                         to={Routes.deckPage(deck.keyforgeId)}

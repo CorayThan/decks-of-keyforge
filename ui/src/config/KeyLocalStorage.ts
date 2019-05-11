@@ -15,6 +15,12 @@ class KeyLocalStorage {
     @observable
     displayExtraDeckStats = false
 
+    @observable
+    displayOldDeckView = false
+
+    @observable
+    smallTableView = false
+
     private localStorage = window.localStorage
 
     constructor() {
@@ -22,6 +28,9 @@ class KeyLocalStorage {
         this.showTableView = Boolean(value)
         this.showFullCardView = Boolean(this.showFullCardViewFromStorage())
         this.deckPageSizeFromStorage()
+        this.loadDisplayExtraDeckStats()
+        this.loadDisplayOldDeckView()
+        this.loadSmallTableView()
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)
@@ -67,6 +76,24 @@ class KeyLocalStorage {
         this.displayExtraDeckStats = this.localStorage.getItem(Keys.DISPLAY_EXTRA_DECK_STATS) === "true"
     }
 
+    toggleDisplayOldDeckView = () => {
+        this.displayOldDeckView = !this.displayOldDeckView
+        this.localStorage.setItem(Keys.DISPLAY_OLD_DECK_VIEW, this.displayOldDeckView.toString())
+    }
+
+    loadDisplayOldDeckView = () => {
+        this.displayOldDeckView = this.localStorage.getItem(Keys.DISPLAY_OLD_DECK_VIEW) === "true"
+    }
+
+    toggleSmallTableView = () => {
+        this.smallTableView = !this.smallTableView
+        this.localStorage.setItem(Keys.DISPLAY_OLD_DECK_VIEW, this.smallTableView.toString())
+    }
+
+    loadSmallTableView = () => {
+        this.smallTableView = this.localStorage.getItem(Keys.SMALL_TABLE_VIEW) === "true"
+    }
+
     setDeckPageSize = (size: number) => {
         if (size < 1) {
             return
@@ -96,6 +123,8 @@ enum Keys {
     FULL_CARD_VIEW = "FULL_CARD_VIEW",
     DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
+    DISPLAY_OLD_DECK_VIEW = "DISPLAY_OLD_DECK_VIEW",
+    SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
 }
 
 export const keyLocalStorage = new KeyLocalStorage()

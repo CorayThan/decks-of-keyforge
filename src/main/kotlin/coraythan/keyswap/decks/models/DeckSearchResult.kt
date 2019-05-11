@@ -35,6 +35,11 @@ data class DeckSearchResult(
         val antisynergyRating: Int = 0,
 
         val totalPower: Int = 0,
+        val cardDrawCount: Int? = null,
+        val cardArchiveCount: Int? = null,
+        val keyCheatCount: Int? = null,
+        val rawAmber: Int = 0,
+        val totalArmor: Int = 0,
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,

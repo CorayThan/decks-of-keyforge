@@ -35,8 +35,6 @@ class AuctionService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    var updateAuctionsMissingData = true
-
     @Scheduled(cron = "0 */15 * * * *")
     @SchedulerLock(name = "completeAuctions", lockAtMostForString = fourteenMin, lockAtLeastForString = fourteenMin)
     fun completeAuctions() {
@@ -59,18 +57,6 @@ class AuctionService(
         }
 
         log.info("$scheduledStop complete auctions.")
-
-        if (updateAuctionsMissingData) {
-            auctionRepo.findAll().forEach {
-                if (it.status == AuctionStatus.ACTIVE) {
-                    deckRepo.save(it.deck.copy(auctionEnd = it.endDateTime))
-                } else if (it.status == AuctionStatus.COMPLETE) {
-                    deckRepo.save(it.deck.copy(auctionEndedOn = it.boughtNowOn ?: it.endDateTime))
-                }
-            }
-        }
-
-        updateAuctionsMissingData = false
     }
 
     fun list(listingInfo: ListingInfo) {

@@ -33,7 +33,7 @@ export class ScreenStore {
 
     private onResize = () => {
         this.screenWidth = window.innerWidth
-        if (this.screenWidth < 600) {
+        if (this.screenWidth < 704) {
             this.screenSize = ScreenSize.xs
         } else if (this.screenWidth < 960) {
             this.screenSize = ScreenSize.sm

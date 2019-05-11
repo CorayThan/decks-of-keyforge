@@ -36,7 +36,7 @@ class PublicApiService(
             log.info("Request for deck that doesn't exist $keyforgeId")
             return null
         }
-        return deck.toDeckSearchResult(listOf())
+        return deck.toDeckSearchResult(listOf(), null)
     }
 
     fun generateApiKey(): String {

@@ -128,7 +128,7 @@ class DeckService(
                 .fetch()
 
         val decks = deckResults.map {
-            val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds))
+            val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds), cardService.cardsForDeck(it))
             if (filters.forSale || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(
                         searchResult.keyforgeId,
@@ -286,7 +286,7 @@ class DeckService(
 
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
-        return deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds))
+        return deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds), cardService.cardsForDeck(deck))
     }
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
@@ -302,7 +302,7 @@ class DeckService(
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
         return DeckWithSynergyInfo(
-                deck = deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds)),
+                deck = deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds), cardService.cardsForDeck(deck)),
                 deckSynergyInfo = synergies,
                 cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1,
                 synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1,
