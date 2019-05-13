@@ -50,10 +50,25 @@ export class AuctionStore {
             })
     }
 
-    findAuctionInfo = (auctionId: string) =>  {
+    findAuctionInfo = (auctionId: string) => {
         axios.get(`${AuctionStore.CONTEXT}/${auctionId}`)
             .then((response: AxiosResponse<AuctionDto>) => {
                 this.auctionInfo = response.data
+            })
+    }
+
+    cancel = (deckId: number) => {
+        axios.post(`${AuctionStore.SECURE_CONTEXT}/cancel/${deckId}`)
+            .then((response: AxiosResponse<boolean>) => {
+                if (response.data) {
+                    messageStore.setSuccessMessage(`Canceled your auction.`)
+                } else {
+                    messageStore.setWarningMessage("Couldn't cancel your auction as it has been bid on.")
+                }
+
+                userStore.loadLoggedInUser()
+                userDeckStore.findAllForUser()
+                userDeckStore.refreshDeckInfo()
             })
     }
 

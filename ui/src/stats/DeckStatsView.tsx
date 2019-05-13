@@ -54,7 +54,8 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                         display: "flex",
                         alignItems: "flex-end",
                         margin: spacing(2),
-                        marginTop: spacing(1)
+                        marginTop: 0,
+                        marginBottom: 0
                     }}
                 >
                     <KeyBar

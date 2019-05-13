@@ -116,18 +116,20 @@ class ColumnHeaders extends React.Component {
 class CellValues extends React.Component<{ combo: SynergyCombo }> {
     render() {
         const combo = this.props.combo
-        const cardLine = <CardAsLine card={{cardTitle: combo.cardName}}/>
         if (screenStore.screenSizeSm()) {
             return (
                 <>
-                    <TableCell>{cardLine}{combo.copies === 1 ? "" : ` x ${combo.copies}`}</TableCell>
+                    <TableCell>
+                        <CardAsLine card={{cardTitle: combo.cardName}}/>
+                        {combo.copies === 1 ? "" : ` x ${combo.copies}`}
+                    </TableCell>
                     <TableCell>{combo.cardRating} / {combo.netSynergy}</TableCell>
                 </>
             )
         } else {
             return (
                 <>
-                    <TableCell>{cardLine}</TableCell>
+                    <TableCell><CardAsLine card={{cardTitle: combo.cardName}}/></TableCell>
                     <TableCell>{combo.copies}</TableCell>
                     <TableCell>
                         <div style={{display: "flex", alignItems: "center"}}>

@@ -220,4 +220,21 @@ class AuctionService(
             }
         }
     }
+
+    fun cancel(deckId: Long): Boolean {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val auctions = auctionRepo.findBySellerIdAndDeckIdAndStatus(user.id, deckId, AuctionStatus.ACTIVE)
+        if (auctions.size > 1) {
+            throw IllegalStateException("Seller shouldn't have more than one active auction for a single deck ${user.username} deckId: ${deckId}")
+        }
+        if (auctions.isEmpty()) return true
+        val auction = auctions[0]
+        if (auction.bids.isNotEmpty()) return false
+        val auctionsForDeck = auction.deck.auctions
+        if (auctionsForDeck.filter { it.status == AuctionStatus.ACTIVE }.size < 2) {
+            deckRepo.save(auction.deck.copy(forAuction = false))
+        }
+        auctionRepo.delete(auction)
+        return true
+    }
 }

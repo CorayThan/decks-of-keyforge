@@ -133,7 +133,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     <DeckHeader title={"Bonus Aember"} property={"rawAmber"}/>
                                     <DeckHeader title={"Key Cheats"} property={"keyCheatCount"}/>
                                     <DeckHeader title={"Draw Cards"} property={"cardDrawCount"}/>
-                                    <DeckHeader title={"Archive Cards"} property={"archiveCardCount"}/>
+                                    <DeckHeader title={"Archive Cards"} property={"cardArchiveCount"}/>
                                     <DeckHeader title={"Creature Power"} property={"totalPower"}/>
                                     <DeckHeader title={"Total Armor"} property={"totalArmor"}/>
                                     <DeckHeader title={"Power"} property={"powerLevel"}/>

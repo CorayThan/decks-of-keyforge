@@ -76,7 +76,7 @@ data class Deck(
         val houses: List<House> = listOf(),
 
         @JsonIgnoreProperties("deck")
-        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
         val auctions: List<Auction> = listOf(),
 
         /**

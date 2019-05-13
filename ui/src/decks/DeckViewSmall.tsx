@@ -123,7 +123,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 ) : null}
                                 {keyLocalStorage.displayOldDeckView && !compact ? (
                                     <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
-                                        <ExpandLess fontSize={"small"}/>
+                                        <ExpandMore fontSize={"small"}/>
                                     </IconButton>
                                 ) : null}
                             </div>
@@ -229,7 +229,7 @@ const SideBarInfo = (props: { deck: Deck }) => {
         <div style={{padding: spacing(2), paddingTop: 0, paddingBottom: 0, backgroundColor: "#DFDFDF"}}>
             <div style={{display: "flex", justifyContent: "center"}}>
                 <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
-                    <ExpandMore fontSize={"small"}/>
+                    <ExpandLess fontSize={"small"}/>
                 </IconButton>
             </div>
             <InfoIconList values={aercInfos}/>
@@ -320,11 +320,11 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], disableTextS
         {props.compact ?
             (
                 <div style={{display: "flex"}}>
-                    <div>
-                        {props.cards.slice(0, 6).map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))}
+                    <div style={{marginRight: spacing(1)}}>
+                        {props.cards.slice(0, 6).map((card, idx) => (<CardAsLine key={idx} card={card} width={144} marginTop={4}/>))}
                     </div>
                     <div>
-                        {props.cards.slice(6).map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))}
+                        {props.cards.slice(6).map((card, idx) => (<CardAsLine key={idx} card={card} width={144} marginTop={4}/>))}
                     </div>
                 </div>
             )

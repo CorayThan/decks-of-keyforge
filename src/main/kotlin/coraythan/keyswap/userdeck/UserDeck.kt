@@ -65,7 +65,7 @@ data class UserDeck(
     val expiresAtLocalDate: LocalDate?
         get() = this.expiresAt?.toLocalDate()
 
-    fun toDto(forAuction: Boolean = false) = UserDeckDto(
+    fun toDto(forAuction: Boolean = false, hasBids: Boolean = false) = UserDeckDto(
             wishlist = wishlist,
             funny = funny,
             ownedBy = ownedBy,
@@ -73,6 +73,7 @@ data class UserDeck(
             forSale = forSale,
             forTrade = forTrade,
             forAuction = forAuction,
+            hasBids = hasBids,
             forSaleInCountry = forSaleInCountry,
             language = language,
             askingPrice = askingPrice,
@@ -109,6 +110,7 @@ data class UserDeckDto(
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
         val forAuction: Boolean = false,
+        val hasBids: Boolean = false,
 
         val forSaleInCountry: Country? = null,
         val language: DeckLanguage? = DeckLanguage.ENGLISH,

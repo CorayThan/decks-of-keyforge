@@ -62,6 +62,8 @@ export interface UserDeckDto {
 
     // On DTO version only
     forAuction: boolean
+    // On DTO version only
+    hasBids: boolean
 
     currencySymbol: string
     forSaleInCountry?: string,

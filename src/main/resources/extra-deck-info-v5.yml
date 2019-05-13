@@ -3460,7 +3460,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  traits: []
+  traits: [forgesKeys]
   synergies: []
 
 - name: Lights Out

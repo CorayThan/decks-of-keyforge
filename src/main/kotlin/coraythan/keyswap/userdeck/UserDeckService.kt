@@ -210,7 +210,10 @@ class UserDeckService(
 
     fun findAllForUser(): List<UserDeckDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        val activeAuctionDeckIds = auctionRepo.findAllBySellerIdAndStatus(currentUser.id, AuctionStatus.ACTIVE).map { it.deck.id }.toSet()
-        return userDeckRepo.findByUserId(currentUser.id).map { it.toDto(activeAuctionDeckIds.contains(it.deck.id)) }
+        val auctions = auctionRepo.findAllBySellerIdAndStatus(currentUser.id, AuctionStatus.ACTIVE)
+        val activeAuctionDeckIds = auctions.map { it.deck.id to it }.toMap()
+        return userDeckRepo.findByUserId(currentUser.id).map {
+            it.toDto(activeAuctionDeckIds.contains(it.deck.id), activeAuctionDeckIds[it.deck.id]?.bids?.isNotEmpty() ?: false)
+        }
     }
 }

@@ -81,6 +81,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.externalLink = ""
         this.bidIncrement = "5"
         this.update = false
+
+        if (!userStore.canListMoreAuctions && userStore.auctionsListed > 0) {
+            // Check if their auctions have expired.
+            userStore.loadLoggedInUser()
+        }
     }
 
     handleOpenForEdit = () => {
@@ -206,7 +211,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         const deck = this.props.deck
         const userDeck = userDeckStore.userDeckByDeckId(deck.id)
         let saleButton
-        if (userDeck && (userDeck.forSale || userDeck.forTrade || userDeck.forAuction)) {
+        if (userDeck && userDeck.forAuction && !userDeck.hasBids) {
+            saleButton = (
+                <KeyButton
+                    color={"primary"}
+                    onClick={() => auctionStore.cancel(deck.id)}
+                    style={{marginRight: spacing(1)}}
+                >
+                    Cancel Auction
+                </KeyButton>
+            )
+        } else if (userDeck && (userDeck.forSale || userDeck.forTrade || userDeck.forAuction)) {
             saleButton = (
                 <>
                     {userDeck.forAuction ? null : (
@@ -242,8 +257,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         const forSaleInCountry = userStore.country
         const forSaleOrAuction = this.forSale || this.auction
 
-        const auctionAllowed = userStore.auctionsAllowed == null || userStore.auctionsAllowed > userStore.auctionsListed
-
         const marginTopRight: React.CSSProperties = {
             marginTop: spacing(2), marginRight: spacing(2)
         }
@@ -277,10 +290,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         )}
                         {this.auction ? (
                             <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
-                                Auctions cannot be cancelled or modified after they are created.
+                                Auctions cannot be cancelled or modified after a bid has been placed.
                             </Typography>
                         ) : null}
-                        {!this.auction || auctionAllowed ? null : (
+                        {!this.auction || userStore.canListMoreAuctions ? null : (
                             <div style={{marginBottom: spacing(2)}}>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
                                     Upgrade your patron level to list more auctions. You can have {userStore.auctionsAllowed} simultaneous auctions.
@@ -487,7 +500,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry || (this.auction && !auctionAllowed)}>
+                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}>
                             {this.update ? "Update Listing" : "List"}
                         </KeyButton>
                     </DialogActions>

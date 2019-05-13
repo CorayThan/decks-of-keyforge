@@ -230,7 +230,14 @@ export class UserStore {
     }
 
     @computed
-    get featuredSeller(): boolean {
+    get canListMoreAuctions(): boolean {
+        return this.auctionsAllowed == null || this.auctionsAllowed > this.auctionsListed
+    }
+
+    @computed
+    get featuredSeller()
+        :
+        boolean {
         if (this.user) {
             return findPatronRewardLevel(this.user.patreonTier) > 1
         }

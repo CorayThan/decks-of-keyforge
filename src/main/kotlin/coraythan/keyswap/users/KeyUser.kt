@@ -51,7 +51,7 @@ data class KeyUser(
         val forSaleQueries: List<ForSaleQueryEntity> = listOf(),
 
         @JsonIgnoreProperties("boughtWithBuyItNow")
-        @OneToMany(mappedBy = "boughtWithBuyItNow", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "boughtWithBuyItNow", fetch = FetchType.LAZY)
         val buyItNows: List<Auction> = listOf(),
 
         val lastVersionSeen: String?,
@@ -71,7 +71,7 @@ data class KeyUser(
         val storeName: String? = null,
 
         @JsonIgnoreProperties("seller")
-        @OneToMany(mappedBy = "seller", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
         val auctions: List<Auction> = listOf()
 
 ) {
