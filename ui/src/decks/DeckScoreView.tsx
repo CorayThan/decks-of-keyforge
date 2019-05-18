@@ -28,7 +28,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     let previousRatingView = null
     if (previousSasRating != null && previousSasRating !== sasRating) {
         previousRatingView = (
-            <Tooltip title={`Previous SAS rating ${previousSasRating}`}>
+            <Tooltip title={`SAS v3 rating: ${previousSasRating}`}>
                 <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
             </Tooltip>
         )
