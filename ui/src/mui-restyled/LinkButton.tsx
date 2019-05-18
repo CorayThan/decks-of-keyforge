@@ -3,8 +3,9 @@ import { ButtonProps } from "@material-ui/core/Button"
 import * as React from "react"
 import { Link, LinkProps } from "react-router-dom"
 
-export const LinkButton = (props: ButtonProps & LinkProps) => {
-    // @ts-ignore: no-implicit-any
-    const Linky = linkyProps => <Link {...linkyProps} />
-    return <Button component={Linky} {...props} />
+export class LinkButton extends React.Component<ButtonProps & LinkProps> {
+    render() {
+        // tslint:disable-next-line:no-any
+        return <Button component={Link as any} {...this.props}/>
+    }
 }

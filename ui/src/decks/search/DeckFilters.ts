@@ -55,6 +55,9 @@ export class DeckFilters {
         if (queryObject.forSale) {
             queryObject.forSale = Boolean(queryObject.forSale)
         }
+        if (queryObject.notForSale) {
+            queryObject.notForSale = Boolean(queryObject.notForSale)
+        }
         if (queryObject.forTrade) {
             queryObject.forTrade = Boolean(queryObject.forTrade)
         }
@@ -86,6 +89,8 @@ export class DeckFilters {
     @observable
     forSale = false
     @observable
+    notForSale = false
+    @observable
     forTrade = false
     @observable
     forAuction = false
@@ -113,6 +118,7 @@ export class DeckFilters {
         log.debug("Reseting deck filters.")
         this.title = ""
         this.forSale = false
+        this.notForSale = false
         this.forTrade = false
         this.forAuction = false
         this.completedAuctions = false

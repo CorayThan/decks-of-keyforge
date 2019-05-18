@@ -156,7 +156,8 @@ export class SasAndAerc extends React.Component {
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Artifact Control (R)</Typography>,
                         "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
-                        "1 point is approximately equal to destroying one artifact.",
+                        "Destroying an artifact is worth 1.5 points. Using an enemy artifact (destroying single use artifacts) is 1 point. And delaying " +
+                        "artifacts is 0.5 points.",
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Creature Control (C)</Typography>,
                         "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +

@@ -35,7 +35,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Patron Rewards" to={AboutSubPaths.patreon} value={AboutSubPaths.patreon}/>
                         <LinkTab label="Contact Me" to={AboutSubPaths.contact} value={AboutSubPaths.contact}/>
                         <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
-                        <LinkTab label="Sellers And Devs" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
+                        <LinkTab label="APIs" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
                     </Tabs>
                 </AppBar>
                 <div style={{padding: spacing(4)}}>

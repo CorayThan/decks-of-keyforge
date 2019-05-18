@@ -227,31 +227,37 @@ class DeckService(
                 )
             }
         }
-        if (filters.completedAuctions) {
-            predicate.and(deckQ.completedAuction.isTrue)
-        } else if (filters.forSale || filters.forTrade || filters.forAuction) {
-            predicate.and(BooleanBuilder().andAnyOf(
-                    *listOfNotNull(
-                            if (filters.forSale) deckQ.forSale.isTrue else null,
-                            if (filters.forTrade) deckQ.forTrade.isTrue else null,
-                            if (filters.forAuction) deckQ.forAuction.isTrue else null
-                    ).toTypedArray()
-            ))
-        }
-        if (filters.forSaleInCountry != null) {
-            val preferredCountries = userHolder.user?.preferredCountries
-            if (preferredCountries.isNullOrEmpty()) {
-                predicate.andAnyOf(
-                        deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry),
-                        deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
-                )
-            } else {
-                predicate.andAnyOf(*preferredCountries.flatMap {
-                    listOf(
-                            deckQ.userDecks.any().forSaleInCountry.eq(it),
-                            deckQ.auctions.any().forSaleInCountry.eq(it)
+        if (filters.notForSale) {
+            predicate.and(deckQ.forSale.isFalse)
+            predicate.and(deckQ.forTrade.isFalse)
+            predicate.and(deckQ.forAuction.isFalse)
+        } else {
+            if (filters.completedAuctions) {
+                predicate.and(deckQ.completedAuction.isTrue)
+            } else if (filters.forSale || filters.forTrade || filters.forAuction) {
+                predicate.and(BooleanBuilder().andAnyOf(
+                        *listOfNotNull(
+                                if (filters.forSale) deckQ.forSale.isTrue else null,
+                                if (filters.forTrade) deckQ.forTrade.isTrue else null,
+                                if (filters.forAuction) deckQ.forAuction.isTrue else null
+                        ).toTypedArray()
+                ))
+            }
+            if (filters.forSaleInCountry != null) {
+                val preferredCountries = userHolder.user?.preferredCountries
+                if (preferredCountries.isNullOrEmpty()) {
+                    predicate.andAnyOf(
+                            deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry),
+                            deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
                     )
-                }.toTypedArray())
+                } else {
+                    predicate.andAnyOf(*preferredCountries.flatMap {
+                        listOf(
+                                deckQ.userDecks.any().forSaleInCountry.eq(it),
+                                deckQ.auctions.any().forSaleInCountry.eq(it)
+                        )
+                    }.toTypedArray())
+                }
             }
         }
         if (filters.constraints.isNotEmpty()) {

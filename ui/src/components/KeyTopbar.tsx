@@ -13,6 +13,7 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
+import { LinkMenu } from "../generic/LinkMenu"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -191,14 +192,17 @@ const AppLinks = () => (
         >
             Articles
         </LinkButton>
-        <LinkButton
+        <LinkMenu
+            genericOnClick={rightMenuStore.close}
+            links={[
+                {to: AboutSubPaths.sas, text: "About"},
+                {to: AboutSubPaths.sas, text: "SAS and AERC"},
+                {to: AboutSubPaths.contact, text: "Contact Me"},
+                {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
+                {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
+            ]}
             style={{margin: spacing(1)}}
-            color={"inherit"}
-            to={AboutSubPaths.sas}
-            onClick={rightMenuStore.close}
-        >
-            About
-        </LinkButton>
+        />
     </>
 )
 
@@ -214,14 +218,16 @@ class UserLinks extends React.Component {
         } else if (userStore.loggedIn()) {
             return (
                 <>
-                    <LinkButton
-                        color={"inherit"}
-                        to={Routes.usersDecks()}
+                    <LinkMenu
+                        genericOnClick={rightMenuStore.close}
+                        links={[
+                            {to: Routes.usersDecks(), text: "My Decks"},
+                            {to: Routes.usersFavorites(), text: "My Favorites"},
+                            {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
+                            {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+                        ]}
                         style={{margin: spacing(1)}}
-                        onClick={rightMenuStore.close}
-                    >
-                        My Decks
-                    </LinkButton>
+                    />
                     <LinkButton
                         color={"inherit"}
                         to={Routes.myProfile}

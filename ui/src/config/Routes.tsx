@@ -45,6 +45,8 @@ class Routes {
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
     static usersDecks = () => `/decks?owner=${userStore.username}&includeUnregistered=true`
+    static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&includeUnregistered=true&notForSale=true`
+    static usersFavorites = () => `/decks?myFavorites=true&includeUnregistered=true`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
 
     /**

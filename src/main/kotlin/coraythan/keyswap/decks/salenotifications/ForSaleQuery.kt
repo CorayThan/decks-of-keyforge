@@ -53,6 +53,8 @@ data class ForSaleQuery(
         val id: UUID? = null
 
 ) : DeckQuery {
+        override val notForSale: Boolean
+                get() = false
         override val myFavorites: Boolean
                 get() = false
         override val completedAuctions: Boolean

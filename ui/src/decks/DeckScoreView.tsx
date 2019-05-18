@@ -1,11 +1,13 @@
 import { Typography } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
+import HistoryIcon from "@material-ui/icons/History"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
 interface DeckScoreViewProps {
     deck: {
         cardsRating: number,
+        previousSasRating?: number,
         sasRating: number,
         synergyRating: number,
         antisynergyRating: number,
@@ -17,10 +19,20 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     const {
         cardsRating,
+        previousSasRating,
         sasRating,
         synergyRating,
         antisynergyRating,
     } = props.deck
+
+    let previousRatingView = null
+    if (previousSasRating != null && previousSasRating !== sasRating) {
+        previousRatingView = (
+            <Tooltip title={`Previous SAS rating ${previousSasRating}`}>
+                <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
+            </Tooltip>
+        )
+    }
 
     return (
         <div style={props.style}>
@@ -28,9 +40,12 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
             <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"}/>
             <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"}/>
             <div style={{borderBottom: "1px solid rgba(255,255,255)"}}/>
-            <Tooltip title={"Synergy and Antisynergy Rating. Read more on the about page."}>
-                <RatingRow value={sasRating} name={"SAS"} large={true}/>
-            </Tooltip>
+            <div style={{display: "flex"}}>
+                <Tooltip title={"Synergy and Antisynergy Rating. Read more on the about page."}>
+                    <RatingRow value={sasRating} name={"SAS"} large={true}/>
+                </Tooltip>
+                {previousRatingView}
+            </div>
         </div>
     )
 }

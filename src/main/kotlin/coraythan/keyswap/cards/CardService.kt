@@ -27,17 +27,19 @@ class CardService(
 
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
-    lateinit var extraInfo: Map<Int, ExtraCardInfo>
+    lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfo>
 
     fun loadExtraInfo() {
         val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
         this.extraInfo = extraInfosFromFile
-                .map {
-                    it.cardNumber to it.copy(
-                            synergies = it.synergies.sorted()
-                    )
+                .flatMap { cardInfo ->
+                    cardInfo.setNumbers.map {
+                        CardNumberSetPair(expansion = it, cardNumber = cardInfo.cardNumber) to cardInfo.copy(
+                                synergies = cardInfo.synergies.sorted()
+                        )
+                    }
                 }
                 .toMap()
     }
@@ -133,14 +135,13 @@ class CardService(
         }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
 
-        val addToExtraInfo = nonMaverickCachedCardsList?.mapNotNull {
-            if (it.traits.contains(CardTrait.Niffle)) {
-            }
-            val synTraitsFromTraits = it.traits.mapNotNull { trait ->
+        val addToExtraInfo = nonMaverickCachedCards?.mapNotNull { entry ->
+            val card = entry.value
+            val synTraitsFromTraits = card.traits.mapNotNull { trait ->
                 trait.synTrait
             }
             if (synTraitsFromTraits.isNotEmpty()) {
-                it.cardNumber to synTraitsFromTraits
+                entry.key to synTraitsFromTraits
             } else {
                 null
             }
@@ -154,7 +155,10 @@ class CardService(
     }
 
 
-    private fun fullCardsFromCards(cards: List<Card>) = cards.map { it.copy(extraCardInfo = this.extraInfo[it.cardNumber]) }
+    private fun fullCardsFromCards(cards: List<Card>) = cards.map {
+        it.copy(extraCardInfo = this.extraInfo[CardNumberSetPair(it.expansion, it.cardNumber)]
+                ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"))
+    }
 
     private fun cardsFromCardIds(cardIdsString: String): List<Card> {
         if (cardIdsString.isBlank()) {

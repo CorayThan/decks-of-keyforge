@@ -29,6 +29,7 @@ data class DeckSearchResult(
         val deckManipulation: Double = 0.0,
         val effectivePower: Int = 0,
         val aercScore: Double = 0.0,
+        val previousSasRating: Int = 0,
         val sasRating: Int = 0,
         val cardsRating: Int = 0,
         val synergyRating: Int = 0,

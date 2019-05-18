@@ -50,6 +50,7 @@ export interface Deck {
     deckManipulation: number
     effectivePower: number
     aercScore: number
+    previousSasRating: number
     sasRating: number
     cardsRating: number
     synergyRating: number

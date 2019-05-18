@@ -99,6 +99,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.selectedSortStore.forAuction = filters.forAuction
         this.selectedSortStore.completedAuctions = false
         filters.completedAuctions = false
+        filters.notForSale = false
 
         if (!this.selectedSortStore.sortIsValid()) {
             log.debug("Sort not defined")
@@ -312,6 +313,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>
                                             to filter decks by country
                                         </Typography>
+                                    </div>
+                                ) : null}
+                                {this.props.filters.notForSale ? (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Typography>Not for sale</Typography>
+                                        <IconButton onClick={() => this.props.filters.notForSale = false}><Delete fontSize={"small"}/></IconButton>
                                     </div>
                                 ) : null}
                             </FormGroup>

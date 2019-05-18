@@ -37,7 +37,7 @@ private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 5
+const val currentDeckRatingVersion = 6
 
 @Transactional
 @Service
@@ -270,6 +270,7 @@ class DeckImporterService(
         val d = extraCardInfos.map { it.deckManipulation }.sum()
         val p = cards.map { it.effectivePower }.sum()
         val powerValue = (p.toDouble() / 5).roundToInt().toDouble() / 2
+        val newSas = cardsRating.roundToInt() + synergy + antisynergy
         return deck.copy(
 
                 creatureCount = cards.filter { it.cardType == CardType.Creature }.size,
@@ -284,7 +285,8 @@ class DeckImporterService(
                 deckManipulation = d,
                 effectivePower = p,
                 aercScore = a + e + r + c + d + powerValue,
-                sasRating = cardsRating.roundToInt() + synergy + antisynergy,
+                previousSasRating = if (newSas != deck.sasRating) deck.sasRating else deck.previousSasRating,
+                sasRating = newSas,
                 cardsRating = cardsRating.roundToInt(),
                 synergyRating = synergy,
                 antisynergyRating = antisynergy.absoluteValue

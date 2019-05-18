@@ -7,6 +7,7 @@ import coraythan.keyswap.synergy.SynTraitValue
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExtraCardInfo(
 
+        val setNumbers: List<Int>,
         val cardNumber: Int,
         val rating: Double = 3.0,
         val expectedAmber: Double = 0.0,

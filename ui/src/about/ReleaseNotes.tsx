@@ -11,13 +11,93 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "3.8"
+export const latestVersion = "4.0"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"4.0"} expanded={true} releaseNotes={[
+                    "Updates to SAS and AERC! Please note the stats will be out of date temporarily. " +
+                    "This will be the last big change before Age of Ascension.",
+                    "The following are the changes to SAS ratings: ",
+                    (
+                        <List>
+                            <ListItem><Typography>Brothers in Battle 2.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Punch 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Banner of Battle 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Pile of Skulls 2 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Bilgum Avalanche 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Bumpsy 2.5 -> 3</Typography></ListItem>
+                            <ListItem><Typography>Ganger Chieftan 2 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Grenade Snib 2 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Lomir Flamefist 3 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Looter Goblin 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Rogue Ogre 2.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Troll 3 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Valdr 1.5 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Phoenix Heart 1 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>A Fair Game 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Control the Weak 3 -> 4</Typography></ListItem>
+                            <ListItem><Typography>Tendrils of Pain 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Mind Barb 2 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Three Fates 3.5 -> 3</Typography></ListItem>
+                            <ListItem><Typography>Key to Dis 3 -> 3.5</Typography></ListItem>
+                            <ListItem><Typography>Ember Imp 2 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Succubus 2 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Master of 2/3 3 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Collar of Subordination 3.5 -> 3</Typography></ListItem>
+                            <ListItem><Typography>Flame-Wreathed 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Effervescent Principle 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Knowledge is Power 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Phase Shift 3 -> 3.5</Typography></ListItem>
+                            <ListItem><Typography>Scrambler Storm 3 -> 3.5</Typography></ListItem>
+                            <ListItem><Typography>Crazy Killing Machine 1.5 -> 1</Typography></ListItem>
+                            <ListItem><Typography>The Howling Pit 1.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Brain Eater 2.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Ganymede Archivist 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Titan Mechanic 2.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Vespilon Theorist 2.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Experimental Therapy 1 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Martians Make Bad Allies 1.5 -> 1</Typography></ListItem>
+                            <ListItem><Typography>Sample Collection 1 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Shatter Storm 1.5 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Feeding Pit 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Invasion Portal 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Ether Spider 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Mindwarper 1.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Phylyx the Disintegrator 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Brain Stem Antenna 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Charge! 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Clear Mind 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Mighty Lance 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Oath of Poverty 1.5 -> 1</Typography></ListItem>
+                            <ListItem><Typography>Shield of Justice 1 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Terms of Redress 1.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>The Harder They Come 1.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Horseman of Famine 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Jehu the Bureaucrat 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Staunch Knight 1 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Gatekeeper 1.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Routine Job 3 -> 3.5</Typography></ListItem>
+                            <ListItem><Typography>Treasure Map 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Noddy the Thief 2.5 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Shadow Self 2.5 -> 3</Typography></ListItem>
+                            <ListItem><Typography>Umbra 1.5 -> 1</Typography></ListItem>
+                            <ListItem><Typography>Duskrunner 1 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Grasping Vines 3 -> 2.5</Typography></ListItem>
+                            <ListItem><Typography>Lifeweb 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Perilous Wild 3 -> 2</Typography></ListItem>
+                            <ListItem><Typography>Giant Sloth 2 -> 1.5</Typography></ListItem>
+                        </List>
+                    ),
+                    "Also, the system for how AERC estimates artifact control has been adjusted. Now hard artifact removal like Sneklifter, or " +
+                    "Neutron Shark provides 1.5 R, artifact use (removing one-use artifacts) like Remote Access or Nexus provides 1 R, and artifact delay " +
+                    "like Barehanded or Grasping Vines provides 0.5 R.",
+                    "You can now view only your decks that are not for sale via the top menu.",
+                    "I've also begun the under-the-hoods preparations for the release of Age of Ascension."
+                ]}/>
                 <ReleaseNote releaseNumber={"3.8"} expanded={true} releaseNotes={[
                     "New deck view with more info! You can use the expand less button to return to the old view.",
                     "Table view now has a ton of new columns. You can see a smaller table view using the top right button.",
@@ -108,31 +188,31 @@ export class ReleaseNotes extends React.Component {
                         </div>
                     )
                 ]}/>
-                <ReleaseNote releaseNumber={"2.7"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.7"} releaseNotes={[
                     "More graphs for the deck page. Click the expansion button to see them!",
                     "Site notifies you of new releases.",
                     "Improved Patreon page."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.6"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.6"} releaseNotes={[
                     "Cards view for deck that shows all the cards.",
                     "Sellers and traders can now update the listing for their decks.",
                     "Added an asking price deck search filter if \"For Sale\" is selected."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.5"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.5"} releaseNotes={[
                     "Page titles now change with the pages.",
                     "Created an API for stores or technically saavy sellers to list and unlist decks.",
                     "Updated the About page. Still as meta as the first time!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.4"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.4"} releaseNotes={[
                     "Improved card search! Faster, and you can search up to 5 different cards.",
                     "Searching decks for sale will display sale info directly in the deck search."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.3"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.3"} releaseNotes={[
                     "You can send an email to sellers and traders if you are logged in and they have not listed an external link for the deck.",
                     "You can now select a country for yourself and filter decks for sale or trade by the country they are listed in. Note that " +
                     "as of this release, no decks have a country selected, but all future decks listed for sale or trade will."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.2"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.2"} releaseNotes={[
                     "Added power level, chains, wins, and losses to decks, and sorting by chains.",
                     "You can now add unregistered decks to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
                     "By default unregistered decks are filtered out of searches.",
@@ -143,12 +223,12 @@ export class ReleaseNotes extends React.Component {
                         <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                     </div>
                 ]}/>
-                <ReleaseNote releaseNumber={"2.1"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.1"} releaseNotes={[
                     "You can now view decks in a table view with column sorting.",
                     "Added password reset.",
                     "Created a Patreon page with some donation options to help support the site!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.0"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.0"} releaseNotes={[
                     "Updated SAS Ratings.",
                     "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
                     "the increased value of how cards work together when often they don't both appear in the same game, or at the wrong time.",

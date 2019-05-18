@@ -71,10 +71,11 @@ data class KeyforgeCard(
         val is_maverick: Boolean,
         val traits: String? = null
 ) {
-    fun toCard(extraInfoMap: Map<Int, ExtraCardInfo>) =
-            Card(id, card_title, house, card_type, front_image, card_text, amber, power, armor, rarity, flavor_text, card_number, expansion, is_maverick,
-                    extraCardInfo = extraInfoMap[card_number],
-                    traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
+    fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfo>): Card {
+        return Card(id, card_title, house, card_type, front_image, card_text, amber, power, armor, rarity, flavor_text, card_number, expansion, is_maverick,
+                extraCardInfo = extraInfoMap[CardNumberSetPair(expansion, card_number)],
+                traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
+    }
 }
 
 data class DeckSearchResultCard(

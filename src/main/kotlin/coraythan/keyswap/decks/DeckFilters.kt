@@ -8,6 +8,7 @@ interface DeckQuery {
     val houses: Set<House>
     val title: String
 
+    val notForSale: Boolean
     val forSale: Boolean
     val forTrade: Boolean
     val forAuction: Boolean
@@ -28,6 +29,7 @@ data class DeckFilters(
 
         val page: Long = 0,
 
+        override val notForSale: Boolean = false,
         override val forSale: Boolean = false,
         override val forTrade: Boolean = false,
         override val forAuction: Boolean = false,
