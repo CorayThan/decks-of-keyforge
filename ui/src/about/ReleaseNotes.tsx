@@ -11,13 +11,18 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.0"
+export const latestVersion = "4.1"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"4.1"} expanded={true} releaseNotes={[
+                    "AERC now has tool tips that tell you what cards contributed to each score.",
+                    "You will receive an email notification when outbid on an auction.",
+                    "Added a button to go to a random registered deck."
+                ]}/>
                 <ReleaseNote releaseNumber={"4.0"} expanded={true} releaseNotes={[
                     "Updates to SAS and AERC! Please note the stats will be out of date temporarily. " +
                     "This will be the last big change before Age of Ascension.",

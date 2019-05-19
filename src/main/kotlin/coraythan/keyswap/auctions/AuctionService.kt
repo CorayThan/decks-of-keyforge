@@ -7,6 +7,7 @@ import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.toReadableString
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -19,6 +20,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Duration
 import java.util.*
 
 private const val fourteenMin = "PT14M"
@@ -127,6 +129,7 @@ class AuctionService(
                     "Use buy it now instead of bidding higher than the buy it now."
             )
         }
+        val previousHighBidder = auction.highestBidder()
         val updateEndDateTime = now.plusMinutes(15) > auction.endDateTime
         val newAuctionEnd = auction.endDateTime.plusMinutes(15)
         val withBid = auction.copy(
@@ -148,6 +151,12 @@ class AuctionService(
                 true,
                 newHighBidder == user.username,
                 if (newHighBidder == user.username) {
+                    if (previousHighBidder != null) {
+                        val timeLeft = Duration.between(now(), if (updateEndDateTime) newAuctionEnd else auction.endDateTime)
+                        GlobalScope.launch {
+                            emailService.sendOutBidEmail(previousHighBidder, auction.deck, timeLeft.toReadableString())
+                        }
+                    }
                     "You are now the highest bidder with a current bid of $highBid, and a max bid of $bid."
                 } else {
                     "Your bid was placed, but you are not the highest bidder."

@@ -33,3 +33,19 @@ fun ZonedDateTime.toLocalDateWithOffsetMinutes(offsetMinutes: Int): LocalDate {
 fun ZonedDateTime.toReadableStringWithOffsetMinutes(offsetMinutes: Int, format: DateTimeFormatter = TimeUtils.localDateTimeFormatter): String {
     return toLocalDateTimeWithOffsetMinutes(offsetMinutes).format(format)
 }
+
+fun Duration.toReadableString(): String {
+    val days = this.toDays()
+    val hours = this.minusDays(days).toHours()
+    val minutes = this.minusDays(days).minusHours(hours).toMinutes()
+    val readableDays = "$days ${if (days == 0L) "day" else "days"}"
+    val readableHours = "$hours ${if (hours == 0L) "hour" else "hours"}"
+    val readableMinutes = "$minutes ${if (minutes == 0L) "minute" else "minutes"}"
+    if (days == 0L && hours == 0L) {
+        return readableMinutes
+    } else if (days == 0L) {
+        return "$readableHours and $readableMinutes"
+    } else {
+        return "$readableDays, $readableHours and $readableMinutes"
+    }
+}

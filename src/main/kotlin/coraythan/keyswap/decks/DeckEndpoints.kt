@@ -58,6 +58,9 @@ class DeckEndpoints(
         }
     }
 
+    @GetMapping("/random")
+    fun randomDeckId() = deckService.randomDeckId()
+
     @CrossOrigin
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = "Please contact me to update to the new version."

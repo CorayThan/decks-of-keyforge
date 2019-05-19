@@ -57,6 +57,9 @@ export class DeckStore {
     @observable
     autoSearch = true
 
+    @observable
+    randomDeckId?: string
+
     reset = () => {
         this.deckPage = undefined
         this.nextDeckPage = undefined
@@ -74,6 +77,13 @@ export class DeckStore {
                     deck.deck.houses.sort()
                     this.deck = deck
                 }
+            })
+    }
+
+    findRandomDeckId = () => {
+        axios.get(`${DeckStore.CONTEXT}/random`)
+            .then((response: AxiosResponse<string>) => {
+                this.randomDeckId = response.data
             })
     }
 

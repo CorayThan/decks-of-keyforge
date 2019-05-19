@@ -9,6 +9,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
+import { CardsWithAerc } from "../cards/CardsWithAerc"
 import { KCard } from "../cards/KCard"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
@@ -170,36 +171,49 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 
 const SideBarInfo = (props: { deck: Deck }) => {
     const {deck} = props
+    const {searchResultCards} = deck
     const aercInfos = [
         {
             icon: <Typography variant={"h5"} color={"primary"}>A</Typography>,
             info: deck.amberControl,
-            tooltip: "Aember Control"
+            tooltip: <CardsWithAerc title={"Aember Control"} accessor={card => card!.extraCardInfo!.amberControl} cards={searchResultCards}/>
         },
         {
             icon: <Typography variant={"h5"} color={"primary"}>E</Typography>,
             info: deck.expectedAmber,
-            tooltip: "Expected Aember"
+            tooltip: <CardsWithAerc title={"Expected Aember"} accessor={card => card!.extraCardInfo!.expectedAmber} cards={searchResultCards}/>
         },
         {
             icon: <Typography variant={"h5"} color={"primary"}>R</Typography>,
             info: deck.artifactControl,
-            tooltip: "Artifact Control"
+            tooltip: <CardsWithAerc title={"Artifact Control"} accessor={card => card!.extraCardInfo!.artifactControl} cards={searchResultCards}/>
         },
         {
             icon: <Typography variant={"h5"} color={"primary"}>C</Typography>,
             info: deck.creatureControl,
-            tooltip: "Creature Control"
+            tooltip: <CardsWithAerc title={"Creature Control"} accessor={card => card!.extraCardInfo!.creatureControl} cards={searchResultCards}/>
         },
         {
             icon: <Typography variant={"h5"} color={"primary"}>D</Typography>,
             info: deck.deckManipulation,
-            tooltip: "Deck Manipulation Control"
+            tooltip: <CardsWithAerc title={"Deck Manipulation"} accessor={card => card!.extraCardInfo!.deckManipulation} cards={searchResultCards}/>
         },
         {
             icon: <Typography variant={"h5"} color={"primary"}>P</Typography>,
             info: deck.effectivePower / 10,
-            tooltip: "Effective Creature Power (divided by 10)"
+            tooltip: (
+                <CardsWithAerc
+                    title={"Effective Creature Power"}
+                    accessor={card => {
+                        const effPower = card!.effectivePower
+                        if (effPower == null) {
+                            return 0
+                        }
+                        return effPower
+                    }}
+                    cards={searchResultCards}
+                />
+            )
         }
     ]
     const extraInfos = [

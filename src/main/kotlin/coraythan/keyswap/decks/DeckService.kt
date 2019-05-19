@@ -288,6 +288,18 @@ class DeckService(
         return predicate
     }
 
+    fun randomDeckId(): String {
+        val deckOffset = (0..(deckCount ?: 800000)).random()
+        val deckQ = QDeck.deck
+        return query
+                .select(deckQ.keyforgeId)
+                .from(deckQ)
+                .where(BooleanBuilder().and(deckQ.registered.isTrue).and(deckQ.id.gt(deckOffset)))
+                .limit(1)
+                .orderBy(deckQ.id.asc())
+                .fetchFirst()
+    }
+
     fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
 
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {

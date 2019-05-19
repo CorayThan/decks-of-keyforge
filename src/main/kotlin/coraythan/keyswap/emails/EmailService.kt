@@ -22,6 +22,28 @@ class EmailService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    fun sendOutBidEmail(buyer: KeyUser, deck: Deck, timeLeft: String) {
+        sendEmail(
+                buyer.primaryEmail,
+                "You've been outbid in the auction for ${deck.name}!",
+                """
+                    <div>
+                        You've been outbid in the auction for ${makeLink("/decks/${deck.keyforgeId}", deck.name)}.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        The auction ends in $timeLeft from the time this email was sent.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        You'll need to place another bid before then if you want to win the deck!
+                    </div>
+                """.trimIndent()
+        )
+    }
+
     fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int, currencySymbol: String) {
         sendEmail(
                 seller.primaryEmail,

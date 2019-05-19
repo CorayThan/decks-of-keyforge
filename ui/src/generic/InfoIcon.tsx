@@ -5,7 +5,7 @@ import { spacing } from "../config/MuiConfig"
 interface InfoIconValue {
     info: number | string
     icon: React.ReactNode
-    tooltip: string
+    tooltip: React.ReactNode
 }
 
 export const InfoIconList = (props: { values: InfoIconValue[] }) => {

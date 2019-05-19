@@ -11,6 +11,8 @@ import { RouteComponentProps, withRouter } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
+import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu } from "../generic/LinkMenu"
@@ -157,45 +159,32 @@ class RightMenu extends React.Component {
 
 const AppLinks = () => (
     <>
-        <LinkButton
-            color={"inherit"}
-            style={{margin: spacing(1)}}
-            to={Routes.decks}
-            onClick={rightMenuStore.close}
-        >
-            Decks
-        </LinkButton>
-        <DeckImportPop
-            style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
-        />
-        <LinkButton
-            style={{margin: spacing(1)}}
-            color={"inherit"}
-            to={Routes.cards}
-            onClick={rightMenuStore.close}
-        >
-            Cards
-        </LinkButton>
-        <LinkButton
-            style={{margin: spacing(1)}}
-            color={"inherit"}
-            to={StatsSubPaths.winRates}
-            onClick={rightMenuStore.close}
-        >
-            Stats
-        </LinkButton>
-        <LinkButton
-            style={{margin: spacing(1)}}
-            color={"inherit"}
-            to={Routes.articles}
-            onClick={rightMenuStore.close}
-        >
-            Articles
-        </LinkButton>
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[
-                {to: AboutSubPaths.sas, text: "About"},
+                {to: Routes.decks, text: "Decks", mobileActive: true},
+                {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
+                randomDeckMenuItem
+            ]}
+            style={{margin: spacing(1)}}
+        />
+        <DeckImportPop
+            style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+        />
+        <LinkMenu
+            genericOnClick={rightMenuStore.close}
+            links={[
+                {to: Routes.landing, text: "Home", mobileActive: true},
+                {to: Routes.cards, text: "Cards", mobileActive: true},
+                {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
+                {to: Routes.articles, text: "Articles", mobileActive: true},
+            ]}
+            style={{margin: spacing(1)}}
+        />
+        <LinkMenu
+            genericOnClick={rightMenuStore.close}
+            links={[
+                {to: AboutSubPaths.sas, text: "About", mobileActive: true},
                 {to: AboutSubPaths.sas, text: "SAS and AERC"},
                 {to: AboutSubPaths.contact, text: "Contact Me"},
                 {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
@@ -221,7 +210,7 @@ class UserLinks extends React.Component {
                     <LinkMenu
                         genericOnClick={rightMenuStore.close}
                         links={[
-                            {to: Routes.usersDecks(), text: "My Decks"},
+                            {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
                             {to: Routes.usersFavorites(), text: "My Favorites"},
                             {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
                             {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},

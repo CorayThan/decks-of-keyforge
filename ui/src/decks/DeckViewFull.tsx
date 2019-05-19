@@ -17,6 +17,11 @@ interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string
 }
 
 export class DeckViewPage extends React.Component<DeckViewPageProps> {
+
+    componentDidMount(): void {
+        deckStore.randomDeckId = undefined
+    }
+
     render() {
         const deckId = this.props.match.params.keyforgeDeckId
         log.debug(`Rendering deck view page with deck id: ${deckId}`)

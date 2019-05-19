@@ -1,5 +1,8 @@
 import { Tooltip, Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import * as React from "react"
+import { CardsWithAerc } from "../cards/CardsWithAerc"
+import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 
 export interface HasAerc {
@@ -10,6 +13,7 @@ export interface HasAerc {
     aercScore: number
     deckManipulation: number
     effectivePower: number
+    searchResultCards?: KCard[]
 }
 
 interface AercScoreViewProps {
@@ -20,54 +24,100 @@ interface AercScoreViewProps {
     style?: React.CSSProperties
 }
 
-export const AercScoreView = (props: AercScoreViewProps) => {
+@observer
+export class AercScoreView extends React.Component<AercScoreViewProps> {
+    render() {
 
-    const {
-        amberControl,
-        expectedAmber,
-        artifactControl,
-        creatureControl,
-        deckManipulation,
-        effectivePower,
-        aercScore,
-    } = props.hasAerc
+        const {
+            amberControl,
+            expectedAmber,
+            artifactControl,
+            creatureControl,
+            deckManipulation,
+            effectivePower,
+            aercScore,
+            searchResultCards
+        } = this.props.hasAerc
 
-    const textStyle: React.CSSProperties = props.dark ? {color: "#333333"} : {color: "#FFFFFF"}
-    const lineStyle = props.dark ? "1px solid rgba(0, 0, 0, 0.12)" : "1px solid rgba(255,255,255)"
-    const aercBorderStyle: React.CSSProperties = {borderStyle: "solid", borderWidth: 1, borderColor: props.dark ? "rgba(0, 0, 0, 0.12)" : "#FFFFFF"}
+        const textStyle: React.CSSProperties = this.props.dark ? {color: "#333333"} : {color: "#FFFFFF"}
+        const lineStyle = this.props.dark ? "1px solid rgba(0, 0, 0, 0.12)" : "1px solid rgba(255,255,255)"
+        const aercBorderStyle: React.CSSProperties = {borderStyle: "solid", borderWidth: 1, borderColor: this.props.dark ? "rgba(0, 0, 0, 0.12)" : "#FFFFFF"}
 
-    const cellWidth = props.narrow ? 44 : 56
-    const horizontalLine = <div style={{width: cellWidth, borderBottom: lineStyle}}/>
-    const verticalLine = <div style={{borderRight: lineStyle}}/>
+        const cellWidth = this.props.narrow ? 44 : 56
+        const horizontalLine = <div style={{width: cellWidth, borderBottom: lineStyle}}/>
+        const verticalLine = <div style={{borderRight: lineStyle}}/>
 
-    const aercColumnStyle: React.CSSProperties = {display: "flex", flexDirection: "column", width: cellWidth}
+        const aercColumnStyle: React.CSSProperties = {display: "flex", flexDirection: "column", width: cellWidth}
 
-    return (
-        <div style={{display: "flex", ...aercBorderStyle, ...props.style}}>
-            <div style={aercColumnStyle}>
-                <AercValue value={amberControl} name={"A"} tooltip={"Aember control"} textStyle={textStyle}/>
-                {horizontalLine}
-                <AercValue value={artifactControl} name={"R"} tooltip={"Artifact control"} textStyle={textStyle}/>
+        return (
+            <div style={{display: "flex", ...aercBorderStyle, ...this.props.style}}>
+                <div style={aercColumnStyle}>
+                    <AercValue
+                        value={amberControl}
+                        name={"A"}
+                        tooltip={<CardsWithAerc title={"Aember Control"} accessor={card => card!.extraCardInfo!.amberControl} cards={searchResultCards}/>}
+                        textStyle={textStyle}
+                    />
+                    {horizontalLine}
+                    <AercValue
+                        value={artifactControl}
+                        name={"R"}
+                        tooltip={<CardsWithAerc title={"Artifact Control"} accessor={card => card!.extraCardInfo!.artifactControl} cards={searchResultCards}/>}
+                        textStyle={textStyle}/>
+                </div>
+                {verticalLine}
+                <div style={aercColumnStyle}>
+                    <AercValue
+                        value={expectedAmber}
+                        name={"E"}
+                        tooltip={<CardsWithAerc title={"Expected Aember"} accessor={card => card!.extraCardInfo!.expectedAmber} cards={searchResultCards}/>}
+                        textStyle={textStyle}
+                    />
+                    {horizontalLine}
+                    <AercValue
+                        value={creatureControl}
+                        name={"C"}
+                        tooltip={<CardsWithAerc title={"Creature Control"} accessor={card => card!.extraCardInfo!.creatureControl} cards={searchResultCards}/>}
+                        textStyle={textStyle}
+                    />
+                </div>
+                {verticalLine}
+                <div style={aercColumnStyle}>
+                    <AercValue
+                        value={deckManipulation}
+                        name={"D"}
+                        tooltip={<CardsWithAerc title={"Deck Manipulation"} accessor={card => card!.extraCardInfo!.deckManipulation}
+                                                cards={searchResultCards}/>}
+                        textStyle={textStyle}
+                    />
+                    {horizontalLine}
+                    <AercValue
+                        value={effectivePower}
+                        name={"P"}
+                        tooltip={
+                            <CardsWithAerc
+                                title={"Effective Creature Power"}
+                                accessor={card => {
+                                    const effPower = card!.effectivePower
+                                    if (effPower == null) {
+                                        return 0
+                                    }
+                                    return effPower
+                                }}
+                                cards={searchResultCards}
+                            />
+                        }
+                        textStyle={textStyle}
+                    />
+                </div>
+                {verticalLine}
+                <AercScore aercScore={aercScore} textStyle={textStyle}/>
             </div>
-            {verticalLine}
-            <div style={aercColumnStyle}>
-                <AercValue value={expectedAmber} name={"E"} tooltip={"Expected aember"} textStyle={textStyle}/>
-                {horizontalLine}
-                <AercValue value={creatureControl} name={"C"} tooltip={"Creature control"} textStyle={textStyle}/>
-            </div>
-            {verticalLine}
-            <div style={aercColumnStyle}>
-                <AercValue value={deckManipulation} name={"D"} tooltip={"Deck Manipulation"} textStyle={textStyle}/>
-                {horizontalLine}
-                <AercValue value={effectivePower} name={"P"} tooltip={"Effective Creature Power"} textStyle={textStyle}/>
-            </div>
-            {verticalLine}
-            <AercScore aercScore={aercScore} textStyle={textStyle}/>
-        </div>
-    )
+        )
+    }
 }
 
-export const AercScore = (props: {aercScore: number, textStyle: React.CSSProperties}) => (
+export const AercScore = (props: { aercScore: number, textStyle: React.CSSProperties }) => (
     <Tooltip title={"AERC score. Read more on the about page!"}>
         <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", margin: spacing(1)}}>
             <Typography
@@ -84,7 +134,7 @@ export const AercScore = (props: {aercScore: number, textStyle: React.CSSPropert
     </Tooltip>
 )
 
-const AercValue = (props: { value: number, name: string, tooltip: string, textStyle: React.CSSProperties }) => {
+const AercValue = (props: { value: number, name: string, tooltip: React.ReactNode, textStyle: React.CSSProperties }) => {
     return (
         <Tooltip title={props.tooltip}>
             <div style={{display: "flex", margin: 4}}>
