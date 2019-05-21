@@ -82,7 +82,7 @@ class PublicApiService(
                 val cards = listDeck.deckInfo.cards.map {
                     val cardsByEch = cardRepo.findByExpansionAndCardNumberAndHouse(
                             listDeck.deckInfo.expansion,
-                            it.cardNumber,
+                            it.cardNumber.toString(),
                             it.house
                     )
                     if (cardsByEch.isEmpty()) {

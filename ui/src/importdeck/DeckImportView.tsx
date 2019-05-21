@@ -5,6 +5,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
+import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
@@ -21,6 +22,8 @@ export const deckImportViewStore = new DeckImportViewStore()
 @observer
 export class DeckImportView extends React.Component {
 
+    expansionStore = new SelectedExpansion()
+
     constructor(props: {}) {
         super(props)
         uiStore.setTopbarValues("Import Deck", "Import", "Add unregistered decks to evaluate, sell, and trade")
@@ -32,6 +35,7 @@ export class DeckImportView extends React.Component {
         deckImportStore.readDeck = undefined
         deckImportStore.newDeckId = undefined
         deckImportStore.startMessages()
+        this.expansionStore = new SelectedExpansion()
     }
 
     componentWillUnmount(): void {
@@ -47,8 +51,9 @@ export class DeckImportView extends React.Component {
     }
 
     postDeckImage = () => {
-        if (deckImportViewStore.deckImage) {
-            deckImportStore.readImageIntoDeck(deckImportViewStore.deckImage)
+        const expansionNumber = this.expansionStore.expansionNumber()
+        if (deckImportViewStore.deckImage && expansionNumber) {
+            deckImportStore.readImageIntoDeck(deckImportViewStore.deckImage, expansionNumber)
         }
     }
 
@@ -56,9 +61,10 @@ export class DeckImportView extends React.Component {
         return (
             <div style={{margin: spacing(4), justifyContent: "center", display: "flex", flexWrap: "wrap"}}>
                 <div>
-                    <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>Deck Image</Typography>
+                    <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>Import Deck</Typography>
                     {saveUnregisteredDeckStore.currentDeck ? null : (
                         <>
+                            <ExpansionSelector store={this.expansionStore} style={{marginBottom: spacing(2), width: 200}}/>
                             <div style={{display: "flex", alignItems: "center", height: 250}}>
                                 <div style={{width: 200, height: 250}}>
                                     <DropzoneArea
@@ -81,7 +87,8 @@ export class DeckImportView extends React.Component {
                                     }}
                                 >
                                     <Typography variant={"body2"}>
-                                        Use a picture taken straight on with low glare and clear text. 1mb or less in size is best, but it must be less than 3mb.
+                                        Use a picture taken straight on with low glare and clear text. 1mb or less in size is best, but it must be less than
+                                        3mb.
                                         Setting your phone camera to the lowest quality setting is often best. Leave about 1/4 inch around the edges after
                                         cropping it.
                                     </Typography>
@@ -91,6 +98,7 @@ export class DeckImportView extends React.Component {
                                             || deckImportStore.readingDeckImage
                                             || !cardStore.cardNameLowercaseToCard
                                             || !!saveUnregisteredDeckStore.currentDeck
+                                            || this.expansionStore.expansionNumber() == null
                                         }
                                         variant={"contained"}
                                         color={"primary"}

@@ -16,6 +16,7 @@ interface DeckQuery {
     val forSaleInCountry: Country?
     val includeUnregistered: Boolean
     val myFavorites: Boolean
+    val expansions: List<Int>
 
     val constraints: List<Constraint>
     val cards: List<DeckCardQuantity>
@@ -37,6 +38,7 @@ data class DeckFilters(
         override val forSaleInCountry: Country? = null,
         override val includeUnregistered: Boolean = false,
         override val myFavorites: Boolean = false,
+        override val expansions: List<Int> = listOf(),
 
         override val constraints: List<Constraint> = listOf(),
 

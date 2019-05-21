@@ -43,6 +43,7 @@ data class ForSaleQuery(
         override val forAuction: Boolean = false,
         override val forSaleInCountry: Country? = null,
         override val includeUnregistered: Boolean = false,
+        override val expansions: List<Int> = listOf(),
 
         override val constraints: List<Constraint> = listOf(),
 

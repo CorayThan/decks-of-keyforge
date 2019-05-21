@@ -46,22 +46,6 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     const {cardTitle, cardType, cardText, amber, extraCardInfo} = card
     const {rating, traits, synergies} = extraCardInfo
 
-    const wrapperStyle: React.CSSProperties = screenStore.screenSizeXs() ? {
-        backgroundColor: "#DFDFDF",
-        display: "flex",
-        flexDirection: "column",
-        width: 300,
-        margin: spacing(1),
-        borderRadius: "20px"
-    } : {
-        backgroundColor: "#DFDFDF",
-        display: "flex",
-        width: 600,
-        minHeight: 420,
-        margin: spacing(1),
-        borderRadius: "20px"
-    }
-
     const sidebarProps = screenStore.screenSizeXs() ? {
         vertical: true,
         width: 300,

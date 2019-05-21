@@ -93,9 +93,9 @@ class DeckEndpoints(
         return deckService.saleInfoForDeck(id, offsetMinutes)
     }
 
-    @PostMapping("/secured/read-deck-image")
-    fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile): SaveUnregisteredDeck? {
-        return azureOcr.readDeckInfoFromImage(deckImage)
+    @PostMapping("/secured/read-deck-image/{expansion}")
+    fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile, @PathVariable expansion: Int): SaveUnregisteredDeck? {
+        return azureOcr.readDeckInfoFromImage(deckImage, expansion)
     }
 
     @PostMapping("/secured/add-unregistered")

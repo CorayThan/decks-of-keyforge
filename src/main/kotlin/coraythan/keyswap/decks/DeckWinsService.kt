@@ -42,7 +42,7 @@ class DeckWinsService(
             findAndUpdateDecksForWinRates("-losses", deckIds)
             log.info("Found $winPages win pages (of 10).")
         }
-        log.info("$scheduledStop It took ${updateWinsLossesDuration / 1000} seconds to update wins and losses.")
+        log.info("$scheduledStop It took ${updateWinsLossesDuration / 1000} seconds for deck win loss update.")
 
         updateCardAndHouseWins()
     }
@@ -56,7 +56,7 @@ class DeckWinsService(
 
         while (true) {
             val decks = keyforgeApi.findDecks(currentPage, order)
-            val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 }
+            val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
             if (updateDecks.isNullOrEmpty()) {
                 break
             }

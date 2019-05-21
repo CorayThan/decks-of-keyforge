@@ -49,6 +49,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
 
 export interface ExtraCardInfo {
     cardNumber: number
+    setNumbers: number[]
     rating: number
     expectedAmber: number
     amberControl: number

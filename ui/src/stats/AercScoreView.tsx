@@ -136,7 +136,7 @@ export const AercScore = (props: { aercScore: number, textStyle: React.CSSProper
 
 const AercValue = (props: { value: number, name: string, tooltip: React.ReactNode, textStyle: React.CSSProperties }) => {
     return (
-        <Tooltip title={props.tooltip}>
+        <Tooltip title={props.tooltip} enterTouchDelay={100}>
             <div style={{display: "flex", margin: 4}}>
                 <div style={{flexGrow: 1}}/>
                 <Typography style={{marginRight: 8, ...props.textStyle}}>{props.value}</Typography>

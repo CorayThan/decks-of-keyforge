@@ -15,5 +15,5 @@ data class CardIds(
 
 data class CardNumberSetPair(
         val expansion: Int,
-        val cardNumber: Int
+        val cardNumber: String
 )

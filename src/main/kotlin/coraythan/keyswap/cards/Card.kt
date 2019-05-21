@@ -18,11 +18,13 @@ data class Card(
         val cardText: String,
         val amber: Int,
         val power: Int,
+        val powerString: String,
         val armor: Int,
+        val armorString: String,
         @Enumerated(EnumType.STRING)
         val rarity: Rarity,
         val flavorText: String? = null,
-        val cardNumber: Int,
+        val cardNumber: String,
         val expansion: Int,
         val maverick: Boolean,
 
@@ -38,7 +40,7 @@ data class Card(
 ) : Comparable<Card> {
     override fun compareTo(other: Card): Int {
         if (expansion != other.expansion) return expansion - other.expansion
-        return cardNumber - other.cardNumber
+        return (cardNumber.toIntOrNull() ?: 0) - (other.cardNumber.toIntOrNull() ?: 0)
     }
 
     val effectivePower: Int
@@ -62,17 +64,21 @@ data class KeyforgeCard(
         val front_image: String,
         val card_text: String,
         val amber: Int,
-        val power: Int,
-        val armor: Int,
+        val power: String,
+        val armor: String,
         val rarity: Rarity,
         val flavor_text: String? = null,
-        val card_number: Int,
+        val card_number: String,
         val expansion: Int,
         val is_maverick: Boolean,
         val traits: String? = null
 ) {
     fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfo>): Card {
-        return Card(id, card_title, house, card_type, front_image, card_text, amber, power, armor, rarity, flavor_text, card_number, expansion, is_maverick,
+        val powerNumber = power.toIntOrNull() ?: 0
+        val armorNumber = power.toIntOrNull() ?: 0
+
+        return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power, armorNumber, armor, rarity, flavor_text,
+                card_number, expansion, is_maverick,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansion, card_number)],
                 traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
     }

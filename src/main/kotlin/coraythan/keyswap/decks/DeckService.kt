@@ -167,6 +167,10 @@ class DeckService(
             predicate.and(deckQ.registered.isTrue)
         }
 
+        if (filters.expansions.isNotEmpty()) {
+            predicate.andAnyOf(*filters.expansions.map { deckQ.expansion.eq(it) }.toTypedArray())
+        }
+
         if (filters.houses.isNotEmpty()) {
             if (filters.houses.size < 4) {
                 filters.houses.forEach { predicate.and(deckQ.houses.contains(it)) }

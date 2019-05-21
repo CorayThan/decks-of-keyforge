@@ -18,6 +18,7 @@ import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
+import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -43,6 +44,7 @@ interface DecksSearchDrawerProps {
 @observer
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
+    selectedExpansion = new SelectedExpansion()
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedSortStore = new DeckSortSelectStore(
         this.props.filters.forTrade || this.props.filters.forSale,
@@ -57,6 +59,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             event.preventDefault()
         }
         const filters = this.props.filters
+        filters.expansions = this.selectedExpansion.expansionsAsArray()
         filters.houses = this.selectedHouses.toArray()
         filters.sort = this.selectedSortStore.toEnumValue()
         filters.constraints = this.constraintsStore.cleanConstraints()
@@ -177,6 +180,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "artifactCount",
             "upgradeCount",
             "powerLevel",
+            "chains",
             "maverickCount",
         ]
         const hideMinMaxConstraintOptions = [
@@ -207,6 +211,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     <Close/>
                                 </IconButton>
                             ) : null}
+                        </ListItem>
+                        <ListItem>
+                            <ExpansionSelector
+                                store={this.selectedExpansion}
+                                small={false}
+                                displayNoneOption={true}
+                            />
                         </ListItem>
                         <ListItem>
                             <HouseSelect selectedHouses={this.selectedHouses}/>

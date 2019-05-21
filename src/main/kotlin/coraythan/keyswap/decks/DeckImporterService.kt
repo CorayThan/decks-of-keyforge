@@ -9,6 +9,7 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.synergy.DeckSynergyService
@@ -80,8 +81,12 @@ class DeckImporterService(
             var pagesRequested = 0
             while (currentPage < finalPage && pagesRequested < maxPageRequests) {
                 val decks = keyforgeApi.findDecks(currentPage)
+                if (decks?.data?.any { it.expansion != Expansion.CALL_OF_THE_ARCHONS.expansionNumber } == true) {
+                    log.warn("Can't import any more decks. Let's verify non COTA decks are safe first!")
+                    return
+                }
                 if (decks == null) {
-                    log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+                     log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
                     break
                 } else {
                     val cards = cardService.importNewCards(decks.data)
@@ -160,6 +165,10 @@ class DeckImporterService(
         } else {
             val deck = keyforgeApi.findDeck(deckId)
             if (deck != null) {
+                if (deck.data.expansion != Expansion.CALL_OF_THE_ARCHONS.expansionNumber) {
+                    log.warn("Can't import any more decks. Let's verify non COTA decks are safe first!")
+                    throw IllegalArgumentException("Can't import non-COTA decks.")
+                }
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 val cards = cardService.importNewCards(deckList)
                 return try {

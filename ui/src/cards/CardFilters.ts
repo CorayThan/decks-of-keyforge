@@ -17,6 +17,7 @@ export class CardFilters {
     ratings: number[] = []
     ambers: number[] = []
     armors: number[] = []
+    expansion?: number
     sort?: string
     @observable
     sortDirection: SortDirection = "DESC"

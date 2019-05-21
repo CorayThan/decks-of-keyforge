@@ -44,7 +44,7 @@ class CardService(
                 .toMap()
     }
 
-    fun findByExpansionCardNumberHouse(expansion: Int, cardNumber: Int, house: House) = cardRepo.findByExpansionAndCardNumberAndHouse(expansion, cardNumber, house)
+    fun findByExpansionCardNumberHouse(expansion: Int, cardNumber: String, house: House) = cardRepo.findByExpansionAndCardNumberAndHouse(expansion, cardNumber, house)
 
     fun allFullCardsNonMaverick(): List<Card> {
         if (nonMaverickCachedCardsList == null) {

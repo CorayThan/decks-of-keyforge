@@ -54,14 +54,14 @@ class DeckImportStore {
 
     stopMessages = () => window.clearInterval(this.messageIntervalId)
 
-    readImageIntoDeck = async (deckImage: File) => {
+    readImageIntoDeck = async (deckImage: File, expansion: number) => {
         this.readingDeckImage = true
 
         const imageData = new FormData()
         imageData.append("deckImage", deckImage)
 
         const response = await axios.post(
-            DeckImportStore.SECURE_CONTEXT + "/read-deck-image",
+            `${DeckImportStore.SECURE_CONTEXT}/read-deck-image/${expansion}`,
             imageData,
             {
                 headers: {

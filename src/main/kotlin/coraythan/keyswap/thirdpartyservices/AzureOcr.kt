@@ -5,6 +5,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -25,7 +26,10 @@ class AzureOcr(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val numberRegex = "\\d+".toRegex()
 
-    fun readDeckInfoFromImage(deckImage: MultipartFile, expansion: Int = 341): SaveUnregisteredDeck? {
+    fun readDeckInfoFromImage(deckImage: MultipartFile, expansion: Int): SaveUnregisteredDeck? {
+        if (expansion != Expansion.CALL_OF_THE_ARCHONS.expansionNumber) {
+            throw IllegalArgumentException("Can't import non-COTA yet.")
+        }
         val response: ResponseEntity<OcrResults> = restTemplate.exchange(
                 "https://westus.api.cognitive.microsoft.com/vision/v1.0/ocr",
                 HttpMethod.POST,
@@ -48,7 +52,9 @@ class AzureOcr(
         val lines = ocrLines.map { line -> line.words.map { it.text } }
         log.info("Deck read lines $lines")
         if (lines.size < 19) return null
-        val cardsByName: Map<String, Card> = cardService.allFullCardsNonMaverick().map { it.cardTitle to it }.toMap()
+        val cardsByName: Map<String, Card> = cardService.allFullCardsNonMaverick()
+                .filter { it.expansion == expansion }
+                .map { it.cardTitle to it }.toMap()
 
         var cards: MutableMap<House, MutableList<Card>> = mutableMapOf()
 
@@ -119,7 +125,7 @@ class AzureOcr(
 
             }
 
-            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPair(expansion, cardNumber)]
+            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPair(expansion, cardNumber.toString())]
 
             return if (foundCard != null) {
                 foundCard

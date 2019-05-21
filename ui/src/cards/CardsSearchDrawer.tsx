@@ -9,6 +9,7 @@ import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
+import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
@@ -35,6 +36,7 @@ export class CardsSearchDrawer extends React.Component {
     selectedRatings = new SelectedCardRatings()
     selectedArmors = new SelectedArmors()
     selectedSortStore = new CardSortSelectStore()
+    selectedExpansion = new SelectedExpansion()
 
     componentDidMount() {
         this.cardStore.reset()
@@ -53,6 +55,7 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.ambers = this.selectedAmbers.toArray()
         this.filters.armors = this.selectedArmors.toArray()
         this.filters.sort = this.selectedSortStore.toEnumValue()
+        this.filters.expansion = this.selectedExpansion.expansionNumber()
         this.cardStore.searchCards(this.filters)
         keyDrawerStore.closeIfSmall()
     }
@@ -67,6 +70,7 @@ export class CardsSearchDrawer extends React.Component {
         this.selectedPowers.reset()
         this.selectedAmbers.reset()
         this.selectedArmors.reset()
+        this.selectedExpansion.reset()
     }
 
     render() {
@@ -109,6 +113,7 @@ export class CardsSearchDrawer extends React.Component {
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
                         </ListItem>
                         <ListItem>
+                            <ExpansionSelector store={this.selectedExpansion} small={false} displayNoneOption={true} style={{marginRight: spacing(2)}}/>
                             <CardSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={this.filters}/>

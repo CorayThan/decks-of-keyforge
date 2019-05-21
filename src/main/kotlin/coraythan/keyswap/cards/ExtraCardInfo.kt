@@ -8,7 +8,7 @@ import coraythan.keyswap.synergy.SynTraitValue
 data class ExtraCardInfo(
 
         val setNumbers: List<Int>,
-        val cardNumber: Int,
+        val cardNumber: String,
         val rating: Double = 3.0,
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,

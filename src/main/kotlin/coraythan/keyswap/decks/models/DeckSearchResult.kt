@@ -7,6 +7,7 @@ import coraythan.keyswap.cards.DeckSearchResultCard
 data class DeckSearchResult(
         val id: Long = -1,
         val keyforgeId: String = "",
+        val expansion: Int,
 
         val name: String = "",
 

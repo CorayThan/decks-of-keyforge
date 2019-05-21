@@ -104,6 +104,7 @@ data class Deck(
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
+                expansion = expansion,
                 name = name,
 
                 powerLevel = powerLevel,

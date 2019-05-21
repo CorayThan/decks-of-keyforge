@@ -55,6 +55,8 @@ export class CardStore {
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&
                 (filters.armors.length === 0 || filters.armors.indexOf(card.armor) !== -1)
+                &&
+                (filters.expansion == null || card.extraCardInfo.setNumbers.indexOf(filters.expansion) !== -1)
             )
         })
 

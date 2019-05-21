@@ -24,6 +24,9 @@ export class DeckFilters {
         if (typeof queryObject.houses === "string") {
             queryObject.houses = [queryObject.houses]
         }
+        if (typeof queryObject.expansions === "string") {
+            queryObject.expansions = [queryObject.expansions]
+        }
         if (queryObject.cards) {
             if (typeof queryObject.cards === "string") {
                 queryObject.cards = [queryObject.cards]
@@ -103,6 +106,7 @@ export class DeckFilters {
     @observable
     myFavorites: boolean = false
     constraints: Constraint[] = []
+    expansions: number[] = []
     @observable
     cards: DeckCardQuantity[] = [{
         cardName: "",
@@ -129,6 +133,7 @@ export class DeckFilters {
             cardName: "",
             quantity: 1
         }]
+        this.expansions = []
         this.constraints = []
         this.sortDirection = "DESC"
         this.owner = ""

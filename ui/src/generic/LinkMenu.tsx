@@ -63,9 +63,9 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                 <>
                     {links
                         .filter(linkInfo => linkInfo.mobileActive)
-                        .map(linkInfo => (
-                            <>
-                                {linkInfo.to == null ? (
+                        .map(linkInfo => {
+                            if (linkInfo.to == null) {
+                                return (
                                     <MenuItem
                                         key={linkInfo.text}
                                         color={"inherit"}
@@ -77,25 +77,26 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                         }}
                                         component={linkInfo.component}
                                     >
-                                        {linkInfo.text}
+                                        {linkInfo.text.toUpperCase()}
                                     </MenuItem>
-                                ) : (
-                                    <LinkButton
-                                        key={linkInfo.text}
-                                        color={"inherit"}
-                                        to={linkInfo.to}
-                                        style={style}
-                                        onClick={() => {
-                                            if (genericOnClick) {
-                                                genericOnClick()
-                                            }
-                                        }}
-                                    >
-                                        {linkInfo.text}
-                                    </LinkButton>
-                                )}
-                            </>
-                        ))}
+                                )
+                            }
+                            return (
+                                <LinkButton
+                                    key={linkInfo.text}
+                                    color={"inherit"}
+                                    to={linkInfo.to}
+                                    style={style}
+                                    onClick={() => {
+                                        if (genericOnClick) {
+                                            genericOnClick()
+                                        }
+                                    }}
+                                >
+                                    {linkInfo.text}
+                                </LinkButton>
+                            )
+                        })}
                 </>
             )
         }
