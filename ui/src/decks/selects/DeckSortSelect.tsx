@@ -86,7 +86,7 @@ export const DeckSorts = {
     funniest: "FUNNIEST",
     wishlisted: "MOST_WISHLISTED",
     chains: "CHAINS",
-    recentlyListed: "RECENTLY_LISTED",
+    // recentlyListed: "RECENTLY_LISTED",
     endingSoonest: "ENDING_SOONEST",
     addedDate: "ADDED_DATE",
     cardsRating: "CARDS_RATING",
@@ -106,10 +106,10 @@ const deckSortOptions: SortOption[] = [
 ]
 
 const forSaleDeckSortOptions: SortOption[] = deckSortOptions.slice()
-forSaleDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
+// forSaleDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 
 const forAuctionDeckSortOptions: SortOption[] = deckSortOptions.slice()
-forAuctionDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
+// forAuctionDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 forAuctionDeckSortOptions.unshift({value: DeckSorts.endingSoonest, name: "Ending Soonest"})
 
 const completedAuctionDeckSortOptions: SortOption[] = deckSortOptions.slice()
@@ -118,6 +118,6 @@ completedAuctionDeckSortOptions.unshift({value: DeckSorts.completedRecently, nam
 const allDeckSortOptions: SortOption[] = deckSortOptions.slice()
 allDeckSortOptions.unshift({value: DeckSorts.completedRecently, name: "Completed Recently"})
 allDeckSortOptions.unshift({value: DeckSorts.endingSoonest, name: "Ending Soonest"})
-allDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
+// allDeckSortOptions.unshift({value: DeckSorts.recentlyListed, name: "Recently Listed"})
 
 export const defaultSort = deckSortOptions[1]

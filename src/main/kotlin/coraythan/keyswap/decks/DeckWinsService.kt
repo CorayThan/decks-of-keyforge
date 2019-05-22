@@ -4,7 +4,6 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.models.withCards
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi

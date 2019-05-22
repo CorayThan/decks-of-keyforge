@@ -67,6 +67,8 @@ data class Deck(
         val cardIds: String = "",
 
         val cardNamesString: String = "",
+        val cardNamesWithHouseString: String = "",
+        val houseNamesString: String? = "",
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -163,27 +165,34 @@ data class Deck(
                 powerLevel = keyforgeDeck.power_level
         )
     }
-}
 
-fun Deck.withCards(newCardsList: List<Card>): Deck {
-    if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
-    val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
-        (1..entry.value.size).map { "${entry.key}$it" }
-    }.joinToString()
-    return this.copy(
-            cardNamesString = cardNamesString,
-            rawAmber = newCardsList.map { it.amber }.sum(),
-            totalPower = newCardsList.map { it.power }.sum(),
-            totalArmor = newCardsList.map { it.armor }.sum(),
-            creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,
-            actionCount = newCardsList.filter { it.cardType == CardType.Action }.size,
-            artifactCount = newCardsList.filter { it.cardType == CardType.Artifact }.size,
-            upgradeCount = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
-            maverickCount = newCardsList.filter { it.maverick }.size,
-            specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
-            raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
-            uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size
-    )
+    fun withCards(newCardsList: List<Card>): Deck {
+        if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
+        val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
+            (1..entry.value.size).map { "${entry.key}$it" }
+        }.joinToString()
+        val cardNamesWithHouseString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
+            entry.value.groupBy { it.house }.flatMap { houseToCards ->
+                val firstCard = houseToCards.value[0]
+                (1..entry.value.size).map { "${firstCard.cardTitle}${firstCard.house}$it" }
+            }
+        }.joinToString()
+        return this.copy(
+                cardNamesString = cardNamesString,
+                cardNamesWithHouseString = cardNamesWithHouseString,
+                rawAmber = newCardsList.map { it.amber }.sum(),
+                totalPower = newCardsList.map { it.power }.sum(),
+                totalArmor = newCardsList.map { it.armor }.sum(),
+                creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,
+                actionCount = newCardsList.filter { it.cardType == CardType.Action }.size,
+                artifactCount = newCardsList.filter { it.cardType == CardType.Artifact }.size,
+                upgradeCount = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
+                maverickCount = newCardsList.filter { it.maverick }.size,
+                specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
+                raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
+                uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size
+        )
+    }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

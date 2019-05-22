@@ -44,8 +44,8 @@ completedAuctions.sort = DeckSorts.completedRecently
 const saleOrTradeAERC = DeckFilters.forSaleOrTrade()
 saleOrTradeAERC.sort = DeckSorts.aerc
 
-const saleOrTradeRecent = DeckFilters.forSaleOrTrade()
-saleOrTradeRecent.sort = DeckSorts.recentlyListed
+// const saleOrTradeRecent = DeckFilters.forSaleOrTrade()
+// saleOrTradeRecent.sort = DeckSorts.recentlyListed
 
 const worstSas = new DeckFilters()
 worstSas.sortDirection = "ASC"
@@ -79,7 +79,7 @@ export class LandingPage extends React.Component<{}> {
                                 Decks for Sale
                             </ListSubheader>
                             <DeckSearchLink name={"For Sale or Trade"} filters={saleOrTrade}/>
-                            <DeckSearchLink name={"Recently Listed"} filters={saleOrTradeRecent} style={{marginTop: spacing(2)}}/>
+                            {/*<DeckSearchLink name={"Recently Listed"} filters={saleOrTradeRecent} style={{marginTop: spacing(2)}}/>*/}
                             <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
                             <DeckSearchLink name={"Completed Auctions"} filters={completedAuctions} style={{marginTop: spacing(2)}}/>
 

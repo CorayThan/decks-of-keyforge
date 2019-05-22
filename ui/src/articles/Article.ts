@@ -3,6 +3,7 @@ import { Author } from "./Authors"
 export interface Article {
     author: Author
     title: string
+    subtitle?: string
     urlTitle: string
     date: string
     sections: ArticleSection[]
@@ -37,6 +38,7 @@ export interface ArticleEntry {
     listItems?: string[]
     deckId?: string
     deckName?: string
+    modal?: boolean
     tableHeaders?: string[]
     tableRows?: string[][]
 

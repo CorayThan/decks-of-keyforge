@@ -1,5 +1,6 @@
 import bigZImg from "../user/imgs/big-z.png"
 import dunkoroImg from "../user/imgs/dunkoro.png"
+import firesaImg from "../user/imgs/firesa.png"
 
 export interface Author {
     name: string
@@ -37,4 +38,17 @@ export const bigZ: Author = {
         "I am also part of the newly formed Team SAS! How SASy is your deck?"
     ],
     img: bigZImg
+}
+
+export const firesa: Author = {
+    name: "Firesa",
+    username: "firesa1",
+    bio: [
+        "Firesa is an avid KeyForge player with a history of participation in tcgs and lcgs.",
+        "Located in Australia, but of a French and German heritage (he speaks all three... if Australian counts as a language), first picked up and played Magic The Gathering competitively at a local and Grand Prix level.",
+        "Due to costs and the time commitment required to be successful at MtG, firesa chose to instead try and play an LCG, Android: Netrunner. There he found considerable success including a nationals win and 5th place at 2017 worlds in Minnesota.",
+        "Wanting to contribute to this community as more than just a competitor, firesa has begun contributing through articles, and hopes to continue to do so for the foreseeable future.",
+        "If you have any questions for him, do not hesitate to contact him via discord (firesa#8785)"
+    ],
+    img: firesaImg
 }

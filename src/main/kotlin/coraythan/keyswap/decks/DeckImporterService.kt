@@ -8,7 +8,10 @@ import coraythan.keyswap.cards.CardIds
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.decks.models.QDeck
+import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
@@ -129,7 +132,8 @@ class DeckImporterService(
     private var doneRatingDecks = false
 
     // Comment this in whenever rating gets revved
-    @Scheduled(fixedDelayString = lockUpdateRatings)
+    // don't rate decks until adding new info done
+    // @Scheduled(fixedDelayString = lockUpdateRatings)
     fun rateDecks() {
 
         if (doneRatingDecks) return
@@ -225,6 +229,38 @@ class DeckImporterService(
         return savedDeck.keyforgeId
     }
 
+    var doneAddingNewDeckInfo = false
+
+    @Scheduled(fixedDelayString = lockUpdateRatings)
+    fun addNewDeckInfo() {
+
+        if (doneAddingNewDeckInfo) return
+
+        log.info("$scheduledStart add new deck info.")
+
+        val millisTaken = measureTimeMillis {
+            val deckQ = QDeck.deck
+
+            val deckResults = query.selectFrom(deckQ)
+                    .where(deckQ.houseNamesString.isNull)
+                    .limit(10000)
+                    .fetch()
+
+            if (deckResults.isEmpty()) {
+                doneAddingNewDeckInfo = true
+                log.info("Done adding info to decks!")
+            }
+
+            val rated = deckResults.map {
+                it.withCards(cardService.cardsForDeck(it))
+                        .copy(houseNamesString = it.houses.sorted().joinToString { "|" })
+            }
+            deckRepo.saveAll(rated)
+        }
+
+        log.info("$scheduledStop Took $millisTaken ms to update info on 10000 decks.")
+    }
+
     private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         deck
@@ -253,6 +289,7 @@ class DeckImporterService(
                 .withCards(cardsList)
                 .copy(
                         houses = houses,
+                        houseNamesString = houses.sorted().joinToString { "|" },
                         cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                 )
 

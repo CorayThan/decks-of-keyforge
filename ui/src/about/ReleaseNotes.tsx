@@ -21,6 +21,9 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"4.2"} expanded={true} releaseNotes={[
                     "Added expansion selectors. The one for cards will show you the COTA cards included in AOA!",
                     "Can add filter on number of chains.",
+                    "Temporarily removing house select and recently listed sort to try to improve recent performance issues. " +
+                    "Also converted the total deck count to be an estimate that is much faster to calculate, but also isn't necessarily exactly how many " +
+                    "decks exist."
                 ]}/>
                 <ReleaseNote releaseNumber={"4.1"} expanded={true} releaseNotes={[
                     "AERC now has tool tips that tell you what cards contributed to each score.",

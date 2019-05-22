@@ -8,6 +8,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { UnstyledHashLink } from "../generic/UnstyledLink"
 import { uiStore } from "../ui/UiStore"
+import { answeringTheCall } from "./AnsweringTheCall"
 import { Article, ArticleType } from "./Article"
 import { ArticleView } from "./ArticleView"
 import { daercArts } from "./DaercArts"
@@ -64,7 +65,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
     }
 }
 
-export const allArticles = [whatsTheRush, daercArts]
+export const allArticles = [answeringTheCall, whatsTheRush, daercArts]
 export const latestTwoArticles = allArticles.slice(0, 2)
 
 const ArticleLinksForType = (props: { type: ArticleType }) => {

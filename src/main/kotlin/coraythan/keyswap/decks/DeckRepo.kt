@@ -18,4 +18,10 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     fun findByName(name: String): Deck?
 
     fun findByWinsGreaterThanOrLossesGreaterThan(wins: Int, losses: Int): List<Deck>
+
+    @Query(
+            value = "SELECT reltuples\\:\\:bigint AS estimate FROM pg_class where relname='deck'",
+            nativeQuery = true
+    )
+    fun estimateRowCount(): Long
 }

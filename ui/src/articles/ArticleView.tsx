@@ -54,7 +54,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
 
     render() {
         const {article} = this.props
-        const {title, urlTitle, date, sections, author} = article
+        const {title, subtitle, urlTitle, date, sections, author} = article
         const link = Routes.articlePage(urlTitle)
 
         return (
@@ -81,9 +81,6 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                         <LinkButton color="primary" to={Routes.userProfilePage(author.username)}>
                             {author.name}'s Profile
                         </LinkButton>
-                        <LinkButton color="primary" to={Routes.userDecksForSale(author.username)}>
-                            {author.name}'s Store
-                        </LinkButton>
                         <div style={{flexGrow: 1}}/>
                         <Button onClick={() => this.bioOpen = false} color="primary" autoFocus>
                             Close
@@ -98,6 +95,11 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                                 {title}
                             </Typography>
                         </UnstyledLink>
+                        {subtitle ? (
+                            <Typography variant={"h5"} color={"textSecondary"} style={{marginBottom: spacing(2), fontStyle: "italic"}}>
+                                {subtitle}
+                            </Typography>
+                        ) : null}
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(4)}}>
                             <img alt={"Writer Image"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
                             <Typography>by</Typography>
@@ -136,7 +138,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                                                             return <ArticleInternalLink internalLink={`/decks/${entry.deckId!}`} text={entry.deckName!}
                                                                                         key={entryIdx}/>
                                                         }
-                                                        return <Deck deckId={entry.deckId!} key={entryIdx}/>
+                                                        return <Deck deckId={entry.deckId!} key={entryIdx} name={entry.deckName!} modal={entry.modal}/>
                                                     case EntryType.TABLE:
                                                         if (screenStore.screenSizeXs()) {
                                                             return null
@@ -181,11 +183,48 @@ const SideCard = (props: { cardImg: string }) => (
     </div>
 )
 
-const Deck = (props: { deckId: string }) => (
-    <div style={{display: "flex", justifyContent: "center", marginBottom: spacing(2)}}>
-        <SimpleDeckView deckId={props.deckId!}/>
-    </div>
-)
+interface ArticleDeckProps {
+    deckId: string
+    name: string
+    modal?: boolean
+}
+
+@observer
+class Deck extends React.Component<ArticleDeckProps> {
+    @observable
+    open = false
+
+    render() {
+        const deck = <SimpleDeckView deckId={this.props.deckId!}/>
+
+        if (!this.props.modal) {
+            return (
+                <div style={{display: "flex", justifyContent: "center", marginBottom: spacing(2)}}>
+                    {deck}
+                </div>
+            )
+        }
+        return (
+            <div>
+                <Button color={"primary"} onClick={() => this.open = true} style={{marginBottom: spacing(2)}}>{this.props.name}</Button>
+                <Dialog
+                    open={this.open}
+                    onClose={() => this.open = false}
+                    maxWidth={"md"}
+                >
+                    <DialogContent style={{display: "flex", justifyContent: "center"}}>
+                        {deck}
+                    </DialogContent>
+                    <DialogActions style={{display: "flex", justifyContent: "center"}}>
+                        <Button color={"primary"} onClick={() => this.open = false} autoFocus={true}>
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        )
+    }
+}
 
 const Paragraph = (props: ArticleEntry) => (
     <div style={{marginBottom: props.noPad ? undefined : spacing(2)}}>

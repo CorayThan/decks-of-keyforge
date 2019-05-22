@@ -54,7 +54,7 @@ class DeckService(
 
             if (filtersAreEqualForCount(filters)) {
 
-                count = deckRepo.count()
+                count = deckRepo.estimateRowCount()
                 deckCount = count
 
             } else {
