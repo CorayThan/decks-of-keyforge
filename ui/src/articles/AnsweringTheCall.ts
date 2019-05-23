@@ -85,7 +85,8 @@ export const answeringTheCall: Article = {
                     type: EntryType.PARAGRAPH,
                     text: "So just in time for the release of the next set, we sought to get the opinions of several KeyForge players, including Vault Tour winners, and players with similar accomplishments, on what they felt the best cards in each house were. Lending their views to this article are:"
                 }
-            ]
+            ],
+            cards: ["https://cdn.keyforgegame.com/media/card_front/en/341_246_JJM8J2JQ288W_en.png"]
         },
         makeFinishesSection(
             "Daniel Lloyd / Pokelope",
@@ -223,7 +224,7 @@ export const answeringTheCall: Article = {
                 },
                 {
                     answer: "Card advantage is very strong when all cards are free to play!",
-                    card: "Battlefleet"
+                    card: "Battle Fleet"
                 },
             ], "https://cdn.keyforgegame.com/media/card_front/en/341_178_7J9MG8W9F6GM_en.png"
         ),
@@ -272,11 +273,11 @@ export const answeringTheCall: Article = {
                 },
                 {
                     answer: "Nature’s call hands down. Enables a lot of combos, and is very flexible. My favorite use is removing opponents’ creatures and filling their hand with multi-house cards to reduce future draws, but it’s also great with on-play ability creatures of your own.",
-                    card: "Nature's Call"
+                    card: "Nature’s Call"
                 },
                 {
                     answer: " Possibly the dirtiest removal card in the game given that Fear and Lights Out exist. What makes it stand out is that It can be used to combo with Play effects to blow opponents out or possibly win on the spot with Chota.",
-                    card: "Nature's Call"
+                    card: "Nature’s Call"
                 },
                 {
                     answer: "It's a second copy of your best card!",

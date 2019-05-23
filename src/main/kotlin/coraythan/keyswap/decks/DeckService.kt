@@ -173,10 +173,10 @@ class DeckService(
 
         if (filters.houses.isNotEmpty()) {
             if (filters.houses.size < 4) {
-                filters.houses.forEach { predicate.and(deckQ.houses.contains(it)) }
+                filters.houses.forEach { predicate.and(deckQ.houseNamesString.like("%$it%")) }
             } else {
                 val excludeHouses = House.values().filter { !filters.houses.contains(it) }
-                excludeHouses.forEach { predicate.and(deckQ.houses.contains(it).not()) }
+                excludeHouses.forEach { predicate.and(deckQ.houseNamesString.notLike("%$it%")) }
             }
         }
 

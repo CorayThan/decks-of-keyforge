@@ -67,16 +67,16 @@ data class Deck(
         val cardIds: String = "",
 
         val cardNamesString: String = "",
+
+        /**
+         * Really just mavericks with house.
+         */
         val cardNamesWithHouseString: String = "",
-        val houseNamesString: String? = "",
+        val houseNamesString: String = "",
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         val userDecks: List<UserDeck> = listOf(),
-
-        @ElementCollection
-        @Enumerated(EnumType.STRING)
-        val houses: List<House> = listOf(),
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
@@ -100,9 +100,10 @@ data class Deck(
         val id: Long = -1
 ) {
 
+    val houses: List<House>
+        get() = this.houseNamesString.split("|").map { House.valueOf(it) }
+
     fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>, cards: List<Card>?): DeckSearchResult {
-        // Load the houses
-        this.houses.size
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
@@ -171,12 +172,17 @@ data class Deck(
         val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
             (1..entry.value.size).map { "${entry.key}$it" }
         }.joinToString()
-        val cardNamesWithHouseString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
-            entry.value.groupBy { it.house }.flatMap { houseToCards ->
-                val firstCard = houseToCards.value[0]
-                (1..entry.value.size).map { "${firstCard.cardTitle}${firstCard.house}$it" }
-            }
-        }.joinToString()
+        val cardNamesWithHouseString = newCardsList
+                .filter { it.maverick }
+                .groupBy { it.cardTitle }
+                .flatMap { entry ->
+                    entry.value
+                            .groupBy { it.house }
+                            .map { houseToCards ->
+                                val firstCard = houseToCards.value[0]
+                                "${firstCard.cardTitle}${firstCard.house}"
+                            }
+                }.joinToString()
         return this.copy(
                 cardNamesString = cardNamesString,
                 cardNamesWithHouseString = cardNamesWithHouseString,

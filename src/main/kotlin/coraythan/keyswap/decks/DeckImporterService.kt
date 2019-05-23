@@ -67,7 +67,7 @@ class DeckImporterService(
     @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
-        val deckCountBeforeImport = deckRepo.count()
+        val deckCountBeforeImport = deckRepo.estimateRowCount()
 
         if (env == "qa" && deckCountBeforeImport > 100000) {
             log.info("Aborting import decks auto because env is QA and deck count is greater than 100k")
@@ -89,7 +89,7 @@ class DeckImporterService(
                     return
                 }
                 if (decks == null) {
-                     log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+                    log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
                     break
                 } else {
                     val cards = cardService.importNewCards(decks.data)
@@ -101,7 +101,7 @@ class DeckImporterService(
 
             deckPageService.setCurrentPage(currentPage - 1)
         }
-        val deckCountNow = deckRepo.count()
+        val deckCountNow = deckRepo.estimateRowCount()
         log.info("$scheduledStop Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
         deckService.countFilters(DeckFilters())
     }
@@ -133,7 +133,7 @@ class DeckImporterService(
 
     // Comment this in whenever rating gets revved
     // don't rate decks until adding new info done
-    // @Scheduled(fixedDelayString = lockUpdateRatings)
+    @Scheduled(fixedDelayString = lockUpdateRatings)
     fun rateDecks() {
 
         if (doneRatingDecks) return
@@ -229,38 +229,6 @@ class DeckImporterService(
         return savedDeck.keyforgeId
     }
 
-    var doneAddingNewDeckInfo = false
-
-    @Scheduled(fixedDelayString = lockUpdateRatings)
-    fun addNewDeckInfo() {
-
-        if (doneAddingNewDeckInfo) return
-
-        log.info("$scheduledStart add new deck info.")
-
-        val millisTaken = measureTimeMillis {
-            val deckQ = QDeck.deck
-
-            val deckResults = query.selectFrom(deckQ)
-                    .where(deckQ.houseNamesString.isNull)
-                    .limit(10000)
-                    .fetch()
-
-            if (deckResults.isEmpty()) {
-                doneAddingNewDeckInfo = true
-                log.info("Done adding info to decks!")
-            }
-
-            val rated = deckResults.map {
-                it.withCards(cardService.cardsForDeck(it))
-                        .copy(houseNamesString = it.houses.sorted().joinToString { "|" })
-            }
-            deckRepo.saveAll(rated)
-        }
-
-        log.info("$scheduledStop Took $millisTaken ms to update info on 10000 decks.")
-    }
-
     private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         deck
@@ -288,8 +256,7 @@ class DeckImporterService(
         val saveable = savedDeck
                 .withCards(cardsList)
                 .copy(
-                        houses = houses,
-                        houseNamesString = houses.sorted().joinToString { "|" },
+                        houseNamesString = houses.sorted().joinToString("|"),
                         cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                 )
 
