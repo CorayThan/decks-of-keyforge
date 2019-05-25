@@ -18,9 +18,12 @@ export const daercArts: Article = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Keep in mind that mistakes can happen and ratings assigned here might not necessarily reflect their actual performance."
+                    text: "Keep in mind that ratings assigned here might not necessarily reflect their eventual ratings as done by Decks of Keyforge."
                 }
             ]
+        },
+        {
+            sectionTitle: "BROBNAR"
         },
         {
             sectionTitle: "1-2 Punch",
@@ -37,7 +40,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-zmWht81z-L4/XHieGvr_CWI/AAAAAAAAHo8/qG3YQeyMP-kxI9bPK8q04qhfpCEg7ddEgCLcBGAs/s200/52293319_534616613726842_1127008261808062464_n.png"]
         },
         {
             sectionTitle: "Bingle Bangbang",
@@ -54,24 +57,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Brammo",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "A reasonably sized creature that doesn't have to fight to be effective, but whose value will depend on opponent's positioning."
-                    
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-GZcTiUwrr_I/XHk8FBUphvI/AAAAAAAAHps/4JktyoJukx0iCvsHqbTcIuz7OpmaVuDbQCLcBGAs/s200/51982153_534629743725529_5058363763967655936_n.png"]
         },
         {
             sectionTitle: "Cowfyne",
@@ -84,10 +70,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-C4OqG0zTcQ0/XHieY_b7CBI/AAAAAAAAHpQ/05ic0Td4C9MzKTRWmMEhNYxeu2d5TJXqgCLcBGAs/s200/51798017_534616713726832_8020134646777905152_n.png"]
         },
         {
             sectionTitle: "Drummernaut",
@@ -101,10 +87,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-oEl2_8OVOH0/XHk79NMscuI/AAAAAAAAHpo/n7fVIjtm2lIwinGxFF15F64PzmuPICdNwCLcBGAs/s200/52601954_534616880393482_5934739441145872384_n.png"]
         },
         {
             sectionTitle: "First Blood",
@@ -121,7 +107,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-W3T2Vo5KFVE/XHk8dI9envI/AAAAAAAAHqA/SjeQcoIwDkY01nMiAhIHx_QZ63DeU0eGACLcBGAs/s200/51917073_534636580391512_7711173000359313408_n.png"]
         },
         {
             sectionTitle: "Foozle",
@@ -134,10 +120,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1.5",
+                    text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-5xvQjsgybJI/XHk87rvqasI/AAAAAAAAHqc/bV_fqMD0WXcDXCJyqkd7l0EuTbwM9e8JACLcBGAs/s200/7ZgsJp0.png"]
         },
         {
             sectionTitle: "Groggins",
@@ -150,10 +136,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1.5",
+                    text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-5Kqis7nv-9I/XHiePrWMo1I/AAAAAAAAHpE/PFjOalskaOo_D9hSXz6sPpGp6QCMASF5wCLcBGAs/s200/51914335_534616687060168_8334790522182828032_n.png"]
         },
         {
             sectionTitle: "Groke",
@@ -166,10 +152,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-ETciYBKDCm4/XHk9IBt5OII/AAAAAAAAHqk/kaxqvqub7usJhy3Ls1eBO80tGbZydtZ9ACEwYBhgL/s200/dMX41O7.png"]
         },
         {
             sectionTitle: "Into the Fray",
@@ -183,10 +169,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 3",
+                    text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-6YCeMQdBOqA/XHk9YZygsKI/AAAAAAAAHqw/dmjt8gznxsUKq_Bl5Z-iO47wWsRQgjT5QCLcBGAs/s200/HMFUr7a.png"]
         },
         {
             sectionTitle: "Lollop the Titanic",
@@ -202,23 +188,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Ecrabouillage(fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "So this is Booby Trap... Except with half the damage. Sounds bad."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 1.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-dBhYdxppXgM/XHk8197NSjI/AAAAAAAAHqY/XeQhdOhxbYQy3xB6Lw42Bb1NhNtZj1WKQCLcBGAs/s200/52097236_534636660391504_9179111024479961088_n.png"]
         },
         {
             sectionTitle: "Culf the Quiet",
@@ -231,10 +201,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-Hi-ijGJ8ons/XHk8Ur8uyAI/AAAAAAAAHp4/LTFomhfJr-sXkXFwminnDaORFDks0UcEQCLcBGAs/s200/51412577_534636590391511_1980970652152102912_n.png"]
         },
         {
             sectionTitle: "Flamethrower",
@@ -250,23 +220,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 0.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Chamane vive Ramme(fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "An okay effect, able to take out small creatures."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-CntrJx1L3ZE/XOf3HrcmS7I/AAAAAAAAIio/y83AJCLCUqwfpxzumsivl3W1B2FFag9BQCLcBGAs/s200/61085054_591076901414146_3159547495361544192_n.jpg"]
         },
         {
             sectionTitle: "Grump Buggy",
@@ -282,7 +236,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-oRZ_QzoR7W4/XHk8Pkb3MwI/AAAAAAAAHp0/UceLnukzTjgr3gAplA-7WHLEbLWmB6SNwCLcBGAs/s200/51983524_534632467058590_3167222713588645888_n.png"]
         },
         {
             sectionTitle: "Ogopogo",
@@ -295,10 +249,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1.5",
+                    text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-syNYCxHVqKo/XMMwVM2LwvI/AAAAAAAAIJ0/BGNRbBA1V5414DuzDkE8zxH9n8B7LAZlQCLcBGAs/s200/kf03_ogopogo.png""]
         },
         {
             sectionTitle: "The Flex",
@@ -315,24 +269,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Og le Maitre de Forge (fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "An interesting twist on [Interdimensional Graft], this card is symmetrical and less powerful instead,"
-                    "which makes it a lot worse."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 1.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-e6oEDH0afCM/XJUq8PC6KjI/AAAAAAAAH5s/PamjBmDab2AiZiz-VXH85bu_C15xl4g7gCLcBGAs/s200/54516427_2323223447999458_8131139631321186304_n.jpg"]
         },
         {
             sectionTitle: "Grumpus Tamer",
@@ -346,27 +283,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "La Loi du Plus Fort (fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "A powerful finisher for brobnar, sacrificing 25 power is a feat even they might struggle with."
-                    "Huge payoff, not completely useless early on."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-fo6qYhdtrHM/XHk8lUN4wSI/AAAAAAAAHqM/_NVaOmyvKgwVLYAI3Mld5yXhxZlBjvKrgCLcBGAs/s200/51669918_534636623724841_1552837510244073472_n.png"]
         },
         {
             sectionTitle: "War Grumpus",
@@ -383,7 +303,10 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-3rlpJ_essKA/XHk8tzPjQiI/AAAAAAAAHqQ/2tsM1p76DJMuFc5nNTO5xLQzNwPWL5EBQCLcBGAs/s200/51793330_534636673724836_6227484429221101568_n.png"]
+        },        
+        {
+            sectionTitle: "DIS"
         },
         {
             sectionTitle: "AEmber Imp",
@@ -397,10 +320,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-6NwvarWYwuA/XIHW7G4IHYI/AAAAAAAAHu8/ye2-Rd5NHWow5gKKl0DfV6KaGQmK34RIACLcBGAs/s200/O5gCBQo.png"]
         },
         {
             sectionTitle: "Banish",
@@ -413,10 +336,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-y0aKtbYTNu0/XHk_fo79jhI/AAAAAAAAHsU/vDuo3O7YwWoIUNJxfKQdbeHW50Gz3CKvwCLcBGAs/s200/51899516_534616647060172_6731945513710518272_n.png"]
         },
         {
             sectionTitle: "Binding Irons",
@@ -432,7 +355,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-lXZqQ70UkiQ/XHk_4406kKI/AAAAAAAAHso/Ajt9iwNjkWsHuLVESpJ16vTMjYX47JRFACLcBGAs/s200/52602821_534616757060161_963511574247505920_n.png"]
         },
         {
             sectionTitle: "Exhume",
@@ -448,7 +371,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-xXCYyzWCdjU/XJUqTADzzlI/AAAAAAAAH5k/eQBxMqpoetgIbabUij9Ms5Qry22WUpNtwCLcBGAs/s200/55549674_2323223454666124_7415629570507800576_n.jpg"]
         },
         {
             sectionTitle: "Gub",
@@ -461,13 +384,13 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-a99-mMqiHKs/XIHXDSSkj8I/AAAAAAAAHvE/gctpm12LpjAYCFZb3pfOw_kXBqIMau2hQCLcBGAs/s200/X2Vd0vT.png"]
         },
         {
-            sectionTitle: "Misery Exploit (fr)",
+            sectionTitle: "Misery Exploit",
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
@@ -477,10 +400,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 0.5",
+                    text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-522GBuD1Jsg/XOfxWB4lTwI/AAAAAAAAIhw/Q5ymaz6xp20miQug10ixaloEM2npJgP6wCLcBGAs/s1600/60473402_591076094747560_99216111064580096_n.jpg"]
         },
         {
             sectionTitle: "Not Finished With You",
@@ -496,7 +419,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["http://prntscr.com/nt95a5"]
         },
         {
             sectionTitle: "Streke",
@@ -509,26 +432,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Tezmal (fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "I'm seriously concerned by the lockout potential of this card in combination with [Restringuntus]. Or in multiples."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-XRLJNk3o794/XHk_oZ3g_MI/AAAAAAAAHsY/toUGi4w4Wa0xjzu_vri_9ztr6XIKTvERACEwYBhgL/s200/52448047_534616673726836_4756364624608100352_n.png"]
         },
         {
             sectionTitle: "Unlocked Gateway",
@@ -545,7 +452,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-yUasscEtJfM/XHk_YvOK82I/AAAAAAAAHsQ/ZTRyLYTam7crzsxkfv2di4xvN7VPdxduQCLcBGAs/s200/51398318_534616633726840_1956039655489011712_n.png"]
         },
         {
             sectionTitle: "Yurk",
@@ -561,23 +468,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Angwish",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "An interesting way to increase key costs at least in concept, it fails in execution as it's easier and easier to kill the more effective it is."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 1.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-FKqCjaLzrMU/XHk_-rP0CYI/AAAAAAAAHsw/Khy_XG6uuBMVHb1SFw0pVJ3fSJ13jB73wCLcBGAs/s200/51626445_534627063725797_7573741597439819776_n.png"]
         },
         {
             sectionTitle: "Old Yurk",
@@ -593,7 +484,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-WyXPYAzk6-s/XLDMTq7nCrI/AAAAAAAAIEE/crieU_DsL3Y-Vf6E5rofedd7gldnBZMwQCLcBGAs/s200/kf03_old-yurk.png"]
         },
         {
             sectionTitle: "Skullion",
@@ -610,7 +501,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 0.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-vSD35uLp_b8/XIHXRj1fMsI/AAAAAAAAHvM/TY0o1lOpvYEJOzbvyyZPGNMX6-b_4CkhQCLcBGAs/s200/62rnrHS.png"]
         },
         {
             sectionTitle: "Soulkeeper",
@@ -627,7 +518,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-Kvp8Mo9Yxw8/XIHXdhEUhGI/AAAAAAAAHvY/zGK3w5v-4SIeJ9yjmXjEk-WW79T07ecjQCLcBGAs/s200/OF7VrIL.png"]
         },
         {
             sectionTitle: "Spyyyder",
@@ -643,7 +534,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-pmRCTh7OTC4/XJUpB-9ulRI/AAAAAAAAH5Y/Ed2xPrxxOXgX87pp_iywPNrkJ8qiG_xMwCLcBGAs/s200/55554450_2323223401332796_7917860342904913920_n.jpg"]
         },
         {
             sectionTitle: "Ancient Yurk",
@@ -659,7 +550,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-VKYG3cWu3ls/XLDMZx7ZmNI/AAAAAAAAIEI/hUwmVkP0El4-jtqfPU7uUrktDhlp9YP4ACLcBGAs/s200/kf03_ancient-yurk.png"]
         },
         {
             sectionTitle: "Onyx Knight",
@@ -675,7 +566,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-gI3wjD4wkio/XLDMi9Ie4yI/AAAAAAAAIEM/csiOdpnZOngl3iMuvd6dvHkawwq3iIStACLcBGAs/s200/kf03_onyx-knight.png"]
         },
         {
             sectionTitle: "Shard of Pain",
@@ -691,7 +582,10 @@ export const daercArts: Article = {
                     text: "SAS Rating: 0.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-88JvbDUy8Cg/XIHXL75nipI/AAAAAAAAHvI/rC6U6UHWIm8kWQpfYdqao9qQtkkWNXGdgCLcBGAs/s200/YY0e2n9.png"]
+        },
+        {
+            sectionTitle: "LOGOS"
         },
         {
             sectionTitle: "Archimedes",
@@ -699,6 +593,7 @@ export const daercArts: Article = {
                 {
                     type: EntryType.PARAGRAPH,
                     text: "I don't see why anyone would destroy Archimedes' neighbourgs before him. It's basically a taunt with elusive... And 2 power",
+                    "The best use I can see is when you want to fight yourself; that way your own creatures end up in archives rather than discard."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -707,7 +602,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-ewlVCa6_ymk/XHlAjE_3n6I/AAAAAAAAHtU/4TK2huWWvKIzm6XYagGGOI8xhoSofVDvgCLcBGAs/s200/51751372_534627097059127_9109601260876595200_n.png"]
         },
         {
             sectionTitle: "Binate Rupture",
@@ -723,23 +618,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Recherche Impitoyable (fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "Quite bad without hitting the condition, not trivial to hit it, quite powerful when it does go off."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-z-XQlUL5d4k/XHlALJm7t4I/AAAAAAAAHs8/TQTM_iatYL4zQRMA4t2PtVep8SpOxYd6gCLcBGAs/s200/51987034_534616697060167_4699163180713115648_n.png"]
         },
         {
             sectionTitle: "Eyegor",
@@ -753,10 +632,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-xkq_m_QIpWg/XHlAXKtcUZI/AAAAAAAAHtI/7G4C_yP5PvctQ5RFJMtHQTlWs2VZuUM2ACLcBGAs/s200/51570548_534617030393467_8996887403335516160_n.png"]
         },
         {
             sectionTitle: "Helper Bot",
@@ -772,7 +651,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-RlXLfK9-0rw/XMMx8mRrMwI/AAAAAAAAIKk/R5r2-rp7kZQkrU1nVMICdc-ZH7jbV7IXwCLcBGAs/s200/kf03_helper-bot.png"]
         },
         {
             sectionTitle: "Hexpion",
@@ -786,10 +665,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["http://prntscr.com/nt993e"]
         },
         {
             sectionTitle: "Pip Pip",
@@ -805,7 +684,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 0.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-YQaHrUIWdIA/XMMxYv95S6I/AAAAAAAAIKY/N526xn56VxgeHnYGcmzWByhXC1Zw2RduACLcBGAs/s200/kf03_pip-pip.png"]
         },
         {
             sectionTitle: "Professor Sutterkin",
@@ -819,10 +698,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-mk4DxFxEjNo/XMMx3NIOjLI/AAAAAAAAIKg/60Pmug0kmRMpQbYPciqJc9EDW4cQdK3OwCLcBGAs/s200/kf03_professor-sutterkin.png"]
         },
         {
             sectionTitle: "Standardized Testing",
@@ -839,7 +718,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-QUIwMTKhSBs/XHlARNrKopI/AAAAAAAAHtE/6B3utYMetFAP2m4Wz8UaYKKql_c4bN3sACLcBGAs/s200/51790154_534616837060153_1361640882079531008_n.png"]
         },
         {
             sectionTitle: "Z.Y.X. Researcher",
@@ -856,7 +735,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-DMezkoH0V_w/XMMyFCfy-nI/AAAAAAAAIKo/o0LpOtfZjI0jBzLSvlT7axANYXuDb3dIgCLcBGAs/s200/kf03_zyx-researcher.png"]
         },
         {
             sectionTitle: "Backup Copy",
@@ -872,7 +751,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["http://prntscr.com/nt99w8"]
         },
         {
             sectionTitle: "Director of Z.Y.X.",
@@ -888,7 +767,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-zeOkk13Gefc/XMMyWFPdldI/AAAAAAAAIK4/rYn8ghR7D_kA8N-X0r9sx-mCXxsryPsKwCLcBGAs/s200/kf03_director-of-zyx.png"]
         },
         {
             sectionTitle: "Eureka!",
@@ -905,39 +784,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Jargogle",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "So this is [Masterplan]... but worse in pretty much every way imaginable? Sounds like a bad plan."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Entropic Swirl",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "With a huge variety of creatures having two traits this card will often be 2[A] and 4[D], which is not awful."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-RBj_utUh9zM/XHlAdFXSBuI/AAAAAAAAHtQ/G2BcVM5NiEQz6aEAon1q9P8mePxqVuxVACLcBGAs/s200/51706737_534627073725796_521502548352303104_n.png"]
         },
         {
             sectionTitle: "Project Z.Y.X.",
@@ -950,10 +797,13 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-geBeace1cAo/XMMybSOqGGI/AAAAAAAAIK8/YpqoAHRCYXcRp7z3_VhmwW8IDZ4bHsGagCLcBGAs/s200/kf03_project-zyx.png"]
+        },
+        {
+            sectionTitle: "MARS"
         },
         {
             sectionTitle: "Agent Hoo-Man",
@@ -969,7 +819,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-9ow7XhYirQI/XOblWxjOU1I/AAAAAAAAIgM/khnGSlwBzYgPCXBxeYjhNmGp0HAZZaUnQCLcBGAs/s200/61147014_2370213569967112_5087287400883814400_n.jpg"]
         },
         {
             sectionTitle: "Carpet Phloxem",
@@ -985,7 +835,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-GMe6ltAajqE/XObiGc1d51I/AAAAAAAAIfE/Sr8eKiG8EKc_j-1b-NpGvEqQLTpgwb98gCLcBGAs/s200/61095692_2370213476633788_431714006466560000_n.jpg"]
         },
         {
             sectionTitle: "Collector Worm",
@@ -1001,7 +851,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-cpb7wGAZVrU/XHibezNNFxI/AAAAAAAAHm8/sgew6QlEMUMFsxA34FHexZIYu2n5bLbWQCLcBGAs/s200/51741923_534616660393504_6149350246733316096_n.png"]
         },
         {
             sectionTitle: "Glyxl Proliferator",
@@ -1017,24 +867,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Ixxyxli Fixfinger",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "At a baseline, getting 1[A] and stunning an opponent's creature is already pretty solid, if not spectacular."
-                    "This card also has an upside of possibly destroying opposing stunned creatures, which will be deck-dependant.",
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-VgqrwqUmk8U/XObkGkvEPMI/AAAAAAAAIf4/px053JI_jmMBQQhnpLLyCy-Wdyb9618-QCLcBGAs/s200/61106256_2370213539967115_5528576878023016448_n.jpg"]
         },
         {
             sectionTitle: "Mars First",
@@ -1050,7 +883,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-W6INud1Z6uE/XHhRsNgeeEI/AAAAAAAAHms/KSMBPZon5G8YTaM7hKSHO9wmWYoqoNAJwCLcBGAs/s200/51885854_534616593726844_3328116221471096832_n.png"]
         },
         {
             sectionTitle: "Mars Needs Amber",
@@ -1066,7 +899,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-0qt5sA5AzjU/XHicZ1t4uuI/AAAAAAAAHnc/U3WvETYuIKkzKcuGyD6O88oyaXYsSewWwCLcBGAs/s200/51708285_534617053726798_7966067824634363904_n.png"]
         },
         {
             sectionTitle: "Mindworm",
@@ -1082,14 +915,14 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-Kd9pwCWAeUA/XMMwqCGcrkI/AAAAAAAAIKA/_4SHCo7zHaM7FJEkqJ5wNVq_abASIsWQACLcBGAs/s200/kf03_mindworm.png"]
         },
         {
             sectionTitle: "Skybooster Squadron",
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I... really don't see the point"
+                    text: "I... really don't see the point, especially with [Battle Fleet] no longer being in the set."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1098,7 +931,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-quyfC_fJfL0/XObiN-PwjeI/AAAAAAAAIfM/ej2nR8rM1aU6PgqZeng4Ok3HVOHhprM9ACLcBGAs/s200/60939653_2370213423300460_8024987886807941120_n.jpg"]
         },
         {
             sectionTitle: "Xanthyx Harvester",
@@ -1111,10 +944,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1",
+                    text: "SAS Rating: 0",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-LZ-tP3bhVXo/XHicRmhD83I/AAAAAAAAHnY/I-UIQbvULUcWZA_h1PfwmHASHJILFFyXwCLcBGAs/s200/51879033_534616987060138_2814825504559857664_n.png"]
         },
         {
             sectionTitle: "Zysysyx Shockworm",
@@ -1130,7 +963,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-65WC7Otxtkg/XHiboEWaFTI/AAAAAAAAHnA/jxW2-VixOZ4M66L3-lXWSrHORT70LBwngCLcBGAs/s200/51822136_534616817060155_2742931565955776512_n.png"]
         },
         {
             sectionTitle: "AEmber Conduction Unit",
@@ -1146,7 +979,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-kJqxchyqWlg/XHib-Xy0J5I/AAAAAAAAHnM/6fKvoDs6pgUTH0lys7uyCQcF7hhq5vvSACLcBGAs/s1600/51762341_534616950393475_6572139482957479936_n.png"]
         },
         {
             sectionTitle: "Nyzyk Resonator",
@@ -1159,26 +992,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Storm Crawler",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "Okay this is getting ridiculous. This might be the best of the bunch because it's not trivial to kill I guess?"
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-L_8RvVBaAbU/XHicLI8kCVI/AAAAAAAAHnQ/xlNb8WOfB0Anm9A6zhEp7U1BbQtCwrzkQCLcBGAs/s1600/51719706_534616977060139_1263630574493368320_n.png"]
         },
         {
             sectionTitle: "Destructive Analysis",
@@ -1192,10 +1009,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 0.5",
+                    text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-RLbZG9b91Yc/XMMwz53aOdI/AAAAAAAAIKE/jwOM-Ww6cPA_YtDDT2fOXhUuASESL5sWgCLcBGAs/s200/kf03_destructive-analysis.png"]
         },
         {
             sectionTitle: "Killzord Mk. 9001",
@@ -1211,7 +1028,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-UhmQFAPVG4w/XMMwkEDRkAI/AAAAAAAAIJ8/teO4pUOFWngCAkAiQglQhMxtTUzojam_ACLcBGAs/s200/kf03_killzord-mk-9001.png"]
         },
         {
             sectionTitle: "Martian Generosity",
@@ -1224,10 +1041,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 3",
+                    text: "SAS Rating: 3.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-oWkgUgpTxCc/XMMw5sRKIqI/AAAAAAAAIKI/eAOOEuCRJGI2QDVs18t9oDwPFrBaQawoACLcBGAs/s200/kf03_martian-generosity.png"]
         },
         {
             sectionTitle: "Yxlyx Stimrager",
@@ -1243,10 +1060,13 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-cmB7cKsoGiw/XMMweHBFKiI/AAAAAAAAIJ4/Upd8kh5QncofKJqt-CBRUgnzGW5Gd6eqACLcBGAs/s200/kf03_yxlyx-stimrager.png"]
         },
         {
-            sectionTitle: ""Lion" Bautrem",
+            sectionTitle: "SANCTUM"
+        },
+        {
+            sectionTitle: "'Lion' Bautrem",
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
@@ -1259,7 +1079,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-cmB7cKsoGiw/XMMweHBFKiI/AAAAAAAAIJ4/Upd8kh5QncofKJqt-CBRUgnzGW5Gd6eqACLcBGAs/s200/kf03_yxlyx-stimrager.png"]
         },
         {
             sectionTitle: "Abond the Armorsmith",
@@ -1275,7 +1095,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-Rom5iQrFNnQ/XIHX-AbHiNI/AAAAAAAAHvw/bqBZa5bZ714mX4eV4FApqggQbbqfeu8GACLcBGAs/s200/2i8RQs1.png"]
         },
         {
             sectionTitle: "Aubade the Grim",
@@ -1291,7 +1111,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-FDJS87Es8G4/XIHX5FIBttI/AAAAAAAAHvs/qxyFKT7K_acGr6WdddYKuYcw9VyuYePBgCLcBGAs/s200/avB4InZ.jpg"]
         },
         {
             sectionTitle: "Bordan the Redeemed",
@@ -1307,7 +1127,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-Dgu-w6Y-21M/XObifoKtTJI/AAAAAAAAIfU/0AMaTk_5JrkyRoQFjNMDfUni8nY0AmpvwCLcBGAs/s200/60688735_2370213496633786_1802732262442139648_n.jpg"]
         },
         {
             sectionTitle: "Challe the Safeguard",
@@ -1323,7 +1143,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-OUWhmTUbpkU/XIHYQd7k5vI/AAAAAAAAHwI/AZ8axY8QZvcHF04hrQ6v6R7gNKKtnWyfQCLcBGAs/s200/A6cNeSD.png"]
         },
         {
             sectionTitle: "Golden Aura",
@@ -1339,39 +1159,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Hallowed Shield",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "Meet the friend of [Hallowed Blaster]. They're both about as bad."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 0",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Healing Blast",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "A slightly more powerful [Vigor] sounds good."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-Fy8SSiV3wHI/XObjE_RVrdI/AAAAAAAAIfc/RWUmuKXB2H0XpBt_HWveqFUvRrApZrkQgCLcBGAs/s200/60859832_2370213503300452_7950326473141780480_n.jpg"]
         },
         {
             sectionTitle: "Maruck the Marked",
@@ -1387,30 +1175,14 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Sir Marrows",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "So a weaker Ether Spider that is harder to be killed? Guess that's not horrible?"
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 1.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-WOJgxLnF6Go/XObjtGoHwvI/AAAAAAAAIfw/7fA-YHP_vqQt191jEXUF4zdCOeRbmJqyQCLcBGAs/s200/61209590_2370213533300449_5544524632758943744_n.jpg"]
         },
         {
             sectionTitle: "Smite",
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Please don't try fighting into a thing. It's not a thing."
+                    text: "Please don't try making fighting into a thing. It's not a thing. This is basically a worse [Inspiration], which is already pretty meh."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1419,7 +1191,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/--YTSm8sRL74/XIHYVKYtQ0I/AAAAAAAAHwM/0nrMHrt0rowclRhvrzIw2TOQHE6rVWycgCLcBGAs/s200/4Cp7BIz.png"]
         },
         {
             sectionTitle: "The Grey Rider",
@@ -1432,10 +1204,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-uWFRu7gFRhs/XIHXyanUNEI/AAAAAAAAHvo/hMSUQegukLQY3negB5od4LI7JmiyEN6dgCLcBGAs/s200/e5JQOZ1.png"]
         },
         {
             sectionTitle: "Barrister Joya",
@@ -1451,7 +1223,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-NimqcFzgV7U/XIHYJZ1XvII/AAAAAAAAHwA/yiRAjZgeyI4FeGkI9X_DN4DO8FcokMJ4gCLcBGAs/s200/iIiGwg0.png"]
         },
         {
             sectionTitle: "X Ambassador",
@@ -1467,7 +1239,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-kpMin-Zacxc/XLDNACW8edI/AAAAAAAAIEs/JXLv6FdA8Dcd5aLS6zy90cRCVslNhnaGQCLcBGAs/s320/kf03_cardfan_a2-ambassadors.png"]
         },
         {
             sectionTitle: "Free Markets",
@@ -1483,7 +1255,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-bDFLNPOBwso/XObhR3hN2AI/AAAAAAAAIe0/wrtt99JFhHE2CXaPIaUiTy7nMyJ_RIvegCLcBGAs/s200/61450238_2370213459967123_592348300187795456_n.jpg"]
         },
         {
             sectionTitle: "Rothais the Fierce",
@@ -1499,14 +1271,14 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-1bcZRhCJsGc/XObkXvyOFWI/AAAAAAAAIgA/sJeYKI1m5QoqDJTgWxgmSATnxFM-1p74wCLcBGAs/s200/60853333_2370213553300447_5476436348711731200_n.jpg"]
         },
         {
             sectionTitle: "Anahita the Trader",
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "An artifact for 4[A] swing? Sounds like an awesome deal."
+                    text: "An artifact for 4[A] swing? Sounds like an awesome deal. Works best with symmetrical artifacts."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1515,7 +1287,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-aNdXyf6cGsw/XLDMzpk3CII/AAAAAAAAIEg/xBHjNN0aXYwQnaFNoGpbh_h8ScecKQTfACLcBGAs/s200/kf03_anahita-the-trader.png"]
         },
         {
             sectionTitle: "Eye of Judgment",
@@ -1531,7 +1303,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-IVMcKeG2B54/XObjRvuq4WI/AAAAAAAAIfk/EmNkAR9EswQ7c0B8LncxBspJImotGM0iwCLcBGAs/s200/61237417_2370213516633784_6579900686429847552_n.jpg"]
         },
         {
             sectionTitle: "Martyr's End",
@@ -1544,10 +1316,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-BhT4EIYFA8E/XLDM5nCrsWI/AAAAAAAAIEk/A6PfPFS8lWg0vGi8fQiK1-prGXlqVjtFQCLcBGAs/s200/kf03_martyrs-end.png"]
         },
         {
             sectionTitle: "Opal Knighth",
@@ -1563,7 +1335,10 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-tUymoeFxSEk/XLDMtXVwYpI/AAAAAAAAIEY/STtCmABzYlkqoHchBY664JjmmEdCA-TKgCLcBGAs/s200/kf03_opal-knight.png"]
+        },
+        {
+            sectionTitle: "SHADOWS"
         },
         {
             sectionTitle: "Dusk Chronicles",
@@ -1579,7 +1354,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-vpFMyWyRqcE/XObRZFOwm4I/AAAAAAAAIdg/scS5XAH0F-s1k8_0VXq7mis26PAW7XVJgCLcBGAs/s200/kf03_dusk-chronicles.png"]
         },
         {
             sectionTitle: "Furtive Investors",
@@ -1595,7 +1370,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-j55A8FhXOuQ/XHidDwOCE3I/AAAAAAAAHoE/RZ6rXwdw-9sYZ2cHTcHlH7V-wu5DN0-hgCLcBGAs/s200/52594295_534631340392036_4100717105001791488_n.png"]
         },
         {
             sectionTitle: "Gamgee",
@@ -1611,7 +1386,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-mYI1Cjz8lgU/XObQcYlqbuI/AAAAAAAAIdY/8HxkXix4al8r9C0NZJIvpJPBhcRIOpW2gCLcBGAs/s200/kf03_gamgee.png"]
         },
         {
             sectionTitle: "Knuckles Bolton",
@@ -1627,7 +1402,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-vAYPHML2UD8/XObVMIEQvrI/AAAAAAAAIeI/6ZEjCPliTAYhlyt9zukzEFMFYRx6iwmfACLcBGAs/s200/kf03_knuckles-bolton.png"]
         },
         {
             sectionTitle: "Lamindra",
@@ -1643,7 +1418,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-Dfy9-_fX6gU/XHidJS9Z4YI/AAAAAAAAHoM/2Tl2YLN3l0ccQpjIUwvGzgPCsvc7uBo-QCLcBGAs/s200/51669916_534636643724839_8866451668917551104_n.png"]
         },
         {
             sectionTitle: "Life for a Life",
@@ -1659,7 +1434,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-k_SoD55Ioow/XHidaUV_mqI/AAAAAAAAHoY/9I-b0GIn7ds_vGK9IBwCr9SsVwp_xZ1-wCLcBGAs/s200/oQXHneb.png"]
         },
         {
             sectionTitle: "Ronnie Wristclocks",
@@ -1675,7 +1450,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-QidSGKT7URc/XHidyuFlVmI/AAAAAAAAHow/IJ6apykCKd4gf08GxbtoSs-uILppCzUPQCLcBGAs/s200/bdjpV7J.png"]
         },
         {
             sectionTitle: "Sucker Punch",
@@ -1688,10 +1463,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-OJET4YnzyAs/XHid5zPeeEI/AAAAAAAAHo0/f52nC8jLiXUzXTK3UCVBaKUrM0fPnSr5QCLcBGAs/s200/mYkmhsP.png"]
         },
         {
             sectionTitle: "Swindle",
@@ -1708,7 +1483,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://storage.googleapis.com/kfc_card_images/swindle-278.png"]
         },
         {
             sectionTitle: "Throwing Stars",
@@ -1724,7 +1499,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://storage.googleapis.com/kfc_card_images/throwing-stars-279.png"]
         },
         {
             sectionTitle: "Whistling Darts",
@@ -1740,7 +1515,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://storage.googleapis.com/kfc_card_images/whistling-darts-281.png"]
         },
         {
             sectionTitle: "Yantzee Gang",
@@ -1756,7 +1531,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://storage.googleapis.com/kfc_card_images/yantezee_gang-282.png"]
         },
         {
             sectionTitle: "Bonerot Venom",
@@ -1772,7 +1547,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-fqRKR2u5qiU/XObh9lUpzhI/AAAAAAAAIfA/Nst5JLOxnXIYUiLXQVa0mrN0KqCyA8OXQCLcBGAs/s200/60981234_2370213466633789_2278398090882842624_n.jpg"]
         },
         {
             sectionTitle: "Brend the Fanatic",
@@ -1788,23 +1563,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Repaire Discret (fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "Nothing spectacular. Pretty much just a [Foggify], but worse."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 1",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-TVkgQvEWdNI/XObTeMnMLdI/AAAAAAAAId0/tEFAIcKixGARUlaVhsMe7kDpMDgsj-YNgCLcBGAs/s200/kf03_brend-the-fanatic.png"]
         },
         {
             sectionTitle: "Little Niff",
@@ -1817,10 +1576,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2.5",
+                    text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-MLABdcgg4TY/XObgjtLsniI/AAAAAAAAIes/fm45tiMIe_Ef48Zj0Qh9fudP3WCbzxz2wCLcBGAs/s1600/60556227_2370213416633794_7614251196399747072_n.jpg"]
         },
         {
             sectionTitle: "Nightforge",
@@ -1833,10 +1592,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 0",
+                    text: "SAS Rating: 0.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-MoeZyJE1p0U/XHidmyl8bjI/AAAAAAAAHok/EX7XXNuLHGg1XfZ7Wp2fJ4HjpGrCjvr5QCLcBGAs/s200/p2zpvmC.png"]
         },
         {
             sectionTitle: "Perplexing Sophistry",
@@ -1852,7 +1611,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-9qFoG1hwvOw/XOfwKzxL_uI/AAAAAAAAIho/ABh2J7PMXN8htDS7Qrqrcemww7gw1dbbQCEwYBhgL/s200/60951602_10161701174640468_2929450047022039040_n.jpg"]
         },
         {
             sectionTitle: "Heist Night",
@@ -1868,7 +1627,10 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-mnQRTat_jUk/XHidSrHBydI/AAAAAAAAHoQ/33Kj8FZcG9INysydZCmwa6CJ7vaqb_VVgCLcBGAs/s200/GmWSuUC.png"]
+        },
+        {
+            sectionTitle: "UNTAMED"
         },
         {
             sectionTitle: "Dharna",
@@ -1884,7 +1646,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5"
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-CfgBFNkJmmo/XHk9rYwt85I/AAAAAAAAHq8/ar4itZMhjqY8vE2fD5w1pvgwRRfwTMAywCLcBGAs/s200/51822071_534616853726818_3405276928146407424_n.png"]
         },
         {
             sectionTitle: "Duskwitch",
@@ -1897,10 +1659,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 2",
+                    text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-a5IYVZcCj2c/XHk-RipoCiI/AAAAAAAAHrY/aF6ZDVJgLD8ZCWri5t2NQNBX6Q1xVYNFACLcBGAs/s200/51652425_534636597058177_2992479495249723392_n.png"]
         },
         {
             sectionTitle: "Fanghouse",
@@ -1916,23 +1678,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Lueur (fr)",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "A [Regrowth] that works on actions? Don't mind if I do."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 2.5
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://3.bp.blogspot.com/-nsYPWeqtUCE/XHk-Z8kRIrI/AAAAAAAAHrk/7oFxq5iuOIYpVuMCGMpf_8rrAESDH4-LwCLcBGAs/s200/dLXnYWI.png"]
         },
         {
             sectionTitle: "Grovekeeper",
@@ -1948,7 +1694,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-M4fDz-jTy_I/XHk9jorlP8I/AAAAAAAAHq0/UHL32K1NUNQfEH_OaU8G8rNT7iREmD2RgCLcBGAs/s200/52146479_534616627060174_2007104218183237632_n.png"]
         },
         {
             sectionTitle: "Knoxx",
@@ -1961,10 +1707,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1.5"
+                    text: "SAS Rating: 1"
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-eWS_2eME_QQ/XHk-DL2Vp5I/AAAAAAAAHrM/xf5UG2aEsxEb62lPjEjYay38p_4Ntl8oACLcBGAs/s200/51960821_534630690392101_8321590859321573376_n.png"]
         },
         {
             sectionTitle: "Marmo Swarm",
@@ -1980,7 +1726,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-yuFz68R2s1M/XHk96bQ_tqI/AAAAAAAAHrI/BDCt30YHCQciPNYOSDC7AS2SRq9ykS0CACLcBGAs/s200/52410560_534627083725795_90838450936217600_n.png"]
         },
         {
             sectionTitle: "Persistence Hunting",
@@ -1996,7 +1742,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 3.5"
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-my0kkhaqvIc/XHk9ys2PzdI/AAAAAAAAHrA/Pcq2rgCw6gYkmK9w560iTT_oA4WMPnX5gCLcBGAs/s200/51745035_534617037060133_3919997959361527808_n.png"]
         },
         {
             sectionTitle: "Song of Spring",
@@ -2013,7 +1759,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-zkNTCZeSZM0/XIHWxfzsegI/AAAAAAAAHu4/fk1evLocY6sk_Vbeh5gBBlAMBTN4_x8XgCLcBGAs/s200/W4kUWN4.png"]
         },
         {
             sectionTitle: "Tantadlin",
@@ -2029,7 +1775,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-qQVh6SBUsXU/XHk-fTes9MI/AAAAAAAAHro/l3RdpY2Af9EAXWzYyHP1OatPt-eQ2pEUQCLcBGAs/s200/7QU7RLz.png"]
         },
         {
             sectionTitle: "They're Everywhere!",
@@ -2045,7 +1791,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 2",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-LnIBxV9iTwI/XHk-p7aJh5I/AAAAAAAAHr0/WSiHn-4J2Lg5U0EU9rjJ0GqI6CJGACJ8wCLcBGAs/s200/khwT9ti.png"]
         },
         {
             sectionTitle: "Bumblebird",
@@ -2058,26 +1804,10 @@ export const daercArts: Article = {
                     type: EntryType.PARAGRAPH,
                     bold: true,
                     color: "primary",
-                    text: "SAS Rating: 1.5",
+                    text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
-        },
-        {
-            sectionTitle: "Camouflage",
-            entries: [
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "I guess this is a non-terrible protection? It's not amazing though."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    bold: true,
-                    color: "primary",
-                    text: "SAS Rating: 1.5",
-                }
-            ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-drHrWUs84QI/XJUrmhdlgiI/AAAAAAAAH54/RD4agBhoZtAqT69zVw2cxOilHeY2fx2KQCLcBGAs/s200/55783802_2323223417999461_2100323146153328640_n.jpg"]
         },
         {
             sectionTitle: "Niffle Grounds",
@@ -2093,7 +1823,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-fDg14e7ZiCg/XJUoTaYc5tI/AAAAAAAAH5Q/vvXuLxkvjGIC-KOESJbyH1DM0kdD_zteQCLcBGAs/s200/54798947_2323223394666130_4218555575786536960_n.jpg"]
         },
         {
             sectionTitle: "Panpaca, Anga",
@@ -2109,7 +1839,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-zi6-rHV4BkE/XJUwg90yWII/AAAAAAAAH6E/q3f-sLvoNXUVbS8x6pyWH_wd4t-dgfBpgCLcBGAs/s200/D1ixxtqXQAEQ9x-.png"]
         },
         {
             sectionTitle: "Panpaca, Jaga",
@@ -2125,7 +1855,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-gpC0rkaI71o/XJUwiaeLUXI/AAAAAAAAH6I/noEpGSXMPKkpX7m2VldcJwJc-Syaz6KZwCLcBGAs/s200/D1ixxtoWkAAP-0j.png"]
         },
         {
             sectionTitle: "Way of the Porcupine",
@@ -2141,7 +1871,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://1.bp.blogspot.com/-4ksRI96LRpQ/XHk-yEN8qkI/AAAAAAAAHr8/82yzZCxiR48m3_93QsxFPTvmAaQCyhmTACLcBGAs/s200/Mu1EmGd%2B%25281%2529.png"]
         },
         {
             sectionTitle: "Roxador",
@@ -2157,7 +1887,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://4.bp.blogspot.com/-pGQ0_Or5CRA/XHk-89XwUwI/AAAAAAAAHsE/a7gG7Lf_aIMj3WR0zKpcjAY3tHrY-K80gCLcBGAs/s200/53161749_10217978690680302_8750363796737884160_n.jpg"]
         },
         {
             sectionTitle: "Shard of Life",
@@ -2173,7 +1903,7 @@ export const daercArts: Article = {
                     text: "SAS Rating: 1",
                 }
             ],
-            cards: ["insert_card_art_link_here"]
+            cards: ["https://2.bp.blogspot.com/-K_xAgXgXwnA/XIHWqWlLgwI/AAAAAAAAHu0/o9EDs8zxF3UKC3MpiiJTm_AbW1n3XGTgACLcBGAs/s200/VrEfjAH.png"]
         }
     ]
 }
