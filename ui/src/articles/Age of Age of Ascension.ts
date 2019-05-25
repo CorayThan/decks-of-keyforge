@@ -1,13 +1,13 @@
 /* tslint:disable:max-line-length */
 import { Article, ArticleType, EntryType } from "./Article"
-import { bigZ } from "./Authors"
+import { Dunkoro } from "./Authors"
 
 export const daercArts: Article = {
     author: Dunkoro,
     title: "Age of Age of Ascension",
     urlTitle: "age-of-age-of-ascension",
-    date: "May 21, 2019,
-    type: ArticleType.SPOILER_REVIEW,
+    date: "May 21, 2019",
+    type: ArticleType.EVALUATION,
     sections: [
         {
             sectionTitle: "Review Goals",
