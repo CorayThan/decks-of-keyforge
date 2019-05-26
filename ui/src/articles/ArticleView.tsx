@@ -120,7 +120,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                                         </Typography>
                                     )}
                                     <div style={{display: "flex"}}>
-                                        <div>
+                                        <div style={{flexGrow: 1}}>
                                             {entries.map((entry: ArticleEntry, entryIdx: number) => {
                                                 switch (entry.type) {
                                                     case EntryType.PARAGRAPH:

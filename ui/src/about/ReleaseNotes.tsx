@@ -18,6 +18,10 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"4.3"} expanded={true} releaseNotes={[
+                    `Search for cards as mavericks in a specific house! Just use the "Copies" drop down and select the house you want.`,
+                    "New article previewing SAS ratings for many of the known cards coming out in Age of Ascension!"
+                ]}/>
                 <ReleaseNote releaseNumber={"4.2"} expanded={true} releaseNotes={[
                     "Added expansion selectors. The one for cards will show you the COTA cards included in AOA!",
                     "Can add filter on number of chains.",

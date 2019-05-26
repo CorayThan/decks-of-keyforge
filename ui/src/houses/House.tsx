@@ -26,10 +26,10 @@ export interface HouseValue {
     title?: React.ReactNode
 }
 
-const HouseLabel = (props: { name: string, img: string, title: boolean }) => (
+const HouseLabel = (props: { house: string, img: string, title?: boolean }) => (
     <div style={{display: "flex", alignItems: "center", width: 96}}>
         <img src={props.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
-        <Typography variant={props.title ? "subtitle2" : "body2"}>{props.name}</Typography>
+        <Typography variant={props.title ? "subtitle2" : "body2"}>{props.house}</Typography>
     </div>
 )
 
@@ -65,8 +65,8 @@ export const houseValuesArray: HouseValue[] = [
 ]
 
 houseValuesArray.forEach((houseValue) => {
-    houseValue.label = <HouseLabel name={houseValue.house} img={houseValue.img} title={false}/>
-    houseValue.title = <HouseLabel name={houseValue.house} img={houseValue.img} title={true}/>
+    houseValue.label = <HouseLabel house={houseValue.house} img={houseValue.img} title={false}/>
+    houseValue.title = <HouseLabel house={houseValue.house} img={houseValue.img} title={true}/>
 })
 
 export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(houseValue => (

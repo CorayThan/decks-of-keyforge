@@ -55,7 +55,8 @@ data class DeckFilters(
 
 data class DeckCardQuantity(
         val cardName: String,
-        val quantity: Int
+        val quantity: Int,
+        val house: House? = null
 )
 
 enum class DeckSortOptions {

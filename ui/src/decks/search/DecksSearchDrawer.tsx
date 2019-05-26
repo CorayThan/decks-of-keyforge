@@ -23,6 +23,7 @@ import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
+import { House, houseValuesArray } from "../../houses/House"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
@@ -343,34 +344,53 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         </ListItem>
                         <ListItem>
                             <div>
-                                {cards.map((card, idx) => (
-                                    <div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>
-                                        <CardSearchSuggest
-                                            card={card}
-                                            style={{marginTop: 12}}
-                                        />
-                                        <TextField
-                                            style={{width: 56, marginLeft: spacing(2)}}
-                                            label={"Copies"}
-                                            select={true}
-                                            value={card.quantity}
-                                            onChange={event => card.quantity = Number(event.target.value)}
-                                        >
-                                            <MenuItem value={0}>None</MenuItem>
-                                            <MenuItem value={1}>1+</MenuItem>
-                                            <MenuItem value={2}>2+</MenuItem>
-                                            <MenuItem value={3}>3+</MenuItem>
-                                            <MenuItem value={4}>4+</MenuItem>
-                                            <MenuItem value={5}>5+</MenuItem>
-                                            <MenuItem value={6}>6+</MenuItem>
-                                        </TextField>
-                                        {idx === 0 && cards.length < 10 ? (
-                                            <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
-                                                <Add fontSize={"small"}/>
-                                            </IconButton>
-                                        ) : null}
-                                    </div>
-                                ))}
+                                {cards.map((card, idx) => {
+                                    const value = card.house ? card.house : card.quantity.toString()
+                                    return (
+                                        <div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>
+                                            <CardSearchSuggest
+                                                card={card}
+                                                style={{marginTop: 12}}
+                                            />
+                                            <TextField
+                                                style={{width: 56, marginLeft: spacing(2)}}
+                                                label={"Copies"}
+                                                select={true}
+                                                value={value}
+                                                onChange={event => {
+                                                    const valueAsNumber = Number(event.target.value)
+                                                    if (isNaN(valueAsNumber)) {
+                                                        card.house = event.target.value as House
+                                                        card.quantity = 1
+                                                    } else {
+                                                        card.quantity = valueAsNumber
+                                                        card.house = undefined
+                                                    }
+                                                }}
+                                            >
+                                                <MenuItem value={"0"}>None</MenuItem>
+                                                <MenuItem value={"1"}>1+</MenuItem>
+                                                <MenuItem value={"2"}>2+</MenuItem>
+                                                <MenuItem value={"3"}>3+</MenuItem>
+                                                <MenuItem value={"4"}>4+</MenuItem>
+                                                <MenuItem value={"5"}>5+</MenuItem>
+                                                <MenuItem value={"6"}>6+</MenuItem>
+                                                {houseValuesArray.map(houseValue => {
+                                                    return (
+                                                        <MenuItem value={houseValue.house} key={houseValue.house}>
+                                                            {houseValue.house}
+                                                        </MenuItem>
+                                                    )
+                                                })}
+                                            </TextField>
+                                            {idx === 0 && cards.length < 10 ? (
+                                                <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
+                                                    <Add fontSize={"small"}/>
+                                                </IconButton>
+                                            ) : null}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </ListItem>
                         <ListItem>

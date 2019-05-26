@@ -33,9 +33,16 @@ export class DeckFilters {
             }
             queryObject.cards = queryObject.cards.map((forQuery: string) => {
                 const lastIndexOf = forQuery.lastIndexOf("-")
+                const secondPart = forQuery.substring(lastIndexOf + 1)
+                const quantity = isNaN(Number(secondPart)) ? undefined : Number(secondPart)
+                let house
+                if (quantity == null) {
+                    house = secondPart as House
+                }
                 return {
                     cardName: forQuery.substring(0, lastIndexOf),
-                    quantity: Number(forQuery.substring(lastIndexOf + 1))
+                    quantity,
+                    house
                 }
             })
         }
@@ -191,7 +198,7 @@ const constraintsAsParam = (constraints: Constraint[]) => (
 )
 
 const cardsAsParam = (cards: DeckCardQuantity[]) => (
-    cards.map(card => `${card.cardName}-${card.quantity}`)
+    cards.map(card => `${card.cardName}-${card.house ? card.house : card.quantity}`)
 )
 
 const DefaultDeckFilters: any = new DeckFilters()
@@ -199,4 +206,5 @@ const DefaultDeckFilters: any = new DeckFilters()
 export interface DeckCardQuantity {
     cardName: string
     quantity: number
+    house?: House
 }

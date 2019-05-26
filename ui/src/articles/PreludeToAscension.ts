@@ -2,10 +2,11 @@
 import { Article, ArticleType, EntryType } from "./Article"
 import { dunkoro } from "./Authors"
 
-export const ageOfAgeOfAscension: Article = {
+export const preludeToAscension: Article = {
     author: dunkoro,
-    title: "Age of Age of Ascension",
-    urlTitle: "age-of-age-of-ascension",
+    title: "Prelude to Ascension",
+    subtitle: "A preview of SAS in Age of Ascension",
+    urlTitle: "prelude-to-ascension",
     date: "May 26, 2019",
     type: ArticleType.EVALUATION,
     sections: [
@@ -14,11 +15,9 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "This article will attempt to review currently available cards from Age of Ascension and give them an approximate SAS rating."
-                },
-                {
-                    type: EntryType.PARAGRAPH,
-                    text: "Keep in mind that ratings assigned here might not necessarily reflect their eventual ratings as done by Decks of Keyforge."
+                    text: "I will be reviewing many of the cards currently known in the upcoming set, Age of Ascension, and previewing their future SAS rating. " +
+                        "These ratings are not final, and also do not include predicted synergies or antisynergies. SAS ratings range from 0 to 4, where 0 is " +
+                        "a very bad card, 2 is average, and 4 is very good."
                 }
             ]
         },
@@ -47,7 +46,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "A suicide bomber that can take out multiple threats. Reminiscent of [Lord Golgotha], except not as likely to fight multiple times and very likely to overkill targets (and kill self)."
+                    text: "A suicide bomber that can take out multiple threats. Reminiscent of {{cardName: Lord Golgotha}} except not as likely to fight multiple times and very likely to overkill targets (and kill self)."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -95,7 +94,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "[Mothership Support] that doesn't absolutely suck sounds nice, but this still doesn't have enough upside. If your brobnars are doing their job, your opponent should have barely any creatures on board to begin with."
+                    text: "{{cardName: Mothership Support}} that doesn't absolutely suck sounds nice, but this still doesn't have enough upside. If your brobnars are doing their job, your opponent should have barely any creatures on board to begin with."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -111,7 +110,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Conditional [Dew Faerie] doesn't sound particularly amazing."
+                    text: "Conditional {{cardName: Dew Faerie}} doesn't sound particularly amazing."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -143,7 +142,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So this is the next set version of [Krump] that's about as powerful; still works when attacking elusive, but doesn't have that 1 more power."
+                    text: "So this is the next set version of {{cardName: Krump}} that's about as powerful; still works when attacking elusive, but doesn't have that 1 more power."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -223,7 +222,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Seems about on par with [Iron Obelisk]. There's a drawback, but there's also aember on entry."
+                    text: "Seems about on par with {{cardName: Iron Obelisk}} There's a drawback, but there's also aember on entry."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -271,7 +270,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I'm assuming this card will always come together with [War Grumpus]. This is still [Bear Flute] that is more vulnerable, doesn't have an alternative mode and only searches for a single copy."
+                    text: "I'm assuming this card will always come together with War Grumpus. This is still {{cardName: Bear Flute}} that is more vulnerable, doesn't have an alternative mode and only searches for a single copy."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -287,7 +286,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Less immediately impactful than [Ganger Chieftain], this seems like a more limited and more vulnerable [John Smyth] instead"
+                    text: "Less immediately impactful than {{cardName: Ganger Chieftain}}, this seems like a more limited and more vulnerable {{cardName: John Smyth}} instead"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -323,7 +322,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "This is basically a worse [Lights Out], which is still a... card."
+                    text: "This is basically a worse {{cardName: Lights Out}} or a better version of {{cardName: Fear}} since it provides an aember."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -355,7 +354,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Basically a more powerful and versatile [Regrowth] with no drawbacks."
+                    text: "Basically a more powerful and versatile {{cardName: Regrowth}}  with no drawbacks. Dis may have lost {{cardName: Arise!}} " +
+                        "but it can feel good with this as a replacement."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -371,7 +371,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Dis always loves taunts to protect their powerful effects.",
+                    text: "Dis creatures always love taunts to protect their powerful effects.",
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -387,7 +387,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "This is a much worse version of [Cleansing Wave], which itself is a quite bad card."
+                    text: "This is a much worse version of {{cardName: Cleansing Wave}}, which itself is a quite bad card."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -403,7 +403,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "The new [Succubus], now a lot more conditional, but elusive."
+                    text: "The new {{cardName: Succubus}}, now a lot more conditional, but elusive."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -419,7 +419,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "A significantly more powerful [Gateway to Dis]. No longer allows you to refill right away, but does allow you to not be chained afterwards."
+                    text: "A significantly more powerful {{cardName: Gateway to Dis}}. No longer allows you to refill right away, but does allow you to not be chained afterwards."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -451,7 +451,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Just like with [Yurk], discarding cards from your hand is good."
+                    text: "Just like with Yurk, discarding cards from your hand is good."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -483,7 +483,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Unlike [Three Fates], you can always play this card and it will always be useful."
+                    text: "Unlike {{cardName: Three Fates}}, you can always play this card and it will always be useful."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -499,7 +499,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So this is [Macis Asp], already a mediocre card, that is also conditional? Ouch"
+                    text: "So this is {{cardName: Macis Asp}}, already a mediocre card, that is also conditional? Ouch"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -547,7 +547,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So with two shards out this is [Cannon], one of the worst artifacts in the game? Sounds awful."
+                    text: "So with two shards out this is {{cardName: Cannon}}, one of the worst artifacts in the game? Sounds awful."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -583,7 +583,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So this is the reverse [Effivrescent Principle]. It seems quite powerful but also extremely exploitable."
+                    text: "So this is the reverse [Effivrescent Principle]. It seems quite powerful but also extremely exploitable. This will need to be " +
+                        "discarded fairly often to not give your opponent a key."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -615,7 +616,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Unless you're playing an OTK deck, this is [Phase Shift] but slightly better. What's not to like?"
+                    text: "Unless you're playing an OTK deck, this is {{cardName: Phase Shift}} but slightly better. What's not to like?"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -647,7 +648,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "This has quite the crazy potential on the level of [Witch of the Eye] and will sometimes be a must-kill. Definitely better than [Doc Bookton]"
+                    text: "This has quite the crazy potential on the level of {{cardName: Witch of the Eye}} and will sometimes be a must-kill. " +
+                        "Definitely better than {{cardName: Doc Bookton}}"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -663,7 +665,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "This is a weird board wipe that's reminiscent of Three Fates but then also is in a faction with some of the smallest creatures... But then it also doesn't give an aember? Not a fan."
+                    text: "This is a weird board wipe that's reminiscent of {{cardName: Three Fates}} but then also is in a faction with some of the smallest creatures... But then it also doesn't give an aember? Not a fan."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -679,7 +681,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I absolutely despise the fact that this card exists, because that forces us to keep track of discard pile's order. When it comes to the card's merit it's comparable to [Random Access Archive]."
+                    text: "I absolutely despise the fact that this card exists, because that forces us to keep track of discard pile's order. When it " +
+                        "comes to the card's merit it's comparable to {{cardName: Random Access Archive}}."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -711,7 +714,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "The Alpha ability is quite powerful. Even if you do risk archiving logos cards from your hand. The only annyoing aspect is randomly choosing two cards..."
+                    text: "The Alpha ability is quite powerful. Even if you do risk archiving logos cards from your hand. The only annoying aspect is randomly choosing two cards..."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -747,7 +750,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So this is [Bigtwig]... but without the exhausting, with friendly stunning, without high power? Yikes"
+                    text: "So this is {{cardName: Bigtwig}} ... but without the exhausting, with friendly stunning, without high power? Poor Mars. " +
+                        "Did you really need any more confirmation you're the red headed stepchild of KeyForge?"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -779,7 +783,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So Uxlyx, but needs to fight rather than reap? Sounds a lot worse."
+                    text: "So {{cardName: Uxlyx the Zookeeper}} but needs to fight rather than reap? Sounds a lot worse."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -795,7 +799,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "This is a slightly better [Novu Archaeologist], which sounds good"
+                    text: "This is a slightly better {{cardName: Novu Archaeologist}}, which sounds good"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -811,7 +815,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Some sort of a compromise between [Squawker] and [Inspiration]."
+                    text: "Some sort of a compromise between {{cardName: Squawker}} and {{cardName: Inspiration}}."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -859,7 +863,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I... really don't see the point, especially with [Battle Fleet] no longer being in the set."
+                    text: "I really don't see the point, especially with {{cardName: Battle Fleet}} no longer being in the set. Hopefully this combos " +
+                        "with an as-yet-unseen Mars card."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -875,7 +880,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So, [Dew Faerie] with less protection and with a significant restriction? Ouch."
+                    text: "So, {{cardName: Dew Faerie}} with less protection and with a significant restriction? Ouch."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1016,14 +1021,14 @@ export const ageOfAgeOfAscension: Article = {
                     text: "SAS Rating: 1.5",
                 }
             ],
-            cards: ["https://3.bp.blogspot.com/-cmB7cKsoGiw/XMMweHBFKiI/AAAAAAAAIJ4/Upd8kh5QncofKJqt-CBRUgnzGW5Gd6eqACLcBGAs/s200/kf03_yxlyx-stimrager.png"]
+            cards: ["https://images-cdn.fantasyflightgames.com/filer_public/83/0f/830f1cf9-ad8c-4d3f-b46d-bac58533a8ae/kf03_lion-bautrem.png"]
         },
         {
             sectionTitle: "Abond the Armorsmith",
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Seems quite similar to [Grey Monk]. Except it gives more armour rather than healing. I'd say it's a wash"
+                    text: "Seems quite similar to {{cardName: Grey Monk}}. Except it gives more armour rather than healing. I'd say it's a wash"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1087,7 +1092,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I guess this is an uh... [Inspiration] for out-of-house only? And a heal? Eh"
+                    text: "I wonder where they got the {{cardName: Inspiration}} for this card, right? Bad pun? Well, this card is just a worse version of " +
+                        "Inspiration, so I suppose that's fair."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1119,7 +1125,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Please don't try making fighting into a thing. It's not a thing. This is basically a worse [Inspiration], which is already pretty meh."
+                    text: "Please don't try making fighting into a thing. It's not a thing. This is basically a worse {{cardName: Inspiration}}, which is already pretty meh."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1135,7 +1141,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Guess this is a cool spin on [Ganger Chieftain]."
+                    text: "Guess this is a cool spin on {{cardName: Sergeant Zakiel}}."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1231,7 +1237,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "At least it gives an [A]. Seems comparable to [Creeping Oblivion]. Perhaps even better than it."
+                    text: "At least it gives an [A]. Seems comparable to {{cardName: Creeping Oblivion}}. Perhaps even better than it."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1247,7 +1253,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Seems quite similar to [Total Recall], except it destroys them rather than returning (better) and it works with exhausted ones (better)"
+                    text: "Seems quite similar to {{cardName: Total Recall}}, except it destroys them rather than returning (better) and it works with exhausted ones (better)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1283,7 +1289,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So a conditional [Labwork]. Drawing isn't nearly as good as archiving."
+                    text: "A conditional {{cardName: Hidden Stash}}. Drawing isn't nearly as good as archiving."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1299,7 +1305,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Seems like a cool spin on [Dr. Escotera]. It's worse though, because more conditional."
+                    text: "Seems like a cool spin on {{cardName: Dr. Escotera}}. It's worse though, because more conditional."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1315,7 +1321,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Seems quite powerful. A lot better than the likes of [Noddy the Thief]."
+                    text: "Seems quite powerful. A lot better than the likes of {{cardName: Noddy the Thief}}."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1363,7 +1369,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "A worse version of [Pawn Sacrifice]. Sounds not great."
+                    text: "A worse version of {{cardName: Pawn Sacrifice}}. Sounds not great."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1379,7 +1385,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "A pretty much better [Urchin]. What's not to love."
+                    text: "A much better {{cardName: Urchin}}. What's not to love."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1395,7 +1401,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "So this is our new version of [Relentless Whispers]? Not a fan. Especially since you can't set it up in the same turn."
+                    text: "So this is our new version of {{cardName: Relentless Whispers}}? Not a fan. Especially since you can't set it up in the same turn."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1411,7 +1417,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "And here's our new version of [Bait & Switch]. It's clearly a downgrade; doesn't even allow you to discard your other shadows cards which will stay stuck in your hand."
+                    text: "And here's our new version of {{cardName: Bait & Switch}}. It's clearly a downgrade; doesn't even allow you to discard your other shadows cards which will stay stuck in your hand."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1459,7 +1465,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Factionshifted [Pit Demon]. Should be about as good"
+                    text: "Faction-shifted {{cardName: Pit Demon}}. Or was Pit Demon the faction-shifted version of this?! Either way the same SAS."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1523,7 +1529,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I... guess it's better than [Key of Darkness]. That doesn't say a whole lot though."
+                    text: "Many times better than {{cardName: Key of Darkness}}. That doesn't say a whole lot though."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1539,7 +1545,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "A conditional [Mind Barb] with a mediocre effect tacked on. Doesn't sound amazing."
+                    text: "A conditional {{cardName: Mind Barb}} with a mediocre effect tacked on. Doesn't sound amazing."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1555,7 +1561,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Has some similarities to [Hypnotic Command]",
+                    text: "{{cardName: Psychic Network}} without the fun Mars shenanigans to help it out.",
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1575,7 +1581,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "A half of [Cleansing Wave] doesn't sound extremely enticing, this card has a few additional things that it does."
+                    text: "A half of {{cardName: Cleansing Wave}} doesn't sound extremely enticing, this card has a few additional things that it does."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1591,7 +1597,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "As powerful as this card seems I find it hard to believe it'd ever survive on the board for a turn."
+                    text: "As powerful as this card seems it's quite easy to kill, and will be a top priority."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1671,7 +1677,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Pretty much [Nocturnal Maneuver]"
+                    text: "Pretty much {{cardName: Nocturnal Maneuver}}"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1703,7 +1709,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "An interesting anti-archive mechanic, but I don't think it's worth it most of the time. [Dysania] seems so much better it's not even funny."
+                    text: "An interesting anti-archive mechanic, but I don't think it's worth it most of the time. {{cardName: Dysania}} seems so much better it's not even funny."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1719,7 +1725,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "An interesting board-wide damage effect, but doesn't seem quite as effective as [Poison Wave] would."
+                    text: "An interesting board-wide damage effect, but doesn't seem quite as effective as {{cardName: Poison Wave}} would."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1751,7 +1757,7 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "I mean, I guess this is better than [Sniffer]... Which is not saying a whole lot"
+                    text: "I mean, I guess this is better than {{cardName: Sniffer}} ... Which is not saying a whole lot"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1831,7 +1837,8 @@ export const ageOfAgeOfAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "How does this not even give an aember on entry..."
+                    text: "That looks like an Aember on the picture. This card clearly deserves an honorary aember on entry. No? Okay, well how about a " +
+                        "terrible SAS score instead then."
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1844,4 +1851,3 @@ export const ageOfAgeOfAscension: Article = {
         }
     ]
 }
-
