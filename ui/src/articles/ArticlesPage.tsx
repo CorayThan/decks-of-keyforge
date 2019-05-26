@@ -13,6 +13,7 @@ import { Article, ArticleType } from "./Article"
 import { ArticleView } from "./ArticleView"
 import { daercArts } from "./DaercArts"
 import { whatsTheRush } from "./WhatsTheRush"
+import { ageOfAgeOfAscension } from "./AgeOfAgeOfAscension"
 
 interface ArticlesPageProps extends RouteComponentProps<{ urlTitle?: string }> {
 }
@@ -65,7 +66,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
     }
 }
 
-export const allArticles = [answeringTheCall, whatsTheRush, daercArts]
+export const allArticles = [answeringTheCall, whatsTheRush, daercArts, ageOfAgeOfAscension]
 export const latestTwoArticles = allArticles.slice(0, 2)
 
 const ArticleLinksForType = (props: { type: ArticleType }) => {
