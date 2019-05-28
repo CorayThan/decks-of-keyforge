@@ -68,6 +68,8 @@ export interface Deck {
     houses: House[]
 
     deckSaleInfo?: DeckSaleInfo[]
+
+    owners?: string[]
 }
 
 export class DeckUtils {

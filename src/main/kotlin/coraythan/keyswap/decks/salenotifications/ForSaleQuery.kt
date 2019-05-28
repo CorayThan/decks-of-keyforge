@@ -60,4 +60,6 @@ data class ForSaleQuery(
                 get() = false
         override val completedAuctions: Boolean
                 get() = false
+        override val withOwners: Boolean
+                get() = false
 }

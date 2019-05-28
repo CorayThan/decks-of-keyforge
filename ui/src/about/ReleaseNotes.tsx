@@ -11,7 +11,7 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.2"
+export const latestVersion = "4.3"
 
 @observer
 export class ReleaseNotes extends React.Component {

@@ -1183,7 +1183,6 @@
   rating: 1.5
   expectedAmber: 1
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   deckManipulation: -1.0
   effectivePower: 4
@@ -1238,7 +1237,6 @@
   rating: 4
   expectedAmber: 0.5
   amberControl: 0.5
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: [stealsAmber, goodPlay]
   synergies:
@@ -1297,7 +1295,6 @@
   rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.5
-  creatureControl: 0.5
   artifactControl: 0.5
   traits: []
   synergies:
@@ -1310,7 +1307,6 @@
   rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies:
@@ -1357,7 +1353,6 @@
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   effectivePower: 4
   traits: [protectsCreatures, goodDestroyed]
@@ -1792,7 +1787,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   deckManipulation: 0.5
   traits: [drawsCards, goodFight]
@@ -1818,7 +1812,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   deckManipulation: 0.5
   traits: [drawsCards]
@@ -2019,7 +2012,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies: []
@@ -2805,7 +2797,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -2827,7 +2818,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   deckManipulation: 0.5
   effectivePower: 4
@@ -3249,6 +3239,9 @@
     - trait: highCreatureCount
       type: house
       rating: 3
+    - trait: lowCreatureCount
+      type: house
+      rating: -3
 
 - name: Whispering Reliquary
   setNumbers: [341]
@@ -3281,7 +3274,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -3292,7 +3284,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 1.0
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies: []
@@ -3331,7 +3322,6 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies: []
@@ -3502,7 +3492,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.0
   artifactControl: 0.0
   traits: [protectsCreatures]
   synergies: []
@@ -3540,7 +3529,6 @@
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   effectivePower: 7
   traits: []
@@ -3552,7 +3540,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
@@ -4216,7 +4203,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: [stealsAmber, goodFight]
   synergies:
@@ -4728,7 +4714,6 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 1.0
   artifactControl: 0.0
   traits: [ancientBear]
   synergies:
@@ -4833,7 +4818,6 @@
   rating: 4
   expectedAmber: 2.0
   amberControl: 0
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: []
   synergies:
@@ -4859,7 +4843,6 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: [skirmish]
   synergies: []
@@ -4890,7 +4873,6 @@
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   traits: [skirmish]
   synergies: []
@@ -4937,7 +4919,6 @@
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   effectivePower: 7
   traits: []
@@ -4959,7 +4940,6 @@
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 0.0
   effectivePower: 8
   traits: []

@@ -17,6 +17,7 @@ interface DeckQuery {
     val includeUnregistered: Boolean
     val myFavorites: Boolean
     val expansions: List<Int>
+    val withOwners: Boolean
 
     val constraints: List<Constraint>
     val cards: List<DeckCardQuantity>
@@ -39,6 +40,7 @@ data class DeckFilters(
         override val includeUnregistered: Boolean = false,
         override val myFavorites: Boolean = false,
         override val expansions: List<Int> = listOf(),
+        override val withOwners: Boolean = false,
 
         override val constraints: List<Constraint> = listOf(),
 

@@ -315,6 +315,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     ) : null}
                                 </div>
                                 {optionals}
+                                {userStore.username === "Coraythan" ? (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.props.filters.withOwners}
+                                                onChange={(event) => this.props.filters.withOwners = event.target.checked}
+                                            />
+                                        }
+                                        label={"With Owners"}
+                                        style={{width: 144}}
+                                    />
+                                ) : null}
                                 {showLoginForCountry ? (
                                     <div style={{display: "flex"}}>
                                         <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>

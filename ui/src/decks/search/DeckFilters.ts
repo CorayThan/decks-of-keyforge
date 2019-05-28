@@ -83,6 +83,9 @@ export class DeckFilters {
         if (queryObject.myFavorites) {
             queryObject.myFavorites = Boolean(queryObject.myFavorites)
         }
+        if (queryObject.withOwners) {
+            queryObject.withOwners = Boolean(queryObject.withOwners)
+        }
 
         const filters = new DeckFilters() as any
         Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
@@ -104,6 +107,8 @@ export class DeckFilters {
     forTrade = false
     @observable
     forAuction = false
+    @observable
+    withOwners = false
     @observable
     completedAuctions = false
     @observable
@@ -144,6 +149,7 @@ export class DeckFilters {
         this.constraints = []
         this.sortDirection = "DESC"
         this.owner = ""
+        this.withOwners = false
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

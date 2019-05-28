@@ -15,6 +15,7 @@ import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.userdeck.QUserDeck
+import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
@@ -33,6 +34,7 @@ class DeckService(
         private val userService: KeyUserService,
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
+        private val userDeckRepo: UserDeckRepo,
         entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -137,6 +139,10 @@ class DeckService(
                         userHolder.user,
                         filters.completedAuctions
                 ))
+            } else if (filters.withOwners) {
+                searchResult.copy(owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
+                    userDeck.ownedBy
+                })
             } else {
                 searchResult
             }

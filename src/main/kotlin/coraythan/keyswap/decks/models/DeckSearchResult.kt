@@ -53,5 +53,7 @@ data class DeckSearchResult(
 
         val houses: List<House> = listOf(),
 
-        val deckSaleInfo: List<DeckSaleInfo>? = null
+        val deckSaleInfo: List<DeckSaleInfo>? = null,
+
+        val owners: List<String>? = null
 )

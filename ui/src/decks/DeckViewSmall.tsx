@@ -31,6 +31,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { AercScoreView } from "../stats/AercScoreView"
 import { screenStore } from "../ui/ScreenStore"
+import { OwnersButton } from "../userdeck/OwnersButton"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
@@ -52,7 +53,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const {deck, fullVersion, hideActions, style} = this.props
         const {
             id, keyforgeId, name, wishlistCount, funnyCount,
-            forSale, forTrade, forAuction, registered
+            forSale, forTrade, forAuction, registered, owners
         } = deck
         const userDeck = userDeckStore.userDeckByDeckId(id)
         let userDeckForSale = false
@@ -150,6 +151,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 ) : null}
                                 <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
                                 <MyDecksButton deck={deck}/>
+                                <OwnersButton owners={owners}/>
                                 <div style={{flexGrow: 1}}/>
                                 <div style={{marginRight: spacing(1)}}>
                                     <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
