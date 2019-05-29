@@ -1,5 +1,6 @@
 import { Typography } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
+import { Warning } from "@material-ui/icons"
 import HistoryIcon from "@material-ui/icons/History"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -11,6 +12,7 @@ interface DeckScoreViewProps {
         sasRating: number,
         synergyRating: number,
         antisynergyRating: number,
+        expansion: number
     }
     style?: React.CSSProperties
 }
@@ -23,13 +25,21 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         sasRating,
         synergyRating,
         antisynergyRating,
+        expansion
     } = props.deck
 
-    let previousRatingView = null
+    let sasInfo = null
     if (previousSasRating != null && previousSasRating !== sasRating && previousSasRating !== 0) {
-        previousRatingView = (
+        sasInfo = (
             <Tooltip title={`SAS v3 rating: ${previousSasRating}`} enterTouchDelay={100}>
                 <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
+            </Tooltip>
+        )
+    }
+    if (expansion === 435) {
+        sasInfo = (
+            <Tooltip title={`AoA ratings are a work in progress and will be lower than they should be due to lack of synergies.`} enterTouchDelay={100}>
+                <Warning style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
             </Tooltip>
         )
     }
@@ -44,7 +54,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                 <Tooltip title={"Synergy and Antisynergy Rating. Read more on the about page."}>
                     <RatingRow value={sasRating} name={"SAS"} large={true}/>
                 </Tooltip>
-                {previousRatingView}
+                {sasInfo}
             </div>
         </div>
     )
