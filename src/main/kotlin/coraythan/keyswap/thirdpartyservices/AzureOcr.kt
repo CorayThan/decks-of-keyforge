@@ -125,7 +125,7 @@ class AzureOcr(
 
             }
 
-            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPair(expansion, cardNumber.toString())]
+            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPair(expansion, cardNumber)]
 
             return if (foundCard != null) {
                 foundCard

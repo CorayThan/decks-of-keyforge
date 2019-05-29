@@ -8,6 +8,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.decks.currentDeckRatingVersion
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.synergy.SynTrait
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
@@ -33,10 +34,14 @@ class CardService(
         val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
+        val extraInfosFromFileAoa: List<ExtraCardInfo> = yamlMapper.readValue(
+                ClassPathResource("extra-deck-info-aoa-v$currentDeckRatingVersion.yml").inputStream
+        )
         this.extraInfo = extraInfosFromFile
+                .plus(extraInfosFromFileAoa)
                 .flatMap { cardInfo ->
-                    cardInfo.setNumbers.map {
-                        CardNumberSetPair(expansion = it, cardNumber = cardInfo.cardNumber) to cardInfo.copy(
+                    cardInfo.cardNumbers.map {
+                        it to cardInfo.copy(
                                 synergies = cardInfo.synergies.sorted()
                         )
                     }
@@ -131,14 +136,14 @@ class CardService(
     fun reloadCachedCards() {
         nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
             it.traits.size
-            CardNumberSetPair(it.expansion, it.cardNumber) to it
+            CardNumberSetPair(it.expansion, it.cardNumber.toInt()) to it
         }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
 
         val addToExtraInfo = nonMaverickCachedCards?.mapNotNull { entry ->
             val card = entry.value
             val synTraitsFromTraits = card.traits.mapNotNull { trait ->
-                trait.synTrait
+                SynTrait.fromTrait(trait)
             }
             if (synTraitsFromTraits.isNotEmpty()) {
                 entry.key to synTraitsFromTraits
@@ -154,9 +159,8 @@ class CardService(
 
     }
 
-
     private fun fullCardsFromCards(cards: List<Card>) = cards.map {
-        it.copy(extraCardInfo = this.extraInfo[CardNumberSetPair(it.expansion, it.cardNumber)]
+        it.copy(extraCardInfo = this.extraInfo[CardNumberSetPair(it.expansion, it.cardNumber.toInt())]
                 ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"))
     }
 

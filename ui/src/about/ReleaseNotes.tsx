@@ -11,13 +11,18 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.3"
+export const latestVersion = "4.4"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"4.4"} expanded={true} releaseNotes={[
+                    "Age of Ascension decks are now importing into Decks of Keyforge! Note that these decks have SAS ratings, but those should be " +
+                    "taken with a huge grain of salt. I haven't had time to add traits, synergies or antisynergies yet, so Age of Ascension decks will " +
+                    "also have lower scores than they should."
+                ]}/>
                 <ReleaseNote releaseNumber={"4.3"} expanded={true} releaseNotes={[
                     `Search for cards as mavericks in a specific house! Just use the "Copies" drop down and select the house you want.`,
                     "New article previewing SAS ratings for many of the known cards coming out in Age of Ascension!"

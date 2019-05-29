@@ -1,6 +1,7 @@
 - name: Anger
-  setNumbers: [341]
-  cardNumber: 1
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 1
   rating: 3
   expectedAmber: 1
   creatureControl: 1.0
@@ -8,8 +9,11 @@
   synergies: []
 
 - name: Barehanded
-  setNumbers: [341, 435]
-  cardNumber: 2
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 2
+    - expansion: 435
+      cardNumber: 33
   rating: 3
   expectedAmber: 1
   artifactControl: 0.5
@@ -21,16 +25,20 @@
       rating: -2
 
 - name: Blood Money
-  setNumbers: [341, 435]
-  cardNumber: 3
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 3
+    - expansion: 435
+      cardNumber: 17
   rating: 2
   expectedAmber: 1.5
   traits: [capturesAmberOnEnemies]
   synergies: []
 
 - name: Brothers in Battle
-  setNumbers: [341]
-  cardNumber: 4
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 4
   rating: 3
   expectedAmber: 1.0
   creatureControl: 1.5
@@ -41,8 +49,11 @@
       rating: -2
 
 - name: Burn the Stockpile
-  setNumbers: [341, 435]
-  cardNumber: 5
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 5
+    - expansion: 435
+      cardNumber: 19
   rating: 3
   amberControl: 2.0
   traits: []
@@ -53,8 +64,11 @@
     - trait: increasesKeyCost
 
 - name: Champion’s Challenge
-  setNumbers: [341, 435]
-  cardNumber: 6
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 6
+    - expansion: 435
+      cardNumber: 36
   rating: 4.5
   creatureControl: 3.0
   traits: [destroysEnemyCreatures, causesFighting, destroysFriendlyCreatures]
@@ -65,8 +79,11 @@
       rating: -2
 
 - name: Coward’s End
-  setNumbers: [341, 435]
-  cardNumber: 7
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 7
+    - expansion: 435
+      cardNumber: 4
   rating: 2
   creatureControl: 2.0
   deckManipulation: -1.0
@@ -79,8 +96,9 @@
       rating: -3
 
 - name: Follow the Leader
-  setNumbers: [341]
-  cardNumber: 8
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 8
   rating: 1
   creatureControl: 1.5
   traits: [causesFighting]
@@ -88,16 +106,20 @@
     - trait: highTotalCreaturePower
 
 - name: Lava Ball
-  setNumbers: [341, 435]
-  cardNumber: 9
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 9
+    - expansion: 435
+      cardNumber: 42
   rating: 3
   creatureControl: 2.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies: []
 
 - name: Loot the Bodies
-  setNumbers: [341]
-  cardNumber: 10
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 10
   rating: 2
   expectedAmber: 1.5
   traits: []
@@ -114,8 +136,11 @@
       rating: -2
 
 - name: Take that, Smartypants
-  setNumbers: [341, 435]
-  cardNumber: 11
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 11
+    - expansion: 435
+      cardNumber: 50
   rating: 2
   expectedAmber: 1.5
   amberControl: 0.5
@@ -123,8 +148,9 @@
   synergies: []
 
 - name: Punch
-  setNumbers: [341]
-  cardNumber: 12
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 12
   rating: 3.5
   expectedAmber: 1.0
   creatureControl: 1.0
@@ -132,8 +158,11 @@
   synergies: []
 
 - name: Relentless Assault
-  setNumbers: [341, 435]
-  cardNumber: 13
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 13
+    - expansion: 435
+      cardNumber: 27
   rating: 4
   expectedAmber: 1.0
   creatureControl: 1.5
@@ -145,8 +174,11 @@
       rating: -2
 
 - name: Smith
-  setNumbers: [341, 435]
-  cardNumber: 14
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 14
+    - expansion: 435
+      cardNumber: 29
   rating: 3
   expectedAmber: 2.5
   amberControl: 0.0
@@ -160,8 +192,11 @@
       rating: -3
 
 - name: Sound the Horns
-  setNumbers: [341, 435]
-  cardNumber: 15
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 15
+    - expansion: 435
+      cardNumber: 30
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -171,8 +206,11 @@
   traits: []
 
 - name: Tremor
-  setNumbers: [341, 435]
-  cardNumber: 16
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 16
+    - expansion: 435
+      cardNumber: 16
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -182,8 +220,9 @@
   synergies: []
 
 - name: Unguarded Camp
-  setNumbers: [341]
-  cardNumber: 17
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 17
   rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
@@ -194,8 +233,9 @@
     - trait: highCreatureCount
 
 - name: Warsong
-  setNumbers: [341]
-  cardNumber: 18
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 18
   rating: 1.5
   expectedAmber: 1
   amberControl: 0.0
@@ -213,8 +253,9 @@
       rating: -2
 
 - name: Autocannon
-  setNumbers: [341]
-  cardNumber: 19
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 19
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -226,8 +267,9 @@
       rating: 3
 
 - name: Banner of Battle
-  setNumbers: [341]
-  cardNumber: 20
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 20
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -241,16 +283,20 @@
       rating: -2
 
 - name: Cannon
-  setNumbers: [341]
-  cardNumber: 21
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 21
   rating: 1.5
   creatureControl: 1.0
   traits: [dealsDamage, usableArtifact]
   synergies: []
 
 - name: Gauntlet of Command
-  setNumbers: [341, 435]
-  cardNumber: 22
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 22
+    - expansion: 435
+      cardNumber: 10
   rating: 3
   expectedAmber: 0.5
   creatureControl: 1.0
@@ -262,8 +308,11 @@
       rating: -1
 
 - name: Iron Obelisk
-  setNumbers: [341, 435]
-  cardNumber: 23
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 23
+    - expansion: 435
+      cardNumber: 40
   rating: 2
   expectedAmber: 0.0
   amberControl: 1.5
@@ -276,8 +325,9 @@
       rating: 3
 
 - name: Mighty Javelin
-  setNumbers: [341]
-  cardNumber: 24
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 24
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -287,8 +337,11 @@
   synergies: []
 
 - name: Pile of Skulls
-  setNumbers: [341, 435]
-  cardNumber: 25
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 25
+    - expansion: 435
+      cardNumber: 46
   rating: 3.5
   amberControl: 2.0
   traits: [capturesAmber]
@@ -302,8 +355,11 @@
       rating: -2
 
 - name: Screechbomb
-  setNumbers: [341, 435]
-  cardNumber: 26
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 26
+    - expansion: 435
+      cardNumber: 28
   rating: 3
   expectedAmber: 0.0
   amberControl: 2.0
@@ -313,8 +369,11 @@
   synergies: []
 
 - name: The Warchest
-  setNumbers: [341, 435]
-  cardNumber: 27
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 27
+    - expansion: 435
+      cardNumber: 32
   rating: 2
   expectedAmber: 1.5
   amberControl: 0.0
@@ -331,8 +390,11 @@
       type: house
 
 - name: Bilgum Avalanche
-  setNumbers: [341, 435]
-  cardNumber: 28
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 28
+    - expansion: 435
+      cardNumber: 35
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -342,8 +404,9 @@
   synergies: []
 
 - name: Valdr
-  setNumbers: [341]
-  cardNumber: 29
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 29
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -353,8 +416,9 @@
   synergies: []
 
 - name: Bumpsy
-  setNumbers: [341]
-  cardNumber: 30
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 30
   rating: 4
   expectedAmber: 0.0
   amberControl: 1.0
@@ -366,8 +430,9 @@
       rating: 1
 
 - name: Earthshaker
-  setNumbers: [341]
-  cardNumber: 31
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 31
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -380,8 +445,9 @@
       rating: -2
 
 - name: Firespitter
-  setNumbers: [341]
-  cardNumber: 32
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 32
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -395,8 +461,11 @@
       rating: 1
 
 - name: Ganger Chieftain
-  setNumbers: [341, 435]
-  cardNumber: 33
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 33
+    - expansion: 435
+      cardNumber: 9
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -412,8 +481,9 @@
       rating: -2
 
 - name: Grenade Snib
-  setNumbers: [341]
-  cardNumber: 34
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 34
   rating: 3.5
   amberControl: 1.5
   traits: [goodDestroyed]
@@ -425,8 +495,9 @@
       type: house
 
 - name: Headhunter
-  setNumbers: [341]
-  cardNumber: 35
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 35
   rating: 3
   expectedAmber: 1.0
   creatureControl: 0.0
@@ -437,8 +508,9 @@
       rating: 1
 
 - name: Hebe the Huge
-  setNumbers: [341]
-  cardNumber: 36
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 36
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -451,8 +523,9 @@
       rating: -2
 
 - name: Kelifi Dragon
-  setNumbers: [341]
-  cardNumber: 37
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 37
   rating: 1
   expectedAmber: 0.5
   amberControl: 0.0
@@ -469,8 +542,11 @@
       rating: 1
 
 - name: King of the Crag
-  setNumbers: [341, 435]
-  cardNumber: 38
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 38
+    - expansion: 435
+      cardNumber: 41
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -480,8 +556,9 @@
   synergies: []
 
 - name: Krump
-  setNumbers: [341]
-  cardNumber: 39
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 39
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 1.0
@@ -494,8 +571,9 @@
       rating: 1
 
 - name: Lomir Flamefist
-  setNumbers: [341]
-  cardNumber: 40
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 40
   rating: 3
   amberControl: 1.0
   creatureControl: 0.0
@@ -508,8 +586,9 @@
       rating: 1
 
 - name: Looter Goblin
-  setNumbers: [341]
-  cardNumber: 41
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 41
   rating: 2.5
   expectedAmber: 1.5
   traits: [elusive, goodReap]
@@ -523,8 +602,11 @@
       type: house
 
 - name: Mugwump
-  setNumbers: [341, 435]
-  cardNumber: 42
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 42
+    - expansion: 435
+      cardNumber: 44
   rating: 3
   creatureControl: 0.5
   effectivePower: 7
@@ -533,24 +615,29 @@
     - trait: causesFighting
 
 - name: Pingle Who Annoys
-  setNumbers: [341]
-  cardNumber: 43
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 43
   rating: 3
   creatureControl: 0.5
   traits: [damagesMultipleEnemies, dealsDamage, damagesAllEnemies]
   synergies: []
 
 - name: Rock-Hurling Giant
-  setNumbers: [341, 435]
-  cardNumber: 44
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 44
+    - expansion: 435
+      cardNumber: 47
   rating: 3
   creatureControl: 1
   traits: [dealsDamage]
   synergies: []
 
 - name: Rogue Ogre
-  setNumbers: [341]
-  cardNumber: 45
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 45
   rating: 3
   amberControl: 0.5
   creatureControl: 0.0
@@ -558,8 +645,9 @@
   synergies: []
 
 - name: Smaaash
-  setNumbers: [341]
-  cardNumber: 46
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 46
   rating: 3
   creatureControl: 0.5
   traits: [stuns, goodPlay]
@@ -568,16 +656,20 @@
       rating: 1
 
 - name: Tireless Crocag
-  setNumbers: [341, 435]
-  cardNumber: 47
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 47
+    - expansion: 435
+      cardNumber: 51
   rating: 2.5
   creatureControl: 1.0
   traits: []
   synergies: []
 
 - name: Troll
-  setNumbers: [341]
-  cardNumber: 48
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 48
   rating: 3
   creatureControl: 0.0
   expectedAmber: 0.0
@@ -587,8 +679,9 @@
       rating: 1
 
 - name: Wardrummer
-  setNumbers: [341]
-  cardNumber: 49
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 49
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -606,8 +699,11 @@
       type: house
 
 - name: Blood of Titans
-  setNumbers: [341, 435]
-  cardNumber: 50
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 50
+    - expansion: 435
+      cardNumber: 18
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -623,8 +719,11 @@
       rating: 1
 
 - name: Phoenix Heart
-  setNumbers: [341, 435]
-  cardNumber: 51
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 51
+    - expansion: 435
+      cardNumber: 45
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -635,8 +734,9 @@
     - trait: highTotalArmor
 
 - name: Yo Mama Mastery
-  setNumbers: [341]
-  cardNumber: 52
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 52
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -648,8 +748,11 @@
       rating: 1
 
 - name: A Fair Game
-  setNumbers: [341, 435]
-  cardNumber: 53
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 53
+    - expansion: 435
+      cardNumber: 87
   rating: 3.5
   expectedAmber: 2.0
   amberControl: 0.0
@@ -660,8 +763,9 @@
     - trait: revealsTopDeck
 
 - name: Arise!
-  setNumbers: [341]
-  cardNumber: 54
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 54
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -682,8 +786,9 @@
       type: house
 
 - name: Control the Weak
-  setNumbers: [341]
-  cardNumber: 55
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 55
   rating: 5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -697,8 +802,11 @@
       type: house
 
 - name: Creeping Oblivion
-  setNumbers: [341, 435]
-  cardNumber: 56
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 56
+    - expansion: 435
+      cardNumber: 90
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -708,8 +816,9 @@
   synergies: []
 
 - name: Dance of Doom
-  setNumbers: [341]
-  cardNumber: 57
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 57
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -719,8 +828,9 @@
   synergies: []
 
 - name: Fear
-  setNumbers: [341]
-  cardNumber: 58
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 58
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -731,8 +841,9 @@
   synergies: []
 
 - name: Gateway to Dis
-  setNumbers: [341]
-  cardNumber: 59
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 59
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -749,8 +860,11 @@
       rating: -1
 
 - name: Gongoozle
-  setNumbers: [341, 435]
-  cardNumber: 60
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 60
+    - expansion: 435
+      cardNumber: 73
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -761,8 +875,9 @@
   synergies: []
 
 - name: Guilty Hearts
-  setNumbers: [341]
-  cardNumber: 61
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 61
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -776,8 +891,9 @@
       rating: -3
 
 - name: Hand of Dis
-  setNumbers: [341]
-  cardNumber: 62
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 62
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -793,8 +909,11 @@
       rating: -2
 
 - name: Hecatomb
-  setNumbers: [341, 435]
-  cardNumber: 63
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 63
+    - expansion: 435
+      cardNumber: 92
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -805,8 +924,9 @@
       type: house
 
 - name: Tendrils of Pain
-  setNumbers: [341]
-  cardNumber: 64
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 64
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -817,8 +937,11 @@
     - trait: highTotalArmor
 
 - name: Hysteria
-  setNumbers: [341, 435]
-  cardNumber: 65
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 65
+    - expansion: 435
+      cardNumber: 74
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -831,8 +954,9 @@
       type: house
 
 - name: Key Hammer
-  setNumbers: [341]
-  cardNumber: 66
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 66
   rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -849,8 +973,9 @@
       type: house
 
 - name: Mind Barb
-  setNumbers: [341]
-  cardNumber: 67
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 67
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -861,8 +986,11 @@
   synergies: []
 
 - name: Pandemonium
-  setNumbers: [341, 435]
-  cardNumber: 68
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 68
+    - expansion: 435
+      cardNumber: 79
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.5
@@ -875,8 +1003,11 @@
     - trait: highCreatureCount
 
 - name: Poltergeist
-  setNumbers: [341, 435]
-  cardNumber: 69
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 69
+    - expansion: 435
+      cardNumber: 80
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -888,8 +1019,11 @@
       rating: -2
 
 - name: Red-Hot Armor
-  setNumbers: [341, 435]
-  cardNumber: 70
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 70
+    - expansion: 435
+      cardNumber: 101
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -899,8 +1033,11 @@
   synergies: []
 
 - name: Three Fates
-  setNumbers: [341, 435]
-  cardNumber: 71
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 71
+    - expansion: 435
+      cardNumber: 86
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -913,8 +1050,9 @@
     - trait: lowTotalCreaturePower
 
 - name: Annihilation Ritual
-  setNumbers: [341]
-  cardNumber: 72
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 72
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -926,8 +1064,9 @@
       rating: -1
 
 - name: Dominator Bauble
-  setNumbers: [341]
-  cardNumber: 73
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 73
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -936,8 +1075,11 @@
   traits: [usesCreaturesOutOfHouse, usableArtifact]
 
 - name: Key to Dis
-  setNumbers: [341, 435]
-  cardNumber: 74
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 74
+    - expansion: 435
+      cardNumber: 93
   rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -951,8 +1093,11 @@
       rating: 2
 
 - name: Lash of Broken Dreams
-  setNumbers: [341, 435]
-  cardNumber: 75
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 75
+    - expansion: 435
+      cardNumber: 61
   rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
@@ -962,8 +1107,11 @@
   synergies: []
 
 - name: Library of the Damned
-  setNumbers: [341, 435]
-  cardNumber: 76
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 76
+    - expansion: 435
+      cardNumber: 75
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -974,8 +1122,11 @@
   synergies: []
 
 - name: Lifeward
-  setNumbers: [341, 435]
-  cardNumber: 77
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 77
+    - expansion: 435
+      cardNumber: 76
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -987,8 +1138,9 @@
     - trait: returnsEnemyCreaturesToHand
 
 - name: Sacrificial Altar
-  setNumbers: [341]
-  cardNumber: 78
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 78
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -999,8 +1151,9 @@
     - trait: human
 
 - name: Screaming Cave
-  setNumbers: [341]
-  cardNumber: 79
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 79
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1011,8 +1164,11 @@
   synergies: []
 
 - name: Soul Snatcher
-  setNumbers: [341, 435]
-  cardNumber: 80
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 80
+    - expansion: 435
+      cardNumber: 105
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1031,8 +1187,11 @@
       rating: 1
 
 - name: Charette
-  setNumbers: [341, 435]
-  cardNumber: 81
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 81
+    - expansion: 435
+      cardNumber: 56
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 1.0
@@ -1044,8 +1203,9 @@
       rating: 1
 
 - name: Drumble
-  setNumbers: [341]
-  cardNumber: 82
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 82
   rating: 4
   expectedAmber: 0.0
   amberControl: 1.5
@@ -1056,8 +1216,11 @@
     - trait: protectsCreatures
 
 - name: Dust Imp
-  setNumbers: [341, 435]
-  cardNumber: 83
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 83
+    - expansion: 435
+      cardNumber: 58
   rating: 4
   expectedAmber: 2.0
   amberControl: 0.0
@@ -1069,8 +1232,11 @@
     - trait: damagesFriendlyCreatures
 
 - name: Eater of the Dead
-  setNumbers: [341, 435]
-  cardNumber: 84
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 84
+    - expansion: 435
+      cardNumber: 91
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1080,8 +1246,9 @@
   synergies: []
 
 - name: Ember Imp
-  setNumbers: [341]
-  cardNumber: 85
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 85
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1096,8 +1263,9 @@
       rating: -1
 
 - name: Gabos Longarms
-  setNumbers: [341]
-  cardNumber: 86
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 86
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1107,8 +1275,11 @@
   synergies: []
 
 - name: Overlord Greking
-  setNumbers: [341, 435]
-  cardNumber: 87
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 87
+    - expansion: 435
+      cardNumber: 99
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1125,8 +1296,9 @@
       rating: 1
 
 - name: Guardian Demon
-  setNumbers: [341]
-  cardNumber: 88
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 88
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1135,8 +1307,9 @@
   traits: [heals, dealsDamage, goodReap]
 
 - name: Master of 1
-  setNumbers: [341]
-  cardNumber: 89
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 89
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1146,8 +1319,9 @@
   synergies: []
 
 - name: Master of 2
-  setNumbers: [341]
-  cardNumber: 90
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 90
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1157,8 +1331,9 @@
   synergies: []
 
 - name: Master of 3
-  setNumbers: [341]
-  cardNumber: 91
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 91
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1168,8 +1343,9 @@
   synergies: []
 
 - name: Pit Demon
-  setNumbers: [341]
-  cardNumber: 92
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 92
   rating: 4
   expectedAmber: 0.0
   amberControl: 1.0
@@ -1178,8 +1354,11 @@
   traits: [stealsAmber, goodAction]
 
 - name: Pitlord
-  setNumbers: [341, 435]
-  cardNumber: 93
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 93
+    - expansion: 435
+      cardNumber: 100
   rating: 1.5
   expectedAmber: 1
   amberControl: 0.0
@@ -1196,8 +1375,11 @@
       type: house
 
 - name: Restringuntus
-  setNumbers: [341, 435]
-  cardNumber: 94
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 94
+    - expansion: 435
+      cardNumber: 102
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1213,8 +1395,9 @@
     - trait: protectsCreatures
 
 - name: Shaffles
-  setNumbers: [341]
-  cardNumber: 95
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 95
   rating: 4
   expectedAmber: 0.0
   amberControl: 1.5
@@ -1233,8 +1416,11 @@
 
 
 - name: Shooler
-  setNumbers: [341, 435]
-  cardNumber: 96
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 96
+    - expansion: 435
+      cardNumber: 64
   rating: 4
   expectedAmber: 0.5
   amberControl: 0.5
@@ -1247,8 +1433,9 @@
       rating: 1
 
 - name: Snudge
-  setNumbers: [341]
-  cardNumber: 97
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 97
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1261,8 +1448,9 @@
       rating: 1
 
 - name: Stealer of Souls
-  setNumbers: [341]
-  cardNumber: 98
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 98
   rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -1276,8 +1464,9 @@
       rating: 1
 
 - name: Succubus
-  setNumbers: [341]
-  cardNumber: 99
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 99
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1292,8 +1481,11 @@
       rating: -1
 
 - name: Tentacus
-  setNumbers: [341, 435]
-  cardNumber: 100
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 100
+    - expansion: 435
+      cardNumber: 85
   rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.5
@@ -1305,8 +1497,9 @@
       rating: -2
 
 - name: The Terror
-  setNumbers: [341]
-  cardNumber: 101
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 101
   rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
@@ -1322,8 +1515,9 @@
       rating: 1
 
 - name: Tocsin
-  setNumbers: [341]
-  cardNumber: 102
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 102
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1335,8 +1529,11 @@
     - trait: protectsCreatures
 
 - name: Tolas
-  setNumbers: [341, 435]
-  cardNumber: 103
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 103
+    - expansion: 435
+      cardNumber: 106
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1352,8 +1549,9 @@
       rating: 1
 
 - name: Truebaru
-  setNumbers: [341]
-  cardNumber: 104
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 104
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1368,8 +1566,11 @@
       rating: 1
 
 - name: Collar of Subordination
-  setNumbers: [341, 435]
-  cardNumber: 105
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 105
+    - expansion: 435
+      cardNumber: 89
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1383,8 +1584,9 @@
       rating: 1
 
 - name: Flame-Wreathed
-  setNumbers: [341]
-  cardNumber: 106
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 106
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1398,8 +1600,11 @@
       rating: -2
 
 - name: Bouncing Deathquark
-  setNumbers: [341, 435]
-  cardNumber: 107
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 107
+    - expansion: 435
+      cardNumber: 125
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1408,8 +1613,9 @@
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
 
 - name: Dimension Door
-  setNumbers: [341]
-  cardNumber: 108
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 108
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 1.0
@@ -1421,8 +1627,9 @@
       type: house
 
 - name: Effervescent Principle
-  setNumbers: [341]
-  cardNumber: 109
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 109
   rating: 2.5
   expectedAmber: -1.0
   amberControl: 2
@@ -1438,8 +1645,9 @@
       type: house
 
 - name: Foggify
-  setNumbers: [341]
-  cardNumber: 110
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 110
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1451,8 +1659,11 @@
       rating: 1
 
 - name: Help from Future Self
-  setNumbers: [341, 435]
-  cardNumber: 111
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 111
+    - expansion: 435
+      cardNumber: 146
   rating: 5
   expectedAmber: 1
   amberControl: 0.0
@@ -1463,8 +1674,11 @@
   synergies: []
 
 - name: Interdimensional Graft
-  setNumbers: [341, 435]
-  cardNumber: 112
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 112
+    - expansion: 435
+      cardNumber: 130
   rating: 3
   expectedAmber: 1.5
   amberControl: 0.5
@@ -1477,8 +1691,11 @@
       rating: 1
 
 - name: Knowledge is Power
-  setNumbers: [341, 435]
-  cardNumber: 113
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 113
+    - expansion: 435
+      cardNumber: 147
   rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -1491,8 +1708,11 @@
       rating: 3
 
 - name: Labwork
-  setNumbers: [341, 435]
-  cardNumber: 114
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 114
+    - expansion: 435
+      cardNumber: 114
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1503,8 +1723,9 @@
   synergies: []
 
 - name: Library Access
-  setNumbers: [341]
-  cardNumber: 115
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 115
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1521,8 +1742,9 @@
       rating: 3
 
 - name: Neuro Syphon
-  setNumbers: [341]
-  cardNumber: 116
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 116
   rating: 3.5
   expectedAmber: 1.5
   amberControl: 0.5
@@ -1534,8 +1756,9 @@
     - trait: increasesKeyCost
 
 - name: Phase Shift
-  setNumbers: [341]
-  cardNumber: 117
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 117
   rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1545,8 +1768,9 @@
   traits: [playsCards]
 
 - name: Positron Bolt
-  setNumbers: [341]
-  cardNumber: 118
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 118
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1556,8 +1780,9 @@
   synergies: []
 
 - name: Random Access Archives
-  setNumbers: [341]
-  cardNumber: 119
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 119
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1568,8 +1793,11 @@
   synergies: []
 
 - name: Remote Access
-  setNumbers: [341, 435]
-  cardNumber: 120
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 120
+    - expansion: 435
+      cardNumber: 134
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1581,8 +1809,9 @@
       rating: -1
 
 - name: Reverse Time
-  setNumbers: [341]
-  cardNumber: 121
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 121
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1595,8 +1824,9 @@
       type: house
 
 - name: Scrambler Storm
-  setNumbers: [341]
-  cardNumber: 122
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 122
   rating: 4.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1607,8 +1837,11 @@
   synergies: []
 
 - name: Sloppy Labwork
-  setNumbers: [341, 435]
-  cardNumber: 123
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 123
+    - expansion: 435
+      cardNumber: 138
   rating: 4.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1619,8 +1852,9 @@
   synergies: []
 
 - name: Twin Bolt Emission
-  setNumbers: [341]
-  cardNumber: 124
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 124
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1630,8 +1864,11 @@
   synergies: []
 
 - name: Wild Wormhole
-  setNumbers: [341, 435]
-  cardNumber: 125
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 125
+    - expansion: 435
+      cardNumber: 122
   rating: 4.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1646,8 +1883,9 @@
       rating: -2
 
 - name: Anomaly Exploiter
-  setNumbers: [341]
-  cardNumber: 126
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 126
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1658,8 +1896,11 @@
     - trait: damagesMultipleEnemies
 
 - name: Chaos Portal
-  setNumbers: [341, 435]
-  cardNumber: 127
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 127
+    - expansion: 435
+      cardNumber: 140
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1675,8 +1916,11 @@
       rating: -1
 
 - name: Crazy Killing Machine
-  setNumbers: [341, 435]
-  cardNumber: 128
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 128
+    - expansion: 435
+      cardNumber: 141
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1688,8 +1932,11 @@
       rating: 1
 
 - name: Library of Babble
-  setNumbers: [341, 435]
-  cardNumber: 129
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 129
+    - expansion: 435
+      cardNumber: 115
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1701,8 +1948,9 @@
     - trait: revealsTopDeck
 
 - name: Mobius Scroll
-  setNumbers: [341]
-  cardNumber: 130
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 130
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1713,8 +1961,11 @@
   synergies: []
 
 - name: Pocket Universe
-  setNumbers: [341, 435]
-  cardNumber: 131
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 131
+    - expansion: 435
+      cardNumber: 151
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1724,8 +1975,9 @@
   synergies: []
 
 - name: Spangler Box
-  setNumbers: [341]
-  cardNumber: 132
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 132
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1735,8 +1987,9 @@
   synergies: []
 
 - name: Spectral Tunneler
-  setNumbers: [341]
-  cardNumber: 133
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 133
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1747,8 +2000,11 @@
   synergies: []
 
 - name: Strange Gizmo
-  setNumbers: [341, 435]
-  cardNumber: 134
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 134
+    - expansion: 435
+      cardNumber: 156
   rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -1758,8 +2014,9 @@
   synergies: []
 
 - name: The Howling Pit
-  setNumbers: [341]
-  cardNumber: 135
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 135
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1770,8 +2027,9 @@
   synergies: []
 
 - name: Batdrone
-  setNumbers: [341]
-  cardNumber: 136
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 136
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -1787,8 +2045,11 @@
       rating: 1
 
 - name: Brain Eater
-  setNumbers: [341, 435]
-  cardNumber: 137
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 137
+    - expansion: 435
+      cardNumber: 126
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1801,8 +2062,9 @@
       rating: 1
 
 - name: Dextre
-  setNumbers: [341]
-  cardNumber: 138
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 138
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -1813,8 +2075,9 @@
   synergies: []
 
 - name: Doc Bookton
-  setNumbers: [341]
-  cardNumber: 139
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 139
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1824,8 +2087,9 @@
   traits: [drawsCards]
 
 - name: Dr. Escotera
-  setNumbers: [341]
-  cardNumber: 140
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 140
   rating: 3
   expectedAmber: 1
   amberControl: 0.0
@@ -1836,8 +2100,11 @@
     - trait: returnsFriendlyCreaturesToHand
 
 - name: Dysania
-  setNumbers: [341, 435]
-  cardNumber: 141
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 141
+    - expansion: 435
+      cardNumber: 142
   rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -1848,8 +2115,9 @@
   synergies: []
 
 - name: Ganymede Archivist
-  setNumbers: [341]
-  cardNumber: 142
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 142
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1866,8 +2134,11 @@
       rating: -1
 
 - name: Harland Mindlock
-  setNumbers: [341, 435]
-  cardNumber: 143
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 143
+    - expansion: 435
+      cardNumber: 145
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1881,8 +2152,9 @@
       rating: 1
 
 - name: Quixo the “Adventurer”
-  setNumbers: [341]
-  cardNumber: 144
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 144
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1897,8 +2169,9 @@
       rating: 1
 
 - name: Mother
-  setNumbers: [341]
-  cardNumber: 145
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 145
   rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1910,8 +2183,11 @@
     - trait: protectsCreatures
 
 - name: Neutron Shark
-  setNumbers: [341, 435]
-  cardNumber: 146
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 146
+    - expansion: 435
+      cardNumber: 149
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1921,8 +2197,9 @@
   synergies: []
 
 - name: Novu Archaeologist
-  setNumbers: [341]
-  cardNumber: 147
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 147
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1935,8 +2212,11 @@
       rating: 1
 
 - name: Ozmo, Martianologist
-  setNumbers: [341, 435]
-  cardNumber: 148
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 148
+    - expansion: 435
+      cardNumber: 150
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1947,8 +2227,9 @@
     - trait: hasMars
 
 - name: Psychic Bug
-  setNumbers: [341]
-  cardNumber: 149
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 149
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -1958,8 +2239,11 @@
   synergies: []
 
 - name: Replicator
-  setNumbers: [341, 435]
-  cardNumber: 150
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 150
+    - expansion: 435
+      cardNumber: 153
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1973,8 +2257,11 @@
       rating: -1
 
 - name: Research Smoko
-  setNumbers: [341, 435]
-  cardNumber: 151
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 151
+    - expansion: 435
+      cardNumber: 135
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -1987,8 +2274,9 @@
       rating: -2
 
 - name: Skippy Timehog
-  setNumbers: [341]
-  cardNumber: 152
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 152
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -2000,8 +2288,11 @@
     - trait: returnsCreaturesFromDiscard
 
 - name: Timetraveller
-  setNumbers: [341, 435]
-  cardNumber: 153
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 153
+    - expansion: 435
+      cardNumber: 158
   rating: 5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2014,8 +2305,11 @@
     - trait: returnsCreaturesFromDiscard
 
 - name: Titan Mechanic
-  setNumbers: [341, 435]
-  cardNumber: 154
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 154
+    - expansion: 435
+      cardNumber: 121
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2025,8 +2319,9 @@
   synergies: []
 
 - name: Vespilon Theorist
-  setNumbers: [341]
-  cardNumber: 155
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 155
   rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
@@ -2038,8 +2333,9 @@
     - trait: revealsTopDeck
 
 - name: Veylan Analyst
-  setNumbers: [341]
-  cardNumber: 156
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 156
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2051,8 +2347,9 @@
       type: house
 
 - name: Experimental Therapy
-  setNumbers: [341]
-  cardNumber: 157
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 157
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2062,8 +2359,11 @@
   synergies: []
 
 - name: Rocket Boots
-  setNumbers: [341, 435]
-  cardNumber: 158
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 158
+    - expansion: 435
+      cardNumber: 136
   rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -2082,8 +2382,11 @@
       rating: -2
 
 - name: Transposition Sandals
-  setNumbers: [341, 435]
-  cardNumber: 159
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 159
+    - expansion: 435
+      cardNumber: 159
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2100,8 +2403,9 @@
       rating: -2
 
 - name: Ammonia Clouds
-  setNumbers: [341]
-  cardNumber: 160
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 160
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2116,8 +2420,9 @@
     - trait: highTotalArmor
 
 - name: Battle Fleet
-  setNumbers: [341]
-  cardNumber: 161
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 161
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2133,8 +2438,9 @@
       type: house
 
 - name: Deep Probe
-  setNumbers: [341]
-  cardNumber: 162
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 162
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2147,8 +2453,9 @@
     - trait: returnsEnemyCreaturesToHand
 
 - name: EMP Blast
-  setNumbers: [341]
-  cardNumber: 163
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 163
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2164,8 +2471,11 @@
       type: house
 
 - name: Hypnotic Command
-  setNumbers: [341, 435]
-  cardNumber: 164
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 164
+    - expansion: 435
+      cardNumber: 198
   rating: 4
   expectedAmber: 1.5
   amberControl: 2.0
@@ -2181,8 +2491,9 @@
       rating: -3
 
 - name: Irradiated Æmber
-  setNumbers: [341]
-  cardNumber: 165
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 165
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2193,8 +2504,11 @@
     - trait: increasesKeyCost
 
 - name: Key Abduction
-  setNumbers: [341, 435]
-  cardNumber: 166
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 166
+    - expansion: 435
+      cardNumber: 182
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2215,8 +2529,11 @@
       rating: -2
 
 - name: Martian Hounds
-  setNumbers: [341, 435]
-  cardNumber: 167
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 167
+    - expansion: 435
+      cardNumber: 203
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2230,8 +2547,9 @@
       rating: 1
 
 - name: Martians Make Bad Allies
-  setNumbers: [341]
-  cardNumber: 168
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 168
   rating: 2
   expectedAmber: 1.5
   amberControl: 0.0
@@ -2243,8 +2561,9 @@
     - trait: highCreatureCount
 
 - name: Mass Abduction
-  setNumbers: [341]
-  cardNumber: 169
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 169
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2259,8 +2578,9 @@
     - trait: damagesAllEnemies
 
 - name: Mating Season
-  setNumbers: [341]
-  cardNumber: 170
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 170
   rating: 1.5
   expectedAmber: 1.5
   amberControl: 0
@@ -2273,8 +2593,11 @@
       type: house
 
 - name: Mothership Support
-  setNumbers: [341, 435]
-  cardNumber: 171
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 171
+    - expansion: 435
+      cardNumber: 183
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2289,8 +2612,11 @@
       rating: 1
 
 - name: Orbital Bombardment
-  setNumbers: [341, 435]
-  cardNumber: 172
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 172
+    - expansion: 435
+      cardNumber: 185
   rating: 4.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2306,8 +2632,9 @@
       type: house
 
 - name: Phosphorus Stars
-  setNumbers: [341]
-  cardNumber: 173
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 173
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2320,8 +2647,9 @@
       rating: -2
 
 - name: Psychic Network
-  setNumbers: [341]
-  cardNumber: 174
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 174
   rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
@@ -2336,8 +2664,11 @@
       rating: 3
 
 - name: Sample Collection
-  setNumbers: [341, 435]
-  cardNumber: 175
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 175
+    - expansion: 435
+      cardNumber: 188
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2349,8 +2680,11 @@
       rating: -2
 
 - name: Shatter Storm
-  setNumbers: [341, 435]
-  cardNumber: 176
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 176
+    - expansion: 435
+      cardNumber: 206
   rating: 3.5
   expectedAmber: -1.0
   amberControl: 3.0
@@ -2362,8 +2696,9 @@
       rating: 1
 
 - name: Soft Landing
-  setNumbers: [341]
-  cardNumber: 177
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 177
   rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
@@ -2378,8 +2713,9 @@
       rating: -3
 
 - name: Squawker
-  setNumbers: [341]
-  cardNumber: 178
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 178
   rating: 4
   expectedAmber: 1.5
   amberControl: 0.0
@@ -2391,8 +2727,11 @@
       type: house
 
 - name: Total Recall
-  setNumbers: [341, 435]
-  cardNumber: 179
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 179
+    - expansion: 435
+      cardNumber: 208
   rating: 1.5
   expectedAmber: 3.0
   amberControl: 0.0
@@ -2405,8 +2744,11 @@
       rating: -1
 
 - name: Combat Pheromones
-  setNumbers: [341, 435]
-  cardNumber: 180
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 180
+    - expansion: 435
+      cardNumber: 177
   rating: 3.5
   expectedAmber: 2.0
   amberControl: 0.0
@@ -2425,8 +2767,9 @@
       rating: -3
 
 - name: Commpod
-  setNumbers: [341]
-  cardNumber: 181
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 181
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2446,8 +2789,9 @@
       rating: 1
 
 - name: Crystal Hive
-  setNumbers: [341]
-  cardNumber: 182
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 182
   rating: 3
   expectedAmber: 2.0
   amberControl: 0.0
@@ -2466,8 +2810,11 @@
       type: house
 
 - name: Custom Virus
-  setNumbers: [341, 435]
-  cardNumber: 183
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 183
+    - expansion: 435
+      cardNumber: 193
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2477,8 +2824,9 @@
   synergies: []
 
 - name: Feeding Pit
-  setNumbers: [341]
-  cardNumber: 184
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 184
   rating: 3.5
   expectedAmber: 1.5
   amberControl: 0.0
@@ -2489,8 +2837,11 @@
   synergies: []
 
 - name: Invasion Portal
-  setNumbers: [341, 435]
-  cardNumber: 185
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 185
+    - expansion: 435
+      cardNumber: 200
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2500,8 +2851,11 @@
   traits: [usableArtifact, drawsCards]
 
 - name: Incubation Chamber
-  setNumbers: [341, 435]
-  cardNumber: 186
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 186
+    - expansion: 435
+      cardNumber: 199
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2518,8 +2872,11 @@
       type: house
 
 - name: Mothergun
-  setNumbers: [341, 435]
-  cardNumber: 187
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 187
+    - expansion: 435
+      cardNumber: 169
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2535,8 +2892,11 @@
     - trait: increasesHandSize
 
 - name: Sniffer
-  setNumbers: [341, 435]
-  cardNumber: 188
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 188
+    - expansion: 435
+      cardNumber: 207
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2546,8 +2906,9 @@
   synergies: []
 
 - name: Swap Widget
-  setNumbers: [341]
-  cardNumber: 189
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 189
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2569,8 +2930,9 @@
       type: house
 
 - name: Blypyp
-  setNumbers: [341]
-  cardNumber: 190
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 190
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2588,8 +2950,9 @@
       rating: 1
 
 - name: Chuff Ape
-  setNumbers: [341]
-  cardNumber: 191
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 191
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2599,8 +2962,9 @@
   synergies: []
 
 - name: Ether Spider
-  setNumbers: [341]
-  cardNumber: 192
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 192
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 1.5
@@ -2611,8 +2975,9 @@
   synergies: []
 
 - name: Grabber Jammer
-  setNumbers: [341]
-  cardNumber: 193
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 193
   rating: 4
   expectedAmber: 0.0
   amberControl: 1.5
@@ -2622,8 +2987,11 @@
   synergies: []
 
 - name: Grommid
-  setNumbers: [341, 435]
-  cardNumber: 194
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 194
+    - expansion: 435
+      cardNumber: 197
   rating: 1
   expectedAmber: 0.0
   amberControl: 0.5
@@ -2636,8 +3004,9 @@
     - trait: lowCreatureCount
 
 - name: “John Smyth”
-  setNumbers: [341]
-  cardNumber: 195
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 195
   rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -2656,8 +3025,11 @@
       rating: -3
 
 - name: Mindwarper
-  setNumbers: [341, 435]
-  cardNumber: 196
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 196
+    - expansion: 435
+      cardNumber: 167
   rating: 3
   expectedAmber: 0.0
   amberControl: 1.0
@@ -2671,8 +3043,9 @@
       rating: 1
 
 - name: Phylyx the Disintegrator
-  setNumbers: [341]
-  cardNumber: 197
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 197
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 1.5
@@ -2690,8 +3063,11 @@
       rating: -2
 
 - name: Qyxxlyx Plague Master
-  setNumbers: [341, 435]
-  cardNumber: 198
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 198
+    - expansion: 435
+      cardNumber: 204
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2703,8 +3079,9 @@
       rating: -2
 
 - name: Tunk
-  setNumbers: [341]
-  cardNumber: 199
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 199
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2719,8 +3096,9 @@
 
 
 - name: Ulyq Megamouth
-  setNumbers: [341]
-  cardNumber: 200
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 200
   rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -2738,8 +3116,11 @@
       rating: -1
 
 - name: Uxlyx the Zookeeper
-  setNumbers: [341, 435]
-  cardNumber: 201
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 201
+    - expansion: 435
+      cardNumber: 190
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2755,8 +3136,11 @@
       rating: -3
 
 - name: Vezyma Thinkdrone
-  setNumbers: [341, 435]
-  cardNumber: 202
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 202
+    - expansion: 435
+      cardNumber: 172
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2767,8 +3151,9 @@
     - trait: goodPlay
 
 - name: Yxili Marauder
-  setNumbers: [341]
-  cardNumber: 203
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 203
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -2785,8 +3170,9 @@
       rating: 1
 
 - name: Yxilo Bolter
-  setNumbers: [341]
-  cardNumber: 204
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 204
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2800,8 +3186,11 @@
       rating: 1
 
 - name: Yxilx Dominator
-  setNumbers: [341, 435]
-  cardNumber: 205
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 205
+    - expansion: 435
+      cardNumber: 174
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2811,8 +3200,11 @@
   synergies: []
 
 - name: Zorg
-  setNumbers: [341, 435]
-  cardNumber: 206
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 206
+    - expansion: 435
+      cardNumber: 191
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2822,8 +3214,9 @@
   synergies: []
 
 - name: Zyzzix the Many
-  setNumbers: [341]
-  cardNumber: 207
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 207
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -2842,8 +3235,9 @@
       rating: -2
 
 - name: Biomatrix Backup
-  setNumbers: [341]
-  cardNumber: 208
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 208
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2856,8 +3250,11 @@
       rating: -3
 
 - name: Brain Stem Antenna
-  setNumbers: [341, 435]
-  cardNumber: 209
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 209
+    - expansion: 435
+      cardNumber: 192
   rating: 3.5
   expectedAmber: 1
   amberControl: 0.0
@@ -2870,8 +3267,9 @@
       rating: -3
 
 - name: Jammer Pack
-  setNumbers: [341]
-  cardNumber: 210
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 210
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 1.0
@@ -2885,8 +3283,11 @@
 
 
 - name: Red Planet Ray Gun
-  setNumbers: [341, 435]
-  cardNumber: 211
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 211
+    - expansion: 435
+      cardNumber: 187
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2905,8 +3306,11 @@
     - trait: power5OrHigherCreatures
 
 - name: Begone!
-  setNumbers: [341, 435]
-  cardNumber: 212
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 212
+    - expansion: 435
+      cardNumber: 250
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2916,8 +3320,11 @@
   synergies: []
 
 - name: Blinding Light
-  setNumbers: [341, 435]
-  cardNumber: 213
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 213
+    - expansion: 435
+      cardNumber: 214
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2927,8 +3334,9 @@
   synergies: []
 
 - name: Charge!
-  setNumbers: [341]
-  cardNumber: 214
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 214
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2944,8 +3352,9 @@
       rating: 3
 
 - name: Cleansing Wave
-  setNumbers: [341]
-  cardNumber: 215
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 215
   rating: 2
   expectedAmber: 1.5
   amberControl: 0.0
@@ -2965,8 +3374,9 @@
       type: house
 
 - name: Clear Mind
-  setNumbers: [341]
-  cardNumber: 216
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 216
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -2976,8 +3386,11 @@
   synergies: []
 
 - name: Doorstep to Heaven
-  setNumbers: [341, 435]
-  cardNumber: 217
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 217
+    - expansion: 435
+      cardNumber: 231
   rating: 4
   expectedAmber: 1.0
   amberControl: 2.0
@@ -2991,8 +3404,9 @@
       rating: 3
 
 - name: Glorious Few
-  setNumbers: [341]
-  cardNumber: 218
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 218
   rating: 3
   expectedAmber: 2.0
   amberControl: 0.0
@@ -3008,8 +3422,9 @@
       rating: 1
 
 - name: Honorable Claim
-  setNumbers: [341]
-  cardNumber: 219
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 219
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 1.0
@@ -3021,8 +3436,9 @@
       rating: 3
 
 - name: Inspiration
-  setNumbers: [341]
-  cardNumber: 220
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 220
   rating: 2
   expectedAmber: 1
   amberControl: 0.0
@@ -3034,8 +3450,11 @@
     - trait: goodAction
 
 - name: Mighty Lance
-  setNumbers: [341, 435]
-  cardNumber: 221
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 221
+    - expansion: 435
+      cardNumber: 256
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3045,8 +3464,11 @@
   synergies: []
 
 - name: Oath of Poverty
-  setNumbers: [341, 435]
-  cardNumber: 222
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 222
+    - expansion: 435
+      cardNumber: 258
   rating: 2
   expectedAmber: 2.0
   amberControl: 0.0
@@ -3060,8 +3482,11 @@
       rating: -1
 
 - name: One Stood Against Many
-  setNumbers: [341, 435]
-  cardNumber: 223
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 223
+    - expansion: 435
+      cardNumber: 259
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3075,8 +3500,11 @@
     - trait: skirmish
 
 - name: Radiant Truth
-  setNumbers: [341, 435]
-  cardNumber: 224
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 224
+    - expansion: 435
+      cardNumber: 241
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3086,8 +3514,11 @@
   synergies: []
 
 - name: Shield of Justice
-  setNumbers: [341, 435]
-  cardNumber: 225
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 225
+    - expansion: 435
+      cardNumber: 222
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3102,8 +3533,11 @@
       rating: -1
 
 - name: Take Hostages
-  setNumbers: [341, 435]
-  cardNumber: 226
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 226
+    - expansion: 435
+      cardNumber: 225
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.5
@@ -3116,8 +3550,9 @@
       rating: 1
 
 - name: Terms of Redress
-  setNumbers: [341]
-  cardNumber: 227
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 227
   rating: 3
   expectedAmber: 1.0
   amberControl: 1.0
@@ -3129,8 +3564,11 @@
       rating: 1
 
 - name: The Harder They Come
-  setNumbers: [341, 435]
-  cardNumber: 228
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 228
+    - expansion: 435
+      cardNumber: 245
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3140,8 +3578,11 @@
   synergies: []
 
 - name: The Spirit’s Way
-  setNumbers: [341, 435]
-  cardNumber: 229
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 229
+    - expansion: 435
+      cardNumber: 246
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3157,8 +3598,9 @@
       rating: -1
 
 - name: Virtuous Works
-  setNumbers: [341]
-  cardNumber: 230
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 230
   rating: 5
   expectedAmber: 3.0
   amberControl: 0.0
@@ -3168,8 +3610,11 @@
   synergies: []
 
 - name: Epic Quest
-  setNumbers: [341, 435]
-  cardNumber: 231
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 231
+    - expansion: 435
+      cardNumber: 252
   rating: 1
   expectedAmber: 0
   amberControl: 0.0
@@ -3182,8 +3627,11 @@
     - trait: increasesHandSize
 
 - name: Gorm of Omm
-  setNumbers: [341, 435]
-  cardNumber: 232
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 232
+    - expansion: 435
+      cardNumber: 235
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3193,8 +3641,9 @@
   synergies: []
 
 - name: Hallowed Blaster
-  setNumbers: [341]
-  cardNumber: 233
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 233
   rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3206,8 +3655,11 @@
       rating: 1
 
 - name: Potion of Invulnerability
-  setNumbers: [341, 435]
-  cardNumber: 234
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 234
+    - expansion: 435
+      cardNumber: 239
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3223,8 +3675,9 @@
       rating: 2
 
 - name: Round Table
-  setNumbers: [341]
-  cardNumber: 235
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 235
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3237,8 +3690,11 @@
       rating: 3
 
 - name: Sigil of Brotherhood
-  setNumbers: [341, 435]
-  cardNumber: 236
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 236
+    - expansion: 435
+      cardNumber: 244
   rating: 3
   expectedAmber: 2
   amberControl: 0.0
@@ -3251,8 +3707,9 @@
       rating: 3
 
 - name: Whispering Reliquary
-  setNumbers: [341]
-  cardNumber: 237
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 237
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3263,8 +3720,9 @@
   synergies: []
 
 - name: Bulwark
-  setNumbers: [341]
-  cardNumber: 238
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 238
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3276,8 +3734,9 @@
     - trait: damagesFriendlyCreatures
 
 - name: Champion Anaphiel
-  setNumbers: [341]
-  cardNumber: 239
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 239
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3287,8 +3746,9 @@
   synergies: []
 
 - name: Champion Tabris
-  setNumbers: [341]
-  cardNumber: 240
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 240
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
@@ -3298,8 +3758,9 @@
   synergies: []
 
 - name: Commander Remiel
-  setNumbers: [341]
-  cardNumber: 241
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 241
   rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
@@ -3314,8 +3775,11 @@
       rating: -1
 
 - name: Duma the Martyr
-  setNumbers: [341, 435]
-  cardNumber: 242
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 242
+    - expansion: 435
+      cardNumber: 251
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3326,8 +3790,9 @@
   synergies: []
 
 - name: Francus
-  setNumbers: [341]
-  cardNumber: 243
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 243
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -3337,8 +3802,9 @@
   synergies: []
 
 - name: Grey Monk
-  setNumbers: [341]
-  cardNumber: 244
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 244
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3351,8 +3817,9 @@
     - trait: highTotalCreaturePower
 
 - name: Hayyel the Merchant
-  setNumbers: [341]
-  cardNumber: 245
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 245
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3368,8 +3835,9 @@
     - trait: returnsFriendlyArtifactsToHand
 
 - name: Horseman of Death
-  setNumbers: [341]
-  cardNumber: 246
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 246
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3382,8 +3850,9 @@
     - trait: returnsCreaturesFromDiscard
 
 - name: Horseman of Famine
-  setNumbers: [341]
-  cardNumber: 247
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 247
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3396,8 +3865,9 @@
       rating: -3
 
 - name: Horseman of Pestilence
-  setNumbers: [341]
-  cardNumber: 248
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 248
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3408,8 +3878,9 @@
     - trait: highTotalArmor
 
 - name: Horseman of War
-  setNumbers: [341]
-  cardNumber: 249
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 249
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3422,8 +3893,9 @@
     - trait: highTotalCreaturePower
 
 - name: Jehu the Bureaucrat
-  setNumbers: [341]
-  cardNumber: 250
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 250
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3438,8 +3910,9 @@
       type: house
 
 - name: Lady Maxena
-  setNumbers: [341]
-  cardNumber: 251
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 251
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3449,8 +3922,11 @@
   synergies: []
 
 - name: Lord Golgotha
-  setNumbers: [341, 435]
-  cardNumber: 252
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 252
+    - expansion: 435
+      cardNumber: 254
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3461,8 +3937,9 @@
     - trait: causesFighting
 
 - name: Numquid the Fair
-  setNumbers: [341]
-  cardNumber: 253
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 253
   rating: 4.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3475,8 +3952,9 @@
     - trait: lowCreatureCount
 
 - name: Protectrix
-  setNumbers: [341]
-  cardNumber: 254
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 254
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3486,8 +3964,9 @@
   synergies: []
 
 - name: Raiding Knight
-  setNumbers: [341]
-  cardNumber: 255
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 255
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
@@ -3497,8 +3976,11 @@
   synergies: []
 
 - name: Sanctum Guardian
-  setNumbers: [341, 435]
-  cardNumber: 256
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 256
+    - expansion: 435
+      cardNumber: 262
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3508,8 +3990,9 @@
   synergies: []
 
 - name: Sequis
-  setNumbers: [341]
-  cardNumber: 257
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 257
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
@@ -3519,8 +4002,9 @@
   synergies: []
 
 - name: Sergeant Zakiel
-  setNumbers: [341]
-  cardNumber: 258
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 258
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3535,8 +4019,9 @@
       rating: -2
 
 - name: Staunch Knight
-  setNumbers: [341]
-  cardNumber: 259
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 259
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3547,8 +4032,11 @@
   synergies: []
 
 - name: Gatekeeper
-  setNumbers: [341, 435]
-  cardNumber: 260
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 260
+    - expansion: 435
+      cardNumber: 234
   rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
@@ -3560,8 +4048,11 @@
       rating: 1
 
 - name: The Vaultkeeper
-  setNumbers: [341, 435]
-  cardNumber: 261
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 261
+    - expansion: 435
+      cardNumber: 265
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3573,8 +4064,11 @@
       rating: 1
 
 - name: Veemos Lightbringer
-  setNumbers: [341, 435]
-  cardNumber: 262
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 262
+    - expansion: 435
+      cardNumber: 266
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3586,8 +4080,11 @@
       rating: -3
 
 - name: Armageddon Cloak
-  setNumbers: [341, 435]
-  cardNumber: 263
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 263
+    - expansion: 435
+      cardNumber: 249
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3599,8 +4096,9 @@
       rating: 1
 
 - name: Mantle of the Zealot
-  setNumbers: [341]
-  cardNumber: 264
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 264
   rating: 3.5
   expectedAmber: 1.5
   amberControl: 0.0
@@ -3612,8 +4110,11 @@
     - trait: goodAction
 
 - name: Protect the Weak
-  setNumbers: [341, 435]
-  cardNumber: 265
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 265
+    - expansion: 435
+      cardNumber: 221
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3628,8 +4129,9 @@
       rating: -1
 
 - name: Shoulder Armor
-  setNumbers: [341]
-  cardNumber: 266
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 266
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3644,8 +4146,9 @@
       rating: -1
 
 - name: Bait and Switch
-  setNumbers: [341]
-  cardNumber: 267
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 267
   rating: 5
   expectedAmber: 2.0
   amberControl: 2.0
@@ -3658,8 +4161,9 @@
       type: house
 
 - name: Booby Trap
-  setNumbers: [341]
-  cardNumber: 268
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 268
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3675,8 +4179,9 @@
       rating: -2
 
 - name: Finishing Blow
-  setNumbers: [341]
-  cardNumber: 269
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 269
   rating: 4.5
   expectedAmber: 2.0
   amberControl: 1.0
@@ -3690,8 +4195,9 @@
       rating: 1
 
 - name: Ghostly Hand
-  setNumbers: [341]
-  cardNumber: 270
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 270
   rating: 3.5
   expectedAmber: 2.0
   amberControl: 0.5
@@ -3707,8 +4213,11 @@
       rating: 1
 
 - name: Hidden Stash
-  setNumbers: [341, 435]
-  cardNumber: 271
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 271
+    - expansion: 435
+      cardNumber: 286
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3719,8 +4228,9 @@
   synergies: []
 
 - name: Imperial Traitor
-  setNumbers: [341]
-  cardNumber: 272
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 272
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3731,8 +4241,11 @@
   synergies: []
 
 - name: Key of Darkness
-  setNumbers: [341, 435]
-  cardNumber: 273
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 273
+    - expansion: 435
+      cardNumber: 304
   rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3742,8 +4255,11 @@
   synergies: []
 
 - name: Lights Out
-  setNumbers: [341, 435]
-  cardNumber: 274
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 274
+    - expansion: 435
+      cardNumber: 288
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3754,8 +4270,11 @@
   synergies: []
 
 - name: Miasma
-  setNumbers: [341, 435]
-  cardNumber: 275
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 275
+    - expansion: 435
+      cardNumber: 274
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3765,8 +4284,11 @@
   synergies: []
 
 - name: Nerve Blast
-  setNumbers: [341, 435]
-  cardNumber: 276
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 276
+    - expansion: 435
+      cardNumber: 275
   rating: 4
   expectedAmber: 1.0
   amberControl: 1.0
@@ -3776,8 +4298,9 @@
   synergies: []
 
 - name: One Last Job
-  setNumbers: [341]
-  cardNumber: 277
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 277
   rating: 3.5
   expectedAmber: 1.5
   amberControl: 0.5
@@ -3793,8 +4316,11 @@
       rating: -2
 
 - name: Oubliette
-  setNumbers: [341, 435]
-  cardNumber: 278
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 278
+    - expansion: 435
+      cardNumber: 292
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -3804,8 +4330,9 @@
   synergies: []
 
 - name: Pawn Sacrifice
-  setNumbers: [341]
-  cardNumber: 279
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 279
   rating: 3
   expectedAmber: 1
   amberControl: 0.0
@@ -3817,8 +4344,9 @@
     - trait: urchin
 
 - name: Poison Wave
-  setNumbers: [341]
-  cardNumber: 280
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 280
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3833,8 +4361,9 @@
       rating: 3
 
 - name: Relentless Whispers
-  setNumbers: [341]
-  cardNumber: 281
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 281
   rating: 5
   expectedAmber: 2
   amberControl: 1
@@ -3849,8 +4378,11 @@
       rating: 1
 
 - name: Routine Job
-  setNumbers: [341, 435]
-  cardNumber: 282
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 282
+    - expansion: 435
+      cardNumber: 311
   rating: 4.5
   expectedAmber: 1.5
   amberControl: 1.5
@@ -3862,8 +4394,11 @@
       rating: 3
 
 - name: Too Much to Protect
-  setNumbers: [341, 435]
-  cardNumber: 283
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 283
+    - expansion: 435
+      cardNumber: 298
   rating: 4
   expectedAmber: 2.0
   amberControl: 1.0
@@ -3880,8 +4415,11 @@
       rating: 1
 
 - name: Treasure Map
-  setNumbers: [341, 435]
-  cardNumber: 284
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 284
+    - expansion: 435
+      cardNumber: 318
   rating: 2.5
   expectedAmber: 2.0
   amberControl: 0.0
@@ -3891,8 +4429,11 @@
   synergies: []
 
 - name: Customs Office
-  setNumbers: [341, 435]
-  cardNumber: 285
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 285
+    - expansion: 435
+      cardNumber: 300
   rating: 3
   expectedAmber: 1.0
   amberControl: 1.0
@@ -3904,8 +4445,9 @@
       rating: 3
 
 - name: Evasion Sigil
-  setNumbers: [341]
-  cardNumber: 286
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 286
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3925,8 +4467,11 @@
       rating: 3
 
 - name: Longfused Mines
-  setNumbers: [341, 435]
-  cardNumber: 287
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 287
+    - expansion: 435
+      cardNumber: 306
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3942,8 +4487,9 @@
       rating: -2
 
 - name: Masterplan
-  setNumbers: [341]
-  cardNumber: 288
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 288
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3956,8 +4502,9 @@
       rating: 1
 
 - name: Safe Place
-  setNumbers: [341]
-  cardNumber: 289
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 289
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3967,8 +4514,9 @@
   synergies: []
 
 - name: Seeker Needle
-  setNumbers: [341]
-  cardNumber: 290
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 290
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -3980,8 +4528,11 @@
       rating: 3
 
 - name: Skeleton Key
-  setNumbers: [341, 435]
-  cardNumber: 291
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 291
+    - expansion: 435
+      cardNumber: 295
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -3990,8 +4541,11 @@
   traits: [usableArtifact, capturesAmber]
 
 - name: Special Delivery
-  setNumbers: [341, 435]
-  cardNumber: 292
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 292
+    - expansion: 435
+      cardNumber: 296
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4001,8 +4555,9 @@
   synergies: []
 
 - name: Speed Sigil
-  setNumbers: [341]
-  cardNumber: 293
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 293
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4019,8 +4574,11 @@
       type: house
 
 - name: Subtle Maul
-  setNumbers: [341, 435]
-  cardNumber: 294
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 294
+    - expansion: 435
+      cardNumber: 297
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4031,8 +4589,11 @@
   synergies: []
 
 - name: The Sting
-  setNumbers: [341, 435]
-  cardNumber: 295
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 295
+    - expansion: 435
+      cardNumber: 317
   rating: 2
   expectedAmber: 2.5
   amberControl: 0.0
@@ -4047,8 +4608,11 @@
       rating: 3
 
 - name: Bad Penny
-  setNumbers: [341, 435]
-  cardNumber: 296
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 296
+    - expansion: 435
+      cardNumber: 267
   rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4059,8 +4623,11 @@
   synergies: []
 
 - name: Bulleteye
-  setNumbers: [341, 435]
-  cardNumber: 297
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 297
+    - expansion: 435
+      cardNumber: 299
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4075,8 +4642,9 @@
       rating: 3
 
 - name: Carlo Phantom
-  setNumbers: [341]
-  cardNumber: 298
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 298
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 1.0
@@ -4091,8 +4659,11 @@
     - trait: returnsFriendlyArtifactsToHand
 
 - name: Deipno Spymaster
-  setNumbers: [341, 435]
-  cardNumber: 299
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 299
+    - expansion: 435
+      cardNumber: 301
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4104,8 +4675,9 @@
       rating: 1
 
 - name: Faygin
-  setNumbers: [341]
-  cardNumber: 300
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 300
   rating: 4
   expectedAmber: 1.5
   amberControl: 1.5
@@ -4120,8 +4692,9 @@
       rating: 1
 
 - name: Macis Asp
-  setNumbers: [341]
-  cardNumber: 301
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 301
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4135,8 +4708,11 @@
       rating: 1
 
 - name: Mack the Knife
-  setNumbers: [341, 435]
-  cardNumber: 302
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 302
+    - expansion: 435
+      cardNumber: 307
   rating: 4.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4145,8 +4721,9 @@
   traits: [elusive, dealsDamage]
 
 - name: Magda the Rat
-  setNumbers: [341]
-  cardNumber: 303
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 303
   rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.5
@@ -4156,8 +4733,9 @@
   synergies: []
 
 - name: Mooncurser
-  setNumbers: [341]
-  cardNumber: 304
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 304
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.5
@@ -4176,8 +4754,9 @@
       rating: -1
 
 - name: Nexus
-  setNumbers: [341]
-  cardNumber: 305
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 305
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4189,8 +4768,9 @@
       rating: -1
 
 - name: Noddy the Thief
-  setNumbers: [341]
-  cardNumber: 306
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 306
   rating: 3
   expectedAmber: 0.0
   amberControl: 1.0
@@ -4200,8 +4780,9 @@
   synergies: []
 
 - name: Old Bruno
-  setNumbers: [341]
-  cardNumber: 307
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 307
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 1.5
@@ -4211,8 +4792,9 @@
   synergies: []
 
 - name: Dodger
-  setNumbers: [341]
-  cardNumber: 308
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 308
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
@@ -4228,8 +4810,11 @@
       type: house
 
 - name: Selwyn the Fence
-  setNumbers: [341, 435]
-  cardNumber: 309
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 309
+    - expansion: 435
+      cardNumber: 314
   rating: 2
   expectedAmber: 0.5
   amberControl: 0.5
@@ -4241,8 +4826,9 @@
       rating: 3
 
 - name: Shadow Self
-  setNumbers: [341]
-  cardNumber: 310
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 310
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4251,8 +4837,9 @@
   traits: [preventsDamage, protectsCreatures]
 
 - name: Silvertooth
-  setNumbers: [341]
-  cardNumber: 311
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 311
   rating: 3
   expectedAmber: 1
   amberControl: 0.0
@@ -4265,8 +4852,9 @@
       rating: -2
 
 - name: Smiling Ruth
-  setNumbers: [341]
-  cardNumber: 312
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 312
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4278,8 +4866,11 @@
       type: house
 
 - name: Sneklifter
-  setNumbers: [341, 435]
-  cardNumber: 313
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 313
+    - expansion: 435
+      cardNumber: 316
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4294,8 +4885,11 @@
     - trait: returnsCreaturesFromDiscard
 
 - name: Umbra
-  setNumbers: [341, 435]
-  cardNumber: 314
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 314
+    - expansion: 435
+      cardNumber: 280
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.5
@@ -4309,8 +4903,9 @@
     - trait: causesFighting
 
 - name: Urchin
-  setNumbers: [341]
-  cardNumber: 315
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 315
   rating: 4
   expectedAmber: 1.0
   amberControl: 1.0
@@ -4320,8 +4915,11 @@
   synergies: []
 
 - name: Duskrunner
-  setNumbers: [341, 435]
-  cardNumber: 316
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 316
+    - expansion: 435
+      cardNumber: 285
   rating: 2.5
   expectedAmber: 1
   amberControl: 1
@@ -4336,8 +4934,11 @@
       rating: 3
 
 - name: Ring of Invisibility
-  setNumbers: [341, 435]
-  cardNumber: 317
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 317
+    - expansion: 435
+      cardNumber: 310
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4351,8 +4952,9 @@
       rating: -1
 
 - name: Silent Dagger
-  setNumbers: [341]
-  cardNumber: 318
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 318
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4366,8 +4968,9 @@
       rating: 1
 
 - name: Cooperative Hunting
-  setNumbers: [341]
-  cardNumber: 319
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 319
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4380,8 +4983,11 @@
       rating: -2
 
 - name: Curiosity
-  setNumbers: [341, 435]
-  cardNumber: 320
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 320
+    - expansion: 435
+      cardNumber: 351
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4393,8 +4999,9 @@
       rating: -3
 
 - name: Fertility Chant
-  setNumbers: [341]
-  cardNumber: 321
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 321
   rating: 2.5
   expectedAmber: 3.0
   amberControl: 0
@@ -4409,8 +5016,11 @@
       rating: 3
 
 - name: Fogbank
-  setNumbers: [341, 435]
-  cardNumber: 322
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 322
+    - expansion: 435
+      cardNumber: 340
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4420,8 +5030,11 @@
   synergies: []
 
 - name: Full Moon
-  setNumbers: [341, 435]
-  cardNumber: 323
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 323
+    - expansion: 435
+      cardNumber: 322
   rating: 2.5
   expectedAmber: 2.0
   amberControl: 0.0
@@ -4437,8 +5050,11 @@
     - trait: returnsFriendlyCreaturesToHand
 
 - name: Grasping Vines
-  setNumbers: [341, 435]
-  cardNumber: 324
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 324
+    - expansion: 435
+      cardNumber: 341
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4449,8 +5065,11 @@
   synergies: []
 
 - name: Key Charge
-  setNumbers: [341, 435]
-  cardNumber: 325
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 325
+    - expansion: 435
+      cardNumber: 325
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4469,8 +5088,11 @@
       type: house
 
 - name: Lifeweb
-  setNumbers: [341, 435]
-  cardNumber: 326
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 326
+    - expansion: 435
+      cardNumber: 342
   rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
@@ -4480,8 +5102,9 @@
   synergies: []
 
 - name: Lost in the Woods
-  setNumbers: [341]
-  cardNumber: 327
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 327
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4497,8 +5120,11 @@
       rating: 1
 
 - name: Mimicry
-  setNumbers: [341, 435]
-  cardNumber: 328
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 328
+    - expansion: 435
+      cardNumber: 343
   rating: 4
   expectedAmber: 0.5
   amberControl: 0.5
@@ -4509,8 +5135,11 @@
   synergies: []
 
 - name: Nature’s Call
-  setNumbers: [341, 435]
-  cardNumber: 329
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 329
+    - expansion: 435
+      cardNumber: 344
   rating: 5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4521,8 +5150,9 @@
   synergies: []
 
 - name: Nocturnal Maneuver
-  setNumbers: [341]
-  cardNumber: 330
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 330
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4532,8 +5162,11 @@
   synergies: []
 
 - name: Perilous Wild
-  setNumbers: [341, 435]
-  cardNumber: 331
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 331
+    - expansion: 435
+      cardNumber: 360
   rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4544,8 +5177,11 @@
       rating: -3
 
 - name: Regrowth
-  setNumbers: [341, 435]
-  cardNumber: 332
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 332
+    - expansion: 435
+      cardNumber: 329
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4559,8 +5195,11 @@
       rating: -3
 
 - name: Save the Pack
-  setNumbers: [341, 435]
-  cardNumber: 333
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 333
+    - expansion: 435
+      cardNumber: 331
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4574,8 +5213,9 @@
       rating: -2
 
 - name: Scout
-  setNumbers: [341]
-  cardNumber: 334
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 334
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4590,8 +5230,9 @@
       rating: 1
 
 - name: Stampede
-  setNumbers: [341]
-  cardNumber: 335
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 335
   rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
@@ -4606,8 +5247,11 @@
       rating: -2
 
 - name: The Common Cold
-  setNumbers: [341, 435]
-  cardNumber: 336
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 336
+    - expansion: 435
+      cardNumber: 368
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4619,8 +5263,9 @@
       rating: -2
 
 - name: Troop Call
-  setNumbers: [341]
-  cardNumber: 337
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 337
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4633,8 +5278,9 @@
       rating: 3
 
 - name: Vigor
-  setNumbers: [341]
-  cardNumber: 338
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 338
   rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.0
@@ -4645,8 +5291,9 @@
     - trait: power5OrHigherCreatures
 
 - name: Word of Returning
-  setNumbers: [341]
-  cardNumber: 339
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 339
   rating: 2
   expectedAmber: 1.5
   amberControl: 0.0
@@ -4657,8 +5304,9 @@
     - trait: capturesAmberOnEnemies
 
 - name: Bear Flute
-  setNumbers: [341]
-  cardNumber: 340
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 340
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4671,8 +5319,11 @@
       rating: 3
 
 - name: Nepenthe Seed
-  setNumbers: [341, 435]
-  cardNumber: 341
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 341
+    - expansion: 435
+      cardNumber: 345
   rating: 4
   expectedAmber: 1.0
   amberControl: 0.5
@@ -4682,8 +5333,9 @@
   traits: [usableArtifact, returnsCardsFromDiscard]
 
 - name: Ritual of Balance
-  setNumbers: [341]
-  cardNumber: 342
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 342
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 1.0
@@ -4694,8 +5346,9 @@
     - trait: increasesKeyCost
 
 - name: Ritual of the Hunt
-  setNumbers: [341]
-  cardNumber: 343
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 343
   rating: 3
   expectedAmber: 2
   amberControl: 0.0
@@ -4711,8 +5364,11 @@
       rating: 3
 
 - name: World Tree
-  setNumbers: [341, 435]
-  cardNumber: 344
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 344
+    - expansion: 435
+      cardNumber: 370
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4723,8 +5379,9 @@
   synergies: []
 
 - name: Ancient Bear
-  setNumbers: [341]
-  cardNumber: 345
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 345
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4736,8 +5393,9 @@
       rating: 1
 
 - name: Bigtwig
-  setNumbers: [341]
-  cardNumber: 346
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 346
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4746,8 +5404,11 @@
   traits: [goodReap]
 
 - name: Witch of the Wilds
-  setNumbers: [341, 435]
-  cardNumber: 347
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 347
+    - expansion: 435
+      cardNumber: 369
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4757,8 +5418,9 @@
   traits: []
 
 - name: Briar Grubbling
-  setNumbers: [341]
-  cardNumber: 348
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 348
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4768,8 +5430,11 @@
   synergies: []
 
 - name: Chota Hazri
-  setNumbers: [341, 435]
-  cardNumber: 349
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 349
+    - expansion: 435
+      cardNumber: 338
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4788,8 +5453,9 @@
       rating: -3
 
 - name: Dew Faerie
-  setNumbers: [341]
-  cardNumber: 350
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 350
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4799,8 +5465,9 @@
   synergies: []
 
 - name: Dust Pixie
-  setNumbers: [341]
-  cardNumber: 351
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 351
   rating: 4
   expectedAmber: 2.0
   amberControl: 0.0
@@ -4812,8 +5479,11 @@
       rating: 1
 
 - name: Flaxia
-  setNumbers: [341, 435]
-  cardNumber: 352
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 352
+    - expansion: 435
+      cardNumber: 339
   rating: 4
   expectedAmber: 1.5
   amberControl: 0.0
@@ -4828,8 +5498,11 @@
       rating: 1
 
 - name: Fuzzy Gruen
-  setNumbers: [341, 435]
-  cardNumber: 353
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 353
+    - expansion: 435
+      cardNumber: 353
   rating: 4
   expectedAmber: 2.0
   amberControl: 0
@@ -4841,8 +5514,9 @@
       rating: 1
 
 - name: Giant Sloth
-  setNumbers: [341]
-  cardNumber: 354
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 354
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
@@ -4854,8 +5528,9 @@
       rating: 1
 
 - name: Halacor
-  setNumbers: [341]
-  cardNumber: 355
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 355
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4865,8 +5540,11 @@
   synergies: []
 
 - name: Inka the Spider
-  setNumbers: [341, 435]
-  cardNumber: 356
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 356
+    - expansion: 435
+      cardNumber: 356
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4875,8 +5553,11 @@
   traits: [poison, stuns, goodReap]
 
 - name: Kindrith Longshot
-  setNumbers: [341, 435]
-  cardNumber: 357
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 357
+    - expansion: 435
+      cardNumber: 357
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4885,8 +5566,9 @@
   traits: [elusive, skirmish, goodReap, dealsDamage]
 
 - name: Snufflegator
-  setNumbers: [341]
-  cardNumber: 358
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 358
   rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4896,8 +5578,11 @@
   synergies: []
 
 - name: Lupo the Scarred
-  setNumbers: [341, 435]
-  cardNumber: 359
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 359
+    - expansion: 435
+      cardNumber: 358
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4909,8 +5594,11 @@
       rating: 1
 
 - name: Mighty Tiger
-  setNumbers: [341, 435]
-  cardNumber: 360
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 360
+    - expansion: 435
+      cardNumber: 359
   rating: 4
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4921,8 +5609,9 @@
     - trait: returnsFriendlyCreaturesToHand
 
 - name: Murmook
-  setNumbers: [341]
-  cardNumber: 361
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 361
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
@@ -4932,8 +5621,9 @@
   synergies: []
 
 - name: Mushroom Man
-  setNumbers: [341]
-  cardNumber: 362
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 362
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4944,8 +5634,9 @@
   synergies: []
 
 - name: Niffle Ape
-  setNumbers: [341]
-  cardNumber: 363
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 363
   rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4954,8 +5645,9 @@
   traits: []
 
 - name: Niffle Queen
-  setNumbers: [341]
-  cardNumber: 364
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 364
   rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4968,8 +5660,11 @@
     - trait: niffle
 
 - name: Piranha Monkeys
-  setNumbers: [341, 435]
-  cardNumber: 365
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 365
+    - expansion: 435
+      cardNumber: 361
   rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
@@ -4982,8 +5677,11 @@
       rating: -2
 
 - name: Teliga
-  setNumbers: [341, 435]
-  cardNumber: 366
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 366
+    - expansion: 435
+      cardNumber: 367
   rating: 4.5
   expectedAmber: 1.5
   amberControl: 0.0
@@ -4994,8 +5692,9 @@
     - trait: protectsCreatures
 
 - name: Hunting Witch
-  setNumbers: [341]
-  cardNumber: 367
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 367
   rating: 4.5
   expectedAmber: 2.0
   amberControl: 0.0
@@ -5014,8 +5713,9 @@
       rating: 1
 
 - name: Witch of the Eye
-  setNumbers: [341]
-  cardNumber: 368
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 368
   rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
@@ -5030,8 +5730,9 @@
       rating: -1
 
 - name: Way of the Bear
-  setNumbers: [341]
-  cardNumber: 369
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 369
   rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
@@ -5040,8 +5741,9 @@
   traits: []
 
 - name: Way of the Wolf
-  setNumbers: [341]
-  cardNumber: 370
+  cardNumbers:
+    - expansion: 341
+      cardNumber: 370
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0

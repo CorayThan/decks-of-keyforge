@@ -2,7 +2,6 @@ package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
-import coraythan.keyswap.synergy.SynTrait
 import javax.persistence.*
 
 @Entity
@@ -32,8 +31,7 @@ data class Card(
         val losses: Int? = 0,
 
         @ElementCollection
-        @Enumerated(EnumType.STRING)
-        val traits: Set<CardTrait> = setOf(),
+        val traits: Set<String> = setOf(),
 
         @Transient
         var extraCardInfo: ExtraCardInfo?
@@ -64,8 +62,8 @@ data class KeyforgeCard(
         val front_image: String,
         val card_text: String,
         val amber: Int,
-        val power: String,
-        val armor: String,
+        val power: String?,
+        val armor: String?,
         val rarity: Rarity,
         val flavor_text: String? = null,
         val card_number: String,
@@ -74,13 +72,13 @@ data class KeyforgeCard(
         val traits: String? = null
 ) {
     fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfo>): Card {
-        val powerNumber = power.toIntOrNull() ?: 0
-        val armorNumber = power.toIntOrNull() ?: 0
+        val powerNumber = power?.toIntOrNull() ?: 0
+        val armorNumber = armor?.toIntOrNull() ?: 0
 
-        return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power, armorNumber, armor, rarity, flavor_text,
+        return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, is_maverick,
-                extraCardInfo = extraInfoMap[CardNumberSetPair(expansion, card_number)],
-                traits = traits?.split(" • ")?.map { CardTrait.valueOf(it) }?.toSet() ?: setOf())
+                extraCardInfo = extraInfoMap[CardNumberSetPair(expansion, card_number.toInt())],
+                traits = traits?.split(" • ")?.toSet() ?: setOf())
     }
 }
 
@@ -91,48 +89,6 @@ data class DeckSearchResultCard(
         val rarity: Rarity,
         val maverick: Boolean
 )
-
-enum class CardTrait(
-        val synTrait: SynTrait? = null
-) {
-    Agent,
-    Angel,
-    Beast(SynTrait.beast),
-    Cyborg,
-    Demon,
-    Dragon,
-    Elf,
-    Faerie,
-    Fungus,
-    Giant,
-    Goblin,
-    Horseman,
-    Human(SynTrait.human),
-    Imp,
-    Insect,
-    Knight(SynTrait.knight),
-    Martian,
-    Merchant,
-    Mutant,
-    Niffle(SynTrait.niffle),
-    Priest,
-    Ranger,
-    Robot,
-    Scientist(SynTrait.scientist),
-    Soldier,
-    Specter,
-    Spirit,
-    Thief,
-    Witch,
-
-    Weapon,
-    Item,
-    Power,
-    Location,
-    Quest,
-    Vehicle,
-    Ally;
-}
 
 enum class CardType {
     Action,

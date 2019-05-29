@@ -7,6 +7,7 @@ import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { messageStore } from "../ui/MessageStore"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { CreateUnregisteredDeck, saveUnregisteredDeckStore } from "./CreateUnregisteredDeck"
@@ -52,6 +53,10 @@ export class DeckImportView extends React.Component {
 
     postDeckImage = () => {
         const expansionNumber = this.expansionStore.expansionNumber()
+        if (expansionNumber !== 341) {
+            messageStore.setWarningMessage("The image importer currently only works with Call of the Archons. Please try again later.")
+            return
+        }
         if (deckImportViewStore.deckImage && expansionNumber) {
             deckImportStore.readImageIntoDeck(deckImportViewStore.deckImage, expansionNumber)
         }

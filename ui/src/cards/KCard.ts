@@ -48,8 +48,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
 }
 
 export interface ExtraCardInfo {
-    cardNumber: number
-    setNumbers: number[]
+    cardNumbers: CardNumberSetPair[]
     rating: number
     expectedAmber: number
     amberControl: number
@@ -59,4 +58,9 @@ export interface ExtraCardInfo {
 
     traits: string[]
     synergies: SynTraitValue[]
+}
+
+export interface CardNumberSetPair {
+    expansion: number
+    cardNumber: number
 }

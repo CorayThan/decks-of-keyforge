@@ -12,7 +12,6 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
-import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.synergy.DeckSynergyService
@@ -67,6 +66,7 @@ class DeckImporterService(
     @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
+
         val deckCountBeforeImport = deckRepo.estimateRowCount()
 
         if (env == "qa" && deckCountBeforeImport > 100000) {
@@ -74,6 +74,7 @@ class DeckImporterService(
             return
         }
 
+        var decksAdded = 0
         val importDecksDuration = measureTimeMillis {
             val decksPerPage = keyforgeApiDeckPageSize
             var currentPage = deckPageService.findCurrentPage()
@@ -84,16 +85,12 @@ class DeckImporterService(
             var pagesRequested = 0
             while (currentPage < finalPage && pagesRequested < maxPageRequests) {
                 val decks = keyforgeApi.findDecks(currentPage)
-                if (decks?.data?.any { it.expansion != Expansion.CALL_OF_THE_ARCHONS.expansionNumber } == true) {
-                    log.warn("Can't import any more decks. Let's verify non COTA decks are safe first!")
-                    return
-                }
                 if (decks == null) {
                     log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
                     break
                 } else {
                     val cards = cardService.importNewCards(decks.data)
-                    saveDecks(decks.data, cards)
+                    decksAdded += saveDecks(decks.data, cards)
                     currentPage++
                     pagesRequested++
                 }
@@ -101,8 +98,8 @@ class DeckImporterService(
 
             deckPageService.setCurrentPage(currentPage - 1)
         }
-        val deckCountNow = deckRepo.estimateRowCount()
-        log.info("$scheduledStop Added ${deckCountNow - deckCountBeforeImport} decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
+        val deckCountNow = deckRepo.count()
+        log.info("$scheduledStop Added $decksAdded decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
         deckService.countFilters(DeckFilters())
     }
 
@@ -169,10 +166,6 @@ class DeckImporterService(
         } else {
             val deck = keyforgeApi.findDeck(deckId)
             if (deck != null) {
-                if (deck.data.expansion != Expansion.CALL_OF_THE_ARCHONS.expansionNumber) {
-                    log.warn("Can't import any more decks. Let's verify non COTA decks are safe first!")
-                    throw IllegalArgumentException("Can't import non-COTA decks.")
-                }
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 val cards = cardService.importNewCards(deckList)
                 return try {
@@ -229,7 +222,8 @@ class DeckImporterService(
         return savedDeck.keyforgeId
     }
 
-    private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>) {
+    private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>): Int {
+        var savedCount = 0
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         deck
                 .forEach { keyforgeDeck ->
@@ -239,8 +233,10 @@ class DeckImporterService(
                         val deckToSave = keyforgeDeck.toDeck()
 
                         saveDeck(deckToSave, houses, cardsList)
+                        savedCount++
                     }
                 }
+        return savedCount
     }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {

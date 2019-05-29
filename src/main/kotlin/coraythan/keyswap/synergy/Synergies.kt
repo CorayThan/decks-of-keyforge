@@ -1,6 +1,5 @@
 package coraythan.keyswap.synergy
 
-import coraythan.keyswap.cards.CardTrait
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -31,16 +30,9 @@ data class SynTraitValue(
     }
 }
 
-fun Set<CardTrait>.toSynTraits(): List<SynTrait> {
+fun Set<String>.toSynTraits(): List<SynTrait> {
     return this.mapNotNull {
-        when (it) {
-            CardTrait.Beast -> SynTrait.beast
-            CardTrait.Knight -> SynTrait.knight
-            CardTrait.Human -> SynTrait.human
-            CardTrait.Scientist -> SynTrait.scientist
-            CardTrait.Niffle -> SynTrait.niffle
-            else -> null
-        }
+        SynTrait.fromTrait(it)
     }
 }
 
@@ -155,10 +147,20 @@ enum class SynTrait {
     highExpectedAmber, // for house: 7=0, 8=1/4, 9=1/2, 10=3/4, 11=1
     // for deck: 22+=1/4, 24+=1/2, 26=3/4, 27+=1
 
-    lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
+    lowExpectedAmber; // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
     // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
 
     // todo: Add average creature power. Banner of battle, other things synergize with it? Remove the "power lower than etc."???
+
+    companion object {
+        fun fromTrait(trait: String): SynTrait? {
+            try {
+                return valueOf(trait)
+            } catch (e: IllegalArgumentException) {
+                return null
+            }
+        }
+    }
 }
 
 enum class SynTraitType {
