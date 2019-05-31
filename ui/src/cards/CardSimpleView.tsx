@@ -6,6 +6,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { log } from "../config/Utils"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -15,7 +16,7 @@ import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { cardStore } from "./CardStore"
 import { hasAercFromCard, KCard } from "./KCard"
-import { MaverickIcon, rarityValues } from "./rarity/Rarity"
+import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 interface HasFrontImage {
     frontImage: string
@@ -109,6 +110,8 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
 
 interface CardAsLineProps {
     card: Partial<KCard>
+    deckExpansion?: number
+    cardExpansions?: number[]
     width?: number
     marginTop?: number
     hideRarity?: boolean
@@ -119,6 +122,7 @@ export class CardAsLine extends React.Component<CardAsLineProps> {
 
     render() {
         const complex = screenStore.screenSizeMdPlus()
+        log.debug("Deck expansion: " + this.props.deckExpansion)
 
         if (complex) {
             return <CardAsLineComplex {...this.props}/>
@@ -228,6 +232,13 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
             )
         }
 
+        // log.debug(`card name: ${this.props.card.cardTitle} Deck expansion = ${this.props.deckExpansion} card expansion = ${this.props.card.expansion}`)
+
+        let expansions
+        if (fullCard != null && fullCard.extraCardInfo != null) {
+            expansions = fullCard.extraCardInfo.cardNumbers.map(cardNumbers => cardNumbers.expansion)
+        }
+
         return (
             <div
                 onWheel={this.handlePopoverClose}
@@ -235,25 +246,31 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine  {...this.props}/>
+                <CardLine  {...this.props} cardExpansions={expansions}/>
                 {pop}
             </div>
         )
     }
 }
 
-const CardLine = (props: CardAsLineProps) => (
-    <div
-        style={{display: "flex", marginTop: props.marginTop,  width: props.width}}
-    >
-        {!props.hideRarity && props.card.rarity ? rarityValues.get(props.card.rarity)!.icon! : null}
-        <Typography
-            variant={"body2"}
-            style={{marginLeft: spacing(1)}}
-            noWrap={true}
+const CardLine = (props: CardAsLineProps) => {
+
+    const isLegacy = props.deckExpansion != null && props.cardExpansions != null && !props.cardExpansions.includes(props.deckExpansion)
+
+    return (
+        <div
+            style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
         >
-            {props.card.cardTitle}
-        </Typography>
-        {props.card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
-    </div>
-)
+            {!props.hideRarity && props.card.rarity ? rarityValues.get(props.card.rarity)!.icon! : null}
+            <Typography
+                variant={"body2"}
+                style={{marginLeft: spacing(1)}}
+                noWrap={true}
+            >
+                {props.card.cardTitle}
+            </Typography>
+            {props.card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
+            {isLegacy ? <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div> : null}
+        </div>
+    )
+}

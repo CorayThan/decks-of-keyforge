@@ -3,6 +3,7 @@ package coraythan.keyswap.auctions
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
@@ -32,6 +33,7 @@ class AuctionService(
         private val currentUserService: CurrentUserService,
         private val deckRepo: DeckRepo,
         private val emailService: EmailService,
+        private val forSaleNotificationsService: ForSaleNotificationsService,
         private val userRepo: KeyUserRepo
 ) {
 
@@ -99,6 +101,7 @@ class AuctionService(
         auctionRepo.save(auction)
         deckRepo.save(deck.copy(forAuction = true, auctionEnd = realEnd, listedOn = listingDate))
         userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate))
+        forSaleNotificationsService.sendNotifications(listingInfo)
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {

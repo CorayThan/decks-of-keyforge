@@ -35,12 +35,12 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT10M"
+private const val lockImportNewDecksFor = "PT1S"
 private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 6
+const val currentDeckRatingVersion = 7
 
 @Transactional
 @Service

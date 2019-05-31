@@ -66,17 +66,18 @@ enum class SynTrait {
     goodFight,
     goodDestroyed,
     readiesCreatures,
+    readiesCreaturesOnPlay,
     sacrificesCreatures,
     elusive,
     skirmish,
     poison,
 
     // Purging
-    purgesEnemyCreatures,
     purgesFriendlyCreatures,
 
     // Archives
     archives,
+    archivesRandom,
     archivesEnemyCards,
 
     // Discard
@@ -89,6 +90,7 @@ enum class SynTrait {
     usableArtifact,
 
     // Hand Manipulation
+    discardsFriendlyCards,
     discardsEnemyCards,
     reducesEnemyDraw,
     returnsFriendlyCreaturesToHand,
@@ -108,6 +110,9 @@ enum class SynTrait {
     revealsTopDeck,
     chains,
     forgesKeys,
+    alpha,
+    omega,
+    self,
 
     // Traits (these don't need to be traits on the extra info)
     knight,
@@ -115,12 +120,16 @@ enum class SynTrait {
     scientist,
     niffle,
     beast,
+    thief,
+    shard,
 
     // Special cards
     badPenny,
     routineJob,
     urchin,
     ancientBear,
+    warGrumpus,
+    ortannusBinding,
 
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4
     lowTotalCreaturePower, // 60-=1/4, 56-=1/2, 51-=3/4, 46-=1

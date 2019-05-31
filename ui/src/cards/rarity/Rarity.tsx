@@ -1,5 +1,6 @@
 import * as React from "react"
 import common from "../imgs/common.svg"
+import legacy from "../imgs/legacy.svg"
 import maverick from "../imgs/maverick.svg"
 import rare from "../imgs/rare.svg"
 import special from "../imgs/special.svg"
@@ -47,6 +48,7 @@ rarityValuesArray.forEach((rarityValue) => {
 })
 
 export const MaverickIcon = () => (<img src={maverick} style={{width: 16, height: 16, color: "#FFD700"}}/>)
+export const LegacyIcon = () => (<img src={legacy} style={{width: 16, height: 16}}/>)
 
 export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.map(rarityValue => (
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]

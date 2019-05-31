@@ -12,7 +12,7 @@ interface DeckScoreViewProps {
         sasRating: number,
         synergyRating: number,
         antisynergyRating: number,
-        expansion: number
+        expansion?: number
     }
     style?: React.CSSProperties
 }

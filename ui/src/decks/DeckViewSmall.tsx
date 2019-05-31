@@ -312,40 +312,45 @@ const DisplayAllCardsByHouse = (props: { deck: Deck }) => {
 
     return (
         <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-            {cardsByHouse.map((cardsForHouse) => (<DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse}/>))}
+            {cardsByHouse.map((cardsForHouse) => (<DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} deckExpansion={props.deck.expansion}/>))}
         </div>
     )
 }
 
 const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
-
+    const deckExpansion = props.deck.expansion
     return (
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
             {cardsByHouse.map((cardsForHouse) => (
-                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true}/>
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true} deckExpansion={deckExpansion}/>
             ))}
         </div>
     )
 }
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[], disableTextSelection?: boolean, compact?: boolean }) => (
-    <List>
-        {houseValues.get(props.house)!.title}
-        <Divider style={{marginTop: 4}}/>
-        {props.compact ?
-            (
-                <div style={{display: "flex"}}>
-                    <div style={{marginRight: spacing(1)}}>
-                        {props.cards.slice(0, 6).map((card, idx) => (<CardAsLine key={idx} card={card} width={144} marginTop={4}/>))}
+const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: number, disableTextSelection?: boolean, compact?: boolean }) => {
+    const deckExpansion = props.deckExpansion
+    return (
+        <List>
+            {houseValues.get(props.house)!.title}
+            <Divider style={{marginTop: 4}}/>
+            {props.compact ?
+                (
+                    <div style={{display: "flex"}}>
+                        <div style={{marginRight: spacing(1)}}>
+                            {props.cards.slice(0, 6).map((card, idx) => (
+                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion}/>))}
+                        </div>
+                        <div>
+                            {props.cards.slice(6).map((card, idx) => (
+                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion}/>))}
+                        </div>
                     </div>
-                    <div>
-                        {props.cards.slice(6).map((card, idx) => (<CardAsLine key={idx} card={card} width={144} marginTop={4}/>))}
-                    </div>
-                </div>
-            )
-            :
-            props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4}/>))
-        }
-    </List>
-)
+                )
+                :
+                props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion}/>))
+            }
+        </List>
+    )
+}
