@@ -51,9 +51,10 @@ export class SasAndAerc extends React.Component {
                             </div>
                         </div>,
                         <CardExample
-                            text={"Bait and Switch is one of the few cards rated 4. It consistently provides a net value of 2, 4, or more aember. " +
+                            text={"Timetraveller is one of the few cards rated 4. Played by itself or with Help from Future Self it consistently provides " +
+                            "Aember, a creature, and often replaces itself with its draw effect. " +
                             "Key of Darkness, on the other hand, is one of the few cards rated 0. It provides no aember and is very difficult to use."}
-                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_267_VHQ67J5MWQV5_en.png"}
+                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_153_X83CX7XJ5GRX_en.png"}
                             img2={"https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png"}
                         />,
                         <div style={{paddingBottom: spacing(1)}}/>,

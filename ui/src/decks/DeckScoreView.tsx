@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
-import { Warning } from "@material-ui/icons"
 import HistoryIcon from "@material-ui/icons/History"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -31,15 +30,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     let sasInfo = null
     if (previousSasRating != null && previousSasRating !== sasRating && previousSasRating !== 0) {
         sasInfo = (
-            <Tooltip title={`SAS v3 rating: ${previousSasRating}`} enterTouchDelay={100}>
+            <Tooltip title={`Previous SAS rating: ${previousSasRating}`} enterTouchDelay={100}>
                 <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
-            </Tooltip>
-        )
-    }
-    if (expansion === 435) {
-        sasInfo = (
-            <Tooltip title={`AoA ratings are a work in progress and will be lower than they should be due to lack of synergies.`} enterTouchDelay={100}>
-                <Warning style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
             </Tooltip>
         )
     }

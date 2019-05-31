@@ -11,13 +11,24 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.4"
+export const latestVersion = "5.0"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.0"} expanded={true} releaseNotes={[
+                    "Age of Ascension traits, synergies, and antisynergies have been added! There are still some new synergies in AoA that are not yet " +
+                    "represented, like an automatic anti-synergy for multiple copies of the Alpha keyword in the same house.",
+                    "Revised Bait and Switch as well as Library Access. Despite it being unfortunate that they needed to do it, I'm personally excited about " +
+                    "the wider array of decks now viable in top-level competitions.",
+                    "A long time ago I added C (Creature Control) rating to high power creatures. I was supposed to remove that when I added Effective " +
+                    "Power, but instead those C ratings were incompletely removed. They are now completely removed, so cards like Shooler don't have a C " +
+                    "rating.",
+                    "Legacy symbols now show up next to decks with legacy cards.",
+                    "Fixed an issue with notifications not being sent for newly listed auctions."
+                ]}/>
                 <ReleaseNote releaseNumber={"4.4"} expanded={true} releaseNotes={[
                     "Age of Ascension decks are now importing into Decks of Keyforge! Note that these decks have SAS ratings, but those should be " +
                     "taken with a huge grain of salt. I haven't had time to add traits, synergies or antisynergies yet, so Age of Ascension decks will " +

@@ -35,7 +35,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT1S"
+private const val lockImportNewDecksFor = "PT10M"
 private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
@@ -230,7 +230,7 @@ class DeckImporterService(
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
                         val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
                         val houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
-                        val deckToSave = keyforgeDeck.toDeck()
+                        val deckToSave = keyforgeDeck.toDeck().copy(ratingVersion = currentDeckRatingVersion)
 
                         saveDeck(deckToSave, houses, cardsList)
                         savedCount++
