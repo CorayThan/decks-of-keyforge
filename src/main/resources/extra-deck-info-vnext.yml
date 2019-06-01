@@ -784,6 +784,8 @@
     - trait: lowCreatureCount
       rating: -2
       type: house
+    - trait: shufflesDiscard
+      rating: -3
 
 - name: Control the Weak
   cardNumbers:
@@ -1443,6 +1445,9 @@
   synergies:
     - trait: protectsCreatures
       rating: 1
+    - trait: goodPlay
+      rating: 1
+      type: house
 
 - name: Stealer of Souls
   cardNumbers:
@@ -1664,7 +1669,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   deckManipulation: 2.0
-  traits: [drawsCards]
+  traits: [drawsCards, shufflesDiscard]
   synergies: []
 
 - name: Interdimensional Graft
@@ -3725,7 +3730,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   effectivePower: 8
-  traits: [protectsCreatures]
+  traits: [protectsCreatures, addsArmor]
   synergies:
     - trait: damagesFriendlyCreatures
 
@@ -3804,7 +3809,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   effectivePower: 6
-  traits: [heals, protectsCreatures, preventsDamage]
+  traits: [heals, protectsCreatures, addsArmor]
   synergies:
     - trait: damagesFriendlyCreatures
     - trait: highTotalCreaturePower
@@ -3841,6 +3846,8 @@
   synergies:
     - trait: returnsFriendlyCreaturesToHand
     - trait: returnsCreaturesFromDiscard
+    - trait: shufflesDiscard
+      rating: -2
 
 - name: Horseman of Famine
   cardNumbers:
@@ -4111,7 +4118,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   effectivePower: 1
-  traits: [protectsCreatures]
+  traits: [protectsCreatures, addsArmor]
   synergies:
     - trait: highCreatureCount
       rating: 1
@@ -4128,7 +4135,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   effectivePower: 3
-  traits: [protectsCreatures]
+  traits: [protectsCreatures, addsArmor]
   synergies:
     - trait: highCreatureCount
       rating: 1
@@ -5182,6 +5189,8 @@
     - trait: lowCreatureCount
       type: house
       rating: -3
+    - trait: shufflesDiscard
+      rating: -1
 
 - name: Save the Pack
   cardNumbers:
@@ -5302,7 +5311,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   deckManipulation: 1.0
-  traits: [usableArtifact]
+  traits: [usableArtifact, shufflesDiscard]
   synergies:
     - trait: ancientBear
       rating: 3
@@ -5320,6 +5329,9 @@
   artifactControl: 0.0
   deckManipulation: 1.5
   traits: [usableArtifact, returnsCardsFromDiscard]
+  synergies:
+    - trait: shufflesDiscard
+      rating: -1
 
 - name: Ritual of Balance
   cardNumbers:

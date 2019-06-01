@@ -5,7 +5,6 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
-import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -27,9 +26,6 @@ class AzureOcr(
     private val numberRegex = "\\d+".toRegex()
 
     fun readDeckInfoFromImage(deckImage: MultipartFile, expansion: Int): SaveUnregisteredDeck? {
-        if (expansion != Expansion.CALL_OF_THE_ARCHONS.expansionNumber) {
-            throw IllegalArgumentException("Can't import non-COTA yet.")
-        }
         val response: ResponseEntity<OcrResults> = restTemplate.exchange(
                 "https://westus.api.cognitive.microsoft.com/vision/v1.0/ocr",
                 HttpMethod.POST,

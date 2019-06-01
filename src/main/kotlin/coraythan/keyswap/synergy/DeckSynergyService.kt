@@ -18,7 +18,7 @@ class DeckSynergyService(
 
     fun fromDeck(deck: Deck): DeckSynergyInfo {
         val cards = cardService.cardsForDeck(deck)
-        val counts: MutableMap<House?, MutableMap<SynTrait, Int>> = mutableMapOf()
+        val counts: MutableMap<House?, MutableMap<Synergies, Int>> = mutableMapOf()
         deck.houses.forEach { counts[it] = mutableMapOf() }
         counts[null] = mutableMapOf()
         val anyHouseCount = counts[null]!!
@@ -29,7 +29,7 @@ class DeckSynergyService(
         cards.forEach { card ->
             val cardInfo = card.extraCardInfo!!
             cardInfo.traits
-                    .plus(card.traits.mapNotNull { SynTrait.fromTrait(it) })
+                    .plus(card.traits.mapNotNull { Synergies.fromTrait(it) })
                     .forEach {
                         val cardHouseCount = counts[card.house]
                                 ?: throw IllegalArgumentException("No house in deck for card ${card.cardTitle} house ${card.house}")
@@ -53,7 +53,7 @@ class DeckSynergyService(
                 -1 -> -0.5
                 else -> minRating + 1.0
             }
-            val matchedTraits: List<Pair<SynTrait, Double>> = cardInfo.synergies.map { synTraitValue ->
+            val matchedTraits: List<Pair<Synergies, Double>> = cardInfo.synergies.map { synTraitValue ->
                 val matchWith = if (synTraitValue.type == SynTraitType.anyHouse) counts[null]!! else counts[card.house]!!
                 // Max of 4 matches
                 val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it } -
@@ -106,7 +106,7 @@ class DeckSynergyService(
         )
     }
 
-    private fun addHouseTraits(cards: List<Card>, counts: MutableMap<House?, MutableMap<SynTrait, Int>>) {
+    private fun addHouseTraits(cards: List<Card>, counts: MutableMap<House?, MutableMap<Synergies, Int>>) {
         counts.forEach { house, houseTraits ->
             if (house != null) {
                 val cardsForHouse = cards.filter { it.house == house }
@@ -114,34 +114,34 @@ class DeckSynergyService(
                 val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
                 val totalExpectedAmber = cardsForHouse.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
 
-                if (totalExpectedAmber > 7) houseTraits[SynTrait.highExpectedAmber] = when {
+                if (totalExpectedAmber > 7) houseTraits[Synergies.highExpectedAmber] = when {
                     totalExpectedAmber > 10 -> 4
                     totalExpectedAmber > 9 -> 3
                     totalExpectedAmber > 8 -> 2
                     else -> 1
                 }
-                if (totalExpectedAmber < 7) houseTraits[SynTrait.lowExpectedAmber] = when {
+                if (totalExpectedAmber < 7) houseTraits[Synergies.lowExpectedAmber] = when {
                     totalExpectedAmber < 4 -> 4
                     totalExpectedAmber < 5 -> 3
                     totalExpectedAmber < 6 -> 2
                     else -> 1
                 }
 
-                if (totalCreaturePower > 21) houseTraits[SynTrait.highTotalCreaturePower] = when {
+                if (totalCreaturePower > 21) houseTraits[Synergies.highTotalCreaturePower] = when {
                     totalCreaturePower > 23 -> 4
                     totalCreaturePower > 25 -> 3
                     totalCreaturePower > 27 -> 2
                     else -> 1
                 }
 
-                if (creatureCount > 6) houseTraits[SynTrait.highCreatureCount] = when {
+                if (creatureCount > 6) houseTraits[Synergies.highCreatureCount] = when {
                     creatureCount > 9 -> 4
                     creatureCount > 8 -> 3
                     creatureCount > 7 -> 2
                     else -> 1
                 }
 
-                if (creatureCount < 6) houseTraits[SynTrait.lowCreatureCount] = when {
+                if (creatureCount < 6) houseTraits[Synergies.lowCreatureCount] = when {
                     creatureCount < 3 -> 4
                     creatureCount < 4 -> 3
                     creatureCount < 5 -> 2
@@ -151,67 +151,67 @@ class DeckSynergyService(
         }
     }
 
-    private fun addDeckTraits(deck: Deck, traits: MutableMap<SynTrait, Int>, cards: List<Card>) {
+    private fun addDeckTraits(deck: Deck, traits: MutableMap<Synergies, Int>, cards: List<Card>) {
 
-        if (deck.houses.contains(House.Mars)) traits[SynTrait.hasMars] = 4
+        if (deck.houses.contains(House.Mars)) traits[Synergies.hasMars] = 4
 
         val totalExpectedAmber = cards.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
-        if (totalExpectedAmber > 21) traits[SynTrait.highExpectedAmber] = when {
+        if (totalExpectedAmber > 21) traits[Synergies.highExpectedAmber] = when {
             totalExpectedAmber > 26 -> 4
             totalExpectedAmber > 25 -> 3
             totalExpectedAmber > 23 -> 2
             else -> 1
         }
-        if (totalExpectedAmber < 19) traits[SynTrait.lowExpectedAmber] = when {
+        if (totalExpectedAmber < 19) traits[Synergies.lowExpectedAmber] = when {
             totalExpectedAmber < 15 -> 4
             totalExpectedAmber < 17 -> 3
             totalExpectedAmber < 18 -> 2
             else -> 1
         }
 
-        if (deck.totalPower < 60) traits[SynTrait.lowTotalCreaturePower] = when {
+        if (deck.totalPower < 60) traits[Synergies.lowTotalCreaturePower] = when {
             deck.totalPower < 47 -> 4
             deck.totalPower < 52 -> 3
             deck.totalPower < 57 -> 2
             else -> 1
         }
 
-        if (deck.totalPower > 67) traits[SynTrait.highTotalCreaturePower] = when {
+        if (deck.totalPower > 67) traits[Synergies.highTotalCreaturePower] = when {
             deck.totalPower > 83 -> 4
             deck.totalPower > 77 -> 3
             deck.totalPower > 72 -> 2
             else -> 1
         }
 
-        if (deck.totalArmor > 3) traits[SynTrait.highTotalArmor] = when {
+        if (deck.totalArmor > 3) traits[Synergies.highTotalArmor] = when {
             deck.totalArmor > 8 -> 4
             deck.totalArmor > 6 -> 3
             deck.totalArmor > 4 -> 2
             else -> 1
         }
 
-        if (deck.artifactCount > 4) traits[SynTrait.highArtifactCount] = when {
+        if (deck.artifactCount > 4) traits[Synergies.highArtifactCount] = when {
             deck.artifactCount > 7 -> 4
             deck.artifactCount > 6 -> 3
             deck.artifactCount > 5 -> 2
             else -> 1
         }
 
-        if (deck.artifactCount < 4) traits[SynTrait.lowArtifactCount] = when {
+        if (deck.artifactCount < 4) traits[Synergies.lowArtifactCount] = when {
             deck.artifactCount < 1 -> 4
             deck.artifactCount < 2 -> 3
             deck.artifactCount < 3 -> 2
             else -> 1
         }
 
-        if (deck.creatureCount > 16) traits[SynTrait.highCreatureCount] = when {
+        if (deck.creatureCount > 16) traits[Synergies.highCreatureCount] = when {
             deck.creatureCount > 20 -> 4
             deck.creatureCount > 18 -> 3
             deck.creatureCount > 17 -> 2
             else -> 1
         }
 
-        if (deck.creatureCount < 15) traits[SynTrait.lowCreatureCount] = when {
+        if (deck.creatureCount < 15) traits[Synergies.lowCreatureCount] = when {
             deck.creatureCount < 12 -> 4
             deck.creatureCount < 13 -> 3
             deck.creatureCount < 14 -> 2
@@ -224,35 +224,35 @@ class DeckSynergyService(
         val power4OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size
         val power5OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size
 
-        if (power2OrLower > 3) traits[SynTrait.power2OrLowerCreatures] = when {
+        if (power2OrLower > 3) traits[Synergies.power2OrLowerCreatures] = when {
             power2OrLower > 6 -> 4
             power2OrLower > 5 -> 3
             power2OrLower > 4 -> 2
             else -> 1
         }
 
-        if (power3OrLower > 8) traits[SynTrait.power3OrLowerCreatures] = when {
+        if (power3OrLower > 8) traits[Synergies.power3OrLowerCreatures] = when {
             power3OrLower > 11 -> 4
             power3OrLower > 10 -> 3
             power3OrLower > 9 -> 2
             else -> 1
         }
 
-        if (power3OrHigher > 12) traits[SynTrait.power3OrHigherCreatures] = when {
+        if (power3OrHigher > 12) traits[Synergies.power3OrHigherCreatures] = when {
             power3OrHigher > 16 -> 4
             power3OrHigher > 14 -> 3
             power3OrHigher > 13 -> 2
             else -> 1
         }
 
-        if (power4OrHigher > 8) traits[SynTrait.power4OrHigherCreatures] = when {
+        if (power4OrHigher > 8) traits[Synergies.power4OrHigherCreatures] = when {
             power4OrHigher > 12 -> 4
             power4OrHigher > 10 -> 3
             power4OrHigher > 9 -> 2
             else -> 1
         }
 
-        if (power5OrHigher > 5) traits[SynTrait.power5OrHigherCreatures] = when {
+        if (power5OrHigher > 5) traits[Synergies.power5OrHigherCreatures] = when {
             power5OrHigher > 9 -> 4
             power5OrHigher > 7 -> 3
             power5OrHigher > 6 -> 2

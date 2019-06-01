@@ -326,6 +326,9 @@
   expectedAmber: 1
   deckManipulation: 1.5
   traits: [returnsCreaturesFromDiscard]
+  synergies:
+    - trait: shufflesDiscard
+      rating: -1
 
 - name: Gub
   cardNumbers:
@@ -1095,7 +1098,7 @@
       cardNumber: 201
   rating: 2
   effectivePower: 4
-  traits: [protectsCreatures, increasesCreaturePower]
+  traits: [protectsCreatures, increasesCreaturePower, addsArmor]
 
 - name: Martian Generosity
   cardNumbers:
@@ -1149,7 +1152,7 @@
       cardNumber: 212
   rating: 2
   effectivePower: 5
-  traits: [protectsCreatures]
+  traits: [protectsCreatures, addsArmor]
 
 - name: Aubade the Grim
   cardNumbers:
@@ -1214,6 +1217,8 @@
   synergies:
     - trait: damagesFriendlyCreatures
       rating: 1
+    - trait: addsArmor
+      rating: 2
 
 - name: Sir Marrows
   cardNumbers:
@@ -1418,7 +1423,7 @@
   rating: 2
   expectedAmber: 1
   effectivePower: 1
-  traits: [protectsCreatures]
+  traits: [protectsCreatures, addsArmor]
 
 - name: Shard of Hope
   cardNumbers:
@@ -1741,6 +1746,9 @@
   rating: 4.5
   deckManipulation: 1.5
   traits: [alpha, returnsCardsFromDiscard, returnsCreaturesFromDiscard, goodPlay]
+  synergies:
+    - trait: shufflesDiscard
+      rating: -1
 
 - name: Grovekeeper
   cardNumbers:
@@ -1896,6 +1904,9 @@
   rating: 3.5
   deckManipulation: 1
   traits: [omega, returnsCreaturesFromDiscard, returnsCardsFromDiscard]
+  synergies:
+    - trait: shufflesDiscard
+      rating: -1
 
 - name: Heart of the Forest
   cardNumbers:

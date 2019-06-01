@@ -18,7 +18,7 @@ export const CardsWithAerc = (props: { title: string, accessor: (card: Partial<K
         return 0
     }
     const filtered = cards
-        .filter(card => accessAerc(card) > 0)
+        .filter(card => accessAerc(card) !== 0)
     if (filtered.length === 0) {
         return titleComponent
     } else {

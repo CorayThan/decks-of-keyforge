@@ -54,6 +54,7 @@ class DeckWinsService(
         var currentPage = 1
 
         while (true) {
+            if (currentPage != 1) Thread.sleep(1000)
             val decks = keyforgeApi.findDecks(currentPage, order)
             val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
             if (updateDecks.isNullOrEmpty()) {

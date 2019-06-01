@@ -35,7 +35,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT10M"
+private const val lockImportNewDecksFor = "PT5M"
 private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
@@ -63,7 +63,7 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Scheduled(fixedDelayString = lockImportNewDecksFor)
-    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
@@ -84,6 +84,8 @@ class DeckImporterService(
             val maxPageRequests = 11
             var pagesRequested = 0
             while (currentPage < finalPage && pagesRequested < maxPageRequests) {
+                if (pagesRequested != 0) Thread.sleep(1000)
+                log.info("Importing decks, making page request $currentPage")
                 val decks = keyforgeApi.findDecks(currentPage)
                 if (decks == null) {
                     log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")

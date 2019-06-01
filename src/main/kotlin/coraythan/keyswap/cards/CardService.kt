@@ -8,7 +8,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.decks.currentDeckRatingVersion
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
-import coraythan.keyswap.synergy.SynTrait
+import coraythan.keyswap.synergy.Synergies
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
@@ -28,6 +28,7 @@ class CardService(
 
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
+    private var nonMaverickCachedCardsListNoDups: List<Card>? = null
     lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfo>
 
     fun loadExtraInfo() {
@@ -58,11 +59,22 @@ class CardService(
         return nonMaverickCachedCardsList!!
     }
 
+    fun allFullCardsNonMaverickNoDups(): List<Card> {
+        if (nonMaverickCachedCardsListNoDups == null) {
+            reloadCachedCards()
+        }
+        return nonMaverickCachedCardsListNoDups!!
+    }
+
     fun allFullCardsNonMaverickMap(): Map<CardNumberSetPair, Card> {
         if (nonMaverickCachedCards == null) {
             reloadCachedCards()
         }
         return nonMaverickCachedCards!!
+    }
+
+    fun realAllCards(): List<Card> {
+        return cardRepo.findAll()
     }
 
     fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard> {
@@ -139,11 +151,16 @@ class CardService(
             CardNumberSetPair(it.expansion, it.cardNumber.toInt()) to it
         }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
+        nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
+                ?.map { it.cardTitle to it }
+                ?.toMap()?.values
+                ?.toList()
+                ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
 
         val addToExtraInfo = nonMaverickCachedCards?.mapNotNull { entry ->
             val card = entry.value
             val synTraitsFromTraits = card.traits.mapNotNull { trait ->
-                SynTrait.fromTrait(trait)
+                Synergies.fromTrait(trait)
             }
             if (synTraitsFromTraits.isNotEmpty()) {
                 entry.key to synTraitsFromTraits

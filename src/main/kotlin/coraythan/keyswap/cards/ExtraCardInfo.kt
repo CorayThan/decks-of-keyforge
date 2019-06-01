@@ -1,8 +1,8 @@
 package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.synergy.SynTrait
 import coraythan.keyswap.synergy.SynTraitValue
+import coraythan.keyswap.synergy.Synergies
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExtraCardInfo(
@@ -16,7 +16,7 @@ data class ExtraCardInfo(
         val deckManipulation: Double = 0.0,
         val effectivePower: Int? = null,
 
-        val traits: Set<SynTrait> = setOf(),
+        val traits: Set<Synergies> = setOf(),
 
         val synergies: List<SynTraitValue> = listOf()
 )

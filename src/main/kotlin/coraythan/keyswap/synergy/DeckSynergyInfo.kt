@@ -5,8 +5,8 @@ import coraythan.keyswap.House
 data class SynergyCombo(
         val house: House,
         val cardName: String,
-        val synergies: Set<SynTrait>,
-        val antisynergies: Set<SynTrait>,
+        val synergies: Set<Synergies>,
+        val antisynergies: Set<Synergies>,
         val netSynergy: Double,
         val synergy: Double,
         val antisynergy: Double,

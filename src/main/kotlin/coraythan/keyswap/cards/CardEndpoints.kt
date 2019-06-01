@@ -24,5 +24,8 @@ class CardEndpoints(
     }
 
     @GetMapping
-    fun allCards() = cardService.allFullCardsNonMaverick()
+    fun allCards() = cardService.allFullCardsNonMaverickNoDups()
+
+    @GetMapping("/complete")
+    fun realAllCards() = cardService.realAllCards()
 }

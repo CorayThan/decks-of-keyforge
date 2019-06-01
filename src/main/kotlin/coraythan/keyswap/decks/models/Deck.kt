@@ -7,7 +7,8 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.synergy.SynTrait
+import coraythan.keyswap.now
+import coraythan.keyswap.synergy.Synergies
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import java.time.ZonedDateTime
@@ -95,6 +96,8 @@ data class Deck(
         val auctionEnd: ZonedDateTime? = null,
         val auctionEndedOn: ZonedDateTime? = null,
 
+        val importDateTime: ZonedDateTime? = now(),
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
@@ -123,11 +126,11 @@ data class Deck(
                 upgradeCount = upgradeCount,
 
                 cardDrawCount = cards?.filter {
-                    it.extraCardInfo?.traits?.contains(SynTrait.drawsCards) == true
-                            || it.extraCardInfo?.traits?.contains(SynTrait.increasesHandSize) == true
+                    it.extraCardInfo?.traits?.contains(Synergies.drawsCards) == true
+                            || it.extraCardInfo?.traits?.contains(Synergies.increasesHandSize) == true
                 }?.size,
-                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.contains(SynTrait.archives) == true }?.size,
-                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.contains(SynTrait.forgesKeys) == true }?.size,
+                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.contains(Synergies.archives) == true }?.size,
+                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.contains(Synergies.forgesKeys) == true }?.size,
                 rawAmber = rawAmber,
                 totalArmor = totalArmor,
 

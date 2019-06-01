@@ -7,6 +7,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
+import { expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -65,6 +66,22 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                 <div style={{display: "flex", alignItems: "center"}}>
                     <CardQualityIcon quality={rating}/>
                     <Typography variant={"h6"} style={{marginLeft: spacing(1), flexGrow: 1}}>{cardTitle}</Typography>
+                    {card.extraCardInfo.cardNumbers.map((cardNumber, idx) => (
+                        <div style={{display: "flex", alignItems: "center"}} key={idx}>
+                            {idx !== 0 ? (
+                                <div style={{
+                                    height: 4,
+                                    width: 4,
+                                    borderRadius: "50%",
+                                    backgroundColor: "#555",
+                                    marginLeft: spacing(1),
+                                    marginRight: spacing(1)
+                                }}/>
+                            ) : null}
+
+                            <Typography>{expansionInfoMap.get(cardNumber.expansion)!.abbreviation}</Typography>
+                        </div>
+                    ))}
                 </div>
                 <div style={{display: "flex"}}>
                     <Typography variant={"subtitle1"}>{cardType}</Typography>

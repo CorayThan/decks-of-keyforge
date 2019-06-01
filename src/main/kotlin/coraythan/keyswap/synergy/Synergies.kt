@@ -6,7 +6,7 @@ import javax.persistence.Id
 
 @Entity
 data class SynTraitValue(
-        val trait: SynTrait,
+        val trait: Synergies,
         val rating: Int = 2,
         val type: SynTraitType = SynTraitType.anyHouse,
 
@@ -30,13 +30,13 @@ data class SynTraitValue(
     }
 }
 
-fun Set<String>.toSynTraits(): List<SynTrait> {
+fun Set<String>.toSynergies(): List<Synergies> {
     return this.mapNotNull {
-        SynTrait.fromTrait(it)
+        Synergies.fromTrait(it)
     }
 }
 
-enum class SynTrait {
+enum class Synergies {
 
     // Amber / keys
     capturesAmberOnEnemies,
@@ -56,6 +56,7 @@ enum class SynTrait {
     destroysEnemyCreatures,
     causesFighting,
     stuns,
+    addsArmor,
     protectsCreatures,
     increasesCreaturePower,
     heals,
@@ -101,6 +102,7 @@ enum class SynTrait {
     increasesHandSize,
     playsCards,
     revealsHand,
+    shufflesDiscard,
 
     // Houses
     controlsHouseChoice,
@@ -162,7 +164,7 @@ enum class SynTrait {
     // todo: Add average creature power. Banner of battle, other things synergize with it? Remove the "power lower than etc."???
 
     companion object {
-        fun fromTrait(trait: String): SynTrait? {
+        fun fromTrait(trait: String): Synergies? {
             try {
                 return valueOf(trait)
             } catch (e: IllegalArgumentException) {

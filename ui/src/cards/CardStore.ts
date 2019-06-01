@@ -72,7 +72,22 @@ export class CardStore {
             filtered = sortBy(filtered, ["extraCardInfo.artifactControl", "cardNumber"])
         } else if (filters.sort === "WIN_RATE") {
             filtered = sortBy(filtered, ["winRate", "cardNumber"])
+        } else if (filters.sort === "SET_NUMBER" && filters.expansion == null) {
+            log.info("Sort by house then card number")
+            filtered = sortBy(filtered, (card: KCard) => {
+                return `${card.house}${card.cardNumber.toString().padStart(4, "0")}`
+            })
+        } else if (filters.sort === "SET_NUMBER") {
+            filtered = sortBy(filtered, (card: KCard) => {
+                const cardNumbers = card.extraCardInfo.cardNumbers.filter(cardNumber => cardNumber.expansion === filters.expansion)
+                if (cardNumbers.length > 0) {
+                    return cardNumbers[0].cardNumber
+                } else {
+                    return card.cardNumber
+                }
+            })
         }
+
         if (filters.sort === "SET_NUMBER") {
             if (filters.sortDirection === "ASC") {
                 filtered.reverse()

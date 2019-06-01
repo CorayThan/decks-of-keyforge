@@ -23,7 +23,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'coraythan'
-version = '128'
+version = '129'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions {
