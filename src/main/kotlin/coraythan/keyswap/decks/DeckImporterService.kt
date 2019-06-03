@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.EntityManager
@@ -35,7 +36,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT5M"
+private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
@@ -62,8 +63,9 @@ class DeckImporterService(
 
     private val query = JPAQueryFactory(entityManager)
 
+    @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor)
-    // @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
@@ -75,33 +77,36 @@ class DeckImporterService(
         }
 
         var decksAdded = 0
+        var pagesRequested = 0
         val importDecksDuration = measureTimeMillis {
-            val decksPerPage = keyforgeApiDeckPageSize
             var currentPage = deckPageService.findCurrentPage()
 
-            val finalPage = currentPage + decksPerPage
-
-            val maxPageRequests = 11
-            var pagesRequested = 0
-            while (currentPage < finalPage && pagesRequested < maxPageRequests) {
-                if (pagesRequested != 0) Thread.sleep(1000)
+            val maxPageRequests = 100
+            while (pagesRequested < maxPageRequests) {
+                if (pagesRequested != 0) Thread.sleep(2000)
                 log.info("Importing decks, making page request $currentPage")
                 val decks = keyforgeApi.findDecks(currentPage)
                 if (decks == null) {
-                    log.debug("Got null decks from the api for page $currentPage decks per page $decksPerPage")
+                    log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
                     break
                 } else {
                     val cards = cardService.importNewCards(decks.data)
-                    decksAdded += saveDecks(decks.data, cards)
+                    val decksToSaveCount = decks.data.count()
+                    decksAdded += saveDecks(decks.data, cards, currentPage)
                     currentPage++
                     pagesRequested++
+
+                    if (decksToSaveCount < keyforgeApiDeckPageSize) {
+                        log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
+                        break
+                    }
+                    if (currentPage == 2530) throw RuntimeException("Oh no bad page.")
                 }
             }
-
-            deckPageService.setCurrentPage(currentPage - 1)
         }
         val deckCountNow = deckRepo.count()
-        log.info("$scheduledStop Added $decksAdded decks. Total decks: $deckCountNow. It took ${importDecksDuration / 1000} seconds.")
+        log.info("$scheduledStop Added $decksAdded decks. Total decks: $deckCountNow. Decks added by counts ${deckCountNow - deckCountBeforeImport} " +
+                "Pages requested $pagesRequested It took ${importDecksDuration / 1000} seconds.")
         deckService.countFilters(DeckFilters())
     }
 
@@ -224,7 +229,11 @@ class DeckImporterService(
         return savedDeck.keyforgeId
     }
 
-    private fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>): Int {
+    /**
+     * Only set current page if this is auto importing new decks
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>, currentPage: Int? = null): Int {
         var savedCount = 0
         val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
         deck
@@ -232,17 +241,32 @@ class DeckImporterService(
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
                         val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
                         val houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
-                        val deckToSave = keyforgeDeck.toDeck().copy(ratingVersion = currentDeckRatingVersion)
+                        val deckToSave = keyforgeDeck.toDeck()
 
-                        saveDeck(deckToSave, houses, cardsList)
-                        savedCount++
+                        try {
+                            saveDeck(deckToSave, houses, cardsList)
+                            savedCount++
+                        } catch (e: DataIntegrityViolationException) {
+                            if (e.message?.contains("deck_keyforge_id_uk") == true) {
+                                log.info("Ignoring unique key exception adding deck with id ${keyforgeDeck.id}.")
+                            } else {
+                                throw e
+                            }
+                        }
+                    } else {
+                        log.info("Ignoring deck that already existed with id ${keyforgeDeck.id}")
                     }
                 }
+        if (currentPage != null && deck.count() >= keyforgeApiDeckPageSize) {
+            val nextPage = currentPage + 1
+            log.info("Updating next deck page to $nextPage")
+            deckPageService.setCurrentPage(nextPage)
+        }
         return savedCount
     }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
-        val savedDeck = deckRepo.save(deck)
+        val savedDeck = deckRepo.save(deck.copy(ratingVersion = currentDeckRatingVersion))
 
         if (houses.size != 3) {
             throw IllegalStateException("Deck doesn't have 3 houses! $deck")

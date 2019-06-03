@@ -9,6 +9,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
+import { Expansion } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
@@ -19,6 +20,10 @@ import { uiStore } from "../ui/UiStore"
 import { DeckSearchLink } from "./DeckSearchLink"
 
 const topSas = new DeckFilters()
+const cota = new DeckFilters()
+cota.expansions = [Expansion.COTA]
+const aoa = new DeckFilters()
+aoa.expansions = [Expansion.AOA]
 const topAerc = new DeckFilters()
 topAerc.sort = DeckSorts.aerc
 const topChains = new DeckFilters()
@@ -67,6 +72,8 @@ export class LandingPage extends React.Component<{}> {
                     <KeyDrawer width={240} hamburgerMenu={true}>
                         <List>
                             <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Call of the Archons"} filters={cota} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Age of Ascension"} filters={aoa} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Top Decks

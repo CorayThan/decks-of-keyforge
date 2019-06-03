@@ -83,6 +83,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.selectedSortStore.selectedValue = ""
         this.props.filters.reset()
         this.constraintsStore.reset()
+        this.selectedExpansion.reset()
     }
 
     updateForSaleOrTrade = (forSale?: boolean, forTrade?: boolean, forAuction?: boolean) => {

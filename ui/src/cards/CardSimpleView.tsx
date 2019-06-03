@@ -6,7 +6,6 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
 import { expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
@@ -139,7 +138,6 @@ export class CardAsLine extends React.Component<CardAsLineProps> {
 
     render() {
         const complex = screenStore.screenSizeMdPlus()
-        log.debug("Deck expansion: " + this.props.deckExpansion)
 
         if (complex) {
             return <CardAsLineComplex {...this.props}/>

@@ -16,7 +16,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 2
-  rating: 2
+  rating: 3
   creatureControl: 1
   traits: []
 
@@ -32,7 +32,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 5
-  rating: 2.5
+  rating: 3
   creatureControl: 0.5
   traits: [goodFight]
 
@@ -40,7 +40,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 6
-  rating: 2.5
+  rating: 4
   synergies:
     - trait: goodPlay
       type: house
@@ -89,7 +89,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 12
-  rating: 3
+  rating: 4
   amberControl: 0.5
   traits: [goodFight]
   synergies:
@@ -313,7 +313,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 57
-  rating: 3.5
+  rating: 4
   expectedAmber: 1
   creatureControl: 1
   traits: [destroysEnemyCreatures]
@@ -389,6 +389,9 @@
       rating: 3
     - trait: protectsCreatures
       rating: 1
+    - trait: returnsEnemyCreaturesToHand
+      rating: 2
+
 
 - name: Unlocked Gateway
   cardNumbers:
@@ -964,7 +967,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 173
-  rating: 1
+  rating: 2
   expectedAmber: 0.5
   synergies:
     - trait: highCreatureCount
@@ -1737,7 +1740,10 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 321
-  rating: 1.5
+  rating: 3
+  synergies:
+    - trait: causesFighting
+      rating: 1
 
 - name: Glimmer
   cardNumbers:

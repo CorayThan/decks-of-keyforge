@@ -1,13 +1,18 @@
 
 export interface ExpansionInfo {
-    expansionNumber: number
+    expansionNumber: Expansion
     name: string
     abbreviation: string
 }
 
+export enum Expansion {
+    COTA = 341,
+    AOA = 435
+}
+
 export const expansionInfos: ExpansionInfo[] = [
-    {expansionNumber: 341, name: "Call of the Archons", abbreviation: "COTA"},
-    {expansionNumber: 435, name: "Age of Ascension", abbreviation: "AOA"},
+    {expansionNumber: Expansion.COTA, name: "Call of the Archons", abbreviation: "COTA"},
+    {expansionNumber: Expansion.AOA, name: "Age of Ascension", abbreviation: "AOA"},
 ]
 
 const expansionNumberStrings = expansionInfos.map(info => info.expansionNumber.toString())

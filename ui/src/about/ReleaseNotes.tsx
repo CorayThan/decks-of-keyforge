@@ -11,13 +11,20 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.0"
+export const latestVersion = "5.1"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.1"} expanded={true} releaseNotes={[
+                    "In the process of adding separate stats for expansions.",
+                    "Improved deck importer to better keep up with quantity of decks.",
+                    "I haven't made changes yet, but I'll be updating and improving SAS ratings for AOA as I get more familiar with the set. " +
+                    "While I do think AOA is weaker in general than COTA, and will have generally lower scores, I think it's being a bit underrated " +
+                    "by SAS at this time."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.0"} expanded={true} releaseNotes={[
                     "Age of Ascension traits, synergies, and antisynergies have been added! There are still some new synergies in AoA that are not yet " +
                     "represented, like an automatic anti-synergy for multiple copies of the Alpha keyword in the same house.",

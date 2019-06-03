@@ -4,8 +4,8 @@ import bigz from "../../user/imgs/big-z.png"
 import coraythan from "./dok.png"
 import fifthPlanet from "./fifth-planet.jpg"
 import neverOutGamed from "./never-out-gamed.png"
+import tiggerClone from "./protoman.jpg"
 import reapout from "./reapout.jpg"
-import tiggerClone from "./tigger-clone.png"
 
 export const sellerImgs: Map<string, string> = new Map()
 

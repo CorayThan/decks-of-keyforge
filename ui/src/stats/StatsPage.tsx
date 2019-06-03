@@ -7,6 +7,7 @@ import { StatsSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
 import { GlobalDeckStatsView } from "./GlobalDeckStatsView"
+import { ToggleStats } from "./ToggleStats"
 import { WinRateStatsView } from "./WinRateStatsView"
 
 @observer
@@ -25,6 +26,9 @@ export class StatsPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Deck Stats" to={StatsSubPaths.deckStats} value={StatsSubPaths.deckStats}/>
                     </Tabs>
                 </AppBar>
+                <div style={{display: "flex", justifyContent: "center", marginTop: spacing(2)}}>
+                    <ToggleStats/>
+                </div>
                 <Switch>
                     <Route path={StatsSubPaths.winRates} component={WinRateStatsView}/>
                     <Route path={StatsSubPaths.deckStats} component={GlobalDeckStatsView}/>

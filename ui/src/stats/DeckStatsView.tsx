@@ -12,6 +12,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
 import { GlobalStats } from "./GlobalStats"
 import { statsStore } from "./StatsStore"
+import { ToggleStats } from "./ToggleStats"
 
 interface DeckStatsViewProps {
     deck: Deck
@@ -42,6 +43,9 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
 
         return (
             <div>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                    <ToggleStats/>
+                </div>
                 <div style={{display: "flex", maxWidth: 616, maxHeight: 232, margin: spacing(2), pointerEvents: "none"}}>
                     <KeyPie name={name} creatures={creatureCount} actions={actionCount} artifacts={artifactCount} upgrades={upgradeCount}/>
                     <KeyPieGlobalAverages stats={stats}/>
@@ -50,7 +54,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                 <div
                     style={{
                         maxWidth: 616,
-                        maxHeight: 392,
+                        maxHeight: 360,
                         display: "flex",
                         alignItems: "flex-end",
                         margin: spacing(2),

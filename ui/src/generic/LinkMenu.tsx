@@ -5,7 +5,6 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { screenStore } from "../ui/ScreenStore"
@@ -36,7 +35,6 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
     menuEl?: HTMLDivElement | null
 
     handleOpen = () => {
-        log.debug("Handle open")
         this.buttonIsHovered = true
         this.open = true
     }
@@ -46,7 +44,6 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
         this.open = false
     }
     autoCloseIfNotHovered = () => {
-        log.debug("auto close")
         this.buttonIsHovered = false
         this.menuIsHovered = false
         window.setTimeout(() => {

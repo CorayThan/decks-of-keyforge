@@ -24,7 +24,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT10M"
+private const val lockUpdateStats = "PT1S"
 
 @Transactional
 @Service
@@ -40,16 +40,16 @@ class StatsService(
 
     private var updateStats = true
 
+    private final val defaultGlobalStats = listOf(GlobalStatsWithExpansion(null, GlobalStats()))
     var cachedStats: DeckStatistics? = null
-    var cachedGlobalStats: GlobalStats? = null
-    val defaultGlobalStats = GlobalStats()
+    var cachedGlobalStats: List<GlobalStatsWithExpansion> = defaultGlobalStats
 
-    fun findGlobalStats(): GlobalStats {
-        if (cachedGlobalStats != null) {
-            return cachedGlobalStats ?: defaultGlobalStats
+    fun findGlobalStats(): List<GlobalStatsWithExpansion> {
+        if (cachedGlobalStats != defaultGlobalStats) {
+            return cachedGlobalStats
         }
         this.updateCachedStats()
-        return cachedGlobalStats ?: defaultGlobalStats
+        return cachedGlobalStats
     }
 
     fun findCurrentStats(): DeckStatistics? {
@@ -210,7 +210,14 @@ class StatsService(
     }
 
     private fun updateCachedStats() {
-        cachedStats = deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionNullOrderByVersionDesc()?.toDeckStatistics() ?: DeckStatistics()
-        cachedGlobalStats = cachedStats?.toGlobalStats() ?: GlobalStats()
+        val statsToCache = deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(null)?.toDeckStatistics() ?: DeckStatistics()
+        cachedStats = statsToCache
+        cachedGlobalStats = listOf(GlobalStatsWithExpansion(null, statsToCache.toGlobalStats()))
+                .plus(Expansion.values().map {
+                    GlobalStatsWithExpansion(it.expansionNumber,
+                            (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)?.toDeckStatistics() ?: DeckStatistics())
+                                    .toGlobalStats()
+                    )
+                })
     }
 }

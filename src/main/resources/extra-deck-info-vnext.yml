@@ -204,6 +204,11 @@
   artifactControl: 0.0
   deckManipulation: 1.0
   traits: []
+  synergies:
+    - trait: returnsCreaturesFromDiscard
+      rating: 1
+    - trait: returnsCardsFromDiscard
+      rating: 1
 
 - name: Tremor
   cardNumbers:
@@ -2102,7 +2107,7 @@
       cardNumber: 141
     - expansion: 435
       cardNumber: 142
-  rating: 2.5
+  rating: 3.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2274,7 +2279,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 152
-  rating: 3.5
+  rating: 4
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0

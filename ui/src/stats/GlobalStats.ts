@@ -1,5 +1,10 @@
 import { BarData } from "./DeckStatsView"
 
+export interface GlobalStatsWithExpansion {
+    expansion: number | null
+    stats: GlobalStats
+}
+
 export interface GlobalStats {
     averageActions: number
     averageArtifacts: number

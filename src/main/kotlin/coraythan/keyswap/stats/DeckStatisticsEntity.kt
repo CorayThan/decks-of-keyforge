@@ -35,7 +35,7 @@ data class DeckStatisticsEntity(
 }
 
 interface DeckStatisticsRepo : CrudRepository<DeckStatisticsEntity, UUID> {
-    fun findFirstByCompleteDateTimeNotNullAndExpansionNullOrderByVersionDesc(): DeckStatisticsEntity?
+    fun findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(expansion: Expansion?): DeckStatisticsEntity?
 
     fun findFirstByOrderByVersionDesc(): DeckStatisticsEntity?
 
