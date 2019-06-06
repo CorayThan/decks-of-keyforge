@@ -72,8 +72,8 @@ export class LandingPage extends React.Component<{}> {
                     <KeyDrawer width={240} hamburgerMenu={true}>
                         <List>
                             <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Call of the Archons"} filters={cota} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Age of Ascension"} filters={aoa} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"COTA"} filters={cota} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"AOA"} filters={aoa} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Top Decks

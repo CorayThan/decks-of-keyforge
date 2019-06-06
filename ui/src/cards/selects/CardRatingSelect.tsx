@@ -4,8 +4,8 @@ import * as React from "react"
 import { CardQualityIcon } from "../../generic/icons/CardQualityIcon"
 import { MultiSelect, MultiSelectOption, SelectedValues } from "../../mui-restyled/MultiSelect"
 
-const ratingOptions: MultiSelectOption[] = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
-    .map(rating => ({option: <CardQualityIcon quality={rating}/>, value: (rating - 1).toString()}))
+const ratingOptions: MultiSelectOption[] = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
+    .map(rating => ({option: <CardQualityIcon quality={rating}/>, value: (rating).toString()}))
 
 @observer
 export class CardRatingSelect extends React.Component<{ selectedRatings: SelectedCardRatings }> {

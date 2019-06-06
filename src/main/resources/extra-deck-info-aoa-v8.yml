@@ -4,7 +4,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 1
-  rating: 3
+  rating: 2
   expectedAmber: 1
   creatureControl: 0.5
   traits: [stuns]
@@ -16,7 +16,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 2
-  rating: 3
+  rating: 2
   creatureControl: 1
   traits: []
 
@@ -24,7 +24,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 3
-  rating: 3
+  rating: 2
   creatureControl: 1
   traits: [dealsDamage, damagesMultipleEnemies, goodPlay]
 
@@ -32,7 +32,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 5
-  rating: 3
+  rating: 2
   creatureControl: 0.5
   traits: [goodFight]
 
@@ -40,7 +40,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 6
-  rating: 4
+  rating: 3
   synergies:
     - trait: goodPlay
       type: house
@@ -52,7 +52,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 7
-  rating: 2
+  rating: 1
   expectedAmber: 1
   creatureControl: 0.5
   traits: [alpha, dealsDamage, damagesMultipleEnemies]
@@ -68,7 +68,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 8
-  rating: 2.5
+  rating: 2
   expectedAmber: 0.5
   traits: [goodReap]
   synergies:
@@ -83,13 +83,13 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 11
-  rating: 2
+  rating: 1
 
 - name: Groke
   cardNumbers:
     - expansion: 435
       cardNumber: 12
-  rating: 4
+  rating: 3
   amberControl: 0.5
   traits: [goodFight]
   synergies:
@@ -101,7 +101,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 13
-  rating: 2
+  rating: 3
   creatureControl: 0.5
   synergies:
     - trait: highTotalCreaturePower
@@ -112,13 +112,13 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 14
-  rating: 2
+  rating: 2.5
 
 - name: Pound
   cardNumbers:
     - expansion: 435
       cardNumber: 15
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   creatureControl: 1
   traits: [dealsDamage]
@@ -127,14 +127,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 20
-  rating: 2.5
+  rating: 1.5
   traits: [elusive]
 
 - name: Flamethrower
   cardNumbers:
     - expansion: 435
       cardNumber: 21
-  rating: 1.5
+  rating: 0.5
   creatureControl: 0.5
   traits: [dealsDamage, damagesMultipleEnemies, usableArtifact]
 
@@ -142,7 +142,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 22
-  rating: 3
+  rating: 2
   creatureControl: 0.5
   traits: [dealsDamage, goodPlay]
 
@@ -150,7 +150,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 23
-  rating: 2
+  rating: 1
   creatureControl: 0.5
   traits: [alpha]
 
@@ -158,7 +158,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 24
-  rating: 1.5
+  rating: 0.5
   amberControl: 1
   expectedAmber: 1
   traits: [increasesKeyCost]
@@ -170,7 +170,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 25
-  rating: 2
+  rating: 1
   amberControl: 0.5
   traits: [elusive]
   synergies:
@@ -183,14 +183,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 26
-  rating: 2
+  rating: 1
   creatureControl: 0.5
 
 - name: The Flex
   cardNumbers:
     - expansion: 435
       cardNumber: 31
-  rating: 1.5
+  rating: 1
   expectedAmber: 1
   synergies:
     - trait: highTotalCreaturePower
@@ -200,7 +200,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 34
-  rating: 2.5
+  rating: 1.5
   creatureControl: 1
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, damagesAllEnemies]
   synergies:
@@ -211,7 +211,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 37
-  rating: 2
+  rating: 1
   expectedAmber: 1
   effectivePower: 2
   traits: [heals, increasesCreaturePower]
@@ -223,14 +223,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 38
-  rating: 3
+  rating: 2
   amberControl: 1
 
 - name: Grumpus Tamer
   cardNumbers:
     - expansion: 435
       cardNumber: 39
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [goodReap]
   synergies:
@@ -240,7 +240,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 43
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 2
   traits: [forgesKeys]
   synergies:
@@ -251,7 +251,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 48
-  rating: 1.5
+  rating: 1
   effectivePower: 3
   traits: [usableArtifact, shard, increasesCreaturePower]
   synergies:
@@ -261,7 +261,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 49
-  rating: 2
+  rating: 1
   expectedAmber: 2
   traits: [usableArtifact]
   synergies:
@@ -273,7 +273,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 52
-  rating: 1.5
+  rating: 0.5
   creatureControl: 0.5
   traits: [warGrumpus, goodReap]
 
@@ -281,7 +281,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 53
-  rating: 2
+  rating: 1
   creatureControl: 0.5
   traits: [elusive, stuns]
   synergies:
@@ -298,7 +298,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 54
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   creatureControl: 0.5
 
@@ -306,14 +306,16 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 55
-  rating: 4.5
+  rating: 3.5
   deckManipulation: 1.5
+  synergies:
+    - trait: returnsCardsFromDiscard
 
 - name: Cull the Weak
   cardNumbers:
     - expansion: 435
       cardNumber: 57
-  rating: 4
+  rating: 3
   expectedAmber: 1
   creatureControl: 1
   traits: [destroysEnemyCreatures]
@@ -322,7 +324,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 59
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1
   deckManipulation: 1.5
   traits: [returnsCreaturesFromDiscard]
@@ -346,7 +348,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 62
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1.5
   synergies:
     - trait: damagesMultipleEnemies
@@ -358,7 +360,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 63
-  rating: 3
+  rating: 2
   expectedAmber: 1
   deckManipulation: 0.5
 
@@ -366,7 +368,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 65
-  rating: 3.5
+  rating: 2.5
   deckManipulation: 1
   traits: [elusive, reducesEnemyDraw]
   synergies:
@@ -379,7 +381,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 66
-  rating: 4
+  rating: 3
   deckManipulation: 1
   traits: [elusive, controlsHouseChoice]
   synergies:
@@ -397,7 +399,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 67
-  rating: 2.5
+  rating: 1.5
   creatureControl: 2.5
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains, omega]
   synergies:
@@ -412,7 +414,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 68
-  rating: 3.5
+  rating: 2.5
   deckManipulation: 0.5
   traits: [goodPlay, discardsFriendlyCards]
 
@@ -420,7 +422,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 69
-  rating: 3
+  rating: 2.5
   amberControl: 1.5
   traits: [increasesKeyCost]
   synergies:
@@ -432,7 +434,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 70
-  rating: 2.5
+  rating: 1.5
   creatureControl: 0.5
   synergies:
     - trait: goodReap
@@ -447,7 +449,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 71
-  rating: 3
+  rating: 2
   amberControl: 1
   traits: [elusive]
 
@@ -455,7 +457,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 72
-  rating: 3
+  rating: 2
   amberControl: 2
   traits: [elusive]
 
@@ -463,7 +465,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 77
-  rating: 3.5
+  rating: 2.5
   deckManipulation: 1
   traits: [goodPlay, discardsFriendlyCards]
 
@@ -471,7 +473,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 78
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   creatureControl: 1.5
   traits: [damagesMultipleEnemies, dealsDamage]
@@ -480,7 +482,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 81
-  rating: 3
+  rating: 2.5
   amberControl: 1
   traits: [elusive]
 
@@ -488,14 +490,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 82
-  rating: 1.5
+  rating: 0.5
   traits: [sacrificesCreatures]
 
 - name: Soulkeeper
   cardNumbers:
     - expansion: 435
       cardNumber: 83
-  rating: 3
+  rating: 2
   expectedAmber: 1
   creatureControl: 1
   traits: [destroysEnemyCreatures]
@@ -504,7 +506,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 84
-  rating: 1.5
+  rating: 0.5
   creatureControl: 0.5
   traits: [skirmish, poison]
 
@@ -512,7 +514,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 88
-  rating: 3
+  rating: 2
   deckManipulation: 0.5
   traits: [goodPlay, discardsFriendlyCards]
 
@@ -520,7 +522,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 94
-  rating: 2
+  rating: 1
   expectedAmber: 1
   synergies:
     - trait: highCreatureCount
@@ -532,7 +534,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 95
-  rating: 3
+  rating: 2
   creatureControl: 1
 
 - name: Orb of Invidius
@@ -540,7 +542,7 @@
     - expansion: 435
       cardNumber: 96
   creatureControl: 0.5
-  rating: 2
+  rating: 1
   synergies:
     - trait: goodReap
       rating: -2
@@ -553,7 +555,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 97
-  rating: 3
+  rating: 3.5
   expectedAmber: 1
   synergies:
     - trait: ortannusBinding
@@ -562,7 +564,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 98
-  rating: 1
+  rating: 0
   expectedAmber: 0.5
   traits: [damagesFriendlyCreatures]
   synergies:
@@ -572,7 +574,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 103
-  rating: 4
+  rating: 3
   amberControl: 1
   deckManipulation: 0.5
 
@@ -580,7 +582,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 104
-  rating: 1.5
+  rating: 0.5
   deckManipulation: 0.5
   traits: [shard, usableArtifact]
   synergies:
@@ -591,7 +593,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 107
-  rating: 1.5
+  rating: 0.5
   creatureControl: 1
   traits: [usableArtifact]
 
@@ -607,7 +609,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 109
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   traits: [alpha]
 
@@ -615,7 +617,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 110
-  rating: 2
+  rating: 1
   amberControl: 0.5
   expectedAmber: 1.5
   traits: [stealsAmber]
@@ -627,7 +629,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 111
-  rating: 4.5
+  rating: 3.5
   deckManipulation: 2
   traits: [drawsCards, goodPlay]
 
@@ -635,7 +637,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 112
-  rating: 4.5
+  rating: 3.5
   deckManipulation: 1.5
   traits: [playsCards, goodPlay]
 
@@ -643,7 +645,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 113
-  rating: 4
+  rating: 2.5
   deckManipulation: 1
   traits: [goodDestroyed, archives, archivesRandom]
 
@@ -651,7 +653,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 116
-  rating: 1.5
+  rating: 0.5
   creatureControl: 0.5
   synergies:
     - trait: protectsCreatures
@@ -660,7 +662,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 117
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   deckManipulation: 0.5
   traits: [drawsCards, dealsDamage]
@@ -669,7 +671,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 118
-  rating: 3
+  rating: 2.5
   deckManipulation: 1
   traits: [drawsCards, goodReap]
   synergies:
@@ -700,7 +702,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 120
-  rating: 2.5
+  rating: 2
   traits: [archives]
   synergies:
     - trait: highCreatureCount
@@ -710,7 +712,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 123
-  rating: 3.5
+  rating: 2.5
   deckManipulation: 1
   traits: [archives, archivesRandom, goodPlay]
 
@@ -718,16 +720,15 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 124
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   deckManipulation: 0.5
-
 
 - name: Director of Z.Y.X.
   cardNumbers:
     - expansion: 435
       cardNumber: 127
-  rating: 3.5
+  rating: 2.5
   deckManipulation: 1
   traits: [elusive, archives, archivesRandom]
 
@@ -735,15 +736,15 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 128
-  rating: 2.5
-  expectedAmber: 2
+  rating: 3
+  expectedAmber: 3
   traits: [alpha, archives, archivesRandom]
 
 - name: Fila the Researcher
   cardNumbers:
     - expansion: 435
       cardNumber: 129
-  rating: 2
+  rating: 1
   deckManipulation: 0.5
   traits: [drawsCards, elusive]
 
@@ -751,7 +752,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 131
-  rating: 4
+  rating: 3
   deckManipulation: 1
   traits: [elusive, goodPlay, archives]
 
@@ -759,7 +760,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 132
-  rating: 4
+  rating: 3
   deckManipulation: 2
   traits: [archives]
 
@@ -767,7 +768,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 133
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1
   traits: [usableArtifact]
 
@@ -775,7 +776,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 137
-  rating: 1.5
+  rating: 0.5
   amberControl: 1
   traits: [usableArtifact]
 
@@ -783,7 +784,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 139
-  rating: 1.5
+  rating: 0.5
   traits: [forgesKeys]
   
 - name: Entropic Swirl
@@ -799,7 +800,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 144
-  rating: 2
+  rating: 1.5
   amberControl: 1
   traits: [usableArtifact, capturesAmber]
 
@@ -807,7 +808,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 148
-  rating: 2
+  rating: 1
   expectedAmber: 1
   deckManipulation: 1
   traits: [archives]
@@ -819,7 +820,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 152
-  rating: 3
+  rating: 2
   deckManipulation: 1
   traits: [goodReap]
   synergies:
@@ -830,7 +831,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 154
-  rating: 2
+  rating: 1
   expectedAmber: 1
   traits: [usableArtifact]
   synergies:
@@ -843,7 +844,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 155
-  rating: 2
+  rating: 1
   deckManipulation: 1
   traits: [shard, usableArtifact]
   synergies:
@@ -854,7 +855,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 157
-  rating: 1
+  rating: 0
   synergies:
     - trait: usableArtifact
       rating: 3
@@ -863,7 +864,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 160
-  rating: 2
+  rating: 1
   creatureControl: 0.5
   traits: [elusive, stuns]
 
@@ -871,7 +872,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 161
-  rating: 3
+  rating: 2
   expectedAmber: 1
   creatureControl: 0.5
   traits: [damagesAllEnemies, damagesMultipleEnemies, dealsDamage]
@@ -896,7 +897,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 163
-  rating: 3
+  rating: 2
   deckManipulation: 0.5
   traits: [goodReap, archives]
 
@@ -904,7 +905,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 164
-  rating: 2
+  rating: 1
   effectivePower: 6
   traits: [elusive, protectsCreatures]
 
@@ -912,7 +913,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 165
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 2
   traits: [readiesCreatures]
   synergies:
@@ -930,7 +931,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 166
-  rating: 3.5
+  rating: 2.5
   amberControl: 1
   expectedAmber: 2
   traits: [capturesAmberOnEnemies]
@@ -942,7 +943,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 168
-  rating: 1.5
+  rating: 1
   creatureControl: 0.5
   traits: [elusive]
 
@@ -950,7 +951,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 170
-  rating: 1.5
+  rating: 1
   synergies:
     - trait: readiesCreaturesOnPlay
       rating: 3
@@ -959,7 +960,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 171
-  rating: 2.5
+  rating: 2
   creatureControl: 0.5
   traits: [goodPlay]
 
@@ -967,7 +968,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 173
-  rating: 2
+  rating: 1
   expectedAmber: 0.5
   synergies:
     - trait: highCreatureCount
@@ -978,21 +979,21 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 175
-  rating: 2.5
+  rating: 2
   creatureControl: 0.5
 
 - name: AEmber Conduction Unit
   cardNumbers:
     - expansion: 435
       cardNumber: 176
-  rating: 2.5
+  rating: 1.5
   creatureControl: 1
 
 - name: Containment Field
   cardNumbers:
     - expansion: 435
       cardNumber: 178
-  rating: 2
+  rating: 1
   creatureControl: 1
   traits: [destroysEnemyCreatures]
 
@@ -1000,7 +1001,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 179
-  rating: 4
+  rating: 3
   artifactControl: 1.5
   creatureControl: 1
   traits: [destroysEnemyCreatures, destroysEnemyArtifacts]
@@ -1009,7 +1010,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 180
-  rating: 2.5
+  rating: 1.5
   creatureControl: 1.5
   traits: [destroysEnemyCreatures]
   synergies:
@@ -1021,7 +1022,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 181
-  rating: 4
+  rating: 3
   creatureControl: 1.5
   traits: [controlsCreatures]
 
@@ -1029,7 +1030,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 184
-  rating: 2.5
+  rating: 2
   amberControl: 2
   traits: [increasesKeyCost]
   synergies:
@@ -1039,7 +1040,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 186
-  rating: 3
+  rating: 1
   expectedAmber: 1
   creatureControl: 1
   traits: [destroysEnemyCreatures]
@@ -1054,14 +1055,14 @@
     - expansion: 435
       cardNumber: 189
   effectivePower: 4
-  rating: 3
+  rating: 2
   creatureControl: 1
 
 - name: Destructive Analysis
   cardNumbers:
     - expansion: 435
       cardNumber: 194
-  rating: 2
+  rating: 1
   expectedAmber: 1
   creatureControl: 1
   deckManipulation: 0.5
@@ -1076,16 +1077,19 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 195
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   creatureControl: 1
   traits: [damagesMultipleEnemies]
+  synergies:
+    - trait: highTotalArmor
+      rating: 2
 
 - name: Extinction
   cardNumbers:
     - expansion: 435
       cardNumber: 196
-  rating: 3.5
+  rating: 2.5
   creatureControl: 1.5
   deckManipulation: -0.5
   traits: [chains]
@@ -1099,7 +1103,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 201
-  rating: 2
+  rating: 2.5
   effectivePower: 4
   traits: [protectsCreatures, increasesCreaturePower, addsArmor]
 
@@ -1107,7 +1111,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 202
-  rating: 5
+  rating: 4
   deckManipulation: 4
   traits: [drawsCards]
   synergies:
@@ -1118,7 +1122,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 205
-  rating: 2.5
+  rating: 1.5
   creatureControl: 1
   traits: [shard, usableArtifact]
 
@@ -1126,7 +1130,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 209
-  rating: 2
+  rating: 1
   creatureControl: 0.5
   traits: [goodFight]
 
@@ -1134,7 +1138,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 210
-  rating: 4
+  rating: 3
   creatureControl: 0.5
   deckManipulation: 1
   traits: [archives, goodPlay]
@@ -1145,7 +1149,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 211
-  rating: 2.5
+  rating: 2
   effectivePower: 7
   traits: [protectsCreatures, increasesCreaturePower]
 
@@ -1153,7 +1157,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 212
-  rating: 2
+  rating: 1
   effectivePower: 5
   traits: [protectsCreatures, addsArmor]
 
@@ -1161,7 +1165,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 213
-  rating: 4
+  rating: 3
   amberControl: 1.5
   traits: [goodPlay, goodReap]
   synergies:
@@ -1172,7 +1176,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 215
-  rating: 2
+  rating: 1
   amberControl: 1
   traits: [elusive]
 
@@ -1180,22 +1184,24 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 216
-  rating: 3
+  rating: 2
   traits: [protectsCreatures]
 
 - name: Golden Aura
   cardNumbers:
     - expansion: 435
       cardNumber: 217
-  rating: 2
+  rating: 1.5
   creatureControl: 0.5
   traits: [preventsDamage, heals]
+  synergies:
+    - trait: highTotalCreaturePower
 
 - name: Hallowed Shield
   cardNumbers:
     - expansion: 435
       cardNumber: 218
-  rating: 1
+  rating: 0.5
   creatureControl: 0.5
   traits: [preventsDamage]
 
@@ -1203,7 +1209,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 219
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   traits: [heals]
   synergies:
@@ -1214,7 +1220,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 220
-  rating: 2.5
+  rating: 1.5
   amberControl: 0.5
   traits: [capturesAmber]
   synergies:
@@ -1227,7 +1233,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 223
-  rating: 2.5
+  rating: 1.5
   amberControl: 1
   traits: [capturesAmber]
 
@@ -1235,7 +1241,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 224
-  rating: 2
+  rating: 1.5
   creatureControl: 1
   traits: [dealsDamage]
   synergies:
@@ -1255,7 +1261,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 227
-  rating: 2.5
+  rating: 2
   amberControl: 0.5
   synergies:
     - trait: discardsFriendlyCards
@@ -1264,14 +1270,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 228
-  rating: 3.5
+  rating: 2.5
   amberControl: 1
 
 - name: Brobnar Ambassador
   cardNumbers:
     - expansion: 435
       cardNumber: 229
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [elusive]
 
@@ -1279,7 +1285,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 230
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [elusive]
 
@@ -1287,7 +1293,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 232
-  rating: 2
+  rating: 1
   expectedAmber: 1
   synergies:
     - trait: capturesAmber
@@ -1299,7 +1305,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 233
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 2
 
 - name: 'Haedroth''s Wall'
@@ -1314,7 +1320,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 237
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [elusive]
 
@@ -1322,7 +1328,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 238
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [elusive]
 
@@ -1330,7 +1336,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 240
-  rating: 4
+  rating: 3
   expectedAmber: 1
   traits: [goodPlay]
   synergies:
@@ -1340,7 +1346,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 242
-  rating: 3
+  rating: 2.5
   effectivePower: 8
   traits: [protectsCreatures]
 
@@ -1348,7 +1354,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 243
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [elusive]
 
@@ -1356,7 +1362,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 247
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   traits: [elusive]
 
@@ -1364,7 +1370,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 248
-  rating: 2
+  rating: 1
   amberControl: 0.5
   expectedAmber: 0.5
   traits: [goodReap]
@@ -1380,7 +1386,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 253
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   traits: [usableArtifact]
 
@@ -1388,7 +1394,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 255
-  rating: 3
+  rating: 2
   expectedAmber: 2
   traits: [sacrificesCreatures]
   synergies:
@@ -1398,7 +1404,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 257
-  rating: 1
+  rating: 0
   amberControl: 0.5
   expectedAmber: 0.5
   traits: [elusive]
@@ -1410,20 +1416,20 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 260
-  rating: 3
+  rating: 2
   creatureControl: 1
 
 - name: Proclamation 346E
   cardNumbers:
     - expansion: 435
       cardNumber: 261
-  rating: 5
+  rating: 4
 
 - name: Seraphic Armor
   cardNumbers:
     - expansion: 435
       cardNumber: 263
-  rating: 2
+  rating: 1
   expectedAmber: 1
   effectivePower: 1
   traits: [protectsCreatures, addsArmor]
@@ -1432,7 +1438,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 264
-  rating: 2.5
+  rating: 1.5
   amberControl: 1.5
   traits: [shard, usableArtifact]
 
@@ -1440,7 +1446,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 268
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   deckManipulation: 1
   traits: [drawsCards, archives]
@@ -1449,7 +1455,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 269
-  rating: 2
+  rating: 1
   expectedAmber: 2
   synergies:
     - trait: increasesKeyCost
@@ -1459,7 +1465,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 270
-  rating: 4
+  rating: 2.5
   amberControl: 0.5
   expectedAmber: 0.5
   traits: [elusive, stealsAmber, goodReap]
@@ -1471,14 +1477,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 271
-  rating: 2
+  rating: 1
   traits: [elusive, skirmish]
 
 - name: Lamindra
   cardNumbers:
     - expansion: 435
       cardNumber: 272
-  rating: 2
+  rating: 1
   effectivePower: 4
   traits: [protectsCreatures]
 
@@ -1486,7 +1492,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 273
-  rating: 3
+  rating: 2
   expectedAmber: 1
   creatureControl: 1.5
   traits: [sacrificesCreatures, dealsDamage]
@@ -1498,7 +1504,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 276
-  rating: 4.5
+  rating: 3.5
   amberControl: 1.5
   expectedAmber: 1.5
   traits: [stealsAmber]
@@ -1510,7 +1516,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 277
-  rating: 4
+  rating: 3
   expectedAmber: 1
   creatureControl: 0.5
   deckManipulation: 0.5
@@ -1521,7 +1527,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 278
-  rating: 3
+  rating: 2
   amberControl: 1
   expectedAmber: 1
   traits: [alpha, omega, stealsAmber]
@@ -1530,7 +1536,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 279
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   creatureControl: 1
   traits: [dealsDamage, damagesMultipleEnemies]
@@ -1539,7 +1545,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 281
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   creatureControl: 1
   traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies]
@@ -1548,7 +1554,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 282
-  rating: 4
+  rating: 3
   amberControl: 1
   traits: [stealsAmber, goodAction]
 
@@ -1556,7 +1562,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 283
-  rating: 2
+  rating: 1
   expectedAmber: 1
   creatureControl: 0.5
   traits: [dealsDamage]
@@ -1565,7 +1571,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 284
-  rating: 4
+  rating: 3
   amberControl: 1
   expectedAmber: 1
   traits: [goodDestroyed, skirmish]
@@ -1576,7 +1582,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 287
-  rating: 2
+  rating: 1
   expectedAmber: 1
   effectivePower: 3
   traits: [usableArtifact]
@@ -1585,7 +1591,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 289
-  rating: 3
+  rating: 2.5
   amberControl: 1
   expectedAmber: 1
   traits: [omega, elusive, goodFight, stealsAmber]
@@ -1594,7 +1600,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 290
-  rating: 4
+  rating: 2.5
   deckManipulation: 1.5
   traits: [goodPlay]
 
@@ -1602,7 +1608,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 291
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   traits: [forgesKeys]
   synergies:
@@ -1616,7 +1622,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 293
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   deckManipulation: 1
   synergies:
@@ -1630,7 +1636,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 294
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   traits: [skirmish]
   synergies:
@@ -1643,7 +1649,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 302
-  rating: 5
+  rating: 4
   amberControl: 2
   expectedAmber: 2
   traits: [usableArtifact, stealsAmber]
@@ -1652,7 +1658,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 303
-  rating: 1
+  rating: 0
   amberControl: 1
   expectedAmber: 1
   traits: [alpha, stealsAmber]
@@ -1664,7 +1670,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 305
-  rating: 2
+  rating: 1
   expectedAmber: 1
   creatureControl: 0.5
 
@@ -1672,7 +1678,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 308
-  rating: 2
+  rating: 1
   creatureControl: 1
   traits: [dealsDamage, damagesAllEnemies, damagesFriendlyCreatures, damagesMultipleEnemies]
   synergies:
@@ -1683,14 +1689,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 309
-  rating: 2.5
+  rating: 2
   expectedAmber: 2
 
 - name: Sack of Coins
   cardNumbers:
     - expansion: 435
       cardNumber: 312
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   creatureControl: 1
   traits: [dealsDamage]
@@ -1706,14 +1712,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 313
-  rating: 4
+  rating: 3
   creatureControl: 1.5
 
 - name: Shard of Greed
   cardNumbers:
     - expansion: 435
       cardNumber: 315
-  rating: 4
+  rating: 3
   expectedAmber: 2
   traits: [shard, usableArtifact]
 
@@ -1721,7 +1727,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 319
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 2
   traits: [heals, goodPlay]
   synergies:
@@ -1732,7 +1738,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 320
-  rating: 4
+  rating: 3
   expectedAmber: 2
   traits: [readiesCreaturesOnPlay, omega, elusive]
 
@@ -1740,7 +1746,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 321
-  rating: 3
+  rating: 2
   synergies:
     - trait: causesFighting
       rating: 1
@@ -1749,7 +1755,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 323
-  rating: 4.5
+  rating: 3.5
   deckManipulation: 1.5
   traits: [alpha, returnsCardsFromDiscard, returnsCreaturesFromDiscard, goodPlay]
   synergies:
@@ -1760,7 +1766,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 324
-  rating: 2
+  rating: 1.5
   effectivePower: 7
   traits: [protectsCreatures, increasesCreaturePower]
 
@@ -1775,14 +1781,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 327
-  rating: 1.5
+  rating: 0.5
   effectivePower: 4
 
 - name: Persistence Hunting
   cardNumbers:
     - expansion: 435
       cardNumber: 328
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   creatureControl: 0.5
 
@@ -1790,7 +1796,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 330
-  rating: 3.5
+  rating: 2.5
   artifactControl: 1
   traits: [goodFight, destroysEnemyArtifacts]
   synergies:
@@ -1801,7 +1807,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 332
-  rating: 2
+  rating: 1
   expectedAmber: 1
   deckManipulation: 0.5
   synergies:
@@ -1813,7 +1819,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 333
-  rating: 2.5
+  rating: 1.5
   deckManipulation: 0.5
   effectivePower: 5
   traits: [goodFight]
@@ -1822,7 +1828,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 334
-  rating: 4
+  rating: 3
   expectedAmber: 1
   creatureControl: 1.5
   traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies]
@@ -1831,14 +1837,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 335
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
 
 - name: Bumblebird
   cardNumbers:
     - expansion: 435
       cardNumber: 336
-  rating: 1.5
+  rating: 0.5
   effectivePower: 5
   traits: [alpha, increasesCreaturePower, goodPlay]
 
@@ -1846,7 +1852,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 337
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1
   effectivePower: 2
 
@@ -1854,7 +1860,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 346
-  rating: 2
+  rating: 1
   expectedAmber: 1
   traits: [usableArtifact]
 
@@ -1862,23 +1868,33 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 347
-  rating: 2
+  rating: 1.5
   effectivePower: 9
   traits: [protectsCreatures, increasesCreaturePower]
+  synergies:
+    - trait: highCreatureCount
+      rating: 3
+    - trait: lowCreatureCount
+      rating: -1
 
 - name: Panpaca, Jaga
   cardNumbers:
     - expansion: 435
       cardNumber: 348
-  rating: 2
+  rating: 1.5
   effectivePower: 5
   traits: [skirmish]
+  synergies:
+    - trait: highCreatureCount
+      rating: 1
+    - trait: lowCreatureCount
+      rating: -1
 
 - name: Soldiers to Flowers
   cardNumbers:
     - expansion: 435
       cardNumber: 349
-  rating: 3
+  rating: 2
   expectedAmber: 2
   synergies:
     - trait: highCreatureCount
@@ -1892,7 +1908,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 350
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   effectivePower: 1
 
@@ -1900,14 +1916,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 352
-  rating: 2
+  rating: 1
   expectedAmber: 1
 
 - name: Gravid Cycle
   cardNumbers:
     - expansion: 435
       cardNumber: 354
-  rating: 3.5
+  rating: 2.5
   deckManipulation: 1
   traits: [omega, returnsCreaturesFromDiscard, returnsCardsFromDiscard]
   synergies:
@@ -1918,7 +1934,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 355
-  rating: 2
+  rating: 1.5
   expectedAmber: 1
   synergies:
     - trait: forgesKeys
@@ -1930,14 +1946,14 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 362
-  rating: 3
+  rating: 2
   traits: [elusive]
 
 - name: Punctuated Equilibrium
   cardNumbers:
     - expansion: 435
       cardNumber: 363
-  rating: 5
+  rating: 4
   deckManipulation: 3
   traits: [discardsEnemyCards, discardsFriendlyCards, drawsCards]
 
@@ -1945,7 +1961,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 364
-  rating: 3
+  rating: 2
   expectedAmber: 1
   creatureControl: 1
 
@@ -1953,13 +1969,13 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 365
-  rating: 1.5
+  rating: 0.5
   traits: [skirmish]
 
 - name: Shard of Life
   cardNumbers:
     - expansion: 435
       cardNumber: 366
-  rating: 1.5
+  rating: 0.5
   deckManipulation: 0.5
   traits: [shard, usableArtifact ]

@@ -39,6 +39,8 @@ export class SasAndAerc extends React.Component {
                         <div>
                             <Typography>These ratings are represented, from best to worst, by the symbols:</Typography>
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
+                                <CardQualityIcon quality={0} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={0.5} style={{marginRight: spacing(1)}}/>
                                 <CardQualityIcon quality={1} style={{marginRight: spacing(1)}}/>
                                 <CardQualityIcon quality={1.5} style={{marginRight: spacing(1)}}/>
                                 <CardQualityIcon quality={2} style={{marginRight: spacing(1)}}/>
@@ -46,8 +48,6 @@ export class SasAndAerc extends React.Component {
                                 <CardQualityIcon quality={3} style={{marginRight: spacing(1)}}/>
                                 <CardQualityIcon quality={3.5} style={{marginRight: spacing(1)}}/>
                                 <CardQualityIcon quality={4} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={4.5} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={5} style={{marginRight: spacing(1)}}/>
                             </div>
                         </div>,
                         <CardExample

@@ -1,5 +1,6 @@
 package coraythan.keyswap.userdeck
 
+import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.auctions.AuctionRepo
 import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.config.BadRequestException
@@ -42,6 +43,19 @@ class UserDeckService(
             unlistUserDeck(it)
             log.info("Unlisted ${it.id}")
         }
+
+        // Something is causing decks without for sale or trade, but with country + currency symbol
+        val removeBadValues = userDeckRepo
+                .findAll(BooleanBuilder()
+                        .and(QUserDeck.userDeck.forSale.isFalse)
+                        .and(QUserDeck.userDeck.forTrade.isFalse)
+                        .andAnyOf(QUserDeck.userDeck.forSaleInCountry.isNotNull, QUserDeck.userDeck.askingPrice.isNotNull)
+                ).toList()
+        val safeBadValues = removeBadValues.filter { !it.forSale && !it.forTrade }
+        log.info("Removing ${safeBadValues.map { it.id }} decks that had the country still when they shouldn't have.")
+        if (removeBadValues.size != safeBadValues.size) log.warn("Removing bad values and we found ones we didn't want.")
+        userDeckRepo.saveAll(safeBadValues.map { it.copy(forSaleInCountry = null, askingPrice = null) })
+
         log.info("$scheduledStop unlisting expired decks.")
     }
 

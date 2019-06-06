@@ -134,7 +134,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                     <TableCell>
                         <div style={{display: "flex", alignItems: "center"}}>
                             {combo.cardRating}
-                            <CardQualityIcon quality={combo.cardRating + 1} style={{marginLeft: spacing(1)}}/>
+                            <CardQualityIcon quality={combo.cardRating} style={{marginLeft: spacing(1)}}/>
                         </div>
                     </TableCell>
                     <TableCell>{combo.netSynergy}</TableCell>

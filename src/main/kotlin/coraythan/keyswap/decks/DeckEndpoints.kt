@@ -63,14 +63,11 @@ class DeckEndpoints(
 
     @CrossOrigin
     @GetMapping("/{id}/simple")
-    fun findDeckSimple(@PathVariable id: String) = "Please contact me to update to the new version."
+    fun findDeckSimple(@PathVariable id: String) = "Please update to the new version."
 
     @CrossOrigin
     @GetMapping("/simple/v2/{id}")
-    fun findDeckSimple2(@PathVariable id: String): SimpleDeckResponse {
-        val deck = publicApiService.findDeckSimple(id)
-        return SimpleDeckResponse(deck ?: Nothing())
-    }
+    fun findDeckSimple2(@PathVariable id: String) = "Please update to the new version."
 
     @GetMapping("/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)

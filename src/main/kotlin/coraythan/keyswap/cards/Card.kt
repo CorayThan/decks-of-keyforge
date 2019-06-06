@@ -2,6 +2,7 @@ package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
+import coraythan.keyswap.expansions.Expansion
 import javax.persistence.*
 
 @Entity
@@ -36,6 +37,11 @@ data class Card(
         @Transient
         var extraCardInfo: ExtraCardInfo?
 ) : Comparable<Card> {
+
+    companion object {
+        val cotaStyle = CardSortCotaStyle()
+    }
+
     override fun compareTo(other: Card): Int {
         if (expansion != other.expansion) return expansion - other.expansion
         return (cardNumber.toIntOrNull() ?: 0) - (other.cardNumber.toIntOrNull() ?: 0)
@@ -51,6 +57,14 @@ data class Card(
             rarity = rarity,
             maverick = maverick
     )
+}
+
+class CardSortCotaStyle() : Comparator<Card> {
+    override fun compare(cardOne: Card, cardTwo: Card): Int {
+        if (cardOne.expansion == Expansion.CALL_OF_THE_ARCHONS.expansionNumber) return cardOne.compareTo(cardTwo)
+        if (cardOne.cardType != cardTwo.cardType) return cardOne.cardType.compareTo(cardTwo.cardType)
+        return cardOne.cardTitle.compareTo(cardTwo.cardTitle)
+    }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

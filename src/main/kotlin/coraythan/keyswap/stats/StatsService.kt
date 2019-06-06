@@ -24,7 +24,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT1S"
+private const val lockUpdateStats = "PT1M"
 
 @Transactional
 @Service

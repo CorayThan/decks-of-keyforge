@@ -2,7 +2,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 1
-  rating: 3
+  rating: 2
   expectedAmber: 1
   creatureControl: 1.0
   traits: [causesFighting]
@@ -14,7 +14,7 @@
       cardNumber: 2
     - expansion: 435
       cardNumber: 33
-  rating: 3
+  rating: 2
   expectedAmber: 1
   artifactControl: 0.5
   deckManipulation: 0.5
@@ -30,7 +30,7 @@
       cardNumber: 3
     - expansion: 435
       cardNumber: 17
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   traits: [capturesAmberOnEnemies]
   synergies: []
@@ -39,7 +39,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 4
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   creatureControl: 1.5
   traits: [causesFighting]
@@ -54,7 +54,7 @@
       cardNumber: 5
     - expansion: 435
       cardNumber: 19
-  rating: 3
+  rating: 2
   amberControl: 2.0
   traits: []
   synergies:
@@ -69,7 +69,7 @@
       cardNumber: 6
     - expansion: 435
       cardNumber: 36
-  rating: 4.5
+  rating: 3.5
   creatureControl: 3.0
   traits: [destroysEnemyCreatures, causesFighting, destroysFriendlyCreatures]
   synergies:
@@ -84,7 +84,7 @@
       cardNumber: 7
     - expansion: 435
       cardNumber: 4
-  rating: 2
+  rating: 1
   creatureControl: 2.0
   deckManipulation: -1.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
@@ -99,7 +99,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 8
-  rating: 1
+  rating: 0
   creatureControl: 1.5
   traits: [causesFighting]
   synergies:
@@ -111,7 +111,7 @@
       cardNumber: 9
     - expansion: 435
       cardNumber: 42
-  rating: 3
+  rating: 2
   creatureControl: 2.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies: []
@@ -120,7 +120,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 10
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   traits: []
   synergies:
@@ -141,7 +141,7 @@
       cardNumber: 11
     - expansion: 435
       cardNumber: 50
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   amberControl: 0.5
   traits: []
@@ -151,7 +151,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 12
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   creatureControl: 1.0
   traits: [dealsDamage]
@@ -163,7 +163,7 @@
       cardNumber: 13
     - expansion: 435
       cardNumber: 27
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   creatureControl: 1.5
   traits: [causesFighting]
@@ -179,7 +179,7 @@
       cardNumber: 14
     - expansion: 435
       cardNumber: 29
-  rating: 3
+  rating: 2
   expectedAmber: 2.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -197,7 +197,7 @@
       cardNumber: 15
     - expansion: 435
       cardNumber: 30
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -216,7 +216,7 @@
       cardNumber: 16
     - expansion: 435
       cardNumber: 16
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -228,7 +228,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 17
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -241,7 +241,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 18
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 0
@@ -261,7 +261,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 19
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -275,7 +275,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 20
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -291,7 +291,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 21
-  rating: 1.5
+  rating: 0.5
   creatureControl: 1.0
   traits: [dealsDamage, usableArtifact]
   synergies: []
@@ -302,7 +302,7 @@
       cardNumber: 22
     - expansion: 435
       cardNumber: 10
-  rating: 3
+  rating: 2
   expectedAmber: 0.5
   creatureControl: 1.0
   traits: [causesFighting, usableArtifact]
@@ -318,7 +318,7 @@
       cardNumber: 23
     - expansion: 435
       cardNumber: 40
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -333,7 +333,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 24
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -347,7 +347,7 @@
       cardNumber: 25
     - expansion: 435
       cardNumber: 46
-  rating: 3.5
+  rating: 2.5
   amberControl: 2.0
   traits: [capturesAmber]
   synergies:
@@ -365,7 +365,7 @@
       cardNumber: 26
     - expansion: 435
       cardNumber: 28
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 2.0
   creatureControl: 0.0
@@ -379,7 +379,7 @@
       cardNumber: 27
     - expansion: 435
       cardNumber: 32
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -400,7 +400,7 @@
       cardNumber: 28
     - expansion: 435
       cardNumber: 35
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -412,7 +412,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 29
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -424,7 +424,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 30
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -438,7 +438,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 31
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -453,7 +453,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 32
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -471,7 +471,7 @@
       cardNumber: 33
     - expansion: 435
       cardNumber: 9
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -489,7 +489,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 34
-  rating: 3.5
+  rating: 2.5
   amberControl: 1.5
   traits: [goodDestroyed]
   synergies:
@@ -503,7 +503,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 35
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   creatureControl: 0.0
   traits: [goodFight]
@@ -516,7 +516,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 36
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -531,7 +531,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 37
-  rating: 1
+  rating: 0
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.5
@@ -552,7 +552,7 @@
       cardNumber: 38
     - expansion: 435
       cardNumber: 41
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -564,7 +564,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 39
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -579,7 +579,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 40
-  rating: 3
+  rating: 2
   amberControl: 1.0
   creatureControl: 0.0
   traits: [goodPlay]
@@ -594,7 +594,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 41
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.5
   traits: [elusive, goodReap]
   synergies:
@@ -612,7 +612,7 @@
       cardNumber: 42
     - expansion: 435
       cardNumber: 44
-  rating: 3
+  rating: 2
   creatureControl: 0.5
   effectivePower: 7
   traits: []
@@ -623,7 +623,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 43
-  rating: 3
+  rating: 2
   creatureControl: 0.5
   traits: [damagesMultipleEnemies, dealsDamage, damagesAllEnemies]
   synergies: []
@@ -634,7 +634,7 @@
       cardNumber: 44
     - expansion: 435
       cardNumber: 47
-  rating: 3
+  rating: 2
   creatureControl: 1
   traits: [dealsDamage]
   synergies: []
@@ -643,7 +643,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 45
-  rating: 3
+  rating: 2
   amberControl: 0.5
   creatureControl: 0.0
   traits: [capturesAmber]
@@ -653,7 +653,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 46
-  rating: 3
+  rating: 2
   creatureControl: 0.5
   traits: [stuns, goodPlay]
   synergies:
@@ -666,7 +666,7 @@
       cardNumber: 47
     - expansion: 435
       cardNumber: 51
-  rating: 2.5
+  rating: 1.5
   creatureControl: 1.0
   traits: []
   synergies: []
@@ -675,7 +675,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 48
-  rating: 3
+  rating: 2
   creatureControl: 0.0
   expectedAmber: 0.0
   traits: []
@@ -687,7 +687,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 49
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -709,7 +709,7 @@
       cardNumber: 50
     - expansion: 435
       cardNumber: 18
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -729,7 +729,7 @@
       cardNumber: 51
     - expansion: 435
       cardNumber: 45
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -742,7 +742,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 52
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -758,7 +758,7 @@
       cardNumber: 53
     - expansion: 435
       cardNumber: 87
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -771,7 +771,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 54
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -796,7 +796,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 55
-  rating: 5
+  rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -814,7 +814,7 @@
       cardNumber: 56
     - expansion: 435
       cardNumber: 90
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -826,7 +826,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 57
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -838,7 +838,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 58
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -851,7 +851,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 59
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 3.0
@@ -872,7 +872,7 @@
       cardNumber: 60
     - expansion: 435
       cardNumber: 73
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -885,7 +885,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 61
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -901,7 +901,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 62
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -921,7 +921,7 @@
       cardNumber: 63
     - expansion: 435
       cardNumber: 92
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -934,7 +934,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 64
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -949,7 +949,7 @@
       cardNumber: 65
     - expansion: 435
       cardNumber: 74
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -964,7 +964,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 66
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -983,7 +983,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 67
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -998,7 +998,7 @@
       cardNumber: 68
     - expansion: 435
       cardNumber: 79
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -1015,7 +1015,7 @@
       cardNumber: 69
     - expansion: 435
       cardNumber: 80
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1031,7 +1031,7 @@
       cardNumber: 70
     - expansion: 435
       cardNumber: 101
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -1045,7 +1045,7 @@
       cardNumber: 71
     - expansion: 435
       cardNumber: 86
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -1060,7 +1060,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 72
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1074,7 +1074,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 73
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1087,7 +1087,7 @@
       cardNumber: 74
     - expansion: 435
       cardNumber: 93
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 3.0
@@ -1105,7 +1105,7 @@
       cardNumber: 75
     - expansion: 435
       cardNumber: 61
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -1119,7 +1119,7 @@
       cardNumber: 76
     - expansion: 435
       cardNumber: 75
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1134,7 +1134,7 @@
       cardNumber: 77
     - expansion: 435
       cardNumber: 76
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -1148,7 +1148,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 78
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1161,7 +1161,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 79
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1176,7 +1176,7 @@
       cardNumber: 80
     - expansion: 435
       cardNumber: 105
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1199,7 +1199,7 @@
       cardNumber: 81
     - expansion: 435
       cardNumber: 56
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -1213,7 +1213,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 82
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -1228,7 +1228,7 @@
       cardNumber: 83
     - expansion: 435
       cardNumber: 58
-  rating: 4
+  rating: 3
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1244,7 +1244,7 @@
       cardNumber: 84
     - expansion: 435
       cardNumber: 91
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1255,7 +1255,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 85
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1272,7 +1272,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 86
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -1286,7 +1286,7 @@
       cardNumber: 87
     - expansion: 435
       cardNumber: 99
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -1305,7 +1305,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 88
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -1316,7 +1316,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 89
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -1328,7 +1328,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 90
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -1340,7 +1340,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 91
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -1352,7 +1352,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 92
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -1365,7 +1365,7 @@
       cardNumber: 93
     - expansion: 435
       cardNumber: 100
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1
   amberControl: 0.0
   artifactControl: 0.0
@@ -1385,7 +1385,7 @@
       cardNumber: 94
     - expansion: 435
       cardNumber: 102
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1403,7 +1403,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 95
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -1426,7 +1426,7 @@
       cardNumber: 96
     - expansion: 435
       cardNumber: 64
-  rating: 4
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.5
   artifactControl: 0.0
@@ -1440,7 +1440,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 97
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -1458,7 +1458,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 98
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.5
@@ -1474,7 +1474,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 99
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1493,7 +1493,7 @@
       cardNumber: 100
     - expansion: 435
       cardNumber: 85
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.5
   artifactControl: 0.5
@@ -1506,7 +1506,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 101
-  rating: 3
+  rating: 2
   expectedAmber: 0.5
   amberControl: 0.0
   artifactControl: 0.0
@@ -1523,7 +1523,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 102
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1539,7 +1539,7 @@
       cardNumber: 103
     - expansion: 435
       cardNumber: 106
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1557,7 +1557,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 104
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -1575,7 +1575,7 @@
       cardNumber: 105
     - expansion: 435
       cardNumber: 89
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -1591,7 +1591,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 106
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1609,7 +1609,7 @@
       cardNumber: 107
     - expansion: 435
       cardNumber: 125
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2
@@ -1620,7 +1620,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 108
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -1634,7 +1634,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 109
-  rating: 2.5
+  rating: 1.5
   expectedAmber: -1.0
   amberControl: 2
   creatureControl: 0.0
@@ -1652,7 +1652,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 110
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1668,7 +1668,7 @@
       cardNumber: 111
     - expansion: 435
       cardNumber: 146
-  rating: 5
+  rating: 4
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 0.0
@@ -1683,7 +1683,7 @@
       cardNumber: 112
     - expansion: 435
       cardNumber: 130
-  rating: 3
+  rating: 2
   expectedAmber: 1.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -1700,7 +1700,7 @@
       cardNumber: 113
     - expansion: 435
       cardNumber: 147
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -1717,7 +1717,7 @@
       cardNumber: 114
     - expansion: 435
       cardNumber: 114
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1730,7 +1730,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 115
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1749,7 +1749,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 116
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -1763,7 +1763,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 117
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1775,7 +1775,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 118
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -1787,7 +1787,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 119
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1802,7 +1802,7 @@
       cardNumber: 120
     - expansion: 435
       cardNumber: 134
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1816,7 +1816,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 121
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1831,7 +1831,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 122
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1846,7 +1846,7 @@
       cardNumber: 123
     - expansion: 435
       cardNumber: 138
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1859,7 +1859,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 124
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -1873,7 +1873,7 @@
       cardNumber: 125
     - expansion: 435
       cardNumber: 122
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1890,7 +1890,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 126
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -1905,7 +1905,7 @@
       cardNumber: 127
     - expansion: 435
       cardNumber: 140
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1925,7 +1925,7 @@
       cardNumber: 128
     - expansion: 435
       cardNumber: 141
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -1941,7 +1941,7 @@
       cardNumber: 129
     - expansion: 435
       cardNumber: 115
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1955,7 +1955,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 130
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1970,7 +1970,7 @@
       cardNumber: 131
     - expansion: 435
       cardNumber: 151
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -1982,7 +1982,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 132
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -1994,7 +1994,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 133
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2009,7 +2009,7 @@
       cardNumber: 134
     - expansion: 435
       cardNumber: 156
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 1
@@ -2021,7 +2021,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 135
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2034,7 +2034,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 136
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -2054,7 +2054,7 @@
       cardNumber: 137
     - expansion: 435
       cardNumber: 126
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -2068,7 +2068,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 138
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -2081,7 +2081,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 139
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -2092,7 +2092,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 140
-  rating: 3
+  rating: 2
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 0.0
@@ -2107,7 +2107,7 @@
       cardNumber: 141
     - expansion: 435
       cardNumber: 142
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2120,7 +2120,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 142
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2141,7 +2141,7 @@
       cardNumber: 143
     - expansion: 435
       cardNumber: 145
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2157,7 +2157,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 144
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2174,7 +2174,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 145
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2190,7 +2190,7 @@
       cardNumber: 146
     - expansion: 435
       cardNumber: 149
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -2202,7 +2202,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 147
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2219,7 +2219,7 @@
       cardNumber: 148
     - expansion: 435
       cardNumber: 150
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0
@@ -2232,7 +2232,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 149
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2246,7 +2246,7 @@
       cardNumber: 150
     - expansion: 435
       cardNumber: 153
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2264,7 +2264,7 @@
       cardNumber: 151
     - expansion: 435
       cardNumber: 135
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2279,7 +2279,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 152
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -2295,7 +2295,7 @@
       cardNumber: 153
     - expansion: 435
       cardNumber: 158
-  rating: 5
+  rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2312,7 +2312,7 @@
       cardNumber: 154
     - expansion: 435
       cardNumber: 121
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -2323,7 +2323,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 155
-  rating: 3
+  rating: 2
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2337,7 +2337,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 156
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2351,7 +2351,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 157
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2365,7 +2365,7 @@
       cardNumber: 158
     - expansion: 435
       cardNumber: 136
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2388,7 +2388,7 @@
       cardNumber: 159
     - expansion: 435
       cardNumber: 159
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2407,7 +2407,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 160
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -2424,7 +2424,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 161
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2442,7 +2442,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 162
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2457,7 +2457,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 163
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2477,7 +2477,7 @@
       cardNumber: 164
     - expansion: 435
       cardNumber: 198
-  rating: 4
+  rating: 3
   expectedAmber: 1.5
   amberControl: 2.0
   creatureControl: 0.0
@@ -2495,7 +2495,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 165
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -2510,7 +2510,7 @@
       cardNumber: 166
     - expansion: 435
       cardNumber: 182
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2535,7 +2535,7 @@
       cardNumber: 167
     - expansion: 435
       cardNumber: 203
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2551,7 +2551,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 168
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2565,7 +2565,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 169
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -2582,7 +2582,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 170
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1.5
   amberControl: 0
   creatureControl: 0.0
@@ -2599,7 +2599,7 @@
       cardNumber: 171
     - expansion: 435
       cardNumber: 183
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2618,7 +2618,7 @@
       cardNumber: 172
     - expansion: 435
       cardNumber: 185
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -2636,7 +2636,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 173
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -2651,7 +2651,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 174
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -2670,7 +2670,7 @@
       cardNumber: 175
     - expansion: 435
       cardNumber: 188
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -2686,7 +2686,7 @@
       cardNumber: 176
     - expansion: 435
       cardNumber: 206
-  rating: 3.5
+  rating: 2.5
   expectedAmber: -1.0
   amberControl: 3.0
   creatureControl: 0.0
@@ -2700,7 +2700,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 177
-  rating: 3
+  rating: 2
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2717,7 +2717,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 178
-  rating: 4
+  rating: 3
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.5
@@ -2740,7 +2740,7 @@
       cardNumber: 179
     - expansion: 435
       cardNumber: 208
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 3.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2757,7 +2757,7 @@
       cardNumber: 180
     - expansion: 435
       cardNumber: 177
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2778,7 +2778,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 181
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2800,7 +2800,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 182
-  rating: 3
+  rating: 2
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2823,7 +2823,7 @@
       cardNumber: 183
     - expansion: 435
       cardNumber: 193
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1
@@ -2835,7 +2835,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 184
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -2850,7 +2850,7 @@
       cardNumber: 185
     - expansion: 435
       cardNumber: 200
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2864,7 +2864,7 @@
       cardNumber: 186
     - expansion: 435
       cardNumber: 199
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2885,7 +2885,7 @@
       cardNumber: 187
     - expansion: 435
       cardNumber: 169
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2905,7 +2905,7 @@
       cardNumber: 188
     - expansion: 435
       cardNumber: 207
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -2917,7 +2917,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 189
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2941,7 +2941,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 190
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2961,7 +2961,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 191
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -2973,7 +2973,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 192
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -2986,7 +2986,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 193
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -3000,7 +3000,7 @@
       cardNumber: 194
     - expansion: 435
       cardNumber: 197
-  rating: 1
+  rating: 0
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0
@@ -3015,7 +3015,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 195
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -3038,7 +3038,7 @@
       cardNumber: 196
     - expansion: 435
       cardNumber: 167
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -3054,7 +3054,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 197
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -3076,7 +3076,7 @@
       cardNumber: 198
     - expansion: 435
       cardNumber: 204
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3090,7 +3090,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 199
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3107,7 +3107,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 200
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -3129,7 +3129,7 @@
       cardNumber: 201
     - expansion: 435
       cardNumber: 190
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3149,7 +3149,7 @@
       cardNumber: 202
     - expansion: 435
       cardNumber: 172
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3162,7 +3162,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 203
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -3181,7 +3181,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 204
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3199,7 +3199,7 @@
       cardNumber: 205
     - expansion: 435
       cardNumber: 174
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -3212,7 +3212,7 @@
       cardNumber: 206
     - expansion: 435
       cardNumber: 191
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3224,7 +3224,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 207
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -3244,7 +3244,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 208
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3261,7 +3261,7 @@
       cardNumber: 209
     - expansion: 435
       cardNumber: 192
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 0.0
@@ -3276,7 +3276,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 210
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -3294,7 +3294,7 @@
       cardNumber: 211
     - expansion: 435
       cardNumber: 187
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3317,7 +3317,7 @@
       cardNumber: 212
     - expansion: 435
       cardNumber: 250
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3331,7 +3331,7 @@
       cardNumber: 213
     - expansion: 435
       cardNumber: 214
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -3343,7 +3343,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 214
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3361,7 +3361,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 215
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -3383,7 +3383,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 216
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3397,7 +3397,7 @@
       cardNumber: 217
     - expansion: 435
       cardNumber: 231
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 2.0
   creatureControl: 0.0
@@ -3413,7 +3413,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 218
-  rating: 3
+  rating: 2
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3431,7 +3431,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 219
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -3445,7 +3445,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 220
-  rating: 2
+  rating: 1
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 0.0
@@ -3461,7 +3461,7 @@
       cardNumber: 221
     - expansion: 435
       cardNumber: 256
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -3475,7 +3475,7 @@
       cardNumber: 222
     - expansion: 435
       cardNumber: 258
-  rating: 2
+  rating: 1
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3493,7 +3493,7 @@
       cardNumber: 223
     - expansion: 435
       cardNumber: 259
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3511,7 +3511,7 @@
       cardNumber: 224
     - expansion: 435
       cardNumber: 241
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3525,7 +3525,7 @@
       cardNumber: 225
     - expansion: 435
       cardNumber: 222
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3544,7 +3544,7 @@
       cardNumber: 226
     - expansion: 435
       cardNumber: 225
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -3559,7 +3559,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 227
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -3575,7 +3575,7 @@
       cardNumber: 228
     - expansion: 435
       cardNumber: 245
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3589,7 +3589,7 @@
       cardNumber: 229
     - expansion: 435
       cardNumber: 246
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -3607,7 +3607,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 230
-  rating: 5
+  rating: 4
   expectedAmber: 3.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3621,7 +3621,7 @@
       cardNumber: 231
     - expansion: 435
       cardNumber: 252
-  rating: 1
+  rating: 0
   expectedAmber: 0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3638,7 +3638,7 @@
       cardNumber: 232
     - expansion: 435
       cardNumber: 235
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3650,7 +3650,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 233
-  rating: 1
+  rating: 0
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3666,7 +3666,7 @@
       cardNumber: 234
     - expansion: 435
       cardNumber: 239
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3684,7 +3684,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 235
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3701,7 +3701,7 @@
       cardNumber: 236
     - expansion: 435
       cardNumber: 244
-  rating: 3
+  rating: 2
   expectedAmber: 2
   amberControl: 0.0
   creatureControl: 0.0
@@ -3716,7 +3716,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 237
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3729,7 +3729,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 238
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3743,7 +3743,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 239
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -3754,7 +3754,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 240
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.5
   artifactControl: 0.0
@@ -3765,7 +3765,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 241
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -3784,7 +3784,7 @@
       cardNumber: 242
     - expansion: 435
       cardNumber: 251
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3797,7 +3797,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 243
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.5
   artifactControl: 0.0
@@ -3808,7 +3808,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 244
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3823,7 +3823,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 245
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3841,7 +3841,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 246
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3858,7 +3858,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 247
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3873,7 +3873,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 248
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3886,7 +3886,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 249
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3901,7 +3901,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 250
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -3918,7 +3918,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 251
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -3932,7 +3932,7 @@
       cardNumber: 252
     - expansion: 435
       cardNumber: 254
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -3945,7 +3945,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 253
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 2.0
@@ -3960,7 +3960,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 254
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -3972,7 +3972,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 255
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -3986,7 +3986,7 @@
       cardNumber: 256
     - expansion: 435
       cardNumber: 262
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -3997,7 +3997,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 257
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -4009,7 +4009,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 258
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -4026,7 +4026,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 259
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -4040,7 +4040,7 @@
       cardNumber: 260
     - expansion: 435
       cardNumber: 234
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.5
   artifactControl: 0.0
@@ -4055,7 +4055,7 @@
       cardNumber: 261
     - expansion: 435
       cardNumber: 265
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4071,7 +4071,7 @@
       cardNumber: 262
     - expansion: 435
       cardNumber: 266
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4087,7 +4087,7 @@
       cardNumber: 263
     - expansion: 435
       cardNumber: 249
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4101,7 +4101,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 264
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -4117,7 +4117,7 @@
       cardNumber: 265
     - expansion: 435
       cardNumber: 221
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4134,7 +4134,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 266
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4151,7 +4151,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 267
-  rating: 4
+  rating: 3
   expectedAmber: 2.0
   amberControl: 2.0
   creatureControl: 0.0
@@ -4166,7 +4166,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 268
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4184,7 +4184,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 269
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 2.0
   amberControl: 1.0
   creatureControl: 0.5
@@ -4200,7 +4200,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 270
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 2.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -4220,7 +4220,7 @@
       cardNumber: 271
     - expansion: 435
       cardNumber: 286
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4233,7 +4233,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 272
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4248,7 +4248,7 @@
       cardNumber: 273
     - expansion: 435
       cardNumber: 304
-  rating: 1
+  rating: 0
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4262,7 +4262,7 @@
       cardNumber: 274
     - expansion: 435
       cardNumber: 288
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -4277,7 +4277,7 @@
       cardNumber: 275
     - expansion: 435
       cardNumber: 274
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4291,7 +4291,7 @@
       cardNumber: 276
     - expansion: 435
       cardNumber: 275
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.5
@@ -4303,7 +4303,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 277
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -4323,7 +4323,7 @@
       cardNumber: 278
     - expansion: 435
       cardNumber: 292
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4335,7 +4335,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 279
-  rating: 3
+  rating: 2
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 1.5
@@ -4349,7 +4349,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 280
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -4366,7 +4366,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 281
-  rating: 5
+  rating: 4
   expectedAmber: 2
   amberControl: 1
   creatureControl: 0.5
@@ -4385,7 +4385,7 @@
       cardNumber: 282
     - expansion: 435
       cardNumber: 311
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.5
   amberControl: 1.5
   creatureControl: 0.0
@@ -4401,7 +4401,7 @@
       cardNumber: 283
     - expansion: 435
       cardNumber: 298
-  rating: 4
+  rating: 3
   expectedAmber: 2.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -4422,7 +4422,7 @@
       cardNumber: 284
     - expansion: 435
       cardNumber: 318
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4436,7 +4436,7 @@
       cardNumber: 285
     - expansion: 435
       cardNumber: 300
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -4450,7 +4450,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 286
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4474,7 +4474,7 @@
       cardNumber: 287
     - expansion: 435
       cardNumber: 306
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4492,7 +4492,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 288
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4507,7 +4507,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 289
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4519,7 +4519,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 290
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -4535,7 +4535,7 @@
       cardNumber: 291
     - expansion: 435
       cardNumber: 295
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -4548,7 +4548,7 @@
       cardNumber: 292
     - expansion: 435
       cardNumber: 296
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4560,7 +4560,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 293
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4581,7 +4581,7 @@
       cardNumber: 294
     - expansion: 435
       cardNumber: 297
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4596,7 +4596,7 @@
       cardNumber: 295
     - expansion: 435
       cardNumber: 317
-  rating: 2
+  rating: 1
   expectedAmber: 2.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -4615,7 +4615,7 @@
       cardNumber: 296
     - expansion: 435
       cardNumber: 267
-  rating: 1
+  rating: 0
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4630,7 +4630,7 @@
       cardNumber: 297
     - expansion: 435
       cardNumber: 299
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4647,7 +4647,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 298
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -4666,7 +4666,7 @@
       cardNumber: 299
     - expansion: 435
       cardNumber: 301
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4680,7 +4680,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 300
-  rating: 4
+  rating: 3
   expectedAmber: 1.5
   amberControl: 1.5
   creatureControl: 0.0
@@ -4697,7 +4697,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 301
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4715,7 +4715,7 @@
       cardNumber: 302
     - expansion: 435
       cardNumber: 307
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -4726,7 +4726,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 303
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -4738,7 +4738,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 304
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 1.0
@@ -4759,7 +4759,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 305
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4773,7 +4773,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 306
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -4785,7 +4785,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 307
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 1.5
   creatureControl: 0.0
@@ -4797,7 +4797,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 308
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.5
   artifactControl: 0.0
@@ -4816,7 +4816,7 @@
       cardNumber: 309
     - expansion: 435
       cardNumber: 314
-  rating: 2
+  rating: 1
   expectedAmber: 0.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -4830,7 +4830,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 310
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4841,7 +4841,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 311
-  rating: 3
+  rating: 2
   expectedAmber: 1
   amberControl: 0.0
   creatureControl: 0.0
@@ -4856,7 +4856,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 312
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -4872,7 +4872,7 @@
       cardNumber: 313
     - expansion: 435
       cardNumber: 316
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4891,7 +4891,7 @@
       cardNumber: 314
     - expansion: 435
       cardNumber: 280
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -4907,7 +4907,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 315
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -4921,7 +4921,7 @@
       cardNumber: 316
     - expansion: 435
       cardNumber: 285
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1
   amberControl: 1
   creatureControl: 0.0
@@ -4940,7 +4940,7 @@
       cardNumber: 317
     - expansion: 435
       cardNumber: 310
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -4956,7 +4956,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 318
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1
@@ -4972,7 +4972,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 319
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -4989,7 +4989,7 @@
       cardNumber: 320
     - expansion: 435
       cardNumber: 351
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -5003,7 +5003,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 321
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 3.0
   amberControl: 0
   creatureControl: 0.0
@@ -5022,7 +5022,7 @@
       cardNumber: 322
     - expansion: 435
       cardNumber: 340
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5036,7 +5036,7 @@
       cardNumber: 323
     - expansion: 435
       cardNumber: 322
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -5056,7 +5056,7 @@
       cardNumber: 324
     - expansion: 435
       cardNumber: 341
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5071,7 +5071,7 @@
       cardNumber: 325
     - expansion: 435
       cardNumber: 325
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5094,7 +5094,7 @@
       cardNumber: 326
     - expansion: 435
       cardNumber: 342
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -5106,7 +5106,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 327
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -5126,7 +5126,7 @@
       cardNumber: 328
     - expansion: 435
       cardNumber: 343
-  rating: 4
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.5
   creatureControl: 0.5
@@ -5141,7 +5141,7 @@
       cardNumber: 329
     - expansion: 435
       cardNumber: 344
-  rating: 5
+  rating: 4
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -5154,7 +5154,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 330
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -5168,7 +5168,7 @@
       cardNumber: 331
     - expansion: 435
       cardNumber: 360
-  rating: 3
+  rating: 2
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -5183,7 +5183,7 @@
       cardNumber: 332
     - expansion: 435
       cardNumber: 329
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5203,7 +5203,7 @@
       cardNumber: 333
     - expansion: 435
       cardNumber: 331
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -5219,7 +5219,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 334
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -5236,7 +5236,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 335
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.5
   amberControl: 0.5
   creatureControl: 0.0
@@ -5255,7 +5255,7 @@
       cardNumber: 336
     - expansion: 435
       cardNumber: 368
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -5269,7 +5269,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 337
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5284,7 +5284,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 338
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -5297,7 +5297,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 339
-  rating: 2
+  rating: 1
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.5
@@ -5310,7 +5310,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 340
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5327,7 +5327,7 @@
       cardNumber: 341
     - expansion: 435
       cardNumber: 345
-  rating: 4
+  rating: 3
   expectedAmber: 1.0
   amberControl: 0.5
   creatureControl: 0.5
@@ -5342,7 +5342,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 342
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.0
@@ -5355,7 +5355,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 343
-  rating: 3
+  rating: 2
   expectedAmber: 2
   amberControl: 0.0
   creatureControl: 0.0
@@ -5375,7 +5375,7 @@
       cardNumber: 344
     - expansion: 435
       cardNumber: 370
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5388,7 +5388,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 345
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -5401,7 +5401,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 346
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -5414,7 +5414,7 @@
       cardNumber: 347
     - expansion: 435
       cardNumber: 369
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5426,7 +5426,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 348
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5440,7 +5440,7 @@
       cardNumber: 349
     - expansion: 435
       cardNumber: 338
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5461,7 +5461,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 350
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5473,7 +5473,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 351
-  rating: 4
+  rating: 3
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5489,7 +5489,7 @@
       cardNumber: 352
     - expansion: 435
       cardNumber: 339
-  rating: 4
+  rating: 3
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -5508,7 +5508,7 @@
       cardNumber: 353
     - expansion: 435
       cardNumber: 353
-  rating: 4
+  rating: 3
   expectedAmber: 2.0
   amberControl: 0
   artifactControl: 0.0
@@ -5521,7 +5521,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 354
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5535,7 +5535,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 355
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -5548,7 +5548,7 @@
       cardNumber: 356
     - expansion: 435
       cardNumber: 356
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -5561,7 +5561,7 @@
       cardNumber: 357
     - expansion: 435
       cardNumber: 357
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.5
@@ -5572,7 +5572,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 358
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -5585,7 +5585,7 @@
       cardNumber: 359
     - expansion: 435
       cardNumber: 358
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1
@@ -5601,7 +5601,7 @@
       cardNumber: 360
     - expansion: 435
       cardNumber: 359
-  rating: 4
+  rating: 3
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.0
@@ -5614,7 +5614,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 361
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0.0
@@ -5626,7 +5626,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 362
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -5638,7 +5638,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 363
-  rating: 1.5
+  rating: 0.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5649,7 +5649,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 364
-  rating: 2
+  rating: 1
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
@@ -5665,7 +5665,7 @@
       cardNumber: 365
     - expansion: 435
       cardNumber: 361
-  rating: 3.5
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -5682,7 +5682,7 @@
       cardNumber: 366
     - expansion: 435
       cardNumber: 367
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 1.5
   amberControl: 0.0
   creatureControl: 0.5
@@ -5695,7 +5695,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 367
-  rating: 4.5
+  rating: 3.5
   expectedAmber: 2.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5716,7 +5716,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 368
-  rating: 3
+  rating: 2
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5733,7 +5733,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 369
-  rating: 2
+  rating: 1
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
@@ -5744,7 +5744,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 370
-  rating: 2.5
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0

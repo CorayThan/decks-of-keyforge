@@ -8,6 +8,8 @@ import coraythan.keyswap.House
 import coraythan.keyswap.decks.currentDeckRatingVersion
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.synergy.SynTraitType
+import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.Synergies
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
@@ -40,6 +42,15 @@ class CardService(
         )
         this.extraInfo = extraInfosFromFile
                 .plus(extraInfosFromFileAoa)
+                .map {
+                    when {
+                        it.traits.contains(Synergies.alpha) ->
+                            it.copy(synergies = it.synergies.plus(SynTraitValue(Synergies.alpha, -3, SynTraitType.house)))
+                        it.traits.contains(Synergies.omega) ->
+                            it.copy(synergies = it.synergies.plus(SynTraitValue(Synergies.omega, -3, SynTraitType.house)))
+                        else -> it
+                    }
+                }
                 .flatMap { cardInfo ->
                     cardInfo.cardNumbers.map {
                         it to cardInfo.copy(
@@ -78,11 +89,13 @@ class CardService(
     }
 
     fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard> {
-        return cardsFromCardIds(cardIdsString).sorted().map { it.toDeckSearchResultCard() }
+        return cardsFromCardIds(cardIdsString)
+                .sortedWith(Card.cotaStyle)
+                .map { it.toDeckSearchResultCard() }
     }
 
     fun cardsForDeck(deck: Deck): List<Card> {
-        val cards = cardsFromCardIds(deck.cardIds)
+        val cards = cardsFromCardIds(deck.cardIds, deck.keyforgeId)
         if (cards.size != 36) throw IllegalStateException("Why doesn't this deck have cards? $deck")
         return cards
     }
@@ -181,9 +194,9 @@ class CardService(
                 ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"))
     }
 
-    private fun cardsFromCardIds(cardIdsString: String): List<Card> {
+    private fun cardsFromCardIds(cardIdsString: String, deckId: String? = null): List<Card> {
         if (cardIdsString.isBlank()) {
-            throw IllegalArgumentException("Card id string was blank!")
+            throw IllegalArgumentException("Card id string was blank! deck id: $deckId")
         }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()

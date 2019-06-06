@@ -78,7 +78,7 @@ class DeckSynergyService(
                     netSynergy = limitedNetSynergy,
                     synergy = synergy,
                     antisynergy = antisynergy,
-                    cardRating = card.extraCardInfo!!.rating - 1,
+                    cardRating = card.extraCardInfo!!.rating,
 
                     amberControl = card.extraCardInfo?.amberControl ?: 0.0,
                     expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,

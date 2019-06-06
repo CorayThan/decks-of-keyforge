@@ -48,7 +48,7 @@ export class CardStore {
                 &&
                 (filters.rarities.length === 0 || filters.rarities.indexOf(card.rarity) !== -1)
                 &&
-                (filters.ratings.length === 0 || filters.ratings.indexOf(card.extraCardInfo.rating - 1) !== -1)
+                (filters.ratings.length === 0 || filters.ratings.indexOf(card.extraCardInfo.rating) !== -1)
                 &&
                 (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
                 &&

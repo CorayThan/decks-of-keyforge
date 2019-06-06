@@ -30,6 +30,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.HttpClientErrorException
 import java.util.*
 import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
@@ -37,11 +38,11 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT2M"
-private const val lockUpdateRatings = "PT5M"
+private const val lockUpdateRatings = "PT1S"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 7
+const val currentDeckRatingVersion = 8
 
 @Transactional
 @Service
@@ -71,11 +72,6 @@ class DeckImporterService(
 
         val deckCountBeforeImport = deckRepo.estimateRowCount()
 
-        if (env == "qa" && deckCountBeforeImport > 100000) {
-            log.info("Aborting import decks auto because env is QA and deck count is greater than 100k")
-            return
-        }
-
         var decksAdded = 0
         var pagesRequested = 0
         val importDecksDuration = measureTimeMillis {
@@ -85,22 +81,26 @@ class DeckImporterService(
             while (pagesRequested < maxPageRequests) {
                 if (pagesRequested != 0) Thread.sleep(2000)
                 log.info("Importing decks, making page request $currentPage")
-                val decks = keyforgeApi.findDecks(currentPage)
-                if (decks == null) {
-                    log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
-                    break
-                } else {
-                    val cards = cardService.importNewCards(decks.data)
-                    val decksToSaveCount = decks.data.count()
-                    decksAdded += saveDecks(decks.data, cards, currentPage)
-                    currentPage++
-                    pagesRequested++
-
-                    if (decksToSaveCount < keyforgeApiDeckPageSize) {
-                        log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
+                try {
+                    val decks = keyforgeApi.findDecks(currentPage)
+                    if (decks == null) {
+                        log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
                         break
+                    } else {
+                        val cards = cardService.importNewCards(decks.data)
+                        val decksToSaveCount = decks.data.count()
+                        decksAdded += saveDecks(decks.data, cards, currentPage)
+                        currentPage++
+                        pagesRequested++
+
+                        if (decksToSaveCount < keyforgeApiDeckPageSize) {
+                            log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
+                            break
+                        }
                     }
-                    if (currentPage == 2530) throw RuntimeException("Oh no bad page.")
+                } catch (e: HttpClientErrorException.TooManyRequests) {
+                    log.warn("Keyforge API says we made too many requests. Sad day.")
+                    break
                 }
             }
         }
@@ -266,8 +266,6 @@ class DeckImporterService(
     }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
-        val savedDeck = deckRepo.save(deck.copy(ratingVersion = currentDeckRatingVersion))
-
         if (houses.size != 3) {
             throw IllegalStateException("Deck doesn't have 3 houses! $deck")
         }
@@ -275,11 +273,12 @@ class DeckImporterService(
             throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
         }
 
-        val saveable = savedDeck
+        val saveable = deck
                 .withCards(cardsList)
                 .copy(
                         houseNamesString = houses.sorted().joinToString("|"),
-                        cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
+                        cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
+                        ratingVersion = currentDeckRatingVersion
                 )
 
         val ratedDeck = rateDeck(saveable)
@@ -295,7 +294,7 @@ class DeckImporterService(
         val cards = cardService.cardsForDeck(deck)
         val extraCardInfos = cards.map { it.extraCardInfo!! }
         val deckSynergyInfo = deckSynergyService.fromDeck(deck)
-        val cardsRating = extraCardInfos.map { it.rating - 1 }.sum()
+        val cardsRating = extraCardInfos.map { it.rating }.sum()
         val synergy = deckSynergyInfo.synergyRating.roundToInt()
         val antisynergy = deckSynergyInfo.antisynergyRating.roundToInt()
         val a = extraCardInfos.map { it.amberControl }.sum()
