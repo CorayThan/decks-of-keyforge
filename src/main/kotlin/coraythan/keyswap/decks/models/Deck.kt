@@ -90,7 +90,6 @@ data class Deck(
         CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
          */
         val ratingVersion: Int? = 0,
-        val statsVersion: Int? = 0,
 
         val listedOn: ZonedDateTime? = null,
         val auctionEnd: ZonedDateTime? = null,

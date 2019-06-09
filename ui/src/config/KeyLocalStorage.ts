@@ -87,11 +87,12 @@ class KeyLocalStorage {
 
     toggleSmallTableView = () => {
         this.smallTableView = !this.smallTableView
-        this.localStorage.setItem(Keys.DISPLAY_OLD_DECK_VIEW, this.smallTableView.toString())
+        this.localStorage.setItem(Keys.SMALL_TABLE_VIEW, this.smallTableView.toString())
     }
 
     loadSmallTableView = () => {
         this.smallTableView = this.localStorage.getItem(Keys.SMALL_TABLE_VIEW) === "true"
+        log.debug(`Loaded small table view as ${this.smallTableView}`)
     }
 
     setDeckPageSize = (size: number) => {

@@ -7,6 +7,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
+import { Routes } from "../../config/Routes"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerDetails } from "../../sellers/SellerDetails"
@@ -50,13 +51,14 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     render() {
         const filters = this.makeFilters(this.props)
         return (
-            <DeckSearchContainer history={this.props.history} filters={filters} queryParams={this.props.location.search}/>
+            <DeckSearchContainer history={this.props.history} location={this.props.location} filters={filters} queryParams={this.props.location.search}/>
         )
     }
 }
 
 interface DeckSearchContainerProps {
     history: History.History
+    location: History.Location
     filters: DeckFilters
     queryParams: string
 }
@@ -103,7 +105,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
     render() {
         const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
-        const {filters, history} = this.props
+        const {filters, history, location} = this.props
 
         let decksToDisplay = null
         if (deckPage != null) {
@@ -114,9 +116,12 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     </Typography>
                 )
             } else {
+                const sellerView = location.search.includes(Routes.saleViewParam)
                 decksToDisplay = (
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                        {keyLocalStorage.showTableView ? <DeckTableView decks={deckPage.decks}/> : <DeckListView decks={deckPage.decks}/>}
+                        {keyLocalStorage.showTableView ?
+                            <DeckTableView decks={deckPage.decks} sellerView={sellerView}/> :
+                            <DeckListView decks={deckPage.decks} sellerView={sellerView}/>}
                     </div>
                 )
             }

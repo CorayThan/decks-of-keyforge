@@ -29,6 +29,8 @@ export {
 }
 
 class Routes {
+    static readonly saleViewParam = "sellersView=true"
+
     static landing = ""
     static users = "/users"
     static myProfile = "/my-profile"
@@ -68,6 +70,12 @@ class Routes {
         const filters = DeckFilters.forSaleOrTrade()
         filters.owner = username
         return Routes.deckSearch(filters)
+    }
+
+    static sellersView = () => {
+        const filters = DeckFilters.forSaleOrTrade()
+        filters.owner = userStore.username!
+        return Routes.deckSearch(filters) + "&" + Routes.saleViewParam
     }
 }
 

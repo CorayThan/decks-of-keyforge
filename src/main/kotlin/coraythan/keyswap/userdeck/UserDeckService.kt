@@ -109,6 +109,15 @@ class UserDeckService(
         }
     }
 
+    fun updatePrices(prices: List<UpdatePrice>) {
+        for (price in prices) {
+            val currentUser = currentUserService.loggedInUserOrUnauthorized()
+            val preexisting = userDeckRepo.findByDeckIdAndUserId(price.deckId, currentUser.id)
+                    ?: throw IllegalArgumentException("There was no listing info for deck with id ${price.deckId}")
+            userDeckRepo.save(preexisting.copy(askingPrice = price.askingPrice))
+        }
+    }
+
     fun list(
             listingInfo: ListingInfo,
             user: KeyUser? = null

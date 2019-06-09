@@ -17,3 +17,8 @@ data class ListingInfo(
         val expireInDays: Int?,
         val auctionListingInfo: AuctionListingInfo? = null
 )
+
+data class UpdatePrice(
+        val deckId: Long,
+        val askingPrice: Double?
+)

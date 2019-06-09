@@ -1,4 +1,4 @@
-import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@material-ui/core"
+import { Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, TextField, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
@@ -11,7 +11,12 @@ import { log } from "../config/Utils"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
+import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
+import { UpdatePrice } from "../userdeck/ListingInfo"
+import { userDeckStore } from "../userdeck/UserDeckStore"
+import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck } from "./Deck"
 import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
@@ -19,11 +24,15 @@ import { SaleInfoView } from "./sales/SaleInfoView"
 
 interface DeckListViewProps {
     decks: Deck[]
+    sellerView?: boolean
 }
 
 @observer
 export class DeckListView extends React.Component<DeckListViewProps> {
     render() {
+        if (this.props.sellerView) {
+            return <DeckTableView {...this.props}/>
+        }
         return (
             <>
                 {this.props.decks.map((deck) => {
@@ -61,6 +70,13 @@ class DeckTableViewStore {
     activeTableSort = ""
     @observable
     tableSortDir: "desc" | "asc" = "desc"
+    @observable
+    priceChanges: UpdatePrice[] = []
+
+    addPriceChange = (deckId: number, askingPrice?: number) => {
+        this.priceChanges = this.priceChanges.filter(priceChange => priceChange.deckId !== deckId)
+        this.priceChanges.push({deckId, askingPrice})
+    }
 
     resort = () => {
         if (deckStore.deckPage) {
@@ -102,9 +118,21 @@ export const deckTableViewStore = new DeckTableViewStore()
 @observer
 export class DeckTableView extends React.Component<DeckListViewProps> {
 
+    componentDidMount(): void {
+        deckTableViewStore.priceChanges = []
+    }
+
     render() {
-        const displayPrices = !!this.props.decks[0].deckSaleInfo
+        log.debug("Seller version by props? " + this.props.sellerView)
+        const {decks, sellerView} = this.props
+        const displayPrices = !!decks[0].deckSaleInfo
+        if (sellerView && userStore.username == null && !userStore.loginInProgress) {
+            return <Typography>Please login to use the sellers view.</Typography>
+        } else if (sellerView && userStore.username == null) {
+            return <Loader/>
+        }
         return (
+            <div>
             <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
                 <Table padding={"checkbox"}>
                     <TableHead>
@@ -117,6 +145,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     <DeckHeader title={"BIN"} property={"buyItNow"}/>
                                 </>
                             ) : null}
+                            {sellerView ? <TableCell>Seller Tools</TableCell> : null}
                             <DeckHeader title={"SAS"} property={"sasRating"}/>
                             <DeckHeader title={"Cards"} property={"cardsRating"}/>
                             <DeckHeader title={"Synergy"} property={"synergyRating"}/>
@@ -150,7 +179,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.decks.map((deck) => (
+                        {decks.map((deck) => (
                             <TableRow key={deck.id}>
                                 <TableCell>
                                     <KeyLink style={{color: "rgba(0, 0, 0, 0.87)"}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
@@ -158,16 +187,18 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     </KeyLink>
                                 </TableCell>
                                 <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
-                                {displayPrices ? (
+                                {displayPrices || sellerView ? (
                                     <>
-                                        <TableCell>
-                                            {findPriceForDeck(deck)}
-                                            {highestBidder(deck) ? " High Bidder" : ""}
-                                        </TableCell>
+                                        <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
                                         <TableCell>
                                             {findBuyItNowForDeck(deck)}
                                         </TableCell>
                                     </>
+                                ) : null}
+                                {sellerView ? (
+                                    <TableCell style={{minWidth: 200}}>
+                                        <MyDecksButton deck={deck}/>
+                                    </TableCell>
                                 ) : null}
                                 <TableCell>{deck.sasRating}</TableCell>
                                 <TableCell>{deck.cardsRating}</TableCell>
@@ -207,6 +238,85 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                     </TableBody>
                 </Table>
             </Paper>
+                {sellerView ? (
+                    <Button
+                        disabled={deckTableViewStore.priceChanges.length === 0}
+                        variant={"contained"}
+                        color={"primary"}
+                        onClick={() => {
+                            userDeckStore.updatePrices(deckTableViewStore.priceChanges)
+                            deckTableViewStore.priceChanges = []
+                        }}
+                    >
+                        Save Prices
+                    </Button>
+                ) : null}
+            </div>
+        )
+    }
+}
+
+interface SellerViewCellProps {
+    deck: Deck
+    sellerVersion?: boolean
+}
+
+@observer
+class DeckPriceCell extends React.Component<SellerViewCellProps> {
+    @observable
+    priceForSeller?: string
+
+    componentDidMount() {
+        this.setPriceForSeller(this.props)
+    }
+
+    setPriceForSeller = (props: SellerViewCellProps) => {
+        const {deck, sellerVersion} = props
+        const saleInfos = deck.deckSaleInfo
+        let foundInfo = false
+        // log.debug(`seller version: ${sellerView} For deck ${deck.name} sale infos is ${prettyJson(saleInfos)}`)
+        if (sellerVersion && saleInfos != null) {
+            saleInfos.forEach(info => {
+                if (info.username === userStore.username && !info.forAuction) {
+                    if (info.askingPrice == null) {
+                        this.priceForSeller = ""
+                    } else {
+                        this.priceForSeller = info.askingPrice.toString()
+                    }
+                    foundInfo = true
+                }
+            })
+        }
+        if (!foundInfo) {
+            this.priceForSeller = undefined
+        }
+    }
+
+    render() {
+        const {deck} = this.props
+        if (this.priceForSeller != null) {
+            return (
+                <TableCell>
+                    <TextField
+                        label={"Price"}
+                        value={this.priceForSeller}
+                        type={"number"}
+                        onChange={(event) => {
+                            this.priceForSeller = event.target.value
+                            log.debug(`Price for seller is ${this.priceForSeller}`)
+                            const asNumber = Number(this.priceForSeller)
+                            const realPrice = asNumber < 1 ? undefined : asNumber
+                            deckTableViewStore.addPriceChange(deck.id, realPrice)
+                        }}
+                    />
+                </TableCell>
+            )
+        }
+        return (
+            <TableCell>
+                {findPriceForDeck(deck)}
+                {highestBidder(deck) ? " High Bidder" : ""}
+            </TableCell>
         )
     }
 }

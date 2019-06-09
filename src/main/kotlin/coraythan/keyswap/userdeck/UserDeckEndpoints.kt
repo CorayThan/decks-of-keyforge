@@ -38,4 +38,7 @@ class UserDeckEndpoints(
 
     @GetMapping("/for-user")
     fun findAllForUser() = userDeckService.findAllForUser()
+
+    @PostMapping("/update-prices")
+    fun list(@RequestBody prices: List<UpdatePrice>) = userDeckService.updatePrices(prices)
 }

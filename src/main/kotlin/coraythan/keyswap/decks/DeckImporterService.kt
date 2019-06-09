@@ -38,7 +38,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT2M"
-private const val lockUpdateRatings = "PT1S"
+private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 

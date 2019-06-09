@@ -11,13 +11,18 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.2"
+export const latestVersion = "5.3"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.3"} expanded={true} releaseNotes={[
+                    "Moved Expansion selector down to above search bar to improve spacing on deck search.",
+                    "Added a sellers view to make it more convenient for sellers to use the table view to update prices and unlist decks.",
+                    "Improved stability by improving the deck statistics update function."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.2"} expanded={true} releaseNotes={[
                     "Refined card ratings and synergies for AoA.",
                     "Improved deck importer to better keep up with quantity of decks.",

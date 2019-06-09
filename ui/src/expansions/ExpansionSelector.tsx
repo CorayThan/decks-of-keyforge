@@ -53,7 +53,7 @@ export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
                 label={"Expansion"}
                 value={store.expansion}
                 onChange={store.handleExpansionSelected}
-                style={{minWidth: 120, ...style}}
+                style={{minWidth: small ? 104 : 120, ...style}}
             >
                 {displayNoneOption ? (
                     <MenuItem value={""}>

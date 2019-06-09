@@ -15,3 +15,8 @@ export interface ListingInfo {
     expireInDays: number
     auctionListingInfo?: AuctionListingInfo
 }
+
+export interface UpdatePrice {
+    deckId: number
+    askingPrice?: number
+}

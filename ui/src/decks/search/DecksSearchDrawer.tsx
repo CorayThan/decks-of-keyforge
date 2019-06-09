@@ -215,13 +215,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             ) : null}
                         </ListItem>
                         <ListItem>
-                            <ExpansionSelector
-                                store={this.selectedExpansion}
-                                small={false}
-                                displayNoneOption={true}
-                            />
-                        </ListItem>
-                        <ListItem>
                             <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
                         <ListItem>
@@ -407,6 +400,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             </div>
                         </ListItem>
                         <ListItem>
+                            <ExpansionSelector
+                                store={this.selectedExpansion}
+                                small={true}
+                                displayNoneOption={true}
+                                style={{marginRight: spacing(2)}}
+                            />
                             <DeckSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={this.props.filters}/>

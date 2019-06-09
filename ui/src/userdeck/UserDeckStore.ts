@@ -5,7 +5,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
 import { messageStore } from "../ui/MessageStore"
-import { ListingInfo } from "./ListingInfo"
+import { ListingInfo, UpdatePrice } from "./ListingInfo"
 import { UserDeckDto } from "./UserDeck"
 
 export class UserDeckStore {
@@ -48,6 +48,15 @@ export class UserDeckStore {
         axios.post(`${UserDeckStore.CONTEXT}/list`, listingInfo)
             .then((response: AxiosResponse) => {
                 messageStore.setInfoMessage(`Listed ${deckName} for sale or trade.`)
+                this.findAllForUser()
+                this.refreshDeckInfo()
+            })
+    }
+
+    updatePrices = (prices: UpdatePrice[]) => {
+        axios.post(`${UserDeckStore.CONTEXT}/update-prices`, prices)
+            .then((response: AxiosResponse) => {
+                messageStore.setInfoMessage(`Updated prices for ${prices.length} decks.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()
             })

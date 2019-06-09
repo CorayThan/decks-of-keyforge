@@ -5,7 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.DeckPageService
+import coraythan.keyswap.decks.DeckPageType
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
@@ -24,14 +25,15 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT1M"
+private const val lockUpdateStats = "PT10S"
+private const val statsUpdateQuantity = 1000L
 
 @Transactional
 @Service
 class StatsService(
         private val cardService: CardService,
         private val deckStatisticsRepo: DeckStatisticsRepo,
-        private val deckRepo: DeckRepo,
+        private val deckPageService: DeckPageService,
         entityManager: EntityManager
 ) {
 
@@ -82,6 +84,7 @@ class StatsService(
         val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
         if (mostRecentVersion == null) {
             deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
+            deckPageService.setCurrentPage(0, DeckPageType.STATS)
             updateStats = true
         } else if (mostRecentVersion.completeDateTime != null) {
             log.info("Creating deck stats with new version.")
@@ -95,6 +98,7 @@ class StatsService(
                                 .copy(version = mostRecentVersion.version + 1, expansion = it)
                 )
             }
+            deckPageService.setCurrentPage(0, DeckPageType.STATS)
             updateStats = true
         }
         log.info("$scheduledStop starting new deck stats.")
@@ -121,13 +125,16 @@ class StatsService(
                     log.info("Deck Stats were already completed updating for version ${stats.version}.")
                 }
                 else -> {
+                    val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
+                    val idStart = currentPage * statsUpdateQuantity
+                    val idEnd = ((currentPage + 1) * statsUpdateQuantity) - 1
+                    log.info("Deck stats id start $idStart end $idEnd")
                     val deckQ = QDeck.deck
                     val predicate = BooleanBuilder()
                             .and(deckQ.registered.isTrue)
-                            .andAnyOf(deckQ.statsVersion.isNull, deckQ.statsVersion.ne(stats.version))
+                            .and(deckQ.id.between(idStart, idEnd))
                     val deckResults = query.selectFrom(deckQ)
                             .where(predicate)
-                            .limit(1000)
                             .fetch()
 
                     if (deckResults.isEmpty()) {
@@ -140,10 +147,11 @@ class StatsService(
                     }
 
                     updateStats(statsWithVersion!!, deckResults)
+                    deckPageService.setCurrentPage(currentPage + 1, DeckPageType.STATS)
                 }
             }
         }
-        if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with 1000 decks.")
+        if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with $statsUpdateQuantity decks.")
     }
 
     private fun updateStats(statsEntities: List<DeckStatisticsEntity>, decks: List<Deck>) {
@@ -204,7 +212,6 @@ class StatsService(
                         }
                     }
 
-            deckRepo.saveAll(decks.map { it.copy(statsVersion = statsEntity.version) })
             deckStatisticsRepo.save(statsEntity.copy(deckStats = DeckStatisticsEntity.fromDeckStatistics(stats).deckStats))
         }
     }

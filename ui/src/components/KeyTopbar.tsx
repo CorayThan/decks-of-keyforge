@@ -164,7 +164,7 @@ const AppLinks = () => (
             links={[
                 {to: Routes.decks, text: "Decks", mobileActive: true},
                 {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
-                randomDeckMenuItem
+                randomDeckMenuItem,
             ]}
             style={{margin: spacing(1)}}
         />
@@ -214,6 +214,7 @@ class UserLinks extends React.Component {
                             {to: Routes.usersFavorites(), text: "My Favorites"},
                             {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
                             {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+                            {to: Routes.sellersView(), text: "Sellers View"},
                         ]}
                         style={{margin: spacing(1)}}
                     />
