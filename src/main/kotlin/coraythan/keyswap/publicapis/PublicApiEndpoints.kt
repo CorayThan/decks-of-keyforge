@@ -46,6 +46,12 @@ class PublicApiEndpoints(
     fun findDeckSimple3(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String): SimpleDeckResponse {
         val user = publicApiService.userForApiKey(apiKey)
         log.info("Simple deck request from user ${user.email}")
+        if (user.email == "piergiorgio.deprosperis@gmail.com") {
+            return SimpleDeckResponse(
+                    "Please rate limit your requests to the site and reply to me email for me to unblock your requests. " +
+                            "You brought down the site with too many requests."
+            )
+        }
         val deck = publicApiService.findDeckSimple(id)
         return SimpleDeckResponse(deck ?: Nothing())
     }

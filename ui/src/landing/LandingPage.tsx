@@ -69,17 +69,21 @@ export class LandingPage extends React.Component<{}> {
         return (
             <div>
                 <div style={{display: "flex"}}>
-                    <KeyDrawer width={240} hamburgerMenu={true}>
+                    <KeyDrawer width={248} hamburgerMenu={true}>
                         <List>
                             <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"COTA"} filters={cota} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"AOA"} filters={aoa} style={{marginTop: spacing(2)}}/>
+                            <div style={{display: "flex", flexWrap: "wrap"}}>
+                                <DeckSearchLink name={"COTA"} filters={cota} style={{marginTop: spacing(2)}}/>
+                                <DeckSearchLink name={"AOA"} filters={aoa} style={{marginTop: spacing(2)}}/>
+                            </div>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Top Decks
                             </ListSubheader>
-                            <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"}/>
-                            <DeckSearchLink name={"AERC"} filters={topAerc} color={"secondary"} style={{marginTop: spacing(2)}}/>
+                            <div style={{display: "flex", flexWrap: "wrap"}}>
+                                <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"}/>
+                                <DeckSearchLink name={"AERC"} filters={topAerc} color={"secondary"}/>
+                            </div>
                             <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
