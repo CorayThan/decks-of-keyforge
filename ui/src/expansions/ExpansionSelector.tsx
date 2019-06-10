@@ -8,9 +8,9 @@ export class SelectedExpansion {
     @observable
     expansion = ""
 
-    constructor(expansion?: string) {
-        if (expansion) {
-            this.expansion = expansion
+    constructor(expansions?: number[]) {
+        if (expansions && expansions.length > 0) {
+            this.expansion = expansions[0].toString()
         }
     }
 

@@ -24,8 +24,14 @@ export class DeckFilters {
         if (typeof queryObject.houses === "string") {
             queryObject.houses = [queryObject.houses]
         }
-        if (typeof queryObject.expansions === "string") {
-            queryObject.expansions = [queryObject.expansions]
+        log.debug(`Expansions is: ${queryObject.expansions}`)
+        if (queryObject.expansions != null) {
+            if (queryObject.expansions.constructor === Array) {
+                queryObject.expansions = queryObject.expansions.map((expansion: string) => Number(expansion))
+            } else {
+                const expansionAsNumber = Number(queryObject.expansions)
+                queryObject.expansions = [expansionAsNumber]
+            }
         }
         if (queryObject.cards) {
             if (typeof queryObject.cards === "string") {

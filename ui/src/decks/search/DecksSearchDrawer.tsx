@@ -45,7 +45,7 @@ interface DecksSearchDrawerProps {
 @observer
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
-    selectedExpansion = new SelectedExpansion()
+    selectedExpansion = new SelectedExpansion(this.props.filters.expansions)
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedSortStore = new DeckSortSelectStore(
         this.props.filters.forTrade || this.props.filters.forSale,

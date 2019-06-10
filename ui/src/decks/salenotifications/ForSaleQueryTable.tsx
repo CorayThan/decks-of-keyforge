@@ -10,6 +10,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { expansionInfoMap } from "../../expansions/Expansions"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -38,6 +39,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                             {small ? null : (
                                 <>
                                     <TableCell>Deck Name</TableCell>
+                                    <TableCell>Expansions</TableCell>
                                     <TableCell>Houses</TableCell>
                                     <TableCell>My Country</TableCell>
                                     <TableCell>Filters</TableCell>
@@ -49,11 +51,12 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                     </TableHead>
                     <TableBody>
                         {this.props.queries.map((query) => {
+                            const {id, ...queryWithoutId} = query
                             return (
                                 <TableRow key={query.id}>
                                     <TableCell>
                                         <LinkButton
-                                            to={Routes.deckSearchForSaleQuery(query)}
+                                            to={Routes.deckSearchForSaleQuery(queryWithoutId)}
                                             color={"primary"}
                                         >
                                             {query.queryName.length === 0 ? "Unnamed" : query.queryName}
@@ -68,6 +71,9 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                     {small ? null : (
                                         <>
                                             <TableCell>{query.title}</TableCell>
+                                            <TableCell>
+                                                {query.expansions.map(expansionNumber => expansionInfoMap.get(expansionNumber)!.abbreviation)}
+                                            </TableCell>
                                             <TableCell><HouseBanner houses={query.houses} size={36}/></TableCell>
                                             <TableCell>
                                                 {query.forSaleInCountry ? "Yes" : ""}

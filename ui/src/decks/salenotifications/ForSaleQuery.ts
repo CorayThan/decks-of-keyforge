@@ -7,6 +7,7 @@ import { DeckCardQuantity, prepareDeckFiltersForQueryString } from "../search/De
 export interface ForSaleQuery {
     queryName: string
     houses: House[]
+    expansions: number[]
     title: string
 
     forSale: boolean
