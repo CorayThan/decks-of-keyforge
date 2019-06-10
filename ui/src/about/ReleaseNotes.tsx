@@ -21,6 +21,7 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"5.3"} expanded={true} releaseNotes={[
                     "Moved Expansion selector down to above search bar to improve spacing on deck search.",
                     "Added a sellers view to make it more convenient for sellers to use the table view to update prices and unlist decks.",
+                    "When listing an auction you can now select the time it will end.",
                     "Improved stability by improving the deck statistics update function."
                 ]}/>
                 <ReleaseNote releaseNumber={"5.2"} expanded={true} releaseNotes={[

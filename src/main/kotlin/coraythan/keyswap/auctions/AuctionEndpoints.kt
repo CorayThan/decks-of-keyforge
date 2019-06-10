@@ -15,7 +15,8 @@ class AuctionEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/secured/list")
-    fun list(@RequestBody listingInfo: ListingInfo) = auctionService.list(listingInfo)
+    fun list(@RequestBody listingInfo: ListingInfo, @RequestHeader(value = "Timezone") offsetMinutes: Int)
+            = auctionService.list(listingInfo, offsetMinutes)
 
     @PostMapping("/secured/cancel/{deckId}")
     fun cancel(@PathVariable deckId: Long) = auctionService.cancel(deckId)

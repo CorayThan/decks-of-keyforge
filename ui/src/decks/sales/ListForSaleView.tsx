@@ -7,7 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel"
 import FormGroup from "@material-ui/core/FormGroup"
 import MenuItem from "@material-ui/core/MenuItem"
 import TextField from "@material-ui/core/TextField"
-import { differenceInDays, parse } from "date-fns"
+import { differenceInDays, format } from "date-fns"
 import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -68,6 +68,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     update = false
 
+    @observable
+    auctionEndTime: string = ""
+
+    componentDidMount(): void {
+        this.auctionEndTime = format(Utils.roundToNearestMinutes(new Date(), 15), "HH:mm")
+    }
+
     handleClose = () => this.open = false
     handleOpen = () => {
         this.open = true
@@ -108,7 +115,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             if (expiresAtLocalDate == null) {
                 this.expireInDays = "365"
             } else {
-                const expiresDate = parse(expiresAtLocalDate)
+                const expiresDate = Utils.parseLocalDate(expiresAtLocalDate)
                 this.expireInDays = differenceInDays(expiresDate, new Date()).toString()
                 this.preExistingDays = this.expireInDays
             }
@@ -197,7 +204,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             listingInfoDto.auctionListingInfo = {
                 startingBid: startingBidNumber as number,
                 bidIncrement: bidIncrementNumber as number,
-                buyItNow: buyItNowNumber as number
+                buyItNow: buyItNowNumber as number,
+                endTime: this.auctionEndTime
             }
             auctionStore.createAuction(this.props.deck.name, listingInfoDto)
         } else {
@@ -396,6 +404,18 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </MenuItem>
                             )}
                         </TextField>
+                        {this.auction ? (
+                            <TextField
+                                label={"End Time"}
+                                type={"time"}
+                                value={this.auctionEndTime}
+                                onChange={event => this.auctionEndTime = event.target.value}
+                                inputProps={{
+                                    step: 900
+                                }}
+                                style={marginTopRight}
+                            />
+                        ) : null}
                         <TextField
                             select={true}
                             label={"Language"}

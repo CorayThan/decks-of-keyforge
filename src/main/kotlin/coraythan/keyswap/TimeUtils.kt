@@ -22,6 +22,10 @@ object TimeUtils {
 
 fun now() = ZonedDateTime.now(TimeUtils.zoneId)
 
+fun LocalTime.withOffsetMinutes(offsetMinutes: Int): LocalTime {
+    return minusMinutes(offsetMinutes.toLong())
+}
+
 fun ZonedDateTime.toLocalDateTimeWithOffsetMinutes(offsetMinutes: Int): LocalDateTime {
     return toOffsetDateTime().withOffsetSameInstant(ZoneOffset.ofHoursMinutes(offsetMinutes / 60, offsetMinutes % 60)).toLocalDateTime()
 }

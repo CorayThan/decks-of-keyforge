@@ -1,14 +1,11 @@
 package coraythan.keyswap.auctions
 
+import coraythan.keyswap.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
-import coraythan.keyswap.now
-import coraythan.keyswap.scheduledStart
-import coraythan.keyswap.scheduledStop
-import coraythan.keyswap.toReadableString
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -63,7 +60,7 @@ class AuctionService(
         log.info("$scheduledStop complete auctions.")
     }
 
-    fun list(listingInfo: ListingInfo) {
+    fun list(listingInfo: ListingInfo, offsetMinutes: Int) {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val auctionListingInfo = listingInfo.auctionListingInfo ?: throw BadRequestException("Auction listing info can't be null.")
         if (listingInfo.forSale || listingInfo.forTrade) {
@@ -77,7 +74,10 @@ class AuctionService(
         if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
 
         val listingDate = now()
+        val endTime = listingInfo.auctionListingInfo.endTimeLocalTime.withOffsetMinutes(offsetMinutes)
         val endDateTime = listingDate.plusDays(listingInfo.expireInDays.toLong())
+                .withHour(endTime.hour)
+                .withMinute(endTime.minute)
         val endMinutesMod = endDateTime.minute % 15
         val endMinutes = endDateTime.minute - endMinutesMod
         val realEnd = endDateTime.withMinute(endMinutes)
