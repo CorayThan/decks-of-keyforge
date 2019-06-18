@@ -87,7 +87,7 @@ class KeyswapApplication {
     @Bean
     fun threadPoolTaskScheduler(): TaskScheduler {
         val threadPoolTaskScheduler = ThreadPoolTaskScheduler()
-        threadPoolTaskScheduler.poolSize = 5
+        threadPoolTaskScheduler.poolSize = 3
         threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
         return threadPoolTaskScheduler
     }

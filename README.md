@@ -62,14 +62,12 @@ SELECT
   query,
   state
 FROM pg_stat_activity
-WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes';
-
-SELECT schemaname, relname, n_live_tup, n_dead_tup, last_autovacuum
-FROM pg_stat_all_tables
-ORDER BY n_dead_tup
-    / (n_live_tup
-       * current_setting('autovacuum_vacuum_scale_factor')::float8
-          + current_setting('autovacuum_vacuum_threshold')::float8)
-     DESC
+WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes'; 
 LIMIT 10;
 ```
+
+## Refresh Primary Patreon account
+
+Go to profile for coraythan
+
+Unlink and relink with buttons.

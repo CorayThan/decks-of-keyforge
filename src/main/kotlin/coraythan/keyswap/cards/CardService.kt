@@ -90,7 +90,7 @@ class CardService(
 
     fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard> {
         return cardsFromCardIds(cardIdsString)
-                .sortedWith(Card.cotaStyle)
+                .sorted()
                 .map { it.toDeckSearchResultCard() }
     }
 

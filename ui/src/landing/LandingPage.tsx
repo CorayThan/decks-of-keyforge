@@ -6,7 +6,7 @@ import { latestTwoArticles } from "../articles/ArticlesPage"
 import { ArticleView } from "../articles/ArticleView"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { Expansion } from "../expansions/Expansions"
@@ -123,7 +123,7 @@ export class LandingPage extends React.Component<{}> {
                                 </Typography>
                             </UnstyledLink>
                             {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
-                            <UnstyledLink to={Routes.stats}>
+                            <UnstyledLink to={StatsSubPaths.winRates}>
                                 <Typography
                                     variant={"h4"}
                                     color={"primary"}

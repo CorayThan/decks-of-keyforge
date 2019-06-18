@@ -38,13 +38,13 @@ data class Card(
         var extraCardInfo: ExtraCardInfo?
 ) : Comparable<Card> {
 
-    companion object {
-        val cotaStyle = CardSortCotaStyle()
-    }
-
     override fun compareTo(other: Card): Int {
-        if (expansion != other.expansion) return expansion - other.expansion
-        return (cardNumber.toIntOrNull() ?: 0) - (other.cardNumber.toIntOrNull() ?: 0)
+        if (expansion == Expansion.CALL_OF_THE_ARCHONS.expansionNumber && other.expansion == Expansion.CALL_OF_THE_ARCHONS.expansionNumber) {
+            return (cardNumber.toIntOrNull() ?: 0) - (other.cardNumber.toIntOrNull() ?: 0)
+        }
+        if (house != other.house) return house.compareTo(other.house)
+        if (cardType != other.cardType) return cardType.compareTo(other.cardType)
+        return cardTitle.compareTo(other.cardTitle)
     }
 
     val effectivePower: Int
@@ -57,14 +57,6 @@ data class Card(
             rarity = rarity,
             maverick = maverick
     )
-}
-
-class CardSortCotaStyle() : Comparator<Card> {
-    override fun compare(cardOne: Card, cardTwo: Card): Int {
-        if (cardOne.expansion == Expansion.CALL_OF_THE_ARCHONS.expansionNumber) return cardOne.compareTo(cardTwo)
-        if (cardOne.cardType != cardTwo.cardType) return cardOne.cardType.compareTo(cardTwo.cardType)
-        return cardOne.cardTitle.compareTo(cardTwo.cardTitle)
-    }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

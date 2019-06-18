@@ -214,7 +214,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                 {discord ? (
                                     <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
                                 ) : null}
-                                {allowEmail && !forAuction ? (
+                                {allowEmail ? (
                                     <>
                                         {discord ? <div style={{flexGrow: 1}}/> : null}
                                         <SendSellerEmailDialog

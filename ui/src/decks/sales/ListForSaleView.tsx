@@ -509,10 +509,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             </LinkButton>
                         </div>
                         {this.auction ? (
+                            <>
+                            <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
+                                Server instability or slowness can prevent users from bidding on an auction. If this significantly impacts the ability of users
+                                to bid on an auction, you are permitted to relist the auction, with a note in the auction description explaining why it was
+                                relisted.
+                            </Typography>
                             <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
                                 Auctions are automatically extended by 15 minutes if a bid comes in in their last 15 minutes. You and the winner will receive
                                 an email when the auction is complete.
                             </Typography>
+                            </>
                         ) : null}
                         <Typography color={"textSecondary"} style={{fontStyle: "italic"}}>
                             Please add noreply@decksofkeyforge.com to your email contacts, or check your spam filter if you have decks listed for sale.

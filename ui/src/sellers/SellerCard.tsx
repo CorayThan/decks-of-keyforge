@@ -23,7 +23,7 @@ export class SellerCard extends React.Component<SellerCardProps> {
 
         return (
             <div style={this.props.style}>
-                <Card style={{display: "flex", flexDirection: "column", width: 344, height: 400, margin: spacing(2)}}>
+                <Card style={{display: "flex", flexDirection: "column", width: 344, height: 416, margin: spacing(2)}}>
                     <CardContent>
                         <div style={{display: "flex", alignItems: "flex-end"}}>
                             <SellerImg sellerUsername={username}/>

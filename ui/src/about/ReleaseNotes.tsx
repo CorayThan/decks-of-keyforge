@@ -18,6 +18,12 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.4"} expanded={true} releaseNotes={[
+                    "Updated description and terms for auction bidding and listing. Sniping is actively discouraged, and if server slowness or instability " +
+                    "significantly affects the ability of users to bid on an auction, sellers are allowed to relist that auction with a description " +
+                    "explaining why.",
+                    "Fixed bugs with card sorting for AoA."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.3"} expanded={true} releaseNotes={[
                     "Moved Expansion selector down to above search bar to improve spacing on deck search.",
                     "Added a sellers view to make it more convenient for sellers to use the table view to update prices and unlist decks.",
