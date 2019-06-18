@@ -212,20 +212,20 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         <div style={{margin: spacing(2), marginTop: 0}}>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 {discord ? (
-                                    <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
+                                    <>
+                                        <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
+                                        <div style={{flexGrow: 1}}/>
+                                    </>
                                 ) : null}
                                 {allowEmail ? (
-                                    <>
-                                        {discord ? <div style={{flexGrow: 1}}/> : null}
-                                        <SendSellerEmailDialog
-                                            deckName={this.props.deckName}
-                                            senderUsername={yourUsername!}
-                                            senderEmail={yourEmail!}
-                                            username={username}
-                                            keyforgeId={this.props.keyforgeId}
-                                            style={{marginTop: spacing(2)}}
-                                        />
-                                    </>
+                                    <SendSellerEmailDialog
+                                        deckName={this.props.deckName}
+                                        senderUsername={yourUsername!}
+                                        senderEmail={yourEmail!}
+                                        username={username}
+                                        keyforgeId={this.props.keyforgeId}
+                                        style={{marginTop: spacing(2)}}
+                                    />
                                 ) : null}
                             </div>
                             <Divider style={{marginTop: spacing(2)}}/>
