@@ -24,6 +24,8 @@ data class KeyUser(
         @Column(unique = true)
         val email: String,
 
+        val emailVerified: Boolean = false,
+
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val password: String?,
 
@@ -93,6 +95,7 @@ data class KeyUser(
             id = id,
             username = username,
             email = email,
+            emailVerified = emailVerified,
             type = type,
             publicContactInfo = publicContactInfo,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
@@ -115,6 +118,8 @@ data class KeyUserDto(
         val username: String,
 
         val email: String,
+
+        val emailVerified: Boolean,
 
         val type: UserType,
 

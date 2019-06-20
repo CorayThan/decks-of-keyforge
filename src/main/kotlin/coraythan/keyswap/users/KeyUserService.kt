@@ -90,6 +90,7 @@ class KeyUserService(
 
         userRepo.save(user.copy(
                 email = update.email ?: user.email,
+                emailVerified = if (update.email == null) user.emailVerified else false,
                 publicContactInfo = update.publicContactInfo,
                 allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
                 currencySymbol = update.currencySymbol,
@@ -126,6 +127,12 @@ class KeyUserService(
     fun setContributionLevel(username: String, patreonRewardsTier: PatreonRewardsTier) {
         val toUpdate = userRepo.findByUsernameIgnoreCase(username) ?: throw BadRequestException("No user for user name $username")
         userRepo.save(toUpdate.copy(patreonTier = patreonRewardsTier))
+    }
+
+    fun verifyEmail(code: String) {
+        val email = passwordResetCodeService.emailForVerification(code) ?: throw BadRequestException("No email for verification code $code")
+        val user = userRepo.findByEmailIgnoreCase(email) ?: throw BadRequestException("No user for email $email")
+        userRepo.save(user.copy(emailVerified = true))
     }
 
     private fun validateEmail(email: String) {

@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
+import { userStore } from "../user/UserStore"
 import { SellerMessage } from "./SellerMessage"
 
 class EmailStore {
@@ -16,6 +17,9 @@ class EmailStore {
 
     @observable
     sendingReset = false
+
+    @observable
+    sendingEmailVerification = false
 
     sendSellerMessage = async (message: SellerMessage) => {
         this.sendingSellerMessage = true
@@ -32,6 +36,20 @@ class EmailStore {
                 this.sendingReset = false
                 messageStore.setInfoMessage(`A reset email has been sent to ${email}`)
             })
+    }
+
+    sendEmailVerification = () => {
+        const email = userStore.email
+        if (email == null) {
+            messageStore.setWarningMessage("Please login to send an email verification.")
+        } else {
+            this.sendingEmailVerification = true
+            axios.post(`${EmailStore.CONTEXT}/send-email-verification`, {email})
+                .then((response: AxiosResponse) => {
+                    this.sendingEmailVerification = false
+                    messageStore.setInfoMessage(`An email verification message has been sent to ${email}`)
+                })
+        }
     }
 
 }

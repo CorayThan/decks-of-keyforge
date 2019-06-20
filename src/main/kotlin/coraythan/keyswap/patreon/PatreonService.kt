@@ -166,5 +166,9 @@ class PatreonService(
             log.info("Next page of patreon campaign members.")
             this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
         }
+        val me = userRepo.findByEmail("coraythan@gmail.com")
+        if (me != null && me.patreonTier != PatreonRewardsTier.MERCHANT_AEMBERMAKER) {
+            userRepo.save(me.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER))
+        }
     }
 }

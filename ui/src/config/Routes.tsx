@@ -8,6 +8,7 @@ import { CardsPage } from "../cards/CardsPage"
 import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
+import { VerifyEmailPage } from "../components/VerifyEmailPage"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleQuery"
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
@@ -45,6 +46,7 @@ class Routes {
     static privacyPolicy = "/privacy-policy"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
+    static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
     static usersDecks = () => `/decks?owner=${userStore.username}&includeUnregistered=true`
     static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&includeUnregistered=true&notForSale=true`
@@ -143,6 +145,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.changePasswordPage()}
                             component={ChangePasswordPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.verifyEmailPage()}
+                            component={VerifyEmailPage}
                         />
                         <Route
                             exact={true}

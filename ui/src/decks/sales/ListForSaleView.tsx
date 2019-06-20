@@ -16,6 +16,7 @@ import { auctionStore } from "../../auctions/AuctionStore"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
+import { SendEmailVerification } from "../../emails/SendEmailVerification"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { PatronButton } from "../../patreon/PatronButton"
@@ -284,6 +285,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         )}
                     </DialogTitle>
                     <DialogContent>
+                        {userStore.emailVerified ? null : (
+                            <div style={{marginBottom: spacing(1)}}>
+                                <Typography color={"error"} style={{marginBottom: spacing(1)}}>
+                                    Please verify your email to list decks for sale or trade.
+                                </Typography>
+                                <SendEmailVerification/>
+                            </div>
+                        )}
                         {forSaleInCountry ? null : (
                             <div style={{display: "flex", alignItems: "center"}}>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
@@ -510,15 +519,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         </div>
                         {this.auction ? (
                             <>
-                            <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
-                                Server instability or slowness can prevent users from bidding on an auction. If this significantly impacts the ability of users
-                                to bid on an auction, you are permitted to relist the auction, with a note in the auction description explaining why it was
-                                relisted.
-                            </Typography>
-                            <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
-                                Auctions are automatically extended by 15 minutes if a bid comes in in their last 15 minutes. You and the winner will receive
-                                an email when the auction is complete.
-                            </Typography>
+                                <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
+                                    Server instability or slowness can prevent users from bidding on an auction. If this significantly impacts the ability of
+                                    users
+                                    to bid on an auction, you are permitted to relist the auction, with a note in the auction description explaining why it was
+                                    relisted.
+                                </Typography>
+                                <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
+                                    Auctions are automatically extended by 15 minutes if a bid comes in in their last 15 minutes. You and the winner will
+                                    receive
+                                    an email when the auction is complete.
+                                </Typography>
                             </>
                         ) : null}
                         <Typography color={"textSecondary"} style={{fontStyle: "italic"}}>
@@ -527,7 +538,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogContent>
                     <DialogActions>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.list} disabled={!forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}>
+                        <KeyButton
+                            color={"primary"}
+                            onClick={this.list}
+                            disabled={!userStore.emailVerified || !forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}
+                        >
                             {this.update ? "Update Listing" : "List"}
                         </KeyButton>
                     </DialogActions>

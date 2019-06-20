@@ -41,4 +41,7 @@ class UserEndpoints(
         apiKeys.checkApiKey(apiKey)
         userService.setContributionLevel(username, tier)
     }
+
+    @PostMapping("/verify-email/{code}")
+    fun verifyEmail(@PathVariable code: String) = userService.verifyEmail(code)
 }

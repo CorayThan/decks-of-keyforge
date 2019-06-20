@@ -243,7 +243,7 @@ const ArticleExternalLink = (props: { externalLink: string, text: string }) => (
     </KeyButton>
 )
 
-const ArticleInternalLink = (props: { internalLink: string, text: string }) => (
+export const ArticleInternalLink = (props: { internalLink: string, text: string }) => (
     <LinkButton
         color={"primary"}
         to={props.internalLink!}

@@ -2,18 +2,19 @@ import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
-interface InfoIconValue {
+export interface InfoIconValue {
     info: number | string
     icon: React.ReactNode
     tooltip: React.ReactNode
 }
 
-export const InfoIconList = (props: { values: InfoIconValue[] }) => {
+export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: boolean }) => {
+    const {values, horizontal} = props
     return (
-        <div>
+        <div style={{display: horizontal ? "flex" : undefined}}>
             {props.values.map((value, idx) => {
                 return (
-                    <InfoIcon value={value} key={idx} style={{marginBottom: 4}}/>
+                    <InfoIcon value={value} key={idx} style={{marginBottom: horizontal ? 0 : 4, marginLeft: idx === 0 ? 0 : spacing(1)}}/>
                 )
             })}
         </div>

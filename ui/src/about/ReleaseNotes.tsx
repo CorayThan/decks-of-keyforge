@@ -2,6 +2,7 @@ import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, Lis
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { ArticleInternalLink } from "../articles/ArticleView"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -22,7 +23,16 @@ export class ReleaseNotes extends React.Component {
                     "Updated description and terms for auction bidding and listing. Sniping is actively discouraged, and if server slowness or instability " +
                     "significantly affects the ability of users to bid on an auction, sellers are allowed to relist that auction with a description " +
                     "explaining why.",
-                    "Fixed bugs with card sorting for AoA."
+                    "Fixed bugs with card sorting for AoA.",
+                    "More info on mobile deck view.",
+                    "Email verification will now be required for listing decks for sale, and soon for other activities.",
+                    "Fixed win / loss / power level / chain updater. It now runs every 3 days, and takes more than a day to complete.",
+                    "I had a great time at the Origins Vault Tour! Opened one good deck with a super cool maverick and made top 16.",
+                    <ArticleInternalLink internalLink={`/decks/409dce8d-839d-4bd9-9994-dca5e1573e3b`} text={"Denim, Perfumed Province Rook"}/>,
+                    "Also was great getting to meet many people who use SAS and the site, as well as Brad Andrews! Brad was telling someone that if anyone, " +
+                    "tells them they can tell them how good their deck is, they're lying. So a friend (thanks Erich) immediately introduced me, " +
+                    `"Speaking of which, I wanted to introduce you to Nathan. He makes Decks of Keyforge and SAS!" So I said, "Hi, I've lied to ` +
+                    `KeyForge players hundreds of thousands of times." Was a pretty funny introduction!`
                 ]}/>
                 <ReleaseNote releaseNumber={"5.3"} expanded={true} releaseNotes={[
                     "Moved Expansion selector down to above search bar to improve spacing on deck search.",

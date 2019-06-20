@@ -6,6 +6,7 @@ export interface KeyUser {
     id: string
     username: string
     email: string
+    emailVerified: boolean
     type: UserType
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
@@ -43,6 +44,7 @@ export interface KeyUserDto {
     id: string
     username: string
     email: string
+    emailVerified: boolean
     type: UserType
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean

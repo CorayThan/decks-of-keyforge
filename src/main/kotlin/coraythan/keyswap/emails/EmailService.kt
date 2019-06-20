@@ -101,7 +101,22 @@ class EmailService(
                     """
                 <div>
                     Use this link to reset your password. It will expire in 24 hours.
-                    ${makeLink("/reset-password/$resetCode", "Reset Email Link")}
+                    ${makeLink("/reset-password/$resetCode", "Reset Password")}
+                </div>
+            """.trimIndent()
+            )
+        }
+    }
+
+    fun sendVerifyEmail(verify: ResetEmail) {
+        val userInSystem = keyUserService.findByEmail(verify.email)
+        if (userInSystem != null) {
+            val resetCode = passwordResetCodeService.createCode(verify.email)
+            sendEmail(verify.email, "Verify your decksofkeyforge.com email",
+                    """
+                <div>
+                    Use this link to verify your email:
+                    ${makeLink("/verify-email/$resetCode", "Verify Email")}
                 </div>
             """.trimIndent()
             )

@@ -5,13 +5,13 @@ import { ChainIcon } from "../generic/icons/ChainIcon"
 import { PowerIcon } from "../generic/icons/PowerIcon"
 import { Deck } from "./Deck"
 
-export const OrganizedPlayStats = (props: { deck: Deck }) => {
+export const OrganizedPlayStats = (props: { deck: Deck, style?: React.CSSProperties }) => {
     const {powerLevel, chains, wins, losses} = props.deck
     if (!powerLevel && !chains && !wins && !losses) {
         return null
     }
     return (
-        <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: spacing(1)}}>
+        <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: spacing(1), ...props.style}}>
             <OpStat value={powerLevel} icon={<PowerIcon/>} tooltip={"Power Level"} style={{marginRight: spacing(2)}}/>
             <OpStat value={chains} icon={<ChainIcon/>} tooltip={"Chains"} style={{marginRight: spacing(2)}}/>
             <OpStat

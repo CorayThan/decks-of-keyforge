@@ -12,7 +12,9 @@ import javax.persistence.Id
 enum class DeckPageType {
     IMPORT,
     STATS,
-    RATINGS
+    RATINGS,
+    WINS,
+    LOSSES
 }
 
 @Entity
@@ -36,7 +38,7 @@ class DeckPageService(
         val all = deckPageRepo.findAllByType(type).toList()
         return when {
             all.isEmpty() -> {
-                val page = deckPageRepo.save(DeckPage())
+                val page = deckPageRepo.save(DeckPage(type = type))
                 page.currentPage
             }
             all.size > 1 -> throw IllegalStateException("More than one deck page?! $all")

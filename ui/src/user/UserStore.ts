@@ -28,6 +28,12 @@ export class UserStore {
     @observable
     changingPassword = false
 
+    @observable
+    verifyingEmail = false
+
+    @observable
+    emailVerificationSuccessful?: boolean
+
     loadLoggedInUser = () => {
         if (!keyLocalStorage.hasAuthKey()) {
             return
@@ -149,6 +155,22 @@ export class UserStore {
             })
     }
 
+    verifyEmail = (verificationCode: string) => {
+        this.verifyingEmail = true
+        axiosWithoutErrors.post(`${UserStore.CONTEXT}/verify-email/${verificationCode}`)
+            .then((response: AxiosResponse) => {
+                this.verifyingEmail = false
+                this.emailVerificationSuccessful = true
+                messageStore.setInfoMessage("We've verified your email!")
+                this.loadLoggedInUser()
+            })
+            .catch((error: AxiosError) => {
+                this.verifyingEmail = false
+                this.emailVerificationSuccessful = false
+                messageStore.setErrorMessage("We couldn't verify your email.")
+            })
+    }
+
     logout = () => {
         this.loginInProgress = false
         this.setUser(undefined)
@@ -178,6 +200,14 @@ export class UserStore {
             return this.user.email
         }
         return undefined
+    }
+
+    @computed
+    get emailVerified(): boolean {
+        if (this.user) {
+            return this.user.emailVerified
+        }
+        return false
     }
 
     @computed

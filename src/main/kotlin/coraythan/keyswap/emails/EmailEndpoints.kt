@@ -21,4 +21,7 @@ class EmailEndpoints(
 
     @PostMapping("/send-reset")
     fun sendReset(@RequestBody reset: ResetEmail) = emailService.sendResetPassword(reset)
+
+    @PostMapping("/send-email-verification")
+    fun sendEmailVerification(@RequestBody verify: ResetEmail) = emailService.sendVerifyEmail(verify)
 }

@@ -45,6 +45,14 @@ class PasswordResetCodeService(
         return null
     }
 
+    fun emailForVerification(code: String): String? {
+        val dbCode = passwordResetCodeRepo.findById(code)
+        if (dbCode.isPresent) {
+            return dbCode.get().email
+        }
+        return null
+    }
+
     fun delete(resetCode: String) = passwordResetCodeRepo.deleteById(resetCode)
 }
 

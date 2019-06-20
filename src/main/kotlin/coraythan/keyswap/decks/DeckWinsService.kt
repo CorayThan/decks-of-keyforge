@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.system.measureTimeMillis
 
-private const val lockUpdateWinsLosses = "PT24H"
+private const val lockUpdateWinsLosses = "PT72H"
 private const val onceEverySixHoursLock = "PT6H"
+private const val lockUpdatePageOfWinLosses = "PT10S"
 
 @Transactional
 @Service
@@ -23,9 +24,12 @@ class DeckWinsService(
         private val keyforgeApi: KeyforgeApi,
         private val cardService: CardService,
         private val cardRepo: CardRepo,
-        private val deckRepo: DeckRepo
+        private val deckRepo: DeckRepo,
+        private val deckPageService: DeckPageService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    private var updatingWinsAndLosses: Boolean? = null
 
     @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
@@ -33,50 +37,66 @@ class DeckWinsService(
 
         log.info("$scheduledStart deck win loss update")
 
-        val updateWinsLossesDuration = measureTimeMillis {
-
-            val deckIds = mutableSetOf<String>()
-
-            val winPages = findAndUpdateDecksForWinRates("-wins", deckIds)
-            findAndUpdateDecksForWinRates("-losses", deckIds)
-            log.info("Found $winPages win pages (of 10).")
+        val winsPage = deckPageService.findCurrentPage(DeckPageType.WINS)
+        val lossesPage = deckPageService.findCurrentPage(DeckPageType.LOSSES)
+        updatingWinsAndLosses = true
+        if (winsPage != -1 || lossesPage != -1) {
+            log.info("Had to abort deck win loss update. Apparently they aren't done yet.")
+            return
         }
-        log.info("$scheduledStop It took ${updateWinsLossesDuration / 1000} seconds for deck win loss update.")
+        deckPageService.setCurrentPage(1, DeckPageType.WINS)
+        deckPageService.setCurrentPage(-1, DeckPageType.LOSSES)
 
         updateCardAndHouseWins()
     }
 
-    private fun findAndUpdateDecksForWinRates(
-            order: String,
-            deckIds: MutableSet<String>
-    ): Int {
+    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
+    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
+    fun findAndUpdateDecksForWinRates() {
 
-        var currentPage = 1
+        if (updatingWinsAndLosses == null) {
+            val winsPage = deckPageService.findCurrentPage(DeckPageType.WINS)
+            val lossesPage = deckPageService.findCurrentPage(DeckPageType.LOSSES)
+            updatingWinsAndLosses = winsPage != -1 || lossesPage != -1
+        }
 
-        while (true) {
-            if (currentPage != 1) Thread.sleep(1000)
-            val decks = keyforgeApi.findDecks(currentPage, order)
-            val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
-            if (updateDecks.isNullOrEmpty()) {
-                break
+        if (updatingWinsAndLosses != true) return
+
+        val winsPage = deckPageService.findCurrentPage(DeckPageType.WINS)
+        val lossesPage = deckPageService.findCurrentPage(DeckPageType.LOSSES)
+
+        val page = if (winsPage != -1) winsPage else lossesPage
+        val order = if (winsPage != -1) "-wins" else "-losses"
+        val pageEnum = if (winsPage != -1) DeckPageType.WINS else DeckPageType.LOSSES
+
+        val decks = keyforgeApi.findDecks(page, order)
+        val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
+        if (updateDecks.isNullOrEmpty()) {
+
+            deckPageService.setCurrentPage(-1, pageEnum)
+            if (winsPage == -1) {
+                log.info("Pages of wins losses: $lossesPage")
+                updatingWinsAndLosses = false
+                updateCardAndHouseWins()
+            } else {
+                deckPageService.setCurrentPage(1, DeckPageType.LOSSES)
             }
-            updateDecks
-                    .filter { !deckIds.contains(it.id) }
-                    .forEach {
-                        deckIds.add(it.id)
-                        val preexisting = deckRepo.findByKeyforgeId(it.id)
-                        if (preexisting != null) {
-                            val cards = cardService.cardsForDeck(preexisting)
-                            val updated = preexisting.withCards(cards).addGameStats(it)
+            return
+        }
+        log.info("Update $order for decks on page $page")
+        updateDecks
+                .forEach {
+                    val preexisting = deckRepo.findByKeyforgeId(it.id)
+                    if (preexisting != null) {
+                        val cards = cardService.cardsForDeck(preexisting)
+                        val updated = preexisting.withCards(cards).addGameStats(it)
 
-                            if (updated != null) {
-                                deckRepo.save(updated)
-                            }
+                        if (updated != null) {
+                            deckRepo.save(updated)
                         }
                     }
-            currentPage++
-        }
-        return currentPage
+                }
+        deckPageService.setCurrentPage(page + 1, pageEnum)
     }
 
     fun updateCardAndHouseWins() {

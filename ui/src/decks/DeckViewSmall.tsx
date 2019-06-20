@@ -88,6 +88,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     paddingBottom: spacing(1)
                 }}
             >
+                {compact ? <ExtraInfoHorizontal deck={deck}/> : null}
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}>
                         <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
@@ -171,6 +172,14 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     }
 }
 
+const ExtraInfoHorizontal = (props: { deck: Deck }) => {
+    return (
+        <div style={{padding: spacing(1), backgroundColor: "#DFDFDF"}}>
+            <InfoIconList values={makeExtraInfos(props.deck)} horizontal={true}/>
+        </div>
+    )
+}
+
 const SideBarInfo = (props: { deck: Deck }) => {
     const {deck} = props
     const {searchResultCards} = deck
@@ -218,7 +227,29 @@ const SideBarInfo = (props: { deck: Deck }) => {
             )
         }
     ]
-    const extraInfos = [
+
+    return (
+        <div style={{padding: spacing(2), paddingTop: 0, paddingBottom: 0, backgroundColor: "#DFDFDF"}}>
+            <div style={{display: "flex", justifyContent: "center"}}>
+                <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
+                    <ExpandLess fontSize={"small"}/>
+                </IconButton>
+            </div>
+            <InfoIconList values={aercInfos}/>
+            <Divider/>
+            <Tooltip title={"Total AERC Score (rounded)"}>
+                <div style={{display: "flex", alignItems: "flex-end", marginBottom: spacing(2)}}>
+                    <Typography variant={"h5"} style={{marginRight: spacing(1)}}>{Math.round(deck.aercScore)}</Typography>
+                    <p style={{fontFamily: TextConfig.TITLE, fontSize: 16, margin: 0, marginBottom: 4}}>AERC</p>
+                </div>
+            </Tooltip>
+            <InfoIconList values={makeExtraInfos(deck)}/>
+        </div>
+    )
+}
+
+const makeExtraInfos = (deck: Deck) => (
+    [
         {
             icon: <AmberIcon/>,
             info: deck.rawAmber,
@@ -240,26 +271,7 @@ const SideBarInfo = (props: { deck: Deck }) => {
             tooltip: "Archive Cards"
         }
     ]
-
-    return (
-        <div style={{padding: spacing(2), paddingTop: 0, paddingBottom: 0, backgroundColor: "#DFDFDF"}}>
-            <div style={{display: "flex", justifyContent: "center"}}>
-                <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
-                    <ExpandLess fontSize={"small"}/>
-                </IconButton>
-            </div>
-            <InfoIconList values={aercInfos}/>
-            <Divider/>
-            <Tooltip title={"Total AERC Score (rounded)"}>
-                <div style={{display: "flex", alignItems: "flex-end", marginBottom: spacing(2)}}>
-                    <Typography variant={"h5"} style={{marginRight: spacing(1)}}>{Math.round(deck.aercScore)}</Typography>
-                    <p style={{fontFamily: TextConfig.TITLE, fontSize: 16, margin: 0, marginBottom: 4}}>AERC</p>
-                </div>
-            </Tooltip>
-            <InfoIconList values={extraInfos}/>
-        </div>
-    )
-}
+)
 
 const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
     const {deck, compact} = props
@@ -276,6 +288,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                     <DeckScoreView deck={deck} style={{marginLeft: spacing(6)}}/>
                 </div>
                 <AercScoreView hasAerc={deck} style={{marginTop: spacing(2)}} includeTotal={true}/>
+                <OrganizedPlayStats deck={deck} style={{marginTop: spacing(2)}}/>
             </div>
         )
     } else {
