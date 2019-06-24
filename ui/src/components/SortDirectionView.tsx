@@ -13,7 +13,6 @@ export class SortDirectionView extends React.Component<{ hasSort: {sortDirection
             <KeyButton
                 onClick={() => this.props.hasSort.sortDirection = sortDirection === "ASC" ? "DESC" : "ASC"}
                 size={"small"}
-                mini={true}
                 variant={"outlined"}
                 style={{width: 32, height: 32, minWidth: 32, minHeight: 32}}
             >

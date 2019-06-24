@@ -4,6 +4,7 @@ import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
+import { OptionType } from "./CardSearchSuggest"
 import { KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
@@ -23,7 +24,7 @@ export class CardStore {
     cardNameLowercaseToCard?: Map<string, KCard>
 
     @observable
-    cardNames: Array<{ label: string, value: string }> = []
+    cardNames: OptionType[] = []
 
     @observable
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]

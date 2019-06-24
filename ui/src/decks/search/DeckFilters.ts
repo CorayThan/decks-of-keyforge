@@ -46,7 +46,7 @@ export class DeckFilters {
                     house = secondPart as House
                 }
                 return {
-                    cardName: forQuery.substring(0, lastIndexOf),
+                    cardNames: forQuery.substring(0, lastIndexOf).split(cardSeparator),
                     quantity,
                     house
                 }
@@ -126,10 +126,7 @@ export class DeckFilters {
     constraints: Constraint[] = []
     expansions: number[] = []
     @observable
-    cards: DeckCardQuantity[] = [{
-        cardName: "",
-        quantity: 1
-    }]
+    cards: DeckCardQuantity[] = []
     @observable
     sortDirection: SortDirection = "DESC"
     @observable
@@ -147,10 +144,7 @@ export class DeckFilters {
         this.forSaleInCountry = undefined
         this.myFavorites = false
         this.includeUnregistered = false
-        this.cards = [{
-            cardName: "",
-            quantity: 1
-        }]
+        this.cards = []
         this.expansions = []
         this.constraints = []
         this.sortDirection = "DESC"
@@ -177,7 +171,7 @@ export class DeckFilters {
 
     cleaned = () => {
         const cloned = clone(this)
-        cloned.cards = cloned.cards.filter(card => card.cardName.length > 0)
+        cloned.cards = cloned.cards.filter(card => card.cardNames.length > 0 && card.cardNames[0].length > 0)
         return cloned
     }
 }
@@ -196,7 +190,7 @@ export const prepareDeckFiltersForQueryString = (filters: DeckFilters): DeckFilt
     }
 
     if (copied.cards) {
-        copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardName.length > 0)
+        copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardNames != null && card.cardNames[0].length > 0)
         copied.cards = cardsAsParam(copied.cards)
     }
     if (copied.constraints) {
@@ -210,13 +204,16 @@ const constraintsAsParam = (constraints: Constraint[]) => (
 )
 
 const cardsAsParam = (cards: DeckCardQuantity[]) => (
-    cards.map(card => `${card.cardName}-${card.house ? card.house : card.quantity}`)
+    cards.map(card => `${card.cardNames.join(cardSeparator)}-${card.house ? card.house : card.quantity}`)
 )
 
+// tslint:disable-next-line:no-any
 const DefaultDeckFilters: any = new DeckFilters()
 
 export interface DeckCardQuantity {
-    cardName: string
+    cardNames: string[]
     quantity: number
     house?: House
 }
+
+export const cardSeparator = "~or~"

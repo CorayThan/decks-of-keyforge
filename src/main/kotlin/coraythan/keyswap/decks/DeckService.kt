@@ -100,9 +100,9 @@ class DeckService(
 
         val sort = if (filters.sort == DeckSortOptions.ENDING_SOONEST) {
             if (filters.sortDirection == SortDirection.ASC) {
-                (sortProperty as ComparableExpressionBase).desc()
+                (sortProperty as ComparableExpressionBase<*>).desc()
             } else {
-                (sortProperty as ComparableExpressionBase).asc()
+                (sortProperty as ComparableExpressionBase<*>).asc()
             }
         } else if (
                 filters.sortDirection == SortDirection.DESC
@@ -111,9 +111,9 @@ class DeckService(
                 || filters.sort == DeckSortOptions.CHAINS
                 || filters.sort == DeckSortOptions.RECENTLY_LISTED
         ) {
-            (sortProperty as ComparableExpressionBase).desc()
+            (sortProperty as ComparableExpressionBase<*>).desc()
         } else {
-            (sortProperty as ComparableExpressionBase).asc()
+            (sortProperty as ComparableExpressionBase<*>).asc()
         }
 
         val deckResults = query.selectFrom(deckQ)
@@ -140,6 +140,7 @@ class DeckService(
                         filters.completedAuctions
                 ))
             } else if (filters.withOwners) {
+                if (userHolder.user?.email != "coraythan@gmail.com") throw BadRequestException("You do not have permission to see owners.")
                 searchResult.copy(owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
                     userDeck.ownedBy
                 })

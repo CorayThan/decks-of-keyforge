@@ -9,5 +9,5 @@ export const UnstyledLink = (props: LinkProps & { style?: React.CSSProperties })
 
 export const UnstyledHashLink = (props: HashLinkProps & { style?: React.CSSProperties }) => {
     const {style, ...rest} = props
-    return <HashLink style={{textDecoration: "none", ...style}} {...rest} />
+    return <HashLink style={{color: "rgba(0, 0, 0, 0.87)", textDecoration: "none", ...style}} {...rest} />
 }

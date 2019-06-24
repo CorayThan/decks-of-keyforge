@@ -1,7 +1,5 @@
-import FormControl from "@material-ui/core/FormControl/FormControl"
-import InputLabel from "@material-ui/core/InputLabel/InputLabel"
+import { TextField } from "@material-ui/core"
 import MenuItem from "@material-ui/core/MenuItem/MenuItem"
-import Select from "@material-ui/core/Select/Select"
 import { observer } from "mobx-react"
 import * as React from "react"
 
@@ -18,25 +16,21 @@ export interface SelectedStore {
 @observer
 export class KeySelect extends React.Component<KeySelectProps> {
 
-    handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => this.props.selected.selectedValue = event.target.value
+    handleChange = (event: React.ChangeEvent<{ value: unknown }>) => this.props.selected.selectedValue = event.target.value as string
 
     render() {
         const {name, options, selected} = this.props
         const id = `key-select-${name}`
         return (
-            <FormControl style={{minWidth: 120}}>
-                <InputLabel htmlFor={id}>{name}</InputLabel>
-                <Select
-                    value={selected.selectedValue}
-                    onChange={this.handleChange}
-                    inputProps={{
-                        name,
-                        id: `key-select-${name}`
-                    }}
-                >
-                    {options.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>)}
-                </Select>
-            </FormControl>
+            <TextField
+                select={true}
+                label={name}
+                value={selected.selectedValue}
+                onChange={this.handleChange}
+                style={{minWidth: 120}}
+            >
+                {options.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>)}
+            </TextField>
         )
     }
 }

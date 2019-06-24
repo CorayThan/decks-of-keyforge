@@ -116,7 +116,7 @@ export class DeckImportView extends React.Component {
                         </>
                     )}
                     {deckImportViewStore.deckImage ? (
-                        <div style={{paddingTop: saveUnregisteredDeckStore.currentDeck ? spacing(1) : 0}}>
+                        <div style={{paddingTop: spacing(2)}}>
                             <img
                                 style={{
                                     marginTop: spacing(4),

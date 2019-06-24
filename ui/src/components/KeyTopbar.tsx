@@ -186,6 +186,7 @@ const AppLinks = () => (
             links={[
                 {to: AboutSubPaths.sas, text: "About", mobileActive: true},
                 {to: AboutSubPaths.sas, text: "SAS and AERC"},
+                {to: AboutSubPaths.patreon, text: "Patron Rewards"},
                 {to: AboutSubPaths.contact, text: "Contact Me"},
                 {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
                 {to: AboutSubPaths.sellersAndDevs, text: "APIs"},

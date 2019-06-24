@@ -11,7 +11,6 @@ export const muiTheme = createMuiTheme({
         secondary: amber,
     },
     typography: {
-        useNextVariants: true,
         fontFamily: TextConfig.BODY,
         h1: {
             fontFamily: TextConfig.TITLE
@@ -26,9 +25,6 @@ export const muiTheme = createMuiTheme({
             fontFamily: TextConfig.TITLE
         },
         h5: {
-            fontFamily: TextConfig.TITLE
-        },
-        title: {
             fontFamily: TextConfig.TITLE
         },
     },

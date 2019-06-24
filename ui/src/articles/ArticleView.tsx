@@ -8,6 +8,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Link,
     List,
     ListItem,
     Table,
@@ -233,14 +234,14 @@ const Paragraph = (props: ArticleEntry) => (
 )
 
 const ArticleExternalLink = (props: { externalLink: string, text: string }) => (
-    <KeyButton
+    <Link
         color={"primary"}
         href={props.externalLink}
         target={"_blank"}
         style={{marginBottom: spacing(2)}}
     >
         {props.text}
-    </KeyButton>
+    </Link>
 )
 
 export const ArticleInternalLink = (props: { internalLink: string, text: string }) => (
@@ -318,7 +319,7 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
 }
 
 const ArticleTable = (props: { headers: string[], rows: string[][] }) => (
-    <Table padding={"checkbox"} style={{marginBottom: spacing(2)}}>
+    <Table padding={"default"} style={{marginBottom: spacing(2)}}>
         <TableHead>
             <TableRow>
                 {props.headers.map(header => <TableCell key={header}>{header}</TableCell>)}

@@ -19,7 +19,7 @@ import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
-import { UnstyledLink } from "../../generic/UnstyledLink"
+import { KeyLink } from "../../mui-restyled/KeyLink"
 import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { userStore } from "../../user/UserStore"
@@ -182,9 +182,9 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     {sellerDetails == null ? null : (
                         <div style={{display: "flex", alignItems: "center", margin: spacing(2), marginBottom: 0}}>
                             <SellerImg sellerUsername={username}/>
-                            <UnstyledLink to={Routes.userDecksForSale(username)}>
+                            <KeyLink to={Routes.userDecksForSale(username)} noStyle={true}>
                                 <Typography variant={"h5"}>{sellerDetails.storeName}</Typography>
-                            </UnstyledLink>
+                            </KeyLink>
                         </div>
                     )}
                     {!listingInfo ? null : (

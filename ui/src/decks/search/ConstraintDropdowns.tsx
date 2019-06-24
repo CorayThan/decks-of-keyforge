@@ -18,15 +18,10 @@ export class FiltersConstraintsStore {
     constraints: Constraint[]
 
     constructor(initialConstraints?: Constraint[]) {
-        if (initialConstraints && initialConstraints.length > 0) {
-            this.constraints = initialConstraints
-        } else {
-            this.constraints = [makeDefaultConstraint()]
-        }
+        this.constraints = initialConstraints ? initialConstraints : []
     }
 
-    reset = () => this.constraints = [makeDefaultConstraint()]
-
+    reset = () => this.constraints = []
     cleanConstraints = () => this.constraints.filter(constraint => !!constraint.property)
 }
 
@@ -43,7 +38,7 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
         return (
             <div style={{width: "100%"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <FormLabel style={{marginRight: spacing(1)}}>Filter on</FormLabel>
+                    <FormLabel style={{marginRight: spacing(1)}}>Constraints</FormLabel>
                     <IconButton onClick={() => store.constraints.push(makeDefaultConstraint())}>
                         <Add fontSize={"small"}/>
                     </IconButton>

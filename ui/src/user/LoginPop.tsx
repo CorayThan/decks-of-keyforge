@@ -31,7 +31,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
         userStore.login({email: this.email, password: this.password})
     }
 
-    handlePopoverOpen = (event: React.MouseEvent<HTMLInputElement>) => {
+    handlePopoverOpen = () => {
         this.popOpen = true
     }
 

@@ -68,7 +68,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 8
-  rating: 2
+  rating: 2.5
   expectedAmber: 0.5
   traits: [goodReap]
   synergies:
@@ -518,7 +518,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 88
-  rating: 2
+  rating: 2.5
   deckManipulation: 0.5
   traits: [goodPlay, discardsFriendlyCards]
 
@@ -605,7 +605,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 108
-  rating: 2.5
+  rating: 4
   deckManipulation: 0.5
   traits: [elusive, protectsCreatures, archives]
 
@@ -649,7 +649,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 113
-  rating: 2.5
+  rating: 3
   deckManipulation: 1
   traits: [goodDestroyed, archives, archivesRandom]
 
@@ -868,7 +868,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 160
-  rating: 1
+  rating: 1.5
   creatureControl: 0.5
   traits: [elusive, stuns]
 
@@ -890,7 +890,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 162
-  rating: 2.5
+  rating: 3
   creatureControl: 1
   traits: [archivesEnemyCards, goodFight]
   synergies: 
@@ -972,7 +972,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 173
-  rating: 1
+  rating: 1.5
   expectedAmber: 0.5
   synergies:
     - trait: highCreatureCount
@@ -1153,7 +1153,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 211
-  rating: 2
+  rating: 3
   effectivePower: 7
   traits: [protectsCreatures, increasesCreaturePower]
 
@@ -1428,6 +1428,7 @@
     - expansion: 435
       cardNumber: 261
   rating: 4
+  traits: [increasesKeyCost]
 
 - name: Seraphic Armor
   cardNumbers:
@@ -1700,7 +1701,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 312
-  rating: 2.5
+  rating: 3
   expectedAmber: 1
   creatureControl: 1
   traits: [dealsDamage]
@@ -1872,7 +1873,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 347
-  rating: 1.5
+  rating: 2.5
   effectivePower: 9
   traits: [protectsCreatures, increasesCreaturePower]
   synergies:
@@ -1950,7 +1951,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 362
-  rating: 2
+  rating: 3
   traits: [elusive]
 
 - name: Punctuated Equilibrium

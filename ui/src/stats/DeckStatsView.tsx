@@ -54,7 +54,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                 <div
                     style={{
                         maxWidth: 616,
-                        maxHeight: 360,
+                        maxHeight: 336,
                         display: "flex",
                         alignItems: "flex-end",
                         margin: spacing(2),

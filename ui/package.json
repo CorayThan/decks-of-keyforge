@@ -5,25 +5,25 @@
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@craco/craco": "^3.5.0",
-    "@material-ui/core": "^3.9.2",
-    "@material-ui/icons": "^3.0.2",
-    "@material-ui/lab": "^3.0.0-alpha.30",
+    "@material-ui/core": "^4.1.2",
+    "@material-ui/icons": "^4.2.1",
+    "@material-ui/lab": "^4.0.0-alpha.17",
     "axios": "^0.18.0",
     "date-fns": "^2.0.0-alpha.31",
     "lodash": "^4.17.11",
     "loglevel": "^1.6.1",
-    "material-ui-dropzone": "^2.2.2",
-    "mobx": "^5.8.0",
-    "mobx-react": "^5.4.3",
+    "material-ui-dropzone": "^2.3.5",
+    "mobx": "^5.10.1",
+    "mobx-react": "^6.1.1",
     "query-string": "^6.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
     "react-router-hash-link": "^1.2.1",
     "react-scripts": "2.1.8",
-    "react-select": "^2.2.0",
+    "react-select": "^3.0.4",
     "recharts": "^1.4.2",
-    "victory": "^32.0.2",
+    "victory": "^32.3.0",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -54,11 +54,11 @@
     "@types/react-dom": "^16.0.11",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-router-hash-link": "^1.2.1",
-    "@types/react-select": "^2.0.11",
+    "@types/react-select": "^2.0.19",
     "@types/recharts": "^1.1.6",
-    "@types/victory": "^31.0.13",
+    "@types/victory": "^31.0.19",
     "@types/webfontloader": "^1.6.29",
     "tslint": "^5.12.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.5.2"
   }
 }

@@ -15,9 +15,9 @@ import {
     ListItemText,
     MenuItem,
     OutlinedInput,
-    Select
+    Select,
+    TextField
 } from "@material-ui/core"
-import TextField from "@material-ui/core/es/TextField"
 import Typography from "@material-ui/core/Typography"
 import * as History from "history"
 import { observable } from "mobx"
@@ -33,6 +33,7 @@ import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNot
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { countries, countryToLabel } from "../generic/Country"
+import { EventValue } from "../generic/EventValue"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -242,7 +243,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Grid container={true} spacing={16} justify={"center"}>
+                <Grid container={true} spacing={2} justify={"center"}>
                     <Grid item={true}>
                         <form onSubmit={this.updateProfile}>
                             <KeyCard
@@ -254,13 +255,13 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                 style={{maxWidth: 440, margin: 0}}
                             >
                                 <div style={{padding: spacing(2)}}>
-                                    <Grid container={true} spacing={16}>
+                                    <Grid container={true} spacing={2}>
                                         <PatreonSupporter profile={profile}/>
                                         <Grid item={true} xs={12}>
                                             <TextField
                                                 label={"email"}
                                                 value={this.email}
-                                                onChange={(event) => this.email = event.target.value}
+                                                onChange={(event: EventValue) => this.email = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                             />
@@ -270,7 +271,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 <TextField
                                                     label={"store name"}
                                                     value={this.storeName}
-                                                    onChange={(event) => this.storeName = event.target.value}
+                                                    onChange={(event: EventValue) => this.storeName = event.target.value}
                                                     fullWidth={true}
                                                     variant={"outlined"}
                                                 />
@@ -280,7 +281,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             <TextField
                                                 label={"public sellers email"}
                                                 value={this.sellerEmail}
-                                                onChange={(event) => this.sellerEmail = event.target.value}
+                                                onChange={(event: EventValue) => this.sellerEmail = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                             />
@@ -289,7 +290,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             <TextField
                                                 label={"discord"}
                                                 value={this.discord}
-                                                onChange={(event) => this.discord = event.target.value}
+                                                onChange={(event: EventValue) => this.discord = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                             />
@@ -300,7 +301,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 value={this.contactInfo}
                                                 multiline={true}
                                                 rows={4}
-                                                onChange={(event) => this.contactInfo = event.target.value}
+                                                onChange={(event: EventValue) => this.contactInfo = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                             />
@@ -310,7 +311,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 select
                                                 label="Country"
                                                 value={this.country}
-                                                onChange={event => this.country = event.target.value}
+                                                onChange={(event: EventValue) => this.country = event.target.value}
                                                 variant="outlined"
                                                 fullWidth={true}
                                             >
@@ -325,7 +326,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             <TextField
                                                 label={"Currency Symbol"}
                                                 value={this.currencySymbol}
-                                                onChange={(event) => this.currencySymbol = event.target.value}
+                                                onChange={(event: EventValue) => this.currencySymbol = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                                 helperText={"For selling decks. e.g. $, €"}

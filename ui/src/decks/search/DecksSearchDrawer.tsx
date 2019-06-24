@@ -1,6 +1,7 @@
 import { FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
+import FormLabel from "@material-ui/core/FormLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
@@ -11,7 +12,7 @@ import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardSearchSuggest } from "../../cards/CardSearchSuggest"
+import { MultiCardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
@@ -142,7 +143,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     onChange={handleMyDecksUpdate}
                                 />
                             }
-                            label={"My Decks"}
+                            label={<Typography variant={"body2"}>My Decks</Typography>}
                             style={{width: 144}}
                         />
                         <FormControlLabel
@@ -152,7 +153,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     onChange={handleMyFavoritesUpdate}
                                 />
                             }
-                            label={"My Favorites"}
+                            label={<Typography variant={"body2"}>My Favorites</Typography>}
                         />
                     </div>
                 ) : null}
@@ -214,7 +215,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             ) : null}
                         </ListItem>
-                        <ListItem>
+                        <ListItem style={{marginTop: spacing(2)}}>
                             <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
                         <ListItem>
@@ -291,7 +292,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     }}
                                                 />
                                             }
-                                            label={"Completed auctions"}
+                                            label={<Typography variant={"body2"}>Completed Auctions</Typography>}
                                             style={{width: 144}}
                                         />
                                     ) : null}
@@ -303,7 +304,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
                                                 />
                                             }
-                                            label={"In my country"}
+                                            label={<Typography variant={"body2"}>In My Country</Typography>}
                                             style={{width: 144}}
                                         />
                                     ) : null}
@@ -317,7 +318,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 onChange={(event) => this.props.filters.withOwners = event.target.checked}
                                             />
                                         }
-                                        label={"With Owners"}
+                                        label={<Typography variant={"body2"}>With Owners</Typography>}
                                         style={{width: 144}}
                                     />
                                 ) : null}
@@ -349,54 +350,60 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             />
                         </ListItem>
                         <ListItem>
-                            <div>
-                                {cards.map((card, idx) => {
-                                    const value = card.house ? card.house : card.quantity.toString()
-                                    return (
-                                        <div style={{display: "flex", marginBottom: spacing(1)}} key={idx}>
-                                            <CardSearchSuggest
-                                                card={card}
-                                                style={{marginTop: 12}}
-                                            />
-                                            <TextField
-                                                style={{width: 56, marginLeft: spacing(2)}}
-                                                label={"Copies"}
-                                                select={true}
-                                                value={value}
-                                                onChange={event => {
-                                                    const valueAsNumber = Number(event.target.value)
-                                                    if (isNaN(valueAsNumber)) {
-                                                        card.house = event.target.value as House
-                                                        card.quantity = 1
-                                                    } else {
-                                                        card.quantity = valueAsNumber
-                                                        card.house = undefined
-                                                    }
-                                                }}
-                                            >
-                                                <MenuItem value={"0"}>None</MenuItem>
-                                                <MenuItem value={"1"}>1+</MenuItem>
-                                                <MenuItem value={"2"}>2+</MenuItem>
-                                                <MenuItem value={"3"}>3+</MenuItem>
-                                                <MenuItem value={"4"}>4+</MenuItem>
-                                                <MenuItem value={"5"}>5+</MenuItem>
-                                                <MenuItem value={"6"}>6+</MenuItem>
-                                                {houseValuesArray.map(houseValue => {
-                                                    return (
-                                                        <MenuItem value={houseValue.house} key={houseValue.house}>
-                                                            {houseValue.house}
-                                                        </MenuItem>
-                                                    )
-                                                })}
-                                            </TextField>
-                                            {idx === 0 && cards.length < 10 ? (
-                                                <IconButton onClick={() => cards.push({cardName: "", quantity: 1})}>
-                                                    <Add fontSize={"small"}/>
-                                                </IconButton>
-                                            ) : null}
-                                        </div>
-                                    )
-                                })}
+                            <div style={{flexGrow: 1}}>
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                    <FormLabel style={{marginRight: spacing(1)}}>Cards</FormLabel>
+                                    {cards.length < 10 ? (
+                                        <IconButton onClick={() => cards.push({cardNames: [], quantity: 1})}>
+                                            <Add fontSize={"small"}/>
+                                        </IconButton>
+                                    ) : null}
+                                </div>
+                                <div style={{flexGrow: 1}}>
+                                    {cards.map((card, idx) => {
+                                        const value = card.house ? card.house : card.quantity.toString()
+                                        return (
+                                            <div key={idx}>
+                                                <MultiCardSearchSuggest
+                                                    card={card}
+                                                    placeholder={"Any of these cards"}
+                                                    style={{flexGrow: 1}}
+                                                />
+                                                <TextField
+                                                    style={{minWidth: 80, marginTop: spacing(1), marginBottom: spacing(1)}}
+                                                    label={"Copies"}
+                                                    select={true}
+                                                    value={value}
+                                                    onChange={event => {
+                                                        const valueAsNumber = Number(event.target.value)
+                                                        if (isNaN(valueAsNumber)) {
+                                                            card.house = event.target.value as House
+                                                            card.quantity = 1
+                                                        } else {
+                                                            card.quantity = valueAsNumber
+                                                            card.house = undefined
+                                                        }
+                                                    }}
+                                                >
+                                                    <MenuItem value={"0"}>None</MenuItem>
+                                                    <MenuItem value={"1"}>1+</MenuItem>
+                                                    <MenuItem value={"2"}>2+</MenuItem>
+                                                    <MenuItem value={"3"}>3+</MenuItem>
+                                                    <MenuItem value={"4"}>4+</MenuItem>
+                                                    <MenuItem value={"5"}>5+</MenuItem>
+                                                    <MenuItem value={"6"}>6+</MenuItem>
+                                                    {houseValuesArray.map(houseValue => {
+                                                        return (
+                                                            <MenuItem value={houseValue.house} key={houseValue.house}>
+                                                                {houseValue.house}
+                                                            </MenuItem>
+                                                        )
+                                                    })}
+                                                </TextField>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         </ListItem>
                         <ListItem>
@@ -412,7 +419,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             </div>
                         </ListItem>
                         <ListItem>
-                            <div style={{display: "flex"}}>
+                            <div style={{display: "flex", marginTop: spacing(1), marginBottom: spacing(1)}}>
                                 <KeyButton
                                     variant={"outlined"}
                                     onClick={this.clearSearch}
@@ -438,7 +445,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         </ListItem>
                         {deckStore.decksCount ? (
                             <ListItem>
-                                <Typography variant={"subtitle2"}>
+                                <Typography variant={"subtitle2"} style={{marginBottom: spacing(1)}}>
                                     You found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 ? "+ " : ""} decks
                                 </Typography>
                             </ListItem>
@@ -456,6 +463,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         exclusive={true}
                                         onChange={keyLocalStorage.toggleDeckTableView}
                                         style={{marginRight: spacing(2)}}
+                                        size={"small"}
                                     >
                                         <ToggleButton value={false}>
                                             <ViewModule/>
@@ -473,6 +481,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             keyLocalStorage.setDeckPageSize(size)
                                             this.search()
                                         }}
+                                        size={"small"}
                                     >
                                         <ToggleButton value={20}>
                                             20

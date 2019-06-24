@@ -5,7 +5,7 @@ import { autorun, computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
-import { CardSearchSuggest } from "../cards/CardSearchSuggest"
+import { SingleCardSearchSuggest } from "../cards/CardSearchSuggest"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
@@ -59,7 +59,7 @@ class SaveUnregisteredDeckStore {
 
     addCardHandler = (house: House) => {
         const cardHolder = observable({
-            cardName: "", quantity: 1
+            cardName: ""
         })
 
         autorun(() => {
@@ -195,7 +195,7 @@ class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards:
                 ))}
                 <div style={{flexGrow: 1}}/>
                 {this.props.cards.length < 12 ? (
-                    <CardSearchSuggest
+                    <SingleCardSearchSuggest
                         card={saveUnregisteredDeckStore.addCardHandler(this.props.house)}
                         style={{marginTop: spacing(2)}}
                         placeholder={"Add Card"}

@@ -134,7 +134,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
         return (
             <div>
             <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
-                <Table padding={"checkbox"}>
+                <Table size={"small"}>
                     <TableHead>
                         <TableRow>
                             <DeckHeader title={"Name"} property={"name"} minWidth={144}/>

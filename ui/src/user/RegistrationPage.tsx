@@ -113,7 +113,7 @@ export class RegistrationPage extends React.Component {
                             Evaluate, sell and trade your decks
                         </Typography>
                         <form onSubmit={this.signUp}>
-                            <Grid container={true} spacing={16}>
+                            <Grid container={true} spacing={2}>
                                 <Grid item={true} xs={6}>
                                     <TextField
                                         variant={"outlined"}

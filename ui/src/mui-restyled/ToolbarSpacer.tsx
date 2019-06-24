@@ -2,6 +2,7 @@ import * as React from "react"
 
 export const ToolbarSpacer = () => <div style={{
     "minHeight": 56,
+    // @ts-ignore
     "@media (minWidth:0px) and (orientation: landscape)": {
         minHeight: 48
     },

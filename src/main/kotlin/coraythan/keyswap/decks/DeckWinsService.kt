@@ -83,7 +83,7 @@ class DeckWinsService(
             }
             return
         }
-        log.info("Update $order for decks on page $page")
+        if (page % 100 == 0) log.info("Update $order for decks on page $page")
         updateDecks
                 .forEach {
                     val preexisting = deckRepo.findByKeyforgeId(it.id)

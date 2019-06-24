@@ -31,7 +31,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
         const small = screenStore.screenSizeSm()
         return (
             <Card>
-                <Table padding={"dense"}>
+                <Table padding={"default"}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Notifications Search</TableCell>
@@ -91,8 +91,10 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                             </TableCell>
                                             <TableCell>
                                                 {query.cards.map((card) => (
-                                                    <div style={{display: "flex"}} key={card.cardName}>
-                                                        <Typography>{card.cardName} – {card.quantity} {card.quantity === 1 ? "copy" : "copies"}</Typography>
+                                                    <div style={{display: "flex"}} key={card.cardNames.join("")}>
+                                                        <Typography>
+                                                            {card.cardNames.join(", ")} – {card.quantity} {card.quantity === 1 ? "copy" : "copies"}
+                                                        </Typography>
                                                     </div>
                                                 ))}
                                             </TableCell>

@@ -25,8 +25,9 @@ export class ToggleStats extends React.Component<{ style?: React.CSSProperties }
                 exclusive={true}
                 onChange={this.toggleStatsExpansion}
                 style={this.props.style}
+                size={"small"}
             >
-                <ToggleButton value={-1}>
+                <ToggleButton value={-1} >
                     All
                 </ToggleButton>
                 {expansionInfos.map(expansionInfo => {

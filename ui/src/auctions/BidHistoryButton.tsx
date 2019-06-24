@@ -65,7 +65,7 @@ export class BidHistoryButton extends React.Component<BidHistoryButtonProps> {
                                     <Typography>No bids have been placed on this auction.</Typography>
                                 ) : (
                                     <Paper>
-                                        <Table padding={"dense"}>
+                                        <Table size={"small"}>
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>User</TableCell>

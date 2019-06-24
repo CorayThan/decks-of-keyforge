@@ -39,7 +39,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                     </Tabs>
                 </AppBar>
                 <div style={{padding: spacing(4)}}>
-                    <Grid container={true} spacing={32} justify={"center"}>
+                    <Grid container={true} spacing={4} justify={"center"}>
                         <Switch>
                             <Route path={AboutSubPaths.sas} component={SasAndAerc}/>
                             <Route path={AboutSubPaths.patreon} component={PatreonRewards}/>

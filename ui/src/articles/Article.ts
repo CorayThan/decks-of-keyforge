@@ -45,7 +45,7 @@ export interface ArticleEntry {
     type: EntryType
 }
 
-export type MuiColors = "default" | "primary" | "secondary"
+export type MuiColors = "primary" | "secondary" | undefined
 
 export enum EntryType {
     PARAGRAPH = "PARAGRAPH",

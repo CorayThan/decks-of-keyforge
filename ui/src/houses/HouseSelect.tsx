@@ -6,6 +6,7 @@ import FormLabel from "@material-ui/core/FormLabel/FormLabel"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { spacing } from "../config/MuiConfig"
 import { House, houseValues, houseValuesArray } from "./House"
 
 interface HouseSelectProps {
@@ -18,7 +19,7 @@ export class HouseSelect extends React.Component<HouseSelectProps> {
         const selectedHouses = this.props.selectedHouses.getSelectedHouses()
         return (
             <FormControl>
-                <FormLabel>Houses</FormLabel>
+                <FormLabel style={{marginBottom: spacing(1)}}>Houses</FormLabel>
                 <FormGroup
                     row={true}
                 >

@@ -17,7 +17,7 @@ export class ForSaleNotificationsStore {
     queries?: ForSaleQuery[]
 
     addQuery = (query: ForSaleQuery) => {
-        query.cards = query.cards.filter((card) => card.cardName.length > 0)
+        query.cards = query.cards.filter((card) => card.cardNames.length > 0)
 
         axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/add-query`, query)
             .then((response: AxiosResponse) => {

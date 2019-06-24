@@ -22,17 +22,14 @@ interface LinkMenuProps {
     style?: React.CSSProperties
 }
 
-@observer
-export class LinkMenu extends React.Component<LinkMenuProps> {
-
+class LinkMenuStore {
     @observable
     open = false
 
     buttonIsHovered = false
     menuIsHovered = false
 
-    anchorEl?: HTMLDivElement | null
-    menuEl?: HTMLDivElement | null
+    anchorElRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
 
     handleOpen = () => {
         this.buttonIsHovered = true
@@ -52,6 +49,12 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
             }
         }, 500)
     }
+}
+
+@observer
+export class LinkMenu extends React.Component<LinkMenuProps> {
+
+    store = new LinkMenuStore()
 
     render() {
         const {links, genericOnClick, style} = this.props
@@ -101,61 +104,69 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
         const firstLink = links[0]
         return (
             <div>
-                <div ref={node => this.anchorEl = node}>
-                    <LinkButton
-                        color={"inherit"}
-                        to={firstLink.to}
-                        style={{...style, marginRight: 0}}
-                        onClick={() => {
-                            if (genericOnClick) {
-                                genericOnClick()
-                            }
-                            this.buttonIsHovered = false
-                        }}
-                        onMouseEnter={this.handleOpen}
-                        onMouseLeave={this.autoCloseIfNotHovered}
-                    >
-                        {firstLink.text}
-                        <ArrowDropDown style={{marginLeft: spacing(1)}}/>
-                    </LinkButton>
-                </div>
-                <Popper open={this.open} anchorEl={this.anchorEl} transition disablePortal>
-                    {({TransitionProps, placement}) => (
-                        <Grow
-                            {...TransitionProps}
-                            style={{transformOrigin: placement === "bottom" ? "center top" : "center bottom"}}
+                <div ref={this.store.anchorElRef}>
+                    <div>
+                        <LinkButton
+                            color={"inherit"}
+                            to={firstLink.to}
+                            style={{...style, marginRight: 0}}
+                            onClick={() => {
+                                if (genericOnClick) {
+                                    genericOnClick()
+                                }
+                                this.store.buttonIsHovered = false
+                            }}
+                            onMouseEnter={this.store.handleOpen}
+                            onMouseLeave={this.store.autoCloseIfNotHovered}
                         >
-                            <div ref={node => this.menuEl = node} onMouseEnter={() => this.menuIsHovered = true} onMouseLeave={this.autoCloseIfNotHovered}>
-                                <Paper>
-                                    <MenuList>
-                                        {links.slice(1).map(linkInfo => {
-                                            if (linkInfo.to != null) {
-                                                return (
-                                                    <LinkMenuItem key={linkInfo.text} onClick={this.handleClose} to={linkInfo.to}>{linkInfo.text}</LinkMenuItem>
-                                                )
-                                            } else if (linkInfo.component) {
-                                                return (
-                                                    <MenuItem
-                                                        key={linkInfo.text}
-                                                        onClick={() => {
-                                                            this.handleClose()
-                                                        }}
-                                                        component={linkInfo.component}
-                                                    >
-                                                        {linkInfo.text}
-                                                    </MenuItem>
-                                                )
-                                            } else {
-                                                throw Error("No to or action in linkInfo.")
-                                            }
-                                        })}
-                                    </MenuList>
-                                </Paper>
-                            </div>
-                        </Grow>
-                    )}
-                </Popper>
+                            {firstLink.text}
+                            <ArrowDropDown style={{marginLeft: spacing(1)}}/>
+                        </LinkButton>
+                    </div>
+                </div>
+                <MenuPopper store={this.store} links={links} ref={this.store.anchorElRef}/>
             </div>
         )
     }
 }
+
+const MenuPopper = observer(React.forwardRef((props: { store: LinkMenuStore, links: LinkInfo[] }, ref: React.Ref<HTMLDivElement>) => {
+    const {store, links} = props
+    return (
+        <Popper open={store.open} anchorEl={(ref as any).current} transition disablePortal>
+            {({TransitionProps, placement}) => (
+                <Grow
+                    {...TransitionProps}
+                    style={{transformOrigin: placement === "bottom" ? "center top" : "center bottom"}}
+                >
+                    <div onMouseEnter={() => store.menuIsHovered = true} onMouseLeave={store.autoCloseIfNotHovered}>
+                        <Paper>
+                            <MenuList>
+                                {links.slice(1).map(linkInfo => {
+                                    if (linkInfo.to != null) {
+                                        return (
+                                            <LinkMenuItem
+                                                key={linkInfo.text}
+                                                onClick={store.handleClose}
+                                                to={linkInfo.to}
+                                            >
+                                                {linkInfo.text}
+                                            </LinkMenuItem>
+                                        )
+                                    } else if (linkInfo.component) {
+                                        const SpecialLink = linkInfo.component
+                                        return (
+                                            <SpecialLink key={linkInfo.text}/>
+                                        )
+                                    } else {
+                                        throw Error("No to or action in linkInfo.")
+                                    }
+                                })}
+                            </MenuList>
+                        </Paper>
+                    </div>
+                </Grow>
+            )}
+        </Popper>
+    )
+}))

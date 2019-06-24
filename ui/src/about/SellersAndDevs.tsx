@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Link, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -154,7 +154,8 @@ export class SellersAndDevs extends React.Component {
                         "immediately after it is generated.",
                         apiKeyOrButton
                     ]}/>
-                    <div style={{paddingBottom: spacing(4)}} />
+                </AboutGridItem>
+                <AboutGridItem>
                     <InfoListCard title={"Deck Selling API"} infos={[
                         "If you sell decks on a website, or have the technical know-how, you can list and unlist decks " +
                         "for sale on Decks of Keyforge via an API.",
@@ -165,7 +166,9 @@ export class SellersAndDevs extends React.Component {
                     <InfoListCard title={"File with all SAS and AERC"} infos={[
                         "Please use this instead of the API if it fits your needs to help conserve DoK's server resources.",
                         "I've created a csv (spreadsheet) file with the deck info for all decks up to the time it was generated.",
-                        "https://drive.google.com/open?id=1LP8_YSzBuGA4lhVA-dBFQWiMBAE4V-Q5",
+                        <Link href={"https://drive.google.com/open?id=1LP8_YSzBuGA4lhVA-dBFQWiMBAE4V-Q5"} target={"_blank"}>
+                            https://drive.google.com/open?id=1LP8_YSzBuGA4lhVA-dBFQWiMBAE4V-Q5
+                        </Link>,
                         "Like with the API, if you use this please attribute decksofkeyforge.com on your site / material.",
                         "I will plan to create a new file whenever I update SAS or AERC, but this file will only contain the decks up to the time it was " +
                         "generated."

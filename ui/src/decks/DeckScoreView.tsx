@@ -31,7 +31,9 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     if (previousSasRating != null && previousSasRating !== sasRating && previousSasRating !== 0) {
         sasInfo = (
             <Tooltip title={`Previous SAS rating: ${previousSasRating}`} enterTouchDelay={100}>
-                <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
+                <div>
+                    <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
+                </div>
             </Tooltip>
         )
     }
@@ -44,7 +46,9 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
             <div style={{borderBottom: "1px solid rgba(255,255,255)"}}/>
             <div style={{display: "flex"}}>
                 <Tooltip title={"Synergy and Antisynergy Rating. Read more on the about page."}>
-                    <RatingRow value={sasRating} name={"SAS"} large={true}/>
+                    <div>
+                        <RatingRow value={sasRating} name={"SAS"} large={true}/>
+                    </div>
                 </Tooltip>
                 {sasInfo}
             </div>

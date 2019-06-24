@@ -4,8 +4,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DiscordUser } from "../generic/DiscordUser"
-import { UnstyledLink } from "../generic/UnstyledLink"
-import { KeyButton } from "../mui-restyled/KeyButton"
+import { KeyLink } from "../mui-restyled/KeyLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { SellerImg } from "./imgs/SellerImgs"
 import { SellerDetails } from "./SellerDetails"
@@ -27,9 +26,9 @@ export class SellerCard extends React.Component<SellerCardProps> {
                     <CardContent>
                         <div style={{display: "flex", alignItems: "flex-end"}}>
                             <SellerImg sellerUsername={username}/>
-                            <UnstyledLink to={storeLink}>
+                            <KeyLink to={storeLink} noStyle={true}>
                                 <Typography variant={"h5"}>{storeName}</Typography>
-                            </UnstyledLink>
+                            </KeyLink>
                         </div>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                         <SellerCardSecondaryInfo sellerDetails={this.props.sellerDetails}/>
@@ -44,13 +43,13 @@ export class SellerCard extends React.Component<SellerCardProps> {
                     <div style={{flexGrow: 1}}/>
                     <CardActions>
                         {email ? (
-                            <KeyButton
+                            <LinkButton
                                 href={`mailto:${email}`}
                                 target={"_blank"}
                                 color={"primary"}
                             >
                                 Send Email
-                            </KeyButton>
+                            </LinkButton>
                         ) : null}
                         <div style={{flexGrow: 1}}/>
                         <LinkButton color="primary" to={storeLink}>

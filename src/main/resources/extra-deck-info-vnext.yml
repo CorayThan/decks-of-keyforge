@@ -949,7 +949,7 @@
       cardNumber: 65
     - expansion: 435
       cardNumber: 74
-  rating: 2
+  rating: 2.5
   expectedAmber: 0.0
   amberControl: 0.0
   creatureControl: 1.5
@@ -2107,7 +2107,7 @@
       cardNumber: 141
     - expansion: 435
       cardNumber: 142
-  rating: 2.5
+  rating: 3
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0

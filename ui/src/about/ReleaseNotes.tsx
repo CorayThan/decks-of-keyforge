@@ -29,7 +29,7 @@ export class ReleaseNotes extends React.Component {
                     "Fixed win / loss / power level / chain updater. It now runs every 3 days, and takes more than a day to complete.",
                     "I had a great time at the Origins Vault Tour! Opened one good deck with a super cool maverick and made top 16.",
                     <ArticleInternalLink internalLink={`/decks/409dce8d-839d-4bd9-9994-dca5e1573e3b`} text={"Denim, Perfumed Province Rook"}/>,
-                    "Also was great getting to meet many people who use SAS and the site, as well as Brad Andrews! Brad was telling someone that if anyone, " +
+                    "Also was great getting to meet many people who use SAS and the site, as well as Brad Andres! Brad was telling someone that if anyone, " +
                     "tells them they can tell them how good their deck is, they're lying. So a friend (thanks Erich) immediately introduced me, " +
                     `"Speaking of which, I wanted to introduce you to Nathan. He makes Decks of Keyforge and SAS!" So I said, "Hi, I've lied to ` +
                     `KeyForge players hundreds of thousands of times." Was a pretty funny introduction!`

@@ -62,7 +62,7 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                     </div>
                 )}
             >
-                <Table padding={"checkbox"}>
+                <Table size={"small"}>
                     <TableHead>
                         <TableRow>
                             <ColumnHeaders/>

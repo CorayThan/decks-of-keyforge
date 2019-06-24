@@ -61,7 +61,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
         const splitOnSlash = this.deckId.split("/")
         return splitOnSlash[splitOnSlash.length - 1]
     }
-    handlePopoverOpen = (event: React.MouseEvent<HTMLInputElement>) => {
+    handlePopoverOpen = () => {
         deckImportPopStore.popOpen = true
         this.deckId = ""
     }

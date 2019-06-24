@@ -12,9 +12,9 @@ export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: bool
     const {values, horizontal} = props
     return (
         <div style={{display: horizontal ? "flex" : undefined}}>
-            {props.values.map((value, idx) => {
+            {values.map((value, idx) => {
                 return (
-                    <InfoIcon value={value} key={idx} style={{marginBottom: horizontal ? 0 : 4, marginLeft: idx === 0 ? 0 : spacing(1)}}/>
+                    <InfoIcon value={value} key={idx} style={{marginBottom: horizontal ? 0 : 4, marginLeft: spacing(1)}}/>
                 )
             })}
         </div>
