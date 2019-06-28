@@ -1,5 +1,4 @@
-import { Typography } from "@material-ui/core"
-import { DropzoneArea } from "material-ui-dropzone"
+import { Button, Paper, Typography } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -46,8 +45,8 @@ export class DeckImportView extends React.Component {
         deckImportStore.stopMessages()
     }
 
-    handleImageAdded = (files: File[]) => {
-        deckImportViewStore.deckImage = files[0]
+    handleImageAdded = (event: React.ChangeEvent<HTMLInputElement>) => {
+        deckImportViewStore.deckImage = event.target.files![0]
     }
 
     postDeckImage = () => {
@@ -58,74 +57,69 @@ export class DeckImportView extends React.Component {
     }
 
     render() {
+        // @ts-ignore
         return (
             <div style={{margin: spacing(4), justifyContent: "center", display: "flex", flexWrap: "wrap"}}>
                 <div>
                     <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>Import Deck</Typography>
-                    {saveUnregisteredDeckStore.currentDeck ? null : (
-                        <>
-                            <ExpansionSelector store={this.expansionStore} style={{marginBottom: spacing(2), width: 200}}/>
-                            <div style={{display: "flex", alignItems: "center", height: 250}}>
-                                <div style={{width: 200, height: 250}}>
-                                    <DropzoneArea
+                    <Paper style={{padding: spacing(2), maxWidth: 600}}>
+                        {saveUnregisteredDeckStore.currentDeck ? null : (
+                            <>
+                                <ExpansionSelector store={this.expansionStore} style={{marginBottom: spacing(2), width: 200}}/>
+                                <div style={{marginBottom: spacing(2)}}>
+                                    <input
+                                        accept="image/*"
+                                        style={{display: "none"}}
+                                        id="contained-button-file"
+                                        multiple={false}
+                                        type="file"
                                         onChange={this.handleImageAdded.bind(this)}
-                                        filesLimit={1}
-                                        dropzoneText={"Upload a deck list image"}
-                                        acceptedFiles={["image/*"]}
-                                        // 3MB
-                                        maxFileSize={3145728}
                                     />
+                                    <label htmlFor="contained-button-file">
+                                        {/*@ts-ignore*/}
+                                        <Button variant="contained" component={"span"} color={"primary"}>
+                                            Upload a deck list image
+                                        </Button>
+                                    </label>
                                 </div>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        width: 212,
-                                        paddingLeft: spacing(2),
-                                        paddingRight: spacing(2),
-                                        height: "100%",
-                                    }}
+                                <Typography variant={"body2"}>
+                                    Use a picture taken straight on with low glare and clear text. 1mb or less in size is best, but it must be less than
+                                    3mb.
+                                    Setting your phone camera to the lowest quality setting is often best. Leave about 1/4 inch around the edges after
+                                    cropping it.
+                                </Typography>
+                                <KeyButton
+                                    disabled={
+                                        !deckImportViewStore.deckImage
+                                        || deckImportStore.readingDeckImage
+                                        || !cardStore.cardNameLowercaseToCard
+                                        || !!saveUnregisteredDeckStore.currentDeck
+                                        || this.expansionStore.expansionNumber() == null
+                                    }
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    loading={deckImportStore.readingDeckImage}
+                                    style={{marginTop: spacing(2), marginBottom: spacing(2)}}
+                                    onClick={this.postDeckImage}
                                 >
-                                    <Typography variant={"body2"}>
-                                        Use a picture taken straight on with low glare and clear text. 1mb or less in size is best, but it must be less than
-                                        3mb.
-                                        Setting your phone camera to the lowest quality setting is often best. Leave about 1/4 inch around the edges after
-                                        cropping it.
-                                    </Typography>
-                                    <KeyButton
-                                        disabled={
-                                            !deckImportViewStore.deckImage
-                                            || deckImportStore.readingDeckImage
-                                            || !cardStore.cardNameLowercaseToCard
-                                            || !!saveUnregisteredDeckStore.currentDeck
-                                            || this.expansionStore.expansionNumber() == null
-                                        }
-                                        variant={"contained"}
-                                        color={"primary"}
-                                        loading={deckImportStore.readingDeckImage}
-                                        style={{marginTop: spacing(2), marginBottom: spacing(2)}}
-                                        onClick={this.postDeckImage}
-                                    >
-                                        Read Deck List
-                                    </KeyButton>
-                                    {deckImportStore.readingDeckMessage ? (
-                                        <Typography variant={"body2"}>{deckImportStore.readingDeckMessage}</Typography>
-                                    ) : null}
-                                </div>
+                                    Read Deck List
+                                </KeyButton>
+                                {deckImportStore.readingDeckMessage ? (
+                                    <Typography variant={"body2"}>{deckImportStore.readingDeckMessage}</Typography>
+                                ) : null}
+                            </>
+                        )}
+                        {deckImportViewStore.deckImage ? (
+                            <div style={{paddingTop: spacing(2)}}>
+                                <img
+                                    style={{
+                                        width: screenStore.screenSizeXs() ? 200 : 400,
+                                    }}
+                                    src={URL.createObjectURL(deckImportViewStore.deckImage)}
+                                />
                             </div>
-                        </>
-                    )}
-                    {deckImportViewStore.deckImage ? (
-                        <div style={{paddingTop: spacing(2)}}>
-                            <img
-                                style={{
-                                    marginTop: spacing(4),
-                                    width: screenStore.screenSizeXs() ? 200 : 400,
-                                }}
-                                src={URL.createObjectURL(deckImportViewStore.deckImage)}
-                            />
-                        </div>
-                    ) : null}
+                        ) : null}
+                    </Paper>
                 </div>
                 {deckImportStore.readDeck ? <CreateUnregisteredDeck initialDeck={deckImportStore.readDeck}/> : null}
             </div>
