@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.HttpClientErrorException
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateWinsLosses = "PT72H"
@@ -69,34 +70,39 @@ class DeckWinsService(
         val order = if (winsPage != -1) "-wins" else "-losses"
         val pageEnum = if (winsPage != -1) DeckPageType.WINS else DeckPageType.LOSSES
 
-        val decks = keyforgeApi.findDecks(page, order)
-        val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
-        if (updateDecks.isNullOrEmpty()) {
+        try {
+            val decks = keyforgeApi.findDecks(page, order)
+            val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
+            if (updateDecks.isNullOrEmpty()) {
 
-            deckPageService.setCurrentPage(-1, pageEnum)
-            if (winsPage == -1) {
-                log.info("Pages of wins losses: $lossesPage")
-                updatingWinsAndLosses = false
-                updateCardAndHouseWins()
-            } else {
-                deckPageService.setCurrentPage(1, DeckPageType.LOSSES)
+                deckPageService.setCurrentPage(-1, pageEnum)
+                if (winsPage == -1) {
+                    log.info("Pages of wins losses: $lossesPage")
+                    updatingWinsAndLosses = false
+                    updateCardAndHouseWins()
+                } else {
+                    deckPageService.setCurrentPage(1, DeckPageType.LOSSES)
+                }
+                return
             }
-            return
-        }
-        if (page % 100 == 0) log.info("Update $order for decks on page $page")
-        updateDecks
-                .forEach {
-                    val preexisting = deckRepo.findByKeyforgeId(it.id)
-                    if (preexisting != null) {
-                        val cards = cardService.cardsForDeck(preexisting)
-                        val updated = preexisting.withCards(cards).addGameStats(it)
+            if (page % 100 == 0) log.info("Update $order for decks on page $page")
+            updateDecks
+                    .forEach {
+                        val preexisting = deckRepo.findByKeyforgeId(it.id)
+                        if (preexisting != null) {
+                            val cards = cardService.cardsForDeck(preexisting)
+                            val updated = preexisting.withCards(cards).addGameStats(it)
 
-                        if (updated != null) {
-                            deckRepo.save(updated)
+                            if (updated != null) {
+                                deckRepo.save(updated)
+                            }
                         }
                     }
-                }
-        deckPageService.setCurrentPage(page + 1, pageEnum)
+            deckPageService.setCurrentPage(page + 1, pageEnum)
+
+        } catch (e: HttpClientErrorException.TooManyRequests) {
+            log.warn("Keyforge API says we made too many requests in deck win service. Sad day.")
+        }
     }
 
     fun updateCardAndHouseWins() {

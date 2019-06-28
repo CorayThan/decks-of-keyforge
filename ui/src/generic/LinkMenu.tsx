@@ -4,16 +4,20 @@ import { ArrowDropDown } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { Redirect } from "react-router"
 import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
+import { deckStore } from "../decks/DeckStore"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { screenStore } from "../ui/ScreenStore"
 
 export interface LinkInfo {
     to?: string
-    component?: React.ReactType<MenuItemProps>
+    component?: React.ElementType<MenuItemProps>
     text: string
     mobileActive?: boolean
+    randomDeck?: boolean
 }
 
 interface LinkMenuProps {
@@ -58,20 +62,25 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
 
     render() {
         const {links, genericOnClick, style} = this.props
-        if (screenStore.screenSizeMd()) {
+        if (deckStore.randomDeckId) {
+            return <Redirect to={Routes.deckPage(deckStore.randomDeckId)}/>
+        }
+        if (screenStore.smallScreenTopBar()) {
             return (
                 <>
                     {links
                         .filter(linkInfo => linkInfo.mobileActive)
                         .map(linkInfo => {
-                            if (linkInfo.to == null) {
+                            if (linkInfo.randomDeck) {
                                 return (
+                                    // @ts-ignore
                                     <MenuItem
                                         key={linkInfo.text}
                                         color={"inherit"}
                                         style={{display: "flex", justifyContent: "center", ...style}}
                                         onClick={() => {
                                             if (genericOnClick) {
+                                                this.store.handleClose()
                                                 genericOnClick()
                                             }
                                         }}

@@ -3,12 +3,13 @@ import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { log } from "../config/Utils"
+import { log, prettyJson } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
+import { DeckNameId } from "./search/DeckNameId"
 
 export class DeckStore {
 
@@ -60,6 +61,9 @@ export class DeckStore {
     @observable
     randomDeckId?: string
 
+    @observable
+    deckNameSearchResults: DeckNameId[] = []
+
     reset = () => {
         this.deckPage = undefined
         this.nextDeckPage = undefined
@@ -83,6 +87,7 @@ export class DeckStore {
     findRandomDeckId = () => {
         axios.get(`${DeckStore.CONTEXT}/random`)
             .then((response: AxiosResponse<string>) => {
+                log.debug(`Found random deck id: ${response.data}`)
                 this.randomDeckId = response.data
             })
     }
@@ -130,6 +135,14 @@ export class DeckStore {
         axios.get(`${DeckStore.CONTEXT}/${keyforgeId}/sale-info`)
             .then((response: AxiosResponse) => {
                 this.saleInfo = response.data
+            })
+    }
+
+    findDecksByName = (name: string) => {
+        axios.get(`${DeckStore.CONTEXT}/by-name/${name}`)
+            .then((response: AxiosResponse<DeckNameId[]>) => {
+                log.debug(`Find decks by name results: ${prettyJson(response.data)}`)
+                this.deckNameSearchResults = response.data
             })
     }
 

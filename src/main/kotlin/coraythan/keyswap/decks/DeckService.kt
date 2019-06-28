@@ -289,12 +289,20 @@ class DeckService(
         }
 
         filters.cards.forEach {
-            if (it.house != null) {
-                predicate.and(deckQ.cardNamesWithHouseString.like("%${it.cardName}${it.house}%"))
-            } else if (it.quantity == 0) {
-                predicate.and(deckQ.cardNamesString.notLike("%${it.cardName}1%"))
-            } else {
-                predicate.and(deckQ.cardNamesString.like("%${it.cardName}${it.quantity}%"))
+            when {
+                it.house != null -> predicate.andAnyOf(
+                        *it.combinedCardNames.map { cardName ->
+                            deckQ.cardNamesWithHouseString.like("%$cardName${it.house}%")
+                        }.toTypedArray()
+                )
+                it.quantity == 0 -> it.combinedCardNames.forEach { cardName ->
+                    predicate.andNot(deckQ.cardNamesString.notLike("%${cardName}1%"))
+                }
+                else -> predicate.andAnyOf(
+                        *it.combinedCardNames.map { cardName ->
+                            deckQ.cardNamesString.like("%$cardName${it.quantity}%")
+                        }.toTypedArray()
+                )
             }
         }
 
@@ -365,6 +373,26 @@ class DeckService(
 
         return mapped
                 .sortedByDescending { it.dateListed }
+    }
+
+    fun findDecksByName(name: String): List<DeckNameId> {
+        val deckQ = QDeck.deck
+        val predicate = BooleanBuilder()
+        val trimmed = name
+                .toLowerCase()
+                .trim()
+        val tokenized = trimmed
+                .split("\\W+".toRegex())
+                .filter { it.length > 2 }
+
+        val toUse = if (tokenized.isEmpty()) listOf(trimmed) else tokenized
+        toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
+
+        return query.selectFrom(deckQ)
+                .where(predicate)
+                .limit(5)
+                .fetch()
+                .map { DeckNameId(it.name, it.keyforgeId) }
     }
 
 }

@@ -55,11 +55,14 @@ data class DeckFilters(
     fun clean() = if (this.pageSize < 20) this.copy(pageSize = 20) else this
 }
 
-data class DeckCardQuantity(
-        val cardName: String,
+data class  DeckCardQuantity(
+        val cardName: String?,
+        val cardNames: List<String>?,
         val quantity: Int,
         val house: House? = null
-)
+) {
+    val combinedCardNames = cardNames ?: listOf(cardName!!)
+}
 
 enum class DeckSortOptions {
     ADDED_DATE,

@@ -12,13 +12,18 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.4"
+export const latestVersion = "5.5"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.5"} expanded={true} releaseNotes={[
+                    "You can now search for a number of copies of any cards. For example, you could search for decks with 1 of Key Charge, Chota Hazri, or " +
+                    "Key Abduction.",
+                    "Added a search field to the top bar. Should help for quick deck name searches!"
+                ]}/>
                 <ReleaseNote releaseNumber={"5.4"} expanded={true} releaseNotes={[
                     "Updated description and terms for auction bidding and listing. Sniping is actively discouraged, and if server slowness or instability " +
                     "significantly affects the ability of users to bid on an auction, sellers are allowed to relist that auction with a description " +

@@ -18,10 +18,6 @@ interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string
 
 export class DeckViewPage extends React.Component<DeckViewPageProps> {
 
-    componentDidMount(): void {
-        deckStore.randomDeckId = undefined
-    }
-
     render() {
         const deckId = this.props.match.params.keyforgeDeckId
         log.debug(`Rendering deck view page with deck id: ${deckId}`)
@@ -56,14 +52,11 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
     }
 
     refreshDeck = (deckId: string) => {
+        deckStore.randomDeckId = undefined
         deckStore.findDeck(deckId)
         deckStore.findDeckSaleInfo(deckId)
         deckStore.importedDeck = undefined
         deckImportPopStore.popOpen = false
-        if (deckStore.deck) {
-            const deck = deckStore.deck
-            uiStore.setTopbarValues(deck.deck.name, "Deck", "")
-        }
     }
 
     render() {
@@ -84,6 +77,15 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
         const deck = props.deck.deck
         uiStore.setTopbarValues("Deck", "Deck", "")
         uiStore.setDocTitleAndDescription(deck.name)
+    }
+
+    componentDidMount(): void {
+        uiStore.setTopbarValues(this.props.deck.deck.name, "Deck", "")
+
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<{ deck: DeckWithSynergyInfo }>) {
+        uiStore.setTopbarValues(nextProps.deck.deck.name, "Deck", "")
     }
 
     render() {

@@ -250,7 +250,7 @@ export class MultiCardSearchSuggest extends React.Component<MultiCardSearchSugge
     }
 }
 
-const MultiCardSearchSuggestInner = (props: MultiCardSearchSuggestProps & {cards: OptionType[]}) => {
+const MultiCardSearchSuggestInner = (props: MultiCardSearchSuggestProps & { cards: OptionType[] }) => {
     const classes = useStyles()
     const theme = useTheme()
     const {card, cards, placeholder, style} = props
@@ -312,7 +312,7 @@ export class SingleCardSearchSuggest extends React.Component<SingleCardSearchSug
     }
 }
 
-const SingleCardSearchSuggestInner = (props: SingleCardSearchSuggestProps & {cards: OptionType[]}) => {
+const SingleCardSearchSuggestInner = (props: SingleCardSearchSuggestProps & { cards: OptionType[] }) => {
     const classes = useStyles()
     const theme = useTheme()
     const {card, cards, placeholder, style} = props
@@ -339,19 +339,17 @@ const SingleCardSearchSuggestInner = (props: SingleCardSearchSuggestProps & {car
 
     return (
         <div className={classes.root}>
-            <NoSsr>
-                <Select
-                    classes={classes}
-                    styles={{...selectStyles, ...style}}
-                    inputId="react-select-multiple"
-                    options={cards}
-                    components={components}
-                    value={card.cardName ? {label: card.cardName, value: card.cardName} : null}
-                    onChange={handleSingleChange}
-                    isMulti={false}
-                    placeholder={placeholder}
-                />
-            </NoSsr>
+            <Select
+                classes={classes}
+                styles={{...selectStyles, ...style}}
+                inputId="react-select-multiple"
+                options={cards}
+                components={components}
+                value={card.cardName ? {label: card.cardName, value: card.cardName} : null}
+                onChange={handleSingleChange}
+                isMulti={false}
+                placeholder={placeholder}
+            />
         </div>
     )
 }

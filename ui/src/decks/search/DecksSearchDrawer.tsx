@@ -392,6 +392,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     <MenuItem value={"4"}>4+</MenuItem>
                                                     <MenuItem value={"5"}>5+</MenuItem>
                                                     <MenuItem value={"6"}>6+</MenuItem>
+                                                    <MenuItem value={"7"}>7+</MenuItem>
                                                     {houseValuesArray.map(houseValue => {
                                                         return (
                                                             <MenuItem value={houseValue.house} key={houseValue.house}>

@@ -68,13 +68,13 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 8
-  rating: 2.5
+  rating: 3
   expectedAmber: 0.5
   traits: [goodReap]
   synergies:
     - trait: destroysEnemyCreatures
       type: house
-      rating: 3
+      rating: 2
     - trait: dealsDamage
       type: house
       rating: 2
@@ -101,7 +101,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 13
-  rating: 2
+  rating: 1.5
   creatureControl: 0.5
   synergies:
     - trait: highTotalCreaturePower
@@ -130,7 +130,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 20
-  rating: 1.5
+  rating: 2
   traits: [elusive]
 
 - name: Flamethrower
@@ -244,7 +244,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 43
-  rating: 1.5
+  rating: 2
   expectedAmber: 2
   traits: [forgesKeys]
   synergies:
@@ -255,7 +255,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 48
-  rating: 1
+  rating: 0.5
   effectivePower: 3
   traits: [usableArtifact, shard, increasesCreaturePower]
   synergies:
@@ -405,7 +405,7 @@
       cardNumber: 67
   rating: 1.5
   creatureControl: 2.5
-  traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains, omega]
+  traits: [destroysEnemyCreatures, destroysFriendlyCreatures, omega]
   synergies:
     - trait: highTotalCreaturePower
       rating: -3
@@ -538,7 +538,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 95
-  rating: 2
+  rating: 3
   creatureControl: 1
 
 - name: Orb of Invidius
@@ -732,7 +732,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 127
-  rating: 2.5
+  rating: 3
   deckManipulation: 1
   traits: [elusive, archives, archivesRandom]
 
@@ -740,7 +740,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 128
-  rating: 3
+  rating: 3.5
   expectedAmber: 3
   traits: [alpha, archives, archivesRandom]
 
@@ -795,7 +795,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 143
-  rating: 3
+  rating: 3.5
   expectedAmber: 2
   creatureControl: 1
   traits: [dealsDamage]
@@ -804,7 +804,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 144
-  rating: 1.5
+  rating: 1
   amberControl: 1
   traits: [usableArtifact, capturesAmber]
 
@@ -912,6 +912,10 @@
   rating: 1
   effectivePower: 6
   traits: [elusive, protectsCreatures]
+  synergies:
+    - trait: highCreatureCount
+      type: house
+      rating: 2
 
 - name: Mars First
   cardNumbers:
@@ -935,7 +939,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 166
-  rating: 2.5
+  rating: 3
   amberControl: 1
   expectedAmber: 2
   traits: [capturesAmberOnEnemies]
@@ -1093,7 +1097,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 196
-  rating: 2.5
+  rating: 3
   creatureControl: 1.5
   deckManipulation: -0.5
   traits: [chains]
@@ -1274,7 +1278,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 228
-  rating: 2.5
+  rating: 3
   amberControl: 1
 
 - name: Brobnar Ambassador
@@ -1398,7 +1402,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 255
-  rating: 2
+  rating: 2.5
   expectedAmber: 2
   traits: [sacrificesCreatures]
   synergies:
@@ -1420,7 +1424,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 260
-  rating: 2
+  rating: 3
   creatureControl: 1
 
 - name: Proclamation 346E
@@ -1497,7 +1501,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 273
-  rating: 2
+  rating: 3
   expectedAmber: 1
   creatureControl: 1.5
   traits: [sacrificesCreatures, dealsDamage]

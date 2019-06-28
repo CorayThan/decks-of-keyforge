@@ -159,33 +159,23 @@ class CardService(
     }
 
     fun reloadCachedCards() {
-        nonMaverickCachedCards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
+        val cards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
+            val synTraitsFromTraits = it.traits.mapNotNull { trait ->
+                Synergies.fromTrait(trait)
+            }
             it.traits.size
-            CardNumberSetPair(it.expansion, it.cardNumber.toInt()) to it
+            CardNumberSetPair(it.expansion, it.cardNumber.toInt()) to
+                    if (synTraitsFromTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(traits = it.extraCardInfo!!.traits.plus(synTraitsFromTraits)))
         }.toMap()
+
+        extraInfo = cards.map { it.key to it.value.extraCardInfo!! }.toMap()
+        nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key]) }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
                 ?.map { it.cardTitle to it }
                 ?.toMap()?.values
                 ?.toList()
                 ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
-
-        val addToExtraInfo = nonMaverickCachedCards?.mapNotNull { entry ->
-            val card = entry.value
-            val synTraitsFromTraits = card.traits.mapNotNull { trait ->
-                Synergies.fromTrait(trait)
-            }
-            if (synTraitsFromTraits.isNotEmpty()) {
-                entry.key to synTraitsFromTraits
-            } else {
-                null
-            }
-        }?.toMap()
-
-        extraInfo = extraInfo.map {
-            val add = addToExtraInfo?.get(it.key)
-            it.key to if (add == null) it.value else it.value.copy(traits = it.value.traits.plus(add))
-        }.toMap()
 
     }
 

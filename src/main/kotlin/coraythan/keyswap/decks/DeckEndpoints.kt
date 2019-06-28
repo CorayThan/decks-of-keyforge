@@ -5,7 +5,6 @@ import coraythan.keyswap.decks.models.DeckCount
 import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.decks.models.DecksPage
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
-import coraythan.keyswap.publicapis.PublicApiService
 import coraythan.keyswap.thirdpartyservices.AzureOcr
 import coraythan.keyswap.userdeck.UserDeckService
 import org.slf4j.LoggerFactory
@@ -19,11 +18,13 @@ class DeckEndpoints(
         private val deckService: DeckService,
         private val deckImporterService: DeckImporterService,
         private val azureOcr: AzureOcr,
-        private val publicApiService: PublicApiService,
         private val userDeckService: UserDeckService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    @GetMapping("/by-name/{name}")
+    fun findDecksByName(@PathVariable name: String) = deckService.findDecksByName(name)
 
     @PostMapping("/filter")
     fun decks(@RequestBody deckFilters: DeckFilters, @RequestHeader(value = "Timezone") offsetMinutes: Int): DecksPage {

@@ -13,6 +13,7 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
 import { DeckFilters } from "../decks/search/DeckFilters"
+import { DeckSearchSuggest } from "../decks/search/DeckSearchSuggest"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu } from "../generic/LinkMenu"
@@ -55,7 +56,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         }
 
         let menuContents
-        if (screenStore.screenSizeMd()) {
+        if (screenStore.smallScreenTopBar()) {
             menuContents = (
                 <>
                     <RightMenu/>
@@ -63,10 +64,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                         variant={"h4"}
                         style={{marginLeft: spacing(2)}}
                         color={"inherit"}>
-                        {screenStore.screenWidth < 440 ? topbarShortName : topbarName}
+                        {screenStore.screenWidth < 800 ? topbarShortName : topbarName}
                     </Typography>
-                    {screenStore.screenWidth < 800 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
+                    <DeckSearchSuggest placement={"bottom-end"}/>
                     <div style={{marginLeft: spacing(2), marginRight: spacing(2)}}>
                         <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
                     </div>
@@ -82,8 +83,9 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                         color={"inherit"}>
                         {screenStore.screenWidth < 1480 ? topbarShortName : topbarName}
                     </Typography>
-                    {screenStore.screenWidth < 1700 ? null : subheaderNode}
+                    {screenStore.screenWidth < 1820 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
+                    <DeckSearchSuggest placement={"bottom-start"}/>
                     <RightMenu/>
                 </>
             )
@@ -117,7 +119,7 @@ const rightMenuStore = new RightMenuStore()
 class RightMenu extends React.Component {
 
     render() {
-        if (screenStore.screenSizeMd()) {
+        if (screenStore.smallScreenTopBar()) {
             return (
                 <>
                     <IconButton
@@ -233,7 +235,7 @@ class UserLinks extends React.Component {
                         style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >
-                        <PatreonIcon style={{marginRight: spacing(1)}} primary={screenStore.screenSizeMd()}/>
+                        <PatreonIcon style={{marginRight: spacing(1)}} primary={screenStore.smallScreenTopBar()}/>
                         Patron Rewards
                     </LinkButton>
                     <KeyButton
