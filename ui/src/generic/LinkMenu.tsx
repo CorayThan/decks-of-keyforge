@@ -139,7 +139,12 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
     }
 }
 
-const MenuPopper = observer(React.forwardRef((props: { store: LinkMenuStore, links: LinkInfo[] }, ref: React.Ref<HTMLDivElement>) => {
+interface MenuPopperProps {
+    store: LinkMenuStore
+    links: LinkInfo[]
+}
+
+const MenuPopper = observer(React.forwardRef((props: MenuPopperProps, ref: React.Ref<HTMLDivElement>) => {
     const {store, links} = props
     return (
         <Popper open={store.open} anchorEl={(ref as any).current} transition disablePortal>

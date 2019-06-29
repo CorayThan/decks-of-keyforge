@@ -4,7 +4,7 @@ import * as React from "react"
 import { MultiSelect, SelectedValues } from "../../mui-restyled/MultiSelect"
 import { Rarity } from "../rarity/Rarity"
 
-const raritySelectValues: Array<(Rarity | "Special")> = [
+const raritySelectValues: (Rarity | "Special")[] = [
     Rarity.Common,
     Rarity.Uncommon,
     Rarity.Rare,

@@ -98,7 +98,7 @@ export class BidButton extends React.Component<BidButtonProps> {
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
                             By bidding on this deck you agree to pay the seller the final price when the auction is completed if you are the highest bidder.
-                            That price will be equal to the second highest bidder's highest bid. You also agree to pay any shipping listed in the description.
+                            {"That price will be equal to the second highest bidder's highest bid. You also agree to pay any shipping listed in the description."}
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
                             If you win, you and the seller will be sent an email from Decks of Keyforge.

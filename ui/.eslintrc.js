@@ -22,6 +22,10 @@ module.exports =  {
         "accessibility": "no-public",
         "@typescript-eslint/explicit-member-accessibility": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/member-delimiter-style": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-empty-interface": "off",
     },
     settings:  {
         react:  {

@@ -86,8 +86,13 @@ export class AercScoreView extends React.Component<AercScoreViewProps> {
                     <AercValue
                         value={deckManipulation}
                         name={"D"}
-                        tooltip={<CardsWithAerc title={"Deck Manipulation"} accessor={card => card!.extraCardInfo!.deckManipulation}
-                                                cards={searchResultCards}/>}
+                        tooltip={(
+                            <CardsWithAerc
+                                title={"Deck Manipulation"}
+                                accessor={card => card!.extraCardInfo!.deckManipulation}
+                                cards={searchResultCards}
+                            />
+                        )}
                         textStyle={textStyle}
                     />
                     {horizontalLine}

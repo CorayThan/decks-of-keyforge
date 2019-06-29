@@ -27,44 +27,6 @@ interface DeckListViewProps {
     sellerView?: boolean
 }
 
-@observer
-export class DeckListView extends React.Component<DeckListViewProps> {
-    render() {
-        if (this.props.sellerView) {
-            return <DeckTableView {...this.props}/>
-        }
-        return (
-            <>
-                {this.props.decks.map((deck) => {
-
-                    let saleInfo = null
-                    if (deck.deckSaleInfo) {
-                        saleInfo = (
-                            <SaleInfoView
-                                saleInfo={deck.deckSaleInfo}
-                                deckName={deck.name}
-                                keyforgeId={deck.keyforgeId}
-                                deckId={deck.id}
-                            />
-                        )
-                    }
-
-                    const deckContainerStyle = screenStore.screenSizeMd() ? undefined : {display: "flex"}
-
-                    return (
-                        <div key={deck.id} style={deckContainerStyle}>
-                            <div>
-                                <DeckViewSmall deck={deck}/>
-                            </div>
-                            {saleInfo}
-                        </div>
-                    )
-                })}
-            </>
-        )
-    }
-}
-
 class DeckTableViewStore {
     @observable
     activeTableSort = ""
@@ -133,111 +95,111 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
         }
         return (
             <div>
-            <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
-                <Table size={"small"}>
-                    <TableHead>
-                        <TableRow>
-                            <DeckHeader title={"Name"} property={"name"} minWidth={144}/>
-                            <TableCell>Houses</TableCell>
-                            {displayPrices ? (
-                                <>
-                                    <DeckHeader title={"Price / Bid"} property={"price"}/>
-                                    <DeckHeader title={"BIN"} property={"buyItNow"}/>
-                                </>
-                            ) : null}
-                            {sellerView ? <TableCell>Seller Tools</TableCell> : null}
-                            <DeckHeader title={"SAS"} property={"sasRating"}/>
-                            <DeckHeader title={"Cards"} property={"cardsRating"}/>
-                            <DeckHeader title={"Synergy"} property={"synergyRating"}/>
-                            <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
-                            <DeckHeader title={"AERC"} property={"aercScore"}/>
-                            <DeckHeader title={"A"} property={"amberControl"}/>
-                            <DeckHeader title={"E"} property={"expectedAmber"}/>
-                            <DeckHeader title={"R"} property={"artifactControl"}/>
-                            <DeckHeader title={"C"} property={"creatureControl"}/>
-                            <DeckHeader title={"D"} property={"deckManipulation"}/>
-                            <DeckHeader title={"P"} property={"effectivePower"}/>
-                            {keyLocalStorage.smallTableView ? null : (
-                                <>
-                                    <DeckHeader title={"Bonus Aember"} property={"rawAmber"}/>
-                                    <DeckHeader title={"Key Cheats"} property={"keyCheatCount"}/>
-                                    <DeckHeader title={"Draw Cards"} property={"cardDrawCount"}/>
-                                    <DeckHeader title={"Archive Cards"} property={"cardArchiveCount"}/>
-                                    <DeckHeader title={"Creature Power"} property={"totalPower"}/>
-                                    <DeckHeader title={"Total Armor"} property={"totalArmor"}/>
-                                    <DeckHeader title={"Power"} property={"powerLevel"}/>
-                                    <DeckHeader title={"Chains"} property={"chains"}/>
-                                    <DeckHeader title={"Wins"} property={"wins"}/>
-                                    <DeckHeader title={"Losses"} property={"losses"}/>
-                                </>
-                            )}
-                            <TableCell>
-                                <IconButton onClick={keyLocalStorage.toggleSmallTableView}>
-                                    {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {decks.map((deck) => (
-                            <TableRow key={deck.id}>
-                                <TableCell>
-                                    <KeyLink style={{color: "rgba(0, 0, 0, 0.87)"}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
-                                        {deck.name}
-                                    </KeyLink>
-                                </TableCell>
-                                <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
-                                {displayPrices || sellerView ? (
+                <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
+                    <Table size={"small"}>
+                        <TableHead>
+                            <TableRow>
+                                <DeckHeader title={"Name"} property={"name"} minWidth={144}/>
+                                <TableCell>Houses</TableCell>
+                                {displayPrices ? (
                                     <>
-                                        <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
-                                        <TableCell>
-                                            {findBuyItNowForDeck(deck)}
-                                        </TableCell>
+                                        <DeckHeader title={"Price / Bid"} property={"price"}/>
+                                        <DeckHeader title={"BIN"} property={"buyItNow"}/>
                                     </>
                                 ) : null}
-                                {sellerView ? (
-                                    <TableCell style={{minWidth: 200}}>
-                                        <MyDecksButton deck={deck}/>
-                                    </TableCell>
-                                ) : null}
-                                <TableCell>{deck.sasRating}</TableCell>
-                                <TableCell>{deck.cardsRating}</TableCell>
-                                <TableCell>{deck.synergyRating}</TableCell>
-                                <TableCell>{deck.antisynergyRating}</TableCell>
-                                <TableCell>{deck.aercScore}</TableCell>
-                                <TableCell>{deck.amberControl}</TableCell>
-                                <TableCell>{deck.expectedAmber}</TableCell>
-                                <TableCell>{deck.artifactControl}</TableCell>
-                                <TableCell>{deck.creatureControl}</TableCell>
-                                <TableCell>{deck.deckManipulation}</TableCell>
-                                <TableCell>{deck.effectivePower}</TableCell>
+                                {sellerView ? <TableCell>Seller Tools</TableCell> : null}
+                                <DeckHeader title={"SAS"} property={"sasRating"}/>
+                                <DeckHeader title={"Cards"} property={"cardsRating"}/>
+                                <DeckHeader title={"Synergy"} property={"synergyRating"}/>
+                                <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
+                                <DeckHeader title={"AERC"} property={"aercScore"}/>
+                                <DeckHeader title={"A"} property={"amberControl"}/>
+                                <DeckHeader title={"E"} property={"expectedAmber"}/>
+                                <DeckHeader title={"R"} property={"artifactControl"}/>
+                                <DeckHeader title={"C"} property={"creatureControl"}/>
+                                <DeckHeader title={"D"} property={"deckManipulation"}/>
+                                <DeckHeader title={"P"} property={"effectivePower"}/>
                                 {keyLocalStorage.smallTableView ? null : (
                                     <>
-                                        <TableCell>{deck.rawAmber}</TableCell>
-                                        <TableCell>{deck.keyCheatCount}</TableCell>
-                                        <TableCell>{deck.cardDrawCount}</TableCell>
-                                        <TableCell>{deck.cardArchiveCount}</TableCell>
-                                        <TableCell>{deck.totalPower}</TableCell>
-                                        <TableCell>{deck.totalArmor}</TableCell>
-                                        <TableCell>{deck.powerLevel}</TableCell>
-                                        <TableCell>{deck.chains}</TableCell>
-                                        <TableCell>{deck.wins}</TableCell>
-                                        <TableCell>{deck.losses}</TableCell>
+                                        <DeckHeader title={"Bonus Aember"} property={"rawAmber"}/>
+                                        <DeckHeader title={"Key Cheats"} property={"keyCheatCount"}/>
+                                        <DeckHeader title={"Draw Cards"} property={"cardDrawCount"}/>
+                                        <DeckHeader title={"Archive Cards"} property={"cardArchiveCount"}/>
+                                        <DeckHeader title={"Creature Power"} property={"totalPower"}/>
+                                        <DeckHeader title={"Total Armor"} property={"totalArmor"}/>
+                                        <DeckHeader title={"Power"} property={"powerLevel"}/>
+                                        <DeckHeader title={"Chains"} property={"chains"}/>
+                                        <DeckHeader title={"Wins"} property={"wins"}/>
+                                        <DeckHeader title={"Losses"} property={"losses"}/>
                                     </>
                                 )}
                                 <TableCell>
-                                    <KeyLink
-                                        to={Routes.deckPage(deck.keyforgeId)}
-                                        noStyle={true}
-                                    >
-                                        <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
-                                    </KeyLink>
+                                    <IconButton onClick={keyLocalStorage.toggleSmallTableView}>
+                                        {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
+                                    </IconButton>
                                 </TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Paper>
+                        </TableHead>
+                        <TableBody>
+                            {decks.map((deck) => (
+                                <TableRow key={deck.id}>
+                                    <TableCell>
+                                        <KeyLink style={{color: "rgba(0, 0, 0, 0.87)"}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
+                                            {deck.name}
+                                        </KeyLink>
+                                    </TableCell>
+                                    <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
+                                    {displayPrices || sellerView ? (
+                                        <>
+                                            <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
+                                            <TableCell>
+                                                {findBuyItNowForDeck(deck)}
+                                            </TableCell>
+                                        </>
+                                    ) : null}
+                                    {sellerView ? (
+                                        <TableCell style={{minWidth: 200}}>
+                                            <MyDecksButton deck={deck}/>
+                                        </TableCell>
+                                    ) : null}
+                                    <TableCell>{deck.sasRating}</TableCell>
+                                    <TableCell>{deck.cardsRating}</TableCell>
+                                    <TableCell>{deck.synergyRating}</TableCell>
+                                    <TableCell>{deck.antisynergyRating}</TableCell>
+                                    <TableCell>{deck.aercScore}</TableCell>
+                                    <TableCell>{deck.amberControl}</TableCell>
+                                    <TableCell>{deck.expectedAmber}</TableCell>
+                                    <TableCell>{deck.artifactControl}</TableCell>
+                                    <TableCell>{deck.creatureControl}</TableCell>
+                                    <TableCell>{deck.deckManipulation}</TableCell>
+                                    <TableCell>{deck.effectivePower}</TableCell>
+                                    {keyLocalStorage.smallTableView ? null : (
+                                        <>
+                                            <TableCell>{deck.rawAmber}</TableCell>
+                                            <TableCell>{deck.keyCheatCount}</TableCell>
+                                            <TableCell>{deck.cardDrawCount}</TableCell>
+                                            <TableCell>{deck.cardArchiveCount}</TableCell>
+                                            <TableCell>{deck.totalPower}</TableCell>
+                                            <TableCell>{deck.totalArmor}</TableCell>
+                                            <TableCell>{deck.powerLevel}</TableCell>
+                                            <TableCell>{deck.chains}</TableCell>
+                                            <TableCell>{deck.wins}</TableCell>
+                                            <TableCell>{deck.losses}</TableCell>
+                                        </>
+                                    )}
+                                    <TableCell>
+                                        <KeyLink
+                                            to={Routes.deckPage(deck.keyforgeId)}
+                                            noStyle={true}
+                                        >
+                                            <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
+                                        </KeyLink>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Paper>
                 {sellerView ? (
                     <Button
                         disabled={deckTableViewStore.priceChanges.length === 0}
@@ -379,4 +341,42 @@ const highestBidder = (deck: Deck): boolean => {
         }
     }
     return false
+}
+
+@observer
+export class DeckListView extends React.Component<DeckListViewProps> {
+    render() {
+        if (this.props.sellerView) {
+            return <DeckTableView {...this.props}/>
+        }
+        return (
+            <>
+                {this.props.decks.map((deck) => {
+
+                    let saleInfo = null
+                    if (deck.deckSaleInfo) {
+                        saleInfo = (
+                            <SaleInfoView
+                                saleInfo={deck.deckSaleInfo}
+                                deckName={deck.name}
+                                keyforgeId={deck.keyforgeId}
+                                deckId={deck.id}
+                            />
+                        )
+                    }
+
+                    const deckContainerStyle = screenStore.screenSizeMd() ? undefined : {display: "flex"}
+
+                    return (
+                        <div key={deck.id} style={deckContainerStyle}>
+                            <div>
+                                <DeckViewSmall deck={deck}/>
+                            </div>
+                            {saleInfo}
+                        </div>
+                    )
+                })}
+            </>
+        )
+    }
 }

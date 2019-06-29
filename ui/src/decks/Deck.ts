@@ -74,7 +74,7 @@ export interface Deck {
 
 export class DeckUtils {
     static cardsInHouses = (deck: Deck) => {
-        const cardsByHouse: Array<{ house: House, cards: KCard[] }> = []
+        const cardsByHouse: { house: House, cards: KCard[] }[] = []
         deck.houses
             .forEach((house) => {
                 const cards = deck.searchResultCards!.filter(card => card.house === house)

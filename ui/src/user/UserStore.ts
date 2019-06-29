@@ -76,7 +76,7 @@ export class UserStore {
         this.loginInProgress = true
         axiosWithoutErrors
             .post(UserStore.CONTEXT + "/register", user)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 log.info("Registered!")
                 messageStore.setSuccessMessage("Welcome to decks of keyforge! You are now being logged in.")
                 this.login({...user})
@@ -131,7 +131,7 @@ export class UserStore {
 
     updateUserProfile = (updateUserProfile: UserProfileUpdate) => {
         axios.post(`${UserStore.SECURE_CONTEXT}/update`, updateUserProfile)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 if (updateUserProfile.email) {
                     this.logout()
                     messageStore.setInfoMessage("Updated your profile! Please sign back in.")
@@ -145,11 +145,11 @@ export class UserStore {
     changePassword = (resetCode: string, newPassword: string) => {
         this.changingPassword = true
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 this.changingPassword = false
                 messageStore.setInfoMessage("Your password has been changed!")
             })
-            .catch((error: AxiosError) => {
+            .catch(() => {
                 this.changingPassword = false
                 messageStore.setErrorMessage("Your password could not be changed. Try sending another reset request.")
             })
@@ -164,7 +164,7 @@ export class UserStore {
                 messageStore.setInfoMessage("We've verified your email!")
                 this.loadLoggedInUser()
             })
-            .catch((error: AxiosError) => {
+            .catch(() => {
                 this.verifyingEmail = false
                 this.emailVerificationSuccessful = false
                 messageStore.setErrorMessage("We couldn't verify your email.")

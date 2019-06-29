@@ -41,10 +41,10 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
                 </Tooltip>
             ) : null}
             <Tooltip title={title}>
-            <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
-            {startCase(props.name)}
-        </Typography>
-        </Tooltip>
-    </span>
+                <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
+                {startCase(props.name)}
+            </Typography>
+            </Tooltip>
+        </span>
     )
 }
