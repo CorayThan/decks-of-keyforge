@@ -56,13 +56,10 @@ data class DeckFilters(
 }
 
 data class  DeckCardQuantity(
-        val cardName: String?,
-        val cardNames: List<String>?,
+        val cardNames: List<String>,
         val quantity: Int,
         val house: House? = null
-) {
-    val combinedCardNames = cardNames ?: listOf(cardName!!)
-}
+)
 
 enum class DeckSortOptions {
     ADDED_DATE,

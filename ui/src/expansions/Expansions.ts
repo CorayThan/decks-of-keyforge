@@ -15,8 +15,6 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: Expansion.AOA, name: "Age of Ascension", abbreviation: "AOA"},
 ]
 
-const expansionNumberStrings = expansionInfos.map(info => info.expansionNumber.toString())
-
 export const expansionInfoMap: Map<number, ExpansionInfo> = new Map(expansionInfos.map(info => (
     [info.expansionNumber, info] as [number, ExpansionInfo]
 )))

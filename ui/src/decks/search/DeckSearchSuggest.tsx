@@ -83,14 +83,14 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
                     marginLeft: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     marginRight: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     alignItems: "center",
-                    width: screenStore.screenSizeXs() ? 144 : 240
+                    width: screenStore.screenSizeXs() ? 124 : 240
                 }}
             >
                 <Search style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}/>
                 <InputBase
                     onChange={searchDeckNameStore.handleSearchChange}
                     style={{caretColor: "#FFFFFF"}}
-                    placeholder={"Search decks..."}
+                    placeholder={screenStore.screenSizeXs() ? "Search" : "Search decks..."}
                     className={classes.input}
                     value={searchDeckNameStore.deckName}
                     onKeyPress={(event) => {

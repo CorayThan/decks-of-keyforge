@@ -1,5 +1,12 @@
 import { observable } from "mobx"
 
+export enum ScreenSize {
+    xs,
+    sm,
+    md,
+    lg
+}
+
 export class ScreenStore {
 
     @observable
@@ -45,13 +52,6 @@ export class ScreenStore {
             this.screenSize = ScreenSize.lg
         }
     }
-}
-
-export enum ScreenSize {
-    xs,
-    sm,
-    md,
-    lg
 }
 
 export const screenStore = new ScreenStore()

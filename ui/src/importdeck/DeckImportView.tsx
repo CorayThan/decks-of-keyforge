@@ -112,6 +112,7 @@ export class DeckImportView extends React.Component {
                         {deckImportViewStore.deckImage ? (
                             <div style={{paddingTop: spacing(2)}}>
                                 <img
+                                    alt={"Deck"}
                                     style={{
                                         width: screenStore.screenSizeXs() ? 200 : 400,
                                     }}

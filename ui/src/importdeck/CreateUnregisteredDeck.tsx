@@ -33,7 +33,7 @@ class SaveUnregisteredDeckStore {
         if (!deck) {
             return false
         }
-        const {name, cards} = deck
+        const {name} = deck
         if (name.trim().length === 0 || name === "Unrecognized Deck Name") {
             return false
         }
@@ -48,7 +48,7 @@ class SaveUnregisteredDeckStore {
     }
 
     removeCard = (card: KCard) => {
-        Object.entries(this.currentDeck!.cards).map((value: [string, KCard[]]) => {
+        Object.entries(this.currentDeck!.cards).forEach((value: [string, KCard[]]) => {
             const cards = value[1]
             const firstIdx = cards.indexOf(card)
             if (firstIdx !== -1) {

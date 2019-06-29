@@ -68,6 +68,7 @@ data class Deck(
         val cardIds: String = "",
 
         val cardNamesString: String = "",
+        val cardNamesStringImproved: String? = "",
 
         /**
          * Really just mavericks with house.
@@ -171,6 +172,7 @@ data class Deck(
 
     fun withCards(newCardsList: List<Card>): Deck {
         if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
+
         val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
             (1..entry.value.size).map { "${entry.key}$it" }
         }.joinToString()
@@ -185,9 +187,26 @@ data class Deck(
                                 "${firstCard.cardTitle}${firstCard.house}"
                             }
                 }.joinToString()
+
+        val cardNamesStringImproved = "~" + newCardsList.groupBy { it.cardTitle }.map { entry ->
+            "${entry.key}${(1..entry.value.size).joinToString("")}"
+        }.joinToString("~") + "~" +
+                newCardsList
+                        .filter { it.maverick }
+                        .groupBy { it.cardTitle }
+                        .flatMap { entry ->
+                            entry.value
+                                    .groupBy { it.house }
+                                    .map { houseToCards ->
+                                        val firstCard = houseToCards.value[0]
+                                        "${firstCard.cardTitle}${firstCard.house}"
+                                    }
+                        }.joinToString("~") + "~"
+
         return this.copy(
                 cardNamesString = cardNamesString,
                 cardNamesWithHouseString = cardNamesWithHouseString,
+                cardNamesStringImproved = cardNamesStringImproved,
                 rawAmber = newCardsList.map { it.amber }.sum(),
                 totalPower = newCardsList.map { it.power }.sum(),
                 totalArmor = newCardsList.map { it.armor }.sum(),

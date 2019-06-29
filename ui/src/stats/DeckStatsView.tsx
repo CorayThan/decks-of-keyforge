@@ -98,10 +98,6 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
 @observer
 export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
 
-    constructor(props: DeckStatsViewProps) {
-        super(props)
-    }
-
     render() {
         const {
             sasRating, cardsRating, synergyRating, antisynergyRating, totalPower,

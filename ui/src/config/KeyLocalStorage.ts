@@ -1,6 +1,16 @@
 import { observable } from "mobx"
 import { log } from "./Utils"
 
+enum Keys {
+    AUTH = "AUTH",
+    DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
+    FULL_CARD_VIEW = "FULL_CARD_VIEW",
+    DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
+    DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
+    DISPLAY_OLD_DECK_VIEW = "DISPLAY_OLD_DECK_VIEW",
+    SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
+}
+
 class KeyLocalStorage {
 
     @observable
@@ -116,16 +126,6 @@ class KeyLocalStorage {
         this.localStorage.clear()
     }
 
-}
-
-enum Keys {
-    AUTH = "AUTH",
-    DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
-    FULL_CARD_VIEW = "FULL_CARD_VIEW",
-    DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
-    DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
-    DISPLAY_OLD_DECK_VIEW = "DISPLAY_OLD_DECK_VIEW",
-    SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
 }
 
 export const keyLocalStorage = new KeyLocalStorage()

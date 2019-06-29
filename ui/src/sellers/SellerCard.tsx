@@ -16,7 +16,7 @@ interface SellerCardProps {
 
 export class SellerCard extends React.Component<SellerCardProps> {
     render() {
-        const {storeName, username, decksAvailable, mostRecentListing, country, storeDescription, discord, email} = this.props.sellerDetails
+        const {storeName, username, storeDescription, discord, email} = this.props.sellerDetails
         
         const storeLink = Routes.userDecksForSale(username)
 

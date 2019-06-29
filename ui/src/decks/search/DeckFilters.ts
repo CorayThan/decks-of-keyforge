@@ -190,7 +190,7 @@ export const prepareDeckFiltersForQueryString = (filters: DeckFilters): DeckFilt
     }
 
     if (copied.cards) {
-        copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardNames != null && card.cardNames[0].length > 0)
+        copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardNames != null && card.cardNames[0] != null && card.cardNames[0].length > 0)
         copied.cards = cardsAsParam(copied.cards)
     }
     if (copied.constraints) {

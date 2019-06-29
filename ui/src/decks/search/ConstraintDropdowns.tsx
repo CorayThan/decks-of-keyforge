@@ -6,6 +6,11 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 
+export enum Cap {
+    MIN = "MIN",
+    MAX = "MAX",
+}
+
 const makeDefaultConstraint = () => ({
     property: "",
     cap: Cap.MIN,
@@ -90,9 +95,4 @@ export interface Constraint {
     property: string
     cap: Cap
     value: string
-}
-
-export enum Cap {
-    MIN = "MIN",
-    MAX = "MAX",
 }

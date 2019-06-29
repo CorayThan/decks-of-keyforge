@@ -24,11 +24,6 @@ import { userStore } from "../user/UserStore"
 import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 
-export {
-    Routes,
-    KeyRouter,
-}
-
 class Routes {
     static readonly saleViewParam = "sellersView=true"
 
@@ -184,4 +179,9 @@ export class AboutSubPaths {
 export class StatsSubPaths {
     static winRates = Routes.stats + "/win-rates"
     static deckStats = Routes.stats + "/deck-stats"
+}
+
+export {
+    Routes,
+    KeyRouter,
 }

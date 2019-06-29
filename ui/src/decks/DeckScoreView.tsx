@@ -24,7 +24,6 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         sasRating,
         synergyRating,
         antisynergyRating,
-        expansion
     } = props.deck
 
     let sasInfo = null

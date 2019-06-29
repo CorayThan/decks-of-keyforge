@@ -23,7 +23,7 @@ export const CardsWithAerc = (props: { title: string, accessor: (card: Partial<K
         return titleComponent
     } else {
         return (
-            <div>
+            <div style={{display: "flex", flexDirection: "column"}}>
                 {titleComponent}
                 {filtered
                     .map((card, idx) => <Typography key={idx} variant={"inherit"}>{`${card.cardTitle} = ${accessAerc(card)}`}</Typography>)}

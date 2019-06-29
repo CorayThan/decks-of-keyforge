@@ -24,8 +24,8 @@ import { DeckSaleInfo } from "./DeckSaleInfo"
 export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
         const {
-            forSale, forTrade, forAuction, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
-            discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
+            forAuction, forSaleInCountry, condition, dateListed, listingInfo, username, publicContactInfo, externalLink,
+            discord, language, currencySymbol, highestBid, buyItNow, auctionEndDateTime, auctionId,  youAreHighestBidder,
             startingBid, boughtBy, boughtNowOn
         } = this.props.saleInfo
 

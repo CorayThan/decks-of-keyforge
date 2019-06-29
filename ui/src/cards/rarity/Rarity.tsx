@@ -44,11 +44,11 @@ export const rarityValuesArray: RarityValue[] = [
 ]
 
 rarityValuesArray.forEach((rarityValue) => {
-    rarityValue.icon = (<img src={rarityValue.img} style={{width: 16, height: 16}}/>)
+    rarityValue.icon = (<img alt={rarityValue.rarity} src={rarityValue.img} style={{width: 16, height: 16}}/>)
 })
 
-export const MaverickIcon = () => (<img src={maverick} style={{width: 16, height: 16, color: "#FFD700"}}/>)
-export const LegacyIcon = () => (<img src={legacy} style={{width: 16, height: 16}}/>)
+export const MaverickIcon = () => (<img alt={"maverick"} src={maverick} style={{width: 16, height: 16, color: "#FFD700"}}/>)
+export const LegacyIcon = () => (<img alt={"legacy"} src={legacy} style={{width: 16, height: 16}}/>)
 
 export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.map(rarityValue => (
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]

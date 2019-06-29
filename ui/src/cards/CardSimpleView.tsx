@@ -34,7 +34,7 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
     }
     return (
         <div>
-            <img src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}/>
+            <img alt={"card"} src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}/>
         </div>
     )
 }
@@ -59,7 +59,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     return (
         <GraySidebar {...sidebarProps} >
             <div>
-                <img src={card.frontImage}/>
+                <img alt={card.cardTitle} src={card.frontImage}/>
             </div>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <div style={{display: "flex", alignItems: "center"}}>

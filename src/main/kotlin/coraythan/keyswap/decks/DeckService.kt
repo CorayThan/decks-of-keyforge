@@ -291,15 +291,15 @@ class DeckService(
         filters.cards.forEach {
             when {
                 it.house != null -> predicate.andAnyOf(
-                        *it.combinedCardNames.map { cardName ->
+                        *it.cardNames.map { cardName ->
                             deckQ.cardNamesWithHouseString.like("%$cardName${it.house}%")
                         }.toTypedArray()
                 )
-                it.quantity == 0 -> it.combinedCardNames.forEach { cardName ->
-                    predicate.andNot(deckQ.cardNamesString.notLike("%${cardName}1%"))
+                it.quantity == 0 -> it.cardNames.forEach { cardName ->
+                    predicate.and(deckQ.cardNamesString.notLike("%${cardName}1%"))
                 }
                 else -> predicate.andAnyOf(
-                        *it.combinedCardNames.map { cardName ->
+                        *it.cardNames.map { cardName ->
                             deckQ.cardNamesString.like("%$cardName${it.quantity}%")
                         }.toTypedArray()
                 )

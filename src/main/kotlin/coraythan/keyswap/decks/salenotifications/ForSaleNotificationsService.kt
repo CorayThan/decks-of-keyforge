@@ -14,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -33,15 +32,6 @@ class ForSaleNotificationsService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private var queries: List<ForSaleQueryEntity>? = null
-
-    //TODO delete after run
-    @Scheduled(fixedDelayString = "PT144H")
-    fun fixQueries() {
-        forSaleQueryRepo.findAll().forEach {
-            val query = objectMapper.readValue<ForSaleQuery>(it.json)
-            forSaleQueryRepo.save(it.copy(json = objectMapper.writeValueAsString(query.copy(cards = query.cards.map { it.copy(cardNames = it.combinedCardNames) }))))
-        }
-    }
 
     fun sendNotifications(listingInfo: ListingInfo) {
         GlobalScope.launch {

@@ -24,7 +24,6 @@ import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -56,13 +55,33 @@ class DeckImporterService(
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
         private val objectMapper: ObjectMapper,
-        @Value("\${env}")
-        private val env: String,
         entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private val query = JPAQueryFactory(entityManager)
+
+    var keepImproving = true
+
+    @Scheduled(fixedDelayString = "PT1M")
+    fun improveCardNamesSTring() {
+        if (!keepImproving) return
+
+        val deckQ = QDeck.deck
+
+        val deckResults = query.selectFrom(deckQ)
+                .where(deckQ.cardNamesStringImproved.isNull)
+                .limit(10000)
+                .fetch()
+
+        if (deckResults.isEmpty()) {
+            log.info("Done improving card names strings")
+            keepImproving = false
+        } else {
+            deckRepo.saveAll(deckResults.map { it.withCards(cardService.cardsForDeck(it)) })
+            log.info("Saving cards with better names")
+        }
+    }
 
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor)

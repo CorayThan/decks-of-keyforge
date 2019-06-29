@@ -102,7 +102,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                             </Typography>
                         ) : null}
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(4)}}>
-                            <img alt={"Writer Image"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
+                            <img alt={"Writer"} src={author.img} style={{height: 48, borderRadius: "50%", marginRight: spacing(2)}}/>
                             <Typography>by</Typography>
                             <Button style={{marginTop: 4, marginLeft: spacing(1)}} onClick={() => this.bioOpen = true}>
                                 {author.name}

@@ -28,7 +28,7 @@ export interface HouseValue {
 
 const HouseLabel = (props: { house: string, img: string, title?: boolean }) => (
     <div style={{display: "flex", alignItems: "center", width: 96}}>
-        <img src={props.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
+        <img alt={props.house} src={props.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
         <Typography variant={props.title ? "subtitle2" : "body2"}>{props.house}</Typography>
     </div>
 )

@@ -59,18 +59,18 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         if (screenStore.smallScreenTopBar()) {
             menuContents = (
                 <>
-                    <RightMenu/>
+                    <div style={{marginLeft: spacing(2), marginRight: spacing(2)}}>
+                        <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
+                    </div>
                     <Typography
-                        variant={"h4"}
-                        style={{marginLeft: spacing(2)}}
+                        variant={screenStore.screenSizeXs() ? "h5" : "h4"}
+                        style={{marginLeft: spacing(1)}}
                         color={"inherit"}>
                         {screenStore.screenWidth < 800 ? topbarShortName : topbarName}
                     </Typography>
                     <div style={{flexGrow: 1}}/>
                     <DeckSearchSuggest placement={"bottom-end"}/>
-                    <div style={{marginLeft: spacing(2), marginRight: spacing(2)}}>
-                        <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
-                    </div>
+                    <RightMenu/>
                 </>
             )
         } else {
@@ -132,7 +132,7 @@ class RightMenu extends React.Component {
                     <Drawer
                         open={rightMenuStore.open}
                         onClose={rightMenuStore.close}
-                        anchor={"left"}
+                        anchor={"right"}
                         style={{zIndex: screenStore.zindexes.rightMenu}}
                     >
                         <div style={{display: "flex", padding: spacing(2), flexDirection: "column"}}>
