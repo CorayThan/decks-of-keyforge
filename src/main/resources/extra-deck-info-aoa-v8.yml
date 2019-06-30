@@ -1140,7 +1140,7 @@
       cardNumber: 210
   rating: 3
   creatureControl: 0.5
-  deckManipulation: 1
+  deckManipulation: 1.5
   traits: [archives, goodPlay]
   synergies:
     - trait: archivesRandom
