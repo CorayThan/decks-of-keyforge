@@ -115,6 +115,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                             name={synergy.trait}
                             positive={synergy.rating > 0}
                             home={synergy.type === SynTraitType.house}
+                            noHome={synergy.type === SynTraitType.outOfHouse}
                             rating={synergy.rating}
                         />
                     ))}

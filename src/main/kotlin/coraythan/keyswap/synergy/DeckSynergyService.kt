@@ -54,7 +54,25 @@ class DeckSynergyService(
                 else -> minRating + 1.0
             }
             val matchedTraits: List<Pair<Synergies, Double>> = cardInfo.synergies.map { synTraitValue ->
-                val matchWith = if (synTraitValue.type == SynTraitType.anyHouse) counts[null]!! else counts[card.house]!!
+                val matchWith = when {
+                    synTraitValue.type == SynTraitType.anyHouse -> counts[null]!!
+                    synTraitValue.type == SynTraitType.house -> counts[card.house]!!
+                    else -> {
+                        val countsOutOfHouse: MutableMap<Synergies, Int> = mutableMapOf()
+                        val toCombine = counts.keys.filter { it != null && it != card.house }.map { counts[it]!! }
+                        toCombine.forEach { synMap ->
+                            synMap.forEach {
+                                val preValue = countsOutOfHouse[it.key]
+                                if (preValue == null) {
+                                    countsOutOfHouse[it.key] = it.value
+                                } else {
+                                    countsOutOfHouse[it.key] = preValue + it.value
+                                }
+                            }
+                        }
+                        countsOutOfHouse
+                    }
+                }
                 // Max of 4 matches
                 val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it } -
                         (if (cardInfo.traits.contains(synTraitValue.trait)) 1 else 0)
@@ -95,7 +113,7 @@ class DeckSynergyService(
 
         val dedupedCombos: MutableList<SynergyCombo> = mutableListOf()
         val groupedCombos = synergyCombos.groupBy { it.house to it.cardName }
-        groupedCombos.forEach { _, dups ->
+        groupedCombos.forEach { (_, dups) ->
             dedupedCombos.add(dups[0].copy(copies = dups.size))
         }
 
@@ -107,7 +125,7 @@ class DeckSynergyService(
     }
 
     private fun addHouseTraits(cards: List<Card>, counts: MutableMap<House?, MutableMap<Synergies, Int>>) {
-        counts.forEach { house, houseTraits ->
+        counts.forEach { (house, houseTraits) ->
             if (house != null) {
                 val cardsForHouse = cards.filter { it.house == house }
                 val totalCreaturePower = cardsForHouse.map { it.power }.sum()

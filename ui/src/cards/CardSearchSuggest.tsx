@@ -245,7 +245,6 @@ interface MultiCardSearchSuggestProps {
 @observer
 export class MultiCardSearchSuggest extends React.Component<MultiCardSearchSuggestProps> {
     render() {
-        log.debug("Card is " + prettyJson(this.props.card))
         return <MultiCardSearchSuggestInner {...this.props} cards={cardStore.cardNames}/>
     }
 }
@@ -256,7 +255,6 @@ const MultiCardSearchSuggestInner = (props: MultiCardSearchSuggestProps & { card
     const {card, cards, placeholder, style} = props
 
     function handleChangeMulti(value: ValueType<OptionType>) {
-        log.debug(`Handle change multi value: ${prettyJson(value)}`)
         if (value == null) {
             card.cardNames = []
         } else {
@@ -307,7 +305,6 @@ interface SingleCardSearchSuggestProps {
 @observer
 export class SingleCardSearchSuggest extends React.Component<SingleCardSearchSuggestProps> {
     render() {
-        log.debug("Card is " + prettyJson(this.props.card))
         return <SingleCardSearchSuggestInner {...this.props} cards={cardStore.cardNames}/>
     }
 }

@@ -41,7 +41,7 @@ private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 8
+const val currentDeckRatingVersion = 9
 
 @Transactional
 @Service
@@ -60,28 +60,6 @@ class DeckImporterService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private val query = JPAQueryFactory(entityManager)
-
-    var keepImproving = true
-
-    @Scheduled(fixedDelayString = "PT1M")
-    fun improveCardNamesSTring() {
-        if (!keepImproving) return
-
-        val deckQ = QDeck.deck
-
-        val deckResults = query.selectFrom(deckQ)
-                .where(deckQ.cardNamesStringImproved.isNull)
-                .limit(10000)
-                .fetch()
-
-        if (deckResults.isEmpty()) {
-            log.info("Done improving card names strings")
-            keepImproving = false
-        } else {
-            deckRepo.saveAll(deckResults.map { it.withCards(cardService.cardsForDeck(it)) })
-            log.info("Saving cards with better names")
-        }
-    }
 
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor)

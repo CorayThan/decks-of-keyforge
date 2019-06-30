@@ -5,6 +5,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { deckStore } from "../decks/DeckStore"
 import { BuyingDisclaimer } from "../decks/sales/SaleInfoView"
+import { SendEmailVerification } from "../emails/SendEmailVerification"
 import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { auctionStore } from "./AuctionStore"
@@ -46,6 +47,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                 >
                     <DialogTitle>Buy It Now</DialogTitle>
                     <DialogContent>
+                        <SendEmailVerification message={"Please verify your email to buy decks for auction."}/>
                         <Typography variant={"subtitle1"} style={{marginBottom: spacing(2)}}>
                             Are you sure you want to buy this deck for {currencySymbol}{buyItNow}?
                         </Typography>
@@ -64,6 +66,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                         <Button
                             onClick={this.buyItNow}
                             color="primary"
+                            disabled={!userStore.emailVerified}
                         >
                             Buy
                         </Button>

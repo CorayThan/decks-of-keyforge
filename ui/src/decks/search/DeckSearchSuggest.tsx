@@ -1,4 +1,4 @@
-import { createStyles, Fade, IconButton, InputBase, List, makeStyles, Paper, Popper, Theme } from "@material-ui/core"
+import { createStyles, Fade, IconButton, InputBase, List, makeStyles, Paper, Popper } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import { PopperPlacementType } from "@material-ui/core/Popper"
 import { Clear, Search } from "@material-ui/icons"
@@ -14,7 +14,7 @@ import { screenStore } from "../../ui/ScreenStore"
 import { deckStore } from "../DeckStore"
 import { DeckFilters } from "./DeckFilters"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         input: {
             color: "white"
@@ -127,7 +127,7 @@ const SuggestPopper = observer(React.forwardRef((props: { menuOpen: boolean, pla
                 <Fade {...TransitionProps} timeout={350}>
                     <Paper>
                         <List>
-                            {deckStore.deckNameSearchResults.map((deckNameId, idx) => (
+                            {deckStore.deckNameSearchResults.map((deckNameId) => (
                                 <LinkMenuItem
                                     key={deckNameId.id}
                                     to={Routes.deckPage(deckNameId.id)}

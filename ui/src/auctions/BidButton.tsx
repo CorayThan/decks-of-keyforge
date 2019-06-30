@@ -5,6 +5,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { deckStore } from "../decks/DeckStore"
 import { BuyingDisclaimer } from "../decks/sales/SaleInfoView"
+import { SendEmailVerification } from "../emails/SendEmailVerification"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -72,22 +73,25 @@ export class BidButton extends React.Component<BidButtonProps> {
                 >
                     <DialogTitle>Place Bid</DialogTitle>
                     <DialogContent>
+                        <SendEmailVerification message={"Please verify your email to bid on decks."}/>
                         <TextField
                             label={"Bid"}
                             value={this.currentBid}
                             type={"number"}
                             onChange={event => this.currentBid = event.target.value}
                             style={{marginBottom: spacing(2)}}
+                            disabled={!userStore.emailVerified}
                         />
                         <Typography variant={"subtitle1"} style={{marginBottom: spacing(2)}}>
                             {currentBid ? (
                                 `To place a bid you must bid ${currencySymbol}${nextValidBid} or more. The current bid is ${currencySymbol}${currentBid}, ` +
                                 `and this auction has a minimum bid increment of ${currencySymbol}${bidIncrement}`
                             ) : (
-                                `No one has bid on this auction your bid must be equal to or greater than the minimum bid of ${currencySymbol}${nextValidBid}.`
+                                `No one has bid on this auction your bid, so must be equal to or greater than the minimum bid of ` +
+                                `${currencySymbol}${nextValidBid}.`
                             )}
                         </Typography>
-                        <Typography color={"error"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
+                        <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
                             We discourage sniping.
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
@@ -114,6 +118,7 @@ export class BidButton extends React.Component<BidButtonProps> {
                         <Button
                             onClick={this.bid}
                             color="primary"
+                            disabled={!userStore.emailVerified}
                         >
                             Bid
                         </Button>

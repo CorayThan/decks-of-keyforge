@@ -1,12 +1,13 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import { amber, blue, teal } from "@material-ui/core/colors"
-import HomeIcon from "@material-ui/icons/Home"
+import Home from "@material-ui/icons/Home"
 import { startCase } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { AntiIcon } from "../generic/icons/AntiIcon"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
 
-export const TraitBubble = (props: { name: string, positive: boolean, home?: boolean, trait?: boolean, rating?: number }) => {
+export const TraitBubble = (props: { name: string, positive: boolean, home?: boolean, noHome?: boolean, trait?: boolean, rating?: number }) => {
     const color = props.positive && !props.trait ? "#FFFFFF" : undefined
     let title
     if (props.trait) {
@@ -37,7 +38,17 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
             ) : null}
             {props.home ? (
                 <Tooltip title={"Synergizes with house traits only"}>
-                    <HomeIcon style={{color, marginRight: spacing(1)}}/>
+                    <Home style={{color, marginRight: spacing(1)}}/>
+                </Tooltip>
+            ) : null}
+            {props.noHome ? (
+                <Tooltip title={"Synergizes with out of house traits only"}>
+                    <div style={{width: 36, height: 36, marginLeft: spacing(1), marginRight: spacing(1)}}>
+                        <div style={{position: "absolute", paddingLeft: 7, paddingTop: 5}}>
+                            <Home style={{color,}}/>
+                        </div>
+                        <AntiIcon style={{position: "absolute"}}/>
+                    </div>
                 </Tooltip>
             ) : null}
             <Tooltip title={title}>

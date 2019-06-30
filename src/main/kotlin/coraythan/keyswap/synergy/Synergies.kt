@@ -72,6 +72,7 @@ enum class Synergies {
     elusive,
     skirmish,
     poison,
+    deploy,
 
     // Purging
     purgesFriendlyCreatures,
@@ -178,4 +179,5 @@ enum class SynTraitType {
     anyHouse,
     // Only synergizes with traits inside its house
     house,
+    outOfHouse,
 }

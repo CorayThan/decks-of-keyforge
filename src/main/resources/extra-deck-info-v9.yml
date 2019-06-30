@@ -47,6 +47,9 @@
     - trait: highTotalCreaturePower
     - trait: lowTotalCreaturePower
       rating: -2
+    - trait: goodFight
+      type: outOfHouse
+      rating: 1
 
 - name: Burn the Stockpile
   cardNumbers:
@@ -104,6 +107,9 @@
   traits: [causesFighting]
   synergies:
     - trait: highTotalCreaturePower
+    - trait: goodFight
+      type: outOfHouse
+      rating: 1
 
 - name: Lava Ball
   cardNumbers:
@@ -1074,12 +1080,19 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 73
-  rating: 2
+  rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
   traits: [usesCreaturesOutOfHouse, usableArtifact]
+  synergies:
+    - trait: goodReap
+      type: outOfHouse
+      rating: 2
+    - trait: goodAction
+      type: outOfHouse
+      rating: 2
 
 - name: Key to Dis
   cardNumbers:
@@ -1221,6 +1234,7 @@
   traits: [elusive, capturesAmber]
   synergies:
     - trait: protectsCreatures
+    - trait: increasesKeyCost
 
 - name: Dust Imp
   cardNumbers:
@@ -1237,6 +1251,7 @@
   synergies:
     - trait: destroysFriendlyCreatures
     - trait: damagesFriendlyCreatures
+    - trait: sacrificesCreatures
 
 - name: Eater of the Dead
   cardNumbers:
@@ -1295,7 +1310,7 @@
   traits: [controlsCreatures, goodFight]
   synergies:
     - trait: usesCreaturesOutOfHouse
-      rating: 2
+      rating: 1
     - trait: causesFighting
       rating: 1
     - trait: increasesCreaturePower
@@ -2977,7 +2992,7 @@
   creatureControl: 0.0
   artifactControl: 0.0
   effectivePower: 4
-  traits: [capturesAmber]
+  traits: [capturesAmber, increasesKeyCost]
   synergies: []
 
 - name: Grabber Jammer
@@ -3105,7 +3120,7 @@
   cardNumbers:
     - expansion: 341
       cardNumber: 200
-  rating: 1.5
+  rating: 1
   expectedAmber: 0.5
   amberControl: 0.0
   creatureControl: 0.0
@@ -3116,10 +3131,12 @@
       rating: 1
     - trait: readiesCreatures
       type: house
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
+    - trait: goodReap
+      type: outOfHouse
+      rating: 2
+    - trait: goodAction
+      type: outOfHouse
+      rating: 2
 
 - name: Uxlyx the Zookeeper
   cardNumbers:
@@ -3535,6 +3552,12 @@
     - trait: lowCreatureCount
       type: house
       rating: -1
+    - trait: causesFighting
+      type: house
+      rating: 1
+    - trait: usesCreaturesOutOfHouse
+      type: house
+      rating: 1
 
 - name: Take Hostages
   cardNumbers:
@@ -3550,6 +3573,12 @@
   traits: [capturesAmber]
   synergies:
     - trait: highTotalCreaturePower
+      type: house
+      rating: 1
+    - trait: causesFighting
+      type: house
+      rating: 1
+    - trait: usesCreaturesOutOfHouse
       type: house
       rating: 1
 
@@ -3771,10 +3800,12 @@
   traits: [goodReap, usesCreaturesOutOfHouse]
   synergies:
     - trait: protectsCreatures
-    - trait: highTotalCreaturePower
-      rating: 1
-    - trait: lowTotalCreaturePower
-      rating: -1
+    - trait: goodReap
+      type: outOfHouse
+      rating: 2
+    - trait: goodAction
+      type: outOfHouse
+      rating: 2
 
 - name: Duma the Martyr
   cardNumbers:
@@ -3894,6 +3925,9 @@
     - trait: preventsDamage
       rating: 3
     - trait: highTotalCreaturePower
+    - trait: goodFight
+      type: outOfHouse
+      rating: 1
 
 - name: Jehu the Bureaucrat
   cardNumbers:
@@ -4340,8 +4374,10 @@
   artifactControl: 0.0
   traits: [dealsDamage, sacrificesCreatures, damagesMultipleEnemies]
   synergies:
+    - trait: goodDestroyed
+      rating: 2
     - trait: badPenny
-    - trait: urchin
+      rating: 2
 
 - name: Poison Wave
   cardNumbers:
@@ -5726,6 +5762,8 @@
     - trait: highTotalCreaturePower
     - trait: lowTotalCreaturePower
       rating: -1
+    - trait: usesCreaturesOutOfHouse
+      type: outOfHouse
 
 - name: Way of the Bear
   cardNumbers:

@@ -13,7 +13,7 @@ export class PatreonStore {
 
     linkAccount = (code: string) => {
         axios.post(`${PatreonStore.SECURE_CONTEXT}/link/${code}`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setSuccessMessage("You've linked your Patreon account!")
                 userStore.loadLoggedInUser()
             })
@@ -21,7 +21,7 @@ export class PatreonStore {
 
     unlinkAccount = () => {
         axios.post(`${PatreonStore.SECURE_CONTEXT}/unlink`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage("You've removed your Patreon account.")
                 userStore.loadLoggedInUser()
             })

@@ -47,8 +47,6 @@ class DeckWinsService(
         }
         deckPageService.setCurrentPage(1, DeckPageType.WINS)
         deckPageService.setCurrentPage(-1, DeckPageType.LOSSES)
-
-        updateCardAndHouseWins()
     }
 
     @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
@@ -66,6 +64,11 @@ class DeckWinsService(
         val winsPage = deckPageService.findCurrentPage(DeckPageType.WINS)
         val lossesPage = deckPageService.findCurrentPage(DeckPageType.LOSSES)
 
+        if (winsPage == -1 && lossesPage == -1) {
+            log.info("Not currently updating wins losses.")
+            updatingWinsAndLosses = false
+        }
+
         val page = if (winsPage != -1) winsPage else lossesPage
         val order = if (winsPage != -1) "-wins" else "-losses"
         val pageEnum = if (winsPage != -1) DeckPageType.WINS else DeckPageType.LOSSES
@@ -77,7 +80,7 @@ class DeckWinsService(
 
                 deckPageService.setCurrentPage(-1, pageEnum)
                 if (winsPage == -1) {
-                    log.info("Pages of wins losses: $lossesPage")
+                    log.info("Pages of wins losses: $lossesPage pageEnum: $pageEnum")
                     updatingWinsAndLosses = false
                     updateCardAndHouseWins()
                 } else {

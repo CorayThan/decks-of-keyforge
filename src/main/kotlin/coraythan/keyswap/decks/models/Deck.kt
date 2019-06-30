@@ -67,13 +67,8 @@ data class Deck(
         @Type(type = "org.hibernate.type.TextType")
         val cardIds: String = "",
 
-        val cardNamesString: String = "",
-        val cardNamesStringImproved: String? = "",
+        val cardNames: String = "",
 
-        /**
-         * Really just mavericks with house.
-         */
-        val cardNamesWithHouseString: String = "",
         val houseNamesString: String = "",
 
         @JsonIgnoreProperties("deck")
@@ -90,7 +85,7 @@ data class Deck(
         ALTER TABLE deck ADD COLUMN rating_version int4;
         CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
          */
-        val ratingVersion: Int? = 0,
+        val ratingVersion: Int = 0,
 
         val listedOn: ZonedDateTime? = null,
         val auctionEnd: ZonedDateTime? = null,
@@ -173,22 +168,7 @@ data class Deck(
     fun withCards(newCardsList: List<Card>): Deck {
         if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
 
-        val cardNamesString = newCardsList.groupBy { it.cardTitle }.flatMap { entry ->
-            (1..entry.value.size).map { "${entry.key}$it" }
-        }.joinToString()
-        val cardNamesWithHouseString = newCardsList
-                .filter { it.maverick }
-                .groupBy { it.cardTitle }
-                .flatMap { entry ->
-                    entry.value
-                            .groupBy { it.house }
-                            .map { houseToCards ->
-                                val firstCard = houseToCards.value[0]
-                                "${firstCard.cardTitle}${firstCard.house}"
-                            }
-                }.joinToString()
-
-        val cardNamesStringImproved = "~" + newCardsList.groupBy { it.cardTitle }.map { entry ->
+        val cardNames = "~" + newCardsList.groupBy { it.cardTitle }.map { entry ->
             "${entry.key}${(1..entry.value.size).joinToString("")}"
         }.joinToString("~") + "~" +
                 newCardsList
@@ -204,9 +184,7 @@ data class Deck(
                         }.joinToString("~") + "~"
 
         return this.copy(
-                cardNamesString = cardNamesString,
-                cardNamesWithHouseString = cardNamesWithHouseString,
-                cardNamesStringImproved = cardNamesStringImproved,
+                cardNames = cardNames,
                 rawAmber = newCardsList.map { it.amber }.sum(),
                 totalPower = newCardsList.map { it.power }.sum(),
                 totalArmor = newCardsList.map { it.armor }.sum(),

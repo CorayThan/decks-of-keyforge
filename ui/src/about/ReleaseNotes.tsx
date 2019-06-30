@@ -12,13 +12,28 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.5"
+export const latestVersion = "5.6"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.6"} expanded={true} releaseNotes={[
+                    "Updated SAS. Added some new traits, like Deploy and an Out of House synergy type. (Synergizes with traits from cards in other houses " +
+                    "only. Also fixed some issues, like the Thief trait not working.",
+                    "Highlights of the update for AoA: ",
+                    <List>
+                        <ListItem><Typography>Foozle 2 -> 3</Typography></ListItem>
+                        <ListItem><Typography>Into the Fray 3 -> 1.5</Typography></ListItem>
+                        <ListItem><Typography>Onyx Knight 2 -> 3</Typography></ListItem>
+                        <ListItem><Typography>Archimedes 2.5 -> 3.5</Typography></ListItem>
+                        <ListItem><Typography>Lion Bautrem 2 -> 3</Typography></ListItem>
+                        <ListItem><Typography>Opal Knight 2 -> 3</Typography></ListItem>
+                        <ListItem><Typography>Panpaca, Anga 1.5 -> 2.5</Typography></ListItem>
+                        <ListItem><Typography>Po's Pixies 2 -> 3</Typography></ListItem>
+                    </List>
+                ]}/>
                 <ReleaseNote releaseNumber={"5.5"} expanded={true} releaseNotes={[
                     "You can now search for a number of copies of any cards. For example, you could search for decks with 1 of Key Charge, Chota Hazri, or " +
                     "Key Abduction.",
@@ -169,18 +184,18 @@ export class ReleaseNotes extends React.Component {
                     "You can now view only your decks that are not for sale via the top menu.",
                     "I've also begun the under-the-hoods preparations for the release of Age of Ascension."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.8"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.8"} releaseNotes={[
                     "New deck view with more info! You can use the expand less button to return to the old view.",
                     "Table view now has a ton of new columns. You can see a smaller table view using the top right button.",
                     "Fixed an issue causing new patreon subscribers to not gain their benefits."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.7"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.7"} releaseNotes={[
                     "Auctions added as a selling and buying option!",
                     "Choose a currency symbol on your profile so you can sell your decks with € or any other currency.",
                     "Select a deck language when selling a deck to help users know what language your deck is in. This " +
                     "defaults to English, so be sure to set it to another language if needed."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.6"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.6"} releaseNotes={[
                     "Real Patron rewards! " +
                     "First one is pretty sweet. Become a $5 a month patron to save deck searches, and get email notifications when new " +
                     "decks are listed for sale or trade that match your search.",
@@ -190,15 +205,15 @@ export class ReleaseNotes extends React.Component {
                     "anymore. It also provides some suggested deck searches, featured sellers, articles, and a couple graphs.",
                     "I've added a new public API for getting the stats used to build the charts and graphs on this site."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.5"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.5"} releaseNotes={[
                     "Created an articles section with two new articles by Dunkoro and Big Z! If you're interested in contributing articles send me a " +
                     "short summary of your idea and an example paragraph. But keep in mind I'm going to be selective about what articles are added to the site."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.4"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.4"} releaseNotes={[
                     "Synergy Details table now includes all cards, AERC scores, and is sortable in desktop mode.",
                     "Deck name search now ignores punctuation."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.3"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.3"} releaseNotes={[
                     "Added two new AERC traits, deck manipulation and effective creature power. Read more about them on the SAS and AERC about page!",
                     "Added those two new traits to the total AERC score. This causes a major change to those scores.",
                     "Minor update to SAS based on latest card win rates. No card was changed by more than 0.5 card rating.",
@@ -206,20 +221,20 @@ export class ReleaseNotes extends React.Component {
                     "Added new \"filter on\" options to deck search. You can now filter on deck manipulation, effective creature power, as well as " +
                     "card type quantity."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.2"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.2"} releaseNotes={[
                     `Europeans rejoice! You can now select "Buying Countries" in your profile. When you search decks for sale, these will be used instead of ` +
                     "your home country for searching.",
                     "Fixed a bug that could prevent users from removing a deck from their decks.",
                     `Added an "Import to my decks" option to the import deck popover.`
                 ]}/>
-                <ReleaseNote releaseNumber={"3.1"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.1"} releaseNotes={[
                     "You can set page size when searching decks to be 100. Look at the bottom of the deck search drawer!",
                     `When searching decks for sale you can set a "Listed Within Days" limit to see only more recently listed decks.`,
                     "Updated AERC stats to give credit in the C category to creatures with high power. 5-6 power provides 0.5 C, while 7+ " +
                     "is typically 7+. Also made minor improvements to other AERC stats of cards.",
                     "Added a total AERC score, along with sorting and constraining by that."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.0"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.0"} releaseNotes={[
                     "TLDR; Updated SAS and added win rates for cards on the cards page.",
                     "This is a major revision to SAS ratings. I've used win rates of cards from the official API to inform my card ratings for SAS. I have " +
                     "followed the win rates for commons more close than uncommons or rares due to the larger amount of data.",

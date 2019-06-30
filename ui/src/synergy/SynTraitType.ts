@@ -1,4 +1,5 @@
 export enum SynTraitType {
     anyHouse = "anyHouse",
-    house = "house"
+    house = "house",
+    outOfHouse = "outOfHouse"
 }

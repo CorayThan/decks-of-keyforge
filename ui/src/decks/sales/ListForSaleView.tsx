@@ -87,7 +87,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.askingPrice = ""
         this.listingInfo = ""
         this.externalLink = ""
-        this.bidIncrement = "5"
+        this.bidIncrement = "1"
         this.update = false
 
         if (!userStore.canListMoreAuctions && userStore.auctionsListed > 0) {
@@ -285,14 +285,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         )}
                     </DialogTitle>
                     <DialogContent>
-                        {userStore.emailVerified ? null : (
-                            <div style={{marginBottom: spacing(1)}}>
-                                <Typography color={"error"} style={{marginBottom: spacing(1)}}>
-                                    Please verify your email to list decks for sale or trade.
-                                </Typography>
-                                <SendEmailVerification/>
-                            </div>
-                        )}
+                        <SendEmailVerification message={"Please verify your email to list decks for sale or trade."}/>
                         {forSaleInCountry ? null : (
                             <div style={{display: "flex", alignItems: "center"}}>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>

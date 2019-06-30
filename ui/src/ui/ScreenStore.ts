@@ -36,7 +36,7 @@ export class ScreenStore {
     screenSizeMd = () => this.screenSize <= ScreenSize.md
     screenSizeLg = () => this.screenSize <= ScreenSize.lg
 
-    smallScreenTopBar = () => this.screenWidth < 1480
+    smallScreenTopBar = () => this.screenWidth < 1680
 
     screenSizeMdPlus = () => this.screenSize >= ScreenSize.md
 

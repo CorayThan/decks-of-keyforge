@@ -447,7 +447,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         {deckStore.decksCount ? (
                             <ListItem>
                                 <Typography variant={"subtitle2"} style={{marginBottom: spacing(1)}}>
-                                    You found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 ? "+ " : ""} decks
+                                    You found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 || deckStore.decksCount.count === 10000 ? "+ " : ""} decks
                                 </Typography>
                             </ListItem>
                         ) : null}
