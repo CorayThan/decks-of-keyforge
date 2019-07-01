@@ -11,8 +11,10 @@ import { uiStore } from "../ui/UiStore"
 import { ContactMe } from "./ContactMe"
 import { PatreonRewards } from "./PatreonRewards"
 import { ReleaseNotes } from "./ReleaseNotes"
+import TeamSasLpBanner from "./sas-lp-banner.png"
 import { SasAndAerc } from "./SasAndAerc"
 import { SellersAndDevs } from "./SellersAndDevs"
+import { TeamSasLp } from "./TeamSasLp"
 
 @observer
 export class AboutPage extends React.Component<RouteComponentProps<{}>> {
@@ -36,8 +38,14 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Contact Me" to={AboutSubPaths.contact} value={AboutSubPaths.contact}/>
                         <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
                         <LinkTab label="APIs" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
+                        <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
                     </Tabs>
                 </AppBar>
+                {this.props.location.pathname.includes(AboutSubPaths.teamSas) ? (
+                    <div style={{display: "flex", justifyContent: "center", marginTop: spacing(4)}}>
+                        <img alt={"Team Sas LP"} src={TeamSasLpBanner}/>
+                    </div>
+                ) : null}
                 <div style={{padding: spacing(4)}}>
                     <Grid container={true} spacing={4} justify={"center"}>
                         <Switch>
@@ -46,6 +54,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                             <Route path={AboutSubPaths.contact} component={ContactMe}/>
                             <Route path={AboutSubPaths.releaseNotes} component={ReleaseNotes}/>
                             <Route path={AboutSubPaths.sellersAndDevs} component={SellersAndDevs}/>
+                            <Route path={AboutSubPaths.teamSas} component={TeamSasLp}/>
                         </Switch>
                     </Grid>
                 </div>

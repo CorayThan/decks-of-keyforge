@@ -192,6 +192,7 @@ const AppLinks = () => (
                 {to: AboutSubPaths.contact, text: "Contact Me"},
                 {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
                 {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
+                {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
             ]}
             style={{margin: spacing(1)}}
         />
