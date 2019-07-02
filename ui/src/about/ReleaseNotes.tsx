@@ -366,7 +366,7 @@ export class ReleaseNotes extends React.Component {
     }
 }
 
-export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean, date?: string }) => (
+export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean, date: string }) => (
     <ExpansionPanel defaultExpanded={true}>
         <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
             <div style={{display: "flex", alignItems: "flex-end", width: "100%"}}>

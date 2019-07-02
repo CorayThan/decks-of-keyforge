@@ -46,8 +46,10 @@ cd 'C:\Program Files\PostgreSQL\10\scripts\'
 // database keyswap
 SET CLIENT_ENCODING TO 'utf8';
 
-\COPY (select keyforge_id, name, expansion, house_names_string, sas_rating, cards_rating, synergy_rating, antisynergy_rating, aerc_score, amber_control, expected_amber, artifact_control, creature_control, deck_manipulation, effective_power, raw_amber, action_count, upgrade_count, creature_count, power_level, chains, wins, losses, card_names from deck where registered = 'true') to 'C:\Users\Coray\Downloads\dok-decks-6-10-19.csv' DELIMITER ',' CSV HEADER;
+\COPY (select keyforge_id, name, expansion, house_names_string, sas_rating, cards_rating, synergy_rating, antisynergy_rating, aerc_score, amber_control, expected_amber, artifact_control, creature_control, deck_manipulation, effective_power, raw_amber, action_count, upgrade_count, creature_count, power_level, chains, wins, losses, card_names from deck where registered = 'true') to 'C:\Users\Coray\Downloads\dok-decks.csv' DELIMITER ',' CSV HEADER;
 ```
+
+Find it in downloads 
 
 
 ## Kill long queries stuff
