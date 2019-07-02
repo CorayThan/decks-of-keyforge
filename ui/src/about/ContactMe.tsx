@@ -41,7 +41,9 @@ export class ContactMe extends React.Component {
                                 </KeyButton>
                             </span>,
                             <span>
-                                <Typography>For comments and suggestions contact CorayThan on Reddit, or send an email to</Typography>
+                                <Typography>
+                                    For comments and suggestions join the Discord server, contact CorayThan on Reddit, or send an email to
+                                </Typography>
                                 <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                             </span>,
                             <div style={{paddingTop: spacing(1)}}>

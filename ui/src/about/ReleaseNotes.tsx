@@ -19,7 +19,7 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
-                <ReleaseNote releaseNumber={"5.6"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.6"} date={"6/30/2019"} expanded={true} releaseNotes={[
                     "Updated SAS. Added some new traits, like Deploy and an Out of House synergy type. (Synergizes with traits from cards in other houses " +
                     "only. Also fixed some issues, like the Thief trait not working.",
                     "Highlights of the update for AoA: ",
@@ -34,12 +34,12 @@ export class ReleaseNotes extends React.Component {
                         <ListItem><Typography>Po's Pixies 2 -> 3</Typography></ListItem>
                     </List>
                 ]}/>
-                <ReleaseNote releaseNumber={"5.5"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.5"} date={"6/28/2019"} expanded={true} releaseNotes={[
                     "You can now search for a number of copies of any cards. For example, you could search for decks with 1 of Key Charge, Chota Hazri, or " +
                     "Key Abduction.",
                     "Added a search field to the top bar. Should help for quick deck name searches!"
                 ]}/>
-                <ReleaseNote releaseNumber={"5.4"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.4"} date={"6/20/2019"} expanded={true} releaseNotes={[
                     "Updated description and terms for auction bidding and listing. Sniping is actively discouraged, and if server slowness or instability " +
                     "significantly affects the ability of users to bid on an auction, sellers are allowed to relist that auction with a description " +
                     "explaining why.",
@@ -54,25 +54,25 @@ export class ReleaseNotes extends React.Component {
                     `"Speaking of which, I wanted to introduce you to Nathan. He makes Decks of Keyforge and SAS!" So I said, "Hi, I've lied to ` +
                     `KeyForge players hundreds of thousands of times." Was a pretty funny introduction!`
                 ]}/>
-                <ReleaseNote releaseNumber={"5.3"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.3"} date={"6/9/2019"} expanded={true} releaseNotes={[
                     "Moved Expansion selector down to above search bar to improve spacing on deck search.",
                     "Added a sellers view to make it more convenient for sellers to use the table view to update prices and unlist decks.",
                     "When listing an auction you can now select the time it will end.",
                     "Improved stability by improving the deck statistics update function."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.2"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.2"} date={"6/5/2019"} expanded={true} releaseNotes={[
                     "Refined card ratings and synergies for AoA.",
                     "Improved deck importer to better keep up with quantity of decks.",
                     "Cards sorted in a CotA style for AoA decks."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.1"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.1"} date={"6/1/2019"} expanded={true} releaseNotes={[
                     "In the process of adding separate stats for expansions.",
                     "Improved deck importer to better keep up with quantity of decks.",
                     "I haven't made changes yet, but I'll be updating and improving SAS ratings for AOA as I get more familiar with the set. " +
                     "While I do think AOA is weaker in general than COTA, and will have generally lower scores, I think it's being a bit underrated " +
                     "by SAS at this time."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.0"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.0"} date={"5/31/2019"} expanded={true} releaseNotes={[
                     "Age of Ascension traits, synergies, and antisynergies have been added! There are still some new synergies in AoA that are not yet " +
                     "represented, like an automatic anti-synergy for multiple copies of the Alpha keyword in the same house.",
                     "Revised Bait and Switch as well as Library Access. Despite it being unfortunate that they needed to do it, I'm personally excited about " +
@@ -83,28 +83,28 @@ export class ReleaseNotes extends React.Component {
                     "Legacy symbols now show up next to decks with legacy cards.",
                     "Fixed an issue with notifications not being sent for newly listed auctions."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.4"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"4.4"} date={"5/29/2019"} expanded={true} releaseNotes={[
                     "Age of Ascension decks are now importing into Decks of Keyforge! Note that these decks have SAS ratings, but those should be " +
                     "taken with a huge grain of salt. I haven't had time to add traits, synergies or antisynergies yet, so Age of Ascension decks will " +
                     "also have lower scores than they should."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.3"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"4.3"} date={"5/26/2019"} expanded={true} releaseNotes={[
                     `Search for cards as mavericks in a specific house! Just use the "Copies" drop down and select the house you want.`,
                     "New article previewing SAS ratings for many of the known cards coming out in Age of Ascension!"
                 ]}/>
-                <ReleaseNote releaseNumber={"4.2"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"4.2"} date={"5/22/2019"} expanded={true} releaseNotes={[
                     "Added expansion selectors. The one for cards will show you the COTA cards included in AOA!",
                     "Can add filter on number of chains.",
                     "Temporarily removing house select and recently listed sort to try to improve recent performance issues. " +
                     "Also converted the total deck count to be an estimate that is much faster to calculate, but also isn't necessarily exactly how many " +
                     "decks exist."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.1"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"4.1"} date={"5/19/2019"} expanded={true} releaseNotes={[
                     "AERC now has tool tips that tell you what cards contributed to each score.",
                     "You will receive an email notification when outbid on an auction.",
                     "Added a button to go to a random registered deck."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.0"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"4.0"} date={"5/18/2019"} expanded={true} releaseNotes={[
                     "Updates to SAS and AERC! Please note the stats will be out of date temporarily. " +
                     "This will be the last big change before Age of Ascension.",
                     "The following are the changes to SAS ratings: ",
@@ -184,18 +184,18 @@ export class ReleaseNotes extends React.Component {
                     "You can now view only your decks that are not for sale via the top menu.",
                     "I've also begun the under-the-hoods preparations for the release of Age of Ascension."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.8"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.8"} date={"5/11/2019"} releaseNotes={[
                     "New deck view with more info! You can use the expand less button to return to the old view.",
                     "Table view now has a ton of new columns. You can see a smaller table view using the top right button.",
                     "Fixed an issue causing new patreon subscribers to not gain their benefits."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.7"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.7"} date={"4/22/2019"} releaseNotes={[
                     "Auctions added as a selling and buying option!",
                     "Choose a currency symbol on your profile so you can sell your decks with € or any other currency.",
                     "Select a deck language when selling a deck to help users know what language your deck is in. This " +
                     "defaults to English, so be sure to set it to another language if needed."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.6"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.6"} date={"4/8/2019"} releaseNotes={[
                     "Real Patron rewards! " +
                     "First one is pretty sweet. Become a $5 a month patron to save deck searches, and get email notifications when new " +
                     "decks are listed for sale or trade that match your search.",
@@ -205,15 +205,15 @@ export class ReleaseNotes extends React.Component {
                     "anymore. It also provides some suggested deck searches, featured sellers, articles, and a couple graphs.",
                     "I've added a new public API for getting the stats used to build the charts and graphs on this site."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.5"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.5"} date={"4/2/2019"} releaseNotes={[
                     "Created an articles section with two new articles by Dunkoro and Big Z! If you're interested in contributing articles send me a " +
                     "short summary of your idea and an example paragraph. But keep in mind I'm going to be selective about what articles are added to the site."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.4"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.4"} date={"3/27/2019"} releaseNotes={[
                     "Synergy Details table now includes all cards, AERC scores, and is sortable in desktop mode.",
                     "Deck name search now ignores punctuation."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.3"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.3"} date={"3/14/2019"} releaseNotes={[
                     "Added two new AERC traits, deck manipulation and effective creature power. Read more about them on the SAS and AERC about page!",
                     "Added those two new traits to the total AERC score. This causes a major change to those scores.",
                     "Minor update to SAS based on latest card win rates. No card was changed by more than 0.5 card rating.",
@@ -221,20 +221,20 @@ export class ReleaseNotes extends React.Component {
                     "Added new \"filter on\" options to deck search. You can now filter on deck manipulation, effective creature power, as well as " +
                     "card type quantity."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.2"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.2"} date={"3/5/2019"} releaseNotes={[
                     `Europeans rejoice! You can now select "Buying Countries" in your profile. When you search decks for sale, these will be used instead of ` +
                     "your home country for searching.",
                     "Fixed a bug that could prevent users from removing a deck from their decks.",
                     `Added an "Import to my decks" option to the import deck popover.`
                 ]}/>
-                <ReleaseNote releaseNumber={"3.1"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.1"} date={"3/3/2019"} releaseNotes={[
                     "You can set page size when searching decks to be 100. Look at the bottom of the deck search drawer!",
                     `When searching decks for sale you can set a "Listed Within Days" limit to see only more recently listed decks.`,
                     "Updated AERC stats to give credit in the C category to creatures with high power. 5-6 power provides 0.5 C, while 7+ " +
                     "is typically 7+. Also made minor improvements to other AERC stats of cards.",
                     "Added a total AERC score, along with sorting and constraining by that."
                 ]}/>
-                <ReleaseNote releaseNumber={"3.0"} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.0"} date={"2/25/2019"} releaseNotes={[
                     "TLDR; Updated SAS and added win rates for cards on the cards page.",
                     "This is a major revision to SAS ratings. I've used win rates of cards from the official API to inform my card ratings for SAS. I have " +
                     "followed the win rates for commons more close than uncommons or rares due to the larger amount of data.",
@@ -274,31 +274,31 @@ export class ReleaseNotes extends React.Component {
                         </div>
                     )
                 ]}/>
-                <ReleaseNote releaseNumber={"2.7"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.7"} date={"2/20/2019"} releaseNotes={[
                     "More graphs for the deck page. Click the expansion button to see them!",
                     "Site notifies you of new releases.",
                     "Improved Patreon page."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.6"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.6"} date={"2/16/2019"} releaseNotes={[
                     "Cards view for deck that shows all the cards.",
                     "Sellers and traders can now update the listing for their decks.",
                     "Added an asking price deck search filter if \"For Sale\" is selected."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.5"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.5"} date={"2/15/2019"} releaseNotes={[
                     "Page titles now change with the pages.",
                     "Created an API for stores or technically saavy sellers to list and unlist decks.",
                     "Updated the About page. Still as meta as the first time!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.4"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.4"} date={"2/12/2019"} releaseNotes={[
                     "Improved card search! Faster, and you can search up to 5 different cards.",
                     "Searching decks for sale will display sale info directly in the deck search."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.3"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.3"} date={"2/7/2019"} releaseNotes={[
                     "You can send an email to sellers and traders if you are logged in and they have not listed an external link for the deck.",
                     "You can now select a country for yourself and filter decks for sale or trade by the country they are listed in. Note that " +
                     "as of this release, no decks have a country selected, but all future decks listed for sale or trade will."
                 ]}/>
-                <ReleaseNote releaseNumber={"2.2"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.2"} date={"2/3/2019"} releaseNotes={[
                     "Added power level, chains, wins, and losses to decks, and sorting by chains.",
                     "You can now add unregistered decks to discover their SAS and list them for sale! Just login and go to Import Deck, then use the link.",
                     "By default unregistered decks are filtered out of searches.",
@@ -309,12 +309,12 @@ export class ReleaseNotes extends React.Component {
                         <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                     </div>
                 ]}/>
-                <ReleaseNote releaseNumber={"2.1"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.1"} date={"1/29/2019"} releaseNotes={[
                     "You can now view decks in a table view with column sorting.",
                     "Added password reset.",
                     "Created a Patreon page with some donation options to help support the site!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.0"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.0"} date={"2/27/2019"} releaseNotes={[
                     "Updated SAS Ratings.",
                     "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
                     "the increased value of how cards work together when often they don't both appear in the same game, or at the wrong time.",
@@ -332,37 +332,52 @@ export class ReleaseNotes extends React.Component {
                     "",
                     "Added expiration date for deck listings."
                 ]}/>
-                <ReleaseNote releaseNumber={"1.4"} releaseNotes={[
+                <ReleaseNote releaseNumber={"1.4"} date={"1/22/2019"} releaseNotes={[
                     "New graphs on deck page to show deck scores relative to global averages.",
                     "Added SAS and Cards Rating options to the deck search filters.",
                     "Fix for vague error on registration page.",
                 ]}/>
-                <ReleaseNote releaseNumber={"1.3"} releaseNotes={[
+                <ReleaseNote releaseNumber={"1.3"} date={"1/21/2019"} releaseNotes={[
                     `Added "My Favorites" to deck search options. Changed "Wishlist" to favorites, but it can be used for either.`,
                     "Added card popovers with expanded details to Synergy Details.",
                     "Improved release notes. Whoa so meta!",
                     "Fixed some bugs, like when the site is linked to from Facebook."
                 ]}/>
-                <ReleaseNote releaseNumber={"1.2"} releaseNotes={[
+                <ReleaseNote releaseNumber={"1.2"} date={"1/20/2019"} releaseNotes={[
                     "Fixed problem with user registration."
                 ]}/>
-                <ReleaseNote releaseNumber={"1.1"} releaseNotes={[
+                <ReleaseNote releaseNumber={"1.1"} date={"1/20/2019"} releaseNotes={[
                     "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
                     "that had the potential to bring down the database.",
                     "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
+                ]}/>
+                <ReleaseNote releaseNumber={"1.1"} date={"1/20/2019"} releaseNotes={[
+                    "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
+                    "that had the potential to bring down the database.",
+                    "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
+                ]}/>
+                <ReleaseNote releaseNumber={"1.0"} date={"1/19/2019"} releaseNotes={[
+                    <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
+                        <img alt={"Key of Darkness"} src={`https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png`}/>
+                    </div>
                 ]}/>
             </AboutGridItem>
         )
     }
 }
 
-export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean }) => (
-    <ExpansionPanel defaultExpanded={props.expanded}>
+export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean, date?: string }) => (
+    <ExpansionPanel defaultExpanded={true}>
         <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-            <Typography color={"primary"} variant={"h6"}>{props.releaseNumber}</Typography>
+            <div style={{display: "flex", alignItems: "flex-end", width: "100%"}}>
+                <Typography color={"primary"} style={{flexGrow: 1}} variant={"h6"}>{props.releaseNumber}</Typography>
+                {props.date ? (
+                    <Typography color={"primary"} variant={"subtitle1"}>{props.date}</Typography>
+                ) : null}
+            </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-            <div>
+            <div style={{width: "100%"}}>
                 {props.releaseNotes.map((note, idx) => {
                     if (typeof note === "string") {
                         return (

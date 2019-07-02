@@ -249,7 +249,7 @@ export class MultiCardSearchSuggest extends React.Component<MultiCardSearchSugge
     }
 }
 
-const MultiCardSearchSuggestInner = (props: MultiCardSearchSuggestProps & { cards: OptionType[] }) => {
+const MultiCardSearchSuggestInner = observer((props: MultiCardSearchSuggestProps & { cards: OptionType[] }) => {
     const classes = useStyles()
     const theme = useTheme()
     const {card, cards, placeholder, style} = props
@@ -290,7 +290,7 @@ const MultiCardSearchSuggestInner = (props: MultiCardSearchSuggestProps & { card
             </NoSsr>
         </div>
     )
-}
+})
 
 export interface SingleCardName {
     cardName: string
@@ -309,7 +309,7 @@ export class SingleCardSearchSuggest extends React.Component<SingleCardSearchSug
     }
 }
 
-const SingleCardSearchSuggestInner = (props: SingleCardSearchSuggestProps & { cards: OptionType[] }) => {
+const SingleCardSearchSuggestInner = observer((props: SingleCardSearchSuggestProps & { cards: OptionType[] }) => {
     const classes = useStyles()
     const theme = useTheme()
     const {card, cards, placeholder, style} = props
@@ -349,4 +349,4 @@ const SingleCardSearchSuggestInner = (props: SingleCardSearchSuggestProps & { ca
             />
         </div>
     )
-}
+})
