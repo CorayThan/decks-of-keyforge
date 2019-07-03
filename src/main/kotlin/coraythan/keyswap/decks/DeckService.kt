@@ -296,11 +296,11 @@ class DeckService(
                         }.toTypedArray()
                 )
                 it.quantity == 0 -> it.cardNames.forEach { cardName ->
-                    predicate.and(deckQ.cardNames.notLike("%~${cardName}1~%"))
+                    predicate.and(deckQ.cardNames.notLike("%~${cardName}1%"))
                 }
                 else -> predicate.andAnyOf(
                         *it.cardNames.map { cardName ->
-                            deckQ.cardNames.like("%~$cardName${(1..it.quantity).joinToString("")}~%")
+                            deckQ.cardNames.like("%~$cardName${(1..it.quantity).joinToString("")}%")
                         }.toTypedArray()
                 )
             }

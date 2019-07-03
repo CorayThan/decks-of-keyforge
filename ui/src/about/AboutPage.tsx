@@ -41,7 +41,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
                     </Tabs>
                 </AppBar>
-                {this.props.location.pathname.includes(AboutSubPaths.teamSas) ? (
+                {this.props.location.pathname.includes(AboutSubPaths.teamSas) && screenStore.screenWidth > 800 ? (
                     <div style={{display: "flex", justifyContent: "center", marginTop: spacing(4)}}>
                         <img alt={"Team Sas LP"} src={TeamSasLpBanner}/>
                     </div>
