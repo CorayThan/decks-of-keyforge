@@ -122,7 +122,7 @@ export class DeckImportView extends React.Component {
                         ) : null}
                     </Paper>
                 </div>
-                {deckImportStore.readDeck ? <CreateUnregisteredDeck initialDeck={deckImportStore.readDeck}/> : null}
+                {deckImportStore.readDeck ? <CreateUnregisteredDeck initialDeck={deckImportStore.readDeck} expansionNumber={this.expansionStore.expansionNumber()!}/> : null}
             </div>
         )
     }

@@ -215,7 +215,7 @@ class DeckImporterService(
         val deck = Deck(
                 keyforgeId = UUID.randomUUID().toString(),
                 name = unregisteredDeck.name,
-                expansion = cardsAsList[0].expansion,
+                expansion = unregisteredDeck.expansion.expansionNumber,
                 registered = false
         )
 

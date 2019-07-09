@@ -12,6 +12,7 @@ import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
+import { expansionInfoMap } from "../expansions/Expansions"
 import { KeyCard } from "../generic/KeyCard"
 import { House, houseValues } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -21,6 +22,7 @@ import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
 
 interface CreateUnregisteredDeckProps {
     initialDeck: SaveUnregisteredDeck
+    expansionNumber: number
 }
 
 class SaveUnregisteredDeckStore {
@@ -35,6 +37,9 @@ class SaveUnregisteredDeckStore {
         }
         const {name} = deck
         if (name.trim().length === 0 || name === "Unrecognized Deck Name") {
+            return false
+        }
+        if (deck.expansion == null) {
             return false
         }
         const entries = Object.entries(this.currentDeck!.cards)
@@ -87,14 +92,20 @@ export const saveUnregisteredDeckStore = new SaveUnregisteredDeckStore()
 export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDeckProps> {
 
     componentDidMount(): void {
-        saveUnregisteredDeckStore.currentDeck = cloneDeep(this.props.initialDeck)
+        this.setInfoFromProps(this.props)
         deckImportStore.newDeckId = undefined
     }
 
     componentWillReceiveProps(nextProps: Readonly<CreateUnregisteredDeckProps>): void {
         if (saveUnregisteredDeckStore.currentDeck == null && nextProps.initialDeck != null) {
-            saveUnregisteredDeckStore.currentDeck = cloneDeep(nextProps.initialDeck)
+            this.setInfoFromProps(nextProps)
         }
+    }
+
+    setInfoFromProps = (props: CreateUnregisteredDeckProps) => {
+        const expansion = expansionInfoMap.get(props.expansionNumber)!
+        saveUnregisteredDeckStore.currentDeck = cloneDeep(props.initialDeck)
+        saveUnregisteredDeckStore.currentDeck.expansion = expansion.backendEnum
     }
 
     createUnregisteredDeck = () => {
@@ -182,7 +193,7 @@ class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards:
                 <Divider style={{marginTop: 4}}/>
                 {this.props.cards.map((card, idx) => (
                     <div key={idx} style={{display: "flex", alignItems: "center"}}>
-                        <CardAsLine card={card}  width={160} marginTop={4}/>
+                        <CardAsLine card={card} width={160} marginTop={4}/>
                         <div style={{flexGrow: 1}}/>
                         <Button
                             size={"small"}

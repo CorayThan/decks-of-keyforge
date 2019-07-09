@@ -94,7 +94,8 @@ class PublicApiService(
                 val deckKeyforgeId = deckImporterService.addUnregisteredDeck(
                         SaveUnregisteredDeck(
                                 cards = cards.groupBy { it.house },
-                                name = listDeck.deckInfo.name
+                                name = listDeck.deckInfo.name,
+                                expansion = listDeck.expansion
                         ),
                         seller
                 )

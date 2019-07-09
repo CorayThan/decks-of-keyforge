@@ -59,13 +59,5 @@
     "eslint-plugin-only-warn": "^1.0.1",
     "eslint-plugin-react": "^7.14.2",
     "typescript": "^3.5.2"
-  },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "react",
-      "@typescript-eslint"
-    ],
-    "rules": {}
   }
 }
