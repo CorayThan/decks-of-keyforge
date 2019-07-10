@@ -573,5 +573,617 @@ export const keyforgeRulesRewritten: Article = {
                 },
             ]
         },
+        {
+            sectionTitle: "Glossary",
+            entries: [
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Active Player"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Active player is the one whose turn it currently is."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Active House"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Active House is the one chosen in step 2 of the turn sequence."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Adjacent"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "The creatures to the immediate left and right of a creature in a player’s battleline are Adjacent to it."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Æmber"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Whenever either player gains Æmber, they put that many Æmber tokens on their Archon card from the common pool."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Whenever either player loses Æmber, they put that many Æmber tokens to the common pool from their Archon card."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Alpha"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "A card with Alpha can only be played if the active player didn't Play, Use or Discard any cards during Step 3 of their turn yet."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Archive (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a player Archives a card, they take that card and put it into the Archives face-down.\nIf an effect doesn't specify where a card is supposed to be Archived from, it is archived from their hand."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Archives (Zone)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Archives is an out-of-play zone.\nEach player can look at the cards in their own Archives."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Armor"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "All creatures have an Armor value. For most creatures, it's 0 (denoted as ~ on the card).\nBefore a creature with an Armor value would take damage, instead reduce the damage by the armor value.\nThen reduce the Armor value by the amount of Damage prevented until the end of the turn.\nA creature's Armor value can't be negative."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "As if you controlled it, As if it were yours"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If an effect instructs a player to do something with a card 'as if it were yours' or 'as if you controlled it',  the player is treated as the card's controller for the purposes of resolving the effect."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Assault"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Before a creature with Assault fights, deal Damage to the opposing creature equal to the value of Assault.\nIf this damage destroys the opposing creature, the Fight event stops at that time and doesn’t proceed further."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Capture"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Captured Æmber is taken from opponent's pool and put on a creature the capturing player controls.\nIf a creature's effect says to capture Æmber, that creature captures the Æmber.\nWhen a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Control"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "All cards a player has played onto the field are under their control.\nIf a player takes control of a card that they didn’t already control, it's put into play under their control."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Damage"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Whenever damage is dealt to a creature, that many damage tokens are put on that creature.\nIf that creature has as much or more damage than its power, it is destroyed."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Deploy"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "A Creature with Deploy may be placed in between two creatures a player controls in addition to being able to be placed at the flanks when played."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Destroy (Event)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a card is destroyed, it is put into its owner's discard pile."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Destroyed (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Destroyed effect triggers before the Card would be destroyed."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Discard Pile"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Discard Pile is an out-of-play zone.\nCards are put into discard pile face-up.\nCards in either discard pile can be examined by either player at any time.\nOrder of cards in the discard pile must be maintained.\nIf multiple cards would put into the discard pile at the same time, the active player chooses the order to put them in."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Draw"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "To draw a card, a player takes the top card of their deck and adds it to their hand.\nIf a player would draw a card and their deck is empty, before they draw they return all cards from their discard pile into their deck and shuffle their new deck.\nIf an effect draws multiple cards, all draws are resolved one by one."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Elusive"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When an elusive Creature gets fought, if this is the first time it's fought this turn, neither creature deals damage to the other during the fight itself."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Enemy"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Cards under a player's opponent's Control are Enemy cards."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Exhaust"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "To Exhaust a card move it to a sideways position. It is now exhausted.\nAn Exhausted card can still be targeted with an Exhaust effect, but it will resolve without an effect."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Fight (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Fight effect triggers After the Creature Fights, if it survived the fight.\nFor details about the Fight (Event), see Fight" //want to put a link to Fight section here
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Flank"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Flanks are the far ends of a player's creature line.\nFlank creatures are creatures at the far ends of a player's creature line."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "For Each"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If an effect instructs a player to do something “for each” something, they can make different choices for each instance of that resulting Effect."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Forge"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a player forges a key they flip one of their key tokens that is on the unforged side to the forged side and that key is now forged."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Friendly"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Cards under a player's Control are Friendly cards."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Hazardous"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Before a creature with Hazardous gets fought, deal Damage to the opposing creature equal to the value of Hazardous.\nIf this damage destroys the opposing creature, the rest of the fight does not occur."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Heal"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a creature is Healed, remove that much damage from it.\nA creature is only Healed for however much damage was actually removed."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "If you do, In order to, to"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "The effect preceding this statement must resolve fully in order to trigger the following effect."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Instead"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If an effect says to do something Instead of something else, the original event is treated to not happen."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Least Powerful"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Least powerful creatures are the ones that are tied for the lowest power value on the field.\nIn case of ties the active player chooses from among the Least Powerful creatures."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Leave Play (Event)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a card leaves play it is put into its owner's appropriate out-of-play zone, unless the effect in question specifically interacts with that zone.\nWhen a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from, then all tokens on it get put into the common pool.\nWhen a non-creature tokens on it get put into the common pool.\nWhen a card with an upgrade attached to it leaves play, that upgrade gets put into the discard pile.\nWhen a card with a face-down card underneath it leaves play, that face-down card gets put into the discard pile.\nWhen a card leaves the field to an out of play zone, all pending effects that interact with that card stop."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Leaves Play (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Leaves Play effect triggers before the Card would leave play (be put into any out of play zone from play)."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "May"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If an effect specifies May in it's text, the effect following that word is optional."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "May Play, May Use"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If an effect allows a player to play or use a card, they are allowed to play or use such a card in addition to all the other cards they may play or use that turn."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Most Powerful"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Most powerful creatures are the ones that are tied for the highest power value on the field.\nIn case of ties the active player chooses from among the Most Powerful creatures."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Neighbor"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "The creatures to the immediate left and right of a creature in a player’s battleline are its neighbors."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Open Game State"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Open Game State exists during any step of the game at a time when no Events or Effects are in any of their steps of resolution.\nOpen Game State is required to manually Play, Use and/or Discard cards, to trigger timing-based Events and Effects and to switch between Phases."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Opposing"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a creature is involved in a fight (either because it was used to fight, or because it was attacked by another creature), the other creature in the fight is the opposing creature."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Other Counters"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Some cards may refer to counters that do not have official components to represent them.\nThese counters have no inherent rules, instead the card that creates them provides context to how the counters function.\nList of other counter types:\n- Doom Counters"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Owner"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "A player owns cards that started the game in their deck."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Pay"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If a player must pay Æmber, they take that much Æmber from their Æmber pool and put it into the opponent's Æmber pool."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Play (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Play abilities trigger after the Card is played.\nActions are put into the discard pile after their Play abilities fully resolve (if any).\nIf a play ability does multiple things, trigger them one by one sequentially, unless otherwise stated or if all of the effects deal damage."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Put into Play"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a card is Put into Play (such as by being played) different rules govern it depending on the card type;\nCreatures get Put into Play into their controller’s battleline on either flank, exhausted.\nArtifacts get Put into Play on their controller’s side of the field, exhausted.\nActions get Put into Play on their controller’s side of the field and then put into the discard pile after they finish resolving.\nUpgrades get Put into Play under whichever creature they’re being attached to."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Poison"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Any damage dealt in a fight by a creature with Poison destroys the opposing creature. If the damage is completely prevented (such as by armor), Poison doesn’t destroy that creature."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Power"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "A creature's power is listed on the left."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Power Counter"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Each power counter increases a creature's Power by 1."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Purge (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Purge is an out-of play zone under the player's archon card.\nPurge is underneath the players Archon card and cards there are face-up."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Purged (Zone)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a card is purged it's placed into Purge."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Ready"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "To ready a creature move it to upright position. It is now ready.\nA ready Creature can still be targeted with a Ready effect, but it will resolve without an effect."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Reap (Effect)"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Reap effect triggers After the Creature reaps.\nFor details about the Reap as a way to Use creatures, see (Reap event)" //want link here
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Redistribute"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When an effect instructs one to Redistribute tokens, pick up all of the aforementioned tokens and place them in whichever arrangement is desired.\nRedistributing damage tokens is not treated as dealing damage (and thus ignores armor)."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Repeat"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "To repeat an effect trigger it again."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Return"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When an effect instructs a player to return anything to a specific zone, it's put there."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Sacrifice"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Sacrificing a card is equivalent to Destroying it.\nA player can only Sacrifice Friendly cards."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Search"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a player searches a zone they look through all the cards in the appropriate zone in secret.\nA player may deliberately fail to find a card they were searching for, even if it is in the appropriate zone."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Self-Referential Text"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If a card refers to its own name, that reference is only to that copy of a card."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Skirmish"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a creature with skirmish fights, it gets dealt no damage by the opposing creature from that fight."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Splash"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When damage is dealt with splash, the Neighbors of the Creature that took the original damage take the Splash damage."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Steal"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When an effect Steals Æmber, that much Æmber is removed from opponent's pool and put into the Stealing player's pool."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Stun/Stunned"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a player stuns a creature, that creature gets a stun token and is stunned.\nA creature can only have at most one stun token at a time.\nWhen a stunned creature would be used, it is instead no longer stunned and the stun token is removed from it.\nA Stunned Creature can still be targeted with a Stun effect, but it will resolve without an effect."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Swap"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "If two cards get swapped, they exchange positions.\nCards controlled by different players can’t be swapped.\nIf two zones get swapped, all cards in either zone get put in the other."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Taunt"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Non-Taunt Neighbors of Taunt Creatures can't be attacked."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Traits"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Traits are a card's descriptors, under the card's Name (like Human or Scientist)."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Trigger"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "To trigger an effect means to activate it and begin resolving it (go to step 1 of the effect’s resolution)."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "Unforge"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a player unforges a key they flip one of their forged key tokens from the forged side to the unforged side and that key is now unforged."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    text: "You, Your, Yours"
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "You, Your, and Yours always references the card’s current controller."
+                }
+            ]
+        }
     ]
 }
