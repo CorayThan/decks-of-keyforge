@@ -74,11 +74,11 @@ export const keyforgeRulesRewritten: Article = {
                 {
                     type: EntryType.UNORDERED_LIST,
                     listItems: [
-                        "1. Forge a key.\nIf the Active Player has six or more Æmber, they forge a key and lose six Æmber.",
-                        "2. Choose a house\nThe Active Player chooses a house that is either on their archon's identity card or is a house of a card their control.\nAfter that, if the Active Player has any cards in their Archive, they can choose to add all of them to their hand.",
-                        "3. Play, discard, or use cards of the chosen house\nThe active player can Play, Discard and/or Use cards that belong to the house chosen in step 2.\nThe first player during their first turn is only allowed to Play and/or Discard a total of one card.\nPlaying, Discarding and/or Using cards is only allowed in an Open Game State (no effects or events being currently resolving).",
-                        "4. Ready Cards\nActive Player readies all cards they control",
-                        "5. Draw cards\nActive Player draws cards until they have six cards in their hand."
+                        "1. Forge a key.<br>If the Active Player has six or more Æmber, they forge a key and lose six Æmber.",
+                        "2. Choose a house<br>The Active Player chooses a house that is either on their archon's identity card or is a house of a card their control.<br>After that, if the Active Player has any cards in their Archive, they can choose to add all of them to their hand.",
+                        "3. Play, discard, or use cards of the chosen house<br>The active player can Play, Discard and/or Use cards that belong to the house chosen in step 2.<br>The first player during their first turn is only allowed to Play and/or Discard a total of one card.<br>Playing, Discarding and/or Using cards is only allowed in an Open Game State (no effects or events being currently resolving).",
+                        "4. Ready Cards<br>Active Player readies all cards they control",
+                        "5. Draw cards<br>Active Player draws cards until they have six cards in their hand."
                     ]
                 }
             ]
@@ -632,7 +632,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When a player Archives a card, they take that card and put it into the Archives face-down.\nIf an effect doesn't specify where a card is supposed to be Archived from, it is archived from their hand."
+                    text: "When a player Archives a card, they take that card and put it into the Archives face-down.<br>If an effect doesn't specify where a card is supposed to be Archived from, it is archived from their hand."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -641,7 +641,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Archives is an out-of-play zone.\nEach player can look at the cards in their own Archives."
+                    text: "Archives is an out-of-play zone.<br>Each player can look at the cards in their own Archives."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -650,7 +650,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "All creatures have an Armor value. For most creatures, it's 0 (denoted as ~ on the card).\nBefore a creature with an Armor value would take damage, instead reduce the damage by the armor value.\nThen reduce the Armor value by the amount of Damage prevented until the end of the turn.\nA creature's Armor value can't be negative."
+                    text: "All creatures have an Armor value. For most creatures, it's 0 (denoted as ~ on the card).<br>Before a creature with an Armor value would take damage, instead reduce the damage by the armor value.<br>Then reduce the Armor value by the amount of Damage prevented until the end of the turn.<br>A creature's Armor value can't be negative."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -668,7 +668,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Before a creature with Assault fights, deal Damage to the opposing creature equal to the value of Assault.\nIf this damage destroys the opposing creature, the Fight event stops at that time and doesn’t proceed further."
+                    text: "Before a creature with Assault fights, deal Damage to the opposing creature equal to the value of Assault.<br>If this damage destroys the opposing creature, the Fight event stops at that time and doesn’t proceed further."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -677,7 +677,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Captured Æmber is taken from opponent's pool and put on a creature the capturing player controls.\nIf a creature's effect says to capture Æmber, that creature captures the Æmber.\nWhen a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from."
+                    text: "Captured Æmber is taken from opponent's pool and put on a creature the capturing player controls.<br>If a creature's effect says to capture Æmber, that creature captures the Æmber.<br>When a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -686,7 +686,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "All cards a player has played onto the field are under their control.\nIf a player takes control of a card that they didn’t already control, it's put into play under their control."
+                    text: "All cards a player has played onto the field are under their control.<br>If a player takes control of a card that they didn’t already control, it's put into play under their control."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -695,7 +695,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Whenever damage is dealt to a creature, that many damage tokens are put on that creature.\nIf that creature has as much or more damage than its power, it is destroyed."
+                    text: "Whenever damage is dealt to a creature, that many damage tokens are put on that creature.<br>If that creature has as much or more damage than its power, it is destroyed."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -731,7 +731,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Discard Pile is an out-of-play zone.\nCards are put into discard pile face-up.\nCards in either discard pile can be examined by either player at any time.\nOrder of cards in the discard pile must be maintained.\nIf multiple cards would put into the discard pile at the same time, the active player chooses the order to put them in."
+                    text: "Discard Pile is an out-of-play zone.<br>Cards are put into discard pile face-up.<br>Cards in either discard pile can be examined by either player at any time.<br>Order of cards in the discard pile must be maintained.<br>If multiple cards would put into the discard pile at the same time, the active player chooses the order to put them in."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -740,7 +740,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "To draw a card, a player takes the top card of their deck and adds it to their hand.\nIf a player would draw a card and their deck is empty, before they draw they return all cards from their discard pile into their deck and shuffle their new deck.\nIf an effect draws multiple cards, all draws are resolved one by one."
+                    text: "To draw a card, a player takes the top card of their deck and adds it to their hand.<br>If a player would draw a card and their deck is empty, before they draw they return all cards from their discard pile into their deck and shuffle their new deck.<br>If an effect draws multiple cards, all draws are resolved one by one."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -767,7 +767,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "To Exhaust a card move it to a sideways position. It is now exhausted.\nAn Exhausted card can still be targeted with an Exhaust effect, but it will resolve without an effect."
+                    text: "To Exhaust a card move it to a sideways position. It is now exhausted.<br>An Exhausted card can still be targeted with an Exhaust effect, but it will resolve without an effect."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -776,7 +776,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Fight effect triggers After the Creature Fights, if it survived the fight.\nFor details about the Fight (Event), see Fight" //want to put a link to Fight section here
+                    text: "Fight effect triggers After the Creature Fights, if it survived the fight.<br>For details about the Fight (Event), see Fight" //want to put a link to Fight section here
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -785,7 +785,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Flanks are the far ends of a player's creature line.\nFlank creatures are creatures at the far ends of a player's creature line."
+                    text: "Flanks are the far ends of a player's creature line.<br>Flank creatures are creatures at the far ends of a player's creature line."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -821,7 +821,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Before a creature with Hazardous gets fought, deal Damage to the opposing creature equal to the value of Hazardous.\nIf this damage destroys the opposing creature, the rest of the fight does not occur."
+                    text: "Before a creature with Hazardous gets fought, deal Damage to the opposing creature equal to the value of Hazardous.<br>If this damage destroys the opposing creature, the rest of the fight does not occur."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -830,7 +830,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When a creature is Healed, remove that much damage from it.\nA creature is only Healed for however much damage was actually removed."
+                    text: "When a creature is Healed, remove that much damage from it.<br>A creature is only Healed for however much damage was actually removed."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -857,7 +857,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Least powerful creatures are the ones that are tied for the lowest power value on the field.\nIn case of ties the active player chooses from among the Least Powerful creatures."
+                    text: "Least powerful creatures are the ones that are tied for the lowest power value on the field.<br>In case of ties the active player chooses from among the Least Powerful creatures."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -866,7 +866,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When a card leaves play it is put into its owner's appropriate out-of-play zone, unless the effect in question specifically interacts with that zone.\nWhen a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from, then all tokens on it get put into the common pool.\nWhen a non-creature tokens on it get put into the common pool.\nWhen a card with an upgrade attached to it leaves play, that upgrade gets put into the discard pile.\nWhen a card with a face-down card underneath it leaves play, that face-down card gets put into the discard pile.\nWhen a card leaves the field to an out of play zone, all pending effects that interact with that card stop."
+                    text: "When a card leaves play it is put into its owner's appropriate out-of-play zone, unless the effect in question specifically interacts with that zone.<br>When a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from, then all tokens on it get put into the common pool.<br>When a non-creature tokens on it get put into the common pool.<br>When a card with an upgrade attached to it leaves play, that upgrade gets put into the discard pile.<br>When a card with a face-down card underneath it leaves play, that face-down card gets put into the discard pile.<br>When a card leaves the field to an out of play zone, all pending effects that interact with that card stop."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -902,7 +902,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Most powerful creatures are the ones that are tied for the highest power value on the field.\nIn case of ties the active player chooses from among the Most Powerful creatures."
+                    text: "Most powerful creatures are the ones that are tied for the highest power value on the field.<br>In case of ties the active player chooses from among the Most Powerful creatures."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -920,7 +920,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Open Game State exists during any step of the game at a time when no Events or Effects are in any of their steps of resolution.\nOpen Game State is required to manually Play, Use and/or Discard cards, to trigger timing-based Events and Effects and to switch between Phases."
+                    text: "Open Game State exists during any step of the game at a time when no Events or Effects are in any of their steps of resolution.<br>Open Game State is required to manually Play, Use and/or Discard cards, to trigger timing-based Events and Effects and to switch between Phases."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -938,7 +938,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Some cards may refer to counters that do not have official components to represent them.\nThese counters have no inherent rules, instead the card that creates them provides context to how the counters function.\nList of other counter types:\n- Doom Counters"
+                    text: "Some cards may refer to counters that do not have official components to represent them.<br>These counters have no inherent rules, instead the card that creates them provides context to how the counters function.<br>List of other counter types:<br>- Doom Counters"
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -965,7 +965,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Play abilities trigger after the Card is played.\nActions are put into the discard pile after their Play abilities fully resolve (if any).\nIf a play ability does multiple things, trigger them one by one sequentially, unless otherwise stated or if all of the effects deal damage."
+                    text: "Play abilities trigger after the Card is played.<br>Actions are put into the discard pile after their Play abilities fully resolve (if any).<br>If a play ability does multiple things, trigger them one by one sequentially, unless otherwise stated or if all of the effects deal damage."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -974,7 +974,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When a card is Put into Play (such as by being played) different rules govern it depending on the card type;\nCreatures get Put into Play into their controller’s battleline on either flank, exhausted.\nArtifacts get Put into Play on their controller’s side of the field, exhausted.\nActions get Put into Play on their controller’s side of the field and then put into the discard pile after they finish resolving.\nUpgrades get Put into Play under whichever creature they’re being attached to."
+                    text: "When a card is Put into Play (such as by being played) different rules govern it depending on the card type;<br>Creatures get Put into Play into their controller’s battleline on either flank, exhausted.<br>Artifacts get Put into Play on their controller’s side of the field, exhausted.<br>Actions get Put into Play on their controller’s side of the field and then put into the discard pile after they finish resolving.<br>Upgrades get Put into Play under whichever creature they’re being attached to."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1010,7 +1010,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Purge is an out-of play zone under the player's archon card.\nPurge is underneath the players Archon card and cards there are face-up."
+                    text: "Purge is an out-of play zone under the player's archon card.<br>Purge is underneath the players Archon card and cards there are face-up."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1028,7 +1028,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "To ready a creature move it to upright position. It is now ready.\nA ready Creature can still be targeted with a Ready effect, but it will resolve without an effect."
+                    text: "To ready a creature move it to upright position. It is now ready.<br>A ready Creature can still be targeted with a Ready effect, but it will resolve without an effect."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1037,7 +1037,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Reap effect triggers After the Creature reaps.\nFor details about the Reap as a way to Use creatures, see (Reap event)" //want link here
+                    text: "Reap effect triggers After the Creature reaps.<br>For details about the Reap as a way to Use creatures, see (Reap event)" //want link here
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1046,7 +1046,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When an effect instructs one to Redistribute tokens, pick up all of the aforementioned tokens and place them in whichever arrangement is desired.\nRedistributing damage tokens is not treated as dealing damage (and thus ignores armor)."
+                    text: "When an effect instructs one to Redistribute tokens, pick up all of the aforementioned tokens and place them in whichever arrangement is desired.<br>Redistributing damage tokens is not treated as dealing damage (and thus ignores armor)."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1073,7 +1073,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "Sacrificing a card is equivalent to Destroying it.\nA player can only Sacrifice Friendly cards."
+                    text: "Sacrificing a card is equivalent to Destroying it.<br>A player can only Sacrifice Friendly cards."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1082,7 +1082,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When a player searches a zone they look through all the cards in the appropriate zone in secret.\nA player may deliberately fail to find a card they were searching for, even if it is in the appropriate zone."
+                    text: "When a player searches a zone they look through all the cards in the appropriate zone in secret.<br>A player may deliberately fail to find a card they were searching for, even if it is in the appropriate zone."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1127,7 +1127,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "When a player stuns a creature, that creature gets a stun token and is stunned.\nA creature can only have at most one stun token at a time.\nWhen a stunned creature would be used, it is instead no longer stunned and the stun token is removed from it.\nA Stunned Creature can still be targeted with a Stun effect, but it will resolve without an effect."
+                    text: "When a player stuns a creature, that creature gets a stun token and is stunned.<br>A creature can only have at most one stun token at a time.<br>When a stunned creature would be used, it is instead no longer stunned and the stun token is removed from it.<br>A Stunned Creature can still be targeted with a Stun effect, but it will resolve without an effect."
                 },
                 {
                     type: Type.PARAGRAPH,
@@ -1136,7 +1136,7 @@ export const keyforgeRulesRewritten: Article = {
                 },
                 {
                     type: Type.PARAGRAPH,
-                    text: "If two cards get swapped, they exchange positions.\nCards controlled by different players can’t be swapped.\nIf two zones get swapped, all cards in either zone get put in the other."
+                    text: "If two cards get swapped, they exchange positions.<br>Cards controlled by different players can’t be swapped.<br>If two zones get swapped, all cards in either zone get put in the other."
                 },
                 {
                     type: Type.PARAGRAPH,
