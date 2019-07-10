@@ -1184,6 +1184,106 @@ export const keyforgeRulesRewritten: Article = {
                     text: "You, Your, and Yours always references the card’s current controller."
                 }
             ]
+        },
+        {
+            sectionTitle: "Ruling Clarifications",
+            entries: [
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Since When effects happen immediately after the triggering event, creatures that are destroyed don’t trigger their “Each time a creature is destroyed” or similar, because they’re already in the discard pile by then."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Effects that use something your opponent controls as if you controlled them don’t finish resolving until after you’ve finished using the card in question. That means that it is treated as being friendly for the entirety of its own usage, including any triggered effects thereof."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "Since triggers are checked one by one, if a new trigger appears during the resolution of another one, it can still trigger despite not being there at the time of the original event happening."
+                }
+            ]
+        },
+        {
+            sectionTitle: "Rules Exceptions",
+            entries: [
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When a maverick Pitlord is on the field and their controller doesn't have Dis on their identity card nor among cards they control, they don't have to (and, in fact, can't) choose Dis as their active house."
+                },
+                {
+                    type: Type.PARAGRAPH,
+                    text: "When Overlord Greking destroys a creature it can put that creature into play despite it being in the discard pile by then despite not explicitly mentioning the discard pile."
+                }
+            ]
+        },
+        {
+            sectionTitle: "Rules in action examples",
+            entries: [
+                {
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    bold: true,
+                    text: "I have chosen house Logos to be my active house this turn and start off by playing Library Access (CoTA 115), I then play Wild Wormhole (CoTA 125). In what order do I resolve this combination of effects?"
+                },
+                {
+                    type: EntryType.UNORDERED_LIST,
+                    listItems: [
+                        "a. In step 1 of Wild Wormhole Playing event, you place it on the field.",
+                        "b. In step 2 of Wild Wormhole Playing event, nothing happens.",
+                        "c. In step 3 of Wild Wormhole Playing event, it gets played.",
+                        "d. In step 4 of Wild Wormhole Playing event, you gain an Æmber (When effect, but before all other When effects)",
+                        "e. In step 4 of Wild Wormhole Playing event, you resolve Library’s Access lingering When effect and draw a card.",
+                        "f. In step 5 of Wild Wormhole Playing event, its Play ability triggers.",
+                        "   i. In step A of Wild Wormhole Play effect, nothing happens as it doesn’t target.",
+                        "   ii. In step B of Wild Wormhole Play effect, the top card of the deck gets played.",
+                        "       1. In step 1 of the other card’s Playing event, you place it on the field.",
+                        "       2. In step 2 of the other card’s Playing event, nothing happens.",
+                        "       3. In step 3 of the other card’s Playing event, it gets played.",
+                        "       4. In step 4 of the other card’s Playing event, you gain its pure Æmber (If any)",
+                        "       5. In step 4 of the other card’s Playing event, you resolve Library’s Access lingering When effect and draw a card.",
+                        "       6. In step 5 of the other card’s Playing event, its Play ability triggers, if any.",
+                        "           a. In step A of the other card’s Play effect, it selects targets, if any.",
+                        "           b. In step B of the other card’s Play effect, the card’s Play effect resolves.",
+                        "           c. In step C of the other card’s Play effect, the card’s Play effect finishes resolving.",
+                        "       7. In step 6 of the other card’s Playing event, finish the event. If it’s an action, place it in the discard pile at this point.",
+                        "   iii. In step C of Wild Wormhole Play effect, the Play effect finishes resolving.",
+                        "g. In step 6 of Wild Wormhole Playing event, finish the event. Place it in the discard pile at this point.",
+                    ],
+                },{
+                    type: Type.PARAGRAPH,
+                    noPad: true,
+                    bold: true,
+                    text: "On my opponent’s turn they use their Yxilo Bolter (CoTA 204) to reap and choose to resolve its reap effect on my Bad Penny (CoTA 296). Is the Bad Penny purged or does it end up back in my hand?"
+                },
+                {
+                    type: EntryType.UNORDERED_LIST,
+                    listItems: [
+                        "a. In step 1 of Yxilo Bolter Use event it gets Exhausted and the Reap option is chosen.",
+                        "b. In step 2 of Yxilo Bolter Use event, nothing happens.",
+                        "c. In step 3 of Yxilo Bolter Use event, the active player gains an Æmber.",
+                        "d. In step 4 of Yxilo Bolter Use event, nothing happens.",
+                        "e. In step 5 of Yxilo Bolter Use event, trigger its Reap effect.",
+                        "   i. In step A of Yxilo Bolter Reap effect nothing happens.",
+                        "   ii. In step B of Yxilo Bolter Reap effect, the first subeffect is triggered.",
+                        "       1. In step A of Yxilo Bolter Reap effect’s first subeffect, the active player chooses Bad Penny as a target.",
+                        "       2. In step B of Yxilo Bolter Reap effect’s first subeffect, Bad Penny gets dealt 2 damage.",
+                        "           a. In step 1 of Bad Penny Destruction event, it gets triggered.",
+                        "           b. In step 2 of Bad Penny Destruction event, her Destroyed effect triggers.",
+                        "               i. In step A of her Destroyed effect, no targets are chosen.",
+                        "               ii. In step B of her Destroyed effect she gets returned to her owner’s hand.",
+                        "               iii. In step C of her Destroyed effect it finishes resolving.",
+                        "           c. In step 3 of Bad Penny Destruction event she is treated to be destroyed.",
+                        "           d. In step 4 of Bad Penny Destruction event nothing happens.",
+                        "           e. In step 5 of Bad Penny Destruction event nothing happens.",
+                        "           f. In step 6 of Bad Penny Destruction event the event finishes.",
+                        "       3. In step C of Yxilo Bolter Reap effect’s first subeffect it finishes resolving. The second subeffect gets triggered.",
+                        "       4. In step A of Yxilo Bolter Reap effect’s second subeffect no targets are chosen.",
+                        "       5. In step B of Yxilo Bolter Reap effect’s second subeffect that subeffect attempts to Purge Bad Penny, as she has been destroyed. Because the effect doesn’t mention any out-of-play zones, it affects only cards on the field and thus doesn’t affect Bad Penny.",
+                        "       6. In step C of Yxilo Bolter Reap effect’s second subeffect it finishes resolving.",
+                        "   iii. In step C of Yxilo Bolter Reap effect it finishes resolving.",
+                        "f. In step 6 of Yxilo Bolter Use event it finishes."
+                    ]
+                }
+            ]
         }
     ]
 }
