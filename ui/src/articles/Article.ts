@@ -12,7 +12,8 @@ export interface Article {
 
 export enum ArticleType {
     STRATEGY,
-    EVALUATION
+    EVALUATION,
+    RULES
 }
 
 export interface ArticleSection {
