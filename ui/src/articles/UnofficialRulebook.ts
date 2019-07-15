@@ -2,12 +2,12 @@
 import { Article, ArticleType, EntryType } from "./Article"
 import { dunkoro } from "./Authors"
 
-export const whatsTheRush = {
+export const keyforgeRules = {
     author: dunkoro,
-    title: "What's the Rush?",
-    urlTitle: "whats-the-rush",
-    date: "July 10 2019",
-    type: ArticleType.STRATEGY, //not a thing yet
+    title: "Unofficial Keyforge Rulebook",
+    urlTitle: "unofficial-keyforge-rulebook",
+    date: "July 20 2019",
+    type: ArticleType.RULES,
     sections: [
         {
             sectionTitle: "Written by Jakub “Dunkoro” Nosal in collaboration with Carson Guy and Joe Huber",
@@ -74,11 +74,11 @@ export const whatsTheRush = {
                 {
                     type: EntryType.UNORDERED_LIST,
                     listItems: [
-                        "1. Forge a key.<br>If the Active Player has six or more Æmber, they forge a key and lose six Æmber.",
-                        "2. Choose a house<br>The Active Player chooses a house that is either on their archon's identity card or is a house of a card their control.<br>After that, if the Active Player has any cards in their Archive, they can choose to add all of them to their hand.",
-                        "3. Play, discard, or use cards of the chosen house<br>The active player can Play, Discard and/or Use cards that belong to the house chosen in step 2.<br>The first player during their first turn is only allowed to Play and/or Discard a total of one card.<br>Playing, Discarding and/or Using cards is only allowed in an Open Game State (no effects or events being currently resolving).",
-                        "4. Ready Cards<br>Active Player readies all cards they control",
-                        "5. Draw cards<br>Active Player draws cards until they have six cards in their hand."
+                        "1. Forge a key. If the Active Player has six or more Æmber, they forge a key and lose six Æmber.",
+                        "2. Choose a house. The Active Player chooses a house that is either on their archon's identity card or is a house of a card their control. After that, if the Active Player has any cards in their Archive, they can choose to add all of them to their hand.",
+                        "3. Play, discard, or use cards of the chosen house. The active player can Play, Discard and/or Use cards that belong to the house chosen in step 2. The first player during their first turn is only allowed to Play and/or Discard a total of one card. Playing, Discarding and/or Using cards is only allowed in an Open Game State (no effects or events being currently resolving).",
+                        "4. Ready Cards Active Player readies all cards they control",
+                        "5. Draw cards Active Player draws cards until they have six cards in their hand."
                     ]
                 }
             ]
@@ -134,8 +134,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Using a Creature"
                 },
                 {
@@ -152,8 +152,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Using an Artifact"
                 },
                 {
@@ -170,8 +170,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Reap"
                 },
                 {
@@ -188,8 +188,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Fight"
                 },
                 {
@@ -198,8 +198,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Action"
                 },
                 {
@@ -212,8 +212,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Omni"
                 },
                 {
@@ -235,8 +235,8 @@ export const whatsTheRush = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "The Golden Rule"
                 },
                 {
@@ -245,8 +245,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Board Rule"
                 },
                 {
@@ -255,8 +255,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Active Player Chooses"
                 },
                 {
@@ -265,8 +265,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Card Placement"
                 },
                 {
@@ -287,8 +287,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Rule of Six"
                 },
                 {
@@ -297,8 +297,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Resolve as much as you can"
                 },
                 {
@@ -315,8 +315,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Effect Scope"
                 },
                 {
@@ -325,8 +325,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Can’t vs Must/May"
                 },
                 {
@@ -379,8 +379,8 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Event structure"
                 },
                 {
@@ -425,13 +425,14 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Effect types"
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Continuous"
                 },
                 {
@@ -445,6 +446,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Trigger"
                 },
                 {
@@ -458,6 +460,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Lingering"
                 },
                 {
@@ -470,13 +473,14 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
                     noPad: true,
+                    bold: true,
                     text: "Triggers"
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Before"
                 },
                 {
@@ -494,6 +498,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "When"
                 },
                 {
@@ -515,6 +520,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "After"
                 },
                 {
@@ -531,8 +537,9 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
+
                     noPad: true,
+                    bold: true,
                     text: "Effects within effects"
                 },
                 {
@@ -541,8 +548,9 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
+
                     noPad: true,
+                    bold: true,
                     text: "Effect structure"
                 },
                 {
@@ -555,8 +563,9 @@ export const whatsTheRush = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    bold: true,
+
                     noPad: true,
+                    bold: true,
                     text: "Target"
                 },
                 {
@@ -579,6 +588,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Active Player"
                 },
                 {
@@ -588,6 +598,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Active House"
                 },
                 {
@@ -597,6 +608,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Adjacent"
                 },
                 {
@@ -606,6 +618,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Æmber"
                 },
                 {
@@ -619,6 +632,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Alpha"
                 },
                 {
@@ -628,33 +642,57 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Archive (Effect)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When a player Archives a card, they take that card and put it into the Archives face-down.<br>If an effect doesn't specify where a card is supposed to be Archived from, it is archived from their hand."
+                    text: "When a player Archives a card, they take that card and put it into the Archives face-down."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If an effect doesn't specify where a card is supposed to be Archived from, it is archived from their hand."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Archives (Zone)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Archives is an out-of-play zone.<br>Each player can look at the cards in their own Archives."
+                    text: "Archives is an out-of-play zone."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Each player can look at the cards in their own Archives."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Armor"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "All creatures have an Armor value. For most creatures, it's 0 (denoted as ~ on the card).<br>Before a creature with an Armor value would take damage, instead reduce the damage by the armor value.<br>Then reduce the Armor value by the amount of Damage prevented until the end of the turn.<br>A creature's Armor value can't be negative."
+                    text: "All creatures have an Armor value. For most creatures, it's 0 (denoted as ~ on the card)."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Before a creature with an Armor value would take damage, instead reduce the damage by the armor value."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Then reduce the Armor value by the amount of Damage prevented until the end of the turn."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A creature's Armor value can't be negative."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "As if you controlled it, As if it were yours"
                 },
                 {
@@ -664,42 +702,67 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Assault"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Before a creature with Assault fights, deal Damage to the opposing creature equal to the value of Assault.<br>If this damage destroys the opposing creature, the Fight event stops at that time and doesn’t proceed further."
+                    text: "Before a creature with Assault fights, deal Damage to the opposing creature equal to the value of Assault."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If this damage destroys the opposing creature, the Fight event stops at that time and doesn’t proceed further."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Capture"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Captured Æmber is taken from opponent's pool and put on a creature the capturing player controls.<br>If a creature's effect says to capture Æmber, that creature captures the Æmber.<br>When a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from."
+                    text: "Captured Æmber is taken from opponent's pool and put on a creature the capturing player controls."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If a creature's effect says to capture Æmber, that creature captures the Æmber."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Control"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "All cards a player has played onto the field are under their control.<br>If a player takes control of a card that they didn’t already control, it's put into play under their control."
+                    text: "All cards a player has played onto the field are under their control."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If a player takes control of a card that they didn’t already control, it's put into play under their control."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Damage"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Whenever damage is dealt to a creature, that many damage tokens are put on that creature.<br>If that creature has as much or more damage than its power, it is destroyed."
+                    text: "Whenever damage is dealt to a creature, that many damage tokens are put on that creature."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If that creature has as much or more damage than its power, it is destroyed."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Deploy"
                 },
                 {
@@ -709,6 +772,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Destroy (Event)"
                 },
                 {
@@ -718,6 +782,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Destroyed (Effect)"
                 },
                 {
@@ -727,24 +792,51 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Discard Pile"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Discard Pile is an out-of-play zone.<br>Cards are put into discard pile face-up.<br>Cards in either discard pile can be examined by either player at any time.<br>Order of cards in the discard pile must be maintained.<br>If multiple cards would put into the discard pile at the same time, the active player chooses the order to put them in."
+                    text: "Discard Pile is an out-of-play zone."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Cards are put into discard pile face-up."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Cards in either discard pile can be examined by either player at any time."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Order of cards in the discard pile must be maintained."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If multiple cards would put into the discard pile at the same time, the active player chooses the order to put them in."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Draw"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "To draw a card, a player takes the top card of their deck and adds it to their hand.<br>If a player would draw a card and their deck is empty, before they draw they return all cards from their discard pile into their deck and shuffle their new deck.<br>If an effect draws multiple cards, all draws are resolved one by one."
+                    text: "To draw a card, a player takes the top card of their deck and adds it to their hand."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If a player would draw a card and their deck is empty, before they draw they return all cards from their discard pile into their deck and shuffle their new deck."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If an effect draws multiple cards, all draws are resolved one by one."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Elusive"
                 },
                 {
@@ -754,6 +846,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Enemy"
                 },
                 {
@@ -763,33 +856,49 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Exhaust"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "To Exhaust a card move it to a sideways position. It is now exhausted.<br>An Exhausted card can still be targeted with an Exhaust effect, but it will resolve without an effect."
+                    text: "To Exhaust a card move it to a sideways position. It is now exhausted."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "An Exhausted card can still be targeted with an Exhaust effect, but it will resolve without an effect."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Fight (Effect)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Fight effect triggers After the Creature Fights, if it survived the fight.<br>For details about the Fight (Event), see Fight" //want to put a link to Fight section here
+                    text: "Fight effect triggers After the Creature Fights, if it survived the fight."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "For details about the Fight (Event), see Fight"
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Flank"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Flanks are the far ends of a player's creature line.<br>Flank creatures are creatures at the far ends of a player's creature line."
+                    text: "Flanks are the far ends of a player's creature line."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Flank creatures are creatures at the far ends of a player's creature line."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "For Each"
                 },
                 {
@@ -799,6 +908,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Forge"
                 },
                 {
@@ -808,6 +918,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Friendly"
                 },
                 {
@@ -817,24 +928,35 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Hazardous"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Before a creature with Hazardous gets fought, deal Damage to the opposing creature equal to the value of Hazardous.<br>If this damage destroys the opposing creature, the rest of the fight does not occur."
+                    text: "Before a creature with Hazardous gets fought, deal Damage to the opposing creature equal to the value of Hazardous."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If this damage destroys the opposing creature, the rest of the fight does not occur."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Heal"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When a creature is Healed, remove that much damage from it.<br>A creature is only Healed for however much damage was actually removed."
+                    text: "When a creature is Healed, remove that much damage from it."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A creature is only Healed for however much damage was actually removed."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "If you do, In order to, to"
                 },
                 {
@@ -844,6 +966,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Instead"
                 },
                 {
@@ -853,24 +976,51 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Least Powerful"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Least powerful creatures are the ones that are tied for the lowest power value on the field.<br>In case of ties the active player chooses from among the Least Powerful creatures."
+                    text: "Least powerful creatures are the ones that are tied for the lowest power value on the field."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "In case of ties the active player chooses from among the Least Powerful creatures."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Leave Play (Event)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When a card leaves play it is put into its owner's appropriate out-of-play zone, unless the effect in question specifically interacts with that zone.<br>When a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from, then all tokens on it get put into the common pool.<br>When a non-creature tokens on it get put into the common pool.<br>When a card with an upgrade attached to it leaves play, that upgrade gets put into the discard pile.<br>When a card with a face-down card underneath it leaves play, that face-down card gets put into the discard pile.<br>When a card leaves the field to an out of play zone, all pending effects that interact with that card stop."
+                    text: "When a card leaves play it is put into its owner's appropriate out-of-play zone, unless the effect in question specifically interacts with that zone."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a creature with Æmber on it leaves play, all Æmber on it goes to the pool of the opponent of the creature’s controller, regardless of where the Æmber came from, then all tokens on it get put into the common pool."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a non-creature tokens on it get put into the common pool."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a card with an upgrade attached to it leaves play, that upgrade gets put into the discard pile."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a card with a face-down card underneath it leaves play, that face-down card gets put into the discard pile."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a card leaves the field to an out of play zone, all pending effects that interact with that card stop."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Leaves Play (Effect)"
                 },
                 {
@@ -880,6 +1030,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "May"
                 },
                 {
@@ -889,6 +1040,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "May Play, May Use"
                 },
                 {
@@ -898,15 +1050,21 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Most Powerful"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Most powerful creatures are the ones that are tied for the highest power value on the field.<br>In case of ties the active player chooses from among the Most Powerful creatures."
+                    text: "Most powerful creatures are the ones that are tied for the highest power value on the field."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "In case of ties the active player chooses from among the Most Powerful creatures."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Neighbor"
                 },
                 {
@@ -916,6 +1074,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Omega"
                 },
                 {
@@ -925,15 +1084,21 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Open Game State"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Open Game State exists during any step of the game at a time when no Events or Effects are in any of their steps of resolution.<br>Open Game State is required to manually Play, Use and/or Discard cards, to trigger timing-based Events and Effects and to switch between Phases."
+                    text: "Open Game State exists during any step of the game at a time when no Events or Effects are in any of their steps of resolution."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Open Game State is required to manually Play, Use and/or Discard cards, to trigger timing-based Events and Effects and to switch between Phases."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Opposing"
                 },
                 {
@@ -943,15 +1108,29 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Other Counters"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Some cards may refer to counters that do not have official components to represent them.<br>These counters have no inherent rules, instead the card that creates them provides context to how the counters function.<br>List of other counter types:<br>- Doom Counters"
+                    text: "Some cards may refer to counters that do not have official components to represent them."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "These counters have no inherent rules, instead the card that creates them provides context to how the counters function."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "List of other counter types:"
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "- Doom Counters"
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Owner"
                 },
                 {
@@ -961,6 +1140,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Pay"
                 },
                 {
@@ -970,24 +1150,51 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Play (Effect)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Play abilities trigger after the Card is played.<br>Actions are put into the discard pile after their Play abilities fully resolve (if any).<br>If a play ability does multiple things, trigger them one by one sequentially, unless otherwise stated or if all of the effects deal damage."
+                    text: "Play abilities trigger after the Card is played."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Actions are put into the discard pile after their Play abilities fully resolve (if any)."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If a play ability does multiple things, trigger them one by one sequentially, unless otherwise stated or if all of the effects deal damage."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Put into Play"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When a card is Put into Play (such as by being played) different rules govern it depending on the card type;<br>Creatures get Put into Play into their controller’s battleline on either flank, exhausted.<br>Artifacts get Put into Play on their controller’s side of the field, exhausted.<br>Actions get Put into Play on their controller’s side of the field and then put into the discard pile after they finish resolving.<br>Upgrades get Put into Play under whichever creature they’re being attached to."
+                    text: "When a card is Put into Play (such as by being played) different rules govern it depending on the card type;"
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Creatures get Put into Play into their controller’s battleline on either flank, exhausted."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Artifacts get Put into Play on their controller’s side of the field, exhausted."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Actions get Put into Play on their controller’s side of the field and then put into the discard pile after they finish resolving."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Upgrades get Put into Play under whichever creature they’re being attached to."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Poison"
                 },
                 {
@@ -997,6 +1204,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Power"
                 },
                 {
@@ -1006,6 +1214,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Power Counter"
                 },
                 {
@@ -1015,15 +1224,21 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Purge (Effect)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Purge is an out-of play zone under the player's archon card.<br>Purge is underneath the players Archon card and cards there are face-up."
+                    text: "Purge is an out-of play zone under the player's archon card."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Purge is underneath the players Archon card and cards there are face-up."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Purged (Zone)"
                 },
                 {
@@ -1033,33 +1248,45 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Ready"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "To ready a creature move it to upright position. It is now ready.<br>A ready Creature can still be targeted with a Ready effect, but it will resolve without an effect."
+                    text: "To ready a creature move it to upright position. It is now ready."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A ready Creature can still be targeted with a Ready effect, but it will resolve without an effect."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Reap (Effect)"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Reap effect triggers After the Creature reaps.<br>For details about the Reap as a way to Use creatures, see (Reap event)" //want link here
+                    text: "Reap effect triggers After the Creature reaps."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Redistribute"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When an effect instructs one to Redistribute tokens, pick up all of the aforementioned tokens and place them in whichever arrangement is desired.<br>Redistributing damage tokens is not treated as dealing damage (and thus ignores armor)."
+                    text: "When an effect instructs one to Redistribute tokens, pick up all of the aforementioned tokens and place them in whichever arrangement is desired."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Redistributing damage tokens is not treated as dealing damage (and thus ignores armor)."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Repeat"
                 },
                 {
@@ -1069,6 +1296,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Return"
                 },
                 {
@@ -1078,24 +1306,35 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Sacrifice"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Sacrificing a card is equivalent to Destroying it.<br>A player can only Sacrifice Friendly cards."
+                    text: "Sacrificing a card is equivalent to Destroying it."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A player can only Sacrifice Friendly cards."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Search"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When a player searches a zone they look through all the cards in the appropriate zone in secret.<br>A player may deliberately fail to find a card they were searching for, even if it is in the appropriate zone."
+                    text: "When a player searches a zone they look through all the cards in the appropriate zone in secret."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A player may deliberately fail to find a card they were searching for, even if it is in the appropriate zone."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Self-Referential Text"
                 },
                 {
@@ -1105,6 +1344,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Skirmish"
                 },
                 {
@@ -1114,6 +1354,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Splash"
                 },
                 {
@@ -1123,6 +1364,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Steal"
                 },
                 {
@@ -1132,24 +1374,47 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Stun/Stunned"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "When a player stuns a creature, that creature gets a stun token and is stunned.<br>A creature can only have at most one stun token at a time.<br>When a stunned creature would be used, it is instead no longer stunned and the stun token is removed from it.<br>A Stunned Creature can still be targeted with a Stun effect, but it will resolve without an effect."
+                    text: "When a player stuns a creature, that creature gets a stun token and is stunned."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A creature can only have at most one stun token at a time."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "When a stunned creature would be used, it is instead no longer stunned and the stun token is removed from it."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "A Stunned Creature can still be targeted with a Stun effect, but it will resolve without an effect."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Swap"
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "If two cards get swapped, they exchange positions.<br>Cards controlled by different players can’t be swapped.<br>If two zones get swapped, all cards in either zone get put in the other."
+                    text: "If two cards get swapped, they exchange positions."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "Cards controlled by different players can’t be swapped."
+                },
+                {
+                    type: EntryType.PARAGRAPH,
+                    text: "If two zones get swapped, all cards in either zone get put in the other."
                 },
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Taunt"
                 },
                 {
@@ -1159,6 +1424,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Traits"
                 },
                 {
@@ -1168,6 +1434,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Trigger"
                 },
                 {
@@ -1177,6 +1444,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "Unforge"
                 },
                 {
@@ -1186,6 +1454,7 @@ export const whatsTheRush = {
                 {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
+                    bold: true,
                     text: "You, Your, Yours"
                 },
                 {
@@ -1231,6 +1500,7 @@ export const whatsTheRush = {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
                     bold: true,
+
                     text: "I have chosen house Logos to be my active house this turn and start off by playing Library Access (CoTA 115), I then play Wild Wormhole (CoTA 125). In what order do I resolve this combination of effects?"
                 },
                 {
@@ -1261,6 +1531,7 @@ export const whatsTheRush = {
                     type: EntryType.PARAGRAPH,
                     noPad: true,
                     bold: true,
+
                     text: "On my opponent’s turn they use their Yxilo Bolter (CoTA 204) to reap and choose to resolve its reap effect on my Bad Penny (CoTA 296). Is the Bad Penny purged or does it end up back in my hand?"
                 },
                 {
