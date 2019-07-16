@@ -14,6 +14,7 @@ import { ArticleView } from "./ArticleView"
 import { daercArts } from "./DaercArts"
 import { preludeToAscension } from "./PreludeToAscension"
 import { whatsTheRush } from "./WhatsTheRush"
+import { rulebookExplained } from "./UnofficialRulebookExplained"
 
 interface ArticlesPageProps extends RouteComponentProps<{ urlTitle?: string }> {
 }
@@ -56,6 +57,11 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
                             Evaluation
                         </ListSubheader>
                         <ArticleLinksForType type={ArticleType.EVALUATION}/>
+                        <Divider style={{marginTop: spacing(2)}}/>
+                        <ListSubheader>
+                            Rules
+                        </ListSubheader>
+                        <ArticleLinksForType type={ArticleType.RULES}/>
                     </List>
                 </KeyDrawer>
                 <div style={{margin: spacing(4), display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
@@ -66,7 +72,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps> {
     }
 }
 
-export const allArticles = [preludeToAscension, answeringTheCall, whatsTheRush, daercArts]
+export const allArticles = [rulebookExplained, preludeToAscension, answeringTheCall, whatsTheRush, daercArts]
 export const latestTwoArticles = allArticles.slice(0, 2)
 
 const ArticleLinksForType = (props: { type: ArticleType }) => {
