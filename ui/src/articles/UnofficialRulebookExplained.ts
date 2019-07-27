@@ -1,9 +1,9 @@
 /* tslint:disable:max-line-length */
 import { Article, ArticleType, EntryType } from "./Article"
-import { dunkoro } from "./Authors"
+import { randomjoe } from "./Authors"
 
 export const rulebookExplained: Article = {
-    author: dunkoro,
+    author: randomjoe,
     title: "Unofficial Rulebook Explained",
     urlTitle: "unofficial-rulebook-explained",
     date: "July 20, 2019",
