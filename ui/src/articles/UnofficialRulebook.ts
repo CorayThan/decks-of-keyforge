@@ -6,7 +6,7 @@ export const keyforgeRules = {
     author: dunkoro,
     title: "Unofficial Keyforge Rulebook",
     urlTitle: "unofficial-keyforge-rulebook",
-    date: "July 20 2019",
+    date: "July 28 2019",
     type: ArticleType.RULES,
     sections: [
         {
@@ -697,7 +697,7 @@ export const keyforgeRules = {
                 },
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "If an effect instructs a player to do something with a card 'as if it were yours' or 'as if you controlled it',  the player is treated as the card's controller for the purposes of resolving the effect."
+                    text: "If an effect instructs a player to do something with a card 'as if it were yours' or 'as if you controlled it',  the player is treated as the card's controller for the purposes of triggering that effect or event only."
                 },
                 {
                     type: EntryType.PARAGRAPH,

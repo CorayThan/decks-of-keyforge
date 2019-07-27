@@ -6,7 +6,7 @@ export const rulebookExplained: Article = {
     author: randomjoe,
     title: "Unofficial Rulebook Explained",
     urlTitle: "unofficial-rulebook-explained",
-    date: "July 20, 2019",
+    date: "July 28, 2019",
     type: ArticleType.RULES,
     sections: [
         {
