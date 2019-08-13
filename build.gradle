@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.3.40'
+        kotlinVersion = '1.3.41'
         springBootVersion = '2.1.6.RELEASE'
         queryDslVersion = "4.2.1"
     }
@@ -23,7 +23,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'coraythan'
-version = '148'
+version = '150'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions {

@@ -41,4 +41,10 @@ class UserDeckEndpoints(
 
     @PostMapping("/update-prices")
     fun list(@RequestBody prices: List<UpdatePrice>) = userDeckService.updatePrices(prices)
+
+    @PostMapping("/{id}/notes")
+    fun notes(@PathVariable id: Long, @RequestBody notes: Notes) = userDeckService.updateNotes(id, notes.notes)
+
 }
+
+data class Notes(val notes: String)

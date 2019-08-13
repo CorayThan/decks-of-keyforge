@@ -17,7 +17,7 @@ import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
-import { DeckSearchLink } from "./DeckSearchLink"
+import { CardSearchLink, DeckSearchLink } from "./DeckSearchLink"
 
 const topSas = new DeckFilters()
 const cota = new DeckFilters()
@@ -96,11 +96,17 @@ export class LandingPage extends React.Component<{}> {
 
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
+                                Cards
+                            </ListSubheader>
+                            <CardSearchLink name={"Cards"} color={"secondary"}/>
+
+                            <Divider style={{marginTop: spacing(2)}}/>
+                            <ListSubheader>
                                 Fun Searches
                             </ListSubheader>
-                            <DeckSearchLink name={"Funniest"} filters={topFunny} color={"secondary"}/>
-                            <DeckSearchLink name={"Most Favorited"} filters={topWishlisted} color={"secondary"} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Worst by SAS"} filters={worstSas} color={"secondary"} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Funniest"} filters={topFunny}/>
+                            <DeckSearchLink name={"Most Favorited"} filters={topWishlisted} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Worst by SAS"} filters={worstSas} style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>

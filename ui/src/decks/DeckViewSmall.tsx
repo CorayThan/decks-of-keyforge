@@ -3,8 +3,9 @@ import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
 import List from "@material-ui/core/List/List"
+import Menu from "@material-ui/core/Menu"
 import Typography from "@material-ui/core/Typography/Typography"
-import { ExpandLess, ExpandMore } from "@material-ui/icons"
+import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardsForDeck } from "../cards/CardsForDeck"
@@ -31,6 +32,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { AercScoreView } from "../stats/AercScoreView"
 import { screenStore } from "../ui/ScreenStore"
+import { DeckNote } from "../userdeck/DeckNote"
 import { OwnersButton } from "../userdeck/OwnersButton"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
@@ -150,8 +152,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         <KeyButton color={"primary"}>View Deck</KeyButton>
                                     </KeyLink>
                                 ) : null}
-                                <CardsForDeck style={{marginRight: spacing(1)}} cards={deck.searchResultCards} deckName={deck.name}/>
-                                <MyDecksButton deck={deck}/>
+                                {compact ? null : (<MyDecksButton deck={deck}/>)}
                                 <OwnersButton owners={owners}/>
                                 <div style={{flexGrow: 1}}/>
                                 <div style={{marginRight: spacing(1)}}>
@@ -160,6 +161,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 <div style={{marginRight: spacing(1)}}>
                                     <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
                                 </div>
+                                <MoreDeckActions deck={deck} compact={compact}/>
                             </CardActions>
                         )}
                     </div>
@@ -365,5 +367,38 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
                 props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion}/>))
             }
         </List>
+    )
+}
+
+const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
+    const {deck, compact} = props
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+    return (
+        <>
+            <IconButton aria-controls="more-deck-actions-menu" aria-haspopup="true" onClick={handleClick}>
+                <MoreVert/>
+            </IconButton>
+            <Menu
+                id={"more-deck-actions-menu"}
+                anchorEl={anchorEl}
+                keepMounted={true}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
+                <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose} />
+                <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
+            </Menu>
+        </>
     )
 }

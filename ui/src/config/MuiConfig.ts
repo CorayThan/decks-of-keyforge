@@ -5,7 +5,7 @@ import { TextConfig } from "./TextConfig"
 
 export const spacing = (spacingValue = 1) => spacingValue * 8 * (screenStore.screenSizeXs() ? 0.5 : 1)
 
-export const muiTheme = createMuiTheme({
+export const theme = createMuiTheme({
     palette: {
         primary: blue,
         secondary: amber,

@@ -85,6 +85,12 @@ class UserDeckService(
         }
     }
 
+    fun updateNotes(deckId: Long, notes: String) {
+        modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), null) {
+            it.copy(notes = notes)
+        }
+    }
+
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
         modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), {
             it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)

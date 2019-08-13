@@ -102,6 +102,10 @@ export class DeckFilters {
     houses: House[] = []
     @observable
     title: string = ""
+    @observable
+    notes: string = ""
+    @observable
+    notesUser: string = ""
     page: number = 0
     @observable
     sort: string = defaultSort.value
@@ -136,6 +140,8 @@ export class DeckFilters {
     reset = () => {
         log.debug("Reseting deck filters.")
         this.title = ""
+        this.notes = ""
+        this.notesUser = ""
         this.forSale = false
         this.notForSale = false
         this.forTrade = false
@@ -153,6 +159,14 @@ export class DeckFilters {
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
+    handleNotesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.notes = event.target.value
+        this.notesUser = userStore.username == null ? "" : userStore.username
+    }
+    removeNotes = () => {
+        this.notesUser = ""
+        this.notes = ""
+    }
     handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             const username = userStore.username

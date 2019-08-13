@@ -154,7 +154,9 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
                     </div>
                 </KeyCard>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <Typography style={{marginLeft: spacing(4)}}>Unregistered decks will be deleted when they are registered.</Typography>
+                    <Typography style={{marginLeft: spacing(4)}}>
+                        Unregistered decks will be deleted when they are registered, or if no one has them marked as their deck.
+                    </Typography>
                     <div style={{flexGrow: 1}}/>
                     <KeyButton
                         variant={"outlined"}

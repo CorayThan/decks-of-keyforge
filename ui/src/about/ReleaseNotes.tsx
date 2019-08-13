@@ -12,13 +12,21 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.6"
+export const latestVersion = "5.7"
 
 @observer
 export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.7"} date={"8/13/2019"} expanded={true} releaseNotes={[
+                    "Improved cards page. The cards page now loads much faster, loads more cards on scroll, and you can link to individual pages for " +
+                    "cards.",
+                    "Add notes to any deck, and use your notes as custom tags to share collections of decks with a link! You can search for " +
+                    "decks with note text you've added, and share those search result URLs with others.",
+                    "Deck action buttons have been improved. Less used actions (view cards, add note) are in a three vertical dots menu, and in mobile " +
+                    "most deck actions will appear there for a simpler, shorter mobile view."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.6"} date={"6/30/2019"} expanded={true} releaseNotes={[
                     "Updated SAS. Added some new traits, like Deploy and an Out of House synergy type. (Synergizes with traits from cards in other houses " +
                     "only. Also fixed some issues, like the Thief trait not working.",

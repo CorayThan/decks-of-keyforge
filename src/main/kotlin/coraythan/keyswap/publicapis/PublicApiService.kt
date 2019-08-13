@@ -33,7 +33,7 @@ class PublicApiService(
         }
         val deck = deckRepo.findByKeyforgeId(keyforgeId)
         if (deck == null) {
-            log.info("Request for deck that doesn't exist $keyforgeId")
+            log.debug("Request for deck that doesn't exist $keyforgeId")
             return null
         }
         return deck.toDeckSearchResult(listOf(), null)

@@ -1,20 +1,21 @@
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../../config/MuiConfig"
-import { KeyButton } from "../../mui-restyled/KeyButton"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { Deck } from "../Deck"
 import { ListForSaleView } from "../sales/ListForSaleView"
+import { DeckActionClickable } from "./DeckActionClickable"
 
 interface MyDecksButtonProps {
     deck: Deck
+    menuItem?: boolean
 }
 
 @observer
 export class MyDecksButton extends React.Component<MyDecksButtonProps> {
 
     render() {
+        const {menuItem} = this.props
         const {id, name} = this.props.deck
         if (!userStore.loggedIn()) {
             return null
@@ -28,26 +29,25 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
         let listButton = null
         if (owned) {
             listButton = (
-                <ListForSaleView deck={this.props.deck}/>
+                <ListForSaleView deck={this.props.deck} menuItem={menuItem}/>
             )
         }
 
         return (
-            <div style={{display: "flex"}}>
+            <>
                 {forSale || forTrade || forAuction ? null :
                     (
-                        <KeyButton
-                            color={"primary"}
+                        <DeckActionClickable
                             onClick={() => {
                                 userDeckStore.owned(name, id, !owned)
                             }}
-                            style={{marginRight: spacing(1)}}
+                            menuItem={menuItem}
                         >
-                            {owned ? "Not mine" : "Add to my decks"}
-                        </KeyButton>
+                            {owned ? "Not mine" : "Add to My Decks"}
+                        </DeckActionClickable>
                     )}
                 {listButton}
-            </div>
+            </>
         )
     }
 }

@@ -4,6 +4,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
@@ -17,7 +18,7 @@ import kotlin.system.measureTimeMillis
 
 private const val lockUpdateWinsLosses = "PT72H"
 private const val onceEverySixHoursLock = "PT6H"
-private const val lockUpdatePageOfWinLosses = "PT10S"
+private const val lockUpdatePageOfWinLosses = "PT20S"
 
 @Transactional
 @Service
@@ -36,7 +37,7 @@ class DeckWinsService(
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 
-        log.info("$scheduledStart deck win loss update")
+        log.info("$scheduledStart start deck win loss update")
 
         val winsPage = deckPageService.findCurrentPage(DeckPageType.WINS)
         val lossesPage = deckPageService.findCurrentPage(DeckPageType.LOSSES)
@@ -47,6 +48,7 @@ class DeckWinsService(
         }
         deckPageService.setCurrentPage(1, DeckPageType.WINS)
         deckPageService.setCurrentPage(-1, DeckPageType.LOSSES)
+        log.info("$scheduledStop done deck win loss update starting")
     }
 
     @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
@@ -74,7 +76,7 @@ class DeckWinsService(
         val pageEnum = if (winsPage != -1) DeckPageType.WINS else DeckPageType.LOSSES
 
         try {
-            val decks = keyforgeApi.findDecks(page, order)
+            val decks = keyforgeApi.findDecks(page, order, 25)
             val updateDecks = decks?.data?.filter { it.losses != 0 || it.wins != 0 || it.power_level != 0 }
             if (updateDecks.isNullOrEmpty()) {
 
@@ -97,7 +99,7 @@ class DeckWinsService(
                             val updated = preexisting.withCards(cards).addGameStats(it)
 
                             if (updated != null) {
-                                deckRepo.save(updated)
+                                deckRepo.save(updated.copy(lastUpdate = now()))
                             }
                         }
                     }

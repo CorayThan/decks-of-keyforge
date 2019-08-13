@@ -7,6 +7,7 @@ Running the project:
 
 ```
 cd ui
+yarn
 npm run start
 ```
 
@@ -74,3 +75,9 @@ LIMIT 10;
 Go to profile for coraythan
 
 Unlink and relink with buttons.
+
+## Make reduced size card images
+
+`.\pngquant.exe --ext=.png --force 256 *.png`
+
+upload to S3 public with headers: `Cache-Control: max-age=31536000`

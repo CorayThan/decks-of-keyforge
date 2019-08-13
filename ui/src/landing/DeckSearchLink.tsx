@@ -28,3 +28,21 @@ export const DeckSearchLink = (props: { name: string, filters: DeckFilters, colo
         </div>
     )
 }
+
+export const CardSearchLink = (props: { name: string, color?: "secondary", style?: React.CSSProperties }) => {
+    const {name, color, style} = props
+
+    return (
+        <div style={{display: "flex", ...style}}>
+            <LinkButton
+                variant={"contained"}
+                size={"large"}
+                color={color ? color : "primary"}
+                to={Routes.cards}
+                style={{marginLeft: spacing(2)}}
+            >
+                {name}
+            </LinkButton>
+        </div>
+    )
+}

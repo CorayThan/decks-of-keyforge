@@ -19,5 +19,6 @@
 /out/
 
 /src/main/resources/static/
+/card-imgs*
 
 application-nocommit.yml

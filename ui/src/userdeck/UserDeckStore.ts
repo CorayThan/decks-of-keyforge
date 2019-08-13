@@ -71,6 +71,15 @@ export class UserDeckStore {
             })
     }
 
+    updateNotes = (deckName: string, notes: string, deckId: number) => {
+        return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
+            .then((response: AxiosResponse) => {
+                messageStore.setInfoMessage(`Update notes for ${deckName}.`)
+                this.findAllForUser()
+                this.refreshDeckInfo()
+            })
+    }
+
     findAllForUser = () => {
         if (keyLocalStorage.hasAuthKey()) {
             this.loadingDecks = true

@@ -198,13 +198,32 @@ class DeckService(
             val toUse = if (tokenized.isEmpty()) listOf(trimmed) else tokenized
             toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
         }
+        if (filters.notes.isNotBlank()) {
+            val username = if (filters.notesUser.isNotBlank()) {
+                filters.notesUser
+            } else {
+                userHolder.user?.username
+            } ?: throw IllegalArgumentException("No notes user for notes.")
+
+            val trimmed = filters.notes.toLowerCase().trim()
+            val userDeckQ = QUserDeck.userDeck
+            predicate.and(
+                    deckQ.userDecks.any().`in`(
+                            JPAExpressions.selectFrom(userDeckQ)
+                                    .where(
+                                            userDeckQ.user.username.eq(username),
+                                            userDeckQ.notes.containsIgnoreCase(trimmed)
+                                    )
+                    )
+            )
+        }
         if (filters.owner.isNotBlank()) {
             val username = userHolder.user?.username
             if (username == filters.owner) {
                 // it's me
                 predicate.and(deckQ.userDecks.any().ownedBy.eq(username))
             } else {
-                val allowToSeeAllDecks = userService.findUserProfile(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
+                val allowToSeeAllDecks = userService.findUserByUsername(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
 
                 if (allowToSeeAllDecks) {
                     predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))

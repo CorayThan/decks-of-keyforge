@@ -17,6 +17,10 @@ export class SendEmailVerification extends React.Component<{ message: string }> 
                 <Typography color={"error"} style={{marginBottom: spacing(1)}}>
                     {this.props.message}
                 </Typography>
+                <Typography color={"textSecondary"} style={{marginBottom: spacing(1)}}>
+                    If you do not receive a verification email, try whitelisting the Decks of KeyForge email address by adding "noreply@decksofkeyforge.com" to
+                    your email contacts.
+                </Typography>
                 <KeyButton color={"primary"} onClick={emailStore.sendEmailVerification} loading={emailStore.sendingEmailVerification}>
                     Send Verification Email
                 </KeyButton>

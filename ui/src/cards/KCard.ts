@@ -1,6 +1,7 @@
 import { House } from "../houses/House"
 import { HasAerc } from "../stats/AercScoreView"
 import { SynTraitValue } from "../synergy/SynTraitValue"
+import { HasFrontImage } from "./CardSimpleView"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
 
@@ -9,7 +10,6 @@ export interface KCard {
     cardTitle: string
     house: House
     cardType: CardType
-    frontImage: string
     cardText: string
     traits: string[]
     amber: number
@@ -64,3 +64,14 @@ export interface CardNumberSetPair {
     expansion: number
     cardNumber: number
 }
+
+const cardNameReplacementRegex = /[^\d\w\s]/g
+const spaceRegex = /\s/g
+const cardNameToCardNameKey = (name: string) => {
+    return name.replace(cardNameReplacementRegex, "")
+        .replace(spaceRegex, "-")
+        .toLowerCase()
+}
+
+export const findCardImageUrl = (card: HasFrontImage) =>
+    `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`

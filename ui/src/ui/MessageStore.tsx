@@ -5,7 +5,7 @@ import CloseIcon from "@material-ui/icons/Close"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { muiTheme, spacing } from "../config/MuiConfig"
+import { theme } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { log } from "../config/Utils"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -74,9 +74,9 @@ export class SnackMessage extends React.Component {
         if (messageType === "Warn") {
             return amber[700]
         } else if (messageType === "Error") {
-            return muiTheme.palette.error.dark
+            return theme.palette.error.dark
         } else if (messageType === "Success") {
-            return muiTheme.palette.primary.dark
+            return theme.palette.primary.dark
         }
         return undefined
     }
@@ -99,7 +99,7 @@ export class SnackMessage extends React.Component {
                 key="close"
                 aria-label="Close"
                 color="inherit"
-                style={{padding: spacing(1) / 2}}
+                style={{padding: theme.spacing(1) / 2}}
                 onClick={this.handleClose}
             >
                 <CloseIcon/>

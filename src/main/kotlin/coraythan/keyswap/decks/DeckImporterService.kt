@@ -251,7 +251,7 @@ class DeckImporterService(
                             }
                         }
                     } else {
-                        log.info("Ignoring deck that already existed with id ${keyforgeDeck.id}")
+                        log.debug("Ignoring deck that already existed with id ${keyforgeDeck.id}")
                     }
                 }
         if (currentPage != null && deck.count() >= keyforgeApiDeckPageSize) {

@@ -53,8 +53,7 @@ data class Card(
     fun toDeckSearchResultCard() = DeckSearchResultCard(
             cardTitle = cardTitle,
             house = house,
-            frontImage = frontImage,
-            rarity = rarity,
+             rarity = rarity,
             maverick = maverick
     )
 }
@@ -91,7 +90,6 @@ data class KeyforgeCard(
 data class DeckSearchResultCard(
         val cardTitle: String,
         val house: House,
-        val frontImage: String,
         val rarity: Rarity,
         val maverick: Boolean
 )

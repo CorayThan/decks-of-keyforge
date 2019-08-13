@@ -7,6 +7,8 @@ import org.springframework.data.domain.Sort
 interface DeckQuery {
     val houses: Set<House>
     val title: String
+    val notes: String
+    val notesUser: String
 
     val notForSale: Boolean
     val forSale: Boolean
@@ -28,6 +30,8 @@ interface DeckQuery {
 data class DeckFilters(
         override val houses: Set<House> = setOf(),
         override val title: String = "",
+        override val notes: String = "",
+        override val notesUser: String = "",
 
         val page: Long = 0,
 

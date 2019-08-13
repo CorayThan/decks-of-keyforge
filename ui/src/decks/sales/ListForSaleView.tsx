@@ -25,11 +25,13 @@ import { userStore } from "../../user/UserStore"
 import { ListingInfo } from "../../userdeck/ListingInfo"
 import { DeckCondition, deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
+import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { Deck } from "../Deck"
 import { DeckLanguage } from "../DeckLanguage"
 
 interface ListForSaleViewProps {
     deck: Deck
+    menuItem?: boolean
 }
 
 @observer
@@ -217,49 +219,47 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     render() {
-        const deck = this.props.deck
+        const {deck, menuItem} = this.props
         const userDeck = userDeckStore.userDeckByDeckId(deck.id)
         let saleButton
         if (userDeck && userDeck.forAuction && !userDeck.hasBids) {
             saleButton = (
-                <KeyButton
-                    color={"primary"}
+                <DeckActionClickable
+                    menuItem={menuItem}
                     onClick={() => auctionStore.cancel(deck.id)}
-                    style={{marginRight: spacing(1)}}
                 >
                     Cancel Auction
-                </KeyButton>
+                </DeckActionClickable>
             )
         } else if (userDeck && (userDeck.forSale || userDeck.forTrade || userDeck.forAuction)) {
             saleButton = (
                 <>
                     {userDeck.forAuction ? null : (
                         <>
-                            <KeyButton
-                                color={"primary"}
+                            <DeckActionClickable
+                                menuItem={menuItem}
                                 onClick={this.handleOpenForEdit}
-                                style={{marginRight: spacing(1)}}
                             >
                                 Edit Listing
-                            </KeyButton>
-                            <KeyButton
-                                color={"primary"}
+                            </DeckActionClickable>
+                            <DeckActionClickable
+                                menuItem={menuItem}
                                 onClick={() => userDeckStore.unlist(deck.name, deck.id)}
                             >
                                 Unlist
-                            </KeyButton>
+                            </DeckActionClickable>
                         </>
                     )}
                 </>
             )
         } else {
             saleButton = (
-                <KeyButton
-                    color={"primary"}
+                <DeckActionClickable
+                    menuItem={menuItem}
                     onClick={this.handleOpen}
                 >
                     Sell
-                </KeyButton>
+                </DeckActionClickable>
             )
         }
 
@@ -271,7 +271,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
 
         return (
-            <div>
+            <>
                 {saleButton}
                 <Dialog
                     open={this.open}
@@ -540,7 +540,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         </KeyButton>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </>
         )
     }
 }

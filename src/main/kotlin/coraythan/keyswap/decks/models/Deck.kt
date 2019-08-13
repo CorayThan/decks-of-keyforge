@@ -92,6 +92,7 @@ data class Deck(
         val auctionEndedOn: ZonedDateTime? = null,
 
         val importDateTime: ZonedDateTime? = now(),
+        val lastUpdate: ZonedDateTime? = now(),
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
@@ -198,6 +199,8 @@ data class Deck(
                 uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size
         )
     }
+
+    fun printWinsLosses() = "Wins: $wins Losses: $losses power: $powerLevel chains: $chains"
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

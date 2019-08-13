@@ -1,0 +1,2 @@
+ALTER TABLE user_deck
+    ADD COLUMN notes VARCHAR(2000);

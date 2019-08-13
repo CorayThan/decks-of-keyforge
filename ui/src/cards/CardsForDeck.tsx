@@ -2,6 +2,7 @@ import { Dialog, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
+import MenuItem from "@material-ui/core/MenuItem"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -13,7 +14,7 @@ import { KCard } from "./KCard"
 interface CardsForDeckProps {
     cards?: KCard[]
     deckName: string
-    style?: React.CSSProperties
+    onClick: () => void
 }
 
 @observer
@@ -25,10 +26,11 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
     handleClose = () => this.open = false
     handleOpen = () => {
         this.open = true
+        this.props.onClick()
     }
 
     render() {
-        const {cards, deckName, style} = this.props
+        const {cards, deckName} = this.props
         if (cards == null) {
             return null
         }
@@ -39,13 +41,12 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
         }
 
         return (
-            <div style={style}>
-                <KeyButton
-                    color={"primary"}
+            <>
+                <MenuItem
                     onClick={this.handleOpen}
                 >
                     Cards
-                </KeyButton>
+                </MenuItem>
                 <Dialog
                     open={this.open}
                     onClose={this.handleClose}
@@ -66,7 +67,7 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
                         <KeyButton color={"primary"} onClick={this.handleClose}>Close</KeyButton>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </>
         )
     }
 }

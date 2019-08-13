@@ -26,6 +26,8 @@ export interface UserDeck {
     dateListed?: string
     expiresAt?: string
 
+    notes?: string
+
     dateListedLocalDate?: string
     expiresAtLocalDate?: string
 }
@@ -83,6 +85,7 @@ export interface UserDeckDto {
 
     // On DTO version only
     deckId: number
+    notes?: string
 
     username: string
     publicContactInfo?: string

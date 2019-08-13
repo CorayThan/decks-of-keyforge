@@ -37,24 +37,32 @@ class ForSaleNotificationsService(
         GlobalScope.launch {
             // Delay 30 seconds to make sure DB is finished saving the user deck
             delay(30000)
-            if (queries == null) {
-                reloadQueries()
-            }
-            val deckId = listingInfo.deckId
-            val deck = deckRepo.findByIdOrNull(deckId)!!
-            val toSend: List<ForSaleQueryEntity> = queries!!
-                    .filter { it.active && queryMatchesDeck(it, deckId) }
-                    .groupBy { it.user!! }
-                    .values.toList()
-                    .map { it.first() }
+            try {
+                if (queries == null) {
+                    reloadQueries()
+                }
+                val deckId = listingInfo.deckId
+                val deck = deckRepo.findByIdOrNull(deckId)!!
+                val toSend: List<ForSaleQueryEntity> = queries!!
+                        .filter { it.active && queryMatchesDeck(it, deckId) }
+                        .groupBy { it.user!! }
+                        .values.toList()
+                        .map { it.first() }
 
-            toSend.forEach {
-                emailService.sendDeckListedNotification(
-                        it.user!!,
-                        listingInfo,
-                        deck,
-                        it.name
-                )
+                if (deck.keyforgeId == "1f74e843-bb38-4d96-a89c-3098c9a04e7e") {
+                    log.info("Undergnome Listed, for sale info is: ${toSend.map { "\n${it.name} ${it.user?.username} ${it.json}" }}")
+                }
+
+                toSend.forEach {
+                    emailService.sendDeckListedNotification(
+                            it.user!!,
+                            listingInfo,
+                            deck,
+                            it.name
+                    )
+                }
+            } catch (e: Exception) {
+                log.error("Couldn't send for sale notifications.", e)
             }
         }
     }

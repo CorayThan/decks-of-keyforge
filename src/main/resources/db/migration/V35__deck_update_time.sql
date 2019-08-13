@@ -1,0 +1,2 @@
+ALTER TABLE deck
+    ADD COLUMN last_update TIMESTAMP;

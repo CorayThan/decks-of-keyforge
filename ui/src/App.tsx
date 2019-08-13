@@ -1,7 +1,7 @@
 import { CssBaseline } from "@material-ui/core"
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
 import * as React from "react"
-import { muiTheme } from "./config/MuiConfig"
+import { theme } from "./config/MuiConfig"
 import { KeyRouter } from "./config/Routes"
 
 export class App extends React.Component {
@@ -9,7 +9,7 @@ export class App extends React.Component {
         return (
             <>
                 <CssBaseline/>
-                <MuiThemeProvider theme={muiTheme}>
+                <MuiThemeProvider theme={theme}>
                     <KeyRouter/>
                 </MuiThemeProvider>
             </>

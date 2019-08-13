@@ -6,20 +6,22 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
 import { expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
+import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { AercScoreView } from "../stats/AercScoreView"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { cardStore } from "./CardStore"
-import { hasAercFromCard, KCard } from "./KCard"
+import { findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
 import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
-interface HasFrontImage {
-    frontImage: string
+export interface HasFrontImage {
+    cardTitle: string
 }
 
 interface CardSimpleViewProps {
@@ -33,13 +35,19 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
         return null
     }
     return (
-        <div>
-            <img alt={"card"} src={props.card.frontImage} style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}/>
-        </div>
+        <UnstyledLink
+            to={Routes.cardPage(props.card.cardTitle)}
+        >
+            <img
+                alt={props.card.cardTitle}
+                src={findCardImageUrl(props.card)}
+                style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}
+            />
+        </UnstyledLink>
     )
 }
 
-export const CardView = (props: { card: KCard, simple?: boolean }) => {
+export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolean }) => {
     const card = props.card
     if (props.simple) {
         return <CardSimpleView card={card}/>
@@ -51,7 +59,7 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
         vertical: true,
         width: 300,
     } : {
-        width: 600,
+        width: 624,
     }
 
     const cardAerc = hasAercFromCard(card)
@@ -59,12 +67,21 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
     return (
         <GraySidebar {...sidebarProps} >
             <div>
-                <img alt={card.cardTitle} src={card.frontImage}/>
+                <img alt={card.cardTitle} src={findCardImageUrl(card)}/>
             </div>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <CardQualityIcon quality={rating}/>
-                    <Typography variant={"h6"} style={{marginLeft: spacing(1), flexGrow: 1}}>{cardTitle}</Typography>
+                    {props.noLink ? (
+                        <Typography color={"textPrimary"} variant={"h6"} style={{marginLeft: spacing(1), flexGrow: 1}}>{cardTitle}</Typography>
+                    ) : (
+                        <UnstyledLink
+                            to={Routes.cardPage(props.card.cardTitle)}
+                            style={{marginLeft: spacing(1), flexGrow: 1, color: "rgba(0, 0, 0, 0.87)"}}
+                        >
+                            <Typography variant={"h6"}>{cardTitle}</Typography>
+                        </UnstyledLink>
+                    )}
                     {card.extraCardInfo.cardNumbers.map((cardNumber, idx) => (
                         <div style={{display: "flex", alignItems: "center"}} key={idx}>
                             {idx !== 0 ? (
@@ -94,10 +111,15 @@ export const CardView = (props: { card: KCard, simple?: boolean }) => {
                         <Tooltip
                             title={"This win rate is affected by house win rate, so expect cards in better houses to have higher win rates."}
                         >
-                            <Typography noWrap={true} style={{fontStyle: "italic"}}>{round(card.winRate * 100, 1)}% win rate</Typography>
+                            <Typography variant={"body2"} noWrap={true} style={{fontStyle: "italic"}}>
+                                {round(card.winRate * 100, 1)}% win rate
+                            </Typography>
                         </Tooltip>
-                        <Typography style={{marginLeft: spacing(1), marginRight: spacing(1)}}>{card.wins} wins</Typography>
-                        <Typography>{card.losses} losses</Typography>
+                        <Tooltip
+                            title={"Wins / Losses"}
+                        >
+                            <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>{card.wins} / {card.losses}</Typography>
+                        </Tooltip>
                     </div>
                 ) : null}
                 <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>

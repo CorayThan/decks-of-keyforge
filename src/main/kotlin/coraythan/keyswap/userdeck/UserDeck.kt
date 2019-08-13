@@ -52,6 +52,8 @@ data class UserDeck(
         val dateListed: ZonedDateTime? = null,
         val expiresAt: ZonedDateTime? = null,
 
+        val notes: String? = null,
+
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
@@ -86,6 +88,7 @@ data class UserDeck(
             id = id,
             deckId = deck.id,
             currencySymbol = currencySymbol ?: "$",
+            notes = notes,
 
             username = user.username,
             publicContactInfo = user.publicContactInfo
@@ -130,6 +133,8 @@ data class UserDeckDto(
         val id: UUID = UUID.randomUUID(),
 
         val deckId: Long,
+
+        val notes: String? = null,
 
         val username: String,
         val publicContactInfo: String?

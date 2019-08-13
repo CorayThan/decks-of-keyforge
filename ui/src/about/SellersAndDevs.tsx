@@ -24,13 +24,13 @@ import { AboutGridItem } from "./AboutPage"
  Body: {
      	  "keyforgeId": "4624dd19-6bf2-4100-b324-38a9445901e6",
          "deckName": "Evans, Genio Arancione",
-         "listingInfo": {
+         "notes": {
              "forSale": true,
              "forTrade": false,
              "condition": "NEW_IN_PLASTIC",
  
        	  "askingPrice": 19.99,
- 	          "listingInfo": "Very bad deck, so great for reversal!",
+ 	          "notes": "Very bad deck, so great for reversal!",
  		      "externalLink": "https://keyforgeseller.com/keyforge/decks/4624dd19-6bf2-4100-b324-38a9445901e6",
    		  "expireInDays": 365
          }
@@ -38,7 +38,7 @@ import { AboutGridItem } from "./AboutPage"
 
  One of keyforgeId or deckName is required unless it is an unregistered deck. If using deckName it must be an exact match with what's on master vault.
 
- In "listingInfo" all values after "condition" are optional and may be left out, but asking price and external link are highly recommended.
+ In "notes" all values after "condition" are optional and may be left out, but asking price and external link are highly recommended.
 
  Condition options:
  NEW_IN_PLASTIC,
@@ -48,7 +48,7 @@ import { AboutGridItem } from "./AboutPage"
 
  Unregistered deck body:
  Body: {
-         "listingInfo": {
+         "notes": {
              "forSale": true,
              "forTrade": false,
              "condition": "NEW_IN_PLASTIC",

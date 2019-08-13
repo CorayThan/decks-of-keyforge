@@ -2,6 +2,7 @@ import { FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import FormLabel from "@material-ui/core/FormLabel"
+import InputLabel from "@material-ui/core/InputLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
@@ -16,7 +17,7 @@ import { MultiCardSearchSuggest } from "../../cards/CardSearchSuggest"
 import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, theme } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
 import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
@@ -121,7 +122,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     render() {
         const {
             title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade, forAuction,
-            forSaleInCountry
+            forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes
         } = this.props.filters
 
         let myCountry: string | undefined
@@ -215,6 +216,32 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             ) : null}
                         </ListItem>
+                        {notes.length > 0 || userStore.loggedIn() ? (
+                            <ListItem>
+                                {notesUser.length === 0 || userStore.username === notesUser ? (
+                                    <TextField
+                                        label={"My Notes"}
+                                        onChange={handleNotesUpdate}
+                                        value={notes}
+                                        fullWidth={true}
+                                    />
+                                ) : (
+                                    <div>
+                                        <div style={{display: "flex", alignItems: "center", marginBottom: theme.spacing(1)}}>
+                                            <InputLabel>
+                                                {notesUser}'s Notes
+                                            </InputLabel>
+                                            <IconButton onClick={removeNotes} size={"small"} style={{marginLeft: theme.spacing(1)}}>
+                                                <Delete/>
+                                            </IconButton>
+                                        </div>
+                                        <Typography variant={"body2"} color={"textSecondary"}>
+                                            "{notes}"
+                                        </Typography>
+                                    </div>
+                                )}
+                            </ListItem>
+                        ) : null}
                         <ListItem style={{marginTop: spacing(2)}}>
                             <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
@@ -447,7 +474,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         {deckStore.decksCount ? (
                             <ListItem>
                                 <Typography variant={"subtitle2"} style={{marginBottom: spacing(1)}}>
-                                    You found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 || deckStore.decksCount.count === 10000 ? "+ " : ""} decks
+                                    You
+                                    found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 || deckStore.decksCount.count === 10000 ? "+ " : ""} decks
                                 </Typography>
                             </ListItem>
                         ) : null}
