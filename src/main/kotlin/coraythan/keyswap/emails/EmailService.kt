@@ -22,6 +22,10 @@ class EmailService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    fun sendErrorMessageToMe(e: Exception) {
+        sendEmail("decksofkeyforge@gmail.com", "Error on DoK! ${e.message}", e.toString())
+    }
+
     fun sendOutBidEmail(buyer: KeyUser, deck: Deck, timeLeft: String) {
         sendEmail(
                 buyer.primaryEmail,

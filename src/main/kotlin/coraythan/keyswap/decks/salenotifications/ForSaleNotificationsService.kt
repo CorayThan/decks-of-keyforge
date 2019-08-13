@@ -63,6 +63,7 @@ class ForSaleNotificationsService(
                 }
             } catch (e: Exception) {
                 log.error("Couldn't send for sale notifications.", e)
+                emailService.sendErrorMessageToMe(e)
             }
         }
     }
