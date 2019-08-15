@@ -102,7 +102,7 @@ data class Deck(
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
-    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>, cards: List<Card>?): DeckSearchResult {
+    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>? = null, cards: List<Card>? = null): DeckSearchResult {
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
@@ -148,7 +148,7 @@ data class Deck(
                 forAuction = forAuction,
                 wishlistCount = wishlistCount,
                 funnyCount = funnyCount,
-                searchResultCards = searchResultCards,
+                searchResultCards = searchResultCards ?: listOf(),
                 houses = houses
         )
     }

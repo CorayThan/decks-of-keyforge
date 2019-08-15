@@ -9,7 +9,6 @@ import { userDeckStore } from "../userdeck/UserDeckStore"
 import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
-import { DeckNameId } from "./search/DeckNameId"
 
 export class DeckStore {
 
@@ -62,7 +61,7 @@ export class DeckStore {
     randomDeckId?: string
 
     @observable
-    deckNameSearchResults: DeckNameId[] = []
+    deckNameSearchResults: Deck[] = []
 
     reset = () => {
         this.deckPage = undefined
@@ -140,7 +139,7 @@ export class DeckStore {
 
     findDecksByName = (name: string) => {
         axios.get(`${DeckStore.CONTEXT}/by-name/${name}`)
-            .then((response: AxiosResponse<DeckNameId[]>) => {
+            .then((response: AxiosResponse<Deck[]>) => {
                 log.debug(`Find decks by name results: ${prettyJson(response.data)}`)
                 this.deckNameSearchResults = response.data
             })

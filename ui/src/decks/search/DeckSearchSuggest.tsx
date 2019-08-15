@@ -1,18 +1,24 @@
 import { createStyles, Fade, IconButton, InputBase, List, makeStyles, Paper, Popper } from "@material-ui/core"
+import ClickAwayListener from "@material-ui/core/ClickAwayListener"
 import { blue } from "@material-ui/core/colors"
+import Divider from "@material-ui/core/Divider"
+import ListSubheader from "@material-ui/core/ListSubheader"
 import { PopperPlacementType } from "@material-ui/core/Popper"
 import { Clear, Search } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
+import { cardStore } from "../../cards/CardStore"
+import { FancyCardMenuItem } from "../../cards/FancyCardMenuItem"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { log, prettyJson } from "../../config/Utils"
+import { log } from "../../config/Utils"
 import { LinkMenuItem } from "../../mui-restyled/LinkMenuItem"
 import { screenStore } from "../../ui/ScreenStore"
 import { deckStore } from "../DeckStore"
 import { DeckFilters } from "./DeckFilters"
+import { FancyDeckMenuItem } from "./FancyDeckMenuItem"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -24,25 +30,25 @@ const useStyles = makeStyles(() =>
 
 class SearchDeckNameStore {
     @observable
-    deckName: string = ""
+    searchValue: string = ""
 
     quietPeriodTimeoutId?: number
 
     inputRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
 
     handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.deckName = event.target.value
-
-        log.debug(`Handle search change deck name ${this.deckName} previous timeout id ${this.quietPeriodTimeoutId}`)
+        this.searchValue = event.target.value
 
         if (this.quietPeriodTimeoutId != null) {
             window.clearTimeout(this.quietPeriodTimeoutId)
         }
 
-        if (this.deckName.trim().length > 3) {
+        const trimmed = this.searchValue.trim()
+        if (trimmed.length > 3) {
             this.quietPeriodTimeoutId = window.setTimeout(() => {
-                log.debug(`Delayed search with ${this.deckName}`)
-                deckStore.findDecksByName(this.deckName.trim())
+                log.debug(`Delayed search with ${trimmed}`)
+                deckStore.findDecksByName(trimmed)
+                cardStore.findCardsByName(trimmed)
             }, 500)
         } else {
             deckStore.deckNameSearchResults = []
@@ -53,8 +59,9 @@ class SearchDeckNameStore {
         if (this.quietPeriodTimeoutId != null) {
             window.clearTimeout(this.quietPeriodTimeoutId)
         }
-        this.deckName = ""
+        this.searchValue = ""
         deckStore.deckNameSearchResults = []
+        cardStore.cardNameSearchResults = []
     }
 }
 
@@ -67,10 +74,10 @@ interface DeckSearchSuggestProps {
 export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestProps & RouteComponentProps) => {
     const classes = useStyles()
     const deckNameSuggestions = deckStore.deckNameSearchResults.map(deckNameId => ({label: deckNameId.name, value: deckNameId.id}))
-    const menuOpen = deckNameSuggestions.length > 0
-    log.debug(`Rendering deck name suggestions: ${prettyJson(deckNameSuggestions)} menuOpen = ${menuOpen}`)
+    const menuOpen = deckNameSuggestions.length > 0 || cardStore.cardNameSearchResults.length > 0
+    // log.debug(`Rendering deck name suggestions: ${prettyJson(deckNameSuggestions)} menuOpen = ${menuOpen}`)
     const filters = new DeckFilters()
-    filters.title = searchDeckNameStore.deckName
+    filters.title = searchDeckNameStore.searchValue
     const search = Routes.deckSearch(filters)
     return (
         <>
@@ -90,9 +97,9 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
                 <InputBase
                     onChange={searchDeckNameStore.handleSearchChange}
                     style={{caretColor: "#FFFFFF"}}
-                    placeholder={screenStore.screenSizeXs() ? "Search" : "Search decks..."}
+                    placeholder={screenStore.screenSizeXs() ? "Search" : "Search decks or cards..."}
                     className={classes.input}
-                    value={searchDeckNameStore.deckName}
+                    value={searchDeckNameStore.searchValue}
                     onKeyPress={(event) => {
                         if (event.key === "Enter") {
                             props.history.push(search)
@@ -100,7 +107,7 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
                         }
                     }}
                 />
-                {searchDeckNameStore.deckName.trim().length > 0 ? (
+                {searchDeckNameStore.searchValue.trim().length > 0 ? (
                     <>
                         <div style={{flexGrow: 1}}/>
                         <IconButton size={"small"} style={{marginLeft: spacing(1)}} onClick={searchDeckNameStore.reset}>
@@ -116,36 +123,60 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
 
 const SuggestPopper = observer(React.forwardRef((props: { menuOpen: boolean, placement: PopperPlacementType, search: string }, ref: React.Ref<HTMLDivElement>) => {
     return (
-        <Popper
-            open={props.menuOpen}
-            anchorEl={(ref as any).current}
-            transition
-            style={{zIndex: screenStore.zindexes.menuPops}}
-            placement={props.placement}
-        >
-            {({TransitionProps}) => (
-                <Fade {...TransitionProps} timeout={350}>
-                    <Paper>
-                        <List>
-                            {deckStore.deckNameSearchResults.map((deckNameId) => (
-                                <LinkMenuItem
-                                    key={deckNameId.id}
-                                    to={Routes.deckPage(deckNameId.id)}
-                                    onClick={searchDeckNameStore.reset}
-                                >
-                                    {deckNameId.name}
-                                </LinkMenuItem>
-                            ))}
-                            <LinkMenuItem
-                                to={props.search}
-                                onClick={searchDeckNameStore.reset}
+        <ClickAwayListener onClickAway={searchDeckNameStore.reset}>
+            <Popper
+                open={props.menuOpen}
+                anchorEl={(ref as any).current}
+                transition
+                style={{zIndex: screenStore.zindexes.menuPops}}
+                placement={props.placement}
+            >
+                {({TransitionProps}) => (
+                    <Fade {...TransitionProps} timeout={350}>
+                        <Paper>
+                            <List
+                                style={{
+                                    maxHeight: screenStore.screenHeight - 80,
+                                    overflowY: "auto"
+                                }}
                             >
-                                All results...
-                            </LinkMenuItem>
-                        </List>
-                    </Paper>
-                </Fade>
-            )}
-        </Popper>
+                                {deckStore.deckNameSearchResults.length > 0 ? (
+                                    <>
+                                        <ListSubheader disableSticky={true}>
+                                            Decks
+                                        </ListSubheader>
+                                        {deckStore.deckNameSearchResults.map((deckSearchResult) => (
+                                            <FancyDeckMenuItem deck={deckSearchResult} onClick={searchDeckNameStore.reset}/>
+                                        ))}
+                                        <LinkMenuItem
+                                            to={props.search}
+                                            onClick={searchDeckNameStore.reset}
+                                        >
+                                            All results...
+                                        </LinkMenuItem>
+                                    </>
+                                ) : null}
+                                {deckStore.deckNameSearchResults.length > 0 && cardStore.cardNameSearchResults.length > 0 ? <Divider/> : null}
+                                {cardStore.cardNameSearchResults.length > 0 ? (
+                                    <>
+                                        <ListSubheader disableSticky={true}>
+                                            Cards
+                                        </ListSubheader>
+                                        {cardStore.cardNameSearchResults.map((card) => (
+                                            <FancyCardMenuItem card={card} onClick={searchDeckNameStore.reset} key={card.id}/>
+                                        ))}
+                                        <LinkMenuItem
+                                            to={Routes.cards}
+                                        >
+                                            Search Cards...
+                                        </LinkMenuItem>
+                                    </>
+                                ) : null}
+                            </List>
+                        </Paper>
+                    </Fade>
+                )}
+            </Popper>
+        </ClickAwayListener>
     )
 }))

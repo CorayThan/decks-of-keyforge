@@ -16,6 +16,7 @@ export class PatreonRewards extends React.Component {
         patreonStore.findTopPatrons()
     }
 
+    /* eslint react/jsx-key: 0 */
     render() {
         return (
             <>

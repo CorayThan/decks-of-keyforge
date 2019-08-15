@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios"
+import axios from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
@@ -32,7 +32,7 @@ class EmailStore {
     sendReset = (email: string) => {
         this.sendingReset = true
         axios.post(`${EmailStore.CONTEXT}/send-reset`, {email})
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 this.sendingReset = false
                 messageStore.setInfoMessage(`A reset email has been sent to ${email}`)
             })
@@ -45,7 +45,7 @@ class EmailStore {
         } else {
             this.sendingEmailVerification = true
             axios.post(`${EmailStore.CONTEXT}/send-email-verification`, {email})
-                .then((response: AxiosResponse) => {
+                .then(() => {
                     this.sendingEmailVerification = false
                     messageStore.setInfoMessage(`An email verification message has been sent to ${email}`)
                 })

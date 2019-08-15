@@ -12,13 +12,21 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.7"
+export const latestVersion = "5.8"
 
 @observer
 export class ReleaseNotes extends React.Component {
+    /* eslint react/jsx-key: 0 */
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.8"} date={"8/14/2019"} expanded={true} releaseNotes={[
+                    "The top search tool is a lot cooler now! Displays relevant info about the decks. It will also search for cards and displays info about " +
+                    "them, and let you click to see the full page for the card.",
+                    "Also wanted to mention the Gen Con Vault Tour was awesome! Was exciting getting to see the upcoming set previewed, and everyone I met " +
+                    "and played against was friendly and cool. I wish I could've made one of the day 2s, but my losses were against great decks and players, " +
+                    "so nothing to complain about!"
+                ]}/>
                 <ReleaseNote releaseNumber={"5.7"} date={"8/13/2019"} expanded={true} releaseNotes={[
                     "Improved cards page. The cards page now loads much faster, loads more cards on scroll, and you can link to individual pages for " +
                     "cards.",

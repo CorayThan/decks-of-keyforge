@@ -25,20 +25,39 @@ interface CardContainerProps {
 @observer
 class CardContainer extends React.Component<CardContainerProps> {
 
-    constructor(props: CardContainerProps) {
-        super(props)
-        uiStore.setTopbarValues(props.cardName, props.cardName, "")
-    }
-
     render() {
         const cardName = this.props.cardName
-        const card = cardStore.fullCardFromCardName(cardName)
+        const card = cardStore.fullCardFromCardNameKey(cardName)
         if (card == null || card.house == null) {
             return <Loader/>
         }
+        return <CardPageView card={card} />
+    }
+}
+
+interface CardProps {
+    card: KCard
+}
+
+class CardPageView extends React.Component<CardProps> {
+
+    componentDidMount(): void {
+        this.setTopbarValues(this.props)
+    }
+
+    componentWillReceiveProps(nextProps: CardProps) {
+        this.setTopbarValues(nextProps)
+    }
+
+    setTopbarValues = (props: CardProps) => {
+            uiStore.setTopbarValues(props.card.cardTitle, props.card.cardTitle, "")
+    }
+
+    render() {
+        const card = this.props.card
         return (
             <div style={{margin: spacing(2), display: "flex", justifyContent: "center"}}>
-                <CardView card={card as KCard} noLink={true}/>
+                <CardView card={card} noLink={true}/>
             </div>
         )
     }

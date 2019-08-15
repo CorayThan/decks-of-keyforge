@@ -124,7 +124,7 @@
   rating: 2.5
   expectedAmber: 1
   creatureControl: 1
-  traits: [dealsDamage]
+  traits: [dealsDamage, damagesMultipleEnemies]
 
 - name: Culf the Quiet
   cardNumbers:

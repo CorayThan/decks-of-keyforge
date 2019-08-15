@@ -28,21 +28,28 @@ interface CardSimpleViewProps {
     card: HasFrontImage
     size?: number
     style?: React.CSSProperties
+    noLink?: boolean
 }
 
 export const CardSimpleView = (props: CardSimpleViewProps) => {
     if (props.card == null) {
         return null
     }
+    const contents = (
+        <img
+            alt={props.card.cardTitle}
+            src={findCardImageUrl(props.card)}
+            style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}
+        />
+    )
+    if (props.noLink) {
+        return contents
+    }
     return (
         <UnstyledLink
             to={Routes.cardPage(props.card.cardTitle)}
         >
-            <img
-                alt={props.card.cardTitle}
-                src={findCardImageUrl(props.card)}
-                style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}
-            />
+            {contents}
         </UnstyledLink>
     )
 }

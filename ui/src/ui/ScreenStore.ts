@@ -15,6 +15,9 @@ export class ScreenStore {
     @observable
     screenWidth: number
 
+    @observable
+    screenHeight: number
+
     zindexes = {
         cardSearchSuggest: 1,
         keyDrawer: 1000,
@@ -27,6 +30,7 @@ export class ScreenStore {
 
     constructor() {
         this.screenWidth = window.innerWidth
+        this.screenHeight = window.innerHeight
         this.onResize()
         window.addEventListener("resize", this.onResize)
     }

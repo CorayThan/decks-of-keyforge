@@ -6,6 +6,7 @@ import { PrivacyPolicy } from "../about/PrivacyPolicy"
 import { ArticlesPage } from "../articles/ArticlesPage"
 import { CardPage } from "../cards/CardPage"
 import { CardsPage } from "../cards/CardsPage"
+import { cardNameToCardNameKey } from "../cards/KCard"
 import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
@@ -41,7 +42,7 @@ class Routes {
     static forgotPassword = "/forgot-password"
     static privacyPolicy = "/privacy-policy"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
-    static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardName}`
+    static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`

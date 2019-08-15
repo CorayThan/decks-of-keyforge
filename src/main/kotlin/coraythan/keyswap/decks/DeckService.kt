@@ -394,7 +394,7 @@ class DeckService(
                 .sortedByDescending { it.dateListed }
     }
 
-    fun findDecksByName(name: String): List<DeckNameId> {
+    fun findDecksByName(name: String): List<DeckSearchResult> {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
         val trimmed = name
@@ -411,7 +411,7 @@ class DeckService(
                 .where(predicate)
                 .limit(5)
                 .fetch()
-                .map { DeckNameId(it.name, it.keyforgeId) }
+                .map { it.toDeckSearchResult() }
     }
 
 }

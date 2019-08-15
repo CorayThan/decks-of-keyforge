@@ -1,9 +1,8 @@
 import { Typography } from "@material-ui/core"
-import { blue } from "@material-ui/core/colors"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { DeckScoreView } from "../decks/DeckScoreView"
+import { DeckScorePill } from "../decks/DeckScoreView"
 import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
 import { AverageIcon } from "../generic/icons/AverageIcon"
 import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
@@ -26,6 +25,7 @@ export class SasAndAerc extends React.Component {
     render() {
         const stats = statsStore.stats
 
+        /* eslint react/jsx-key: 0 */
         return (
             <>
                 <AboutGridItem>
@@ -94,21 +94,14 @@ export class SasAndAerc extends React.Component {
                         />,
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
-                        <div
-                            style={{
-                                backgroundColor: blue["500"],
-                                padding: spacing(2),
-                                width: 200,
-                                borderRadius: 10
-                            }}
-                        >
-                            <DeckScoreView deck={{
+                        <DeckScorePill
+                            deck={{
                                 cardsRating: 75,
                                 sasRating: 80,
                                 synergyRating: 10,
                                 antisynergyRating: 5,
-                            }}/>
-                        </div>,
+                            }}
+                        />,
                         "I add together the card ratings, synergy, and antisynergy of a deck to create its SAS rating.",
                         "The system isn't perfect, but it gives a reasonable approximation of the relative quality of decks, and can help you " +
                         "see the useful synergies in your deck, as well as antisynergies to be aware of.",

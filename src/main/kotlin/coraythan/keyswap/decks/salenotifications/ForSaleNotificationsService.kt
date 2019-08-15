@@ -49,10 +49,6 @@ class ForSaleNotificationsService(
                         .values.toList()
                         .map { it.first() }
 
-                if (deck.keyforgeId == "1f74e843-bb38-4d96-a89c-3098c9a04e7e") {
-                    log.info("Undergnome Listed, for sale info is: ${toSend.map { "\n${it.name} ${it.user?.username} ${it.json}" }}")
-                }
-
                 toSend.forEach {
                     emailService.sendDeckListedNotification(
                             it.user!!,

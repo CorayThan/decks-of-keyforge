@@ -23,7 +23,7 @@ export class ChangePasswordView extends React.Component<{resetCode: string}> {
     @observable
     confirmPassword = ""
 
-    sendReset = (event: React.MouseEvent) => {
+    sendReset = () => {
         let error
         if (this.password.trim() !== this.confirmPassword) {
             error = "Please make sure your password and confirm password match."

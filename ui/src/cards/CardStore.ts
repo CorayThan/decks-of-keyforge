@@ -5,7 +5,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
 import { CardFilters } from "./CardFilters"
 import { OptionType } from "./CardSearchSuggest"
-import { KCard, winPercentForCard } from "./KCard"
+import { cardNameToCardNameKey, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
 
@@ -24,10 +24,16 @@ export class CardStore {
     cardNameLowercaseToCard?: Map<string, KCard>
 
     @observable
+    cardNameHyphenDelimitedLowercaseToCard?: Map<string, KCard>
+
+    @observable
     cardNames: OptionType[] = []
 
     @observable
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
+
+    @observable
+    cardNameSearchResults: KCard[] = []
 
     reset = () => {
         if (this.cards) {
@@ -121,9 +127,11 @@ export class CardStore {
                 this.allCards = basisForCards
                 this.cards = basisForCards.slice()
                 this.cardNameLowercaseToCard = new Map()
+                this.cardNameHyphenDelimitedLowercaseToCard = new Map()
                 this.cardFlavors = []
                 this.cardNames = this.allCards!.map(card => {
                     this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
+                    this.cardNameHyphenDelimitedLowercaseToCard!.set(cardNameToCardNameKey(card.cardTitle), card)
                     if (card.flavorText) {
                         this.cardFlavors.push(card.flavorText)
                     }
@@ -132,8 +140,34 @@ export class CardStore {
             })
     }
 
+    findCardsByName = (searchValue: string) => {
+        const tokenized = this.cardSearchTokenized(searchValue)
+        if (tokenized.length === 0) {
+            this.cardNameSearchResults = []
+        } else {
+            this.cardNameSearchResults = this.allCards.slice().filter(card => {
+                for (let x = 0; x < tokenized.length; x++) {
+                    if (!card.cardTitle.toLowerCase().includes(tokenized[x])) {
+                        return false
+                    }
+                }
+                return true
+            })
+            if (this.cardNameSearchResults.length > 5) {
+                this.cardNameSearchResults = this.cardNameSearchResults.slice(0, 5)
+            }
+        }
+    }
+
     fullCardFromCardName = (cardTitle: string) => {
         return this.fullCardFromCardWithName({cardTitle})
+    }
+
+    fullCardFromCardNameKey = (cardNameKey: string) => {
+        if (this.cardNameHyphenDelimitedLowercaseToCard) {
+            return this.cardNameHyphenDelimitedLowercaseToCard.get(cardNameKey)
+        }
+        return undefined
     }
 
     fullCardFromCardWithName = (card: Partial<KCard>) => {
@@ -142,6 +176,12 @@ export class CardStore {
         }
         return card
     }
+
+    private cardSearchTokenized = (searchValue: string) => searchValue
+        .trim()
+        .toLowerCase()
+        .split(/\W+/)
+        .filter(token => token.length > 2)
 }
 
 export const cardStore = new CardStore()

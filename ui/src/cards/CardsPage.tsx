@@ -75,7 +75,7 @@ class CardsContainerWithScroll extends React.Component<CardsContainerWithScrollP
 
     constructor(props: CardsContainerWithScrollProps) {
         super(props)
-        this.updateCardsToDisplay(props)
+        this.resetCardsToDisplay(props)
     }
 
     componentDidMount(): void {
@@ -84,6 +84,20 @@ class CardsContainerWithScroll extends React.Component<CardsContainerWithScrollP
 
     componentWillUnmount(): void {
         window.removeEventListener("scroll", this.handleScroll)
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<CardsContainerWithScrollProps>) {
+        this.resetCardsToDisplay(nextProps)
+    }
+
+    resetCardsToDisplay = (props: CardsContainerWithScrollProps) => {
+        log.debug("Reset cards to display.")
+        this.pageQuantity = 1
+        if (props.allCards.length < 101) {
+            this.cardsToDisplay = props.allCards.slice()
+        } else {
+            this.cardsToDisplay = props.allCards.slice(0, 40 * this.pageQuantity)
+        }
     }
 
     updateCardsToDisplay = (props: CardsContainerWithScrollProps) => {

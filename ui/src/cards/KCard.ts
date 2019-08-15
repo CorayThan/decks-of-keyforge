@@ -67,7 +67,7 @@ export interface CardNumberSetPair {
 
 const cardNameReplacementRegex = /[^\d\w\s]/g
 const spaceRegex = /\s/g
-const cardNameToCardNameKey = (name: string) => {
+export const cardNameToCardNameKey = (name: string) => {
     return name.replace(cardNameReplacementRegex, "")
         .replace(spaceRegex, "-")
         .toLowerCase()
