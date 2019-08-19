@@ -10,7 +10,6 @@ export interface DeckWithSynergyInfo {
     cardRatingPercentile: number
     synergyPercentile: number
     antisynergyPercentile: number
-    sasPercentile: number
 }
 
 export interface Deck {
@@ -61,6 +60,8 @@ export interface Deck {
     forAuction: boolean
     wishlistCount: number
     funnyCount: number
+
+    sasPercentile?: number
 
     userDecks: UserDeck[]
 

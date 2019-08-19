@@ -8,6 +8,7 @@ import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.now
+import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.Synergies
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
@@ -102,7 +103,7 @@ data class Deck(
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
-    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>? = null, cards: List<Card>? = null): DeckSearchResult {
+    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>? = null, cards: List<Card>? = null, stats: DeckStatistics?): DeckSearchResult {
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
@@ -149,7 +150,9 @@ data class Deck(
                 wishlistCount = wishlistCount,
                 funnyCount = funnyCount,
                 searchResultCards = searchResultCards ?: listOf(),
-                houses = houses
+                houses = houses,
+
+                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: -1.0
         )
     }
 

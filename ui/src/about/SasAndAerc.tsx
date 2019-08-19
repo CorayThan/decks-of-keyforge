@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { List, ListItem, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -100,6 +100,7 @@ export class SasAndAerc extends React.Component {
                                 sasRating: 80,
                                 synergyRating: 10,
                                 antisynergyRating: 5,
+                                sasPercentile: 75.0
                             }}
                         />,
                         "I add together the card ratings, synergy, and antisynergy of a deck to create its SAS rating.",
@@ -108,6 +109,42 @@ export class SasAndAerc extends React.Component {
                         "Please keep in mind this system will never judge decks as accurately as a human, and it will inaccurately judge many decks, " +
                         "especially ones with very complex interactions or strategies. So just because SAS thinks your deck is bad, or average, " +
                         "doesn't mean it is in real play!"
+                    ]}/>
+                    <div style={{marginBottom: spacing(4)}}/>
+                    <InfoListCard title={"SAStars"} infos={[
+                        "SAStars give you at-a-glance info about the percentile ranking of a deck in terms of SAS among all other decks.",
+                        "Unlike SAS, a deck's ranking in terms of SAStars can change at any time if the quality of all registered decks is changed in " +
+                        "some way, for example by the release of a new set that is rated better or worse than previous sets.",
+                        "SAStars are calculated as follows:",
+                        <List>
+                            <ListItem><Typography>Top 0.01% of decks (1/10,000) will be 5 gold stars</Typography></ListItem>
+                            <ListItem><Typography>Top 0.1% of decks (1/1000) will be 5 stars</Typography></ListItem>
+                            <ListItem><Typography>Top 1% of decks (1/100) will be 4.5 stars</Typography></ListItem>
+                            <ListItem><Typography>Top 10% of decks will be 4 stars</Typography></ListItem>
+                            <ListItem><Typography>Top 25% of decks will be 3.5 stars</Typography></ListItem>
+                            <ListItem><Typography>Middle 50% of decks will be 3 stars (Half of all decks)</Typography></ListItem>
+                            <ListItem><Typography>Bottom 25% of decks will be 2.5 stars</Typography></ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 10% of decks will be 2 stars
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 1% of decks will be 1.5 stars
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 0.1% of decks will be 1 star
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 0.01% of decks will be 0.5 stars
+                                </Typography>
+                            </ListItem>
+                        </List>
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>

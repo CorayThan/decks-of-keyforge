@@ -49,6 +49,8 @@ data class DeckSearchResult(
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
 
+        val sasPercentile: Double = 0.0,
+
         val searchResultCards: List<DeckSearchResultCard> = listOf(),
 
         val houses: List<House> = listOf(),

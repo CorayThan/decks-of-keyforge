@@ -1,11 +1,13 @@
 package coraythan.keyswap.publicapis
 
 import coraythan.keyswap.cards.CardRepo
+import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -21,7 +23,9 @@ class PublicApiService(
         private val userDeckService: UserDeckService,
         private val deckRepo: DeckRepo,
         private val deckImporterService: DeckImporterService,
-        private val cardRepo: CardRepo
+        private val cardRepo: CardRepo,
+        private val cardService: CardService,
+        private val statsService: StatsService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -36,7 +40,10 @@ class PublicApiService(
             log.debug("Request for deck that doesn't exist $keyforgeId")
             return null
         }
-        return deck.toDeckSearchResult(listOf(), null)
+        return deck.toDeckSearchResult(
+                cards = cardService.cardsForDeck(deck),
+                stats = statsService.findCurrentStats()
+        )
     }
 
     fun generateApiKey(): String {

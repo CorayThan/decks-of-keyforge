@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { ArticleInternalLink } from "../articles/ArticleView"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { AboutSubPaths, Routes } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { BarData } from "../stats/DeckStatsView"
@@ -12,7 +12,7 @@ import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.8"
+export const latestVersion = "5.9"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -20,6 +20,11 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.9"} date={"8/20/2019"} expanded={true} releaseNotes={[
+                    "Introducing SAStars! These stars are a quick way to know the percentile ranking of a deck by SAS. Check out the new About page section " +
+                    "for more info on what they mean. (Scroll down for the SAStars section.)",
+                    <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={AboutSubPaths.sas}>About SAStars</LinkButton>
+                ]}/>
                 <ReleaseNote releaseNumber={"5.8"} date={"8/14/2019"} expanded={true} releaseNotes={[
                     "The top search tool is a lot cooler now! Displays relevant info about the decks. It will also search for cards and displays info about " +
                     "them, and let you click to see the full page for the card.",

@@ -36,7 +36,8 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
     }
 
     render() {
-        const {deckSynergyInfo, antisynergyPercentile, synergyPercentile, cardRatingPercentile, sasPercentile} = this.props.synergies
+        const sasPercentile = this.props.synergies.deck.sasPercentile
+        const {deckSynergyInfo, antisynergyPercentile, synergyPercentile, cardRatingPercentile} = this.props.synergies
         const {synergyCombos} = deckSynergyInfo
         return (
             <KeyCard
@@ -47,10 +48,10 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                             Card Details
                         </Typography>
                         <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
-                            <PercentRatingRow value={sasPercentile} name={"SAS"}/>
-                            <PercentRatingRow value={cardRatingPercentile} name={"CARD RATING"}/>
-                            <PercentRatingRow value={synergyPercentile} name={"SYNERGY"}/>
-                            <PercentRatingRow value={antisynergyPercentile} name={"ANTISYNERGY"}/>
+                            <PercentRatingRow value={(sasPercentile == null ? -1.0 : sasPercentile).toFixed(1)} name={"SAS"}/>
+                            <PercentRatingRow value={cardRatingPercentile.toFixed(1)} name={"CARD RATING"}/>
+                            <PercentRatingRow value={synergyPercentile.toFixed(1)} name={"SYNERGY"}/>
+                            <PercentRatingRow value={antisynergyPercentile.toFixed(1)} name={"ANTISYNERGY"}/>
                             <div>
                                 <Tooltip
                                     title={"Percentile ranking among all decks. Higher is better."}

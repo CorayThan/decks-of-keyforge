@@ -145,7 +145,7 @@ data class IndividalDeckTraitStats(
         val bottom10Percent: Int,
         val percentile40: Int,
         val percentile60: Int,
-        val percentileForValue: MutableMap<Int, Int>
+        val percentileForValue: MutableMap<Int, Double>
 ) {
     companion object {
 
@@ -164,11 +164,11 @@ data class IndividalDeckTraitStats(
             var top90Percent: Int = -1
             var percentile40 = -1
             var percentile60 = -1
-            var currentPercentile: Int
-            val percentileForValue = mutableMapOf<Int, Int>()
+            var currentPercentile: Double
+            val percentileForValue = mutableMapOf<Int, Double>()
             keysSorted.forEach {
                 currentIndex += values[it]!!
-                currentPercentile = (currentIndex * 100) / total
+                currentPercentile = (currentIndex.toDouble() * 100.0) / total.toDouble()
                 percentileForValue[it] = currentPercentile
                 if (bottom10Percent == -1 && currentIndex >= bottom10PercentIndex) {
                     bottom10Percent = it

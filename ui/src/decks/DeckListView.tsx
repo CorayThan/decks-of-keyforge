@@ -18,6 +18,7 @@ import { UpdatePrice } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck } from "./Deck"
+import { SaStars } from "./DeckScoreView"
 import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { SaleInfoView } from "./sales/SaleInfoView"
@@ -109,6 +110,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 ) : null}
                                 {sellerView ? <TableCell>Seller Tools</TableCell> : null}
                                 <DeckHeader title={"SAS"} property={"sasRating"}/>
+                                <DeckHeader title={"SAStars"} property={"sasPercentile"}/>
                                 <DeckHeader title={"Cards"} property={"cardsRating"}/>
                                 <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                                 <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
@@ -163,6 +165,22 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                         </TableCell>
                                     ) : null}
                                     <TableCell>{deck.sasRating}</TableCell>
+                                    <TableCell>
+                                        {deck.sasPercentile && (
+                                            <SaStars
+                                                sasPercentile={deck.sasPercentile}
+                                                small={true}
+                                                gray={true}
+                                                style={{
+                                                    display: "flex",
+                                                    flexWrap: "wrap",
+                                                    width: 40,
+                                                    alignItems: "flex-end",
+                                                    justifyContent: "center"
+                                                }}
+                                            />
+                                        )}
+                                    </TableCell>
                                     <TableCell>{deck.cardsRating}</TableCell>
                                     <TableCell>{deck.synergyRating}</TableCell>
                                     <TableCell>{deck.antisynergyRating}</TableCell>

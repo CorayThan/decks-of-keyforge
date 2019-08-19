@@ -35,7 +35,7 @@ class DeckService(
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
         private val userDeckRepo: UserDeckRepo,
-        entityManager: EntityManager
+        private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
@@ -130,7 +130,11 @@ class DeckService(
                 .fetch()
 
         val decks = deckResults.map {
-            val searchResult = it.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(it.cardIds), cardService.cardsForDeck(it))
+            val searchResult = it.toDeckSearchResult(
+                    cardService.deckSearchResultCardsFromCardIds(it.cardIds),
+                    cardService.cardsForDeck(it),
+                    statsService.findCurrentStats()
+            )
             if (filters.forSale || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(
                         searchResult.keyforgeId,
@@ -344,7 +348,10 @@ class DeckService(
 
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
-        return deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds), cardService.cardsForDeck(deck))
+        return deck.toDeckSearchResult(
+                cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
+                cardService.cardsForDeck(deck),
+                statsService.findCurrentStats())
     }
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
@@ -360,12 +367,15 @@ class DeckService(
         val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
         return DeckWithSynergyInfo(
-                deck = deck.toDeckSearchResult(cardService.deckSearchResultCardsFromCardIds(deck.cardIds), cardService.cardsForDeck(deck)),
+                deck = deck.toDeckSearchResult(
+                        cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
+                        cardService.cardsForDeck(deck),
+                        statsService.findCurrentStats()
+                ),
                 deckSynergyInfo = synergies,
-                cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1,
-                synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1,
-                antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1,
-                sasPercentile = stats?.sasStats?.percentileForValue?.get(deck.sasRating) ?: -1
+                cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1.0,
+                synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
+                antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0
         )
     }
 
@@ -411,7 +421,7 @@ class DeckService(
                 .where(predicate)
                 .limit(5)
                 .fetch()
-                .map { it.toDeckSearchResult() }
+                .map { it.toDeckSearchResult(stats = statsService.findCurrentStats()) }
     }
 
 }

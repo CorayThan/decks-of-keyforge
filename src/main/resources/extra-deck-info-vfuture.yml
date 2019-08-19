@@ -3701,11 +3701,12 @@
   traits: [usableArtifact, preventsDamage]
   synergies:
     - trait: highTotalCreaturePower
-      rating: 3
     - trait: lowTotalCreaturePower
       rating: -2
     - trait: goodFight
       rating: 2
+    - trait: damagesFriendlyCreatures
+      rating: 3
 
 - name: Round Table
   cardNumbers:
