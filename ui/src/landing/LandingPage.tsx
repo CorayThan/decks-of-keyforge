@@ -6,7 +6,7 @@ import { latestTwoArticles } from "../articles/ArticlesPage"
 import { ArticleView } from "../articles/ArticleView"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing } from "../config/MuiConfig"
-import { Routes, StatsSubPaths } from "../config/Routes"
+import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { Expansion } from "../expansions/Expansions"
@@ -15,6 +15,9 @@ import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
 import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
+import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
+import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { CardSearchLink, DeckSearchLink } from "./DeckSearchLink"
@@ -69,7 +72,7 @@ export class LandingPage extends React.Component<{}> {
         return (
             <div>
                 <div style={{display: "flex"}}>
-                    <KeyDrawer width={248} hamburgerMenu={true}>
+                    <KeyDrawer width={280} hamburgerMenu={true}>
                         <List>
                             <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
@@ -144,6 +147,20 @@ export class LandingPage extends React.Component<{}> {
                                     <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true}/>
                                 </div>
                             )}
+                            <UnstyledLink to={AboutSubPaths.contact}>
+                                <Typography
+                                    variant={"h4"}
+                                    color={"primary"}
+                                    style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+                                >
+                                    Join in!
+                                </Typography>
+                            </UnstyledLink>
+                            <div>
+                                <PatronButton/>
+                                <DiscordButton style={{marginLeft: spacing(2)}}/>
+                                <TwitterButton style={{marginLeft: spacing(2)}}/>
+                            </div>
                         </div>
                     </div>
                 </div>
