@@ -31,7 +31,7 @@ class CardContainer extends React.Component<CardContainerProps> {
         if (card == null || card.house == null) {
             return <Loader/>
         }
-        return <CardPageView card={card} />
+        return <CardPageView card={card}/>
     }
 }
 
@@ -50,7 +50,7 @@ class CardPageView extends React.Component<CardProps> {
     }
 
     setTopbarValues = (props: CardProps) => {
-            uiStore.setTopbarValues(props.card.cardTitle, props.card.cardTitle, "")
+        uiStore.setTopbarValues(props.card.cardTitle, props.card.cardTitle, "")
     }
 
     render() {

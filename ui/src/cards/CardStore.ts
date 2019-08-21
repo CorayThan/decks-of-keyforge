@@ -3,9 +3,9 @@ import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
-import { CardFilters } from "./CardFilters"
+import { CardFilters, CardSort } from "./CardFilters"
 import { OptionType } from "./CardSearchSuggest"
-import { cardNameToCardNameKey, KCard, winPercentForCard } from "./KCard"
+import { cardNameToCardNameKey, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
 
@@ -69,6 +69,8 @@ export class CardStore {
 
         if (filters.sort === "CARD_RATING") {
             filtered = sortBy(filtered, ["extraCardInfo.rating", "cardNumber"])
+        } else if (filters.sort === CardSort.AERC) {
+            filtered = sortBy(filtered, [(card) => hasAercFromCard(card).aercScore, "cardNumber"])
         } else if (filters.sort === "EXPECTED_AMBER") {
             filtered = sortBy(filtered, ["extraCardInfo.expectedAmber", "cardNumber"])
         } else if (filters.sort === "AMBER_CONTROL") {

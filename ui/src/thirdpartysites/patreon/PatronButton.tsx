@@ -1,8 +1,8 @@
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
-import { PatreonIcon } from "../generic/icons/PatreonIcon"
-import { LinkButton } from "../mui-restyled/LinkButton"
+import { spacing } from "../../config/MuiConfig"
+import { PatreonIcon } from "../../generic/icons/PatreonIcon"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 
 @observer
 export class PatronButton extends React.Component {

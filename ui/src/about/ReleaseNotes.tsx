@@ -1,4 +1,5 @@
 import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, ListItem, Typography } from "@material-ui/core"
+import Link from "@material-ui/core/Link"
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -10,6 +11,8 @@ import { Loader } from "../mui-restyled/Loader"
 import { BarData } from "../stats/DeckStatsView"
 import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
+import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
 export const latestVersion = "5.9"
@@ -23,7 +26,23 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"5.9"} date={"8/20/2019"} expanded={true} releaseNotes={[
                     "Introducing SAStars! These stars are a quick way to know the percentile ranking of a deck by SAS. Check out the new About page section " +
                     "for more info on what they mean. (Scroll down for the SAStars section.)",
-                    <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={AboutSubPaths.sas}>About SAStars</LinkButton>
+                    <LinkButton style={{margin: spacing(1)}} size={"small"} to={AboutSubPaths.sas}>About SAStars</LinkButton>,
+                    "And some special preview news! I've begun the process of the biggest revision to SAS since its release. Plan is to have this complete " +
+                    "before the release of Set 3.",
+                    "In short, I'm planning on adding more traits to AERC (Steal Prevention, splitting Deck Manipulation into Efficiency and Disruption , " +
+                    "House Cheating, Other), adding synergies and antisynergies to improve AERC values, and then replacing the SAS card ratings with total " +
+                    "AERC score of cards.",
+                    "If you want to read the in-depth road map, take a look at the google doc: ",
+                    <div style={{margin: spacing(1)}} >
+                        <Link href={"https://docs.google.com/document/d/1_Hg1K2XI2vViDyJUECsmiIyAeYsCMvTHys46dVvKETA/edit?usp=sharing"}>
+                            SAS v6 Roadmap
+                        </Link>
+                    </div>,
+                    "Send me a message on Discord or Twitter to provide feedback and comments!",
+                    <div>
+                        <DiscordButton/>
+                        <TwitterButton style={{marginLeft: spacing(2)}}/>
+                    </div>,
                 ]}/>
                 <ReleaseNote releaseNumber={"5.8"} date={"8/14/2019"} expanded={true} releaseNotes={[
                     "The top search tool is a lot cooler now! Displays relevant info about the decks. It will also search for cards and displays info about " +
@@ -277,7 +296,6 @@ export class ReleaseNotes extends React.Component {
                         </List>
                     ),
                     "Many more have been changed by 0.5 or 1 point. You can see the previous spreadsheet in the 2.0 release notes, and compare to this one.",
-                    // TODO do it
                     <a href={"https://docs.google.com/spreadsheets/d/1NpRMo_uZcOh8EkiYTvSQZOPHgfAEDU88rd7VuBDkgwQ/edit?usp=sharing"}>
                         Card Ratings v3 Spreadsheet
                     </a>,

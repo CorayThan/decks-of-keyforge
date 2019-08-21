@@ -4,10 +4,11 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
-import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { patreonStore } from "../patreon/PatreonStore"
-import { PatronButton } from "../patreon/PatronButton"
+import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
+import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
 @observer
@@ -31,15 +32,9 @@ export class ContactMe extends React.Component {
                             "List decks for sale or trade, and use the search features to find available decks.",
                             "Wishlist and mark decks as funny, and see what everyone else thinks too!",
                             <span style={{display: "flex", alignItems: "center"}}>
-                                <Typography style={{marginRight: spacing(1)}}>Join the discussion on</Typography>
-                                <KeyButton
-                                    style={{margin: spacing(1)}}
-                                    color={"inherit"}
-                                    href={"https://discord.gg/T5taTHm"}
-                                    variant={"contained"}
-                                >
-                                    Discord
-                                </KeyButton>
+                                <Typography style={{marginRight: spacing(1)}}>Join the discussion:</Typography>
+                                <DiscordButton style={{margin: spacing(1)}}/>
+                                <TwitterButton style={{margin: spacing(1)}}/>
                             </span>,
                             <span>
                                 <Typography>

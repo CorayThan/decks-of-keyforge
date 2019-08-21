@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
-import { HttpConfig } from "../config/HttpConfig"
-import { messageStore } from "../ui/MessageStore"
-import { userStore } from "../user/UserStore"
+import { HttpConfig } from "../../config/HttpConfig"
+import { messageStore } from "../../ui/MessageStore"
+import { userStore } from "../../user/UserStore"
 
 export class PatreonStore {
     static readonly CONTEXT = HttpConfig.API + "/patreon"

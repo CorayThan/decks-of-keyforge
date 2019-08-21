@@ -1,4 +1,4 @@
-/* tslint:disable:no-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Chip from "@material-ui/core/Chip"
 import MenuItem from "@material-ui/core/MenuItem"
 import NoSsr from "@material-ui/core/NoSsr"

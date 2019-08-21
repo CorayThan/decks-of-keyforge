@@ -5,8 +5,8 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { patreonStore } from "../patreon/PatreonStore"
-import { PatronButton } from "../patreon/PatronButton"
+import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { AboutGridItem } from "./AboutPage"
 
 @observer

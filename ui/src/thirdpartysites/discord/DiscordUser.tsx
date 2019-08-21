@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
-import { DiscordIcon } from "./icons/DiscordIcon"
+import { spacing } from "../../config/MuiConfig"
+import { DiscordIcon } from "../../generic/icons/DiscordIcon"
 
 export const DiscordUser = (props: { discord?: string, style?: React.CSSProperties }) => {
     if (props.discord == null) {

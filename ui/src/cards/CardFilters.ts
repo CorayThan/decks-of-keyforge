@@ -18,7 +18,7 @@ export class CardFilters {
     ambers: number[] = []
     armors: number[] = []
     expansion?: number
-    sort?: string
+    sort?: CardSort
     @observable
     sortDirection: SortDirection = "DESC"
 
@@ -30,4 +30,15 @@ export class CardFilters {
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value
+}
+
+export enum CardSort {
+    CARD_RATING = "CARD_RATING",
+    EXPECTED_AMBER = "EXPECTED_AMBER",
+    AMBER_CONTROL = "AMBER_CONTROL",
+    CREATURE_CONTROL = "CREATURE_CONTROL",
+    ARTIFACT_CONTROL = "ARTIFACT_CONTROL",
+    WIN_RATE = "WIN_RATE",
+    SET_NUMBER = "SET_NUMBER",
+    AERC = "AERC"
 }

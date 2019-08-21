@@ -30,7 +30,7 @@ export class UserDeckStore {
     funny = (deckName: string, deckId: number, funny: boolean) => {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${funny ? "" : "un"}funny`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
                 this.findAllForUser()
             })
@@ -38,7 +38,7 @@ export class UserDeckStore {
 
     owned = (deckName: string, deckId: number, owned: boolean) => {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${owned ? "" : "un"}owned`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
                 this.findAllForUser()
             })
@@ -46,7 +46,7 @@ export class UserDeckStore {
 
     listDeck = (deckName: string, listingInfo: ListingInfo) => {
         axios.post(`${UserDeckStore.CONTEXT}/list`, listingInfo)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(`Listed ${deckName} for sale or trade.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()
@@ -55,7 +55,7 @@ export class UserDeckStore {
 
     updatePrices = (prices: UpdatePrice[]) => {
         axios.post(`${UserDeckStore.CONTEXT}/update-prices`, prices)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(`Updated prices for ${prices.length} decks.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()
@@ -64,7 +64,7 @@ export class UserDeckStore {
 
     unlist = (deckName: string, deckId: number) => {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/unlist`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(`${deckName} is no longer listed for sale or trade.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()
@@ -73,7 +73,7 @@ export class UserDeckStore {
 
     updateNotes = (deckName: string, notes: string, deckId: number) => {
         return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(`Update notes for ${deckName}.`)
                 this.findAllForUser()
                 this.refreshDeckInfo()

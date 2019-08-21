@@ -1,11 +1,11 @@
 import { ButtonProps } from "@material-ui/core/Button"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
-import { Utils } from "../config/Utils"
-import { PatreonIcon } from "../generic/icons/PatreonIcon"
-import { KeyButton } from "../mui-restyled/KeyButton"
-import { userStore } from "../user/UserStore"
+import { spacing } from "../../config/MuiConfig"
+import { Utils } from "../../config/Utils"
+import { PatreonIcon } from "../../generic/icons/PatreonIcon"
+import { KeyButton } from "../../mui-restyled/KeyButton"
+import { userStore } from "../../user/UserStore"
 import { patreonStore } from "./PatreonStore"
 
 const patreonClientId = Utils.isDev()

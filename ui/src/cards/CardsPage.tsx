@@ -38,7 +38,7 @@ export class CardsPage extends React.Component {
                 )
             } else {
                 cardsDisplay = (
-                    <CardsContainerWithScroll allCards={cards}/>
+                    <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards}/>
                 )
             }
         }
@@ -61,6 +61,7 @@ export class CardsPage extends React.Component {
 
 interface CardsContainerWithScrollProps {
     allCards: KCard[]
+    showAllCards: boolean
 }
 
 @observer
@@ -93,7 +94,7 @@ class CardsContainerWithScroll extends React.Component<CardsContainerWithScrollP
     resetCardsToDisplay = (props: CardsContainerWithScrollProps) => {
         log.debug("Reset cards to display.")
         this.pageQuantity = 1
-        if (props.allCards.length < 101) {
+        if (props.allCards.length < 101 || props.showAllCards) {
             this.cardsToDisplay = props.allCards.slice()
         } else {
             this.cardsToDisplay = props.allCards.slice(0, 40 * this.pageQuantity)

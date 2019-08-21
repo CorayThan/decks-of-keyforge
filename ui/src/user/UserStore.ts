@@ -5,7 +5,7 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
-import { findPatronRewardLevel, patronAuctionLimit } from "../patreon/PatreonRewardsTier"
+import { findPatronRewardLevel, patronAuctionLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration } from "./KeyUser"

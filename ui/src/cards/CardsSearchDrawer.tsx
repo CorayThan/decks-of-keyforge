@@ -13,7 +13,7 @@ import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSel
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
-import { CardFilters } from "./CardFilters"
+import { CardFilters, CardSort } from "./CardFilters"
 import { cardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
@@ -54,7 +54,7 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.powers = this.selectedPowers.toArray()
         this.filters.ambers = this.selectedAmbers.toArray()
         this.filters.armors = this.selectedArmors.toArray()
-        this.filters.sort = this.selectedSortStore.toEnumValue()
+        this.filters.sort = this.selectedSortStore.toEnumValue() as CardSort
         this.filters.expansion = this.selectedExpansion.expansionNumber()
         this.cardStore.searchCards(this.filters)
         keyDrawerStore.closeIfSmall()
@@ -151,6 +151,17 @@ export class CardsSearchDrawer extends React.Component {
                                     />
                                 }
                                 label={"Full card view"}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={keyLocalStorage.showAllCards}
+                                        onChange={keyLocalStorage.toggleShowAllCards}
+                                    />
+                                }
+                                label={"Load all cards"}
                             />
                         </ListItem>
                     </List>

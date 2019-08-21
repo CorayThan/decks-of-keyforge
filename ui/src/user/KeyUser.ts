@@ -1,5 +1,5 @@
 import { ForSaleQueryEntity } from "../decks/salenotifications/ForSaleQuery"
-import { PatreonRewardsTier } from "../patreon/PatreonRewardsTier"
+import { PatreonRewardsTier } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { UserDeck } from "../userdeck/UserDeck"
 
 export interface KeyUser {
