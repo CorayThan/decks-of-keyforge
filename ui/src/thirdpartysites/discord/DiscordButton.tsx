@@ -10,7 +10,8 @@ export class DiscordButton extends React.Component<{ style?: React.CSSProperties
                 color={"primary"}
                 href={"https://discord.gg/T5taTHm"}
                 target={"_blank"}
-                style={{borderRadius: 4, ...this.props.style}}
+                style={{borderRadius: 4, ...this.props.style, paddingTop: 4, paddingBottom: 4}}
+                size={"large"}
             >
                 <DiscordIcon full={true}/>
             </Button>

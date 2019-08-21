@@ -157,7 +157,7 @@ export class LandingPage extends React.Component<{}> {
                                 </Typography>
                             </UnstyledLink>
                             <div>
-                                <PatronButton/>
+                                <PatronButton size={"large"}/>
                                 <DiscordButton style={{marginLeft: spacing(2)}}/>
                                 <TwitterButton style={{marginLeft: spacing(2)}}/>
                             </div>

@@ -5,7 +5,7 @@ import { PatreonIcon } from "../../generic/icons/PatreonIcon"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 
 @observer
-export class PatronButton extends React.Component {
+export class PatronButton extends React.Component<{ size?: "small" | "medium" | "large" }> {
     render() {
         return (
             <LinkButton
@@ -14,6 +14,7 @@ export class PatronButton extends React.Component {
                 variant={"contained"}
                 href={"https://www.patreon.com/decksofkeyforge"}
                 target={"_blank"}
+                size={this.props.size}
             >
                 <PatreonIcon primary={false}/>
                 <div style={{marginRight: spacing(1)}}/>
