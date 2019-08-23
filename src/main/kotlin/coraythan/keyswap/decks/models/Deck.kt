@@ -152,7 +152,7 @@ data class Deck(
                 searchResultCards = searchResultCards ?: listOf(),
                 houses = houses,
 
-                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: -1.0
+                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0
         )
     }
 
