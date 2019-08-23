@@ -1,5 +1,5 @@
 import { FormLabel, IconButton, MenuItem, TextField } from "@material-ui/core"
-import { Add } from "@material-ui/icons"
+import { Add, Delete } from "@material-ui/icons"
 import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -28,6 +28,7 @@ export class FiltersConstraintsStore {
 
     reset = () => this.constraints = []
     cleanConstraints = () => this.constraints.filter(constraint => !!constraint.property)
+    removeConstraint = (idx: number) => this.constraints.splice(idx, 1)
 }
 
 export interface ConstraintDropdownsProps {
@@ -49,40 +50,47 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                     </IconButton>
                 </div>
                 {store.constraints.map((constraint, idx) => (
-                    <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}} key={idx}>
-                        <TextField
-                            select={true}
-                            value={constraint.property}
-                            onChange={event => constraint.property = event.target.value}
-                            style={{marginRight: spacing(2), flexGrow: 1}}
-                        >
-                            {properties.map(property => (
-                                <MenuItem key={property} value={property}>
-                                    {startCase(property)}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        {hideMinMax.includes(constraint.property) ? null : (
+                    <div key={idx}>
+                        <div style={{display: "flex", alignItems: "center"}}>
                             <TextField
                                 select={true}
-                                value={constraint.cap}
-                                onChange={event => constraint.cap = event.target.value as Cap}
-                                style={{marginRight: spacing(2)}}
+                                value={constraint.property}
+                                onChange={event => constraint.property = event.target.value}
+                                style={{marginRight: spacing(2), width: 192 }}
                             >
-                                <MenuItem value={Cap.MIN}>
-                                    Min
-                                </MenuItem>
-                                <MenuItem value={Cap.MAX}>
-                                    Max
-                                </MenuItem>
+                                {properties.map(property => (
+                                    <MenuItem key={property} value={property}>
+                                        {startCase(property)}
+                                    </MenuItem>
+                                ))}
                             </TextField>
-                        )}
-                        <TextField
-                            value={constraint.value}
-                            type={"number"}
-                            onChange={event => constraint.value = event.target.value}
-                            style={{width: 40}}
-                        />
+                            <IconButton onClick={() => store.removeConstraint(idx)}>
+                                <Delete fontSize={"small"}/>
+                            </IconButton>
+                        </div>
+                        <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
+                            {hideMinMax.includes(constraint.property) ? null : (
+                                <TextField
+                                    select={true}
+                                    value={constraint.cap}
+                                    onChange={event => constraint.cap = event.target.value as Cap}
+                                    style={{marginRight: spacing(2), width: 104}}
+                                >
+                                    <MenuItem value={Cap.MIN}>
+                                        Min
+                                    </MenuItem>
+                                    <MenuItem value={Cap.MAX}>
+                                        Max
+                                    </MenuItem>
+                                </TextField>
+                            )}
+                            <TextField
+                                value={constraint.value}
+                                type={"number"}
+                                onChange={event => constraint.value = event.target.value}
+                                style={{width: 72, marginRight: spacing(1)}}
+                            />
+                        </div>
                     </div>
                 ))
                 }

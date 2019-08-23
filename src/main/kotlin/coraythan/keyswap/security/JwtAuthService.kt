@@ -6,7 +6,7 @@ import coraythan.keyswap.users.UserType
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -36,8 +36,8 @@ class JwtAuthService(
     }
 
     fun hasJwtAuthHeader(req: HttpServletRequest): Boolean {
-        val header = req.getHeader(JwtAuthService.HEADER_STRING)
-        return header != null && header.startsWith(JwtAuthService.TOKEN_PREFIX)
+        val header = req.getHeader(HEADER_STRING)
+        return header != null && header.startsWith(TOKEN_PREFIX)
     }
 
     fun expiration(duration: Duration): Date = Date.from(now().plus(duration).toInstant())
@@ -57,11 +57,11 @@ class JwtAuthService(
         val date = expiration(EXPIRE_AFTER)
 
         tokenBuilder.setExpiration(date)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret.toByteArray())
-                .claim(JwtAuthService.ROLE, role)
+                .signWith(Keys.hmacShaKeyFor(jwtSecret.toByteArray()))
+                .claim(ROLE, role)
 
         val token = tokenBuilder.compact()
-        res.addHeader(JwtAuthService.HEADER_STRING, JwtAuthService.TOKEN_PREFIX + token)
+        res.addHeader(HEADER_STRING, TOKEN_PREFIX + token)
     }
 
     fun getAuthenticationFromJwt(
@@ -69,15 +69,15 @@ class JwtAuthService(
             res: HttpServletResponse
     ): UsernamePasswordAuthenticationToken? {
 
-        val token = req.getHeader(JwtAuthService.HEADER_STRING)
+        val token = req.getHeader(HEADER_STRING)
         if (token != null) {
             try {
                 val body: Claims = Jwts.parser()
                         .setSigningKey(jwtSecret.toByteArray())
-                        .parseClaimsJws(token.replace(JwtAuthService.TOKEN_PREFIX, ""))
+                        .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                         .body
 
-                val userType = UserType.valueOf(body.get(JwtAuthService.ROLE, String::class.java))
+                val userType = UserType.valueOf(body.get(ROLE, String::class.java))
 
                 if (refreshToken(body)) {
                     addJwtToResponse(res, body.subject, userType.authoritiesList)
@@ -97,6 +97,6 @@ class JwtAuthService(
         val issuedAt = ZonedDateTime.ofInstant(authClaims.issuedAt.toInstant(), ZoneId.systemDefault())
         val expiresAt = ZonedDateTime.ofInstant(authClaims.expiration.toInstant(), ZoneId.systemDefault())
         val now = now()
-        return now.isAfter(issuedAt.plus(JwtAuthService.REFRESH_AFTER)) && !expiresAt.isBefore(now)
+        return now.isAfter(issuedAt.plus(REFRESH_AFTER)) && !expiresAt.isBefore(now)
     }
 }

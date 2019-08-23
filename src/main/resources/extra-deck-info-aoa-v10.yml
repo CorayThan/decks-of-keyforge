@@ -16,7 +16,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 2
-  rating: 1.5
+  rating: 2
   creatureControl: 1
   traits: [goodFight]
 
@@ -24,7 +24,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 3
-  rating: 2.5
+  rating: 2
   creatureControl: 1
   traits: [dealsDamage, damagesMultipleEnemies, goodPlay]
 
@@ -130,7 +130,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 20
-  rating: 2.5
+  rating: 2
   traits: [elusive]
 
 - name: Flamethrower
@@ -145,7 +145,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 22
-  rating: 2.5
+  rating: 2
   creatureControl: 0.5
   traits: [dealsDamage, goodPlay]
 
@@ -204,7 +204,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 34
-  rating: 2
+  rating: 1.5
   creatureControl: 1
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, damagesAllEnemies]
   synergies:
@@ -234,7 +234,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 39
-  rating: 0
+  rating: 1
   deckManipulation: 0.5
   traits: [goodReap]
   synergies:
@@ -255,7 +255,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 48
-  rating: 0
+  rating: 0.5
   effectivePower: 3
   traits: [usableArtifact, shard, increasesCreaturePower]
   synergies:
@@ -364,7 +364,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 63
-  rating: 1.5
+  rating: 2
   expectedAmber: 1
   deckManipulation: 0.5
 
@@ -461,8 +461,8 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 72
-  rating: 1.5
-  amberControl: 2
+  rating: 1
+  amberControl: 1
   traits: [elusive]
 
 - name: Old Yurk
@@ -539,7 +539,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 95
-  rating: 3.5
+  rating: 3
   creatureControl: 1
 
 - name: Orb of Invidius
@@ -598,7 +598,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 107
-  rating: 0
+  rating: 0.5
   creatureControl: 1
   traits: [usableArtifact]
 
@@ -784,7 +784,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 137
-  rating: 0
+  rating: 0.5
   amberControl: 1
   traits: [usableArtifact]
 
@@ -794,7 +794,7 @@
       cardNumber: 139
   rating: 0.5
   traits: [forgesKeys]
-  
+
 - name: Entropic Swirl
   cardNumbers:
     - expansion: 435
@@ -884,7 +884,7 @@
   expectedAmber: 1
   creatureControl: 0.5
   traits: [damagesAllEnemies, damagesMultipleEnemies, dealsDamage]
-  synergies: 
+  synergies:
     - trait: highTotalCreaturePower
       rating: -2
     - trait: lowTotalCreaturePower
@@ -897,7 +897,7 @@
   rating: 3.5
   creatureControl: 1
   traits: [archivesEnemyCards, goodFight]
-  synergies: 
+  synergies:
     - trait: archives
       rating: -2
 
@@ -972,7 +972,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 171
-  rating: 3
+  rating: 2.5
   creatureControl: 0.5
   traits: [goodPlay]
 
@@ -1023,7 +1023,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 180
-  rating: 1
+  rating: 1.5
   creatureControl: 1.5
   traits: [destroysEnemyCreatures]
   synergies:
@@ -1046,7 +1046,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 184
-  rating: 3
+  rating: 2.5
   amberControl: 2
   traits: [increasesKeyCost]
   synergies:
@@ -1138,7 +1138,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 205
-  rating: 1
+  rating: 1.5
   creatureControl: 1
   traits: [shard, usableArtifact]
 
@@ -1619,7 +1619,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 287
-  rating: 0.5
+  rating: 1
   expectedAmber: 1
   effectivePower: 3
   traits: [usableArtifact]
@@ -1637,7 +1637,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 290
-  rating: 2
+  rating: 2.5
   deckManipulation: 1.5
   traits: [goodPlay]
 
@@ -1645,7 +1645,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 291
-  rating: 1
+  rating: 2
   expectedAmber: 1
   traits: [forgesKeys]
   synergies:
@@ -1756,7 +1756,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 315
-  rating: 2.5
+  rating: 3.5
   expectedAmber: 2
   traits: [shard, usableArtifact]
 
@@ -1854,7 +1854,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 332
-  rating: 0
+  rating: 1
   expectedAmber: 1
   deckManipulation: 0.5
   synergies:
@@ -1970,7 +1970,7 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 354
-  rating: 3
+  rating: 2.5
   deckManipulation: 1
   expectedAmber: 1
   traits: [omega, returnsCreaturesFromDiscard, returnsCardsFromDiscard]
@@ -2024,6 +2024,6 @@
   cardNumbers:
     - expansion: 435
       cardNumber: 366
-  rating: 0
+  rating: 0.5
   deckManipulation: 0.5
   traits: [shard, usableArtifact ]

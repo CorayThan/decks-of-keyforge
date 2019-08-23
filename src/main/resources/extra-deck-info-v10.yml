@@ -2536,12 +2536,16 @@
   synergies:
     - trait: highCreatureCount
       type: house
+      rating: 1
     - trait: lowCreatureCount
       type: house
-      rating: -2
+      rating: -1
     - trait: archives
       rating: 1
     - trait: increasesHandSize
+    - trait: drawsCards
+      type: house
+      rating: 3
 
 - name: Martian Hounds
   cardNumbers:

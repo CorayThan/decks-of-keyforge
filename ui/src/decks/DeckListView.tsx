@@ -178,6 +178,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                                     alignItems: "flex-end",
                                                     justifyContent: "center"
                                                 }}
+                                                halfAtEnd={true}
                                             />
                                         )}
                                     </TableCell>

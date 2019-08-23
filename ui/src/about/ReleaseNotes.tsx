@@ -15,7 +15,7 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.9"
+export const latestVersion = "5.10"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -23,6 +23,18 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.10"} date={"8/22/2019"} expanded={true} releaseNotes={[
+                    "Minor improvement to SAS / AERC. These are some lingering changes to the current system I wanted to get out before I start " +
+                    "working on the big update.",
+                    "Fixed problems like Shadow of Dis having Aember Control instead of Expected Aember.",
+                    "Increased rating for a few cards, like Mother, Succubus, Shatter Storm, Rock Hurling Giant, Door Step to Heaven, Tyxl Beambuckler, " +
+                    "Nyzyk Resonator, Martyr's End, and Persistence Hunting.",
+                    "Reduced rating for a few cards, like Into the Fray, Grumpus Tamer, Bloodshard Imp, Gold Key Imp, Memory Chip, AEmber Conduction Unit, " +
+                    "Nightforge, Guard Disguise, and Scowly Caper.",
+                    "Improved constraints + cards search. It should be more clear how to add more, and possible to remove lines without resetting the whole " +
+                    "search.",
+                    "A few minor bug fixes, like to the tooltips for stars."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.9"} date={"8/20/2019"} expanded={true} releaseNotes={[
                     "Introducing SAStars! These stars are a quick way to know the percentile ranking of a deck by SAS. Check out the new About page section " +
                     "for more info on what they mean. (Scroll down for the SAStars section.)",

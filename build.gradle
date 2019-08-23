@@ -1,8 +1,10 @@
 buildscript {
     ext {
-        kotlinVersion = '1.3.41'
-        springBootVersion = '2.1.6.RELEASE'
+        kotlinVersion = '1.3.50'
+        springBootVersion = '2.1.7.RELEASE'
         queryDslVersion = "4.2.1"
+        shedlockVersion = "2.5.0"
+        jjwtVersion = "0.10.7"
     }
     repositories {
         mavenCentral()
@@ -23,7 +25,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'coraythan'
-version = '152'
+version = '153'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions {
@@ -58,15 +60,18 @@ dependencies {
     implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
     implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml')
     implementation('org.flywaydb:flyway-core')
-    implementation('net.javacrumbs.shedlock:shedlock-spring:2.1.0')
-    implementation('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:2.2.0')
+    implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("io.jsonwebtoken:jjwt:0.9.1")
-    implementation("org.apache.commons:commons-lang3:3.8.1")
-    implementation("org.logback-extensions:logback-ext-loggly:0.1.2")
-    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1')
+    implementation("org.apache.commons:commons-lang3:3.9")
+    implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
+    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2')
     implementation("com.patreon:patreon:0.4.2")
+
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+    runtime("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    runtime("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion")

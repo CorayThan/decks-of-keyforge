@@ -106,8 +106,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     )
 }
 
-export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean }) => {
-    const {sasPercentile, small, style, gray} = props
+export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean, halfAtEnd?: boolean }) => {
+    const {sasPercentile, small, style, gray, halfAtEnd} = props
     let includeHalf = false
     let type = StarType.NORMAL
     let quantity = 0
@@ -119,7 +119,7 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
         if (random > 0.5) {
             tooltip = "A controller of weakling decks. Only one in 10,000 decks is this good"
         } else {
-            tooltip = "When nature calls, this deck won't have to go. Only one in 1,000 decks is this good"
+            tooltip = "When nature calls, this deck won't have to go. Only one in 10,000 decks is this good"
         }
     }
 
@@ -156,7 +156,7 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
         quantity = 3
         if (sasPercentile >= 75) {
             if (random > 0.5) {
-                tooltip = "Overlord of pedestrian decks. In the top 75% of decks"
+                tooltip = "Overlord of pedestrian decks. In the top 25% of decks"
             } else {
                 tooltip = "Stealer of sub-par souls. Better than 75% of decks out there"
             }
@@ -207,8 +207,9 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     return (
         <Tooltip title={tooltip}>
             <div style={style}>
-                {includeHalf && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
+                {includeHalf && !halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
                 {range(quantity).map((idx) => <StarIcon key={idx} starType={type} style={starStyle} small={small} gray={gray}/>)}
+                {includeHalf && halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
             </div>
         </Tooltip>
     )

@@ -219,16 +219,20 @@ class AuctionService(
         deckRepo.save(auction.deck.copy(forAuction = false, completedAuction = sold))
 
         GlobalScope.launch {
-            if (sold) {
-                emailService.sendAuctionPurchaseEmail(
-                        buyItNowUser ?: auction.highestBidder()!!,
-                        auction.seller,
-                        auction.deck,
-                        if (buyItNowUser != null) auction.buyItNow!! else auction.highestBid!!,
-                        auction.seller.currencySymbol
-                )
-            } else {
-                emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck)
+            try {
+                if (sold) {
+                    emailService.sendAuctionPurchaseEmail(
+                            buyItNowUser ?: auction.highestBidder()!!,
+                            auction.seller,
+                            auction.deck,
+                            if (buyItNowUser != null) auction.buyItNow!! else auction.highestBid!!,
+                            auction.seller.currencySymbol
+                    )
+                } else {
+                    emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck)
+                }
+            } catch (e: Exception) {
+                log.warn("Couldn't send for sale notification for ${auction.id}", e)
             }
         }
     }

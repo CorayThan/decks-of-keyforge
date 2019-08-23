@@ -41,7 +41,7 @@ private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 9
+const val currentDeckRatingVersion = 10
 
 @Transactional
 @Service

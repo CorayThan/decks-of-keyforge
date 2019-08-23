@@ -1,4 +1,4 @@
-import { FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
+import { Button, FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import FormLabel from "@material-ui/core/FormLabel"
@@ -380,11 +380,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             <div style={{flexGrow: 1}}>
                                 <div style={{display: "flex", alignItems: "center"}}>
                                     <FormLabel style={{marginRight: spacing(1)}}>Cards</FormLabel>
-                                    {cards.length < 10 ? (
-                                        <IconButton onClick={() => cards.push({cardNames: [], quantity: 1})}>
-                                            <Add fontSize={"small"}/>
-                                        </IconButton>
-                                    ) : null}
+                                    <IconButton onClick={() => cards.push({cardNames: [], quantity: 1})}>
+                                        <Add fontSize={"small"}/>
+                                    </IconButton>
                                 </div>
                                 <div style={{flexGrow: 1}}>
                                     {cards.map((card, idx) => {
@@ -428,6 +426,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                         )
                                                     })}
                                                 </TextField>
+                                                <IconButton
+                                                    onClick={() => cards.splice(idx, cards.length)}
+                                                    style={{marginTop: spacing(2), marginLeft: spacing(1)}}
+                                                >
+                                                    <Delete fontSize={"small"}/>
+                                                </IconButton>
+                                                <Button
+                                                    onClick={() => cards.push({cardNames: [], quantity: 1})}
+                                                    style={{marginLeft: spacing(1), marginTop: spacing(2.5)}}
+                                                >
+                                                    And Card...
+                                                </Button>
                                             </div>
                                         )
                                     })}

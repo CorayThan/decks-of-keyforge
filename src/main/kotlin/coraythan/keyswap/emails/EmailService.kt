@@ -27,10 +27,11 @@ class EmailService(
     }
 
     fun sendOutBidEmail(buyer: KeyUser, deck: Deck, timeLeft: String) {
-        sendEmail(
-                buyer.primaryEmail,
-                "You've been outbid in the auction for ${deck.name}!",
-                """
+        try {
+            sendEmail(
+                    buyer.primaryEmail,
+                    "You've been outbid in the auction for ${deck.name}!",
+                    """
                     <div>
                         You've been outbid in the auction for ${makeLink("/decks/${deck.keyforgeId}", deck.name)}.
                     </div>
@@ -45,14 +46,18 @@ class EmailService(
                         You'll need to place another bid before then if you want to win the deck!
                     </div>
                 """.trimIndent()
-        )
+            )
+        } catch (e: Exception) {
+            log.warn("Couldn't send outbid notification to ${buyer.primaryEmail}", e)
+        }
     }
 
     fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int, currencySymbol: String) {
-        sendEmail(
-                seller.primaryEmail,
-                "${deck.name} has sold on auction!",
-                """
+        try {
+            sendEmail(
+                    seller.primaryEmail,
+                    "${deck.name} has sold on auction!",
+                    """
                     <div>
                         ${buyer.username} has won the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} for $currencySymbol$price plus any shipping
                         listed in the auction description.
@@ -63,12 +68,16 @@ class EmailService(
                         You can reply to this email to contact the buyer.
                     </div>
                 """.trimIndent(),
-                buyer.primaryEmail
-        )
-        sendEmail(
-                buyer.primaryEmail,
-                "You have won the auction for ${deck.name}!",
-                """
+                    buyer.primaryEmail
+            )
+        } catch (e: Exception) {
+            log.warn("Couldn't send deck sold email to seller for ${seller.primaryEmail}", e)
+        }
+        try {
+            sendEmail(
+                    buyer.primaryEmail,
+                    "You have won the auction for ${deck.name}!",
+                    """
                     <div>
                         You have won the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} for $currencySymbol$price plus any shipping listed in
                         the auction description.
@@ -81,8 +90,11 @@ class EmailService(
 
                     </div>
                 """.trimIndent(),
-                seller.primaryEmail
-        )
+                    seller.primaryEmail
+            )
+        } catch (e: Exception) {
+            log.warn("Couldn't send deck sold email to buyer for ${seller.primaryEmail}", e)
+        }
     }
 
     fun sendAuctionDidNotSellEmail(seller: KeyUser, deck: Deck) {
@@ -129,23 +141,25 @@ class EmailService(
 
     fun sendDeckListedNotification(recipient: KeyUser, listingInfo: ListingInfo, deck: Deck, queryName: String) {
 
-        val availableFor = when {
-            listingInfo.auctionListingInfo != null -> "as an auction"
-            listingInfo.forSale && listingInfo.forTrade -> "for sale or trade"
-            listingInfo.forSale -> "for sale"
-            listingInfo.forTrade -> "for trade"
-            else -> throw BadRequestException("Deck must be available for sale, trade, or auction.")
-        }
+        try {
 
-        log.info("Sending deck listed notification.")
-        sendEmail(
-                recipient.email,
-                "A new deck listed on Decks of Keyforge matches $queryName",
-                """
+            val availableFor = when {
+                listingInfo.auctionListingInfo != null -> "as an auction"
+                listingInfo.forSale && listingInfo.forTrade -> "for sale or trade"
+                listingInfo.forSale -> "for sale"
+                listingInfo.forTrade -> "for trade"
+                else -> throw BadRequestException("Deck must be available for sale, trade, or auction.")
+            }
+
+            log.info("Sending deck listed notification.")
+            sendEmail(
+                    recipient.email,
+                    "\"$queryName\" matches a deck listed on Decks of KeyForge",
+                    """
                     <div>
                         <div>
                             The deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} matches the query "$queryName" you've set up to
-                            email you whenever a new deck is listed for sale.
+                            email you whenever a deck is listed for sale.
                         </div>
                         <br>
                         <div>
@@ -161,7 +175,11 @@ class EmailService(
                         </div>
                     </div>
                 """.trimIndent()
-        )
+            )
+
+        } catch (e: Exception) {
+            log.warn("Couldn't send deck listed notification email.", e)
+        }
     }
 
     fun sendMessageToSeller(sellerMessage: SellerMessage) {
