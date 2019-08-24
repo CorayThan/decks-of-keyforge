@@ -52,6 +52,22 @@ class EmailService(
         }
     }
 
+    fun sendSomeoneElseBoughtNowEmail(buyer: KeyUser, deck: Deck) {
+        try {
+            sendEmail(
+                    buyer.primaryEmail,
+                    "Some chose Buy It Now for ${deck.name}!",
+                    """
+                    <div>
+                        Someone else has purchased the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)}, for which you were the highest bidder.
+                    </div>
+                """.trimIndent()
+            )
+        } catch (e: Exception) {
+            log.warn("Couldn't send outbid notification to ${buyer.primaryEmail}", e)
+        }
+    }
+
     fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int, currencySymbol: String) {
         try {
             sendEmail(

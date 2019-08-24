@@ -12,6 +12,12 @@ class RestErrorHandler {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    @ExceptionHandler(RateExceededException::class)
+    fun badRequestException(ex: RateExceededException, request: HttpServletRequest): ErrorResponse {
+        return ErrorResponse(ex.message ?: "You've sent too many requests.")
+    }
+
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     @ExceptionHandler(BadRequestException::class)
     fun badRequestException(ex: BadRequestException, request: HttpServletRequest): ErrorResponse {
@@ -59,6 +65,7 @@ class RestErrorHandler {
 
 class BadRequestException(message: String) : RuntimeException(message)
 class UnauthorizedException(message: String) : RuntimeException(message)
+class RateExceededException(message: String) : RuntimeException(message)
 
 data class ErrorResponse(
         val message: String

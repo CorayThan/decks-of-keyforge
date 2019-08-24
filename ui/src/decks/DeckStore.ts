@@ -71,7 +71,7 @@ export class DeckStore {
     }
 
     findDeck = (keyforgeId: string) => {
-        axios.get(`${DeckStore.CONTEXT}/${keyforgeId}`)
+        axios.get(`${DeckStore.CONTEXT}/with-synergies/${keyforgeId}`)
             .then((response: AxiosResponse) => {
                 const deck: DeckWithSynergyInfo = response.data
                 if (!deck || !deck.deck) {

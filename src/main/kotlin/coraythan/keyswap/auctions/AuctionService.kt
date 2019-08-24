@@ -180,6 +180,10 @@ class AuctionService(
         if (auction.buyItNow == null) throw BadRequestException("Can't buy it now when the auction doesn't have buy it now.")
 
         endAuction(true, auction, user)
+        val previousHighBidder = auction.highestBidder()
+        if (previousHighBidder != null && previousHighBidder != user) {
+            emailService.sendSomeoneElseBoughtNowEmail(previousHighBidder, auction.deck)
+        }
 
         return BidPlacementResult(
                 true,

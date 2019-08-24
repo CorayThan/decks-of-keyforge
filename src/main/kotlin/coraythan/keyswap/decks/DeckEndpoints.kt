@@ -62,15 +62,13 @@ class DeckEndpoints(
     @GetMapping("/random")
     fun randomDeckId() = deckService.randomDeckId()
 
-    @CrossOrigin
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = "Please update to the new version."
 
-    @CrossOrigin
     @GetMapping("/simple/v2/{id}")
     fun findDeckSimple2(@PathVariable id: String) = "Please update to the new version."
 
-    @GetMapping("/{id}")
+    @GetMapping("/with-synergies/{id}")
     fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
 
     @GetMapping("/search-result-with-cards/{id}")

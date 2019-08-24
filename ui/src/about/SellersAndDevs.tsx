@@ -179,7 +179,9 @@ export class SellersAndDevs extends React.Component {
                     <InfoListCard title={"SAS and AERC API"} infos={[
                         "I've created a simple API you can use to get SAS and AERC ratings for a deck, but if you use it I would appreciate it " +
                         "if you could follow a few rules.",
-                        "1. Don't hit the endpoint too hard. It's a fairly efficient request, but my servers aren't super robust.",
+                        "1. Users have taken down DoK from over using this endpoint, so I have added rate limiting. You are not allowed to send more " +
+                        "than 25 requests per minute. Please try to stay significantly under that cap though! If you need SAS / AERC for all decks " +
+                        "DO NOT USE the endpoint, use the CSV.",
                         "2. Please don't send requests with deck IDs that don't exist in master vault.",
                         "3. If you display SAS or AERC values please provide a link to decksofkeyforge.com (or a link to the deck itself " +
                         "on decksofkeyforge.com) along with the rating. " +

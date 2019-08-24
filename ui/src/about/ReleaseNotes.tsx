@@ -15,7 +15,7 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.10"
+export const latestVersion = "5.12"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -23,6 +23,14 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.12"} date={"8/25/2019"} expanded={true} releaseNotes={[
+                    "Added Master Vault link to the more options button for decks."
+                ]}/>
+                <ReleaseNote releaseNumber={"5.11"} date={"8/23/2019"} expanded={true} releaseNotes={[
+                    "Added rate limiting for the deck request API. Some users were misusing this resource. Please use the CSV if you need all SAS / AERC " +
+                    "ratings.",
+                    "If you are the high bidder on an auction and someone else buys the auction with buy it now, you will receive an email."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.10"} date={"8/22/2019"} expanded={true} releaseNotes={[
                     "Minor improvement to SAS / AERC. These are some lingering changes to the current system I wanted to get out before I start " +
                     "working on the big update.",

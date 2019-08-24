@@ -4,6 +4,7 @@ import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
 import List from "@material-ui/core/List/List"
 import Menu from "@material-ui/core/Menu"
+import MenuItem from "@material-ui/core/MenuItem"
 import Typography from "@material-ui/core/Typography/Typography"
 import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons"
 import { observer } from "mobx-react"
@@ -136,7 +137,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         </CardContent>
                         {hideActions ? null : (
                             <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                                {fullVersion && deck.registered ? (
+                                {fullVersion && !compact && deck.registered ? (
                                     <KeyButton
                                         href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
                                         color={"primary"}
@@ -398,6 +399,12 @@ const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
                 <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose} />
                 <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
+                <MenuItem
+                    component={"a"}
+                    href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
+                >
+                    Master Vault
+                </MenuItem>
             </Menu>
         </>
     )
