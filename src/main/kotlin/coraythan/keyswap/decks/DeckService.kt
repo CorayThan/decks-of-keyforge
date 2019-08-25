@@ -144,7 +144,7 @@ class DeckService(
                         filters.completedAuctions
                 ))
             } else if (filters.withOwners) {
-                if (userHolder.user?.email != "coraythan@gmail.com") throw BadRequestException("You do not have permission to see owners.")
+                if (userHolder.user?.email != "coraythan@gmail.com" && userHolder.user?.email?.toLowerCase() != "randomjoe@gmail.com") throw BadRequestException("You do not have permission to see owners.")
                 searchResult.copy(owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
                     userDeck.ownedBy
                 })

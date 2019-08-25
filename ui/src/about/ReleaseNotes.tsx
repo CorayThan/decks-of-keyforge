@@ -23,7 +23,10 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
-                <ReleaseNote releaseNumber={"5.12"} date={"8/25/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"5.12"} date={"8/24/2019"} expanded={true} releaseNotes={[
+                    "Download deck lists as a spreadsheet file! Switch to the table view (toggle button at the bottom of the search bar) and click the " +
+                    "download button.",
+                    "Deck table view now has a three dots button to perform most of the normal actions for a deck directly from the table.",
                     "Added Master Vault link to the more options button for decks."
                 ]}/>
                 <ReleaseNote releaseNumber={"5.11"} date={"8/23/2019"} expanded={true} releaseNotes={[

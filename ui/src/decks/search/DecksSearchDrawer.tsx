@@ -337,7 +337,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     ) : null}
                                 </div>
                                 {optionals}
-                                {userStore.username === "Coraythan" ? (
+                                {userStore.username === "Coraythan" || userStore.username === "randomjoe" ? (
                                     <FormControlLabel
                                         control={
                                             <Checkbox

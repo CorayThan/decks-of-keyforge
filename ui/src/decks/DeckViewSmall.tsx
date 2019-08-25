@@ -371,7 +371,7 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
     )
 }
 
-const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
+export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
     const {deck, compact} = props
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)

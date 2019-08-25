@@ -1,9 +1,10 @@
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, TextField, Typography } from "@material-ui/core"
-import { ChevronLeft, ChevronRight } from "@material-ui/icons"
+import { ChevronLeft, ChevronRight, GetApp } from "@material-ui/icons"
 import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { CSVLink } from "react-csv"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -17,10 +18,10 @@ import { userStore } from "../user/UserStore"
 import { UpdatePrice } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { MyDecksButton } from "./buttons/MyDecksButton"
-import { Deck } from "./Deck"
+import { Deck, DeckUtils } from "./Deck"
 import { SaStars } from "./DeckScoreView"
 import { deckStore } from "./DeckStore"
-import { DeckViewSmall } from "./DeckViewSmall"
+import { DeckViewSmall, MoreDeckActions } from "./DeckViewSmall"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
 interface DeckListViewProps {
@@ -136,9 +137,23 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     </>
                                 )}
                                 <TableCell>
-                                    <IconButton onClick={keyLocalStorage.toggleSmallTableView}>
-                                        {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
-                                    </IconButton>
+                                    <div style={{display: "flex"}}>
+                                        <CSVLink
+                                            data={DeckUtils.arrayToCSV(decks)}
+                                            target={"_blank"}
+                                            filename={"dok-decks.csv"}
+                                        >
+                                            <IconButton>
+                                                <GetApp/>
+                                            </IconButton>
+                                        </CSVLink>
+                                        <IconButton
+                                            onClick={keyLocalStorage.toggleSmallTableView}
+                                            style={{marginLeft: spacing(2)}}
+                                        >
+                                            {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
+                                        </IconButton>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -207,12 +222,16 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                         </>
                                     )}
                                     <TableCell>
-                                        <KeyLink
-                                            to={Routes.deckPage(deck.keyforgeId)}
-                                            noStyle={true}
-                                        >
-                                            <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
-                                        </KeyLink>
+                                        <div style={{display: "flex"}}>
+                                            <KeyLink
+                                                to={Routes.deckPage(deck.keyforgeId)}
+                                                noStyle={true}
+                                                style={{marginRight: spacing(2)}}
+                                            >
+                                                <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
+                                            </KeyLink>
+                                            <MoreDeckActions deck={deck} compact={true}/>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}

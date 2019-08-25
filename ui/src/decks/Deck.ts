@@ -83,6 +83,100 @@ export class DeckUtils {
             })
         return cardsByHouse
     }
+
+    static arrayToCSV = (decks: Deck[]) => {
+        const data = decks.map(deck => {
+
+            return [
+                deck.name.replace(/"/g, "\"\""),
+                deck.houses,
+                deck.expansion,
+                deck.sasRating,
+                deck.cardsRating,
+                deck.synergyRating,
+                deck.antisynergyRating,
+                deck.sasPercentile,
+                deck.aercScore,
+                deck.amberControl,
+                deck.expectedAmber,
+                deck.artifactControl,
+                deck.creatureControl,
+                deck.deckManipulation,
+                deck.effectivePower,
+
+                deck.creatureCount,
+                deck.actionCount,
+                deck.artifactCount,
+                deck.upgradeCount,
+
+                deck.rawAmber,
+                deck.keyCheatCount,
+                deck.cardDrawCount,
+                deck.cardArchiveCount,
+                deck.totalPower,
+                deck.totalArmor,
+
+                deck.powerLevel,
+                deck.chains,
+                deck.wins,
+                deck.losses,
+
+                deck.forSale,
+                deck.forAuction,
+                deck.forTrade,
+                deck.searchResultCards == null ? "" : `${deck.searchResultCards.map(card => card.cardTitle).join(", ")}`,
+                deck.wishlistCount,
+                deck.funnyCount,
+                `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,
+                `https://www.keyforgegame.com/deck-details/${deck.keyforgeId}`
+            ]
+        })
+        data.unshift([
+            "Name",
+            "Houses",
+            "Expansion",
+            "Sas Rating",
+            "Cards Rating",
+            "Synergy Rating",
+            "Antisynergy Rating",
+            "Sas Percentile",
+            "Aerc Score",
+            "Amber Control",
+            "Expected Amber",
+            "Artifact Control",
+            "Creature Control",
+            "Deck Manipulation",
+            "Effective Power",
+
+            "Creature Count",
+            "Action Count",
+            "Artifact Count",
+            "Upgrade Count",
+
+            "Raw Amber",
+            "Key Cheat Count",
+            "Card Draw Count",
+            "Card Archive Count",
+            "Total Power",
+            "Total Armor",
+
+            "Power Level",
+            "Chains",
+            "Wins",
+            "Losses",
+
+            "For Sale",
+            "For Auction",
+            "For Trade",
+
+            "Cards",
+            "Wishlist",
+            "Funny",
+            "DoK Link",
+            "Master Vault Link"
+        ])
+        return data
+    }
 }
 
 export interface DeckPage {
