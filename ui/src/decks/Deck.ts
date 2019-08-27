@@ -124,7 +124,7 @@ export class DeckUtils {
                 deck.forSale,
                 deck.forAuction,
                 deck.forTrade,
-                deck.searchResultCards == null ? "" : `${deck.searchResultCards.map(card => card.cardTitle).join(", ")}`,
+                deck.searchResultCards == null ? "" : `${deck.searchResultCards.map(card => card.cardTitle).join("|")}`,
                 deck.wishlistCount,
                 deck.funnyCount,
                 `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,
