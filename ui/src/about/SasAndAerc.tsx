@@ -1,4 +1,4 @@
-import { List, ListItem, Typography } from "@material-ui/core"
+import { Divider, List, ListItem, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -79,8 +79,8 @@ export class SasAndAerc extends React.Component {
                         <CardExample
                             text={"Ember Imp and Shadow Self synergize because Ember Imp has a great effect but is easy to kill, and " +
                             "Shadow Self provides protection."}
-                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_85_C72X25358RG2_en.png"}
-                            img2={"https://cdn.keyforgegame.com/media/card_front/en/341_310_C33C4J4W6726_en.png"}
+                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ember-imp.png"}
+                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/shadow-self.png"}
                         />,
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Deck and House Synergies</Typography>,
@@ -89,8 +89,8 @@ export class SasAndAerc extends React.Component {
                         <CardExample
                             text={"Ammonia Clouds damages all creatures, but if your creatures have armor, it can prevent much of the damage dealt by " +
                             "Ammonia clouds. Ammonia Clouds synergizes with decks with high armor."}
-                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_160_VQMVCX37C6XQ_en.png"}
-                            img2={"https://cdn.keyforgegame.com/media/card_front/en/341_259_F6VVWM6QHCRR_en.png"}
+                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ammonia-clouds.png"}
+                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/staunch-knight.png"}
                         />,
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
@@ -149,7 +149,7 @@ export class SasAndAerc extends React.Component {
                 </AboutGridItem>
                 <AboutGridItem>
                     <InfoListCard title={"The AERC of your Deck"} infos={[
-                        <Typography variant={"h6"}>AERC Deck Traits</Typography>,
+                        <Typography variant={"h5"}>AERC Deck Traits</Typography>,
                         <div style={{maxWidth: 520, maxHeight: 320}}>
                             {stats ? (
                                 <KeyBar
@@ -158,59 +158,121 @@ export class SasAndAerc extends React.Component {
                                         {x: "Expected Aember", y: stats.averageExpectedAmber},
                                         {x: "Artifact Ctrl", y: stats.averageArtifactControl},
                                         {x: "Creature Ctrl", y: stats.averageCreatureControl},
-                                        {x: "Deck Manip", y: stats.averageDeckManipulation},
+                                        {x: "Efficiency", y: stats.averageDeckManipulation},
+                                        {x: "Disruption", y: stats.averageDeckManipulation},
                                         {x: "Effective Power", y: stats.averageEffectivePower / 10},
+                                        {x: "Steal Prevention", y: stats.averageDeckManipulation},
+                                        {x: "House Cheating", y: stats.averageDeckManipulation},
+                                        {x: "Other", y: stats.averageDeckManipulation},
                                     ]}
                                     domainPadding={60}
                                 />
                             ) : <Loader/>}
                         </div>,
                         <div style={{paddingBottom: spacing(2)}}/>,
-                        "I've rated every card in key metrics, like its expected aember control (A), expected aember (E), artifact control (R), " +
-                        "creature control (C), Deck Manipulation (D) and Effective Total Creature Power (P).",
+                        "I've rated every card in key metrics, like its expected Aember Control (A), Expected Aember (E), Artifact Control (R), " +
+                        "Creature Control (C), Efficiency (F), Disruption (D), Effective Total Creature Power (P), Steal Prevention (S), " +
+                        "House Cheating (H) and Other (O).",
                         "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
-                        "These are important metrics to consider when judging the quality of a deck, but they don't directly impact a deck's SAS " +
-                        "rating.",
-                        "However, when searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
+                        "When added together, these metrics represent the value of a deck converted to Aember. For example, Punch " +
+                        "provides one aember, and does damage equal to 1 aember of value. Its net AERC rating and value in a deck is 2.",
+                        "When searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
                         <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Aember Control (A)</Typography>,
-                        "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
-                        "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
-                        "avoided.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Expected Aember (E)</Typography>,
-                        "This rating is an approximation of how much aember you can expect a card to generate. It does not take the ability of creatures " +
-                        "to reap into account, unless they are a special skill that will usually generate extra aember, like Dew " +
-                        "Faerie's \"Reap: Gain 1<A>\".",
-                        "Some cards that are difficult to play have their base aember reduced, and some cards " +
-                        "that immediately allow the use of creatures have aember added on the assumption creatures will be used to reap.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Artifact Control (R)</Typography>,
-                        "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
-                        "Destroying an artifact is worth 1.5 points. Using an enemy artifact (destroying single use artifacts) is 1 point. And delaying " +
-                        "artifacts is 0.5 points.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Creature Control (C)</Typography>,
-                        "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
-                        "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
-                        "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Deck Manipulation (D)</Typography>,
-                        "Deck Manipulation is increased by effects that allow you to play extra cards, or reduce the number your opponent can play. " +
-                        "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
-                        "1 point is approximately equal to drawing two cards, archiving a random card, or preventing your opponent from drawing 2.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Effective Power (P)</Typography>,
-                        "While raw total creature power in a deck is a useful statistic, it has many flaws that Effective Creature Power is made to address. " +
-                        "For example, there are many powerful creatures with significant downsides, " +
-                        "like Kelifi Dragon or Grommid. These creatures have had their effective power reduced.",
-                        "There are other creatures and abilities " +
-                        "that contribute extra power, like Blood of Titans or Zyzzix the Many. These have had their effective power increased.",
-                        "Effective power is also increased by Armor at a 1:1 ratio.",
-                        "When included in total AERC score, Effective Power is divided by 10 and rounded to the nearest 0.5.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>AERC Score (AERC)</Typography>,
-                        "To calculate the AERC score divide Effective Power by 10, round to the nearest 0.5, then add that with the other AERC scores. " +
+
+                        <AercTraitDescription
+                            title={"Aember Control (A)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/routine-job.png"}
+                            texts={[
+                                "Aember control represents the amount of aember the deck can deny your opponent for forging keys. Lost and stolen aember is " +
+                                "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
+                                "avoided."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Expected Aember (E)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/dust-pixie.png"}
+                            texts={[
+                                "How much aember you can expect a card to generate. It does not account for creatures reaping unless they have a special " +
+                                "ability like Dew Faerie's \"Reap: Gain 1<A>\".",
+                                "Some cards that are difficult to play have their base aember reduced, and some cards " +
+                                "that immediately allow the use of creatures have aember added."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Artifact Control (R)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/gorm-of-omm.png"}
+                            texts={[
+                                "Artifact control is increased by cards that destroy enemy artifacts, or deny your opponent the use of them.",
+                                "Destroying an artifact is worth 1.5 points. Using an enemy artifact (destroying single use artifacts) is 1 point. And delaying " +
+                                "artifacts is 0.5 points."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Creature Control (C)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/gateway-to-dis.png"}
+                            texts={[
+                                "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
+                                "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
+                                "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Efficiency (F)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/library-access.png"}
+                            texts={[
+                                "Efficiency is increased by effects that allow you to play extra cards. " +
+                                "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
+                                "1 point is approximately equal to drawing two cards or archiving a random card."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Disruption (D)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/control-the-weak.png"}
+                            texts={[
+                                "Disruption is increased by effects that reduce the number of cards your opponent can play. " +
+                                "1 point is approximately equal to preventing your opponent from drawing 2 cards."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Effective Power (P)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/mugwump.png"}
+                            texts={[
+                                "Effective power represents the real usable power of creatures in a deck. Creatures like Grommid, which " +
+                                "often cannot be played or used, have their total power reduced. Meanwhile, other cards contribute extra " +
+                                "power, like Blood of Titans or Zyzzix the Many.",
+                                "Effective power is also increased by Armor at a 1:1 ratio, and other abilities that affect fighting, like elusive, " +
+                                "skirmish, hazardous, and assault.",
+                                "When included in total AERC score, Effective Power is divided by 10."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Steal Prevention (S)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/pos-pixies.png"}
+                            texts={[
+                                "Steal Prevention includes any cards with effects that prevent stealing. This includes obvious cards, like Po's Pixies, " +
+                                "as well as Key Cheats (can't steal what you don't have!) and Control the Weak (can't steal with cards you can't play!)"
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"House Cheating (H)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ulyq-megamouth.png"}
+                            texts={[
+                                "House cheating represents how well a deck can use cards outside of their normal house. For example, Ulyq Megamouth " +
+                                "allows you to use a friendly non-mars creature, and increases H. Cards that let you play cards out of house, like Phase " +
+                                "Shift, effect efficiency."
+                            ]}
+                        />,
+                        <AercTraitDescription
+                            title={"Other (0)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/shadow-of-dis.png"}
+                            texts={[
+                                "Other is a catch all for qualities of cards that don't fit into the other AERC traits. It includes 0.3 value per creature for a " +
+                                "creature's inherent ability to reap, and unusual effects such as Shadow of Dis."
+                            ]}
+                        />,
+                        <Typography variant={"h5"}>AERC Score (AERC)</Typography>,
+                        <Divider/>,
+                        "To calculate the AERC score divide Effective Power by 10, then add that with the other AERC scores. " +
                         "The AERC score represents how good a deck is at the core mechanics of " +
                         "the game: generating and controlling aember, controlling artifacts, controlling creatures, " +
                         "drawing cards, and building a board of creatures. It doesn't directly represent how good a deck is.",
@@ -229,6 +291,35 @@ export class SasAndAerc extends React.Component {
         )
     }
 }
+
+export const AercTraitDescription = (props: { title: string, texts: string[], img: string }) => (
+    <div>
+        <div style={{display: "flex"}}>
+            <div>
+                <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>{props.title}</Typography>
+                <Divider style={{marginBottom: spacing(1)}}/>
+                {props.texts.map((text, idx) => (
+                    <div style={{marginBottom: spacing(1)}} key={idx}>
+                        <Typography>
+                            {text}
+                        </Typography>
+                    </div>
+                ))}
+            </div>
+            <div>
+                <div style={{marginLeft: spacing(2), padding: spacing(2), backgroundColor: "#DDDDDD"}}>
+                    <img
+                        style={{width: 200}}
+                        src={props.img}
+                        alt={"Card For Text"}
+                    />
+                </div>
+            </div>
+        </div>
+        <div style={{paddingBottom: spacing(1)}}/>
+    </div>
+)
+
 
 export const CardExample = (props: { text: string, img1: string, img2: string }) => (
     <div style={{padding: spacing(2), backgroundColor: "#DDDDDD"}}>

@@ -235,7 +235,7 @@
     - expansion: 435
       cardNumber: 39
   rating: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [goodReap]
   synergies:
     - trait: warGrumpus
@@ -311,7 +311,7 @@
     - expansion: 435
       cardNumber: 55
   rating: 3.5
-  deckManipulation: 1.5
+  efficiency: 1.5
   synergies:
     - trait: returnsCardsFromDiscard
 
@@ -330,7 +330,7 @@
       cardNumber: 59
   rating: 3.5
   expectedAmber: 1
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [returnsCreaturesFromDiscard]
   synergies:
     - trait: shufflesDiscard
@@ -366,14 +366,14 @@
       cardNumber: 63
   rating: 2
   expectedAmber: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
 
 - name: Streke
   cardNumbers:
     - expansion: 435
       cardNumber: 65
   rating: 2.5
-  deckManipulation: 1
+  efficiency: 1
   traits: [elusive, reducesEnemyDraw]
   synergies:
     - trait: highCreatureCount
@@ -386,7 +386,7 @@
     - expansion: 435
       cardNumber: 66
   rating: 3
-  deckManipulation: 1
+  efficiency: 1
   traits: [elusive, controlsHouseChoice]
   synergies:
     - trait: controlsHouseChoice
@@ -419,7 +419,7 @@
     - expansion: 435
       cardNumber: 68
   rating: 2.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [goodPlay, discardsFriendlyCards]
 
 - name: Angwish
@@ -470,7 +470,7 @@
     - expansion: 435
       cardNumber: 77
   rating: 2.5
-  deckManipulation: 1
+  efficiency: 1
   traits: [goodPlay, discardsFriendlyCards]
 
 - name: Pain Reaction
@@ -519,7 +519,7 @@
     - expansion: 435
       cardNumber: 88
   rating: 2.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [goodPlay, discardsFriendlyCards]
 
 - name: Neffru
@@ -581,14 +581,14 @@
       cardNumber: 103
   rating: 3
   expectedAmber: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
 
 - name: Shard of Pain
   cardNumbers:
     - expansion: 435
       cardNumber: 104
   rating: 0.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [shard, usableArtifact]
   synergies:
     - trait: shard
@@ -607,7 +607,7 @@
     - expansion: 435
       cardNumber: 108
   rating: 3.5
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [elusive, protectsCreatures, archives, goodDestroyed]
 
 - name: Binate Rupture
@@ -635,7 +635,7 @@
     - expansion: 435
       cardNumber: 111
   rating: 3.5
-  deckManipulation: 2
+  efficiency: 2
   traits: [drawsCards, goodPlay]
 
 - name: Helper Bot
@@ -643,7 +643,7 @@
     - expansion: 435
       cardNumber: 112
   rating: 3.5
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [playsCards, goodPlay]
 
 - name: Hexpion
@@ -651,7 +651,7 @@
     - expansion: 435
       cardNumber: 113
   rating: 3
-  deckManipulation: 1
+  efficiency: 1
   traits: [goodDestroyed, archives, archivesRandom]
 
 - name: Pip Pip
@@ -669,7 +669,7 @@
       cardNumber: 117
   rating: 1.5
   expectedAmber: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards, dealsDamage]
 
 - name: Professor Sutterkin
@@ -677,7 +677,7 @@
     - expansion: 435
       cardNumber: 118
   rating: 2.5
-  deckManipulation: 1
+  efficiency: 1
   traits: [drawsCards, goodReap]
   synergies:
     - trait: highCreatureCount
@@ -718,7 +718,7 @@
     - expansion: 435
       cardNumber: 123
   rating: 2.5
-  deckManipulation: 1
+  efficiency: 1
   traits: [archives, archivesRandom, goodPlay]
 
 - name: Backup Copy
@@ -727,14 +727,14 @@
       cardNumber: 124
   rating: 1.5
   expectedAmber: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
 
 - name: Director of Z.Y.X.
   cardNumbers:
     - expansion: 435
       cardNumber: 127
   rating: 3
-  deckManipulation: 1
+  efficiency: 1
   traits: [elusive, archives, archivesRandom]
 
 - name: Eureka!
@@ -750,7 +750,7 @@
     - expansion: 435
       cardNumber: 129
   rating: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards, elusive]
   synergies:
     - trait: deploy
@@ -761,7 +761,7 @@
     - expansion: 435
       cardNumber: 131
   rating: 3
-  deckManipulation: 1
+  efficiency: 1
   traits: [elusive, goodPlay, archives]
 
 - name: Memory Chip
@@ -769,7 +769,7 @@
     - expansion: 435
       cardNumber: 132
   rating: 2.0
-  deckManipulation: 1
+  efficiency: 1
   traits: [archives]
 
 - name: Quantum Fingertrap
@@ -818,7 +818,7 @@
       cardNumber: 148
   rating: 1
   expectedAmber: 1
-  deckManipulation: 1
+  efficiency: 1
   traits: [archives]
   synergies:
     - trait: lowCreatureCount
@@ -829,7 +829,7 @@
     - expansion: 435
       cardNumber: 152
   rating: 2
-  deckManipulation: 1
+  efficiency: 1
   traits: [goodReap]
   synergies:
     - trait: archivesRandom
@@ -853,7 +853,7 @@
     - expansion: 435
       cardNumber: 155
   rating: 1
-  deckManipulation: 1
+  efficiency: 1
   traits: [shard, usableArtifact]
   synergies:
     - trait: shard
@@ -906,7 +906,7 @@
     - expansion: 435
       cardNumber: 163
   rating: 2
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [goodReap, archives]
 
 - name: Ixxyxli Fixfinger
@@ -1081,7 +1081,7 @@
   rating: 1
   expectedAmber: 1
   creatureControl: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [dealsDamage]
   synergies:
     - trait: archivesRandom
@@ -1107,7 +1107,7 @@
       cardNumber: 196
   rating: 3
   creatureControl: 1.5
-  deckManipulation: -0.5
+  efficiency: -0.5
   traits: [chains]
   synergies:
     - trait: lowCreatureCount
@@ -1128,7 +1128,7 @@
     - expansion: 435
       cardNumber: 202
   rating: 4
-  deckManipulation: 4
+  efficiency: 4
   traits: [drawsCards]
   synergies:
     - trait: highExpectedAmber
@@ -1156,7 +1156,7 @@
       cardNumber: 210
   rating: 3
   creatureControl: 0.5
-  deckManipulation: 1
+  efficiency: 1
   traits: [archives, goodPlay]
   synergies:
     - trait: archivesRandom
@@ -1308,7 +1308,7 @@
     - expansion: 435
       cardNumber: 229
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive]
 
 - name: Dis Ambassador
@@ -1316,7 +1316,7 @@
     - expansion: 435
       cardNumber: 230
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive]
 
 - name: Equalize
@@ -1351,7 +1351,7 @@
     - expansion: 435
       cardNumber: 237
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive]
 
 - name: Mars Ambassador
@@ -1359,7 +1359,7 @@
     - expansion: 435
       cardNumber: 238
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive]
 
 - name: Prince Derric, Unifier
@@ -1385,7 +1385,7 @@
     - expansion: 435
       cardNumber: 243
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive]
 
 - name: Untamed Ambassador
@@ -1393,7 +1393,7 @@
     - expansion: 435
       cardNumber: 247
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive]
 
 - name: Anahita the Trader
@@ -1480,7 +1480,7 @@
       cardNumber: 268
   rating: 2.5
   expectedAmber: 1
-  deckManipulation: 1
+  efficiency: 1
   traits: [drawsCards, archives]
 
 - name: Furtive Investors
@@ -1553,7 +1553,7 @@
   rating: 3
   expectedAmber: 1
   creatureControl: 0.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [alpha, dealsDamage, archives]
 
 
@@ -1638,7 +1638,7 @@
     - expansion: 435
       cardNumber: 290
   rating: 2.5
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [goodPlay]
 
 - name: Nightforge
@@ -1661,7 +1661,7 @@
       cardNumber: 293
   rating: 2.5
   expectedAmber: 1
-  deckManipulation: 1
+  efficiency: 1
   synergies:
     - trait: highExpectedAmber
       type: house
@@ -1800,7 +1800,7 @@
     - expansion: 435
       cardNumber: 323
   rating: 3.5
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [alpha, returnsCardsFromDiscard, returnsCreaturesFromDiscard, goodPlay]
   synergies:
     - trait: shufflesDiscard
@@ -1856,7 +1856,7 @@
       cardNumber: 332
   rating: 1
   expectedAmber: 1
-  deckManipulation: 0.5
+  efficiency: 0.5
   synergies:
     - trait: goodPlay
       rating: 3
@@ -1867,7 +1867,7 @@
     - expansion: 435
       cardNumber: 333
   rating: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   effectivePower: 5
   traits: [goodFight]
 
@@ -1971,7 +1971,7 @@
     - expansion: 435
       cardNumber: 354
   rating: 2.5
-  deckManipulation: 1
+  efficiency: 1
   expectedAmber: 1
   traits: [omega, returnsCreaturesFromDiscard, returnsCardsFromDiscard]
   synergies:
@@ -2002,7 +2002,7 @@
     - expansion: 435
       cardNumber: 363
   rating: 4
-  deckManipulation: 3
+  efficiency: 3
   traits: [discardsEnemyCards, discardsFriendlyCards, drawsCards]
 
 - name: Quicksand
@@ -2025,5 +2025,5 @@
     - expansion: 435
       cardNumber: 366
   rating: 0.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [shard, usableArtifact ]

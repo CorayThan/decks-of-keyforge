@@ -17,7 +17,7 @@
   rating: 2
   expectedAmber: 1
   artifactControl: 0.5
-  deckManipulation: 0.5
+  disruption: 0.5
   traits: [returnsFriendlyArtifactsToHand, returnsEnemyArtifactsToHand]
   synergies:
     - trait: lowArtifactCount
@@ -41,7 +41,7 @@
       cardNumber: 4
   rating: 2
   expectedAmber: 1.0
-  creatureControl: 1.5
+  houseCheating: 1
   traits: [causesFighting]
   synergies:
     - trait: highTotalCreaturePower
@@ -88,8 +88,8 @@
     - expansion: 435
       cardNumber: 4
   rating: 1
-  creatureControl: 2.0
-  deckManipulation: -1.0
+  creatureControl: 2.5
+  efficiency: -1.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
     - trait: power5OrHigherCreatures
@@ -103,7 +103,7 @@
     - expansion: 341
       cardNumber: 8
   rating: 0
-  creatureControl: 1.5
+  houseCheating  : 1
   traits: [causesFighting]
   synergies:
     - trait: highTotalCreaturePower
@@ -208,7 +208,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: []
   synergies:
     - trait: returnsCreaturesFromDiscard
@@ -782,7 +782,7 @@
   amberControl: 0.0
   creatureControl: 1
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [returnsCreaturesFromDiscard, chains]
   synergies:
     - trait: highCreatureCount
@@ -807,7 +807,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [controlsHouseChoice]
   synergies:
     - trait: revealsHand
@@ -849,7 +849,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -862,7 +862,7 @@
   amberControl: 0.0
   creatureControl: 3.0
   artifactControl: 0.0
-  deckManipulation: -1.0
+  efficiency: -1.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
     - trait: highTotalCreaturePower
@@ -883,7 +883,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [dealsDamage]
   synergies: []
 
@@ -960,7 +960,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [returnsEnemyCreaturesToHand, returnsFriendlyCreaturesToHand]
   synergies:
     - trait: goodPlay
@@ -994,7 +994,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies: []
 
@@ -1137,7 +1137,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [archives, usableArtifact]
   synergies: []
 
@@ -1152,7 +1152,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [usableArtifact]
   synergies:
     - trait: returnsEnemyCreaturesToHand
@@ -1179,7 +1179,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [usableArtifact]
   synergies: []
 
@@ -1275,7 +1275,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -1306,7 +1306,7 @@
   amberControl: 0.0
   creatureControl: 1
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [controlsCreatures, goodFight]
   synergies:
     - trait: usesCreaturesOutOfHouse
@@ -1384,7 +1384,7 @@
   expectedAmber: 1
   amberControl: 0.0
   artifactControl: 0.0
-  deckManipulation: -1.0
+  efficiency: -1.0
   effectivePower: 4
   traits: [goodPlay]
   synergies:
@@ -1405,7 +1405,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [controlsHouseChoice]
   synergies:
     - trait: controlsHouseChoice
@@ -1460,7 +1460,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [goodReap, returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand, returnsEnemyArtifactsToHand]
   synergies:
     - trait: protectsCreatures
@@ -1494,7 +1494,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [reducesEnemyDraw]
   synergies:
     - trait: protectsCreatures
@@ -1544,7 +1544,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [discardsEnemyCards, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -1596,7 +1596,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [controlsCreatures]
   synergies:
     - trait: causesFighting
@@ -1655,7 +1655,7 @@
   amberControl: 2
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: -0.5
+  efficiency: -0.5
   traits: [chains]
   synergies:
     - trait: increasesKeyCost
@@ -1689,7 +1689,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 2.0
+  efficiency: 2.0
   traits: [drawsCards, shufflesDiscard]
   synergies: []
 
@@ -1721,7 +1721,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [archives]
   synergies:
     - trait: archives
@@ -1738,7 +1738,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [archives]
   synergies: []
 
@@ -1751,7 +1751,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 2.0
+  efficiency: 2.0
   traits: [drawsCards]
   synergies:
     - trait: archives
@@ -1770,7 +1770,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [stealsAmber]
   synergies:
     - trait: increasesKeyCost
@@ -1784,7 +1784,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [playsCards]
 
 - name: Positron Bolt
@@ -1808,7 +1808,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [archives, archivesRandom]
   synergies: []
 
@@ -1837,7 +1837,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies:
     - trait: playsCards
@@ -1852,7 +1852,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: []
   synergies: []
 
@@ -1867,7 +1867,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 2.0
+  efficiency: 2.0
   traits: [archives]
   synergies: []
 
@@ -1894,7 +1894,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [playsCards]
   synergies:
     - trait: chains
@@ -1926,7 +1926,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [playsCards, usableArtifact]
   synergies:
     - trait: revealsTopDeck
@@ -1962,7 +1962,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards, usableArtifact]
   synergies:
     - trait: revealsTopDeck
@@ -1976,7 +1976,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [archives, usableArtifact]
   synergies: []
 
@@ -2015,7 +2015,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards, usableArtifact]
   synergies: []
 
@@ -2042,7 +2042,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [drawsCards, increasesHandSize]
   synergies: []
 
@@ -2074,7 +2074,7 @@
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards, goodFight]
   synergies:
     - trait: increasesCreaturePower
@@ -2089,7 +2089,7 @@
   amberControl: 0.5
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: -0.5
+  efficiency: -0.5
   traits: [revealsTopDeck, capturesAmber]
   synergies: []
 
@@ -2101,7 +2101,7 @@
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards]
 
 - name: Dr. Escotera
@@ -2128,7 +2128,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies: []
 
@@ -2141,7 +2141,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [archives, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -2162,7 +2162,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -2178,7 +2178,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [skirmish, drawsCards, goodFight]
   synergies:
     - trait: causesFighting
@@ -2195,7 +2195,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [drawsCards, increasesHandSize]
   synergies:
     - trait: protectsCreatures
@@ -2223,7 +2223,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [archives, goodAction]
   synergies:
     - trait: protectsCreatures
@@ -2285,7 +2285,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [archives, goodDestroyed, archives]
   synergies:
     - trait: archives
@@ -2316,7 +2316,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [drawsCards, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -2344,7 +2344,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [elusive, archives, goodReap]
   synergies:
     - trait: revealsTopDeck
@@ -2445,7 +2445,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [drawsCards]
   synergies:
     - trait: increasesHandSize
@@ -2463,7 +2463,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies:
     - trait: revealsHand
@@ -2531,7 +2531,7 @@
   amberControl: 0.0
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [forgesKeys]
   synergies:
     - trait: highCreatureCount
@@ -2574,7 +2574,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -2659,7 +2659,7 @@
   amberControl: 0.0
   creatureControl: 1.0
   artifactControl: 0.0
-  deckManipulation: -0.5
+  efficiency: -0.5
   traits: [chains, stuns]
   synergies:
     - trait: highCreatureCount
@@ -2763,7 +2763,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: -1.0
+  efficiency: -1.0
   traits: [returnsFriendlyCreaturesToHand]
   synergies:
     - trait: capturesAmber
@@ -2858,7 +2858,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [usableArtifact]
   synergies: []
 
@@ -2873,7 +2873,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [usableArtifact, drawsCards]
 
 - name: Incubation Chamber
@@ -2887,7 +2887,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [usableArtifact, archives]
   synergies:
     - trait: lowCreatureCount
@@ -3023,7 +3023,7 @@
   amberControl: 0.5
   creatureControl: 0
   artifactControl: 0.0
-  deckManipulation: -1.0
+  efficiency: -1.0
   effectivePower: 3
   traits: []
   synergies:
@@ -3248,7 +3248,7 @@
   expectedAmber: 0.0
   amberControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   effectivePower: 4
   traits: [goodReap, archives]
   synergies:
@@ -3269,7 +3269,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [archives]
   synergies:
     - trait: lowCreatureCount
@@ -3753,7 +3753,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [usableArtifact, returnsFriendlyArtifactsToHand]
   synergies: []
 
@@ -3823,7 +3823,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [drawsCards, heals, goodDestroyed]
   synergies: []
 
@@ -3880,7 +3880,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -4262,7 +4262,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [archives]
   synergies: []
 
@@ -4275,7 +4275,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [revealsHand]
   synergies: []
 
@@ -4304,7 +4304,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -4536,7 +4536,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [usableArtifact]
   synergies:
     - trait: forgesKeys
@@ -4625,7 +4625,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [usableArtifact, discardsEnemyCards]
   synergies: []
 
@@ -4724,7 +4724,7 @@
   amberControl: 1.5
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [goodReap]
   synergies:
     - trait: urchin
@@ -4916,7 +4916,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 1.5
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [goodPlay]
   synergies:
     - trait: destroysEnemyArtifacts
@@ -5100,7 +5100,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.5
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [returnsFriendlyArtifactsToHand, returnsEnemyArtifactsToHand]
   synergies: []
 
@@ -5150,7 +5150,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies:
     - trait: lowCreatureCount
@@ -5170,7 +5170,7 @@
   amberControl: 0.5
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: []
   synergies: []
 
@@ -5185,7 +5185,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -5227,7 +5227,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [returnsCreaturesFromDiscard]
   synergies:
     - trait: lowCreatureCount
@@ -5247,7 +5247,7 @@
   amberControl: 0.0
   creatureControl: 1.5
   artifactControl: 0.0
-  deckManipulation: -0.5
+  efficiency: -0.5
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: damagesMultipleEnemies
@@ -5313,7 +5313,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: []
   synergies:
     - trait: niffle
@@ -5354,7 +5354,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [usableArtifact, shufflesDiscard]
   synergies:
     - trait: ancientBear
@@ -5371,7 +5371,7 @@
   amberControl: 0.5
   creatureControl: 0.5
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: [usableArtifact, returnsCardsFromDiscard]
   synergies:
     - trait: shufflesDiscard
@@ -5419,7 +5419,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 0.5
+  efficiency: 0.5
   traits: [usableArtifact, revealsTopDeck, returnsCreaturesFromDiscard]
   synergies: []
 
@@ -5458,7 +5458,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.5
+  efficiency: 1.5
   traits: []
 
 - name: Briar Grubbling
@@ -5772,7 +5772,7 @@
   amberControl: 0.0
   creatureControl: 0.0
   artifactControl: 0.0
-  deckManipulation: 1.0
+  efficiency: 1.0
   traits: [goodReap, returnsCardsFromDiscard]
   synergies:
     - trait: protectsCreatures
