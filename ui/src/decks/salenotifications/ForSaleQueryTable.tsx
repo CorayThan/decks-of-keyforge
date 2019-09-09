@@ -53,7 +53,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                         {this.props.queries.map((query) => {
                             const {id, ...queryWithoutId} = query
                             return (
-                                <TableRow key={query.id}>
+                                <TableRow key={id}>
                                     <TableCell>
                                         <LinkButton
                                             to={Routes.deckSearchForSaleQuery(queryWithoutId)}

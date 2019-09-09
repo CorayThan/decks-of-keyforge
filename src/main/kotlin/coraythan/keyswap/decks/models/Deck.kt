@@ -47,8 +47,12 @@ data class Deck(
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
-        val deckManipulation: Double? = 0.0,
-        val effectivePower: Int? = 0,
+        val efficiency: Double = 0.0,
+        val effectivePower: Int = 0,
+        val stealPrevention: Double? = 0.0,
+        val disruption: Double? = 0.0,
+        val houseCheating: Double? = 0.0,
+        val other: Double? = 0.0,
         val aercScore: Double = 0.0,
         val previousSasRating: Int? = 0,
         val sasRating: Int = 0,
@@ -135,8 +139,12 @@ data class Deck(
                 amberControl = amberControl,
                 creatureControl = creatureControl,
                 artifactControl = artifactControl,
-                deckManipulation = deckManipulation ?: 0.0,
-                effectivePower = effectivePower ?: 0,
+                efficiency = efficiency,
+                effectivePower = effectivePower,
+                stealPrevention = stealPrevention ?: 0.0,
+                disruption = disruption ?: 0.0,
+                houseCheating = houseCheating ?: 0.0,
+                other = other ?: 0.0,
                 aercScore = aercScore,
                 previousSasRating = previousSasRating ?: sasRating,
                 sasRating = sasRating,
@@ -152,7 +160,21 @@ data class Deck(
                 searchResultCards = searchResultCards ?: listOf(),
                 houses = houses,
 
-                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0
+                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0,
+                amberControlPercentile = stats?.amberControlStats?.percentileForValue?.get(amberControl.toInt())?.toInt(),
+                expectedAmberPercentile = stats?.expectedAmberStats?.percentileForValue?.get(expectedAmber.toInt())?.toInt(),
+                stealPreventionPercentile = stats?.stealPreventionStats?.percentileForValue?.get(stealPrevention?.toInt())?.toInt(),
+                artifactControlPercentile = stats?.artifactControlStats?.percentileForValue?.get(artifactControl.toInt())?.toInt(),
+                creatureControlPercentile = stats?.creatureControlStats?.percentileForValue?.get(creatureControl.toInt())?.toInt(),
+                effectivePowerPercentile = stats?.effectivePowerStats?.percentileForValue?.get(effectivePower.toInt())?.toInt(),
+                efficiencyPercentile = stats?.efficiencyStats?.percentileForValue?.get(efficiency.toInt())?.toInt(),
+                disruptionPercentile = stats?.disruptionStats?.percentileForValue?.get(disruption?.toInt())?.toInt(),
+                houseCheatingPercentile = stats?.houseCheatingStats?.percentileForValue?.get(houseCheating?.toInt())?.toInt(),
+
+                creaturesPercentile = stats?.creatureCountStats?.percentileForValue?.get(creatureCount)?.toInt(),
+                actionsPercentile = stats?.actionCountStats?.percentileForValue?.get(actionCount)?.toInt(),
+                artifactsPercentile = stats?.artifactCountStats?.percentileForValue?.get(artifactCount)?.toInt(),
+                upgradesPercentile = stats?.upgradeCountStats?.percentileForValue?.get(upgradeCount)?.toInt()
         )
     }
 
@@ -203,7 +225,6 @@ data class Deck(
         )
     }
 
-    fun printWinsLosses() = "Wins: $wins Losses: $losses power: $powerLevel chains: $chains"
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

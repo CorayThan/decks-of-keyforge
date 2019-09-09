@@ -23,7 +23,7 @@ interface MultiSelectProps {
 @observer
 export class MultiSelect extends React.Component<MultiSelectProps> {
 
-    handleChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         log.debug(`target value: ${event.target.value}`)
         this.props.selected.selectedValues.replace(event.target.value as string[])
     }
@@ -45,8 +45,10 @@ export class MultiSelect extends React.Component<MultiSelectProps> {
                         value={selectedRarities}
                         onChange={this.handleChange}
                         input={<Input id={id}/>}
-                        // tslint:disable-next-line
-                        renderValue={(selectedValue: any) => selectedValue.join(", ")}
+                        renderValue={
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (selectedValue: any) => selectedValue.join(", ")
+                        }
                         MenuProps={{
                             PaperProps: {
                                 style: {

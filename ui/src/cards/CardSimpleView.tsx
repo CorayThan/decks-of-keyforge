@@ -5,6 +5,7 @@ import { round } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { expansionInfoMap } from "../expansions/Expansions"
@@ -12,12 +13,11 @@ import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { AercScoreView } from "../stats/AercScoreView"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { cardStore } from "./CardStore"
-import { findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
+import { findCardImageUrl, KCard } from "./KCard"
 import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 export interface HasFrontImage {
@@ -69,8 +69,6 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
         width: 624,
     }
 
-    const cardAerc = hasAercFromCard(card)
-
     return (
         <GraySidebar {...sidebarProps} >
             <div>
@@ -112,7 +110,8 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                     {amber > 0 ? <Typography variant={"subtitle1"}>{amber} aember</Typography> : null}
                 </div>
                 <Typography>{cardText}</Typography>
-                <AercScoreView hasAerc={cardAerc} style={{marginTop: spacing(1)}} dark={true} narrow={true}/>
+                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                <AercForCard card={card}/>
                 {card.winRate != null ? (
                     <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
                         <Tooltip
@@ -197,7 +196,6 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
 
         let dialog = null
         if (fullCard && fullCard.id != null) {
-            const cardAerc = hasAercFromCard(fullCard as KCard)
             dialog = (
                 <Dialog
                     open={this.open}
@@ -209,7 +207,9 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     </DialogTitle>
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
-                        <AercScoreView hasAerc={cardAerc} style={{marginTop: spacing(2)}} dark={true} narrow={true}/>
+                        <div style={{marginTop: spacing(2)}}>
+                            <AercForCard card={fullCard as KCard}/>
+                        </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Close</KeyButton>

@@ -1,10 +1,12 @@
+import { HasAerc } from "../aerc/HasAerc"
+
 export interface DeckSynergyInfo {
     synergyCombos: SynergyCombo[]
     synergyRating: number
     antisynergyRating: number
 }
 
-export interface SynergyCombo {
+export interface SynergyCombo extends HasAerc {
     cardName: string
     synergies: string[]
     antisynergies: string[]
@@ -13,12 +15,5 @@ export interface SynergyCombo {
     netSynergy: number
     cardRating: number
 
-    expectedAmber: number
-    amberControl: number
-    creatureControl: number
-    artifactControl: number
-    deckManipulation: number
-    effectivePower: number
-    
     copies: number
 }

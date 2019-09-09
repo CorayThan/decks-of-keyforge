@@ -20,7 +20,7 @@ export class RandomDeckMenuItem extends React.Component<MenuItemProps> {
                     deckStore.deck = undefined
                     deckStore.findRandomDeckId()
                     if (this.props.onClick) {
-                        // tslint:disable-next-line:no-any
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         this.props.onClick({} as any)
                     }
                 }}

@@ -20,7 +20,6 @@ export class KeySelect extends React.Component<KeySelectProps> {
 
     render() {
         const {name, options, selected} = this.props
-        const id = `key-select-${name}`
         return (
             <TextField
                 select={true}

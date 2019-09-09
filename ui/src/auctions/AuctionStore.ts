@@ -18,7 +18,7 @@ export class AuctionStore {
 
     createAuction = (deckName: string, listingInfo: ListingInfo) => {
         axios.post(`${AuctionStore.SECURE_CONTEXT}/list`, listingInfo)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setSuccessMessage(`Created an auction for ${deckName}.`)
                 userStore.loadLoggedInUser()
                 userDeckStore.findAllForUser()

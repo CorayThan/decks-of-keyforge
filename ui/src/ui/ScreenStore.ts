@@ -35,6 +35,7 @@ export class ScreenStore {
         window.addEventListener("resize", this.onResize)
     }
 
+    smallDeckView = () => screenStore.screenWidth < 768
     screenSizeXs = () => this.screenSize === ScreenSize.xs
     screenSizeSm = () => this.screenSize <= ScreenSize.sm
     screenSizeMd = () => this.screenSize <= ScreenSize.md

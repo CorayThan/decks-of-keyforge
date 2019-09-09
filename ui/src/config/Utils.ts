@@ -6,19 +6,19 @@ import * as loglevel from "loglevel"
 export const log = loglevel
 log.setDefaultLevel("debug")
 
-// tslint:disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const prettyJson = (write: any): string => JSON.stringify(write, null, 2)
 
 export class Utils {
     static readonly localDateFormat = "yyyy-MM-dd"
 
-    // tslint:disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]
     }
 
     static validateEmail = (email: string) => {
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(String(email).toLowerCase())
     }
@@ -34,7 +34,7 @@ export class Utils {
 
     static isDev = () => process.env.NODE_ENV === "development"
 
-    // tslint:disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static jsonCopy = (toCopy: any) => {
         return JSON.parse(JSON.stringify(toCopy))
     }

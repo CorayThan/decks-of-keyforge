@@ -1,4 +1,4 @@
-/* tslint:disable:max-line-length */
+/* eslint-disable */
 import { Article, ArticleEntry, ArticleSection, ArticleType, EntryType } from "./Article"
 import { firesa } from "./Authors"
 

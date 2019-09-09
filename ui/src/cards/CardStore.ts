@@ -122,7 +122,7 @@ export class CardStore {
                         card.extraCardInfo.expectedAmber +
                         card.extraCardInfo.artifactControl +
                         card.extraCardInfo.creatureControl +
-                        card.extraCardInfo.deckManipulation +
+                        card.extraCardInfo.efficiency +
                         card.effectivePower / 10
                 })
                 log.debug(`All wins: ${allWins}`)

@@ -144,10 +144,19 @@ interface MenuPopperProps {
     links: LinkInfo[]
 }
 
+// eslint-disable-next-line
 const MenuPopper = observer(React.forwardRef((props: MenuPopperProps, ref: React.Ref<HTMLDivElement>) => {
     const {store, links} = props
     return (
-        <Popper open={store.open} anchorEl={(ref as any).current} transition disablePortal>
+        <Popper
+            open={store.open}
+            anchorEl={
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (ref as any).current
+            }
+            transition
+            disablePortal
+        >
             {({TransitionProps, placement}) => (
                 <Grow
                     {...TransitionProps}

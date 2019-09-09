@@ -2,17 +2,17 @@ import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import React from "react"
+import { AercView } from "../../aerc/AercViews"
 import { spacing, theme } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { LinkMenuItem } from "../../mui-restyled/LinkMenuItem"
-import { AercScoreView } from "../../stats/AercScoreView"
 import { screenStore } from "../../ui/ScreenStore"
 import { Deck } from "../Deck"
 import { DeckScorePill } from "../DeckScoreView"
 
 export const FancyDeckMenuItem = observer((props: { deck: Deck, onClick: () => void }) => {
     const {deck, onClick} = props
-    if (screenStore.screenSizeXs()) {
+    if (screenStore.smallDeckView()) {
         return (
             <LinkMenuItem
                 key={deck.id}
@@ -48,14 +48,13 @@ export const FancyDeckMenuItem = observer((props: { deck: Deck, onClick: () => v
                     <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>
                         {deck.name}
                     </Typography>
-                    <div>
-                        <AercScoreView hasAerc={deck} dark={true}/>
-                    </div>
+                    <AercView hasAerc={deck} excludeMisc={true} horizontal={true}/>
                 </div>
-                <DeckScorePill
-                    small={true}
-                    deck={deck}
-                />
+                <div style={{display: "flex", alignItems: "flex-end"}}>
+                    <DeckScorePill
+                        deck={deck}
+                    />
+                </div>
             </div>
         </LinkMenuItem>
     )

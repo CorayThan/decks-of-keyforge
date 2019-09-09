@@ -1,4 +1,4 @@
-/* tslint:disable:max-line-length */
+/* eslint-disable */
 import { Article, ArticleType, EntryType } from "./Article"
 import { dunkoro } from "./Authors"
 
@@ -296,7 +296,7 @@ export const preludeToAscension: Article = {
                 }
             ],
             cards: ["https://2.bp.blogspot.com/-3rlpJ_essKA/XHk8tzPjQiI/AAAAAAAAHqQ/2tsM1p76DJMuFc5nNTO5xLQzNwPWL5EBQCLcBGAs/s200/51793330_534636673724836_6227484429221101568_n.png"]
-        },        
+        },
         {
             sectionTitle: "DIS",
             entries: []

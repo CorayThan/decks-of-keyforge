@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { computed, observable } from "mobx"
 import { latestVersion } from "../about/ReleaseNotes"
+import { etagResponseErrorInterceptor } from "../config/EtagCache"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
@@ -49,8 +50,12 @@ export class UserStore {
                 this.checkLastSeenVersion()
             })
             .catch((error: AxiosError) => {
-                // 401 or 403 means there is no logged in user
-                if (
+                let logout = true
+                if (error.response && error.response.status === 304) {
+                    logout = false
+                    etagResponseErrorInterceptor(error)
+                } else if (
+                    // 401 or 403 means there is no logged in user
                     (error.response && (error.response.status === 401 || error.response.status === 403)) ||
                     (error.message && error.message.includes("JWT signature does not match "))
                 ) {
@@ -60,7 +65,9 @@ export class UserStore {
                     log.error(`Error loading logged in user ${error}`)
                     messageStore.setRequestErrorMessage()
                 }
-                this.logout()
+                if (logout) {
+                    this.logout()
+                }
                 this.loginInProgress = false
             })
     }

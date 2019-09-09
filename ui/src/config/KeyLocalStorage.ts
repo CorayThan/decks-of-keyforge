@@ -1,4 +1,5 @@
 import { observable } from "mobx"
+import { screenStore } from "../ui/ScreenStore"
 import { log } from "./Utils"
 
 enum Keys {
@@ -8,14 +9,14 @@ enum Keys {
     SHOW_ALL_CARDS = "SHOW_ALL_CARDS",
     DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
-    DISPLAY_OLD_DECK_VIEW = "DISPLAY_OLD_DECK_VIEW",
     SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
+    DECK_LIST_VIEW_TYPE = "DECK_LIST_VIEW_TYPE",
 }
 
 class KeyLocalStorage {
 
     @observable
-    showTableView: boolean = false
+    deckListViewType: "graphs" | "grid" | "table" = screenStore.screenSizeMd() ? "grid" : "graphs"
 
     @observable
     showFullCardView: boolean = false
@@ -30,19 +31,15 @@ class KeyLocalStorage {
     displayExtraDeckStats = false
 
     @observable
-    displayOldDeckView = false
-
-    @observable
     smallTableView = false
 
     private localStorage = window.localStorage
 
     constructor() {
-        this.loadShowDeckTableView()
+        this.loadDeckListViewType()
         this.loadShowFullCardView()
         this.loadDeckPageSize()
         this.loadDisplayExtraDeckStats()
-        this.loadDisplayOldDeckView()
         this.loadSmallTableView()
         this.loadShowAllCards()
     }
@@ -61,9 +58,9 @@ class KeyLocalStorage {
         return key
     }
 
-    toggleDeckTableView = () => {
-        this.showTableView = !this.showTableView
-        this.localStorage.setItem(Keys.DECK_TABLE_VIEW, String(this.showTableView))
+    setDeckListViewType = (type: "graphs" | "grid" | "table") => {
+        this.deckListViewType = type
+        this.localStorage.setItem(Keys.DECK_LIST_VIEW_TYPE, type)
     }
 
     toggleFullCardView = () => {
@@ -79,11 +76,6 @@ class KeyLocalStorage {
     toggleDisplayExtraDeckStats = () => {
         this.displayExtraDeckStats = !this.displayExtraDeckStats
         this.localStorage.setItem(Keys.DISPLAY_EXTRA_DECK_STATS, this.displayExtraDeckStats.toString())
-    }
-
-    toggleDisplayOldDeckView = () => {
-        this.displayOldDeckView = !this.displayOldDeckView
-        this.localStorage.setItem(Keys.DISPLAY_OLD_DECK_VIEW, this.displayOldDeckView.toString())
     }
 
     toggleSmallTableView = () => {
@@ -104,6 +96,13 @@ class KeyLocalStorage {
         this.localStorage.clear()
     }
 
+    private loadDeckListViewType = () => {
+        const deckListViewType = this.localStorage.getItem(Keys.DECK_LIST_VIEW_TYPE)
+        if (deckListViewType != null && deckListViewType.trim().length > 0) {
+            this.deckListViewType = deckListViewType as "graphs" | "grid" | "table"
+        }
+    }
+
     private loadDeckPageSize = () => {
         const deckPageSizeString = this.localStorage.getItem(Keys.DECK_PAGE_SIZE)
         const deckPageSize = Number(deckPageSizeString)
@@ -116,20 +115,12 @@ class KeyLocalStorage {
         this.smallTableView = this.localStorage.getItem(Keys.SMALL_TABLE_VIEW) === "true"
     }
 
-    private loadDisplayOldDeckView = () => {
-        this.displayOldDeckView = this.localStorage.getItem(Keys.DISPLAY_OLD_DECK_VIEW) === "true"
-    }
-
     private loadShowFullCardView = () => {
         this.showFullCardView = this.localStorage.getItem(Keys.FULL_CARD_VIEW) === "true"
     }
 
     private loadShowAllCards = () => {
         this.showAllCards = this.localStorage.getItem(Keys.SHOW_ALL_CARDS) === "true"
-    }
-
-    private loadShowDeckTableView = () => {
-        this.showTableView = this.localStorage.getItem(Keys.DECK_TABLE_VIEW) === "true"
     }
 
     private loadDisplayExtraDeckStats = () => {

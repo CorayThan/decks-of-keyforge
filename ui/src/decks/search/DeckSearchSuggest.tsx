@@ -121,12 +121,16 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
     )
 }))
 
+// eslint-disable-next-line
 const SuggestPopper = observer(React.forwardRef((props: { menuOpen: boolean, placement: PopperPlacementType, search: string }, ref: React.Ref<HTMLDivElement>) => {
     return (
         <ClickAwayListener onClickAway={searchDeckNameStore.reset}>
             <Popper
                 open={props.menuOpen}
-                anchorEl={(ref as any).current}
+                anchorEl={
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (ref as any).current
+                }
                 transition
                 style={{zIndex: screenStore.zindexes.menuPops}}
                 placement={props.placement}
@@ -146,7 +150,7 @@ const SuggestPopper = observer(React.forwardRef((props: { menuOpen: boolean, pla
                                             Decks
                                         </ListSubheader>
                                         {deckStore.deckNameSearchResults.map((deckSearchResult) => (
-                                            <FancyDeckMenuItem deck={deckSearchResult} onClick={searchDeckNameStore.reset}/>
+                                            <FancyDeckMenuItem deck={deckSearchResult} onClick={searchDeckNameStore.reset} key={deckSearchResult.id}/>
                                         ))}
                                         <LinkMenuItem
                                             to={props.search}

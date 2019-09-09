@@ -5,6 +5,7 @@ import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CSVLink } from "react-csv"
+import { AercRadar } from "../aerc/AercRadar"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -13,6 +14,7 @@ import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { Loader } from "../mui-restyled/Loader"
+import { CardTypeRadar } from "../stats/CardTypeRadar"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { UpdatePrice } from "../userdeck/ListingInfo"
@@ -120,7 +122,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <DeckHeader title={"E"} property={"expectedAmber"}/>
                                 <DeckHeader title={"R"} property={"artifactControl"}/>
                                 <DeckHeader title={"C"} property={"creatureControl"}/>
-                                <DeckHeader title={"D"} property={"deckManipulation"}/>
+                                <DeckHeader title={"D"} property={"efficiency"}/>
                                 <DeckHeader title={"P"} property={"effectivePower"}/>
                                 {keyLocalStorage.smallTableView ? null : (
                                     <>
@@ -205,7 +207,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     <TableCell>{deck.expectedAmber}</TableCell>
                                     <TableCell>{deck.artifactControl}</TableCell>
                                     <TableCell>{deck.creatureControl}</TableCell>
-                                    <TableCell>{deck.deckManipulation}</TableCell>
+                                    <TableCell>{deck.efficiency}</TableCell>
                                     <TableCell>{deck.effectivePower}</TableCell>
                                     {keyLocalStorage.smallTableView ? null : (
                                         <>
@@ -403,15 +405,39 @@ export class DeckListView extends React.Component<DeckListViewProps> {
                         )
                     }
 
-                    const deckContainerStyle = screenStore.screenSizeMd() ? undefined : {display: "flex"}
+                    let deckContainerStyle
+                    if (!saleInfo && screenStore.screenWidth > 1472) {
+                        deckContainerStyle = {display: "flex"}
+                    } else if (screenStore.screenWidth > 1888) {
+                        deckContainerStyle = {display: "flex"}
+                    }
 
                     return (
                         <div key={deck.id} style={deckContainerStyle}>
                             <div>
                                 <DeckViewSmall deck={deck}/>
                             </div>
-                            {saleInfo}
+                            {saleInfo && (
+                                <div>
+                                    <div style={{display: screenStore.smallDeckView() ? undefined : "flex", flexWrap: "wrap"}}>
+                                        {saleInfo}
+                                        {keyLocalStorage.deckListViewType === "graphs" ? (
+                                            <div>
+                                                <AercRadar deck={deck}/>
+                                                <CardTypeRadar deck={deck} style={{marginTop: spacing(4)}}/>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+                            )}
+                            {!saleInfo && keyLocalStorage.deckListViewType === "graphs" && (
+                                <div style={{display: screenStore.smallDeckView() ? undefined : "flex", flexWrap: "wrap"}}>
+                                    <AercRadar deck={deck}/>
+                                    <CardTypeRadar deck={deck}/>
+                                </div>
+                            )}
                         </div>
+
                     )
                 })}
             </>

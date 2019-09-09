@@ -6,32 +6,24 @@ import List from "@material-ui/core/List/List"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import Typography from "@material-ui/core/Typography/Typography"
-import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons"
+import { MoreVert } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { AercView } from "../aerc/AercViews"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
-import { CardsWithAerc } from "../cards/CardsWithAerc"
 import { KCard } from "../cards/KCard"
-import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { TextConfig } from "../config/TextConfig"
-import { AmberIcon } from "../generic/icons/AmberIcon"
-import { ArchiveIcon } from "../generic/icons/ArchiveIcon"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
-import { DrawIcon } from "../generic/icons/DrawIcon"
-import { KeyCheatIcon } from "../generic/icons/KeyCheatIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
-import { InfoIconList } from "../generic/InfoIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
-import { AercScoreView } from "../stats/AercScoreView"
 import { screenStore } from "../ui/ScreenStore"
 import { DeckNote } from "../userdeck/DeckNote"
 import { OwnersButton } from "../userdeck/OwnersButton"
@@ -67,15 +59,13 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             userDeckForTrade = userDeck.forTrade
             userDeckForAuction = userDeck.forAuction
         }
-        const compact = screenStore.screenSizeXs()
+        const compact = screenStore.smallDeckView()
 
         let width
         if (compact) {
             width = 328
-        } else if (keyLocalStorage.displayOldDeckView) {
-            width = 544
         } else {
-            width = 652
+            width = 704
         }
         return (
             <KeyCard
@@ -91,7 +81,9 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     paddingBottom: spacing(1)
                 }}
             >
-                {compact ? <ExtraInfoHorizontal deck={deck}/> : null}
+                {compact ? (
+                    <AercView hasAerc={deck} deck={deck} horizontal={true} excludeMisc={true}/>
+                ) : null}
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}>
                         <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
@@ -127,13 +119,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         <div style={{marginLeft: spacing(1)}}><AuctionDeckIcon/></div>
                                     </Tooltip>
                                 ) : null}
-                                {keyLocalStorage.displayOldDeckView && !compact ? (
-                                    <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
-                                        <ExpandMore fontSize={"small"}/>
-                                    </IconButton>
-                                ) : null}
                             </div>
-                            <DisplayAllCardsByHouse deck={this.props.deck}/>
+                            <DisplayAllCardsByHouse deck={deck}/>
                         </CardContent>
                         {hideActions ? null : (
                             <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
@@ -166,115 +153,12 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardActions>
                         )}
                     </div>
-                    {keyLocalStorage.displayOldDeckView || compact ? null : (
-                        <SideBarInfo deck={deck}/>
-                    )}
+                    {compact ? null : <AercView hasAerc={deck} deck={deck}/>}
                 </div>
             </KeyCard>
         )
     }
 }
-
-const ExtraInfoHorizontal = (props: { deck: Deck }) => {
-    return (
-        <div style={{padding: spacing(1), backgroundColor: "#DFDFDF"}}>
-            <InfoIconList values={makeExtraInfos(props.deck)} horizontal={true}/>
-        </div>
-    )
-}
-
-const SideBarInfo = (props: { deck: Deck }) => {
-    const {deck} = props
-    const {searchResultCards} = deck
-    const aercInfos = [
-        {
-            icon: <Typography variant={"h5"} color={"primary"}>A</Typography>,
-            info: deck.amberControl,
-            tooltip: <CardsWithAerc title={"Aember Control"} accessor={card => card!.extraCardInfo!.amberControl} cards={searchResultCards}/>
-        },
-        {
-            icon: <Typography variant={"h5"} color={"primary"}>E</Typography>,
-            info: deck.expectedAmber,
-            tooltip: <CardsWithAerc title={"Expected Aember"} accessor={card => card!.extraCardInfo!.expectedAmber} cards={searchResultCards}/>
-        },
-        {
-            icon: <Typography variant={"h5"} color={"primary"}>R</Typography>,
-            info: deck.artifactControl,
-            tooltip: <CardsWithAerc title={"Artifact Control"} accessor={card => card!.extraCardInfo!.artifactControl} cards={searchResultCards}/>
-        },
-        {
-            icon: <Typography variant={"h5"} color={"primary"}>C</Typography>,
-            info: deck.creatureControl,
-            tooltip: <CardsWithAerc title={"Creature Control"} accessor={card => card!.extraCardInfo!.creatureControl} cards={searchResultCards}/>
-        },
-        {
-            icon: <Typography variant={"h5"} color={"primary"}>D</Typography>,
-            info: deck.deckManipulation,
-            tooltip: <CardsWithAerc title={"Deck Manipulation"} accessor={card => card!.extraCardInfo!.deckManipulation} cards={searchResultCards}/>
-        },
-        {
-            icon: <Typography variant={"h5"} color={"primary"}>P</Typography>,
-            info: deck.effectivePower / 10,
-            tooltip: (
-                <CardsWithAerc
-                    title={"Effective Creature Power"}
-                    accessor={card => {
-                        const effPower = card!.effectivePower
-                        if (effPower == null) {
-                            return 0
-                        }
-                        return effPower
-                    }}
-                    cards={searchResultCards}
-                />
-            )
-        }
-    ]
-
-    return (
-        <div style={{padding: spacing(2), paddingTop: 0, paddingBottom: 0, backgroundColor: "#DFDFDF"}}>
-            <div style={{display: "flex", justifyContent: "center"}}>
-                <IconButton onClick={keyLocalStorage.toggleDisplayOldDeckView}>
-                    <ExpandLess fontSize={"small"}/>
-                </IconButton>
-            </div>
-            <InfoIconList values={aercInfos}/>
-            <Divider/>
-            <Tooltip title={"Total AERC Score (rounded)"}>
-                <div style={{display: "flex", alignItems: "flex-end", marginBottom: spacing(2)}}>
-                    <Typography variant={"h5"} style={{marginRight: spacing(1)}}>{Math.round(deck.aercScore)}</Typography>
-                    <p style={{fontFamily: TextConfig.TITLE, fontSize: 16, margin: 0, marginBottom: 4}}>AERC</p>
-                </div>
-            </Tooltip>
-            <InfoIconList values={makeExtraInfos(deck)}/>
-        </div>
-    )
-}
-
-const makeExtraInfos = (deck: Deck) => (
-    [
-        {
-            icon: <AmberIcon/>,
-            info: deck.rawAmber,
-            tooltip: "Bonus Aember"
-        },
-        {
-            icon: <KeyCheatIcon/>,
-            info: deck.keyCheatCount,
-            tooltip: "Key Cheat Cards"
-        },
-        {
-            icon: <DrawIcon/>,
-            info: deck.cardDrawCount,
-            tooltip: "Extra Draw Cards"
-        },
-        {
-            icon: <ArchiveIcon/>,
-            info: deck.cardArchiveCount,
-            tooltip: "Archive Cards"
-        }
-    ]
-)
 
 const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
     const {deck, compact} = props
@@ -290,7 +174,6 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                     <HouseBanner houses={houses} size={48} vertical={true}/>
                     <DeckScoreView deck={deck} style={{marginLeft: spacing(6)}}/>
                 </div>
-                <AercScoreView hasAerc={deck} style={{marginTop: spacing(2)}} includeTotal={true}/>
                 <OrganizedPlayStats deck={deck} style={{marginTop: spacing(2)}}/>
             </div>
         )
@@ -304,14 +187,8 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                 paddingRight: spacing(2),
             }}>
                 <div style={{flexGrow: 1}}>
-                    <HouseBanner houses={houses} size={keyLocalStorage.displayOldDeckView ? 64 : 72}/>
-                    {keyLocalStorage.displayOldDeckView ? (
-                        <div style={{display: "flex", justifyContent: "center"}}>
-                            <AercScoreView hasAerc={deck} style={{marginTop: spacing(1)}} includeTotal={true}/>
-                        </div>
-                    ) : (
-                        <OrganizedPlayStats deck={deck}/>
-                    )}
+                    <HouseBanner houses={houses} size={72}/>
+                    <OrganizedPlayStats deck={deck}/>
                 </div>
                 <DeckScoreView deck={deck} style={compact ? {alignItems: "flex-end"} : undefined}/>
             </div>
@@ -322,7 +199,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
 const DisplayAllCardsByHouse = (props: { deck: Deck }) => {
     const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
 
-    if (screenStore.screenSizeXs()) {
+    if (screenStore.smallDeckView()) {
         return <DisplayAllCardsByHouseCompact {...props}/>
     }
 
@@ -397,7 +274,7 @@ export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
                 onClose={handleClose}
             >
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
-                <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose} />
+                <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose}/>
                 <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
                 <MenuItem
                     component={"a"}

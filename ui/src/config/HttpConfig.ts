@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { messageStore } from "../ui/MessageStore"
+import { etagRequestInterceptor, etagResponseErrorInterceptor, etagResponseInterceptor } from "./EtagCache"
 import { keyLocalStorage } from "./KeyLocalStorage"
 import { log } from "./Utils"
 
@@ -11,8 +12,10 @@ export class HttpConfig {
     static API = "/api"
 
     static setupAxios = () => {
-        axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.errorInterceptor)
+        axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.responseErrorInterceptor)
+        axios.interceptors.response.use(etagResponseInterceptor, etagResponseErrorInterceptor)
         axiosWithoutErrors.interceptors.response.use(HttpConfig.responseInterceptor)
+        axios.interceptors.request.use(etagRequestInterceptor)
         let timezoneOffset = new Date().getTimezoneOffset() * -1
         if (timezoneOffset == null || isNaN(timezoneOffset)) {
             log.warn("No timezone offset available.")
@@ -47,17 +50,20 @@ export class HttpConfig {
         return response
     }
 
-    private static errorInterceptor = (error: AxiosError) => {
-
-        log.error(`There was an error completing the request. ${error.message}`)
+    private static responseErrorInterceptor = (error: AxiosError) => {
 
         const code = error.response && error.response.status
 
+        if (code !== 304) {
+            log.error(`There was an error completing the request. ${error.message}`)
+        }
         if (code === 401) {
             messageStore.setErrorMessage("You are unauthorized to make this request.")
         } else if (code === 417) {
             const message = error.response && error.response.data && error.response.data.message
             messageStore.setErrorMessage(message)
+        } else if (code === 304) {
+            return etagResponseErrorInterceptor(error)
         } else {
             messageStore.setRequestErrorMessage()
         }

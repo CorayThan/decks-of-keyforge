@@ -62,7 +62,7 @@ export class MessageStore {
 @observer
 export class SnackMessage extends React.Component {
 
-    // tslint:disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleClose = (event: any, reason?: string) => {
         if (reason === "clickaway") {
             return

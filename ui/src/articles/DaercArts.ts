@@ -1,4 +1,4 @@
-/* tslint:disable:max-line-length */
+/* eslint-disable */
 import { Article, ArticleType, EntryType } from "./Article"
 import { bigZ } from "./Authors"
 
@@ -404,7 +404,7 @@ export const daercArts: Article = {
                 },
                 {
                     type: EntryType.LINK,
-                    internalLink: "/decks?constraints=amberControl-MIN-10&constraints=expectedAmber-MIN-20&constraints=artifactControl-MIN-2&constraints=creatureControl-MIN-15&constraints=deckManipulation-MIN-9&constraints=creatureCount-MIN-16&sort=ADDED_DATE",
+                    internalLink: "/decks?constraints=amberControl-MIN-10&constraints=expectedAmber-MIN-20&constraints=artifactControl-MIN-2&constraints=creatureControl-MIN-15&constraints=efficiency-MIN-9&constraints=creatureCount-MIN-16&sort=ADDED_DATE",
                     text: "Gold Standard Search"
                 },
                 {

@@ -2,7 +2,7 @@ import { AppBar, Tabs } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Route, RouteComponentProps, Switch } from "react-router"
-import { spacing } from "../config/MuiConfig"
+import { spacing, theme } from "../config/MuiConfig"
 import { StatsSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
@@ -26,9 +26,7 @@ export class StatsPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Deck Stats" to={StatsSubPaths.deckStats} value={StatsSubPaths.deckStats}/>
                     </Tabs>
                 </AppBar>
-                <div style={{display: "flex", justifyContent: "center", marginTop: spacing(2)}}>
-                    <ToggleStats/>
-                </div>
+                <ToggleStats style={{position: "fixed", right: theme.spacing(2), bottom: theme.spacing(2), zIndex: screenStore.zindexes.menuPops}}/>
                 <Switch>
                     <Route path={StatsSubPaths.winRates} component={WinRateStatsView}/>
                     <Route path={StatsSubPaths.deckStats} component={GlobalDeckStatsView}/>

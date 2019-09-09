@@ -13,8 +13,12 @@ data class ExtraCardInfo(
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
-        val deckManipulation: Double = 0.0,
+        val efficiency: Double = 0.0,
         val effectivePower: Int? = null,
+        val disruption: Double = 0.0,
+        val stealPrevention: Double = 0.0,
+        val houseCheating: Double = 0.0,
+        val other: Double = 0.0,
 
         val traits: Set<Synergies> = setOf(),
 

@@ -102,8 +102,13 @@ class DeckSynergyService(
                     expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,
                     creatureControl = card.extraCardInfo?.creatureControl ?: 0.0,
                     artifactControl = card.extraCardInfo?.artifactControl ?: 0.0,
-                    deckManipulation = card.extraCardInfo?.deckManipulation ?: 0.0,
-                    effectivePower = card.effectivePower
+                    efficiency = card.extraCardInfo?.efficiency ?: 0.0,
+                    effectivePower = card.effectivePower,
+
+                    disruption = card.extraCardInfo?.disruption ?: 0.0,
+                    houseCheating = card.extraCardInfo?.houseCheating ?: 0.0,
+                    stealPrevention = card.extraCardInfo?.stealPrevention ?: 0.0,
+                    other = card.extraCardInfo?.other ?: 0.0
             )
         }
 

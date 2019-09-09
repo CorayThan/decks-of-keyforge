@@ -8,25 +8,43 @@ export interface InfoIconValue {
     tooltip: React.ReactNode
 }
 
-export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: boolean }) => {
-    const {values, horizontal} = props
+export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: boolean, small?: boolean, style?: React.CSSProperties }) => {
+    const {values, horizontal, style, small} = props
     return (
-        <div style={{display: horizontal ? "flex" : undefined}}>
+        <div style={{display: horizontal ? "flex" : undefined, ...style}}>
             {values.map((value, idx) => {
                 return (
-                    <InfoIcon value={value} key={idx} style={{marginBottom: horizontal ? 0 : 4, marginLeft: spacing(1)}}/>
+                    <InfoIcon value={value} key={idx} style={{marginBottom: small ? spacing(0.25) : spacing(0.5), marginLeft: spacing(1)}} small={small}/>
                 )
             })}
         </div>
     )
 }
 
-const InfoIcon = (props: { value: InfoIconValue, style?: React.CSSProperties }) => {
+export const CardAercInfoDisplay = (props: { value: InfoIconValue }) => {
+    return (
+        <Tooltip title={props.value.tooltip}>
+            <div style={{display: "flex", alignItems: "center"}}>
+                <Typography variant={"h6"} style={{marginRight: spacing(1)}}>{props.value.info}</Typography>
+                {props.value.icon}
+            </div>
+        </Tooltip>
+    )
+}
+
+
+const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?: React.CSSProperties }) => {
+    let value = props.value.info
+    if (typeof value === "number") {
+        value = value.toFixed(value < 10 && value % 1 !== 0 ? 1 : 0)
+    }
     return (
         <Tooltip title={props.value.tooltip}>
             <div style={{display: "flex", alignItems: "center", ...props.style}}>
-                <Typography variant={"h6"} style={{marginRight: spacing(1), width: 40, textAlign: "right"}}>{props.value.info}</Typography>
-                <div style={{display: "flex", width: 24}}>
+                <Typography variant={props.small ? "body1" : "h6"} style={{marginRight: spacing(1), width: 24, textAlign: "right"}}>
+                    {value}
+                </Typography>
+                <div style={{display: "flex", width: props.small ? 20 : 24}}>
                     {props.value.icon}
                 </div>
             </div>

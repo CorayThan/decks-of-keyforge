@@ -7,7 +7,7 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { Add, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
+import { Add, BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
 import { computed } from "mobx"
@@ -172,8 +172,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "expectedAmber",
             "artifactControl",
             "creatureControl",
-            "deckManipulation",
+            "efficiency",
+            "disruption",
+            "stealPrevention",
+            "houseCheating",
             "effectivePower",
+            "rawAmber",
             "aercScore",
             "synergyRating",
             "antisynergyRating",
@@ -498,16 +502,21 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             <div style={{display: "flex", alignItems: "center"}}>
                                 <Tooltip title={"View type"}>
                                     <ToggleButtonGroup
-                                        value={keyLocalStorage.showTableView}
+                                        value={keyLocalStorage.deckListViewType}
                                         exclusive={true}
-                                        onChange={keyLocalStorage.toggleDeckTableView}
+                                        onChange={(event, viewType) => {
+                                            keyLocalStorage.setDeckListViewType(viewType)
+                                        }}
                                         style={{marginRight: spacing(2)}}
                                         size={"small"}
                                     >
-                                        <ToggleButton value={false}>
+                                        <ToggleButton value={"graphs"}>
+                                            <BarChart/>
+                                        </ToggleButton>
+                                        <ToggleButton value={"grid"}>
                                             <ViewModule/>
                                         </ToggleButton>
-                                        <ToggleButton value={true}>
+                                        <ToggleButton value={"table"}>
                                             <ViewList/>
                                         </ToggleButton>
                                     </ToggleButtonGroup>

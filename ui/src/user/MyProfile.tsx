@@ -105,6 +105,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     update?: UserProfileUpdate
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     buyingCountriesInputLabelRef: any
 
     constructor(props: MyProfileInnerProps) {
@@ -127,6 +128,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     }
 
     componentDidMount(): void {
+        // eslint-disable-next-line
         this.preferredCountriesLabelWidth = (ReactDOM.findDOMNode(this.buyingCountriesInputLabelRef) as any).offsetWidth
         forSaleNotificationsStore.findAllForUser()
         this.update = undefined
@@ -343,7 +345,10 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 <Select
                                                     multiple={true}
                                                     value={this.preferredCountries}
-                                                    onChange={(event: any) => this.preferredCountries = event.target.value}
+                                                    onChange={
+                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                        (event: any) => this.preferredCountries = event.target.value
+                                                    }
                                                     input={
                                                         <OutlinedInput
                                                             labelWidth={this.preferredCountriesLabelWidth}
@@ -351,7 +356,10 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                             fullWidth={true}
                                                         />
                                                     }
-                                                    renderValue={(selected: any) => selected.join(", ")}
+                                                    renderValue={
+                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                        (selected: any) => selected.join(", ")
+                                                    }
                                                     variant={"outlined"}
                                                 >
                                                     {countries.map(country => (

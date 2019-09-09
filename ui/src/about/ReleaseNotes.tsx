@@ -15,7 +15,7 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.12"
+export const latestVersion = "5.13"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -23,6 +23,15 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.13"} date={"9/9/2019"} expanded={true} releaseNotes={[
+                    "Big changes to AERC! Multiple new Aerc stats, including Steal Prevention (cards like Vault Keeper and key cheats), House Cheating " +
+                    "(Dominator Bauble), and Other (things that don't fit elsewhere). Also split Deck Manipulation into Efficiency (can play more cards) " +
+                    "and Disruption (stop your opponent from playing more cards).",
+                    "Along with those changes come cool new icons and AERC displays. (I tried to make the icons cool, but I'll admit, that isn't my " +
+                    "speciality!)",
+                    "And some radar graphs to show the percentile rankings of a deck's traits and card types! You can toggle those to show or not " +
+                    "with the toggle button in the bottom of the deck search menu."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.12"} date={"8/24/2019"} expanded={true} releaseNotes={[
                     "Download deck lists as a spreadsheet file! Switch to the table view (toggle button at the bottom of the search bar) and click the " +
                     "download button.",

@@ -26,7 +26,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
         const {
             name, creatureCount, actionCount, artifactCount, upgradeCount,
             expectedAmber, amberControl, creatureControl, artifactControl,
-            deckManipulation, effectivePower
+            efficiency, effectivePower
         } = this.props.deck
         const stats = statsStore.stats
         if (!stats) {
@@ -34,12 +34,12 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
         }
         const {
             averageExpectedAmber, averageAmberControl, averageCreatureControl,
-            averageArtifactControl, averageDeckManipulation, averageEffectivePower
+            averageArtifactControl, averageEfficiency, averageEffectivePower
 
         } = stats
 
-        const avgDeckManToUse = averageDeckManipulation == null ? 4 : averageDeckManipulation
-        const avgEffPowToUse = averageEffectivePower == null ? 7 : Math.round(averageEffectivePower / 5) / 2
+        const averageEfficiencyToUse = averageEfficiency == null ? 0 : averageEfficiency
+        const avgEffPowToUse = averageEffectivePower == null ? 0 : Math.round(averageEffectivePower / 5) / 2
 
         return (
             <div>
@@ -72,8 +72,8 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                             {x: "Avg R", y: averageArtifactControl},
                             {x: "C", y: creatureControl},
                             {x: "Avg C", y: averageCreatureControl},
-                            {x: "D", y: deckManipulation},
-                            {x: "Avg D", y: avgDeckManToUse},
+                            {x: "F", y: efficiency},
+                            {x: "Avg F", y: averageEfficiencyToUse},
                             {x: "P", y: Math.round(effectivePower / 5) / 2},
                             {x: "Avg P", y: avgEffPowToUse},
                         ]}
@@ -102,7 +102,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
         const {
             sasRating, cardsRating, synergyRating, antisynergyRating, totalPower,
             aercScore, amberControl, expectedAmber, artifactControl, creatureControl,
-            deckManipulation, effectivePower
+            efficiency, effectivePower, disruption, houseCheating, stealPrevention, other
         } = this.props.deck
         const stats = statsStore.stats
         if (!stats) {
@@ -125,7 +125,11 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
             {name: "Expected Aember", data: stats.expectedAmber, comparison: Math.round(expectedAmber)},
             {name: "Artifact Control", data: stats.artifactControl, comparison: Math.round(artifactControl)},
             {name: "Creature Control", data: stats.creatureControl, comparison: Math.round(creatureControl)},
-            {name: "Deck Manipulation", data: stats.deckManipulation, comparison: Math.round(deckManipulation)},
+            {name: "Efficiency", data: stats.efficiency, comparison: Math.round(efficiency)},
+            {name: "Disruption", data: stats.disruption, comparison: Math.round(disruption)},
+            {name: "House Cheating", data: stats.houseCheating, comparison: Math.round(houseCheating)},
+            {name: "Steal Prevention", data: stats.stealPrevention, comparison: Math.round(stealPrevention)},
+            {name: "Other", data: stats.other, comparison: Math.round(other)},
             {name: "Effective Power", data: stats.effectivePower, comparison: effectiveCreaturePowerCompareValue},
         ]
 

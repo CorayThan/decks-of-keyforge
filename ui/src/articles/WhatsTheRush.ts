@@ -1,4 +1,4 @@
-/* tslint:disable:max-line-length */
+/* eslint-disable */
 import { Article, ArticleType, EntryType } from "./Article"
 import { dunkoro } from "./Authors"
 

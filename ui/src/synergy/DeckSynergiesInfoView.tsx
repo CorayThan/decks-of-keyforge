@@ -105,7 +105,7 @@ class ColumnHeaders extends React.Component {
                     <SynergiesHeader title={"Expected Aember"} property={"expectedAmber"}/>
                     <SynergiesHeader title={"Artifact Control"} property={"artifactControl"}/>
                     <SynergiesHeader title={"Creature Control"} property={"creatureControl"}/>
-                    <SynergiesHeader title={"Deck Manipulation"} property={"deckManipulation"}/>
+                    <SynergiesHeader title={"Deck Manipulation"} property={"efficiency"}/>
                     <SynergiesHeader title={"Effective Power"} property={"effectivePower"}/>
                 </>
             )
@@ -154,7 +154,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                     <TableCell>{combo.expectedAmber}</TableCell>
                     <TableCell>{combo.artifactControl}</TableCell>
                     <TableCell>{combo.creatureControl}</TableCell>
-                    <TableCell>{combo.deckManipulation}</TableCell>
+                    <TableCell>{combo.efficiency}</TableCell>
                     <TableCell>{combo.effectivePower}</TableCell>
                 </>
             )

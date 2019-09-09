@@ -19,6 +19,7 @@ export class DeckFilters {
         return filters
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static rehydrateFromQuery = (queryObject: any): DeckFilters => {
         log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
         if (typeof queryObject.houses === "string") {
@@ -93,6 +94,7 @@ export class DeckFilters {
             queryObject.withOwners = Boolean(queryObject.withOwners)
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const filters = new DeckFilters() as any
         Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
         // log.debug(`Rehydrated to: ${prettyJson(filters)}`)
@@ -221,7 +223,7 @@ const cardsAsParam = (cards: DeckCardQuantity[]) => (
     cards.map(card => `${card.cardNames.join(cardSeparator)}-${card.house ? card.house : card.quantity}`)
 )
 
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DefaultDeckFilters: any = new DeckFilters()
 
 export interface DeckCardQuantity {

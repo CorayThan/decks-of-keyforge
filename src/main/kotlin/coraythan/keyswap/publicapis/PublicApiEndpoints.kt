@@ -25,6 +25,8 @@ class PublicApiEndpoints(
 
     private val rateLimiters = ConcurrentHashMap<String, Int>()
 
+    private val dontRateLimitEmails = listOf("detour27@gmail.com", "skyjedi@gmail.com")
+
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/api-keys/secured")
@@ -57,13 +59,17 @@ class PublicApiEndpoints(
         val requests = this.rateLimiters.getOrPut(apiKey, { 0 }) + 1
         this.rateLimiters[apiKey] = requests
 
-        if (requests in 26..27) log.warn("The user ${publicApiService.userForApiKey(apiKey).email} sent too many requests.")
-
-        if (requests > 25) throw RateExceededException(
-                "You've sent too many requests in the last minute. You've sent $requests in the last minute. Decks of KeyForge has been taken down " +
-                        "by this type of activity in the past. If you need to know the SAS for all decks, I provide a CSV file you should use for " +
-                        "that purpose. Otherwise, please contact me on discord, or at decksofkeyforge@gmail.com"
-        )
+        if (requests > 25) {
+            val userEmail = publicApiService.userForApiKey(apiKey).email
+            if (requests in 26..27) log.warn("The user $userEmail sent too many requests.")
+            if (!dontRateLimitEmails.contains(userEmail)) {
+                throw RateExceededException(
+                        "You've sent too many requests in the last minute. You've sent $requests in the last minute. Decks of KeyForge has been taken down " +
+                                "by this type of activity in the past. If you need to know the SAS for all decks, I provide a CSV file you should use for " +
+                                "that purpose. Otherwise, please contact me on discord, or at decksofkeyforge@gmail.com"
+                )
+            }
+        }
 
         val deck = publicApiService.findDeckSimple(id)
         return SimpleDeckResponse(deck ?: Nothing())

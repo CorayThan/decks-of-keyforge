@@ -20,7 +20,7 @@ export class ForSaleNotificationsStore {
         query.cards = query.cards.filter((card) => card.cardNames.length > 0)
 
         axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/add-query`, query)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setMessage(
                     `Created deck notification "${query.queryName}". See it on your `,
                     "Success",
@@ -31,14 +31,14 @@ export class ForSaleNotificationsStore {
                     >
                         Profile
                     </LinkButton>
-                    )
+                )
                 userStore.loadLoggedInUser()
             })
     }
 
     deleteQuery = (queryId: string) => {
         axios.delete(`${ForSaleNotificationsStore.SECURE_CONTEXT}/${queryId}`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setInfoMessage(`Deleted deck notification filter.`)
                 this.findAllForUser()
             })

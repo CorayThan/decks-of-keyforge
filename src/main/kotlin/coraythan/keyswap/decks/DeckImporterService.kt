@@ -41,7 +41,7 @@ private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 10
+const val currentDeckRatingVersion = 11
 
 @Transactional
 @Service
@@ -294,17 +294,22 @@ class DeckImporterService(
         val cardsRating = extraCardInfos.map { it.rating }.sum()
         val synergy = deckSynergyInfo.synergyRating.roundToInt()
         val antisynergy = deckSynergyInfo.antisynergyRating.roundToInt()
+        val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
         val a = extraCardInfos.map { it.amberControl }.sum()
         val e = extraCardInfos.map { it.expectedAmber }.sum()
         val r = extraCardInfos.map { it.artifactControl }.sum()
         val c = extraCardInfos.map { it.creatureControl }.sum()
-        val d = extraCardInfos.map { it.deckManipulation }.sum()
+        val f = extraCardInfos.map { it.efficiency }.sum()
+        val d = extraCardInfos.map { it.disruption }.sum()
         val p = cards.map { it.effectivePower }.sum()
-        val powerValue = (p.toDouble() / 5).roundToInt().toDouble() / 2
+        val o = extraCardInfos.map { it.other }.sum()
+        val s = extraCardInfos.map { it.stealPrevention }.sum()
+        val h = extraCardInfos.map { it.houseCheating }.sum()
+        val powerValue = p.toDouble() / 10
         val newSas = cardsRating.roundToInt() + synergy + antisynergy
         return deck.copy(
 
-                creatureCount = cards.filter { it.cardType == CardType.Creature }.size,
+                creatureCount = creatureCount,
                 actionCount = cards.filter { it.cardType == CardType.Action }.size,
                 artifactCount = cards.filter { it.cardType == CardType.Artifact }.size,
                 upgradeCount = cards.filter { it.cardType == CardType.Upgrade }.size,
@@ -313,9 +318,13 @@ class DeckImporterService(
                 expectedAmber = e,
                 artifactControl = r,
                 creatureControl = c,
-                deckManipulation = d,
+                efficiency = f,
                 effectivePower = p,
-                aercScore = a + e + r + c + d + powerValue,
+                disruption = d,
+                stealPrevention = s,
+                houseCheating = h,
+                other = o,
+                aercScore = a + e + r + c + f + d + s + h + o + powerValue + (creatureCount.toDouble() * 0.4),
                 previousSasRating = if (newSas != deck.sasRating) deck.sasRating else deck.previousSasRating,
                 sasRating = newSas,
                 cardsRating = cardsRating.roundToInt(),

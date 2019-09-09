@@ -16,7 +16,7 @@ export class ForgotPasswordPage extends React.Component {
     @observable
     error = false
 
-    sendReset = (event: React.MouseEvent) => {
+    sendReset = () => {
         this.error = false
         if (!this.email.trim()) {
             this.error = true

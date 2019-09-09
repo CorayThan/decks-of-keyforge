@@ -1,5 +1,5 @@
+import { HasAerc } from "../aerc/HasAerc"
 import { House } from "../houses/House"
-import { HasAerc } from "../stats/AercScoreView"
 import { SynTraitValue } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
 import { CardType } from "./CardType"
@@ -39,11 +39,20 @@ export const winPercentForCard = (card: KCard): number | undefined => {
 
 export const hasAercFromCard = (card: KCard): HasAerc => {
     const {extraCardInfo, effectivePower, aercScore} = card
-    const {amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation} = extraCardInfo
+    const {amberControl, expectedAmber, creatureControl, artifactControl, efficiency, stealPrevention, disruption, houseCheating, other} = extraCardInfo
 
     return {
-        amberControl, expectedAmber, creatureControl, artifactControl, deckManipulation, aercScore: aercScore == null ? 0 : aercScore,
-        effectivePower
+        amberControl,
+        expectedAmber,
+        creatureControl,
+        artifactControl,
+        efficiency,
+        aercScore: aercScore == null ? 0 : aercScore,
+        effectivePower,
+        stealPrevention,
+        disruption,
+        houseCheating,
+        other
     }
 }
 
@@ -54,7 +63,11 @@ export interface ExtraCardInfo {
     amberControl: number
     creatureControl: number
     artifactControl: number
-    deckManipulation: number
+    efficiency: number
+    disruption: number
+    stealPrevention: number
+    houseCheating: number
+    other: number
 
     traits: string[]
     synergies: SynTraitValue[]

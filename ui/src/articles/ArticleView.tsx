@@ -136,8 +136,13 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                                                         return <UnorderedList {...entry} key={entryIdx}/>
                                                     case EntryType.DECK:
                                                         if (screenStore.screenSizeXs()) {
-                                                            return <ArticleInternalLink internalLink={`/decks/${entry.deckId!}`} text={entry.deckName!}
-                                                                                        key={entryIdx}/>
+                                                            return (
+                                                                <ArticleInternalLink
+                                                                    internalLink={`/decks/${entry.deckId!}`}
+                                                                    text={entry.deckName!}
+                                                                    key={entryIdx}
+                                                                />
+                                                            )
                                                         }
                                                         return <Deck deckId={entry.deckId!} key={entryIdx} name={entry.deckName!} modal={entry.modal}/>
                                                     case EntryType.TABLE:

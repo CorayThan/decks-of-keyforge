@@ -118,7 +118,7 @@
     - expansion: 435
       cardNumber: 42
   rating: 2
-  creatureControl: 2.0
+  creatureControl: 1.5
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies: []
 
@@ -186,10 +186,7 @@
     - expansion: 435
       cardNumber: 29
   rating: 2
-  expectedAmber: 2.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 2
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -205,9 +202,6 @@
       cardNumber: 30
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: []
   synergies:
@@ -223,10 +217,7 @@
     - expansion: 435
       cardNumber: 16
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 1.5
-  artifactControl: 0.0
+  creatureControl: 1
   traits: [stuns]
   synergies: []
 
@@ -237,8 +228,6 @@
   rating: 1
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
     - trait: highCreatureCount
@@ -249,9 +238,7 @@
       cardNumber: 18
   rating: 0.5
   expectedAmber: 1
-  amberControl: 0.0
   creatureControl: 0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -269,9 +256,7 @@
       cardNumber: 19
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
@@ -282,10 +267,6 @@
     - expansion: 341
       cardNumber: 20
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 10.0
   traits: [protectsCreatures, increasesCreaturePower]
   synergies:
@@ -311,6 +292,7 @@
   rating: 2
   expectedAmber: 0.5
   creatureControl: 1.0
+  houseCheating: 0.5
   traits: [causesFighting, usableArtifact]
   synergies:
     - trait: highTotalCreaturePower
@@ -325,10 +307,7 @@
     - expansion: 435
       cardNumber: 40
   rating: 1
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [increasesKeyCost]
   synergies:
     - trait: highTotalCreaturePower
@@ -341,9 +320,7 @@
       cardNumber: 24
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, usableArtifact]
   synergies: []
 
@@ -372,10 +349,7 @@
     - expansion: 435
       cardNumber: 28
   rating: 2
-  expectedAmber: 0.0
   amberControl: 2.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [usableArtifact]
   synergies: []
 
@@ -387,9 +361,6 @@
       cardNumber: 32
   rating: 1
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [usableArtifact]
   synergies:
     - trait: highTotalCreaturePower
@@ -407,10 +378,7 @@
     - expansion: 435
       cardNumber: 35
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies, dealsDamage, damagesAllEnemies]
   synergies: []
 
@@ -419,10 +387,6 @@
     - expansion: 341
       cardNumber: 29
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -431,10 +395,7 @@
     - expansion: 341
       cardNumber: 30
   rating: 3
-  expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -445,10 +406,7 @@
     - expansion: 341
       cardNumber: 31
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures, goodPlay]
   synergies:
     - trait: power4OrHigherCreatures
@@ -460,10 +418,7 @@
     - expansion: 341
       cardNumber: 32
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies, goodFight, damagesAllEnemies]
   synergies:
     - trait: causesFighting
@@ -478,10 +433,8 @@
     - expansion: 435
       cardNumber: 9
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
+  houseCheating: 0.5
   traits: [causesFighting, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -511,7 +464,6 @@
       cardNumber: 35
   rating: 2
   expectedAmber: 1.0
-  creatureControl: 0.0
   traits: [goodFight]
   synergies:
     - trait: causesFighting
@@ -523,10 +475,7 @@
     - expansion: 341
       cardNumber: 36
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: highTotalArmor
@@ -539,9 +488,7 @@
       cardNumber: 37
   rating: 0
   expectedAmber: 0.5
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   effectivePower: 4
   traits: []
   synergies:
@@ -559,10 +506,7 @@
     - expansion: 435
       cardNumber: 41
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -571,10 +515,7 @@
     - expansion: 341
       cardNumber: 39
   rating: 2.5
-  expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [goodFight]
   synergies:
     - trait: causesFighting
@@ -587,7 +528,6 @@
       cardNumber: 40
   rating: 2
   amberControl: 1.0
-  creatureControl: 0.0
   traits: [goodPlay]
   synergies:
     - trait: capturesAmber
@@ -619,8 +559,7 @@
     - expansion: 435
       cardNumber: 44
   rating: 2
-  creatureControl: 0.5
-  effectivePower: 7
+  effectivePower: 10
   traits: []
   synergies:
     - trait: causesFighting
@@ -643,7 +582,9 @@
   rating: 3
   creatureControl: 1
   traits: [dealsDamage]
-  synergies: []
+  synergies:
+    - trait: discardsFriendlyCards
+      rating: 3
 
 - name: Rogue Ogre
   cardNumbers:
@@ -651,7 +592,6 @@
       cardNumber: 45
   rating: 2
   amberControl: 0.5
-  creatureControl: 0.0
   traits: [capturesAmber]
   synergies: []
 
@@ -673,7 +613,7 @@
     - expansion: 435
       cardNumber: 51
   rating: 1.5
-  creatureControl: 1.0
+  houseCheating: 1.0
   traits: []
   synergies: []
 
@@ -682,8 +622,7 @@
     - expansion: 341
       cardNumber: 48
   rating: 2
-  creatureControl: 0.0
-  expectedAmber: 0.0
+  effectivePower: 10
   traits: []
   synergies:
     - trait: damagesFriendlyCreatures
@@ -694,10 +633,8 @@
     - expansion: 341
       cardNumber: 49
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  efficiency: 1.0
+  effectivePower: 5
   traits: []
   synergies:
     - trait: goodPlay
@@ -717,8 +654,6 @@
       cardNumber: 18
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  artifactControl: 0.0
   effectivePower: 3
   traits: [increasesCreaturePower, protectsCreatures]
   synergies:
@@ -736,10 +671,8 @@
     - expansion: 435
       cardNumber: 45
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 2.0
-  artifactControl: 0.0
+  creatureControl: 0.5
+  efficiency: 0.5
   traits: [damagesMultipleEnemies, damagesAllEnemies, dealsDamage, protectsCreatures, damagesFriendlyCreatures, returnsFriendlyCreaturesToHand]
   synergies:
     - trait: highTotalArmor
@@ -750,9 +683,7 @@
       cardNumber: 52
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 3
   traits: [protectsCreatures]
   synergies:
     - trait: highTotalCreaturePower
@@ -766,9 +697,6 @@
       cardNumber: 87
   rating: 2.5
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [revealsHand]
   synergies:
     - trait: revealsTopDeck
@@ -778,11 +706,7 @@
     - expansion: 341
       cardNumber: 54
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 1
-  artifactControl: 0.0
-  efficiency: 1.5
+  efficiency: 2
   traits: [returnsCreaturesFromDiscard, chains]
   synergies:
     - trait: highCreatureCount
@@ -804,10 +728,8 @@
       cardNumber: 55
   rating: 4
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.5
+  disruption: 1.5
+  stealPrevention: 1
   traits: [controlsHouseChoice]
   synergies:
     - trait: revealsHand
@@ -822,9 +744,7 @@
       cardNumber: 90
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  disruption: 0.5
   traits: []
   synergies: []
 
@@ -833,10 +753,7 @@
     - expansion: 341
       cardNumber: 57
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 2.0
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures]
   synergies: []
 
@@ -845,11 +762,8 @@
     - expansion: 341
       cardNumber: 58
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -858,10 +772,7 @@
     - expansion: 341
       cardNumber: 59
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 3.0
-  artifactControl: 0.0
   efficiency: -1.0
   traits: [destroysEnemyCreatures, destroysFriendlyCreatures, chains]
   synergies:
@@ -880,10 +791,8 @@
       cardNumber: 73
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: [dealsDamage]
   synergies: []
 
@@ -893,9 +802,7 @@
       cardNumber: 61
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: capturesAmberOnEnemies
@@ -908,10 +815,7 @@
     - expansion: 341
       cardNumber: 62
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures]
   synergies:
     - trait: returnsEnemyCreaturesToHand
@@ -929,9 +833,7 @@
       cardNumber: 92
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   synergies:
     - trait: goodDestroyed
       type: house
@@ -942,9 +844,7 @@
       cardNumber: 64
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
@@ -956,11 +856,8 @@
     - expansion: 435
       cardNumber: 74
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
-  efficiency: 1.5
+  disruption: 1.5
   traits: [returnsEnemyCreaturesToHand, returnsFriendlyCreaturesToHand]
   synergies:
     - trait: goodPlay
@@ -972,9 +869,7 @@
       cardNumber: 66
   rating: 0.5
   expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  amberControl: 0.5
   traits: []
   synergies:
     - trait: stealsAmber
@@ -991,10 +886,7 @@
       cardNumber: 67
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: []
   synergies: []
 
@@ -1007,8 +899,6 @@
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [capturesAmber, capturesAmberOnEnemies]
   synergies:
     - trait: heals
@@ -1023,8 +913,6 @@
       cardNumber: 80
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 1.5
   traits: [destroysEnemyArtifacts]
   synergies:
@@ -1039,9 +927,7 @@
       cardNumber: 101
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -1053,9 +939,7 @@
       cardNumber: 86
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 2.0
-  artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: power5OrHigherCreatures
@@ -1068,9 +952,7 @@
       cardNumber: 72
   rating: 0.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  disruption: 0.5
   traits: [purgesFriendlyCreatures]
   synergies:
     - trait: returnsCreaturesFromDiscard
@@ -1081,10 +963,7 @@
     - expansion: 341
       cardNumber: 73
   rating: 1.5
-  expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 1.0
   traits: [usesCreaturesOutOfHouse, usableArtifact]
   synergies:
     - trait: goodReap
@@ -1101,10 +980,7 @@
     - expansion: 435
       cardNumber: 93
   rating: 3.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 3.0
-  artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures, usableArtifact]
   synergies:
     - trait: highTotalCreaturePower
@@ -1119,10 +995,7 @@
     - expansion: 435
       cardNumber: 61
   rating: 2
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [increasesKeyCost, usableArtifact]
   synergies: []
 
@@ -1133,10 +1006,6 @@
     - expansion: 435
       cardNumber: 75
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [archives, usableArtifact]
   synergies: []
@@ -1149,10 +1018,7 @@
       cardNumber: 76
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 1.5
+  disruption: 1.5
   traits: [usableArtifact]
   synergies:
     - trait: returnsEnemyCreaturesToHand
@@ -1163,9 +1029,6 @@
       cardNumber: 78
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [returnsCreaturesFromDiscard, usableArtifact]
   synergies:
     - trait: human
@@ -1175,10 +1038,6 @@
     - expansion: 341
       cardNumber: 79
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [usableArtifact]
   synergies: []
@@ -1191,9 +1050,6 @@
       cardNumber: 105
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -1213,10 +1069,7 @@
     - expansion: 435
       cardNumber: 56
   rating: 2.5
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
     - trait: protectsCreatures
@@ -1227,10 +1080,8 @@
     - expansion: 341
       cardNumber: 82
   rating: 3
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: [elusive, capturesAmber]
   synergies:
     - trait: protectsCreatures
@@ -1244,9 +1095,6 @@
       cardNumber: 58
   rating: 3
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [goodDestroyed]
   synergies:
     - trait: destroysFriendlyCreatures
@@ -1260,10 +1108,6 @@
     - expansion: 435
       cardNumber: 91
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   synergies: []
 
 - name: Ember Imp
@@ -1271,11 +1115,7 @@
     - expansion: 341
       cardNumber: 85
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  disruption: 1.5
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -1288,10 +1128,7 @@
     - expansion: 341
       cardNumber: 86
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -1302,11 +1139,8 @@
     - expansion: 435
       cardNumber: 99
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: [controlsCreatures, goodFight]
   synergies:
     - trait: usesCreaturesOutOfHouse
@@ -1321,10 +1155,7 @@
     - expansion: 341
       cardNumber: 88
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [heals, dealsDamage, goodReap]
 
 - name: Master of 1
@@ -1332,10 +1163,7 @@
     - expansion: 341
       cardNumber: 89
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures]
   synergies: []
 
@@ -1344,10 +1172,7 @@
     - expansion: 341
       cardNumber: 90
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures, goodReap]
   synergies: []
 
@@ -1356,10 +1181,7 @@
     - expansion: 341
       cardNumber: 91
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures, goodReap]
   synergies: []
 
@@ -1368,10 +1190,7 @@
     - expansion: 341
       cardNumber: 92
   rating: 3
-  expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber, goodAction]
 
 - name: Pitlord
@@ -1382,8 +1201,6 @@
       cardNumber: 100
   rating: 0.5
   expectedAmber: 1
-  amberControl: 0.0
-  artifactControl: 0.0
   efficiency: -1.0
   effectivePower: 4
   traits: [goodPlay]
@@ -1401,11 +1218,7 @@
     - expansion: 435
       cardNumber: 102
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  disruption: 1.5
   traits: [controlsHouseChoice]
   synergies:
     - trait: controlsHouseChoice
@@ -1419,10 +1232,7 @@
     - expansion: 341
       cardNumber: 95
   rating: 3
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -1442,9 +1252,8 @@
     - expansion: 435
       cardNumber: 64
   rating: 3
-  expectedAmber: 0.5
-  amberControl: 0.5
-  artifactControl: 0.0
+  expectedAmber: 0.75
+  amberControl: 0.75
   traits: [stealsAmber, goodPlay]
   synergies:
     - trait: increasesKeyCost
@@ -1456,11 +1265,9 @@
     - expansion: 341
       cardNumber: 97
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 1.0
+  creatureControl: 0.5
   artifactControl: 0.5
-  efficiency: 0.5
+  disruption: 0.5
   traits: [goodReap, returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand, returnsEnemyArtifactsToHand]
   synergies:
     - trait: protectsCreatures
@@ -1474,10 +1281,8 @@
     - expansion: 341
       cardNumber: 98
   rating: 2.5
-  expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.5
-  artifactControl: 0.0
+  expectedAmber: 1
+  disruption: 0.5
   traits: [goodFight]
   synergies:
     - trait: increasesCreaturePower
@@ -1490,11 +1295,7 @@
     - expansion: 341
       cardNumber: 99
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  disruption: 1.5
   traits: [reducesEnemyDraw]
   synergies:
     - trait: protectsCreatures
@@ -1524,8 +1325,6 @@
       cardNumber: 101
   rating: 2
   expectedAmber: 0.5
-  amberControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: capturesAmber
@@ -1540,11 +1339,7 @@
     - expansion: 341
       cardNumber: 102
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: [discardsEnemyCards, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -1557,9 +1352,6 @@
       cardNumber: 106
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [elusive]
   synergies:
     - trait: highCreatureCount
@@ -1574,9 +1366,6 @@
     - expansion: 341
       cardNumber: 104
   rating: 0.5
-  expectedAmber: 1.0
-  amberControl: 0.0
-  artifactControl: 0.0
   effectivePower: 4
   traits: [protectsCreatures, goodDestroyed]
   synergies:
@@ -1592,10 +1381,7 @@
     - expansion: 435
       cardNumber: 89
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [controlsCreatures]
   synergies:
@@ -1609,10 +1395,7 @@
       cardNumber: 106
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  effectivePower: 1
+  effectivePower: 4
   traits: [protectsCreatures, increasesCreaturePower ]
   synergies:
     - trait: highCreatureCount
@@ -1626,10 +1409,7 @@
     - expansion: 435
       cardNumber: 125
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 2
-  artifactControl: 0.0
+  creatureControl: 1.5
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
 
 - name: Dimension Door
@@ -1637,10 +1417,7 @@
     - expansion: 341
       cardNumber: 108
   rating: 0.5
-  expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber]
   synergies:
     - trait: highTotalCreaturePower
@@ -1653,8 +1430,6 @@
   rating: 1.5
   expectedAmber: -1.0
   amberControl: 2
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: -0.5
   traits: [chains]
   synergies:
@@ -1670,9 +1445,7 @@
       cardNumber: 110
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: [protectsCreatures]
   synergies:
     - trait: power3OrLowerCreatures
@@ -1686,9 +1459,6 @@
       cardNumber: 146
   rating: 4
   expectedAmber: 1
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 2.0
   traits: [drawsCards, shufflesDiscard]
   synergies: []
@@ -1702,8 +1472,6 @@
   rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber]
   synergies:
     - trait: capturesAmber
@@ -1718,9 +1486,6 @@
       cardNumber: 147
   rating: 1.5
   expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [archives]
   synergies:
@@ -1735,9 +1500,6 @@
       cardNumber: 114
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [archives]
   synergies: []
@@ -1747,10 +1509,6 @@
     - expansion: 341
       cardNumber: 115
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 2.0
   traits: [drawsCards]
   synergies:
@@ -1768,8 +1526,6 @@
   rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [stealsAmber]
   synergies:
@@ -1780,11 +1536,7 @@
     - expansion: 341
       cardNumber: 117
   rating: 3.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.5
+  efficiency: 2
   traits: [playsCards]
 
 - name: Positron Bolt
@@ -1793,9 +1545,7 @@
       cardNumber: 118
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies: []
 
@@ -1805,9 +1555,6 @@
       cardNumber: 119
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [archives, archivesRandom]
   synergies: []
@@ -1820,8 +1567,6 @@
       cardNumber: 134
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 1.0
   traits: []
   synergies:
@@ -1834,9 +1579,6 @@
       cardNumber: 121
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: []
   synergies:
@@ -1849,10 +1591,7 @@
       cardNumber: 122
   rating: 3.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.5
+  disruption: 2
   traits: []
   synergies: []
 
@@ -1864,11 +1603,8 @@
       cardNumber: 138
   rating: 3.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 2.0
-  traits: [archives]
+  traits: [archives, discardsFriendlyCards]
   synergies: []
 
 - name: Twin Bolt Emission
@@ -1877,9 +1613,7 @@
       cardNumber: 124
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies: []
 
@@ -1891,9 +1625,6 @@
       cardNumber: 122
   rating: 3.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [playsCards]
   synergies:
@@ -1907,10 +1638,7 @@
     - expansion: 341
       cardNumber: 126
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures, usableArtifact]
   synergies:
     - trait: damagesMultipleEnemies
@@ -1922,10 +1650,6 @@
     - expansion: 435
       cardNumber: 140
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [playsCards, usableArtifact]
   synergies:
@@ -1942,8 +1666,6 @@
     - expansion: 435
       cardNumber: 141
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1
   artifactControl: 0.5
   traits: [destroysEnemyArtifacts, destroysFriendlyArtifacts, destroysFriendlyCreatures, destroysEnemyCreatures, usableArtifact]
@@ -1958,10 +1680,6 @@
     - expansion: 435
       cardNumber: 115
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [drawsCards, usableArtifact]
   synergies:
@@ -1972,10 +1690,6 @@
     - expansion: 341
       cardNumber: 130
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [archives, usableArtifact]
   synergies: []
@@ -1987,10 +1701,7 @@
     - expansion: 435
       cardNumber: 151
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  stealPrevention: 1.0
   traits: [usableArtifact]
   synergies: []
 
@@ -1999,10 +1710,7 @@
     - expansion: 341
       cardNumber: 132
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [usableArtifact]
   synergies: []
 
@@ -2012,9 +1720,6 @@
       cardNumber: 133
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [drawsCards, usableArtifact]
   synergies: []
@@ -2027,7 +1732,6 @@
       cardNumber: 156
   rating: 2.5
   expectedAmber: 0.5
-  amberControl: 0.0
   creatureControl: 1
   artifactControl: 0.5
   traits: [destroysFriendlyArtifacts, destroysEnemyArtifacts, destroysFriendlyCreatures, destroysEnemyCreatures]
@@ -2039,10 +1743,7 @@
       cardNumber: 135
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  efficiency: 0.5
   traits: [drawsCards, increasesHandSize]
   synergies: []
 
@@ -2051,10 +1752,7 @@
     - expansion: 341
       cardNumber: 136
   rating: 1.5
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber, goodFight]
   synergies:
     - trait: readiesCreatures
@@ -2071,10 +1769,7 @@
     - expansion: 435
       cardNumber: 126
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  efficiency: 1
   traits: [drawsCards, goodFight]
   synergies:
     - trait: increasesCreaturePower
@@ -2085,10 +1780,7 @@
     - expansion: 341
       cardNumber: 138
   rating: 0.5
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: -0.5
   traits: [revealsTopDeck, capturesAmber]
   synergies: []
@@ -2098,10 +1790,7 @@
     - expansion: 341
       cardNumber: 139
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  efficiency: 1
   traits: [drawsCards]
 
 - name: Dr. Escotera
@@ -2110,9 +1799,6 @@
       cardNumber: 140
   rating: 2
   expectedAmber: 1
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -2124,11 +1810,8 @@
     - expansion: 435
       cardNumber: 142
   rating: 3
-  expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  expectedAmber: 1
+  disruption: 1
   traits: []
   synergies: []
 
@@ -2137,11 +1820,7 @@
     - expansion: 341
       cardNumber: 142
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  efficiency: 1
   traits: [archives, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -2158,11 +1837,7 @@
     - expansion: 435
       cardNumber: 145
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 0.5
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -2174,10 +1849,6 @@
     - expansion: 341
       cardNumber: 144
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [skirmish, drawsCards, goodFight]
   synergies:
@@ -2191,11 +1862,7 @@
     - expansion: 341
       cardNumber: 145
   rating: 4
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.5
+  efficiency: 2.5
   traits: [drawsCards, increasesHandSize]
   synergies:
     - trait: protectsCreatures
@@ -2207,8 +1874,6 @@
     - expansion: 435
       cardNumber: 149
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1
   artifactControl: 1.5
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures, destroysEnemyArtifacts, destroysFriendlyArtifacts]
@@ -2219,10 +1884,6 @@
     - expansion: 341
       cardNumber: 147
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [archives, goodAction]
   synergies:
@@ -2236,10 +1897,8 @@
     - expansion: 435
       cardNumber: 150
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: []
   synergies:
     - trait: hasMars
@@ -2250,9 +1909,7 @@
       cardNumber: 149
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: [revealsHand]
   synergies: []
 
@@ -2263,10 +1920,7 @@
     - expansion: 435
       cardNumber: 153
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: [goodReap]
   synergies:
     - trait: highTotalCreaturePower
@@ -2281,11 +1935,7 @@
     - expansion: 435
       cardNumber: 135
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  efficiency: 1
   traits: [archives, goodDestroyed, archives]
   synergies:
     - trait: archives
@@ -2296,10 +1946,7 @@
     - expansion: 341
       cardNumber: 152
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  creatureControl: 1
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -2313,10 +1960,7 @@
       cardNumber: 158
   rating: 4
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  efficiency: 1.5
   traits: [drawsCards, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -2329,9 +1973,7 @@
     - expansion: 435
       cardNumber: 121
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1
   traits: []
   synergies: []
 
@@ -2341,10 +1983,8 @@
       cardNumber: 155
   rating: 2
   expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
+  effectivePower: 4
   traits: [elusive, archives, goodReap]
   synergies:
     - trait: revealsTopDeck
@@ -2355,9 +1995,6 @@
       cardNumber: 156
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: usableArtifact
@@ -2368,10 +2005,8 @@
     - expansion: 341
       cardNumber: 157
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
+  houseCheating: 0.5
   traits: [stuns, usesCreaturesOutOfHouse]
   synergies: []
 
@@ -2383,9 +2018,6 @@
       cardNumber: 136
   rating: 0.5
   expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: skirmish
@@ -2406,9 +2038,7 @@
       cardNumber: 159
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 0.5
   traits: [usesCreaturesOutOfHouse]
   synergies:
     - trait: goodReap
@@ -2424,10 +2054,7 @@
     - expansion: 341
       cardNumber: 160
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: power3OrLowerCreatures
@@ -2442,9 +2069,6 @@
       cardNumber: 161
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [drawsCards]
   synergies:
@@ -2460,10 +2084,8 @@
       cardNumber: 162
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: []
   synergies:
     - trait: revealsHand
@@ -2475,8 +2097,6 @@
       cardNumber: 163
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.5
   artifactControl: 1.5
   traits: [destroysFriendlyArtifacts, destroysEnemyArtifacts, stuns]
   synergies:
@@ -2495,9 +2115,7 @@
       cardNumber: 198
   rating: 3
   expectedAmber: 1.5
-  amberControl: 2.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  amberControl: 2
   traits: [capturesAmberOnEnemies]
   synergies:
     - trait: highCreatureCount
@@ -2513,9 +2131,7 @@
       cardNumber: 165
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies]
   synergies:
     - trait: increasesKeyCost
@@ -2528,10 +2144,7 @@
       cardNumber: 182
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 0.5
+  stealPrevention: 1.0
   traits: [forgesKeys]
   synergies:
     - trait: highCreatureCount
@@ -2554,10 +2167,6 @@
     - expansion: 435
       cardNumber: 203
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 2
   traits: []
   synergies:
@@ -2571,9 +2180,6 @@
       cardNumber: 168
   rating: 1
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: []
   synergies:
@@ -2585,9 +2191,7 @@
       cardNumber: 169
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 1.5
-  artifactControl: 0.0
+  creatureControl: 1
   traits: [archivesEnemyCards]
   synergies:
     - trait: archives
@@ -2603,8 +2207,6 @@
   rating: 0.5
   expectedAmber: 1.5
   amberControl: 0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -2619,9 +2221,7 @@
       cardNumber: 183
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies:
     - trait: highTotalCreaturePower
@@ -2638,9 +2238,7 @@
       cardNumber: 185
   rating: 3.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies:
     - trait: increasesHandSize
@@ -2655,10 +2253,7 @@
     - expansion: 341
       cardNumber: 173
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   efficiency: -0.5
   traits: [chains, stuns]
   synergies:
@@ -2672,8 +2267,6 @@
   rating: 1
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber]
   synergies:
     - trait: readiesCreatures
@@ -2689,10 +2282,7 @@
     - expansion: 435
       cardNumber: 188
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [archivesEnemyCards]
   synergies:
     - trait: archives
@@ -2705,10 +2295,8 @@
     - expansion: 435
       cardNumber: 206
   rating: 3
-  expectedAmber: -1.0
-  amberControl: 3.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: -1.5
+  amberControl: 4.5
   traits: []
   synergies:
     - trait: increasesKeyCost
@@ -2719,10 +2307,7 @@
     - expansion: 341
       cardNumber: 177
   rating: 2
-  expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1
   traits: [readiesCreatures]
   synergies:
     - trait: highCreatureCount
@@ -2737,9 +2322,7 @@
       cardNumber: 178
   rating: 3
   expectedAmber: 1.5
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [readiesCreatures, stuns]
   synergies:
     - trait: goodReap
@@ -2759,10 +2342,7 @@
     - expansion: 435
       cardNumber: 208
   rating: 0.5
-  expectedAmber: 3.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 2.0
   efficiency: -1.0
   traits: [returnsFriendlyCreaturesToHand]
   synergies:
@@ -2776,10 +2356,8 @@
     - expansion: 435
       cardNumber: 177
   rating: 2.5
-  expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1.0
+  houseCheating: 1
   traits: [usableArtifact]
   synergies:
     - trait: goodReap
@@ -2797,10 +2375,7 @@
     - expansion: 341
       cardNumber: 181
   rating: 3
-  expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1.5
   traits: [usableArtifact, readiesCreatures]
   synergies:
     - trait: lowCreatureCount
@@ -2820,9 +2395,6 @@
       cardNumber: 182
   rating: 2
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [usableArtifact]
   synergies:
     - trait: lowCreatureCount
@@ -2843,9 +2415,7 @@
       cardNumber: 193
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1
-  artifactControl: 0.0
   traits: [usableArtifact, destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies: []
 
@@ -2855,9 +2425,6 @@
       cardNumber: 184
   rating: 2.5
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [usableArtifact]
   synergies: []
@@ -2869,10 +2436,6 @@
     - expansion: 435
       cardNumber: 200
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [usableArtifact, drawsCards]
 
@@ -2883,10 +2446,6 @@
     - expansion: 435
       cardNumber: 199
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [usableArtifact, archives]
   synergies:
@@ -2904,10 +2463,7 @@
     - expansion: 435
       cardNumber: 169
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [usableArtifact, dealsDamage]
   synergies:
     - trait: archives
@@ -2925,9 +2481,7 @@
       cardNumber: 207
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.5
-  artifactControl: 0.0
+  creatureControl: 0.25
   traits: [usableArtifact]
   synergies: []
 
@@ -2936,10 +2490,7 @@
     - expansion: 341
       cardNumber: 189
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: [usableArtifact, readiesCreatures]
   synergies:
     - trait: lowCreatureCount
@@ -2960,10 +2511,7 @@
     - expansion: 341
       cardNumber: 190
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 0.25
   traits: [readiesCreatures, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -2980,10 +2528,7 @@
     - expansion: 341
       cardNumber: 191
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 13
   traits: [protectsCreatures]
   synergies: []
 
@@ -2992,10 +2537,7 @@
     - expansion: 341
       cardNumber: 192
   rating: 1.5
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 4
   traits: [capturesAmber, increasesKeyCost]
   synergies: []
@@ -3005,10 +2547,7 @@
     - expansion: 341
       cardNumber: 193
   rating: 3
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [increasesKeyCost, capturesAmber]
   synergies: []
 
@@ -3019,10 +2558,8 @@
     - expansion: 435
       cardNumber: 197
   rating: 0
-  expectedAmber: 0.0
   amberControl: 0.5
   creatureControl: 0
-  artifactControl: 0.0
   efficiency: -1.0
   effectivePower: 3
   traits: []
@@ -3034,10 +2571,8 @@
     - expansion: 341
       cardNumber: 195
   rating: 2.5
-  expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1
+  effectivePower: 4
   traits: [readiesCreatures, goodReap, elusive]
   synergies:
     - trait: readiesCreatures
@@ -3057,10 +2592,8 @@
     - expansion: 435
       cardNumber: 167
   rating: 2
-  expectedAmber: 0.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: [goodAction, elusive, capturesAmberOnEnemies]
   synergies:
     - trait: readiesCreatures
@@ -3073,10 +2606,8 @@
     - expansion: 341
       cardNumber: 197
   rating: 1.5
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 2
   traits: [goodAction, elusive]
   synergies:
     - trait: readiesCreatures
@@ -3095,10 +2626,7 @@
     - expansion: 435
       cardNumber: 204
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: human
@@ -3109,10 +2637,7 @@
     - expansion: 341
       cardNumber: 199
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.5
-  artifactControl: 0.0
+  effectivePower: 12
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -3126,10 +2651,7 @@
     - expansion: 341
       cardNumber: 200
   rating: 1
-  expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 0.5
   traits: [usesCreaturesOutOfHouse, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -3150,10 +2672,8 @@
     - expansion: 435
       cardNumber: 190
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: [goodReap, archivesEnemyCards, elusive]
   synergies:
     - trait: readiesCreatures
@@ -3170,10 +2690,7 @@
     - expansion: 435
       cardNumber: 172
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  efficiency: 0.25
   traits: []
   synergies:
     - trait: goodPlay
@@ -3183,10 +2700,7 @@
     - expansion: 341
       cardNumber: 203
   rating: 0.5
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 3
   traits: [capturesAmber]
   synergies:
@@ -3202,10 +2716,7 @@
     - expansion: 341
       cardNumber: 204
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [goodReap, dealsDamage]
   synergies:
     - trait: readiesCreatures
@@ -3220,9 +2731,7 @@
     - expansion: 435
       cardNumber: 174
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 12
   traits: [protectsCreatures]
   synergies: []
 
@@ -3233,10 +2742,7 @@
     - expansion: 435
       cardNumber: 191
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [stuns, goodFight]
   synergies: []
 
@@ -3245,9 +2751,6 @@
     - expansion: 341
       cardNumber: 207
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   effectivePower: 4
   traits: [goodReap, archives]
@@ -3266,9 +2769,6 @@
       cardNumber: 208
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [archives]
   synergies:
@@ -3283,9 +2783,7 @@
       cardNumber: 192
   rating: 2.5
   expectedAmber: 1
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 1
   traits: [usesCreaturesOutOfHouse]
   synergies:
     - trait: lowCreatureCount
@@ -3299,8 +2797,6 @@
   rating: 2.5
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [increasesKeyCost]
   synergies:
     - trait: power5OrHigherCreatures
@@ -3316,9 +2812,7 @@
       cardNumber: 187
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [goodReap]
   synergies:
     - trait: readiesCreatures
@@ -3339,9 +2833,7 @@
       cardNumber: 250
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -3353,9 +2845,7 @@
       cardNumber: 214
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 1.5
-  artifactControl: 0.0
+  creatureControl: 1
   traits: [stuns]
   synergies: []
 
@@ -3365,9 +2855,7 @@
       cardNumber: 214
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies:
     - trait: lowCreatureCount
@@ -3383,9 +2871,6 @@
       cardNumber: 215
   rating: 1
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [heals]
   synergies:
     - trait: damagesMultipleEnemies
@@ -3405,9 +2890,7 @@
       cardNumber: 216
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: []
   synergies: []
 
@@ -3420,8 +2903,6 @@
   rating: 3.5
   expectedAmber: 1.0
   amberControl: 2.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: capturesAmber
@@ -3434,9 +2915,6 @@
       cardNumber: 218
   rating: 2
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: lowCreatureCount
@@ -3453,8 +2931,6 @@
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
     - trait: knight
@@ -3466,9 +2942,6 @@
       cardNumber: 220
   rating: 1
   expectedAmber: 1
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: goodReap
@@ -3481,10 +2954,7 @@
     - expansion: 435
       cardNumber: 256
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies: []
 
@@ -3496,9 +2966,6 @@
       cardNumber: 258
   rating: 1
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highArtifactCount
@@ -3514,14 +2981,13 @@
       cardNumber: 259
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [causesFighting]
   synergies:
     - trait: power5OrHigherCreatures
     - trait: preventsDamage
       type: house
+      rating: 3
     - trait: skirmish
 
 - name: Radiant Truth
@@ -3532,9 +2998,7 @@
       cardNumber: 241
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [stuns]
   synergies: []
 
@@ -3546,9 +3010,7 @@
       cardNumber: 222
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [preventsDamage]
   synergies:
     - trait: highTotalCreaturePower
@@ -3572,8 +3034,6 @@
   rating: 1
   expectedAmber: 1.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
     - trait: highTotalCreaturePower
@@ -3593,8 +3053,6 @@
   rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
     - trait: power5OrHigherCreatures
@@ -3607,10 +3065,7 @@
     - expansion: 435
       cardNumber: 245
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -3621,10 +3076,7 @@
     - expansion: 435
       cardNumber: 246
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: power3OrHigherCreatures
@@ -3640,9 +3092,6 @@
       cardNumber: 230
   rating: 4
   expectedAmber: 3.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -3653,10 +3102,7 @@
     - expansion: 435
       cardNumber: 252
   rating: 0
-  expectedAmber: 0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: [forgesKeys, archives]
   synergies:
     - trait: archives
@@ -3670,9 +3116,6 @@
     - expansion: 435
       cardNumber: 235
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 1.5
   traits: [usableArtifact, destroysEnemyArtifacts]
   synergies: []
@@ -3682,10 +3125,7 @@
     - expansion: 341
       cardNumber: 233
   rating: 0
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 2
   traits: [usableArtifact, heals]
   synergies:
     - trait: highTotalCreaturePower
@@ -3699,9 +3139,7 @@
       cardNumber: 239
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [usableArtifact, preventsDamage]
   synergies:
     - trait: highTotalCreaturePower
@@ -3718,10 +3156,8 @@
       cardNumber: 235
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
-  effectivePower: 2
+  effectivePower: 4
   traits: [protectsCreatures]
   synergies:
     - trait: knight
@@ -3734,10 +3170,8 @@
     - expansion: 435
       cardNumber: 244
   rating: 2
-  expectedAmber: 2
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1
+  houseCheating: 1
   traits: [usableArtifact]
   synergies:
     - trait: highCreatureCount
@@ -3749,9 +3183,6 @@
     - expansion: 341
       cardNumber: 237
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 0.5
   efficiency: 0.5
   traits: [usableArtifact, returnsFriendlyArtifactsToHand]
@@ -3762,10 +3193,6 @@
     - expansion: 341
       cardNumber: 238
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 8
   traits: [protectsCreatures, addsArmor]
   synergies:
@@ -3776,9 +3203,7 @@
     - expansion: 341
       cardNumber: 239
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 9
   traits: [protectsCreatures]
   synergies: []
 
@@ -3787,9 +3212,7 @@
     - expansion: 341
       cardNumber: 240
   rating: 2
-  expectedAmber: 0.0
   amberControl: 0.5
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies: []
 
@@ -3798,10 +3221,7 @@
     - expansion: 341
       cardNumber: 241
   rating: 1.5
-  expectedAmber: 0.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 0.5
   traits: [goodReap, usesCreaturesOutOfHouse]
   synergies:
     - trait: protectsCreatures
@@ -3819,10 +3239,6 @@
     - expansion: 435
       cardNumber: 251
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [drawsCards, heals, goodDestroyed]
   synergies: []
@@ -3832,9 +3248,7 @@
     - expansion: 341
       cardNumber: 243
   rating: 1.5
-  expectedAmber: 0.0
   amberControl: 0.5
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies: []
 
@@ -3843,10 +3257,6 @@
     - expansion: 341
       cardNumber: 244
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 6
   traits: [heals, protectsCreatures, addsArmor]
   synergies:
@@ -3859,9 +3269,6 @@
       cardNumber: 245
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highArtifactCount
@@ -3876,10 +3283,6 @@
     - expansion: 341
       cardNumber: 246
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [goodPlay]
   synergies:
@@ -3893,10 +3296,7 @@
     - expansion: 341
       cardNumber: 247
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
     - trait: power5OrHigherCreatures
@@ -3908,10 +3308,7 @@
     - expansion: 341
       cardNumber: 248
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures]
   synergies:
     - trait: highTotalArmor
@@ -3921,10 +3318,7 @@
     - expansion: 341
       cardNumber: 249
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 1.0
-  artifactControl: 0.0
+  houseCheating: 1.0
   traits: [causesFighting, goodPlay]
   synergies:
     - trait: preventsDamage
@@ -3940,9 +3334,6 @@
       cardNumber: 250
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -3956,10 +3347,7 @@
     - expansion: 341
       cardNumber: 251
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [stuns, goodPlay]
   synergies: []
 
@@ -3970,10 +3358,7 @@
     - expansion: 435
       cardNumber: 254
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 2.0
-  artifactControl: 0.0
   traits: [goodFight]
   synergies:
     - trait: causesFighting
@@ -3983,10 +3368,7 @@
     - expansion: 341
       cardNumber: 253
   rating: 3.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 2.0
-  artifactControl: 0.0
   traits: [destroysEnemyCreatures, goodPlay]
   synergies:
     - trait: highCreatureCount
@@ -3998,10 +3380,7 @@
     - expansion: 341
       cardNumber: 254
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.5
-  artifactControl: 0.0
+  effectivePower: 7
   traits: [heals, preventsDamage]
   synergies: []
 
@@ -4010,10 +3389,7 @@
     - expansion: 341
       cardNumber: 255
   rating: 2
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -4024,9 +3400,7 @@
     - expansion: 435
       cardNumber: 262
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 9
   traits: [protectsCreatures]
   synergies: []
 
@@ -4035,10 +3409,7 @@
     - expansion: 341
       cardNumber: 257
   rating: 2
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -4047,10 +3418,8 @@
     - expansion: 341
       cardNumber: 258
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
+  houseCheating: 0.5
   traits: [causesFighting, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -4064,9 +3433,6 @@
     - expansion: 341
       cardNumber: 259
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
   effectivePower: 7
   traits: []
   synergies: []
@@ -4078,9 +3444,7 @@
     - expansion: 435
       cardNumber: 234
   rating: 2
-  expectedAmber: 0.0
   amberControl: 1.5
-  artifactControl: 0.0
   traits: [capturesAmber]
   synergies:
     - trait: increasesKeyCost
@@ -4093,10 +3457,7 @@
     - expansion: 435
       cardNumber: 265
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  stealPrevention: 1.5
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -4109,10 +3470,7 @@
     - expansion: 435
       cardNumber: 266
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: elusive
@@ -4126,9 +3484,7 @@
       cardNumber: 249
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: [protectsCreatures]
   synergies:
     - trait: destroysFriendlyCreatures
@@ -4139,10 +3495,7 @@
     - expansion: 341
       cardNumber: 264
   rating: 2.5
-  expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 1.5
   traits: [usesCreaturesOutOfHouse]
   synergies:
     - trait: goodReap
@@ -4156,10 +3509,7 @@
       cardNumber: 221
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  effectivePower: 1
+  effectivePower: 3
   traits: [protectsCreatures, addsArmor]
   synergies:
     - trait: highCreatureCount
@@ -4173,9 +3523,6 @@
       cardNumber: 266
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   effectivePower: 3
   traits: [protectsCreatures, addsArmor]
   synergies:
@@ -4189,10 +3536,8 @@
     - expansion: 341
       cardNumber: 267
   rating: 3
-  expectedAmber: 2.0
-  amberControl: 2.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1.25
+  amberControl: 1.25
   traits: [stealsAmber]
   synergies:
     - trait: increasesKeyCost
@@ -4205,9 +3550,7 @@
       cardNumber: 268
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies:
     - trait: destroysEnemyCreatures
@@ -4222,10 +3565,9 @@
     - expansion: 341
       cardNumber: 269
   rating: 3.5
-  expectedAmber: 2.0
-  amberControl: 1.0
+  expectedAmber: 1.75
+  amberControl: 0.75
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures, stealsAmber]
   synergies:
     - trait: damagesMultipleEnemies
@@ -4238,10 +3580,8 @@
     - expansion: 341
       cardNumber: 270
   rating: 2.5
-  expectedAmber: 2.0
-  amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 2.25
+  amberControl: 0.25
   traits: [stealsAmber]
   synergies:
     - trait: capturesAmber
@@ -4259,9 +3599,6 @@
       cardNumber: 286
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [archives]
   synergies: []
@@ -4272,10 +3609,7 @@
       cardNumber: 272
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 0.5
+  other: 0.5
   traits: [revealsHand]
   synergies: []
 
@@ -4286,10 +3620,6 @@
     - expansion: 435
       cardNumber: 304
   rating: 0
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [forgesKeys]
   synergies: []
 
@@ -4301,10 +3631,8 @@
       cardNumber: 288
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
-  efficiency: 0.5
+  disruption: 0.5
   traits: [returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -4316,9 +3644,7 @@
       cardNumber: 274
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  amberControl: 1
   traits: [increasesKeyCost]
   synergies: []
 
@@ -4332,7 +3658,6 @@
   expectedAmber: 1.0
   amberControl: 1.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [dealsDamage, stealsAmber]
   synergies: []
 
@@ -4343,8 +3668,6 @@
   rating: 2.5
   expectedAmber: 1.5
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: badPenny
@@ -4361,10 +3684,7 @@
     - expansion: 435
       cardNumber: 292
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -4374,9 +3694,7 @@
       cardNumber: 279
   rating: 2
   expectedAmber: 1
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [dealsDamage, sacrificesCreatures, damagesMultipleEnemies]
   synergies:
     - trait: goodDestroyed
@@ -4390,9 +3708,7 @@
       cardNumber: 280
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 1.5
-  artifactControl: 0.0
+  creatureControl: 1
   traits: [damagesMultipleEnemies, damagesAllEnemies, damagesFriendlyCreatures, dealsDamage]
   synergies:
     - trait: power2OrLowerCreatures
@@ -4406,10 +3722,9 @@
     - expansion: 341
       cardNumber: 281
   rating: 4
-  expectedAmber: 2
-  amberControl: 1
+  expectedAmber: 1.75
+  amberControl: 0.75
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [dealsDamage, stealsAmber]
   synergies:
     - trait: dealsDamage
@@ -4427,12 +3742,12 @@
   rating: 3.5
   expectedAmber: 1.5
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [routineJob, stealsAmber]
   synergies:
     - trait: routineJob
       rating: 3
+    - trait: shufflesDiscard
+      rating: -2
 
 - name: Too Much to Protect
   cardNumbers:
@@ -4443,8 +3758,6 @@
   rating: 3
   expectedAmber: 2.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber]
   synergies:
     - trait: increasesKeyCost
@@ -4463,9 +3776,6 @@
       cardNumber: 318
   rating: 1.5
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -4478,7 +3788,6 @@
   rating: 2
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
   artifactControl: 0.5
   traits: [stealsAmber]
   synergies:
@@ -4491,9 +3800,7 @@
       cardNumber: 286
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 0.5
   traits: [protectsCreatures]
   synergies:
     - trait: revealsTopDeck
@@ -4515,9 +3822,7 @@
       cardNumber: 306
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [usableArtifact, dealsDamage, damagesMultipleEnemies]
   synergies:
     - trait: destroysEnemyCreatures
@@ -4533,9 +3838,6 @@
       cardNumber: 288
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: [usableArtifact]
   synergies:
@@ -4548,9 +3850,7 @@
       cardNumber: 289
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  stealPrevention: 1
   traits: [usableArtifact]
   synergies: []
 
@@ -4559,10 +3859,8 @@
     - expansion: 341
       cardNumber: 290
   rating: 1
-  expectedAmber: 1.0
-  amberControl: 0.0
+  expectedAmber: 0.5
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [usableArtifact, dealsDamage]
   synergies:
     - trait: badPenny
@@ -4575,10 +3873,7 @@
     - expansion: 435
       cardNumber: 295
   rating: 0.5
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [usableArtifact, capturesAmber]
 
 - name: Special Delivery
@@ -4589,9 +3884,7 @@
       cardNumber: 296
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [usableArtifact, dealsDamage]
   synergies: []
 
@@ -4601,9 +3894,6 @@
       cardNumber: 293
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [readiesCreatures]
   synergies:
     - trait: goodReap
@@ -4621,11 +3911,7 @@
     - expansion: 435
       cardNumber: 297
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  disruption: 1.0
   traits: [usableArtifact, discardsEnemyCards]
   synergies: []
 
@@ -4636,10 +3922,7 @@
     - expansion: 435
       cardNumber: 317
   rating: 1
-  expectedAmber: 2.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 2
   traits: [usableArtifact]
   synergies:
     - trait: destroysFriendlyArtifacts
@@ -4655,10 +3938,6 @@
     - expansion: 435
       cardNumber: 267
   rating: 0
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [badPenny]
   synergies:
     - trait: readiesCreaturesOnPlay
@@ -4670,10 +3949,8 @@
     - expansion: 435
       cardNumber: 299
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 1.0
-  artifactControl: 0.0
+  creatureControl: 1.5
+  effectivePower: 4
   traits: [elusive, goodReap]
   synergies:
     - trait: protectsCreatures
@@ -4689,8 +3966,7 @@
   rating: 1.5
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 2
   traits: [elusive, skirmish]
   synergies:
     - trait: lowArtifactCount
@@ -4706,10 +3982,8 @@
     - expansion: 435
       cardNumber: 301
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  houseCheating: 1
+  effectivePower: 2
   traits: [elusive, usesCreaturesOutOfHouse]
   synergies:
     - trait: protectsCreatures
@@ -4722,9 +3996,6 @@
   rating: 3
   expectedAmber: 1.5
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
   traits: [goodReap]
   synergies:
     - trait: urchin
@@ -4737,10 +4008,8 @@
     - expansion: 341
       cardNumber: 301
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
+  effectivePower: 5
   traits: [skirmish, poison]
   synergies:
     - trait: causesFighting
@@ -4756,9 +4025,9 @@
       cardNumber: 307
   rating: 3.5
   expectedAmber: 1.0
-  amberControl: 0.0
+  houseCheating: 1
   creatureControl: 0.5
-  artifactControl: 0.0
+  effectivePower: 5
   traits: [elusive, dealsDamage]
 
 - name: Magda the Rat
@@ -4768,8 +4037,7 @@
   rating: 1.5
   expectedAmber: 0.5
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 6
   traits: [stealsAmber]
   synergies: []
 
@@ -4778,10 +4046,8 @@
     - expansion: 341
       cardNumber: 304
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.5
+  amberControl: 0.25
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [skirmish, poison, goodFight]
   synergies:
     - trait: causesFighting
@@ -4799,10 +4065,8 @@
     - expansion: 341
       cardNumber: 305
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 1.0
+  effectivePower: 5
   traits: [elusive, goodReap]
   synergies:
     - trait: destroysEnemyArtifacts
@@ -4813,10 +4077,8 @@
     - expansion: 341
       cardNumber: 306
   rating: 2
-  expectedAmber: 0.0
+  effectivePower: 4
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [stealsAmber, goodAction, elusive]
   synergies: []
 
@@ -4825,10 +4087,8 @@
     - expansion: 341
       cardNumber: 307
   rating: 2.5
-  expectedAmber: 0.0
   amberControl: 1.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 5
   traits: [capturesAmber, elusive]
   synergies: []
 
@@ -4837,9 +4097,7 @@
     - expansion: 341
       cardNumber: 308
   rating: 2
-  expectedAmber: 0.0
   amberControl: 0.5
-  artifactControl: 0.0
   traits: [stealsAmber, goodFight]
   synergies:
     - trait: causesFighting
@@ -4858,8 +4116,6 @@
   rating: 1
   expectedAmber: 0.5
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: capturesAmber
@@ -4870,10 +4126,7 @@
     - expansion: 341
       cardNumber: 310
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 1.5
   traits: [preventsDamage, protectsCreatures]
 
 - name: Silvertooth
@@ -4882,9 +4135,6 @@
       cardNumber: 311
   rating: 2
   expectedAmber: 1
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: readiesCreatures
@@ -4896,10 +4146,8 @@
     - expansion: 341
       cardNumber: 312
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
+  effectivePower: 2
   traits: [elusive]
   synergies:
     - trait: readiesCreatures
@@ -4912,9 +4160,6 @@
     - expansion: 435
       cardNumber: 316
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 1.5
   efficiency: 0.5
   traits: [goodPlay]
@@ -4931,10 +4176,8 @@
     - expansion: 435
       cardNumber: 280
   rating: 1
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: [stealsAmber, skirmish, goodFight]
   synergies:
     - trait: readiesCreatures
@@ -4949,8 +4192,7 @@
   rating: 3
   expectedAmber: 1.0
   amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 3
   traits: [urchin, elusive, stealsAmber, goodPlay]
   synergies: []
 
@@ -4963,8 +4205,6 @@
   rating: 1.5
   expectedAmber: 1
   amberControl: 1
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [goodReap, stealsAmber]
   synergies:
     - trait: highTotalCreaturePower
@@ -4981,9 +4221,7 @@
       cardNumber: 310
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 3
   traits: [protectsCreatures, elusive, skirmish]
   synergies:
     - trait: causesFighting
@@ -4997,9 +4235,7 @@
       cardNumber: 318
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1
-  artifactControl: 0.0
   traits: [goodReap ]
   synergies:
     - trait: lowTotalCreaturePower
@@ -5012,10 +4248,7 @@
     - expansion: 341
       cardNumber: 319
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, damagesMultipleEnemies]
   synergies:
     - trait: highCreatureCount
@@ -5030,9 +4263,7 @@
       cardNumber: 351
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: scientist
@@ -5043,10 +4274,8 @@
     - expansion: 341
       cardNumber: 321
   rating: 1.5
-  expectedAmber: 3.0
-  amberControl: 0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 4.0
+  amberControl: -1.5
   traits: []
   synergies:
     - trait: stealsAmber
@@ -5063,9 +4292,7 @@
       cardNumber: 340
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  other: 0.5
   traits: [protectsCreatures]
   synergies: []
 
@@ -5077,9 +4304,6 @@
       cardNumber: 322
   rating: 1.5
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -5097,10 +4321,8 @@
       cardNumber: 341
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
   artifactControl: 0.5
-  efficiency: 1.5
+  disruption: 1
   traits: [returnsFriendlyArtifactsToHand, returnsEnemyArtifactsToHand]
   synergies: []
 
@@ -5111,10 +4333,7 @@
     - expansion: 435
       cardNumber: 325
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  stealPrevention: 1.5
   traits: [forgesKeys]
   synergies:
     - trait: archives
@@ -5136,8 +4355,6 @@
   rating: 1.5
   expectedAmber: 1.5
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -5147,10 +4364,7 @@
       cardNumber: 327
   rating: 3
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
-  efficiency: 0.5
   traits: []
   synergies:
     - trait: lowCreatureCount
@@ -5166,11 +4380,7 @@
     - expansion: 435
       cardNumber: 343
   rating: 3
-  expectedAmber: 0.5
-  amberControl: 0.5
-  creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 1.5
+  other: 3
   traits: []
   synergies: []
 
@@ -5182,10 +4392,8 @@
       cardNumber: 344
   rating: 4
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
-  efficiency: 1.5
+  disruption: 1
   traits: [returnsFriendlyCreaturesToHand, returnsEnemyCreaturesToHand]
   synergies: []
 
@@ -5195,9 +4403,7 @@
       cardNumber: 330
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies: []
 
@@ -5209,9 +4415,7 @@
       cardNumber: 360
   rating: 2
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   synergies:
     - trait: elusive
       rating: -3
@@ -5224,9 +4428,6 @@
       cardNumber: 329
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [returnsCreaturesFromDiscard]
   synergies:
@@ -5243,10 +4444,7 @@
     - expansion: 435
       cardNumber: 331
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   efficiency: -0.5
   traits: [destroysFriendlyCreatures, destroysEnemyCreatures]
   synergies:
@@ -5260,9 +4458,7 @@
       cardNumber: 334
   rating: 2.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 1.5
-  artifactControl: 0.0
+  creatureControl: 1
   traits: [causesFighting]
   synergies:
     - trait: highTotalCreaturePower
@@ -5276,10 +4472,8 @@
     - expansion: 341
       cardNumber: 335
   rating: 1.5
-  expectedAmber: 1.5
-  amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1.25
+  amberControl: 0.25
   traits: []
   synergies:
     - trait: highTotalCreaturePower
@@ -5296,9 +4490,7 @@
       cardNumber: 368
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, damagesAllEnemies]
   synergies:
     - trait: hasMars
@@ -5310,9 +4502,6 @@
       cardNumber: 337
   rating: 0.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: []
   synergies:
@@ -5325,9 +4514,6 @@
       cardNumber: 338
   rating: 1.5
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [heals]
   synergies:
     - trait: power5OrHigherCreatures
@@ -5338,9 +4524,7 @@
       cardNumber: 339
   rating: 1
   expectedAmber: 1.5
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies]
   synergies:
     - trait: capturesAmberOnEnemies
@@ -5350,10 +4534,6 @@
     - expansion: 341
       cardNumber: 340
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.0
   traits: [usableArtifact, shufflesDiscard]
   synergies:
@@ -5367,11 +4547,7 @@
     - expansion: 435
       cardNumber: 345
   rating: 3
-  expectedAmber: 1.0
-  amberControl: 0.5
-  creatureControl: 0.5
-  artifactControl: 0.0
-  efficiency: 1.5
+  efficiency: 2.5
   traits: [usableArtifact, returnsCardsFromDiscard]
   synergies:
     - trait: shufflesDiscard
@@ -5382,10 +4558,8 @@
     - expansion: 341
       cardNumber: 342
   rating: 1.5
-  expectedAmber: 1.0
-  amberControl: 1.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 0.75
+  amberControl: 0.75
   traits: [usableArtifact, stealsAmber]
   synergies:
     - trait: increasesKeyCost
@@ -5395,10 +4569,8 @@
     - expansion: 341
       cardNumber: 343
   rating: 2
-  expectedAmber: 2
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  expectedAmber: 1
+  houseCheating: 1
   traits: [usableArtifact]
   synergies:
     - trait: lowCreatureCount
@@ -5415,10 +4587,6 @@
     - expansion: 435
       cardNumber: 370
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 0.5
   traits: [usableArtifact, revealsTopDeck, returnsCreaturesFromDiscard]
   synergies: []
@@ -5428,10 +4596,8 @@
     - expansion: 341
       cardNumber: 345
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
   traits: [ancientBear]
+  effectivePower: 7
   synergies:
     - trait: causesFighting
       rating: 1
@@ -5441,10 +4607,7 @@
     - expansion: 341
       cardNumber: 346
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [goodReap]
 
 - name: Witch of the Wilds
@@ -5454,10 +4617,6 @@
     - expansion: 435
       cardNumber: 369
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   efficiency: 1.5
   traits: []
 
@@ -5466,10 +4625,7 @@
     - expansion: 341
       cardNumber: 348
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 3
   traits: []
   synergies: []
 
@@ -5480,10 +4636,7 @@
     - expansion: 435
       cardNumber: 338
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  stealPrevention: 1.5
   traits: [forgesKeys, goodPlay]
   synergies:
     - trait: forgesKeys
@@ -5502,9 +4655,7 @@
       cardNumber: 350
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 4
   traits: [goodReap, elusive]
   synergies: []
 
@@ -5514,9 +4665,6 @@
       cardNumber: 351
   rating: 3
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -5533,9 +4681,6 @@
       cardNumber: 339
   rating: 3
   expectedAmber: 1.5
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [goodPlay]
   synergies:
     - trait: lowCreatureCount
@@ -5551,9 +4696,8 @@
     - expansion: 435
       cardNumber: 353
   rating: 3
-  expectedAmber: 2.0
-  amberControl: 0
-  artifactControl: 0.0
+  expectedAmber: 2
+  amberControl: -1
   traits: []
   synergies:
     - trait: stealsAmber
@@ -5567,9 +4711,6 @@
       cardNumber: 354
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: increasesHandSize
@@ -5580,9 +4721,7 @@
     - expansion: 341
       cardNumber: 355
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 6
   traits: [skirmish]
   synergies: []
 
@@ -5593,10 +4732,7 @@
     - expansion: 435
       cardNumber: 356
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [poison, stuns, goodReap]
 
 - name: Kindrith Longshot
@@ -5606,10 +4742,8 @@
     - expansion: 435
       cardNumber: 357
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
+  effectivePower: 6
   traits: [elusive, skirmish, goodReap, dealsDamage]
 
 - name: Snufflegator
@@ -5617,9 +4751,7 @@
     - expansion: 341
       cardNumber: 358
   rating: 1.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 6
   traits: [skirmish]
   synergies: []
 
@@ -5630,10 +4762,8 @@
     - expansion: 435
       cardNumber: 358
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1
-  artifactControl: 0.0
+  effectivePower: 8
   traits: [skirmish, dealsDamage, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -5646,10 +4776,7 @@
     - expansion: 435
       cardNumber: 359
   rating: 3
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.0
-  artifactControl: 0.0
   traits: [dealsDamage, goodPlay]
   synergies:
     - trait: returnsFriendlyCreaturesToHand
@@ -5663,10 +4790,7 @@
     - expansion: 341
       cardNumber: 361
   rating: 2
-  expectedAmber: 0.0
   amberControl: 0.5
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: [increasesKeyCost]
   synergies: []
 
@@ -5675,9 +4799,6 @@
     - expansion: 341
       cardNumber: 362
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
   effectivePower: 7
   traits: []
   synergies: []
@@ -5687,10 +4808,6 @@
     - expansion: 341
       cardNumber: 363
   rating: 0.5
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
 
 - name: Niffle Queen
@@ -5698,9 +4815,6 @@
     - expansion: 341
       cardNumber: 364
   rating: 1
-  expectedAmber: 0.0
-  amberControl: 0.0
-  artifactControl: 0.0
   effectivePower: 8
   traits: []
   synergies:
@@ -5714,10 +4828,7 @@
     - expansion: 435
       cardNumber: 361
   rating: 2.5
-  expectedAmber: 0.0
-  amberControl: 0.0
   creatureControl: 1.5
-  artifactControl: 0.0
   traits: [damagesMultipleEnemies, damagesFriendlyCreatures, dealsDamage, goodReap, goodPlay, damagesAllEnemies]
   synergies:
     - trait: highTotalArmor
@@ -5732,9 +4843,7 @@
       cardNumber: 367
   rating: 3.5
   expectedAmber: 1.5
-  amberControl: 0.0
   creatureControl: 0.5
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -5745,9 +4854,6 @@
       cardNumber: 367
   rating: 3.5
   expectedAmber: 2.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
   traits: []
   synergies:
     - trait: highCreatureCount
@@ -5768,11 +4874,7 @@
     - expansion: 341
       cardNumber: 368
   rating: 2
-  expectedAmber: 0.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
-  efficiency: 1.0
+  efficiency: 1.5
   traits: [goodReap, returnsCardsFromDiscard]
   synergies:
     - trait: protectsCreatures
@@ -5788,9 +4890,7 @@
       cardNumber: 369
   rating: 1
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 1
   traits: []
 
 - name: Way of the Wolf
@@ -5799,7 +4899,5 @@
       cardNumber: 370
   rating: 1.5
   expectedAmber: 1.0
-  amberControl: 0.0
-  creatureControl: 0.0
-  artifactControl: 0.0
+  effectivePower: 1
   traits: []

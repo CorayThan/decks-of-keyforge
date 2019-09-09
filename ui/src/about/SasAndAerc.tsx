@@ -158,12 +158,12 @@ export class SasAndAerc extends React.Component {
                                         {x: "Expected Aember", y: stats.averageExpectedAmber},
                                         {x: "Artifact Ctrl", y: stats.averageArtifactControl},
                                         {x: "Creature Ctrl", y: stats.averageCreatureControl},
-                                        {x: "Efficiency", y: stats.averageDeckManipulation},
-                                        {x: "Disruption", y: stats.averageDeckManipulation},
+                                        {x: "Efficiency", y: stats.averageEfficiency},
+                                        {x: "Disruption", y: stats.averageDisruption},
                                         {x: "Effective Power", y: stats.averageEffectivePower / 10},
-                                        {x: "Steal Prevention", y: stats.averageDeckManipulation},
-                                        {x: "House Cheating", y: stats.averageDeckManipulation},
-                                        {x: "Other", y: stats.averageDeckManipulation},
+                                        {x: "Steal Prevention", y: stats.averageStealPrevention},
+                                        {x: "House Cheating", y: stats.averageHouseCheating},
+                                        {x: "Other", y: stats.averageOther},
                                     ]}
                                     domainPadding={60}
                                 />
@@ -213,7 +213,7 @@ export class SasAndAerc extends React.Component {
                             texts={[
                                 "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
                                 "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
-                                "1 point is approximately equal to destroying one 3 power creature or stunning 2 creatures."
+                                "1 point is approximately equal to dealing 4 damage or stunning 2 creatures."
                             ]}
                         />,
                         <AercTraitDescription
@@ -240,8 +240,8 @@ export class SasAndAerc extends React.Component {
                                 "Effective power represents the real usable power of creatures in a deck. Creatures like Grommid, which " +
                                 "often cannot be played or used, have their total power reduced. Meanwhile, other cards contribute extra " +
                                 "power, like Blood of Titans or Zyzzix the Many.",
-                                "Effective power is also increased by Armor at a 1:1 ratio, and other abilities that affect fighting, like elusive, " +
-                                "skirmish, hazardous, and assault.",
+                                "Effective power is also increased by Armor at a 1:1 ratio, and other abilities that affect creature survivability, " +
+                                "like elusive, skirmish, hazardous, assault, and healing.",
                                 "When included in total AERC score, Effective Power is divided by 10."
                             ]}
                         />,
@@ -264,18 +264,18 @@ export class SasAndAerc extends React.Component {
                         />,
                         <AercTraitDescription
                             title={"Other (0)"}
-                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/shadow-of-dis.png"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/psychic-bug.png"}
                             texts={[
-                                "Other is a catch all for qualities of cards that don't fit into the other AERC traits. It includes 0.3 value per creature for a " +
-                                "creature's inherent ability to reap, and unusual effects such as Shadow of Dis."
+                                "Other is a catch all for qualities of cards that don't fit into the other AERC traits. It includes " +
+                                "unusual effects such as viewing an opponent's hand."
                             ]}
                         />,
                         <Typography variant={"h5"}>AERC Score (AERC)</Typography>,
                         <Divider/>,
-                        "To calculate the AERC score divide Effective Power by 10, then add that with the other AERC scores. " +
+                        "To calculate the AERC score divide Effective Power by 10, add all other AERC scores, and then add 0.4 x number of creatures. " +
                         "The AERC score represents how good a deck is at the core mechanics of " +
                         "the game: generating and controlling aember, controlling artifacts, controlling creatures, " +
-                        "drawing cards, and building a board of creatures. It doesn't directly represent how good a deck is.",
+                        "drawing cards, and building a board of creatures.",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"Using SAS and AERC"} infos={[
@@ -296,7 +296,10 @@ export const AercTraitDescription = (props: { title: string, texts: string[], im
     <div>
         <div style={{display: "flex"}}>
             <div>
+                <div style={{display: "flex"}}>
+                    show icon!
                 <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>{props.title}</Typography>
+                </div>
                 <Divider style={{marginBottom: spacing(1)}}/>
                 {props.texts.map((text, idx) => (
                     <div style={{marginBottom: spacing(1)}} key={idx}>

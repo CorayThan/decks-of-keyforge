@@ -1,3 +1,4 @@
+import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
 import { House } from "../houses/House"
 import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
@@ -12,7 +13,7 @@ export interface DeckWithSynergyInfo {
     antisynergyPercentile: number
 }
 
-export interface Deck {
+export interface Deck extends HasAerc {
 
     id: number
     keyforgeId: string
@@ -42,12 +43,6 @@ export interface Deck {
     keyCheatCount: number
     totalArmor: number
 
-    expectedAmber: number
-    amberControl: number
-    creatureControl: number
-    artifactControl: number
-    deckManipulation: number
-    effectivePower: number
     aercScore: number
     previousSasRating: number
     sasRating: number
@@ -62,10 +57,23 @@ export interface Deck {
     funnyCount: number
 
     sasPercentile?: number
+    amberControlPercentile?: number
+    expectedAmberPercentile?: number
+    stealPreventionPercentile?: number
+    artifactControlPercentile?: number
+    creatureControlPercentile?: number
+    effectivePowerPercentile?: number
+    efficiencyPercentile?: number
+    disruptionPercentile?: number
+    houseCheatingPercentile?: number
+
+    creaturesPercentile?: number
+    actionsPercentile?: number
+    artifactsPercentile?: number
+    upgradesPercentile?: number
 
     userDecks: UserDeck[]
 
-    searchResultCards?: KCard[]
     houses: House[]
 
     deckSaleInfo?: DeckSaleInfo[]
@@ -101,7 +109,7 @@ export class DeckUtils {
                 deck.expectedAmber,
                 deck.artifactControl,
                 deck.creatureControl,
-                deck.deckManipulation,
+                deck.efficiency,
                 deck.effectivePower,
 
                 deck.creatureCount,

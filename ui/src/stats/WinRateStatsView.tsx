@@ -6,7 +6,7 @@ import { spacing } from "../config/MuiConfig"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
 import { BarData } from "./DeckStatsView"
-import { StatsBar, StatsBarProps } from "./StatsBar"
+import { RechartsStatsBar, StatsBarProps } from "./StatsBar"
 import { statsStore } from "./StatsStore"
 
 @observer
@@ -24,40 +24,45 @@ export class WinRateStatsView extends React.Component<{}> {
             return <Loader/>
         }
 
-        let deckManipStats
-        if (stats.deckManipulationWinRate && stats.deckManipulationWinRate.length > 0) {
-            deckManipStats = stats.deckManipulationWinRate
+        let efficiencyStats
+        if (stats.efficiencyWinRate && stats.efficiencyWinRate.length > 0) {
+            efficiencyStats = stats.efficiencyWinRate
                 .map((data: BarData) => ({x: (data.x as number) + 5, y: data.y}))
         }
 
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate}/>
-                <WinRateBar name={"Card Rating Win Rate"} data={stats.cardRatingsWinRate}/>
-                <WinRateBar name={"Synergy Win Rate"} data={stats.synergyWinRate}/>
-                <WinRateBar name={"Antisynergy Win Rate"} data={stats.antisynergyWinRate}/>
+                <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate} quantities={stats.sas}/>
+                <WinRateBar name={"Card Rating Win Rate"} data={stats.cardRatingsWinRate} quantities={stats.cardsRating}/>
+                <WinRateBar name={"Synergy Win Rate"} data={stats.synergyWinRate} quantities={stats.synergy}/>
+                <WinRateBar name={"Antisynergy Win Rate"} data={stats.antisynergyWinRate} quantities={stats.antisynergy}/>
 
-                <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true}/>
-                <WinRateBar name={"Amber Control Win Rate"} data={stats.amberControlWinRate} secondary={true}/>
-                <WinRateBar name={"Expected Amber Win Rate"} data={stats.expectedAmberWinRate} secondary={true}/>
-                <WinRateBar name={"Artifact Control Win Rate"} data={stats.artifactControlWinRate} secondary={true}/>
-                <WinRateBar name={"Creature Control Win Rate"} data={stats.creatureControlWinRate} secondary={true}/>
+                <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true} quantities={stats.aerc}/>
+                <WinRateBar name={"Amber Control Win Rate"} data={stats.amberControlWinRate} secondary={true} quantities={stats.amberControl}/>
+                <WinRateBar name={"Expected Amber Win Rate"} data={stats.expectedAmberWinRate} secondary={true} quantities={stats.expectedAmber}/>
+                <WinRateBar name={"Artifact Control Win Rate"} data={stats.artifactControlWinRate} secondary={true} quantities={stats.artifactControl}/>
+                <WinRateBar name={"Creature Control Win Rate"} data={stats.creatureControlWinRate} secondary={true} quantities={stats.creatureControl}/>
                 <WinRateBar
-                    name={"Deck Manipulation Win Rate"}
-                    data={deckManipStats}
+                    name={"Efficiency Win Rate"}
+                    data={efficiencyStats}
                     secondary={true}
-                    xTickValues={[0, 5, 10, 15, 20, 25, 30]}
+                    xTickValues={[0, 5, 10, 15, 20, 25]}
                     xTickFormat={(tick: number) => tick - 5}
+                    quantities={stats.efficiency}
                 />
-                <WinRateBar name={"Effective Power Win Rate"} data={stats.effectivePowerWinRate} secondary={true}/>
+                <WinRateBar name={"Disruption Win Rate"} data={stats.disruptionWinRate} secondary={true} quantities={stats.disruption}/>
+                <WinRateBar name={"Effective Power Win Rate"} data={stats.effectivePowerWinRate} secondary={true} quantities={stats.effectivePower}/>
+                <WinRateBar name={"House Cheating Win Rate"} data={stats.houseCheatingWinRate} secondary={true} quantities={stats.houseCheating}/>
+                <WinRateBar name={"Steal Prevention Win Rate"} data={stats.stealPreventionWinRate} secondary={true} quantities={stats.stealPrevention}/>
+                <WinRateBar name={"Other Win Rate"} data={stats.otherWinRate} secondary={true} quantities={stats.other}/>
 
-                <WinRateBar name={"Creature Count Win Rate"} data={stats.creatureCountWinRate}/>
-                <WinRateBar name={"Action Count Win Rate"} data={stats.actionCountWinRate}/>
-                <WinRateBar name={"Artifact Count Win Rate"} data={stats.artifactCountWinRate}/>
-                <WinRateBar name={"Upgrade Count Win Rate"} data={stats.upgradeCountWinRate}/>
-                <WinRateBar name={"Rare Count Win Rate"} data={stats.raresWinRate}/>
+                <WinRateBar name={"Creature Count Win Rate"} data={stats.creatureCountWinRate} quantities={stats.creatures}/>
+                <WinRateBar name={"Action Count Win Rate"} data={stats.actionCountWinRate} quantities={stats.actions}/>
+                <WinRateBar name={"Artifact Count Win Rate"} data={stats.artifactCountWinRate} quantities={stats.artifacts}/>
+                <WinRateBar name={"Upgrade Count Win Rate"} data={stats.upgradeCountWinRate} quantities={stats.upgrades}/>
+                <WinRateBar name={"Rare Count Win Rate"} data={stats.raresWinRate} yDomain={[40, 60]}/>
 
-                <WinRateBar name={"House Win Rate"} data={stats.houseWinRate} secondary={true}/>
+                <WinRateBar name={"House Win Rate"} data={stats.houseWinRate} secondary={true} yDomain={[40, 60]}/>
             </div>
         )
     }
@@ -65,6 +70,6 @@ export class WinRateStatsView extends React.Component<{}> {
 
 export const WinRateBar = (props: StatsBarProps) => (
     <Card style={{margin: spacing(2)}}>
-        <StatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>
+        <RechartsStatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>
     </Card>
 )
