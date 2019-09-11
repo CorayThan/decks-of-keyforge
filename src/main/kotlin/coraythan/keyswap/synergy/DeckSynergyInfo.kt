@@ -18,7 +18,7 @@ data class SynergyCombo(
         val artifactControl: Double,
         val efficiency: Double,
         val effectivePower: Int,
-        val stealPrevention: Double,
+        val amberProtection: Double,
         val disruption: Double,
         val houseCheating: Double,
         val other: Double,

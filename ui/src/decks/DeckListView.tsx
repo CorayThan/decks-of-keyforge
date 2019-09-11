@@ -1,4 +1,5 @@
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, TextField, Typography } from "@material-ui/core"
+import Tooltip from "@material-ui/core/Tooltip"
 import { ChevronLeft, ChevronRight, GetApp } from "@material-ui/icons"
 import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
@@ -10,6 +11,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
+import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
@@ -118,12 +120,15 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                                 <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
                                 <DeckHeader title={"AERC"} property={"aercScore"}/>
-                                <DeckHeader title={"A"} property={"amberControl"}/>
-                                <DeckHeader title={"E"} property={"expectedAmber"}/>
-                                <DeckHeader title={"R"} property={"artifactControl"}/>
-                                <DeckHeader title={"C"} property={"creatureControl"}/>
-                                <DeckHeader title={"D"} property={"efficiency"}/>
-                                <DeckHeader title={"P"} property={"effectivePower"}/>
+                                <DeckHeader title={"A"} property={"amberControl"} tooltip={"Aember Control"}/>
+                                <DeckHeader title={"E"} property={"expectedAmber"} tooltip={"Expected Aember"}/>
+                                <DeckHeader title={"R"} property={"artifactControl"} tooltip={"Artifact Control"}/>
+                                <DeckHeader title={"C"} property={"creatureControl"} tooltip={"Creature Control"}/>
+                                <DeckHeader title={"P"} property={"effectivePower"} tooltip={"Effective Power"}/>
+                                <DeckHeader title={"F"} property={"efficiency"} tooltip={"Efficiency"}/>
+                                <DeckHeader title={"D"} property={"disruption"} tooltip={"Disruption"}/>
+                                <DeckHeader title={<AercIcon type={AercType.S}/>} property={"amberProtection"} tooltip={"Aember Protection"}/>
+                                <DeckHeader title={<AercIcon type={AercType.H}/>} property={"houseCheating"} tooltip={"House Cheating"}/>
                                 {keyLocalStorage.smallTableView ? null : (
                                     <>
                                         <DeckHeader title={"Bonus Aember"} property={"rawAmber"}/>
@@ -207,8 +212,11 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     <TableCell>{deck.expectedAmber}</TableCell>
                                     <TableCell>{deck.artifactControl}</TableCell>
                                     <TableCell>{deck.creatureControl}</TableCell>
-                                    <TableCell>{deck.efficiency}</TableCell>
                                     <TableCell>{deck.effectivePower}</TableCell>
+                                    <TableCell>{deck.efficiency}</TableCell>
+                                    <TableCell>{deck.disruption}</TableCell>
+                                    <TableCell>{deck.amberProtection}</TableCell>
+                                    <TableCell>{deck.houseCheating}</TableCell>
                                     {keyLocalStorage.smallTableView ? null : (
                                         <>
                                             <TableCell>{deck.rawAmber}</TableCell>
@@ -334,15 +342,17 @@ const changeSortHandler = (property: string) => {
     }
 }
 
-const DeckHeader = (props: { title: string, property: string, minWidth?: number }) => (
+const DeckHeader = (props: { title: React.ReactNode, property: string, tooltip?: string, minWidth?: number }) => (
     <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined, maxWidth: 72}}>
-        <TableSortLabel
-            active={deckTableViewStore.activeTableSort === props.property}
-            direction={deckTableViewStore.tableSortDir}
-            onClick={changeSortHandler(props.property)}
-        >
-            {props.title}
-        </TableSortLabel>
+        <Tooltip title={props.tooltip ? props.tooltip : ""}>
+            <TableSortLabel
+                active={deckTableViewStore.activeTableSort === props.property}
+                direction={deckTableViewStore.tableSortDir}
+                onClick={changeSortHandler(props.property)}
+            >
+                {props.title}
+            </TableSortLabel>
+        </Tooltip>
     </TableCell>
 )
 

@@ -1,7 +1,6 @@
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { log } from "../config/Utils"
 import { expansionInfos } from "../expansions/Expansions"
 import { statsStore } from "./StatsStore"
 
@@ -9,7 +8,6 @@ import { statsStore } from "./StatsStore"
 export class ToggleStats extends React.Component<{ style?: React.CSSProperties }> {
 
     toggleStatsExpansion = (event: React.MouseEvent, expansionNumber: number) => {
-        log.debug(`Toggle stats to ${expansionNumber}`)
         if (expansionNumber === -1) {
             statsStore.changeStats(undefined)
         } else {
@@ -27,11 +25,10 @@ export class ToggleStats extends React.Component<{ style?: React.CSSProperties }
                 style={this.props.style}
                 size={"small"}
             >
-                <ToggleButton value={-1} >
+                <ToggleButton value={-1}>
                     All
                 </ToggleButton>
                 {expansionInfos.map(expansionInfo => {
-                    log.debug(`toggle button with value: ${expansionInfo.expansionNumber}`)
                     return (
                         <ToggleButton value={expansionInfo.expansionNumber} key={expansionInfo.expansionNumber}>
                             {expansionInfo.abbreviation}

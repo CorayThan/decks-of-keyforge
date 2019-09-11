@@ -57,20 +57,6 @@ export interface Deck extends HasAerc {
     funnyCount: number
 
     sasPercentile?: number
-    amberControlPercentile?: number
-    expectedAmberPercentile?: number
-    stealPreventionPercentile?: number
-    artifactControlPercentile?: number
-    creatureControlPercentile?: number
-    effectivePowerPercentile?: number
-    efficiencyPercentile?: number
-    disruptionPercentile?: number
-    houseCheatingPercentile?: number
-
-    creaturesPercentile?: number
-    actionsPercentile?: number
-    artifactsPercentile?: number
-    upgradesPercentile?: number
 
     userDecks: UserDeck[]
 

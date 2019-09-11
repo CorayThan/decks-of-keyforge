@@ -14,12 +14,13 @@ import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { AboutSubPaths, Routes } from "../config/Routes"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
+import { UnstyledLink } from "../generic/UnstyledLink"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -41,6 +42,8 @@ interface DeckViewSmallProps {
     hideActions?: boolean
     style?: React.CSSProperties
 }
+
+export const standardDeckViewWidth = 704
 
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
@@ -65,7 +68,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         if (compact) {
             width = 328
         } else {
-            width = 704
+            width = standardDeckViewWidth
         }
         return (
             <KeyCard
@@ -80,10 +83,11 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     paddingTop: spacing(1),
                     paddingBottom: spacing(1)
                 }}
+                id={deck.keyforgeId}
             >
-                {compact ? (
-                    <AercView hasAerc={deck} deck={deck} horizontal={true} excludeMisc={true}/>
-                ) : null}
+                {compact && (
+                    <AercView hasAerc={deck} deck={deck} horizontal={true} excludeMisc={true} style={{marginLeft: spacing(1)}}/>
+                )}
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}>
                         <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
@@ -190,7 +194,9 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                     <HouseBanner houses={houses} size={72}/>
                     <OrganizedPlayStats deck={deck}/>
                 </div>
-                <DeckScoreView deck={deck} style={compact ? {alignItems: "flex-end"} : undefined}/>
+                <UnstyledLink to={AboutSubPaths.sas}>
+                    <DeckScoreView deck={deck}/>
+                </UnstyledLink>
             </div>
         )
     }

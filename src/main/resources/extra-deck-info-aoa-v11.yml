@@ -1583,10 +1583,15 @@
   rating: 3.5
   amberControl: 1.25
   expectedAmber: 1.25
-  traits: [stealsAmber]
+  traits: [stealsAmber, goodPlay]
   synergies:
     - trait: increasesKeyCost
       rating: 1
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 1
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 3
+      type: house
 
 - name: Sucker Punch
   cardNumbers:
@@ -1689,7 +1694,7 @@
       cardNumber: 291
   rating: 2
   expectedAmber: 1
-  stealPrevention: 0.25
+  amberProtection: 0.25
   traits: [forgesKeys]
   synergies:
     - trait: highExpectedAmber
@@ -2046,7 +2051,7 @@
     - expansion: 435
       cardNumber: 362
   rating: 3
-  stealPrevention: 2
+  amberProtection: 2
   effectivePower: 3
   traits: [elusive]
 

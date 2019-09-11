@@ -14,7 +14,7 @@ data class GlobalStats(
         val averageEfficiency: Int = 0,
         val averageDisruption: Int = 0,
         val averageHouseCheating: Int = 0,
-        val averageStealPrevention: Int = 0,
+        val averageAmberProtection: Int = 0,
         val averageOther: Int = 0,
         val averageEffectivePower:  Int = 0,
         val sas: List<BarData> = listOf(),
@@ -31,7 +31,7 @@ data class GlobalStats(
         val efficiency: List<BarData> = listOf(),
         val disruption: List<BarData> = listOf(),
         val houseCheating: List<BarData> = listOf(),
-        val stealPrevention: List<BarData> = listOf(),
+        val amberProtection: List<BarData> = listOf(),
         val other: List<BarData> = listOf(),
         val effectivePower: List<BarData> = listOf(),
 
@@ -52,7 +52,7 @@ data class GlobalStats(
         val efficiencyWinRate: List<BarData>? = listOf(),
         val disruptionWinRate: List<BarData>? = listOf(),
         val houseCheatingWinRate: List<BarData>? = listOf(),
-        val stealPreventionWinRate: List<BarData>? = listOf(),
+        val amberProtectionWinRate: List<BarData>? = listOf(),
         val otherWinRate: List<BarData>? = listOf(),
         val effectivePowerWinRate: List<BarData>? = listOf(),
 
@@ -62,7 +62,21 @@ data class GlobalStats(
         val upgradeCountWinRate: List<BarData>? = listOf(),
 
         val raresWinRate: List<BarData>? = listOf(),
-        val houseWinRate: List<BarData>? = listOf()
+        val houseWinRate: List<BarData>? = listOf(),
+
+        val actionCountPercentiles: Map<Int, Double> = mapOf(),
+        val creatureCountPercentiles: Map<Int, Double> = mapOf(),
+        val artifactCountPercentiles: Map<Int, Double> = mapOf(),
+        val upgradeCountPercentiles: Map<Int, Double> = mapOf(),
+
+        val amberControlPercentiles: Map<Int, Double> = mapOf(),
+        val expectedAmberPercentiles: Map<Int, Double> = mapOf(),
+        val amberProtectionPercentiles: Map<Int, Double> = mapOf(),
+        val creatureControlPercentiles: Map<Int, Double> = mapOf(),
+        val artifactControlPercentiles: Map<Int, Double> = mapOf(),
+        val effectivePowerPercentiles: Map<Int, Double> = mapOf(),
+        val efficiencyPercentiles: Map<Int, Double> = mapOf(),
+        val disruptionPercentiles: Map<Int, Double> = mapOf()
 )
 
 data class BarData(

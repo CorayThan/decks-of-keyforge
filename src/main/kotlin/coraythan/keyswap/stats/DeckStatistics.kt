@@ -15,7 +15,7 @@ data class DeckStatistics(
         val efficiency: MutableMap<Int, Int> = mutableMapOf(),
         val disruption: MutableMap<Int, Int> = mutableMapOf(),
         val houseCheating: MutableMap<Int, Int> = mutableMapOf(),
-        val stealPrevention: MutableMap<Int, Int> = mutableMapOf(),
+        val amberProtection: MutableMap<Int, Int> = mutableMapOf(),
         val other: MutableMap<Int, Int> = mutableMapOf(),
         val effectivePower: MutableMap<Int, Int> = mutableMapOf(),
         val sas: MutableMap<Int, Int> = mutableMapOf(),
@@ -44,7 +44,7 @@ data class DeckStatistics(
         val efficiencyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val disruptionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val houseCheatingToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
-        val stealPreventionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
+        val amberProtectionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val otherToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val effectivePowerToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
 
@@ -57,41 +57,41 @@ data class DeckStatistics(
         val housesWins: MutableMap<House, Wins> = mutableMapOf()
 ) {
     val expectedAmberStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(expectedAmber)
+        get() = IndividalDeckTraitStats.fromValues(expectedAmber)
     val amberControlStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(amberControl)
+        get() = IndividalDeckTraitStats.fromValues(amberControl)
     val creatureControlStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(creatureControl)
+        get() = IndividalDeckTraitStats.fromValues(creatureControl)
     val artifactControlStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(artifactControl)
+        get() = IndividalDeckTraitStats.fromValues(artifactControl)
     val efficiencyStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(efficiency)
     val disruptionStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(disruption)
     val houseCheatingStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(houseCheating)
-    val stealPreventionStats: IndividalDeckTraitStats
-        get() = IndividalDeckTraitStats.fromValues(stealPrevention)
+    val amberProtectionStats: IndividalDeckTraitStats
+        get() = IndividalDeckTraitStats.fromValues(amberProtection)
     val otherStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(other)
     val effectivePowerStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(effectivePower)
     val sasStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(sas)
+        get() = IndividalDeckTraitStats.fromValues(sas)
     val cardsRatingStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(cardsRating)
+        get() = IndividalDeckTraitStats.fromValues(cardsRating)
     val synergyStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(synergy)
+        get() = IndividalDeckTraitStats.fromValues(synergy)
     val antisynergyStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(antisynergy, true)
+        get() = IndividalDeckTraitStats.fromValues(antisynergy, true)
     val creatureCountStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(creatureCount)
+        get() = IndividalDeckTraitStats.fromValues(creatureCount)
     val actionCountStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(actionCount)
+        get() = IndividalDeckTraitStats.fromValues(actionCount)
     val artifactCountStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(artifactCount)
+        get() = IndividalDeckTraitStats.fromValues(artifactCount)
     val upgradeCountStats: IndividalDeckTraitStats
-            get() = IndividalDeckTraitStats.fromValues(upgradeCount)
+        get() = IndividalDeckTraitStats.fromValues(upgradeCount)
 
     fun toGlobalStats() = GlobalStats(
             averageActions = actionCountStats.median,
@@ -105,7 +105,7 @@ data class DeckStatistics(
             averageEfficiency = efficiencyStats.median,
             averageDisruption = disruptionStats.median,
             averageHouseCheating = houseCheatingStats.median,
-            averageStealPrevention = stealPreventionStats.median,
+            averageAmberProtection = amberProtectionStats.median,
             averageOther = otherStats.median,
             averageEffectivePower = effectivePowerStats.median,
             sas = sas.map { BarData(it.key, it.value) },
@@ -122,7 +122,7 @@ data class DeckStatistics(
             efficiency = efficiency.map { BarData(it.key, it.value) },
             disruption = disruption.map { BarData(it.key, it.value) },
             houseCheating = houseCheating.map { BarData(it.key, it.value) },
-            stealPrevention = stealPrevention.map { BarData(it.key, it.value) },
+            amberProtection = amberProtection.map { BarData(it.key, it.value) },
             other = other.map { BarData(it.key, it.value) },
             effectivePower = groupEffectiveCreaturePowerByTens(),
 
@@ -143,7 +143,7 @@ data class DeckStatistics(
             efficiencyWinRate = efficiencyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             disruptionWinRate = disruptionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             houseCheatingWinRate = houseCheatingToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
-            stealPreventionWinRate = stealPreventionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            amberProtectionWinRate = amberProtectionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             otherWinRate = otherToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             effectivePowerWinRate = effectivePowerToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
 
@@ -153,7 +153,21 @@ data class DeckStatistics(
             upgradeCountWinRate = upgradeWins.map { BarData(it.key, it.value.toWinPercent()) },
 
             raresWinRate = raresWins.map { BarData(it.key, it.value.toWinPercent()) },
-            houseWinRate = housesWins.map { BarData(it.key, it.value.toWinPercent()) }.sortedBy { it.x as House }
+            houseWinRate = housesWins.map { BarData(it.key, it.value.toWinPercent()) }.sortedBy { it.x as House },
+
+            actionCountPercentiles = actionCountStats.percentileForValue,
+            creatureCountPercentiles = creatureCountStats.percentileForValue,
+            artifactCountPercentiles = artifactCountStats.percentileForValue,
+            upgradeCountPercentiles = upgradeCountStats.percentileForValue,
+
+            amberControlPercentiles = amberControlStats.percentileForValue,
+            expectedAmberPercentiles = expectedAmberStats.percentileForValue,
+            amberProtectionPercentiles = amberProtectionStats.percentileForValue,
+            creatureControlPercentiles = creatureControlStats.percentileForValue,
+            artifactControlPercentiles = artifactControlStats.percentileForValue,
+            effectivePowerPercentiles = effectivePowerStats.percentileForValue,
+            efficiencyPercentiles = efficiencyStats.percentileForValue,
+            disruptionPercentiles = disruptionStats.percentileForValue
     )
 
     private fun groupCreaturePowerByTens(): List<BarData> {

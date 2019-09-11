@@ -29,7 +29,7 @@ data class DeckSearchResult(
         val artifactControl: Double = 0.0,
         val efficiency: Double = 0.0,
         val effectivePower: Int = 0,
-        val stealPrevention: Double = 0.0,
+        val amberProtection: Double = 0.0,
         val disruption: Double = 0.0,
         val houseCheating: Double = 0.0,
         val other: Double = 0.0,
@@ -54,20 +54,6 @@ data class DeckSearchResult(
         val funnyCount: Int = 0,
 
         val sasPercentile: Double = 0.0,
-        val amberControlPercentile: Int?,
-        val expectedAmberPercentile: Int?,
-        val stealPreventionPercentile: Int?,
-        val artifactControlPercentile: Int?,
-        val creatureControlPercentile: Int?,
-        val effectivePowerPercentile: Int?,
-        val efficiencyPercentile: Int?,
-        val disruptionPercentile: Int?,
-        val houseCheatingPercentile: Int?,
-
-        val creaturesPercentile: Int?,
-        val actionsPercentile: Int?,
-        val artifactsPercentile: Int?,
-        val upgradesPercentile: Int?,
 
         val searchResultCards: List<DeckSearchResultCard> = listOf(),
 

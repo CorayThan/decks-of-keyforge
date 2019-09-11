@@ -303,7 +303,7 @@ class DeckImporterService(
         val d = extraCardInfos.map { it.disruption }.sum()
         val p = cards.map { it.effectivePower }.sum()
         val o = extraCardInfos.map { it.other }.sum()
-        val s = extraCardInfos.map { it.stealPrevention }.sum()
+        val s = extraCardInfos.map { it.amberProtection }.sum()
         val h = extraCardInfos.map { it.houseCheating }.sum()
         val powerValue = p.toDouble() / 10
         val newSas = cardsRating.roundToInt() + synergy + antisynergy
@@ -321,9 +321,10 @@ class DeckImporterService(
                 efficiency = f,
                 effectivePower = p,
                 disruption = d,
-                stealPrevention = s,
+                amberProtection = s,
                 houseCheating = h,
                 other = o,
+                // Remember! When updating this also update Card
                 aercScore = a + e + r + c + f + d + s + h + o + powerValue + (creatureCount.toDouble() * 0.4),
                 previousSasRating = if (newSas != deck.sasRating) deck.sasRating else deck.previousSasRating,
                 sasRating = newSas,

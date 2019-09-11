@@ -9,7 +9,7 @@ export interface HasAerc {
     aercScore: number
     efficiency: number
     effectivePower: number
-    stealPrevention: number
+    amberProtection: number
     disruption: number
     houseCheating: number
     other: number

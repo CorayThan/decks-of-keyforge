@@ -1,4 +1,4 @@
-import { BarData } from "./DeckStatsView"
+import { BarData } from "../graphs/StatsBar"
 
 export interface GlobalStatsWithExpansion {
     expansion: number | null
@@ -17,7 +17,7 @@ export interface GlobalStats {
     averageEfficiency: number
     averageDisruption: number
     averageHouseCheating: number
-    averageStealPrevention: number
+    averageAmberProtection: number
     averageOther: number
     averageEffectivePower: number
     sas: BarData[]
@@ -34,7 +34,7 @@ export interface GlobalStats {
     efficiency: BarData[]
     disruption: BarData[]
     houseCheating: BarData[]
-    stealPrevention: BarData[]
+    amberProtection: BarData[]
     other: BarData[]
     effectivePower: BarData[]
 
@@ -55,7 +55,7 @@ export interface GlobalStats {
     efficiencyWinRate?: BarData[]
     disruptionWinRate?: BarData[]
     houseCheatingWinRate?: BarData[]
-    stealPreventionWinRate?: BarData[]
+    amberProtectionWinRate?: BarData[]
     otherWinRate?: BarData[]
     effectivePowerWinRate?: BarData[]
 
@@ -66,4 +66,19 @@ export interface GlobalStats {
 
     raresWinRate?: BarData[]
     houseWinRate?: BarData[]
+
+    // Int then Double
+    actionCountPercentiles: { [key: number]: number }
+    creatureCountPercentiles: { [key: number]: number }
+    artifactCountPercentiles: { [key: number]: number }
+    upgradeCountPercentiles: { [key: number]: number }
+
+    amberControlPercentiles: { [key: number]: number }
+    expectedAmberPercentiles: { [key: number]: number }
+    amberProtectionPercentiles: { [key: number]: number }
+    creatureControlPercentiles: { [key: number]: number }
+    artifactControlPercentiles: { [key: number]: number }
+    effectivePowerPercentiles: { [key: number]: number }
+    efficiencyPercentiles: { [key: number]: number }
+    disruptionPercentiles: { [key: number]: number }
 }

@@ -1,5 +1,4 @@
 import { observable } from "mobx"
-import { screenStore } from "../ui/ScreenStore"
 import { log } from "./Utils"
 
 enum Keys {
@@ -16,7 +15,7 @@ enum Keys {
 class KeyLocalStorage {
 
     @observable
-    deckListViewType: "graphs" | "grid" | "table" = screenStore.screenSizeMd() ? "grid" : "graphs"
+    deckListViewType: "graphs" | "grid" | "table" = "grid"
 
     @observable
     showFullCardView: boolean = false

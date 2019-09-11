@@ -11,13 +11,14 @@ interface DokRadarProps {
     keys: string[]
     indexBy: string
     name: string
+    maxValue?: number
     style?: React.CSSProperties
 }
 
 @observer
 export class DokRadar extends React.Component<DokRadarProps> {
     render() {
-        const {data, style, keys, indexBy, name} = this.props
+        const {data, style, keys, indexBy, name, maxValue} = this.props
 
         const margin = 32
         const marginLeftRight = 104
@@ -30,7 +31,7 @@ export class DokRadar extends React.Component<DokRadarProps> {
                         data={data}
                         keys={keys}
                         indexBy={indexBy}
-                        maxValue={100}
+                        maxValue={maxValue}
                         gridLevels={5}
                         gridShape={"linear"}
                         colors={{scheme: "category10"}}

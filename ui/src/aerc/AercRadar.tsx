@@ -1,46 +1,55 @@
+import { observer } from "mobx-react"
 import React from "react"
+import { Utils } from "../config/Utils"
 import { Deck } from "../decks/Deck"
-import { DokRadar } from "../stats/DokRadar"
+import { DokRadar } from "../graphs/DokRadar"
+import { Loader } from "../mui-restyled/Loader"
+import { statsStore } from "../stats/StatsStore"
 
 interface AercRadarProps {
     deck: Deck
 }
 
+@observer
 export class AercRadar extends React.Component<AercRadarProps> {
     render() {
         const {deck} = this.props
+        const stats = statsStore.stats
+        if (stats == null) {
+            return <Loader/>
+        }
         const data = [
             {
-                aerc: "Expected Aember",
-                deck: deck.expectedAmberPercentile,
+                aerc: "Expected Aember (E)",
+                deck: Utils.valueFromPercentiles(deck.expectedAmber, stats.expectedAmberPercentiles),
             },
             {
-                aerc: "Steal Prevention",
-                deck: deck.stealPreventionPercentile,
+                aerc: "Aember Protection",
+                deck: Utils.valueFromPercentiles(deck.amberProtection, stats.amberProtectionPercentiles),
             },
             {
-                aerc: "Aember Control",
-                deck: deck.amberControlPercentile
+                aerc: "Aember Ctrl (A)",
+                deck: Utils.valueFromPercentiles(deck.amberControl, stats.amberControlPercentiles),
             },
             {
-                aerc: "Artifact Control",
-                deck: deck.artifactControlPercentile,
+                aerc: "Artifact Control (R)",
+                deck: Utils.valueFromPercentiles(deck.artifactControl, stats.artifactControlPercentiles),
             },
             {
-                aerc: "Creature Control",
-                deck: deck.creatureControlPercentile,
+                aerc: "Creature Control (C)",
+                deck: Utils.valueFromPercentiles(deck.creatureControl, stats.creatureControlPercentiles),
             },
             {
-                aerc: "Effective Power",
-                deck: deck.effectivePowerPercentile,
+                aerc: "Effective Power (P)",
+                deck: Utils.valueFromPercentiles(deck.effectivePower, stats.effectivePowerPercentiles),
             },
             {
-                aerc: "Disruption",
-                deck: deck.disruptionPercentile,
+                aerc: "Disruption (D)",
+                deck: Utils.valueFromPercentiles(deck.disruption, stats.disruptionPercentiles),
             },
             {
-                aerc: "Efficiency",
-                deck: deck.efficiencyPercentile,
+                aerc: "Efficiency (E)",
+                deck: Utils.valueFromPercentiles(deck.efficiency, stats.efficiencyPercentiles),
             },
         ]
 
@@ -50,6 +59,7 @@ export class AercRadar extends React.Component<AercRadarProps> {
                 keys={["deck"]}
                 indexBy={"aerc"}
                 name={"Aerc Percentile Rankings"}
+                maxValue={100}
             />
         )
     }

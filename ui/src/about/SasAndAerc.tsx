@@ -4,13 +4,11 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckScorePill } from "../decks/DeckScoreView"
 import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
+import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { AverageIcon } from "../generic/icons/AverageIcon"
 import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
-import { Loader } from "../mui-restyled/Loader"
-import { KeyBar } from "../stats/DeckStatsView"
-import { statsStore } from "../stats/StatsStore"
 import { uiStore } from "../ui/UiStore"
 import { AboutGridItem } from "./AboutPage"
 
@@ -23,8 +21,6 @@ export class SasAndAerc extends React.Component {
     }
 
     render() {
-        const stats = statsStore.stats
-
         /* eslint react/jsx-key: 0 */
         return (
             <>
@@ -150,32 +146,11 @@ export class SasAndAerc extends React.Component {
                 <AboutGridItem>
                     <InfoListCard title={"The AERC of your Deck"} infos={[
                         <Typography variant={"h5"}>AERC Deck Traits</Typography>,
-                        <div style={{maxWidth: 520, maxHeight: 320}}>
-                            {stats ? (
-                                <KeyBar
-                                    data={[
-                                        {x: "Aember Ctrl", y: stats.averageAmberControl},
-                                        {x: "Expected Aember", y: stats.averageExpectedAmber},
-                                        {x: "Artifact Ctrl", y: stats.averageArtifactControl},
-                                        {x: "Creature Ctrl", y: stats.averageCreatureControl},
-                                        {x: "Efficiency", y: stats.averageEfficiency},
-                                        {x: "Disruption", y: stats.averageDisruption},
-                                        {x: "Effective Power", y: stats.averageEffectivePower / 10},
-                                        {x: "Steal Prevention", y: stats.averageStealPrevention},
-                                        {x: "House Cheating", y: stats.averageHouseCheating},
-                                        {x: "Other", y: stats.averageOther},
-                                    ]}
-                                    domainPadding={60}
-                                />
-                            ) : <Loader/>}
-                        </div>,
-                        <div style={{paddingBottom: spacing(2)}}/>,
                         "I've rated every card in key metrics, like its expected Aember Control (A), Expected Aember (E), Artifact Control (R), " +
-                        "Creature Control (C), Efficiency (F), Disruption (D), Effective Total Creature Power (P), Steal Prevention (S), " +
-                        "House Cheating (H) and Other (O).",
+                        "Creature Control (C), Efficiency, Disruption, Effective Creature Power, Aember Protection, " +
+                        "House Cheating and Other.",
                         "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
-                        "When added together, these metrics represent the value of a deck converted to Aember. For example, Punch " +
-                        "provides one aember, and does damage equal to 1 aember of value. Its net AERC rating and value in a deck is 2.",
+                        "When added together, these metrics represent the value of a deck converted to Aember.",
                         "When searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
                         <div style={{paddingBottom: spacing(1)}}/>,
 
@@ -187,6 +162,7 @@ export class SasAndAerc extends React.Component {
                                 "counted at a 1:1 ratio, while captured aember and increased key cost is counted at a 2:1 ratio, as those can be reclaimed or " +
                                 "avoided."
                             ]}
+                            icon={AercType.A}
                         />,
                         <AercTraitDescription
                             title={"Expected Aember (E)"}
@@ -197,6 +173,7 @@ export class SasAndAerc extends React.Component {
                                 "Some cards that are difficult to play have their base aember reduced, and some cards " +
                                 "that immediately allow the use of creatures have aember added."
                             ]}
+                            icon={AercType.E}
                         />,
                         <AercTraitDescription
                             title={"Artifact Control (R)"}
@@ -206,6 +183,7 @@ export class SasAndAerc extends React.Component {
                                 "Destroying an artifact is worth 1.5 points. Using an enemy artifact (destroying single use artifacts) is 1 point. And delaying " +
                                 "artifacts is 0.5 points."
                             ]}
+                            icon={AercType.R}
                         />,
                         <AercTraitDescription
                             title={"Creature Control (C)"}
@@ -215,6 +193,7 @@ export class SasAndAerc extends React.Component {
                                 "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
                                 "1 point is approximately equal to dealing 4 damage or stunning 2 creatures."
                             ]}
+                            icon={AercType.C}
                         />,
                         <AercTraitDescription
                             title={"Efficiency (F)"}
@@ -224,6 +203,7 @@ export class SasAndAerc extends React.Component {
                                 "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
                                 "1 point is approximately equal to drawing two cards or archiving a random card."
                             ]}
+                            icon={AercType.F}
                         />,
                         <AercTraitDescription
                             title={"Disruption (D)"}
@@ -232,6 +212,7 @@ export class SasAndAerc extends React.Component {
                                 "Disruption is increased by effects that reduce the number of cards your opponent can play. " +
                                 "1 point is approximately equal to preventing your opponent from drawing 2 cards."
                             ]}
+                            icon={AercType.D}
                         />,
                         <AercTraitDescription
                             title={"Effective Power (P)"}
@@ -244,38 +225,41 @@ export class SasAndAerc extends React.Component {
                                 "like elusive, skirmish, hazardous, assault, and healing.",
                                 "When included in total AERC score, Effective Power is divided by 10."
                             ]}
+                            icon={AercType.P}
                         />,
                         <AercTraitDescription
-                            title={"Steal Prevention (S)"}
+                            title={"Aember Protection"}
                             img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/pos-pixies.png"}
                             texts={[
-                                "Steal Prevention includes any cards with effects that prevent stealing. This includes obvious cards, like Po's Pixies, " +
+                                "Aember Protection includes any cards with effects that prevent stealing. This includes obvious cards, like Po's Pixies, " +
                                 "as well as Key Cheats (can't steal what you don't have!) and Control the Weak (can't steal with cards you can't play!)"
                             ]}
+                            icon={AercType.S}
                         />,
                         <AercTraitDescription
-                            title={"House Cheating (H)"}
+                            title={"House Cheating"}
                             img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ulyq-megamouth.png"}
                             texts={[
                                 "House cheating represents how well a deck can use cards outside of their normal house. For example, Ulyq Megamouth " +
                                 "allows you to use a friendly non-mars creature, and increases H. Cards that let you play cards out of house, like Phase " +
                                 "Shift, effect efficiency."
                             ]}
+                            icon={AercType.H}
                         />,
                         <AercTraitDescription
-                            title={"Other (0)"}
+                            title={"Other"}
                             img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/psychic-bug.png"}
                             texts={[
                                 "Other is a catch all for qualities of cards that don't fit into the other AERC traits. It includes " +
                                 "unusual effects such as viewing an opponent's hand."
                             ]}
+                            icon={AercType.O}
                         />,
-                        <Typography variant={"h5"}>AERC Score (AERC)</Typography>,
+                        <Typography variant={"h5"}>AERC Score</Typography>,
                         <Divider/>,
                         "To calculate the AERC score divide Effective Power by 10, add all other AERC scores, and then add 0.4 x number of creatures. " +
                         "The AERC score represents how good a deck is at the core mechanics of " +
-                        "the game: generating and controlling aember, controlling artifacts, controlling creatures, " +
-                        "drawing cards, and building a board of creatures.",
+                        "the game.",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"Using SAS and AERC"} infos={[
@@ -292,13 +276,15 @@ export class SasAndAerc extends React.Component {
     }
 }
 
-export const AercTraitDescription = (props: { title: string, texts: string[], img: string }) => (
+export const AercTraitDescription = (props: { title: string, texts: string[], img: string, icon: AercType }) => (
     <div>
         <div style={{display: "flex"}}>
             <div>
-                <div style={{display: "flex"}}>
-                    show icon!
-                <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>{props.title}</Typography>
+                <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
+                    <AercIcon type={props.icon}/>
+                    <Typography variant={"h5"} style={{marginLeft: spacing(1)}}>
+                        {props.title}
+                    </Typography>
                 </div>
                 <Divider style={{marginBottom: spacing(1)}}/>
                 {props.texts.map((text, idx) => (

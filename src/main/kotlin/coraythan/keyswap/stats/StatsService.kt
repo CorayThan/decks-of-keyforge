@@ -171,7 +171,7 @@ class StatsService(
                         stats.efficiency.incrementValue(ratedDeck.efficiency.roundToInt())
                         stats.disruption.incrementValue(ratedDeck.disruption?.roundToInt() ?: 0)
                         stats.houseCheating.incrementValue(ratedDeck.houseCheating?.roundToInt() ?: 0)
-                        stats.stealPrevention.incrementValue(ratedDeck.stealPrevention?.roundToInt() ?: 0)
+                        stats.amberProtection.incrementValue(ratedDeck.amberProtection?.roundToInt() ?: 0)
                         stats.other.incrementValue(ratedDeck.other?.roundToInt() ?: 0)
                         stats.effectivePower.incrementValue(ratedDeck.effectivePower)
                         stats.sas.incrementValue(ratedDeck.sasRating)
@@ -204,7 +204,7 @@ class StatsService(
                             stats.efficiencyToWinsLosses.addWinsLosses(ratedDeck.efficiency.roundToInt(), wins)
                             stats.disruptionToWinsLosses.addWinsLosses(ratedDeck.disruption?.roundToInt() ?: 0, wins)
                             stats.houseCheatingToWinsLosses.addWinsLosses(ratedDeck.houseCheating?.roundToInt() ?: 0, wins)
-                            stats.stealPreventionToWinsLosses.addWinsLosses(ratedDeck.stealPrevention?.roundToInt() ?: 0, wins)
+                            stats.amberProtectionToWinsLosses.addWinsLosses(ratedDeck.amberProtection?.roundToInt() ?: 0, wins)
                             stats.otherToWinsLosses.addWinsLosses(ratedDeck.other?.roundToInt() ?: 0, wins)
                             stats.effectivePowerToWinsLosses.addWinsLosses((ratedDeck.effectivePower / 5) * 5, wins)
 

@@ -2,9 +2,9 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
+import { StatsBar, StatsBarProps } from "../graphs/StatsBar"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
-import { StatsBar, StatsBarProps } from "./StatsBar"
 import { statsStore } from "./StatsStore"
 
 @observer

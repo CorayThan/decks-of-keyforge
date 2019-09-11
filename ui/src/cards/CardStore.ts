@@ -117,13 +117,6 @@ export class CardStore {
                 basisForCards.forEach(card => {
                     allWins += card.wins!
                     card.winRate = winPercentForCard(card)
-                    card.aercScore =
-                        card.extraCardInfo.amberControl +
-                        card.extraCardInfo.expectedAmber +
-                        card.extraCardInfo.artifactControl +
-                        card.extraCardInfo.creatureControl +
-                        card.extraCardInfo.efficiency +
-                        card.effectivePower / 10
                 })
                 log.debug(`All wins: ${allWins}`)
                 this.allCards = basisForCards

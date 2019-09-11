@@ -6,6 +6,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { deckStore } from "../decks/DeckStore"
+import { standardDeckViewWidth } from "../decks/DeckViewSmall"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
 
@@ -25,16 +26,19 @@ class KeyDrawerStoreImpl {
 export const keyDrawerStore = new KeyDrawerStoreImpl()
 
 @observer
-export class KeyDrawer extends React.Component<{ children: React.ReactNode, width?: number, hamburgerMenu?: boolean }> {
+export class KeyDrawer extends React.Component<{ children: React.ReactNode, width?: number, hamburgerMenu?: boolean, deckVersion?: boolean }> {
 
     componentDidMount() {
         keyDrawerStore.open = !deckStore.autoSearch
     }
 
     render() {
-        const {width, hamburgerMenu} = this.props
+        const {width, hamburgerMenu, deckVersion} = this.props
         const panelWidth = width ? width : standardPanelWidth
-        const small = screenStore.screenSizeSm()
+        let small = screenStore.screenSizeSm()
+        if (deckVersion) {
+            small = (screenStore.screenWidth - standardDeckViewWidth - panelWidth) < 64
+        }
         if (small) {
             if (hamburgerMenu) {
                 return null

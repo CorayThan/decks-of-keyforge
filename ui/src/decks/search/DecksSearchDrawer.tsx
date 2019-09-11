@@ -174,7 +174,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "creatureControl",
             "efficiency",
             "disruption",
-            "stealPrevention",
+            "amberProtection",
             "houseCheating",
             "effectivePower",
             "rawAmber",
@@ -203,7 +203,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         }
 
         return (
-            <KeyDrawer>
+            <KeyDrawer deckVersion={true}>
                 <form onSubmit={this.search}>
                     <List dense={true}>
                         <ListItem>
@@ -510,15 +510,17 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         style={{marginRight: spacing(2)}}
                                         size={"small"}
                                     >
-                                        <ToggleButton value={"graphs"}>
-                                            <BarChart/>
-                                        </ToggleButton>
                                         <ToggleButton value={"grid"}>
                                             <ViewModule/>
                                         </ToggleButton>
-                                        <ToggleButton value={"table"}>
-                                            <ViewList/>
+                                        <ToggleButton value={"graphs"}>
+                                            <BarChart/>
                                         </ToggleButton>
+                                        {!screenStore.screenSizeXs() && (
+                                            <ToggleButton value={"table"}>
+                                                <ViewList/>
+                                            </ToggleButton>
+                                        )}
                                     </ToggleButtonGroup>
                                 </Tooltip>
                                 <Tooltip title={"Page size"}>

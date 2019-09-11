@@ -729,7 +729,7 @@
   rating: 4
   expectedAmber: 1.0
   disruption: 1.5
-  stealPrevention: 1
+  amberProtection: 1
   traits: [controlsHouseChoice]
   synergies:
     - trait: revealsHand
@@ -1259,6 +1259,9 @@
     - trait: increasesKeyCost
     - trait: returnsFriendlyCreaturesToHand
       rating: 1
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 2
+      type: house
 
 - name: Snudge
   cardNumbers:
@@ -1701,7 +1704,7 @@
     - expansion: 435
       cardNumber: 151
   rating: 1
-  stealPrevention: 1.0
+  amberProtection: 1.0
   traits: [usableArtifact]
   synergies: []
 
@@ -2144,7 +2147,7 @@
       cardNumber: 182
   rating: 2
   expectedAmber: 1.0
-  stealPrevention: 1.0
+  amberProtection: 1.0
   traits: [forgesKeys]
   synergies:
     - trait: highCreatureCount
@@ -3457,7 +3460,7 @@
     - expansion: 435
       cardNumber: 265
   rating: 2
-  stealPrevention: 1.5
+  amberProtection: 1.5
   traits: []
   synergies:
     - trait: protectsCreatures
@@ -3850,7 +3853,7 @@
       cardNumber: 289
   rating: 2.5
   expectedAmber: 1.0
-  stealPrevention: 1
+  amberProtection: 1
   traits: [usableArtifact]
   synergies: []
 
@@ -4194,7 +4197,12 @@
   amberControl: 1.0
   effectivePower: 3
   traits: [urchin, elusive, stealsAmber, goodPlay]
-  synergies: []
+  synergies:
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 1
+    - trait: returnsFriendlyCreaturesToHand
+      rating: 3
+      type: house
 
 - name: Duskrunner
   cardNumbers:
@@ -4333,7 +4341,7 @@
     - expansion: 435
       cardNumber: 325
   rating: 2
-  stealPrevention: 1.5
+  amberProtection: 1.5
   traits: [forgesKeys]
   synergies:
     - trait: archives
@@ -4636,7 +4644,7 @@
     - expansion: 435
       cardNumber: 338
   rating: 2.5
-  stealPrevention: 1.5
+  amberProtection: 1.5
   traits: [forgesKeys, goodPlay]
   synergies:
     - trait: forgesKeys

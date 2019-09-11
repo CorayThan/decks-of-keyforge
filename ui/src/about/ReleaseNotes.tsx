@@ -6,10 +6,9 @@ import * as React from "react"
 import { ArticleInternalLink } from "../articles/ArticleView"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
+import { BarData, StatsBar } from "../graphs/StatsBar"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
-import { BarData } from "../stats/DeckStatsView"
-import { StatsBar } from "../stats/StatsBar"
 import { statsStore } from "../stats/StatsStore"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
@@ -23,14 +22,18 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
-                <ReleaseNote releaseNumber={"5.13"} date={"9/9/2019"} expanded={true} releaseNotes={[
-                    "Big changes to AERC! Multiple new Aerc stats, including Steal Prevention (cards like Vault Keeper and key cheats), House Cheating " +
+                <ReleaseNote releaseNumber={"5.13"} date={"9/11/2019"} expanded={true} releaseNotes={[
+                    "Make sure to check out the toggle buttons on the bottom of the deck search drawer! I added a new graph one to see some graphs on " +
+                    "the deck search screen!",
+                    "Big changes to AERC! Multiple new Aerc stats, including Aember Protection (cards like Vault Keeper and key cheats), House Cheating " +
                     "(Dominator Bauble), and Other (things that don't fit elsewhere). Also split Deck Manipulation into Efficiency (can play more cards) " +
                     "and Disruption (stop your opponent from playing more cards).",
-                    "Along with those changes come cool new icons and AERC displays. (I tried to make the icons cool, but I'll admit, that isn't my " +
-                    "speciality!)",
-                    "And some radar graphs to show the percentile rankings of a deck's traits and card types! You can toggle those to show or not " +
-                    "with the toggle button in the bottom of the deck search menu."
+                    "Along with those changes come handy new icons and AERC displays. I've added references to the AERC letters in many places, because " +
+                    "I don't want that lingo to go away, but for the primary deck display I want some easy to recognize icons.",
+                    "Also added some radar graphs to show the percentile rankings of a deck's traits and card types!",
+                    "Added Raw Aember as a deck search constraint. Had been getting a lot of requests for this one. Each constraint adds technical " +
+                    "overhead, but this seemed worth it.",
+                    "Improved the stats page. The graphs exclude data with very small counts, and display quantity of data available."
                 ]}/>
                 <ReleaseNote releaseNumber={"5.12"} date={"8/24/2019"} expanded={true} releaseNotes={[
                     "Download deck lists as a spreadsheet file! Switch to the table view (toggle button at the bottom of the search bar) and click the " +
@@ -61,7 +64,7 @@ export class ReleaseNotes extends React.Component {
                     <LinkButton style={{margin: spacing(1)}} size={"small"} to={AboutSubPaths.sas}>About SAStars</LinkButton>,
                     "And some special preview news! I've begun the process of the biggest revision to SAS since its release. Plan is to have this complete " +
                     "before the release of Set 3.",
-                    "In short, I'm planning on adding more traits to AERC (Steal Prevention, splitting Deck Manipulation into Efficiency and Disruption , " +
+                    "In short, I'm planning on adding more traits to AERC (Aember Protection, splitting Deck Manipulation into Efficiency and Disruption , " +
                     "House Cheating, Other), adding synergies and antisynergies to improve AERC values, and then replacing the SAS card ratings with total " +
                     "AERC score of cards.",
                     "If you want to read the in-depth road map, take a look at the google doc: ",

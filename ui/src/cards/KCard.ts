@@ -25,7 +25,7 @@ export interface KCard {
     wins?: number
     losses?: number
     winRate?: number
-    aercScore?: number
+    aercScore: number
 
     extraCardInfo: ExtraCardInfo
 }
@@ -39,7 +39,7 @@ export const winPercentForCard = (card: KCard): number | undefined => {
 
 export const hasAercFromCard = (card: KCard): HasAerc => {
     const {extraCardInfo, effectivePower, aercScore} = card
-    const {amberControl, expectedAmber, creatureControl, artifactControl, efficiency, stealPrevention, disruption, houseCheating, other} = extraCardInfo
+    const {amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other} = extraCardInfo
 
     return {
         amberControl,
@@ -49,7 +49,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         efficiency,
         aercScore: aercScore == null ? 0 : aercScore,
         effectivePower,
-        stealPrevention,
+        amberProtection,
         disruption,
         houseCheating,
         other
@@ -65,7 +65,7 @@ export interface ExtraCardInfo {
     artifactControl: number
     efficiency: number
     disruption: number
-    stealPrevention: number
+    amberProtection: number
     houseCheating: number
     other: number
 

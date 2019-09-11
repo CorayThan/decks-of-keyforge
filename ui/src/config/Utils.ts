@@ -38,6 +38,14 @@ export class Utils {
     static jsonCopy = (toCopy: any) => {
         return JSON.parse(JSON.stringify(toCopy))
     }
+
+    static valueFromPercentiles = (value: number, percentiles: { [key: number]: number }) => {
+        const percentile = percentiles[Math.round(value)]
+        if (percentile != null) {
+            return Math.round(percentile)
+        }
+        return 0
+    }
 }
 
 type EnumType = string | number

@@ -16,7 +16,7 @@ data class ExtraCardInfo(
         val efficiency: Double = 0.0,
         val effectivePower: Int? = null,
         val disruption: Double = 0.0,
-        val stealPrevention: Double = 0.0,
+        val amberProtection: Double = 0.0,
         val houseCheating: Double = 0.0,
         val other: Double = 0.0,
 

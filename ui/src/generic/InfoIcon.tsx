@@ -21,19 +21,7 @@ export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: bool
     )
 }
 
-export const CardAercInfoDisplay = (props: { value: InfoIconValue }) => {
-    return (
-        <Tooltip title={props.value.tooltip}>
-            <div style={{display: "flex", alignItems: "center"}}>
-                <Typography variant={"h6"} style={{marginRight: spacing(1)}}>{props.value.info}</Typography>
-                {props.value.icon}
-            </div>
-        </Tooltip>
-    )
-}
-
-
-const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?: React.CSSProperties }) => {
+export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?: React.CSSProperties }) => {
     let value = props.value.info
     if (typeof value === "number") {
         value = value.toFixed(value < 10 && value % 1 !== 0 ? 1 : 0)

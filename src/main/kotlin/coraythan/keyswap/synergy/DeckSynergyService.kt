@@ -107,7 +107,7 @@ class DeckSynergyService(
 
                     disruption = card.extraCardInfo?.disruption ?: 0.0,
                     houseCheating = card.extraCardInfo?.houseCheating ?: 0.0,
-                    stealPrevention = card.extraCardInfo?.stealPrevention ?: 0.0,
+                    amberProtection = card.extraCardInfo?.amberProtection ?: 0.0,
                     other = card.extraCardInfo?.other ?: 0.0
             )
         }

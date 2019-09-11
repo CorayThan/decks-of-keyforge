@@ -50,10 +50,30 @@ data class Card(
     val effectivePower: Int
         get() = extraCardInfo?.effectivePower ?: power + armor
 
+    val aercScore: Double
+        get() {
+            val cardInfo = this.extraCardInfo
+            return if (cardInfo == null) {
+                0.0
+            } else {
+                cardInfo.amberControl +
+                        cardInfo.expectedAmber +
+                        cardInfo.artifactControl +
+                        cardInfo.creatureControl +
+                        cardInfo.efficiency +
+                        cardInfo.disruption +
+                        cardInfo.houseCheating +
+                        cardInfo.amberProtection +
+                        cardInfo.other +
+                        this.effectivePower / 10 +
+                        (if (this.cardType == CardType.Creature) 0.4 else 0.0)
+            }
+        }
+
     fun toDeckSearchResultCard() = DeckSearchResultCard(
             cardTitle = cardTitle,
             house = house,
-             rarity = rarity,
+            rarity = rarity,
             maverick = maverick
     )
 }

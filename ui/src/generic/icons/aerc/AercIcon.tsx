@@ -1,5 +1,6 @@
 import * as React from "react"
 import AmberControl from "./amber-control.svg"
+import AmberProtection from "./amber-protection.svg"
 import ArtifactControl from "./artifact-control.svg"
 import CreatureControl from "./creature-control.svg"
 import Disruption from "./disruption.svg"
@@ -8,7 +9,6 @@ import ExpectedAmber from "./expected-amber.svg"
 import HouseCheating from "./house-cheating.svg"
 import Other from "./other.svg"
 import Power from "./power.svg"
-import StealPrevention from "./steal-prevention.svg"
 
 export enum AercType {
     A,
@@ -49,7 +49,7 @@ export const AercIcon = (props: { type: AercType, width?: number, style?: React.
             icon = Power
             break
         case AercType.S:
-            icon = StealPrevention
+            icon = AmberProtection
             break
         case AercType.H:
             icon = HouseCheating

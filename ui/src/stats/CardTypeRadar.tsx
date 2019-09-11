@@ -1,6 +1,9 @@
 import React from "react"
+import { Utils } from "../config/Utils"
 import { Deck } from "../decks/Deck"
-import { DokRadar } from "./DokRadar"
+import { DokRadar } from "../graphs/DokRadar"
+import { Loader } from "../mui-restyled/Loader"
+import { statsStore } from "./StatsStore"
 
 interface CardTypeRadarProps {
     deck: Deck
@@ -10,22 +13,26 @@ interface CardTypeRadarProps {
 export class CardTypeRadar extends React.Component<CardTypeRadarProps> {
     render() {
         const {deck, style} = this.props
+        const stats = statsStore.stats
+        if (stats == null) {
+            return <Loader/>
+        }
         const data = [
             {
                 cardType: "Actions",
-                deck: deck.actionsPercentile,
+                deck: Utils.valueFromPercentiles(deck.actionCount, stats.actionCountPercentiles),
             },
             {
                 cardType: "Creatures",
-                deck: deck.creaturesPercentile,
+                deck: Utils.valueFromPercentiles(deck.creatureCount, stats.creatureCountPercentiles),
             },
             {
                 cardType: "Artifacts",
-                deck: deck.artifactsPercentile
+                deck: Utils.valueFromPercentiles(deck.artifactCount, stats.artifactCountPercentiles),
             },
             {
                 cardType: "Upgrades",
-                deck: deck.upgradesPercentile,
+                deck: Utils.valueFromPercentiles(deck.upgradeCount, stats.upgradeCountPercentiles),
             },
         ]
 
@@ -36,6 +43,7 @@ export class CardTypeRadar extends React.Component<CardTypeRadarProps> {
                 indexBy={"cardType"}
                 name={"Card Type Rankings"}
                 style={style}
+                maxValue={100}
             />
         )
     }
