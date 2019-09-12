@@ -80,9 +80,7 @@ class ForSaleNotificationsService(
 
     fun addForSaleQuery(query: ForSaleQuery) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        if (user.patreonTier?.canSaveNotifications != true) {
-            throw IllegalStateException("You must be a patron to save for sale queries.")
-        }
+        check(user.patreonTier?.canSaveNotifications == true) { "You must be a patron to save for sale queries." }
 
         val toSave = ForSaleQueryEntity(
                 name = query.queryName,
@@ -103,7 +101,13 @@ class ForSaleNotificationsService(
     }
 
     private fun reloadQueries() {
-        this.queries = forSaleQueryRepo.findAll()
+        val queries = forSaleQueryRepo.findAll()
+        this.queries = queries
+
+        // TODO remove after it has been added
+        val queriesToUpdate = queries.filter { it.json.contains("deckManipulation") }
+        val updated = queriesToUpdate.map { it.copy(json = it.json.replace("deckManipulation", "efficiency")) }
+        if (updated.isNotEmpty()) forSaleQueryRepo.saveAll(updated)
     }
 
     fun findAllForUser(): List<ForSaleQuery> {
