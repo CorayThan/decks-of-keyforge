@@ -97,16 +97,19 @@ class ColumnHeaders extends React.Component {
                 <>
                     <SynergiesHeader title={"Card Name"} property={"cardName"}/>
                     <SynergiesHeader title={"Copies"} property={"copies"}/>
-                    <SynergiesHeader title={"Rating (0 to 4)"} property={"cardRating"}/>
+                    <SynergiesHeader title={"Rating (0-4)"} property={"cardRating"}/>
                     <SynergiesHeader title={"Synergy (-2 to 2)"} property={"netSynergy"}/>
                     <SynergiesHeader title={"Value"} property={"value"}/>
                     <TableCell>Synergies</TableCell>
                     <SynergiesHeader title={"Aember Control"} property={"amberControl"}/>
                     <SynergiesHeader title={"Expected Aember"} property={"expectedAmber"}/>
+                    <SynergiesHeader title={"Aember Protection"} property={"amberProtection"}/>
                     <SynergiesHeader title={"Artifact Control"} property={"artifactControl"}/>
                     <SynergiesHeader title={"Creature Control"} property={"creatureControl"}/>
-                    <SynergiesHeader title={"Deck Manipulation"} property={"efficiency"}/>
                     <SynergiesHeader title={"Effective Power"} property={"effectivePower"}/>
+                    <SynergiesHeader title={"Efficiency"} property={"efficiency"}/>
+                    <SynergiesHeader title={"Disruption"} property={"disruption"}/>
+                    <SynergiesHeader title={"House Cheating"} property={"houseCheating"}/>
                 </>
             )
         }
@@ -152,10 +155,13 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                     </TableCell>
                     <TableCell>{combo.amberControl}</TableCell>
                     <TableCell>{combo.expectedAmber}</TableCell>
+                    <TableCell>{combo.amberProtection}</TableCell>
                     <TableCell>{combo.artifactControl}</TableCell>
                     <TableCell>{combo.creatureControl}</TableCell>
-                    <TableCell>{combo.efficiency}</TableCell>
                     <TableCell>{combo.effectivePower}</TableCell>
+                    <TableCell>{combo.efficiency}</TableCell>
+                    <TableCell>{combo.disruption}</TableCell>
+                    <TableCell>{combo.houseCheating}</TableCell>
                 </>
             )
         }

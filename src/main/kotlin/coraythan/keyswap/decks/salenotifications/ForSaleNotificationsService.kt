@@ -108,6 +108,8 @@ class ForSaleNotificationsService(
         val queriesToUpdate = queries.filter { it.json.contains("deckManipulation") }
         val updated = queriesToUpdate.map { it.copy(json = it.json.replace("deckManipulation", "efficiency")) }
         if (updated.isNotEmpty()) forSaleQueryRepo.saveAll(updated)
+
+        log.info("Reloaded queries. Found ${queriesToUpdate.size} to update and ${queries.size} total.")
     }
 
     fun findAllForUser(): List<ForSaleQuery> {

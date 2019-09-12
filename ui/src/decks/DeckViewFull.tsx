@@ -126,7 +126,7 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
                         {saleInfoComponent}
                         <DeckSynergiesInfoView
                             synergies={deck}
-                            width={1200}
+                            width={1400}
                         />
                     </div>
                 </div>

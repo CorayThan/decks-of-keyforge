@@ -48,7 +48,7 @@ export class AercRadar extends React.Component<AercRadarProps> {
                 deck: Utils.valueFromPercentiles(deck.disruption, stats.disruptionPercentiles),
             },
             {
-                aerc: "Efficiency (E)",
+                aerc: "Efficiency (F)",
                 deck: Utils.valueFromPercentiles(deck.efficiency, stats.efficiencyPercentiles),
             },
         ]
