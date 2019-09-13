@@ -65,7 +65,7 @@ data class Card(
                         cardInfo.houseCheating +
                         cardInfo.amberProtection +
                         cardInfo.other +
-                        this.effectivePower / 10 +
+                        this.effectivePower.toDouble() / 10 +
                         (if (this.cardType == CardType.Creature) 0.4 else 0.0)
             }
         }

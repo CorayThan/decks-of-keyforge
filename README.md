@@ -44,10 +44,11 @@ coraythan
 ```
 cd 'C:\Program Files\PostgreSQL\10\scripts\'
 .\runpsql.bat
-// database keyswap
+// server click enter
+// database enter: keyswap
 SET CLIENT_ENCODING TO 'utf8';
 
-\COPY (select keyforge_id, name, expansion, house_names_string, sas_rating, cards_rating, synergy_rating, antisynergy_rating, aerc_score, amber_control, expected_amber, artifact_control, creature_control, deck_manipulation, effective_power, raw_amber, action_count, upgrade_count, creature_count, power_level, chains, wins, losses, card_names from deck where registered = 'true') to 'C:\Users\Coray\Downloads\dok-decks.csv' DELIMITER ',' CSV HEADER;
+\COPY (select keyforge_id, name, expansion, house_names_string, sas_rating, cards_rating, synergy_rating, antisynergy_rating, aerc_score, amber_control, expected_amber, artifact_control, creature_control, efficiency, disruption, amber_protection, house_cheating, other, effective_power, raw_amber, action_count, upgrade_count, creature_count, power_level, chains, wins, losses, card_names from deck where registered = 'true') to 'C:\Users\Coray\Downloads\dok-decks.csv' DELIMITER ',' CSV HEADER;
 ```
 
 Find it in downloads 

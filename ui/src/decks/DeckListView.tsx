@@ -207,7 +207,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                     <TableCell>{deck.cardsRating}</TableCell>
                                     <TableCell>{deck.synergyRating}</TableCell>
                                     <TableCell>{deck.antisynergyRating}</TableCell>
-                                    <TableCell>{deck.aercScore}</TableCell>
+                                    <TableCell>{Math.round(deck.aercScore)}</TableCell>
                                     <TableCell>{deck.amberControl}</TableCell>
                                     <TableCell>{deck.expectedAmber}</TableCell>
                                     <TableCell>{deck.artifactControl}</TableCell>

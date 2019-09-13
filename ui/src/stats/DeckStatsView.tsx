@@ -44,7 +44,7 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                     upgrades={upgradeCount}
                     style={{marginTop: 0}}
                 />
-                <CardTypePieGlobalAverages stats={stats}/>
+                {!compact && <CardTypePieGlobalAverages stats={stats}/>}
                 <AercRadar deck={deck}/>
                 <CardTypeRadar deck={deck}/>
             </>

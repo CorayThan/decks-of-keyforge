@@ -101,15 +101,7 @@ class ForSaleNotificationsService(
     }
 
     private fun reloadQueries() {
-        val queries = forSaleQueryRepo.findAll()
-        this.queries = queries
-
-        // TODO remove after it has been added
-        val queriesToUpdate = queries.filter { it.json.contains("deckManipulation") }
-        val updated = queriesToUpdate.map { it.copy(json = it.json.replace("deckManipulation", "efficiency")) }
-        if (updated.isNotEmpty()) forSaleQueryRepo.saveAll(updated)
-
-        log.info("Reloaded queries. Found ${queriesToUpdate.size} to update and ${queries.size} total.")
+        this.queries = forSaleQueryRepo.findAll()
     }
 
     fun findAllForUser(): List<ForSaleQuery> {

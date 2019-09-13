@@ -9,6 +9,7 @@ import { AverageIcon } from "../generic/icons/AverageIcon"
 import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
+import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { AboutGridItem } from "./AboutPage"
 
@@ -276,7 +277,7 @@ export class SasAndAerc extends React.Component {
     }
 }
 
-export const AercTraitDescription = (props: { title: string, texts: string[], img: string, icon: AercType }) => (
+export const AercTraitDescription = observer((props: { title: string, texts: string[], img: string, icon: AercType }) => (
     <div>
         <div style={{display: "flex"}}>
             <div>
@@ -295,19 +296,21 @@ export const AercTraitDescription = (props: { title: string, texts: string[], im
                     </div>
                 ))}
             </div>
-            <div>
-                <div style={{marginLeft: spacing(2), padding: spacing(2), backgroundColor: "#DDDDDD"}}>
-                    <img
-                        style={{width: 200}}
-                        src={props.img}
-                        alt={"Card For Text"}
-                    />
+            {screenStore.screenWidth > 500 && (
+                <div>
+                    <div style={{marginLeft: spacing(2), padding: spacing(2), backgroundColor: "#DDDDDD"}}>
+                        <img
+                            style={{width: 200}}
+                            src={props.img}
+                            alt={"Card For Text"}
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
         <div style={{paddingBottom: spacing(1)}}/>
     </div>
-)
+))
 
 
 export const CardExample = (props: { text: string, img1: string, img2: string }) => (

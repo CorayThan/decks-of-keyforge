@@ -90,7 +90,7 @@ data class Deck(
         ALTER TABLE deck ADD COLUMN rating_version int4;
         CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
          */
-        val ratingVersion: Int = 0,
+        val ratingVersion: Int? = 0,
 
         val listedOn: ZonedDateTime? = null,
         val auctionEnd: ZonedDateTime? = null,

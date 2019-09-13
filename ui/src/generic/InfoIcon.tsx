@@ -1,4 +1,5 @@
 import { Tooltip, Typography } from "@material-ui/core"
+import { TypographyClassKey } from "@material-ui/core/Typography"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 
@@ -26,13 +27,22 @@ export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?:
     if (typeof value === "number") {
         value = value.toFixed(value < 10 && value % 1 !== 0 ? 1 : 0)
     }
+
+    let variant: TypographyClassKey
+    let iconSize = 24
+    if (props.small) {
+        variant = "body1"
+        iconSize = 20
+    } else {
+        variant = "h6"
+    }
     return (
         <Tooltip title={props.value.tooltip}>
             <div style={{display: "flex", alignItems: "center", ...props.style}}>
-                <Typography variant={props.small ? "body1" : "h6"} style={{marginRight: spacing(1), width: 24, textAlign: "right"}}>
+                <Typography variant={variant} style={{marginRight: spacing(1), width: 32, textAlign: "right"}}>
                     {value}
                 </Typography>
-                <div style={{display: "flex", width: props.small ? 20 : 24}}>
+                <div style={{display: "flex", width: iconSize}}>
                     {props.value.icon}
                 </div>
             </div>

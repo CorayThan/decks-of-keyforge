@@ -34,6 +34,39 @@ export const AercView = (props: {
         }
     }
 
+    const speedInfos =   [
+        {
+            icon: <AercIcon type={AercType.F}/>,
+            info: hasAerc.efficiency,
+            tooltip: (
+                <CardsWithAerc
+                    title={"Efficiency (F)"}
+                    accessor={card => card!.extraCardInfo!.efficiency}
+                    cards={hasAerc.searchResultCards}
+                />
+            )
+        },
+        {
+            icon: <AercIcon type={AercType.D}/>,
+            info: hasAerc.disruption,
+            tooltip: (
+                <CardsWithAerc
+                    title={"Disruption (D)"}
+                    accessor={card => card!.extraCardInfo!.disruption}
+                    cards={hasAerc.searchResultCards}
+                />
+            )
+        },
+    ]
+
+    if (horizontal && deck) {
+        speedInfos.push(        {
+            info: deck.aercScore,
+            icon: <Typography variant={"h5"} color={"primary"} style={{fontSize: "1rem"}}>AERC</Typography>,
+            tooltip: <div>Total AERC Score. Read more on the about page.</div>
+        },)
+    }
+
     return (
         <div
             style={{backgroundColor: "#DFDFDF", padding: spacing(1)}}
@@ -55,7 +88,7 @@ export const AercView = (props: {
                 style={{
                     display: "grid",
                     gridTemplateColumns: columns,
-                    columnGap: spacing(1),
+                    columnGap: horizontal ? spacing(1) : undefined,
                     ...style
                 }}
             >
@@ -151,30 +184,7 @@ export const AercView = (props: {
                     horizontal={horizontal}
                     name={"Speed"}
                     infos={
-                        [
-                            {
-                                icon: <AercIcon type={AercType.F}/>,
-                                info: hasAerc.efficiency,
-                                tooltip: (
-                                    <CardsWithAerc
-                                        title={"Efficiency (F)"}
-                                        accessor={card => card!.extraCardInfo!.efficiency}
-                                        cards={hasAerc.searchResultCards}
-                                    />
-                                )
-                            },
-                            {
-                                icon: <AercIcon type={AercType.D}/>,
-                                info: hasAerc.disruption,
-                                tooltip: (
-                                    <CardsWithAerc
-                                        title={"Disruption (D)"}
-                                        accessor={card => card!.extraCardInfo!.disruption}
-                                        cards={hasAerc.searchResultCards}
-                                    />
-                                )
-                            },
-                        ]
+                      speedInfos
                     }
                 />
                 {!excludeMisc && (

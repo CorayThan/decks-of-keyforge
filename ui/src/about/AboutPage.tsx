@@ -27,20 +27,22 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
     render() {
         return (
             <div style={{margin: spacing(4), backgroundColor: "#FFF"}}>
-                <AppBar position={"static"} color={"default"}>
-                    <Tabs
-                        value={this.props.location.pathname}
-                        centered={screenStore.screenSizeMdPlus()}
-                        variant={screenStore.screenSizeSm() ? "fullWidth" : undefined}
-                    >
-                        <LinkTab label="SAS and AERC" to={AboutSubPaths.sas} value={AboutSubPaths.sas}/>
-                        <LinkTab label="Patron Rewards" to={AboutSubPaths.patreon} value={AboutSubPaths.patreon}/>
-                        <LinkTab label="Contact Me" to={AboutSubPaths.contact} value={AboutSubPaths.contact}/>
-                        <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
-                        <LinkTab label="APIs" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
-                        <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
-                    </Tabs>
-                </AppBar>
+                {!screenStore.smallScreenTopBar() && (
+                    <AppBar position={"static"} color={"default"}>
+                        <Tabs
+                            value={this.props.location.pathname}
+                            centered={screenStore.screenSizeMdPlus()}
+                            variant={screenStore.screenSizeSm() ? "fullWidth" : undefined}
+                        >
+                            <LinkTab label="SAS and AERC" to={AboutSubPaths.sas} value={AboutSubPaths.sas}/>
+                            <LinkTab label="Patron Rewards" to={AboutSubPaths.patreon} value={AboutSubPaths.patreon}/>
+                            <LinkTab label="Contact Me" to={AboutSubPaths.contact} value={AboutSubPaths.contact}/>
+                            <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
+                            <LinkTab label="APIs" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
+                            <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
+                        </Tabs>
+                    </AppBar>
+                )}
                 {this.props.location.pathname.includes(AboutSubPaths.teamSas) && screenStore.screenWidth > 800 ? (
                     <div style={{display: "flex", justifyContent: "center", marginTop: spacing(4)}}>
                         <img alt={"Team Sas LP"} src={TeamSasLpBanner}/>

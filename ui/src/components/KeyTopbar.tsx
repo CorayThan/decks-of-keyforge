@@ -1,8 +1,10 @@
-import { Divider, IconButton } from "@material-ui/core"
+import { Button, Divider, IconButton, List } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
+import Collapse from "@material-ui/core/Collapse"
 import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
+import { ExpandLess, ExpandMore } from "@material-ui/icons"
 import MenuIcon from "@material-ui/icons/Menu"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -108,8 +110,12 @@ class RightMenuStore {
     @observable
     open = false
 
+    @observable
+    aboutOpen = false
+
     close = () => {
         this.open = false
+        this.aboutOpen = false
     }
 }
 
@@ -159,7 +165,7 @@ class RightMenu extends React.Component {
     }
 }
 
-const AppLinks = () => (
+const AppLinks = observer(() => (
     <>
         <LinkMenu
             genericOnClick={rightMenuStore.close}
@@ -183,21 +189,83 @@ const AppLinks = () => (
             ]}
             style={{margin: spacing(1)}}
         />
-        <LinkMenu
-            genericOnClick={rightMenuStore.close}
-            links={[
-                {to: AboutSubPaths.sas, text: "About", mobileActive: true},
-                {to: AboutSubPaths.sas, text: "SAS and AERC"},
-                {to: AboutSubPaths.patreon, text: "Patron Rewards"},
-                {to: AboutSubPaths.contact, text: "Contact Me"},
-                {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
-                {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
-                {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
-            ]}
-            style={{margin: spacing(1)}}
-        />
+        {screenStore.smallScreenTopBar() ? (
+            <>
+                <Button
+                    color={"inherit"}
+                    style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+                    onClick={() => rightMenuStore.aboutOpen = !rightMenuStore.aboutOpen}
+                >
+                    About
+                    {rightMenuStore.aboutOpen ? <ExpandLess/> : <ExpandMore/>}
+                </Button>
+                <Collapse in={rightMenuStore.aboutOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                        <LinkButton
+                            color={"inherit"}
+                            to={AboutSubPaths.sas}
+                            style={{margin: spacing(1)}}
+                            onClick={rightMenuStore.close}
+                            size={"small"}
+                        >
+                            SAS and AERC
+                        </LinkButton>
+                        <LinkButton
+                            color={"inherit"}
+                            to={AboutSubPaths.contact}
+                            style={{margin: spacing(1)}}
+                            onClick={rightMenuStore.close}
+                            size={"small"}
+                        >
+                            Contact Me
+                        </LinkButton>
+                        <LinkButton
+                            color={"inherit"}
+                            to={AboutSubPaths.releaseNotes}
+                            style={{margin: spacing(1)}}
+                            onClick={rightMenuStore.close}
+                            size={"small"}
+                        >
+                            Release Notes
+                        </LinkButton>
+                        <LinkButton
+                            color={"inherit"}
+                            to={AboutSubPaths.sellersAndDevs}
+                            style={{margin: spacing(1)}}
+                            onClick={rightMenuStore.close}
+                            size={"small"}
+                        >
+                            APIs
+                        </LinkButton>
+                        <LinkButton
+                            color={"inherit"}
+                            to={AboutSubPaths.teamSas}
+                            style={{margin: spacing(1)}}
+                            onClick={rightMenuStore.close}
+                            size={"small"}
+                        >
+                            Team SAS-LP
+                        </LinkButton>
+                    </List>
+                </Collapse>
+            </>
+        ) : (
+            <LinkMenu
+                genericOnClick={rightMenuStore.close}
+                links={[
+                    {to: AboutSubPaths.sas, text: "About", mobileActive: true},
+                    {to: AboutSubPaths.sas, text: "SAS and AERC"},
+                    {to: AboutSubPaths.patreon, text: "Patron Rewards"},
+                    {to: AboutSubPaths.contact, text: "Contact Me"},
+                    {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
+                    {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
+                    {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
+                ]}
+                style={{margin: spacing(1)}}
+            />
+        )}
     </>
-)
+))
 
 @observer
 class UserLinks extends React.Component {

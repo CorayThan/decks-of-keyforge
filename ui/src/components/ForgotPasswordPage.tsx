@@ -43,9 +43,13 @@ export class ForgotPasswordPage extends React.Component {
                         <Typography style={{marginBottom: spacing(1)}}>
                             It will send an email to your email address with a reset link.
                         </Typography>
-                        <Typography style={{marginBottom: spacing(2)}}>
+                        <Typography style={{marginBottom: spacing(1)}}>
                             If there is a typo in your email address and you forgot your password it will not be possible to recover your account,
                             but you can create a new one and still add your decks.
+                        </Typography>
+                        <Typography style={{marginBottom: spacing(2)}}>
+                            If you do not receive a reset email, try whitelisting the Decks of KeyForge email address by adding "noreply@decksofkeyforge.com" to
+                            your email contacts.
                         </Typography>
                         <TextField
                             variant={"outlined"}
