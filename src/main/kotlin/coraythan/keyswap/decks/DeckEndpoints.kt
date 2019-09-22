@@ -98,6 +98,9 @@ class DeckEndpoints(
     fun addUnregistered(@RequestBody deck: SaveUnregisteredDeck): String {
         return deckImporterService.addUnregisteredDeck(deck)
     }
+
+    @GetMapping("/updating")
+    fun updating() = !deckImporterService.doneRatingDecks
 }
 
 data class SimpleDeckResponse(

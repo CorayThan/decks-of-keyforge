@@ -4,3 +4,5 @@ export interface SynTraitValue {
     type: string
     id: string
 }
+
+export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.type}`

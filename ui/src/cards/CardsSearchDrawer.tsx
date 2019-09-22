@@ -1,8 +1,9 @@
-import { FormControlLabel, IconButton, Switch, Typography } from "@material-ui/core"
+import { FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@material-ui/core"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
-import { Close } from "@material-ui/icons"
+import { Close, Image, ViewList, ViewModule } from "@material-ui/icons"
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
@@ -143,17 +144,27 @@ export class CardsSearchDrawer extends React.Component {
                             </ListItem>
                         ) : null}
                         <ListItem>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={keyLocalStorage.showFullCardView}
-                                        onChange={keyLocalStorage.toggleFullCardView}
-                                    />
-                                }
-                                label={"Full card view"}
-                            />
-                        </ListItem>
-                        <ListItem>
+                            <Tooltip title={"View type"}>
+                                <ToggleButtonGroup
+                                    value={keyLocalStorage.cardListViewType}
+                                    exclusive={true}
+                                    onChange={(event, viewType) => {
+                                        keyLocalStorage.setCardListViewType(viewType)
+                                    }}
+                                    style={{marginRight: spacing(2)}}
+                                    size={"small"}
+                                >
+                                    <ToggleButton value={"full"}>
+                                        <ViewModule/>
+                                    </ToggleButton>
+                                    <ToggleButton value={"image"}>
+                                        <Image/>
+                                    </ToggleButton>
+                                    <ToggleButton value={"table"}>
+                                        <ViewList/>
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Tooltip>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -161,7 +172,7 @@ export class CardsSearchDrawer extends React.Component {
                                         onChange={keyLocalStorage.toggleShowAllCards}
                                     />
                                 }
-                                label={"Load all cards"}
+                                label={"All cards"}
                             />
                         </ListItem>
                     </List>

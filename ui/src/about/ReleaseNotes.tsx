@@ -14,7 +14,7 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.13"
+export const latestVersion = "5.14"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,12 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote releaseNumber={"5.14"} date={"9/22/2019"} expanded={true} releaseNotes={[
+                    "Major update to AERC card scores! I've gone through and trued AERC scores against SAS card ratings to improve AERC scores. " +
+                    "I've also made AERC scores more internally consistent, for example fight effects are rated the same for similar power creatures.",
+                    "Card table view and csv download!",
+                    "Message while SAS / AERC are updating. Now you know when things are in flux."
+                ]}/>
                 <ReleaseNote releaseNumber={"5.13"} date={"9/11/2019"} expanded={true} releaseNotes={[
                     "Make sure to check out the toggle buttons on the bottom of the deck search drawer! I added a new graph one to see some graphs on " +
                     "the deck search screen!",

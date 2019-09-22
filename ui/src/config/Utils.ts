@@ -27,6 +27,8 @@ export class Utils {
 
     static parseLocalDate = (date: string) => parse(date, Utils.localDateFormat, new Date())
 
+    static nowDateString = () => format(new Date(), Utils.localDateFormat)
+
     static roundToNearestMinutes = (date: Date, interval: number) => {
         const roundedMinutes = Math.floor(getMinutes(date) / interval) * interval
         return setMinutes(startOfMinute(date), roundedMinutes)

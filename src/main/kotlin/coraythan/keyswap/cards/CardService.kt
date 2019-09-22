@@ -37,11 +37,7 @@ class CardService(
         val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
-        val extraInfosFromFileAoa: List<ExtraCardInfo> = yamlMapper.readValue(
-                ClassPathResource("extra-deck-info-aoa-v$currentDeckRatingVersion.yml").inputStream
-        )
         this.extraInfo = extraInfosFromFile
-                .plus(extraInfosFromFileAoa)
                 .map {
                     when {
                         it.traits.contains(Synergies.alpha) ->

@@ -10,6 +10,7 @@ import { uiStore } from "../ui/UiStore"
 import { CardView } from "./CardSimpleView"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { cardStore } from "./CardStore"
+import { CardTableView } from "./CardTableView"
 import { KCard } from "./KCard"
 
 @observer
@@ -35,6 +36,10 @@ export class CardsPage extends React.Component {
                     <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
                         Sorry, no cards match your search criteria.
                     </Typography>
+                )
+            } else if (keyLocalStorage.cardListViewType === "table") {
+                cardsDisplay = (
+                    <CardTableView cards={cards}/>
                 )
             } else {
                 cardsDisplay = (
@@ -126,7 +131,7 @@ class CardsContainerWithScroll extends React.Component<CardsContainerWithScrollP
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}} onScroll={this.handleScroll}>
                 <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                     {this.cardsToDisplay.map(card => (
-                        <CardView card={card} key={card.id} simple={!keyLocalStorage.showFullCardView}/>
+                        <CardView card={card} key={card.id} simple={keyLocalStorage.cardListViewType === "image"}/>
                     ))}
                 </div>
                 {this.cardsToDisplay.length !== allCards.length ? (

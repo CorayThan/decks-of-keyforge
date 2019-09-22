@@ -41,7 +41,7 @@ private const val lockUpdateRatings = "PT5M"
 private const val lockUpdateCleanUnregistered = "PT24H"
 private const val onceEverySixHoursLock = "PT6h"
 
-const val currentDeckRatingVersion = 11
+const val currentDeckRatingVersion = 12
 
 @Transactional
 @Service
@@ -130,7 +130,7 @@ class DeckImporterService(
         log.info("$scheduledStop Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    private var doneRatingDecks = false
+    var doneRatingDecks = false
 
     // Comment this in whenever rating gets revved
     // don't rate decks until adding new info done

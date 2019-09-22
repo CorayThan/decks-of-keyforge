@@ -1,6 +1,6 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { House } from "../houses/House"
-import { SynTraitValue } from "../synergy/SynTraitValue"
+import { SynTraitValue, synTraitValueToString } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
@@ -88,3 +88,70 @@ export const cardNameToCardNameKey = (name: string) => {
 
 export const findCardImageUrl = (card: HasFrontImage) =>
     `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
+
+export class CardUtils {
+    static arrayToCSV = (cards: KCard[]) => {
+        const data = cards.map(card => {
+
+            return [
+                card.cardTitle,
+                card.house,
+                card.extraCardInfo.cardNumbers.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`).join(" | "),
+                card.aercScore,
+                card.extraCardInfo.amberControl,
+                card.extraCardInfo.expectedAmber,
+                card.extraCardInfo.amberProtection,
+                card.extraCardInfo.artifactControl,
+                card.extraCardInfo.creatureControl,
+                card.effectivePower,
+                card.extraCardInfo.efficiency,
+                card.extraCardInfo.disruption,
+                card.extraCardInfo.houseCheating,
+                card.extraCardInfo.other,
+
+                card.amber,
+                card.power,
+                card.armor,
+                card.wins,
+                card.losses,
+
+                card.extraCardInfo.traits.join(" | "),
+                card.extraCardInfo.synergies.map(value => synTraitValueToString(value)).join(" | "),
+                card.traits,
+                card.cardText.replace(/"/g, "\"\""),
+                card.flavorText == null ? "" : card.flavorText.replace(/"/g, "\"\"")
+            ]
+        })
+        data.unshift([
+            "Name",
+            "House",
+            "Expansion – #",
+            "Aerc Score",
+            "Amber Control",
+            "Expected Amber",
+            "Aember Protection",
+            "Artifact Control",
+            "Creature Control",
+            "Effective Power",
+            "Efficiency",
+            "Disruption",
+            "House Cheating",
+            "Other",
+
+            "Raw Amber",
+            "Power",
+            "Armor",
+
+            "Wins",
+            "Losses",
+
+            "SAS traits",
+            "Synergies",
+
+            "Traits",
+            "Text",
+            "Flavor Text"
+        ])
+        return data
+    }
+}

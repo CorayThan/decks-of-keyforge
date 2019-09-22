@@ -3,8 +3,7 @@ import { log } from "./Utils"
 
 enum Keys {
     AUTH = "AUTH",
-    DECK_TABLE_VIEW = "DECK_TABLE_VIEW",
-    FULL_CARD_VIEW = "FULL_CARD_VIEW",
+    CARD_LIST_VIEW_TYPE = "CARD_LIST_VIEW_TYPE",
     SHOW_ALL_CARDS = "SHOW_ALL_CARDS",
     DECK_PAGE_SIZE = "DECK_PAGE_SIZE",
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
@@ -12,13 +11,16 @@ enum Keys {
     DECK_LIST_VIEW_TYPE = "DECK_LIST_VIEW_TYPE",
 }
 
+type CardViewType = "image" | "full" | "table"
+type DeckViewType = "graphs" | "grid" | "table"
+
 class KeyLocalStorage {
 
     @observable
-    deckListViewType: "graphs" | "grid" | "table" = "grid"
+    deckListViewType: DeckViewType = "grid"
 
     @observable
-    showFullCardView: boolean = false
+    cardListViewType: CardViewType = "full"
 
     @observable
     showAllCards: boolean = false
@@ -36,11 +38,11 @@ class KeyLocalStorage {
 
     constructor() {
         this.loadDeckListViewType()
-        this.loadShowFullCardView()
         this.loadDeckPageSize()
         this.loadDisplayExtraDeckStats()
         this.loadSmallTableView()
         this.loadShowAllCards()
+        this.loadCardListViewType()
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)
@@ -57,14 +59,14 @@ class KeyLocalStorage {
         return key
     }
 
-    setDeckListViewType = (type: "graphs" | "grid" | "table") => {
+    setDeckListViewType = (type: DeckViewType) => {
         this.deckListViewType = type
         this.localStorage.setItem(Keys.DECK_LIST_VIEW_TYPE, type)
     }
 
-    toggleFullCardView = () => {
-        this.showFullCardView = !this.showFullCardView
-        this.localStorage.setItem(Keys.FULL_CARD_VIEW, String(this.showFullCardView))
+    setCardListViewType = (type: CardViewType) => {
+        this.cardListViewType = type
+        this.localStorage.setItem(Keys.CARD_LIST_VIEW_TYPE, type)
     }
 
     toggleShowAllCards = () => {
@@ -98,7 +100,14 @@ class KeyLocalStorage {
     private loadDeckListViewType = () => {
         const deckListViewType = this.localStorage.getItem(Keys.DECK_LIST_VIEW_TYPE)
         if (deckListViewType != null && deckListViewType.trim().length > 0) {
-            this.deckListViewType = deckListViewType as "graphs" | "grid" | "table"
+            this.deckListViewType = deckListViewType as DeckViewType
+        }
+    }
+
+    private loadCardListViewType = () => {
+        const cardListViewType = this.localStorage.getItem(Keys.CARD_LIST_VIEW_TYPE)
+        if (cardListViewType != null && cardListViewType.trim().length > 0) {
+            this.cardListViewType = cardListViewType as CardViewType
         }
     }
 
@@ -112,10 +121,6 @@ class KeyLocalStorage {
 
     private loadSmallTableView = () => {
         this.smallTableView = this.localStorage.getItem(Keys.SMALL_TABLE_VIEW) === "true"
-    }
-
-    private loadShowFullCardView = () => {
-        this.showFullCardView = this.localStorage.getItem(Keys.FULL_CARD_VIEW) === "true"
     }
 
     private loadShowAllCards = () => {

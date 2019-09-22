@@ -10,7 +10,7 @@ import { AercRadar } from "../aerc/AercRadar"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log } from "../config/Utils"
+import { log, Utils } from "../config/Utils"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -148,7 +148,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                         <CSVLink
                                             data={DeckUtils.arrayToCSV(decks)}
                                             target={"_blank"}
-                                            filename={"dok-decks.csv"}
+                                            filename={`dok-decks-${Utils.nowDateString()}.csv`}
                                         >
                                             <IconButton>
                                                 <GetApp/>

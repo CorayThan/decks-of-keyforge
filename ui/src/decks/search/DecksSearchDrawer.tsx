@@ -516,11 +516,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         <ToggleButton value={"graphs"}>
                                             <BarChart/>
                                         </ToggleButton>
-                                        {!screenStore.screenSizeXs() && (
-                                            <ToggleButton value={"table"}>
-                                                <ViewList/>
-                                            </ToggleButton>
-                                        )}
+                                        <ToggleButton value={"table"}>
+                                            <ViewList/>
+                                        </ToggleButton>
                                     </ToggleButtonGroup>
                                 </Tooltip>
                                 <Tooltip title={"Page size"}>

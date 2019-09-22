@@ -87,22 +87,7 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                             <Typography variant={"h6"}>{cardTitle}</Typography>
                         </UnstyledLink>
                     )}
-                    {card.extraCardInfo.cardNumbers.map((cardNumber, idx) => (
-                        <div style={{display: "flex", alignItems: "center"}} key={idx}>
-                            {idx !== 0 ? (
-                                <div style={{
-                                    height: 4,
-                                    width: 4,
-                                    borderRadius: "50%",
-                                    backgroundColor: "#555",
-                                    marginLeft: spacing(1),
-                                    marginRight: spacing(1)
-                                }}/>
-                            ) : null}
-
-                            <Typography>{expansionInfoMap.get(cardNumber.expansion)!.abbreviation}</Typography>
-                        </div>
-                    ))}
+                    <CardSets card={card}/>
                 </div>
                 <div style={{display: "flex"}}>
                     <Typography variant={"subtitle1"}>{cardType}</Typography>
@@ -136,18 +121,7 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                     ))}
                 </div>
                 {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
-                <div style={{display: "flex", flexWrap: "wrap"}}>
-                    {synergies.map(synergy => (
-                        <TraitBubble
-                            key={synergy.id}
-                            name={synergy.trait}
-                            positive={synergy.rating > 0}
-                            home={synergy.type === SynTraitType.house}
-                            noHome={synergy.type === SynTraitType.outOfHouse}
-                            rating={synergy.rating}
-                        />
-                    ))}
-                </div>
+                <CardSynergies card={card}/>
             </div>
         </GraySidebar>
     )
@@ -319,3 +293,39 @@ const CardLine = (props: CardAsLineProps) => {
         </div>
     )
 }
+
+export const CardSets = (props: { card: KCard, noDot?: boolean }) => (
+    <div>
+        {props.card.extraCardInfo.cardNumbers.map((cardNumber, idx) => (
+            <div style={{display: "flex", alignItems: "center"}} key={idx}>
+                {idx !== 0 && !props.noDot ? (
+                    <div style={{
+                        height: 4,
+                        width: 4,
+                        borderRadius: "50%",
+                        backgroundColor: "#555",
+                        marginLeft: spacing(1),
+                        marginRight: spacing(1)
+                    }}/>
+                ) : null}
+
+                <Typography>{expansionInfoMap.get(cardNumber.expansion)!.abbreviation}</Typography>
+            </div>
+        ))}
+    </div>
+)
+
+export const CardSynergies = (props: { card: KCard }) => (
+    <div style={{display: "flex", flexWrap: "wrap"}}>
+        {props.card.extraCardInfo.synergies.map(synergy => (
+            <TraitBubble
+                key={synergy.id}
+                name={synergy.trait}
+                positive={synergy.rating > 0}
+                home={synergy.type === SynTraitType.house}
+                noHome={synergy.type === SynTraitType.outOfHouse}
+                rating={synergy.rating}
+            />
+        ))}
+    </div>
+)

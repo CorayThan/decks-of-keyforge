@@ -143,6 +143,15 @@ export class SasAndAerc extends React.Component {
                             </ListItem>
                         </List>
                     ]}/>
+                    <div style={{marginBottom: spacing(4)}}/>
+                    <InfoListCard title={"Using SAS and AERC"} infos={[
+                        "SAS estimates the total power of the cards in a deck, and how the synergies and antisynergies effect the deck's quality, but " +
+                        "it won't be right about every deck. Many decks have complex combos SAS doesn't take into account, or their component cards " +
+                        "and synergies are very good, but they're missing a key overall trait, like sufficient Aember Control.",
+                        "Using a combination of SAS, AERC deck traits, and human judgement, it's possible to make an educated guess which of your decks " +
+                        "are best, or what would be a good deck to purchase. But even then, the best way to judge the quality of decks will be playing " +
+                        "the game!"
+                    ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
                     <InfoListCard title={"The AERC of your Deck"} infos={[
@@ -192,7 +201,7 @@ export class SasAndAerc extends React.Component {
                             texts={[
                                 "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
                                 "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
-                                "1 point is approximately equal to dealing 4 damage or stunning 2 creatures."
+                                "1 point is approximately equal to dealing 3 damage or stunning 2 creatures."
                             ]}
                             icon={AercType.C}
                         />,
@@ -202,7 +211,7 @@ export class SasAndAerc extends React.Component {
                             texts={[
                                 "Efficiency is increased by effects that allow you to play extra cards. " +
                                 "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
-                                "1 point is approximately equal to drawing two cards or archiving a random card."
+                                "1 point is approximately equal to drawing two cards or archiving a random card. Archiving a card of your choice is 1.5"
                             ]}
                             icon={AercType.F}
                         />,
@@ -223,7 +232,7 @@ export class SasAndAerc extends React.Component {
                                 "often cannot be played or used, have their total power reduced. Meanwhile, other cards contribute extra " +
                                 "power, like Blood of Titans or Zyzzix the Many.",
                                 "Effective power is also increased by Armor at a 1:1 ratio, and other abilities that affect creature survivability, " +
-                                "like elusive, skirmish, hazardous, assault, and healing.",
+                                "like elusive, skirmish, hazardous, assault, healing and damage prevention.",
                                 "When included in total AERC score, Effective Power is divided by 10."
                             ]}
                             icon={AercType.P}
@@ -263,13 +272,13 @@ export class SasAndAerc extends React.Component {
                         "the game.",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
-                    <InfoListCard title={"Using SAS and AERC"} infos={[
-                        "SAS estimates the total power of the cards in a deck, and how the synergies and antisynergies effect the deck's quality, but " +
-                        "it won't be right about every deck. Many decks have complex combos SAS doesn't take into account, or their component cards " +
-                        "and synergies are very good, but they're missing a key overall trait, like sufficient Aember Control.",
-                        "Using a combination of SAS, AERC deck traits, and human judgement, it's possible to make an educated guess which of your decks " +
-                        "are best, or what would be a good deck to purchase. But even then, the best way to judge the quality of decks will be playing " +
-                        "the game!"
+                    <InfoListCard title={"Notes on AERC calculations"} infos={[
+                        "Fight effects are considered to happen half of the time.",
+                        "Actions, reap effects, etc on creatures are expected to happen once.",
+                        "Static effects are expected to take effect for about three turns.",
+                        "The values for all of these effects will vary depending on the durability of the creature. For example, hunting witch " +
+                        "won't be valued at three turns of his static ability because he is easy to kill, while Lord Golgotha will be expected to " +
+                        "execute her ability more than half the time."
                     ]}/>
                 </AboutGridItem>
             </>

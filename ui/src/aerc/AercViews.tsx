@@ -34,7 +34,7 @@ export const AercView = (props: {
         }
     }
 
-    const speedInfos =   [
+    const speedInfos = [
         {
             icon: <AercIcon type={AercType.F}/>,
             info: hasAerc.efficiency,
@@ -60,7 +60,7 @@ export const AercView = (props: {
     ]
 
     if (horizontal && deck) {
-        speedInfos.push(        {
+        speedInfos.push({
             info: deck.aercScore,
             icon: <Typography variant={"h5"} color={"primary"} style={{fontSize: "1rem"}}>AERC</Typography>,
             tooltip: <div>Total AERC Score. Read more on the about page.</div>
@@ -184,7 +184,7 @@ export const AercView = (props: {
                     horizontal={horizontal}
                     name={"Speed"}
                     infos={
-                      speedInfos
+                        speedInfos
                     }
                 />
                 {!excludeMisc && (
@@ -287,21 +287,21 @@ const AercCategory = (props: { name: string, small?: boolean, horizontal?: boole
     )
 }
 
-export const AercForCard = (props: { card: KCard }) => {
-    const {card} = props
+export const AercForCard = (props: { card: KCard, short?: boolean }) => {
+    const {card, short} = props
     return (
         <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
-            <AercScore score={card.extraCardInfo.amberControl} name={"Aember Control (A)"}/>
-            <AercScore score={card.extraCardInfo.expectedAmber} name={"Expected Aember (E)"}/>
-            <AercScore score={card.extraCardInfo.artifactControl} name={"Artifact Control (R)"}/>
-            <AercScore score={card.extraCardInfo.creatureControl} name={"Creature Control (C)"}/>
-            <AercScore score={card.effectivePower} name={"Effective Power (P)"}/>
-            <AercScore score={card.extraCardInfo.efficiency} name={"Efficiency (F)"}/>
-            <AercScore score={card.extraCardInfo.disruption} name={"Disruption (D)"}/>
-            <AercScore score={card.extraCardInfo.amberProtection} name={"Aember Protection"}/>
-            <AercScore score={card.extraCardInfo.houseCheating} name={"House Cheating"}/>
-            <AercScore score={card.extraCardInfo.other} name={"Other"}/>
-            <AercScore score={hasAercFromCard(card).aercScore} name={"AERC"}/>
+            <AercScore score={card.extraCardInfo.amberControl} name={short ? "A" : "Aember Control (A)"}/>
+            <AercScore score={card.extraCardInfo.expectedAmber} name={short ? "E" : "Expected Aember (E)"}/>
+            <AercScore score={card.extraCardInfo.artifactControl} name={short ? "R" : "Artifact Control (R)"}/>
+            <AercScore score={card.extraCardInfo.creatureControl} name={short ? "C" : "Creature Control (C)"}/>
+            <AercScore score={card.effectivePower} name={short ? "P" : "Effective Power (P)"}/>
+            <AercScore score={card.extraCardInfo.efficiency} name={short ? "F" : "Efficiency (F)"}/>
+            <AercScore score={card.extraCardInfo.disruption} name={short ? "D" : "Disruption (D)"}/>
+            <AercScore score={card.extraCardInfo.amberProtection} name={short ? "AP" : "Aember Protection"}/>
+            <AercScore score={card.extraCardInfo.houseCheating} name={short ? "HC" : "House Cheating"}/>
+            <AercScore score={card.extraCardInfo.other} name={short ? "O" : "Other"}/>
+            <AercScore score={Math.round(hasAercFromCard(card).aercScore * 10) / 10} name={"AERC"}/>
         </div>
     )
 }
@@ -313,8 +313,12 @@ const AercScore = (props: { score: number, name: string }) => {
     }
     return (
         <>
-            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>{name}:</Typography>
-            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>{score}</Typography>
+            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+                {name}:
+            </Typography>
+            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
+                {score}
+            </Typography>
         </>
     )
 }
