@@ -1,4 +1,5 @@
 import { observable } from "mobx"
+import { ListingInfo } from "../userdeck/ListingInfo"
 import { log } from "./Utils"
 
 enum Keys {
@@ -9,6 +10,7 @@ enum Keys {
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
     SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
     DECK_LIST_VIEW_TYPE = "DECK_LIST_VIEW_TYPE",
+    SALE_DEFAULTS = "SALE_DEFAULTS"
 }
 
 type CardViewType = "image" | "full" | "table"
@@ -34,6 +36,9 @@ class KeyLocalStorage {
     @observable
     smallTableView = false
 
+    @observable
+    saleDefaults?: Partial<ListingInfo>
+
     private localStorage = window.localStorage
 
     constructor() {
@@ -43,6 +48,7 @@ class KeyLocalStorage {
         this.loadSmallTableView()
         this.loadShowAllCards()
         this.loadCardListViewType()
+        this.loadSaleDefaults()
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)
@@ -92,9 +98,26 @@ class KeyLocalStorage {
         this.localStorage.setItem(Keys.DECK_PAGE_SIZE, size.toString())
     }
 
+    setSaleDefaults = (defaults: Partial<ListingInfo>) => {
+        this.saleDefaults = defaults
+        this.localStorage.setItem(Keys.SALE_DEFAULTS, JSON.stringify(defaults))
+    }
+
     clear = () => {
-        log.debug("Clearing local storage.")
-        this.localStorage.clear()
+        log.debug("Clearing auth related local storage")
+        this.localStorage.removeItem(Keys.AUTH)
+    }
+
+    private loadSaleDefaults = () => {
+        const saleDefaults = this.localStorage.getItem(Keys.SALE_DEFAULTS)
+        if (saleDefaults != null && saleDefaults.length > 0) {
+            try {
+                this.saleDefaults = JSON.parse(saleDefaults) as Partial<ListingInfo>
+            } catch (e) {
+                log.error("Couldn't read sale defaults from " + saleDefaults)
+                this.localStorage.removeItem(Keys.SALE_DEFAULTS)
+            }
+        }
     }
 
     private loadDeckListViewType = () => {

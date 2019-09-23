@@ -26,7 +26,9 @@ export class ReleaseNotes extends React.Component {
                     "Major update to AERC card scores! I've gone through and trued AERC scores against SAS card ratings to improve AERC scores. " +
                     "I've also made AERC scores more internally consistent, for example fight effects are rated the same for similar power creatures.",
                     "Card table view and csv download!",
-                    "Message while SAS / AERC are updating. Now you know when things are in flux."
+                    "Save defaults when listing decks for sale! No more re-entering the same thing to list 10 similar decks.",
+                    "Message while SAS / AERC are updating. Now you know when things are in flux.",
+                    "Hover for card totals shows names of cards that match the type."
                 ]}/>
                 <ReleaseNote releaseNumber={"5.13"} date={"9/11/2019"} expanded={true} releaseNotes={[
                     "Make sure to check out the toggle buttons on the bottom of the deck search drawer! I added a new graph one to see some graphs on " +

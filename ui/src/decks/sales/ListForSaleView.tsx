@@ -13,6 +13,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { auctionStore } from "../../auctions/AuctionStore"
+import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -81,15 +82,21 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     handleClose = () => this.open = false
     handleOpen = () => {
         this.open = true
-        this.forSale = true
-        this.forTrade = true
-        this.auction = false
-        this.language = DeckLanguage.ENGLISH
-        this.condition = DeckCondition.NEW_IN_PLASTIC
-        this.askingPrice = ""
-        this.listingInfo = ""
-        this.externalLink = ""
-        this.bidIncrement = "1"
+
+        const defaults = keyLocalStorage.saleDefaults == null ? {} : keyLocalStorage.saleDefaults
+        this.forSale = defaults.forSale == null ? true : defaults.forSale
+        this.forTrade = defaults.forTrade == null ? true : defaults.forTrade
+        this.auction = defaults.auctionListingInfo != null
+        this.language = defaults.language == null ? DeckLanguage.ENGLISH : defaults.language
+        this.condition = defaults.condition == null ? DeckCondition.NEW_IN_PLASTIC : defaults.condition
+        this.askingPrice = defaults.askingPrice == null ? "" : defaults.askingPrice.toString()
+        this.listingInfo = defaults.listingInfo == null ? "" : defaults.listingInfo
+        this.externalLink = defaults.externalLink == null ? "" : defaults.externalLink
+        this.bidIncrement = defaults.auctionListingInfo == null ? "1" : defaults.auctionListingInfo.bidIncrement.toString()
+        this.startingBid = defaults.auctionListingInfo == null ? "1" : defaults.auctionListingInfo.startingBid.toString()
+        this.buyItNow = defaults.auctionListingInfo == null || defaults.auctionListingInfo.buyItNow == null ? "" : defaults.auctionListingInfo.buyItNow.toString()
+        this.expireInDays = defaults.expireInDays == null ? "7" : defaults.expireInDays.toString()
+
         this.update = false
 
         if (!userStore.canListMoreAuctions && userStore.auctionsListed > 0) {
@@ -129,7 +136,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.expireInDays = event.target.value
     }
 
-    list = () => {
+    list = (saveAsDefault?: boolean) => {
         const {
             forSale, forTrade, auction, condition, askingPrice, listingInfo, externalLink, expireInDays, language, bidIncrement,
             startingBid, buyItNow
@@ -210,12 +217,21 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 buyItNow: buyItNowNumber as number,
                 endTime: this.auctionEndTime
             }
-            auctionStore.createAuction(this.props.deck.name, listingInfoDto)
+            if (!saveAsDefault) {
+                auctionStore.createAuction(this.props.deck.name, listingInfoDto)
+            }
         } else {
             listingInfoDto.askingPrice = askingPriceNumber
-            userDeckStore.listDeck(this.props.deck.name, listingInfoDto)
+            if (!saveAsDefault) {
+                userDeckStore.listDeck(this.props.deck.name, listingInfoDto)
+            }
         }
-        this.handleClose()
+        if (saveAsDefault) {
+            delete listingInfoDto.deckId
+            keyLocalStorage.setSaleDefaults(listingInfoDto)
+        } else {
+            this.handleClose()
+        }
     }
 
     render() {
@@ -530,10 +546,19 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         </Typography>
                     </DialogContent>
                     <DialogActions>
+                        <KeyButton
+                            style={{marginLeft: spacing(1)}}
+                            onClick={() => this.list(true)}
+                            disabled={!userStore.emailVerified || !forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}
+                        >
+                            {"Save Default"}
+                        </KeyButton>
+                        <div style={{flexGrow: 1}}/>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
                         <KeyButton
+                            style={{marginRight: spacing(1)}}
                             color={"primary"}
-                            onClick={this.list}
+                            onClick={() => this.list()}
                             disabled={!userStore.emailVerified || !forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}
                         >
                             {this.update ? "Update Listing" : "List"}

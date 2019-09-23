@@ -3,8 +3,8 @@ import * as React from "react"
 import { cardStore } from "./CardStore"
 import { KCard } from "./KCard"
 
-export const CardsWithAerc = (props: { title: string, accessor: (card: Partial<KCard>) => number, cards?: KCard[] }) => {
-    const {title, accessor, cards} = props
+export const CardsWithAerc = (props: { title: string, accessor: (card: Partial<KCard>) => number, cards?: KCard[], noScore?: boolean }) => {
+    const {title, accessor, cards, noScore} = props
     const titleComponent = <Typography variant={"inherit"}>{title}</Typography>
     if (cards == null) {
         return titleComponent
@@ -26,7 +26,11 @@ export const CardsWithAerc = (props: { title: string, accessor: (card: Partial<K
             <div style={{display: "flex", flexDirection: "column"}}>
                 {titleComponent}
                 {filtered
-                    .map((card, idx) => <Typography key={idx} variant={"inherit"}>{`${card.cardTitle} = ${accessAerc(card)}`}</Typography>)}
+                    .map((card, idx) => (
+                        <Typography key={idx} variant={"inherit"}>
+                            {noScore ? card.cardTitle : `${card.cardTitle} = ${accessAerc(card)}`}
+                        </Typography>
+                    ))}
             </div>
         )
     }

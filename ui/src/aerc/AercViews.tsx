@@ -1,6 +1,7 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardsWithAerc } from "../cards/CardsWithAerc"
+import { CardType } from "../cards/CardType"
 import { hasAercFromCard, KCard } from "../cards/KCard"
 import { spacing, theme } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
@@ -248,22 +249,50 @@ export const AercView = (props: {
                                 {
                                     icon: <ActionIcon width={20}/>,
                                     info: deck.actionCount,
-                                    tooltip: "Action Count"
+                                    tooltip: (
+                                        <CardsWithAerc
+                                            title={"Actions"}
+                                            accessor={card => card!.cardType === CardType.Action ? 1 : 0}
+                                            cards={hasAerc.searchResultCards}
+                                            noScore={true}
+                                        />
+                                    )
                                 },
                                 {
                                     icon: <CreatureIcon width={20}/>,
                                     info: deck.creatureCount,
-                                    tooltip: "Creature Count"
+                                    tooltip: (
+                                        <CardsWithAerc
+                                            title={"Creatures"}
+                                            accessor={card => card!.cardType === CardType.Creature ? 1 : 0}
+                                            cards={hasAerc.searchResultCards}
+                                            noScore={true}
+                                        />
+                                    )
                                 },
                                 {
                                     icon: <ArtifactIcon width={20}/>,
                                     info: deck.artifactCount,
-                                    tooltip: "Artifact Count"
+                                    tooltip: (
+                                        <CardsWithAerc
+                                            title={"Artifacts"}
+                                            accessor={card => card!.cardType === CardType.Artifact ? 1 : 0}
+                                            cards={hasAerc.searchResultCards}
+                                            noScore={true}
+                                        />
+                                    )
                                 },
                                 {
                                     icon: <UpgradeIcon width={20}/>,
                                     info: deck.upgradeCount,
-                                    tooltip: "Upgrade Count"
+                                    tooltip: (
+                                        <CardsWithAerc
+                                            title={"Upgrades"}
+                                            accessor={card => card!.cardType === CardType.Upgrade ? 1 : 0}
+                                            cards={hasAerc.searchResultCards}
+                                            noScore={true}
+                                        />
+                                    )
                                 }
                             ]
                         }

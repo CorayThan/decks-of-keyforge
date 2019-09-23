@@ -30,7 +30,7 @@ private const val statsUpdateQuantity = 10000L
 
 @Transactional
 @Service
-class StatsService(
+class  StatsService(
         private val cardService: CardService,
         private val deckStatisticsRepo: DeckStatisticsRepo,
         private val deckPageService: DeckPageService,
