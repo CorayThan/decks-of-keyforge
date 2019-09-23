@@ -24,8 +24,14 @@ export class ReleaseNotes extends React.Component {
             <AboutGridItem>
                 <ReleaseNote releaseNumber={"5.14"} date={"9/22/2019"} expanded={true} releaseNotes={[
                     "Major update to AERC card scores! I've gone through and trued AERC scores against SAS card ratings to improve AERC scores. " +
-                    "I've also made AERC scores more internally consistent, for example fight effects are rated the same for similar power creatures.",
-                    "Card table view and csv download!",
+                    "I've also made AERC scores more internally consistent, for example fight effects are rated the same for similar power creatures. " +
+                    "This completes step 3 of the 4 step SAS revision plan.",
+                    "Card table view and spreadsheet download! Find a link to the previous AERC ratings csv below.",
+                    <div style={{margin: spacing(1)}}>
+                        <Link href={"https://docs.google.com/spreadsheets/d/1BQ-PB1btHAyc38Dr4RXIFbuTm4oMkTAM_x7rGo5IMnc/edit?usp=sharing"}>
+                            All cards spreadsheet pre-major AERC scores revision
+                        </Link>
+                    </div>,
                     "Save defaults when listing decks for sale! No more re-entering the same thing to list 10 similar decks.",
                     "Message while SAS / AERC are updating. Now you know when things are in flux.",
                     "Hover for card totals shows names of cards that match the type."
@@ -76,7 +82,7 @@ export class ReleaseNotes extends React.Component {
                     "House Cheating, Other), adding synergies and antisynergies to improve AERC values, and then replacing the SAS card ratings with total " +
                     "AERC score of cards.",
                     "If you want to read the in-depth road map, take a look at the google doc: ",
-                    <div style={{margin: spacing(1)}} >
+                    <div style={{margin: spacing(1)}}>
                         <Link href={"https://docs.google.com/document/d/1_Hg1K2XI2vViDyJUECsmiIyAeYsCMvTHys46dVvKETA/edit?usp=sharing"}>
                             SAS v6 Roadmap
                         </Link>
