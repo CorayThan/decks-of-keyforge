@@ -22,20 +22,45 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
-                <ReleaseNote releaseNumber={"5.14"} date={"9/22/2019"} expanded={true} releaseNotes={[
-                    "Major update to AERC card scores! I've gone through and trued AERC scores against SAS card ratings to improve AERC scores. " +
-                    "I've also made AERC scores more internally consistent, for example fight effects are rated the same for similar power creatures. " +
-                    "This completes step 3 of the 4 step SAS revision plan.",
-                    "Card table view and spreadsheet download! Find a link to the previous AERC ratings csv below.",
-                    <div style={{margin: spacing(1)}}>
-                        <Link href={"https://docs.google.com/spreadsheets/d/1BQ-PB1btHAyc38Dr4RXIFbuTm4oMkTAM_x7rGo5IMnc/edit?usp=sharing"}>
-                            All cards spreadsheet pre-major AERC scores revision
-                        </Link>
-                    </div>,
-                    "Save defaults when listing decks for sale! No more re-entering the same thing to list 10 similar decks.",
-                    "Message while SAS / AERC are updating. Now you know when things are in flux.",
-                    "Hover for card totals shows names of cards that match the type."
-                ]}/>
+                <ReleaseNote
+                    releaseNumber={"5.14"}
+                    date={"9/22/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "AERC Update",
+                            note: "Major update to AERC card scores! I've gone through and trued AERC scores against SAS card ratings to improve AERC " +
+                                "scores. " +
+                                "I've also made AERC scores more internally consistent, for example fight effects are rated the same for similar power " +
+                                "creatures. This completes step 3 of the 4 step SAS revision plan."
+                        },
+                        {
+                            highlight: "Card Table View + Spreadsheet",
+                            note: "Card table view and spreadsheet download! Find a link to the previous AERC ratings csv below."
+                        },
+                        {
+                            note: (
+                                <div style={{margin: spacing(1)}}>
+                                    <Link href={"https://docs.google.com/spreadsheets/d/1BQ-PB1btHAyc38Dr4RXIFbuTm4oMkTAM_x7rGo5IMnc/edit?usp=sharing"}>
+                                        All cards spreadsheet pre-major AERC scores revision
+                                    </Link>
+                                </div>
+                            )
+                        },
+                        {
+                            highlight: "Deck Sale Listing Defaults",
+                            note: "Save defaults when listing decks for sale! No more re-entering the same thing to list 10 similar decks."
+                        },
+                        {
+                            highlight: "Update Message",
+                            note: "Message while SAS / AERC are updating. Now you know when things are in flux."
+                        },
+                        {
+                            highlight: "Card Type Hover",
+                            note: "Hover for card totals shows names of cards that match the type."
+                        },
+                    ]}
+                />
                 <ReleaseNote releaseNumber={"5.13"} date={"9/11/2019"} expanded={true} releaseNotes={[
                     "Make sure to check out the toggle buttons on the bottom of the deck search drawer! I added a new graph one to see some graphs on " +
                     "the deck search screen!",
@@ -439,11 +464,6 @@ export class ReleaseNotes extends React.Component {
                     "that had the potential to bring down the database.",
                     "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
                 ]}/>
-                <ReleaseNote releaseNumber={"1.1"} date={"1/20/2019"} releaseNotes={[
-                    "I've temporarily disabled searching for more than one card in the deck search. It was possible to create long-running searches " +
-                    "that had the potential to bring down the database.",
-                    "Fixed a bug where average artifact control and creature control were showing average artifact count and creature count."
-                ]}/>
                 <ReleaseNote releaseNumber={"1.0"} date={"1/19/2019"} releaseNotes={[
                     <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
                         <img alt={"Key of Darkness"} src={`https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png`}/>
@@ -454,7 +474,13 @@ export class ReleaseNotes extends React.Component {
     }
 }
 
-export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.ReactNode[], expanded?: boolean, date: string }) => (
+export const ReleaseNote = (props: {
+    releaseNumber: string,
+    releaseNotes?: React.ReactNode[],
+    releaseNotesWithHighlights?: { note: React.ReactNode, highlight?: string }[],
+    expanded?: boolean,
+    date: string
+}) => (
     <ExpansionPanel defaultExpanded={true}>
         <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
             <div style={{display: "flex", alignItems: "flex-end", width: "100%"}}>
@@ -466,10 +492,35 @@ export const ReleaseNote = (props: { releaseNumber: string, releaseNotes: React.
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
             <div style={{width: "100%"}}>
-                {props.releaseNotes.map((note, idx) => {
+                {props.releaseNotesWithHighlights && props.releaseNotesWithHighlights.map((noteAndHighlight, idx) => {
+                    let note
+                    if (typeof note === "string") {
+                        note = (
+                            <Typography
+                            >
+                                {noteAndHighlight.note}
+                            </Typography>
+                        )
+                    } else {
+                        note = noteAndHighlight.note
+                    }
+                    return (
+                        <div
+                            key={idx}
+                            style={{marginTop: idx !== 0 ? spacing(1) : undefined}}
+                        >
+                            {
+                                noteAndHighlight.highlight &&
+                                <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>{noteAndHighlight.highlight}</Typography>
+                            }
+                            {note}
+                        </div>
+                    )
+                })}
+                {props.releaseNotes && props.releaseNotes.map((note, idx) => {
                     if (typeof note === "string") {
                         return (
-                            <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes.length - 1 ? spacing(1) : undefined}}>
+                            <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes!.length - 1 ? spacing(1) : undefined}}>
                                 {note}
                             </Typography>
                         )
