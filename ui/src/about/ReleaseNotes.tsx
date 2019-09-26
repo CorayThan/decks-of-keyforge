@@ -14,7 +14,7 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.14"
+export const latestVersion = "5.15"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,22 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"5.15"}
+                    date={"9/25/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Crucible Tracker Wins",
+                            note: "You can now see the wins and losses for decks from results recorded with Crucible Tracker! Click the icon to go to the " +
+                                "deck page on Crucible Tracker."
+                        },
+                        {
+                            highlight: "Improved App Bar",
+                            note: "App bar now shows decks and my decks for smaller resolution desktops."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.14"}
                     date={"9/22/2019"}
@@ -52,7 +68,7 @@ export class ReleaseNotes extends React.Component {
                             note: "Save defaults when listing decks for sale! No more re-entering the same thing to list 10 similar decks."
                         },
                         {
-                            highlight: "Update Message",
+                            highlight: "SAS / AERC Update Message",
                             note: "Message while SAS / AERC are updating. Now you know when things are in flux."
                         },
                         {

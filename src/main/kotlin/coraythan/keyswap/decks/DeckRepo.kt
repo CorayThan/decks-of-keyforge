@@ -13,6 +13,7 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     fun findByNameIgnoreCase(@Param("name") name: String): List<Deck>
 
     fun findAllByRegisteredFalse(): List<Deck>
+    fun findByRegisteredTrueAndCardNames(cardNames: String): List<Deck>
 
     fun findByNameAndRegisteredTrue(name: String): Deck?
     fun findByName(name: String): Deck?

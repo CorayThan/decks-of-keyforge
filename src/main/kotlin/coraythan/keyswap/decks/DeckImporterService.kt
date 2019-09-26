@@ -38,8 +38,7 @@ import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateRatings = "PT5M"
-private const val lockUpdateCleanUnregistered = "PT24H"
-private const val onceEverySixHoursLock = "PT6h"
+private const val lockUpdateCleanUnregistered = "PT72H"
 
 const val currentDeckRatingVersion = 12
 
@@ -107,7 +106,8 @@ class DeckImporterService(
         deckService.countFilters(DeckFilters())
     }
 
-    @Scheduled(fixedDelayString = onceEverySixHoursLock)
+    @Transactional(propagation = Propagation.NEVER)
+    @Scheduled(fixedDelayString = lockUpdateCleanUnregistered)
     @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
         log.info("$scheduledStart clean out unregistered decks.")
@@ -117,17 +117,43 @@ class DeckImporterService(
             val allUnregDecks = deckRepo.findAllByRegisteredFalse()
             unregDeckCount = allUnregDecks.size
             allUnregDecks.forEach { unreg ->
-                val decksLike = deckRepo.findByNameIgnoreCase(unreg.name)
-                        .filter { it.id != unreg.id }
-                if (decksLike.isNotEmpty()) {
-                    log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
-                    deckRepo.deleteById(unreg.id)
-                    cleanedOut++
+                try {
+                    val decksLike = deckRepo.findByNameIgnoreCase(unreg.name)
+                            .filter { it.id != unreg.id }
+                    when {
+                        decksLike.isNotEmpty() -> {
+                            log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
+                            deckRepo.deleteById(unreg.id)
+                            cleanedOut++
+                        }
+                        deckService.countFilters(DeckFilters(
+                                cards = cardService.cardsForDeck(unreg)
+                                        .groupBy { it.cardTitle }
+                                        .map {
+                                            DeckCardQuantity(listOf(it.key), it.value.size)
+                                        }
+                        )).count > 0
+                        -> {
+                            // Eventually use this:
+                            // val identicalRegistered = deckRepo.findByRegisteredTrueAndCardNames(unreg.cardNames)
+
+                            log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it has a duplicate")
+                            deckRepo.deleteById(unreg.id)
+                            cleanedOut++
+                        }
+                        userDeckRepo.findByDeckIdAndOwnedByNotNull(unreg.id).isEmpty() -> {
+                            log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it is unowned")
+                            deckRepo.deleteById(unreg.id)
+                            cleanedOut++
+                        }
+                    }
+                } catch (e: Exception) {
+                    log.warn("Exception trying to clean unreg deck: ${unreg.name} with id ${unreg.keyforgeId}", e)
                 }
             }
         }
 
-        log.info("$scheduledStop Cleaned unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
+        log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
     var doneRatingDecks = false

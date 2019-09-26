@@ -431,7 +431,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     })}
                                                 </TextField>
                                                 <IconButton
-                                                    onClick={() => cards.splice(idx, cards.length)}
+                                                    onClick={() => cards.splice(idx, 1)}
                                                     style={{marginTop: spacing(2), marginLeft: spacing(1)}}
                                                 >
                                                     <Delete fontSize={"small"}/>

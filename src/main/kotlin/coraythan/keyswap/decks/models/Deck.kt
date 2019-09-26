@@ -27,6 +27,8 @@ data class Deck(
         val chains: Int = 0,
         val wins: Int = 0,
         val losses: Int = 0,
+        val crucibleTrackerWins: Int? = null,
+        val crucibleTrackerLosses: Int? = null,
 
         val registered: Boolean = true,
 
@@ -107,7 +109,12 @@ data class Deck(
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
-    fun toDeckSearchResult(searchResultCards: List<DeckSearchResultCard>? = null, cards: List<Card>? = null, stats: DeckStatistics?): DeckSearchResult {
+    fun toDeckSearchResult(
+            searchResultCards: List<DeckSearchResultCard>? = null,
+            cards: List<Card>? = null,
+            includeCrucibleTracker: Boolean = true,
+            stats: DeckStatistics?
+    ): DeckSearchResult {
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
@@ -118,6 +125,8 @@ data class Deck(
                 chains = chains,
                 wins = wins,
                 losses = losses,
+                crucibleTrackerWins = if (includeCrucibleTracker) crucibleTrackerWins else null,
+                crucibleTrackerLosses = if (includeCrucibleTracker) crucibleTrackerLosses else null,
 
                 registered = registered,
 
@@ -180,9 +189,14 @@ data class Deck(
     fun withCards(newCardsList: List<Card>): Deck {
         if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
 
-        val cardNames = "~" + newCardsList.groupBy { it.cardTitle }.map { entry ->
-            "${entry.key}${(1..entry.value.size).joinToString("")}"
-        }.joinToString("~") + "~" +
+        val cardNames = "~" +
+                // Add the cards themselves
+                newCardsList
+                        .groupBy { it.cardTitle }
+                        .map { entry ->
+                            "${entry.key}${(1..entry.value.size).joinToString("")}"
+                        }.sorted().joinToString("~") + "~" +
+                // Add duplicates for mavericks with the house
                 newCardsList
                         .filter { it.maverick }
                         .groupBy { it.cardTitle }
@@ -193,7 +207,7 @@ data class Deck(
                                         val firstCard = houseToCards.value[0]
                                         "${firstCard.cardTitle}${firstCard.house}"
                                     }
-                        }.joinToString("~") + "~"
+                        }.sorted().joinToString("~") + "~"
 
         return this.copy(
                 cardNames = cardNames,

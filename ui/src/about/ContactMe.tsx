@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Link, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -60,6 +60,9 @@ export class ContactMe extends React.Component {
                         </div>,
                         "Without their support, as well as the support of all the other patrons, this site would not be possible. If you aren't already a " +
                         "patron, please consider becoming one to support the site and get some exclusive benefits on the site!",
+                        "Thank you to Crucible Tracker for providing wins and losses from that service. Use it to record your wins and losses on " +
+                        "The Crucible Online!",
+                        <Link href={"https://www.thecrucibletracker.com?utm_source=decksofkeyforge"} target={"_blank"}>Crucible Tracker</Link>
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>

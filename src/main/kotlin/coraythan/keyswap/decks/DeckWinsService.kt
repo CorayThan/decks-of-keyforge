@@ -7,16 +7,19 @@ import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.thirdpartyservices.CrucibleTrackerApi
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateWinsLosses = "PT72H"
+private const val lockCrucibleTrackerUpdateWinsLosses = "PT12H"
 private const val onceEverySixHoursLock = "PT6H"
 private const val lockUpdatePageOfWinLosses = "PT20S"
 
@@ -27,11 +30,41 @@ class DeckWinsService(
         private val cardService: CardService,
         private val cardRepo: CardRepo,
         private val deckRepo: DeckRepo,
-        private val deckPageService: DeckPageService
+        private val deckPageService: DeckPageService,
+        private val crucibleTrackerApi: CrucibleTrackerApi
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var updatingWinsAndLosses: Boolean? = null
+
+    @Transactional(propagation = Propagation.NEVER)
+    @Scheduled(fixedDelayString = onceEverySixHoursLock)
+    @SchedulerLock(
+            name = "updateCrucibleTrackerWinsAndLosses",
+            lockAtLeastForString = lockCrucibleTrackerUpdateWinsLosses,
+            lockAtMostForString = lockCrucibleTrackerUpdateWinsLosses
+    )
+    fun updateCrucibleTrackerWinsAndLosses() {
+
+        log.info("$scheduledStart start crucible tracker deck win loss update")
+
+        crucibleTrackerApi.findWins()
+                .decks
+                .entries
+                .forEach {
+                    val preexisting = deckRepo.findByKeyforgeId(it.key)
+                    if (preexisting == null) {
+                        log.warn("Couldn't find deck with id from crucible tracker ${it.key}")
+                    } else {
+                        if (preexisting.crucibleTrackerWins ?: 0 != it.value.wins || preexisting.crucibleTrackerLosses ?: 0 != it.value.losses) {
+                            deckRepo.save(preexisting.copy(crucibleTrackerWins = it.value.wins, crucibleTrackerLosses = it.value.losses))
+                        }
+                    }
+                }
+
+        log.info("$scheduledStop done crucible tracker deck win loss update")
+    }
+
 
     @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)

@@ -23,7 +23,8 @@ export interface LinkInfo {
 interface LinkMenuProps {
     links: LinkInfo[]
     genericOnClick?: () => void
-    style?: React.CSSProperties
+    style?: React.CSSProperties,
+    dropdownOnly?: boolean
 }
 
 class LinkMenuStore {
@@ -61,11 +62,11 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
     store = new LinkMenuStore()
 
     render() {
-        const {links, genericOnClick, style} = this.props
+        const {links, genericOnClick, style, dropdownOnly} = this.props
         if (deckStore.randomDeckId) {
             return <Redirect to={Routes.deckPage(deckStore.randomDeckId)}/>
         }
-        if (screenStore.smallScreenTopBar()) {
+        if (screenStore.smallScreenTopBar() && !dropdownOnly) {
             return (
                 <>
                     {links

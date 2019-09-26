@@ -133,7 +133,7 @@ class DeckService(
             val searchResult = it.toDeckSearchResult(
                     cardService.deckSearchResultCardsFromCardIds(it.cardIds),
                     cardService.cardsForDeck(it),
-                    statsService.findCurrentStats()
+                    stats = statsService.findCurrentStats()
             )
             if (filters.forSale || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(
@@ -351,7 +351,7 @@ class DeckService(
         return deck.toDeckSearchResult(
                 cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
                 cardService.cardsForDeck(deck),
-                statsService.findCurrentStats())
+                stats = statsService.findCurrentStats())
     }
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {
@@ -370,7 +370,7 @@ class DeckService(
                 deck = deck.toDeckSearchResult(
                         cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
                         cardService.cardsForDeck(deck),
-                        statsService.findCurrentStats()
+                        stats = statsService.findCurrentStats()
                 ),
                 deckSynergyInfo = synergies,
                 cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1.0,

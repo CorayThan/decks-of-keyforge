@@ -72,6 +72,32 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                     </Typography>
                     <div style={{flexGrow: 1}}/>
                     <DeckSearchSuggest placement={"bottom-end"}/>
+                    {screenStore.screenWidth > 1000 && (
+                        <>
+                            <LinkMenu
+                                genericOnClick={rightMenuStore.close}
+                                links={[
+                                    {to: Routes.decks, text: "Decks", mobileActive: true},
+                                    {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
+                                    randomDeckMenuItem,
+                                ]}
+                                style={{margin: spacing(1)}}
+                                dropdownOnly={true}
+                            />
+                            <LinkMenu
+                                genericOnClick={rightMenuStore.close}
+                                links={[
+                                    {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
+                                    {to: Routes.usersFavorites(), text: "My Favorites"},
+                                    {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
+                                    {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+                                    {to: Routes.sellersView(), text: "Sellers View"},
+                                ]}
+                                style={{margin: spacing(1)}}
+                                dropdownOnly={true}
+                            />
+                        </>
+                    )}
                     <RightMenu/>
                 </>
             )
