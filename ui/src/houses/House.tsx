@@ -16,7 +16,9 @@ export enum House {
     Mars = "Mars",
     Sanctum = "Sanctum",
     Shadows = "Shadows",
-    Untamed = "Untamed"
+    Untamed = "Untamed",
+    StarAlliance = "StarAlliance",
+    SaurianRepublic = "SaurianRepublic"
 }
 
 export interface HouseValue {

@@ -1,4 +1,4 @@
-import { Button, Popover, TextField, Typography } from "@material-ui/core"
+import { Button, ListItem, ListItemText, Popover, TextField, Typography } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -77,17 +77,16 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
         }
 
         return (
-            <div style={this.props.style}>
-                <div
+            <>
+                <ListItem
+                    style={this.props.style}
                     ref={(ref: HTMLDivElement) => this.anchorElement = ref}
+                    button={true}
+                    color={"inherit"}
+                    onClick={this.handlePopoverOpen}
                 >
-                    <KeyButton
-                        color={"inherit"}
-                        onClick={this.handlePopoverOpen}
-                    >
-                        Import Deck
-                    </KeyButton>
-                </div>
+                    <ListItemText primary={"Import Deck"}/>
+                </ListItem>
                 <Popover
                     open={deckImportPopStore.popOpen}
                     onClose={this.handlePopoverClose}
@@ -159,7 +158,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                         </div>
                     </div>
                 </Popover>
-            </div>
+            </>
         )
     }
 }

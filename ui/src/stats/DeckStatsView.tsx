@@ -34,8 +34,11 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
 
         const contents = (
             <>
-                {!compact &&
-                <ToggleStats style={{position: "fixed", right: theme.spacing(2), bottom: theme.spacing(2), zIndex: screenStore.zindexes.menuPops}}/>}
+                {!compact && (
+                    <ToggleStats
+                        style={{position: "fixed", right: theme.spacing(2), bottom: theme.spacing(2), zIndex: screenStore.zindexes.keyDrawer}}
+                    />
+                )}
                 <CardTypePie
                     name={"This Deck"}
                     creatures={creatureCount}

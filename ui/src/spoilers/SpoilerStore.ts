@@ -1,0 +1,106 @@
+import axios, { AxiosResponse } from "axios"
+import { observable } from "mobx"
+import { CardFilters } from "../cards/CardFilters"
+import { KCard } from "../cards/KCard"
+import { HttpConfig } from "../config/HttpConfig"
+import { log, prettyJson } from "../config/Utils"
+import { messageStore } from "../ui/MessageStore"
+import { Spoiler } from "./Spoiler"
+import { SpoilerFilters } from "./SpoilerFilters"
+
+export class SpoilerStore {
+
+    static readonly CONTEXT = HttpConfig.API + "/spoilers"
+    static readonly SECURE_CONTEXT = HttpConfig.API + "/spoilers/secured"
+
+    @observable
+    spoilers?: Spoiler[]
+
+    @observable
+    searchingForSpoilers = false
+
+    @observable
+    allSpoilers: Spoiler[] = []
+
+    @observable
+    addingSpoilerImage = false
+
+    @observable
+    savingSpoiler = false
+
+    reset = () => {
+        if (this.spoilers) {
+            this.spoilers = undefined
+        }
+    }
+
+    searchSpoilers = (filters: SpoilerFilters) => {
+        log.debug(`Spoiler filters are ${prettyJson(filters)}`)
+        const toSeach = this.allSpoilers
+        let filtered = toSeach.slice().filter(card => {
+            return (
+                includeCardOrSpoiler(filters, card)
+                &&
+                (filters.expansion == null || card.expansion === filters.expansion)
+            )
+        })
+
+        this.spoilers = filtered.slice()
+    }
+
+    loadAllSpoilers = () => {
+        this.searchingForSpoilers = true
+        axios.get(`${SpoilerStore.CONTEXT}`)
+            .then((response: AxiosResponse) => {
+                this.searchingForSpoilers = false
+                this.allSpoilers = response.data
+                this.spoilers = this.allSpoilers.slice()
+            })
+    }
+
+    saveSpoiler = (spoiler: Spoiler) => {
+        this.savingSpoiler = true
+        axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
+            .then(() => {
+                this.savingSpoiler = false
+                messageStore.setSuccessMessage("Saved spoiler!")
+            })
+    }
+
+    addImageToSpoiler = async (spoilerImage: File, spoilerId: number) => {
+        this.addingSpoilerImage = true
+
+        const imageData = new FormData()
+        imageData.append("spoilerImage", spoilerImage)
+
+        await axios.post(
+            `${SpoilerStore.SECURE_CONTEXT}/add-spoiler-image/${spoilerId}`,
+            imageData,
+            {
+                headers: {
+                    "content-type": "multipart/form-data"
+                }
+            }
+        )
+
+        this.addingSpoilerImage = false
+        messageStore.setSuccessMessage("Added image to spoiler!")
+    }
+
+}
+
+export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card: KCard | Spoiler): boolean => {
+    return (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))
+        &&
+        (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
+        &&
+        (filters.houses.length === 0 || filters.houses.indexOf(card.house) !== -1)
+        &&
+        (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
+        &&
+        (filters.rarities.length === 0 || filters.rarities.indexOf(card.rarity) !== -1)
+        &&
+        (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
+}
+
+export const spoilerStore = new SpoilerStore()

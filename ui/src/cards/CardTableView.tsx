@@ -9,7 +9,7 @@ import { Utils } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { TraitBubble } from "../synergy/TraitBubble"
-import { CardSets, CardSynergies } from "./CardSimpleView"
+import { CardSetsFromCard, CardSynergies } from "./CardSimpleView"
 import { CardUtils, KCard } from "./KCard"
 
 export const CardTableView = (props: { cards: KCard[] }) => {
@@ -48,7 +48,7 @@ export const CardTableView = (props: { cards: KCard[] }) => {
                         {props.cards.map(card => (
                             <TableRow key={card.id}>
                                 <TableCell>{card.cardTitle}</TableCell>
-                                <TableCell><CardSets card={card} noDot={true}/></TableCell>
+                                <TableCell><CardSetsFromCard card={card} noDot={true}/></TableCell>
                                 <TableCell>{card.cardType}</TableCell>
                                 <TableCell>{card.amber}</TableCell>
                                 <TableCell>{card.power}</TableCell>

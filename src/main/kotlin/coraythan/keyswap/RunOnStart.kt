@@ -49,14 +49,18 @@ class RunOnStart(
                             HttpMethod.GET, entity, ByteArray::class.java, "1")
 
                     if (response.statusCode == HttpStatus.OK) {
-                        val titleMod = card.cardTitle
-                                .replace("[^\\d\\w\\s]".toRegex(), "")
-                                .replace(" ", "-")
-                                .toLowerCase()
+                        val titleMod = card.cardTitle.toUrlFriendlyCardTitle()
 
                         val written = Files.write(Paths.get("card-imgs/$titleMod.png"), response.body!!)
                         log.info("Wrote card image to location ${written.toAbsolutePath()}")
                     }
                 }
     }
+}
+
+fun String.toUrlFriendlyCardTitle(): String {
+    return this
+            .replace("[^\\d\\w\\s]".toRegex(), "")
+            .replace(" ", "-")
+            .toLowerCase()
 }

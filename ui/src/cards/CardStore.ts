@@ -3,6 +3,7 @@ import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
+import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { OptionType } from "./CardSearchSuggest"
 import { cardNameToCardNameKey, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
@@ -43,21 +44,10 @@ export class CardStore {
 
     searchCards = (filters: CardFilters) => {
         log.debug(`Card filters are ${prettyJson(filters)}`)
-        let filtered = this.allCards.slice().filter(card => {
+        const toSeach = this.allCards
+        let filtered = toSeach.slice().filter(card => {
             return (
-                (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))
-                &&
-                (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
-                &&
-                (filters.houses.length === 0 || filters.houses.indexOf(card.house) !== -1)
-                &&
-                (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
-                &&
-                (filters.rarities.length === 0 || filters.rarities.indexOf(card.rarity) !== -1)
-                &&
-                (filters.ratings.length === 0 || filters.ratings.indexOf(card.extraCardInfo.rating) !== -1)
-                &&
-                (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
+                includeCardOrSpoiler(filters, card)
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&

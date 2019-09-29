@@ -42,8 +42,7 @@ class PublicApiService(
         }
         return deck.toDeckSearchResult(
                 cards = cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats(),
-                includeCrucibleTracker = false
+                stats = statsService.findCurrentStats()
         )
     }
 

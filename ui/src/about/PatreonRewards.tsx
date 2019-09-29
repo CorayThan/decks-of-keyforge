@@ -36,8 +36,9 @@ export class PatreonRewards extends React.Component {
                         title={"Accessing your rewards"}
                         infos={[
                             <div style={{display: "flex", alignItems: "center"}}>
-                                <Typography>After becoming a patron link your account from your </Typography>
+                                <Typography style={{marginRight: spacing(2)}}>After becoming a patron link your account from your </Typography>
                                 <LinkButton
+                                    variant={"outlined"}
                                     to={Routes.myProfile}
                                 >
                                     Profile
@@ -74,7 +75,6 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
-                            "After your first month send me your real address and I'll send you a set of cardboard keys promoting the site!",
                             "List up to five simultaneous auctions. (By default you are only allowed one.)"
                         ]}
                     />

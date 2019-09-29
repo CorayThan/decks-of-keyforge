@@ -35,6 +35,7 @@ class DeckService(
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
         private val userDeckRepo: UserDeckRepo,
+        private val deckWinsService: DeckWinsService,
         private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -133,7 +134,8 @@ class DeckService(
             val searchResult = it.toDeckSearchResult(
                     cardService.deckSearchResultCardsFromCardIds(it.cardIds),
                     cardService.cardsForDeck(it),
-                    stats = statsService.findCurrentStats()
+                    stats = statsService.findCurrentStats(),
+                    crucibleWins = deckWinsService.crucibleWins
             )
             if (filters.forSale || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(
@@ -370,7 +372,8 @@ class DeckService(
                 deck = deck.toDeckSearchResult(
                         cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
                         cardService.cardsForDeck(deck),
-                        stats = statsService.findCurrentStats()
+                        stats = statsService.findCurrentStats(),
+                        crucibleWins = deckWinsService.crucibleWins
                 ),
                 deckSynergyInfo = synergies,
                 cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1.0,

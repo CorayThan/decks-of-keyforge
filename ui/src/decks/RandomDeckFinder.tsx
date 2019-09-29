@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core"
+import { ListItem, ListItemText } from "@material-ui/core"
 import { MenuItemProps } from "@material-ui/core/MenuItem"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -14,8 +14,8 @@ export class RandomDeckMenuItem extends React.Component<MenuItemProps> {
 
     render() {
         return (
-            <Button
-                style={{justifyContent: "center"}}
+            <ListItem
+                button={true}
                 onClick={() => {
                     deckStore.deck = undefined
                     deckStore.findRandomDeckId()
@@ -25,8 +25,8 @@ export class RandomDeckMenuItem extends React.Component<MenuItemProps> {
                     }
                 }}
             >
-                I Feel Lucky
-            </Button>
+                <ListItemText primary={"I Feel Lucky"}/>
+            </ListItem>
         )
     }
 }

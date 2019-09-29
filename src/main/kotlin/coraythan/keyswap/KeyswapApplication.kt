@@ -34,11 +34,12 @@ import javax.sql.DataSource
 @SpringBootApplication
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "PT24H")
-class KeyswapApplication {
+class KeyswapApplication() {
 
     private val log = LoggerFactory.getLogger(KeyswapApplication::class.java)
 
     companion object {
+
         val objectMapper = ObjectMapper()
                 .apply {
 
@@ -84,7 +85,7 @@ class KeyswapApplication {
     fun lockProvider(dataSource: DataSource): LockProvider {
         return JdbcTemplateLockProvider(dataSource)
     }
-    
+
     @Bean
     fun threadPoolTaskScheduler(): TaskScheduler {
         val threadPoolTaskScheduler = ThreadPoolTaskScheduler()
@@ -95,6 +96,7 @@ class KeyswapApplication {
 
     @Bean
     fun shallowEtagHeaderFilter() = ShallowEtagHeaderFilter()
+
 }
 
 fun main(args: Array<String>) {

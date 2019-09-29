@@ -1,4 +1,4 @@
-import { Grow, MenuItem, MenuList, Paper, Popper } from "@material-ui/core"
+import { Grow, ListItem, ListItemText, MenuList, Paper, Popper } from "@material-ui/core"
 import { MenuItemProps } from "@material-ui/core/MenuItem"
 import { ArrowDropDown } from "@material-ui/icons"
 import { observable } from "mobx"
@@ -8,9 +8,10 @@ import { Redirect } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { deckStore } from "../decks/DeckStore"
-import { LinkButton } from "../mui-restyled/LinkButton"
+import { LinkButton, ListItemLink } from "../mui-restyled/LinkButton"
 import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 
 export interface LinkInfo {
     to?: string
@@ -18,6 +19,7 @@ export interface LinkInfo {
     text: string
     mobileActive?: boolean
     randomDeck?: boolean
+    contentCreatorOnly?: boolean
 }
 
 interface LinkMenuProps {
@@ -25,6 +27,7 @@ interface LinkMenuProps {
     genericOnClick?: () => void
     style?: React.CSSProperties,
     dropdownOnly?: boolean
+    children?: React.ReactNode
 }
 
 class LinkMenuStore {
@@ -62,23 +65,24 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
     store = new LinkMenuStore()
 
     render() {
-        const {links, genericOnClick, style, dropdownOnly} = this.props
+        const {links, genericOnClick, style, dropdownOnly, children} = this.props
+        const filteredLinks = links.filter(link => link.contentCreatorOnly == null || userStore.contentCreator)
         if (deckStore.randomDeckId) {
             return <Redirect to={Routes.deckPage(deckStore.randomDeckId)}/>
         }
         if (screenStore.smallScreenTopBar() && !dropdownOnly) {
             return (
                 <>
-                    {links
+                    {filteredLinks
                         .filter(linkInfo => linkInfo.mobileActive)
                         .map(linkInfo => {
                             if (linkInfo.randomDeck) {
                                 return (
                                     // @ts-ignore
-                                    <MenuItem
+                                    <ListItem
                                         key={linkInfo.text}
                                         color={"inherit"}
-                                        style={{display: "flex", justifyContent: "center", ...style}}
+                                        style={{...style}}
                                         onClick={() => {
                                             if (genericOnClick) {
                                                 this.store.handleClose()
@@ -87,31 +91,29 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                         }}
                                         component={linkInfo.component}
                                     >
-                                        {linkInfo.text.toUpperCase()}
-                                    </MenuItem>
+                                        <ListItemText primary={linkInfo.text}/>
+                                    </ListItem>
                                 )
                             }
                             return (
-                                <LinkButton
+                                <ListItemLink
                                     key={linkInfo.text}
-                                    color={"inherit"}
-                                    to={linkInfo.to}
-                                    style={style}
+                                    to={linkInfo.to!}
                                     onClick={() => {
                                         if (genericOnClick) {
                                             genericOnClick()
                                         }
                                     }}
-                                >
-                                    {linkInfo.text}
-                                </LinkButton>
+                                    primary={linkInfo.text}
+                                />
                             )
                         })}
+                    {children}
                 </>
             )
         }
 
-        const firstLink = links[0]
+        const firstLink = filteredLinks[0]
         return (
             <div>
                 <div ref={this.store.anchorElRef}>
@@ -134,7 +136,9 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                         </LinkButton>
                     </div>
                 </div>
-                <MenuPopper store={this.store} links={links} ref={this.store.anchorElRef}/>
+                <MenuPopper store={this.store} links={filteredLinks} ref={this.store.anchorElRef}>
+                    {children}
+                </MenuPopper>
             </div>
         )
     }
@@ -143,11 +147,12 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
 interface MenuPopperProps {
     store: LinkMenuStore
     links: LinkInfo[]
+    children?: React.ReactNode
 }
 
 // eslint-disable-next-line
 const MenuPopper = observer(React.forwardRef((props: MenuPopperProps, ref: React.Ref<HTMLDivElement>) => {
-    const {store, links} = props
+    const {store, links, children} = props
     return (
         <Popper
             open={store.open}
@@ -186,6 +191,7 @@ const MenuPopper = observer(React.forwardRef((props: MenuPopperProps, ref: React
                                         throw Error("No to or action in linkInfo.")
                                     }
                                 })}
+                                {children}
                             </MenuList>
                         </Paper>
                     </div>

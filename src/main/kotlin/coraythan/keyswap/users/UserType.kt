@@ -7,6 +7,7 @@ const val ROLE_USER = "ROLE_USER"
 
 enum class UserType : GrantedAuthority {
     ADMIN,
+    CONTENT_CREATOR,
     USER;
 
     @Suppress("LeakingThis")

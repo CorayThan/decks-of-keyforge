@@ -8,17 +8,20 @@ export interface ExpansionInfo {
 
 export enum Expansion {
     COTA = 341,
-    AOA = 435
+    AOA = 435,
+    WC = 1
 }
 
 export enum BackendExpansion {
     CALL_OF_THE_ARCHONS = "CALL_OF_THE_ARCHONS",
     AGE_OF_ASCENSION = "AGE_OF_ASCENSION",
+    WORLDS_COLLIDE = "WORLDS_COLLIDE",
 }
 
 export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: Expansion.COTA, name: "Call of the Archons", abbreviation: "COTA", backendEnum: BackendExpansion.CALL_OF_THE_ARCHONS},
     {expansionNumber: Expansion.AOA, name: "Age of Ascension", abbreviation: "AOA", backendEnum: BackendExpansion.AGE_OF_ASCENSION},
+    {expansionNumber: Expansion.WC, name: "Worlds Collide", abbreviation: "WC", backendEnum: BackendExpansion.WORLDS_COLLIDE},
 ]
 
 export const expansionInfoMap: Map<number, ExpansionInfo> = new Map(expansionInfos.map(info => (

@@ -36,8 +36,9 @@ export interface UserRegistration {
 }
 
 export enum UserType {
-    USER,
-    ADMIN
+    USER = "USER",
+    ADMIN = "ADMIN",
+    CONTENT_CREATOR = "CONTENT_CREATOR",
 }
 
 export interface KeyUserDto {

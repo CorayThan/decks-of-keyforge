@@ -17,6 +17,8 @@ import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/D
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { LandingPage } from "../landing/LandingPage"
+import { AddSpoilerPage } from "../spoilers/AddSpoilerPage"
+import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
 import { MyProfile } from "../user/MyProfile"
@@ -33,6 +35,8 @@ class Routes {
     static users = "/users"
     static myProfile = "/my-profile"
     static cards = "/cards"
+    static spoilers = "/spoilers"
+    static createSpoiler = "/spoilers/create"
     static about = "/about"
     static decks = "/decks"
     static stats = "/stats"
@@ -54,7 +58,6 @@ class Routes {
     /**
      * Deck filters should be cleaned.
      * @param filters
-     * @param removeAuto
      */
     static deckSearch = (filters: DeckFilters) => {
         const cleaned = prepareDeckFiltersForQueryString(filters)
@@ -163,6 +166,14 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.myProfile}
                             component={MyProfile}
+                        />
+                        <LoggedInRoute
+                            path={Routes.createSpoiler}
+                            component={AddSpoilerPage}
+                        />
+                        <Route
+                            path={Routes.spoilers}
+                            component={SpoilersPage}
                         />
                         <Route
                             path={Routes.landing}

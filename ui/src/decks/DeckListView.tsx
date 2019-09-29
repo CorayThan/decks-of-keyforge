@@ -447,7 +447,6 @@ export class DeckListView extends React.Component<DeckListViewProps> {
                                 </div>
                             )}
                         </div>
-
                     )
                 })}
             </>

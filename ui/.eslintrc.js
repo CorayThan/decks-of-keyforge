@@ -27,6 +27,7 @@ module.exports =  {
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "react/no-unescaped-entities": "off",
+        "react/display-name": "off"
     },
     settings:  {
         react:  {

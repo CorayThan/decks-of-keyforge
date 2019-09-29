@@ -7,6 +7,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.Synergies
@@ -112,8 +113,8 @@ data class Deck(
     fun toDeckSearchResult(
             searchResultCards: List<DeckSearchResultCard>? = null,
             cards: List<Card>? = null,
-            includeCrucibleTracker: Boolean = true,
-            stats: DeckStatistics?
+            crucibleWins: Map<String, Wins>? = null,
+            stats: DeckStatistics? = null
     ): DeckSearchResult {
         return DeckSearchResult(
                 id = id,
@@ -125,8 +126,8 @@ data class Deck(
                 chains = chains,
                 wins = wins,
                 losses = losses,
-                crucibleTrackerWins = if (includeCrucibleTracker) crucibleTrackerWins else null,
-                crucibleTrackerLosses = if (includeCrucibleTracker) crucibleTrackerLosses else null,
+                crucibleTrackerWins = crucibleWins?.get(keyforgeId)?.wins,
+                crucibleTrackerLosses = crucibleWins?.get(keyforgeId)?.losses,
 
                 registered = registered,
 

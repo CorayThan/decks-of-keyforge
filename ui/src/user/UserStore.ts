@@ -9,7 +9,7 @@ import { deckStore } from "../decks/DeckStore"
 import { findPatronRewardLevel, patronAuctionLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { KeyUserDto, UserLogin, UserRegistration } from "./KeyUser"
+import { KeyUserDto, UserLogin, UserRegistration, UserType } from "./KeyUser"
 import { UserProfile, UserProfileUpdate } from "./UserProfile"
 
 export class UserStore {
@@ -283,6 +283,14 @@ export class UserStore {
     get featuredSeller(): boolean {
         if (this.user) {
             return findPatronRewardLevel(this.user.patreonTier) > 1
+        }
+        return false
+    }
+
+    @computed
+    get contentCreator(): boolean {
+        if (this.user) {
+            return this.user.type === UserType.ADMIN || this.user.type === UserType.CONTENT_CREATOR
         }
         return false
     }

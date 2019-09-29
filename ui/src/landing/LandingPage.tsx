@@ -1,12 +1,9 @@
 import { Divider, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Article } from "../articles/Article"
-import { latestTwoArticles } from "../articles/ArticlesPage"
-import { ArticleView } from "../articles/ArticleView"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
+import { AboutSubPaths, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { Expansion } from "../expansions/Expansions"
@@ -122,16 +119,7 @@ export class LandingPage extends React.Component<{}> {
                         ) : null}
                         <FeaturedSellersView/>
                         <div style={{margin: spacing(4)}}>
-                            <UnstyledLink to={Routes.articles}>
-                                <Typography
-                                    variant={"h4"}
-                                    color={"primary"}
-                                    style={{marginBottom: spacing(4), marginTop: spacing(4)}}
-                                >
-                                    Articles
-                                </Typography>
-                            </UnstyledLink>
-                            {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
+                            {/*<LastTwoArticles/>*/}
                             <UnstyledLink to={StatsSubPaths.winRates}>
                                 <Typography
                                     variant={"h4"}
@@ -168,3 +156,21 @@ export class LandingPage extends React.Component<{}> {
         )
     }
 }
+
+
+// const LastTwoArticles = () => {
+//     return (
+//         <>
+//             <UnstyledLink to={Routes.articles}>
+//                 <Typography
+//                     variant={"h4"}
+//                     color={"primary"}
+//                     style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+//                 >
+//                     Articles
+//                 </Typography>
+//             </UnstyledLink>
+//             {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
+//         </>
+//     )
+// }

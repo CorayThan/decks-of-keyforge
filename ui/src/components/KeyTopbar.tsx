@@ -1,4 +1,4 @@
-import { Button, Divider, IconButton, List } from "@material-ui/core"
+import { Divider, IconButton, List, ListItem, ListItemText } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Collapse from "@material-ui/core/Collapse"
 import Drawer from "@material-ui/core/Drawer"
@@ -21,7 +21,7 @@ import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu } from "../generic/LinkMenu"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { LinkButton } from "../mui-restyled/LinkButton"
+import { LinkButton, ListItemLink } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
@@ -167,7 +167,7 @@ class RightMenu extends React.Component {
                         anchor={"right"}
                         style={{zIndex: screenStore.zindexes.rightMenu}}
                     >
-                        <div style={{display: "flex", padding: spacing(2), flexDirection: "column"}}>
+                        <div style={{display: "flex", flexDirection: "column", minWidth: 160}}>
                             <AppLinks/>
                             <Divider style={{margin: spacing(2)}}/>
                             <UserLinks/>
@@ -184,7 +184,7 @@ class RightMenu extends React.Component {
                 <div
                     style={{display: "flex", borderLeft: "1px solid rgb(255, 255, 255, 0.25)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
                 >
-                    <UserLinks/>
+                    <UserLinksDesktop/>
                 </div>
             </>
         )
@@ -201,15 +201,16 @@ const AppLinks = observer(() => (
                 randomDeckMenuItem,
             ]}
             style={{margin: spacing(1)}}
-        />
-        <DeckImportPop
-            style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
-        />
+        >
+            <DeckImportPop/>
+        </LinkMenu>
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.landing, text: "Home", mobileActive: true},
                 {to: Routes.cards, text: "Cards", mobileActive: true},
+                {to: Routes.spoilers, text: "Card Spoilers", contentCreatorOnly: true},
+                {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true},
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
@@ -217,61 +218,40 @@ const AppLinks = observer(() => (
         />
         {screenStore.smallScreenTopBar() ? (
             <>
-                <Button
-                    color={"inherit"}
-                    style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+                <ListItem
+                    button={true}
                     onClick={() => rightMenuStore.aboutOpen = !rightMenuStore.aboutOpen}
                 >
-                    About
+                    <ListItemText primary={"About"}/>
                     {rightMenuStore.aboutOpen ? <ExpandLess/> : <ExpandMore/>}
-                </Button>
+                </ListItem>
                 <Collapse in={rightMenuStore.aboutOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <LinkButton
-                            color={"inherit"}
+                    <List component="div" disablePadding>
+                        <ListItemLink
                             to={AboutSubPaths.sas}
-                            style={{margin: spacing(1)}}
                             onClick={rightMenuStore.close}
-                            size={"small"}
-                        >
-                            SAS and AERC
-                        </LinkButton>
-                        <LinkButton
-                            color={"inherit"}
+                            primary={"SAS and AERC"}
+                        />
+                        <ListItemLink
                             to={AboutSubPaths.contact}
-                            style={{margin: spacing(1)}}
                             onClick={rightMenuStore.close}
-                            size={"small"}
-                        >
-                            Contact Me
-                        </LinkButton>
-                        <LinkButton
-                            color={"inherit"}
+                            primary={"Contact Me"}
+                        />
+                        <ListItemLink
                             to={AboutSubPaths.releaseNotes}
-                            style={{margin: spacing(1)}}
                             onClick={rightMenuStore.close}
-                            size={"small"}
-                        >
-                            Release Notes
-                        </LinkButton>
-                        <LinkButton
-                            color={"inherit"}
+                            primary={"Release Notes"}
+                        />
+                        <ListItemLink
                             to={AboutSubPaths.sellersAndDevs}
-                            style={{margin: spacing(1)}}
                             onClick={rightMenuStore.close}
-                            size={"small"}
-                        >
-                            APIs
-                        </LinkButton>
-                        <LinkButton
-                            color={"inherit"}
+                            primary={"APIs"}
+                        />
+                        <ListItemLink
                             to={AboutSubPaths.teamSas}
-                            style={{margin: spacing(1)}}
                             onClick={rightMenuStore.close}
-                            size={"small"}
-                        >
-                            Team SAS-LP
-                        </LinkButton>
+                            primary={"Team SAS-LP"}
+                        />
                     </List>
                 </Collapse>
             </>
@@ -295,6 +275,72 @@ const AppLinks = observer(() => (
 
 @observer
 class UserLinks extends React.Component {
+
+    @observable
+    buttonAnchor?: HTMLElement
+
+    render() {
+        if (!userStore.loggedIn() && userStore.loginInProgress) {
+            return <Loader/>
+        } else if (userStore.loggedIn()) {
+            return (
+                <>
+                    <LinkMenu
+                        genericOnClick={rightMenuStore.close}
+                        links={[
+                            {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
+                            {to: Routes.usersFavorites(), text: "My Favorites"},
+                            {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
+                            {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+                            {to: Routes.sellersView(), text: "Sellers View"},
+                        ]}
+                        style={{margin: spacing(1)}}
+                    />
+                    <ListItemLink
+                        to={Routes.myProfile}
+                        onClick={rightMenuStore.close}
+                        primary={"Profile"}
+                    />
+                    <ListItemLink
+                        to={AboutSubPaths.patreon}
+                        onClick={rightMenuStore.close}
+                        primary={"Patreon"}
+                        icon={<PatreonIcon primary={true}/>}
+                    />
+                    <ListItem
+                        button={true}
+                        onClick={() => {
+                            userStore.logout()
+                            rightMenuStore.close()
+                        }}
+                    >
+                        <ListItemText primary={"Logout"}/>
+                    </ListItem>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <LoginPop
+                        style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+                    />
+                    <LinkButton
+                        color={"secondary"}
+                        variant={"contained"}
+                        to={Routes.registration}
+                        style={{margin: spacing(1)}}
+                        onClick={rightMenuStore.close}
+                    >
+                        Sign Up
+                    </LinkButton>
+                </>
+            )
+        }
+    }
+}
+
+@observer
+class UserLinksDesktop extends React.Component {
 
     @observable
     buttonAnchor?: HTMLElement

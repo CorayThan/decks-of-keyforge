@@ -13,13 +13,12 @@ import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateWinsLosses = "PT72H"
-private const val lockCrucibleTrackerUpdateWinsLosses = "PT12H"
+private const val lockCrucibleTrackerUpdateWinsLosses = "PT1H"
 private const val onceEverySixHoursLock = "PT6H"
 private const val lockUpdatePageOfWinLosses = "PT20S"
 
@@ -37,34 +36,41 @@ class DeckWinsService(
 
     private var updatingWinsAndLosses: Boolean? = null
 
-    @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = onceEverySixHoursLock)
-    @SchedulerLock(
-            name = "updateCrucibleTrackerWinsAndLosses",
-            lockAtLeastForString = lockCrucibleTrackerUpdateWinsLosses,
-            lockAtMostForString = lockCrucibleTrackerUpdateWinsLosses
-    )
+    var crucibleWins: Map<String, Wins> = mapOf()
+
+    // TODO delete the columns
+    @Scheduled(fixedDelayString = lockCrucibleTrackerUpdateWinsLosses)
+//    @SchedulerLock(
+//            name = "updateCrucibleTrackerWinsAndLosses",
+//            lockAtLeastForString = lockCrucibleTrackerUpdateWinsLosses,
+//            lockAtMostForString = lockCrucibleTrackerUpdateWinsLosses
+//    )
     fun updateCrucibleTrackerWinsAndLosses() {
 
         log.info("$scheduledStart start crucible tracker deck win loss update")
 
-        crucibleTrackerApi.findWins()
-                .decks
-                .entries
-                .forEach {
-                    val preexisting = deckRepo.findByKeyforgeId(it.key)
-                    if (preexisting == null) {
-                        log.warn("Couldn't find deck with id from crucible tracker ${it.key}")
-                    } else {
-                        if (preexisting.crucibleTrackerWins ?: 0 != it.value.wins || preexisting.crucibleTrackerLosses ?: 0 != it.value.losses) {
-                            deckRepo.save(preexisting.copy(crucibleTrackerWins = it.value.wins, crucibleTrackerLosses = it.value.losses))
-                        }
-                    }
-                }
+//        var updateCount = 0
+//        var checked = 0
+        this.crucibleWins = crucibleTrackerApi.findWins().decks
 
-        log.info("$scheduledStop done crucible tracker deck win loss update")
+//        entries.forEach {
+//                    checked++
+//                    try {
+//                        val preexisting = deckRepo.findByKeyforgeId(it.key)
+//                        if (preexisting == null) {
+//                            log.warn("Couldn't find deck with id from crucible tracker ${it.key}")
+//                        } else if (preexisting.crucibleTrackerWins != it.value.wins || preexisting.crucibleTrackerLosses != it.value.losses) {
+//                            updateCount++
+//                            deckRepo.updateCrucibleTrackerWins(preexisting.id, it.value.wins, it.value.losses)
+//                        }
+//                    } catch (e: Exception) {
+//                        log.warn("Problem with crucible wins for ${it.key}.", e)
+//                    }
+//                    if (checked % 1000 == 0) log.info("Checked $checked decks for crucible tracker. Updated $updateCount. Out of ${entries.size}")
+//                }
+
+        log.info("$scheduledStop done crucible tracker deck win loss update.")
     }
-
 
     @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)

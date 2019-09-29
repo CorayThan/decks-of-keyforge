@@ -7,7 +7,9 @@ enum class House {
     Mars,
     Sanctum,
     Shadows,
-    Untamed;
+    Untamed,
+    StarAlliance,
+    SaurianRepublic;
 
     companion object {
         fun valueOfOrNull(value: String): House? {

@@ -8,12 +8,17 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+        // For fixing windows command too long
+        classpath "gradle.plugin.com.github.viswaramamoorthy:gradle-util-plugins:0.1.0-RELEASE"
     }
 }
 
@@ -23,9 +28,11 @@ apply plugin: 'kotlin-jpa'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+// For fixing windows command too long
+apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '168'
+version = '171'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
@@ -50,6 +57,10 @@ repositories {
     mavenCentral()
 }
 
+springBoot {
+    mainClassName = "coraythan.keyswap.KeyswapApplicationKt"
+}
+
 dependencies {
 
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -67,6 +78,7 @@ dependencies {
     implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
     implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2')
     implementation("com.patreon:patreon:0.4.2")
+    implementation("com.amazonaws:aws-java-sdk:1.11.640")
 
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtime("io.jsonwebtoken:jjwt-impl:$jjwtVersion")

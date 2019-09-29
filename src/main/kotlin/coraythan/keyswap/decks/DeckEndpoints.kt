@@ -18,7 +18,8 @@ class DeckEndpoints(
         private val deckService: DeckService,
         private val deckImporterService: DeckImporterService,
         private val azureOcr: AzureOcr,
-        private val userDeckService: UserDeckService
+        private val userDeckService: UserDeckService,
+        private val deckWinsService: DeckWinsService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -101,6 +102,9 @@ class DeckEndpoints(
 
     @GetMapping("/updating")
     fun updating() = !deckImporterService.doneRatingDecks
+
+    @GetMapping("/update-crucible-tracker-wins")
+    fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
 }
 
 data class SimpleDeckResponse(

@@ -18,7 +18,6 @@ import { CardFilters, CardSort } from "./CardFilters"
 import { cardStore } from "./CardStore"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
-import { CardRatingSelect, SelectedCardRatings } from "./selects/CardRatingSelect"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
 import { CardTypeSelect, SelectedCardTypes } from "./selects/CardTypeSelect"
 import { PowerSelect, SelectedPowers } from "./selects/PowerSelect"
@@ -34,7 +33,6 @@ export class CardsSearchDrawer extends React.Component {
     selectedRarities = new SelectedRarities()
     selectedPowers = new SelectedPowers()
     selectedAmbers = new SelectedAmbers()
-    selectedRatings = new SelectedCardRatings()
     selectedArmors = new SelectedArmors()
     selectedSortStore = new CardSortSelectStore()
     selectedExpansion = new SelectedExpansion()
@@ -51,7 +49,6 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.types = this.selectedCardTypes.selectedValues
         this.filters.rarities = this.selectedRarities.toArray()
-        this.filters.ratings = this.selectedRatings.toArray()
         this.filters.powers = this.selectedPowers.toArray()
         this.filters.ambers = this.selectedAmbers.toArray()
         this.filters.armors = this.selectedArmors.toArray()
@@ -67,7 +64,6 @@ export class CardsSearchDrawer extends React.Component {
         this.filters.reset()
         this.selectedCardTypes.reset()
         this.selectedRarities.reset()
-        this.selectedRatings.reset()
         this.selectedPowers.reset()
         this.selectedAmbers.reset()
         this.selectedArmors.reset()
@@ -108,7 +104,6 @@ export class CardsSearchDrawer extends React.Component {
                         <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><RaritySelect selectedRarities={this.selectedRarities}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardRatingSelect selectedRatings={this.selectedRatings}/></div>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><AmberSelect selectedAmbers={this.selectedAmbers}/></div>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><PowerSelect selectedPowers={this.selectedPowers}/></div>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>

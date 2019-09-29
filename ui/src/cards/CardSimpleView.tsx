@@ -8,7 +8,7 @@ import * as React from "react"
 import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { expansionInfoMap } from "../expansions/Expansions"
+import { Expansion, expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -87,7 +87,7 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                             <Typography variant={"h6"}>{cardTitle}</Typography>
                         </UnstyledLink>
                     )}
-                    <CardSets card={card}/>
+                    <CardSetsFromCard card={card}/>
                 </div>
                 <div style={{display: "flex"}}>
                     <Typography variant={"subtitle1"}>{cardType}</Typography>
@@ -294,26 +294,53 @@ const CardLine = (props: CardAsLineProps) => {
     )
 }
 
-export const CardSets = (props: { card: KCard, noDot?: boolean }) => (
-    <div>
-        {props.card.extraCardInfo.cardNumbers.map((cardNumber, idx) => (
-            <div style={{display: "flex", alignItems: "center"}} key={idx}>
-                {idx !== 0 && !props.noDot ? (
-                    <div style={{
-                        height: 4,
-                        width: 4,
-                        borderRadius: "50%",
-                        backgroundColor: "#555",
-                        marginLeft: spacing(1),
-                        marginRight: spacing(1)
-                    }}/>
-                ) : null}
+export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
+    const sets = props.card.extraCardInfo.cardNumbers.map(cardNumber => expansionInfoMap.get(cardNumber.expansion)!.abbreviation)
+    return (
+        <div>
+            {sets.map((abbreviation, idx) => (
+                <div style={{display: "flex", alignItems: "center"}} key={idx}>
+                    {idx !== 0 && !props.noDot ? (
+                        <div style={{
+                            height: 4,
+                            width: 4,
+                            borderRadius: "50%",
+                            backgroundColor: "#555",
+                            marginLeft: spacing(1),
+                            marginRight: spacing(1)
+                        }}/>
+                    ) : null}
 
-                <Typography>{expansionInfoMap.get(cardNumber.expansion)!.abbreviation}</Typography>
-            </div>
-        ))}
-    </div>
-)
+                    <Typography>{abbreviation}</Typography>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+export const CardSets = (props: { set: Expansion, noDot?: boolean }) => {
+    const sets = [expansionInfoMap.get(props.set)!.abbreviation]
+    return (
+        <div>
+            {sets.map((abbreviation, idx) => (
+                <div style={{display: "flex", alignItems: "center"}} key={idx}>
+                    {idx !== 0 && !props.noDot ? (
+                        <div style={{
+                            height: 4,
+                            width: 4,
+                            borderRadius: "50%",
+                            backgroundColor: "#555",
+                            marginLeft: spacing(1),
+                            marginRight: spacing(1)
+                        }}/>
+                    ) : null}
+
+                    <Typography>{abbreviation}</Typography>
+                </div>
+            ))}
+        </div>
+    )
+}
 
 export const CardSynergies = (props: { card: KCard }) => (
     <div style={{display: "flex", flexWrap: "wrap"}}>
