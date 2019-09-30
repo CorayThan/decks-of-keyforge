@@ -156,15 +156,15 @@ class DeckImporterService(
         log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    var doneRatingDecks = false
+    var doneRatingDecks: Boolean? = null
 
     // Comment this in whenever rating gets revved
     // don't rate decks until adding new info done
     @Scheduled(fixedDelayString = lockUpdateRatings)
     fun rateDecks() {
 
-        if (doneRatingDecks) return
-
+        if (doneRatingDecks == true) return
+        doneRatingDecks = false
         log.info("$scheduledStart rate decks.")
 
         val millisTaken = measureTimeMillis {

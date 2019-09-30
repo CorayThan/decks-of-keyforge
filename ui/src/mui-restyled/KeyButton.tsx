@@ -7,6 +7,7 @@ import { spacing } from "../config/MuiConfig"
 interface KeyButtonProps extends ButtonProps {
     outlinedWhite?: boolean
     loading?: boolean
+    component?: string
 }
 
 export const KeyButton = (props: KeyButtonProps) => {

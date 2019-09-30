@@ -17,7 +17,7 @@ import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/D
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { LandingPage } from "../landing/LandingPage"
-import { AddSpoilerPage } from "../spoilers/AddSpoilerPage"
+import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
 import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
@@ -36,7 +36,8 @@ class Routes {
     static myProfile = "/my-profile"
     static cards = "/cards"
     static spoilers = "/spoilers"
-    static createSpoiler = "/spoilers/create"
+    static createSpoiler = `/spoilers/create`
+    static editSpoiler = (spoilerId?: string | number) => `${Routes.spoilers}/edit/${spoilerId == null ? ":spoilerId" : spoilerId}`
     static about = "/about"
     static decks = "/decks"
     static stats = "/stats"
@@ -168,6 +169,12 @@ class KeyRouter extends React.Component {
                             component={MyProfile}
                         />
                         <LoggedInRoute
+                            exact={true}
+                            path={Routes.editSpoiler()}
+                            component={EditSpoilerPage}
+                        />
+                        <LoggedInRoute
+                            exact={true}
                             path={Routes.createSpoiler}
                             component={AddSpoilerPage}
                         />

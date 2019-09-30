@@ -23,24 +23,32 @@ class SpoilerService(
         val spoilers = this.cachedSpoilers
         if (spoilers == null) {
             val loadedSpoilers = spoilerRepo.findAll()
+                    .toList()
+                    .sortedBy { it.cardNumber.toIntOrNull() }
             this.cachedSpoilers = loadedSpoilers
             return loadedSpoilers
         }
         return spoilers
     }
 
-    fun saveSpoiler(spoiler: Spoiler) {
+    fun findSpoiler(id: Long): Spoiler {
+        return spoilerRepo.findByIdOrNull(id) ?: throw IllegalStateException("No spoiler for id $id")
+    }
+
+    fun saveSpoiler(spoiler: Spoiler): Long {
         currentUserService.contentCreatorOrUnauthorized()
-        spoilerRepo.save(spoiler)
+        val saved = spoilerRepo.save(spoiler)
         this.cachedSpoilers = null
+        return saved.id
     }
 
     fun addSpoilerCard(spoilerImage: MultipartFile, spoilerId: Long) {
         val spoiler = spoilerRepo.findByIdOrNull(spoilerId) ?: throw IllegalStateException("No spoiler for $spoilerId")
         val name = spoiler.cardTitle.toUrlFriendlyCardTitle()
         currentUserService.contentCreatorOrUnauthorized()
-        s3Service.addSpoilerCard(spoilerImage, name, spoiler.expansion)
-        spoilerRepo.save(spoiler.copy(frontImage = spoiler.expansion.toString() + "_" + name))
+        val frontImage = "spoiler-imgs/${spoiler.expansion}/$name.${spoilerImage.originalFilename!!.split(".").last()}"
+        s3Service.addSpoilerCard(spoilerImage, frontImage)
+        spoilerRepo.save(spoiler.copy(frontImage = frontImage))
     }
 
 }

@@ -11,20 +11,26 @@ import { House, houseValues, houseValuesArray } from "./House"
 
 interface HouseSelectProps {
     selectedHouses: SelectedHouses
+    includeWorldsCollide?: boolean
 }
 
 @observer
 export class HouseSelect extends React.Component<HouseSelectProps> {
     render() {
-        const selectedHouses = this.props.selectedHouses.getSelectedHouses()
+        const {selectedHouses, includeWorldsCollide} = this.props
+        const selectedHousesGotten = selectedHouses.getSelectedHouses()
+        let houses = houseValuesArray
+        if (!includeWorldsCollide) {
+            houses = houseValuesArray.filter(houseValue => houseValue.house !== House.SaurianRepublic && houseValue.house !== House.StarAlliance)
+        }
         return (
             <FormControl>
                 <FormLabel style={{marginBottom: spacing(1)}}>Houses</FormLabel>
                 <FormGroup
                     row={true}
                 >
-                    {houseValuesArray.map((houseValue) => {
-                        const select = selectedHouses.filter((selectedHouse) => selectedHouse.house === houseValue.house)
+                    {houses.map((houseValue) => {
+                        const select = selectedHousesGotten.filter((selectedHouse) => selectedHouse.house === houseValue.house)
                         return (<HouseCheckbox key={houseValue.house} selectedHouse={select[0]}/>)
                     })}
                 </FormGroup>

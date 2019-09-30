@@ -13,6 +13,9 @@ class SpoilerEndpoints(
     @GetMapping
     fun allSpoilers() = spoilerService.findSpoilers()
 
+    @GetMapping("/{spoilerId}")
+    fun findSpoiler(@PathVariable spoilerId: Long) = spoilerService.findSpoiler(spoilerId)
+
     @PostMapping("/secured")
     fun saveSpoiler(@RequestBody spoiler: Spoiler) = spoilerService.saveSpoiler(spoiler)
 

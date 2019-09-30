@@ -2,12 +2,12 @@ import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardsContainerWithScroll } from "../cards/CardsPage"
-import { CardsSearchDrawer } from "../cards/CardsSearchDrawer"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
+import { SpoilerSearchDrawer } from "./SpoilerSearchDrawer"
 import { spoilerStore } from "./SpoilerStore"
 
 @observer
@@ -49,7 +49,7 @@ export class SpoilersPage extends React.Component {
         }
         return (
             <div style={{display: "flex"}}>
-                <CardsSearchDrawer/>
+                <SpoilerSearchDrawer/>
                 <div
                     style={{flexGrow: 1, margin: spacing(2)}}
                 >

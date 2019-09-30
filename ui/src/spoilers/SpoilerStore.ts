@@ -28,6 +28,9 @@ export class SpoilerStore {
     @observable
     savingSpoiler = false
 
+    @observable
+    spoiler?: Spoiler
+
     reset = () => {
         if (this.spoilers) {
             this.spoilers = undefined
@@ -48,23 +51,29 @@ export class SpoilerStore {
         this.spoilers = filtered.slice()
     }
 
-    loadAllSpoilers = () => {
-        this.searchingForSpoilers = true
-        axios.get(`${SpoilerStore.CONTEXT}`)
-            .then((response: AxiosResponse) => {
-                this.searchingForSpoilers = false
-                this.allSpoilers = response.data
-                this.spoilers = this.allSpoilers.slice()
-            })
+    findSpoiler = async (spoilerId: number) => {
+        this.spoiler = undefined
+        const spoiler: AxiosResponse<Spoiler> = await axios.get(`${SpoilerStore.CONTEXT}/${spoilerId}`)
+        this.spoiler = spoiler.data
     }
 
-    saveSpoiler = (spoiler: Spoiler) => {
+
+    loadAllSpoilers = async () => {
+        this.searchingForSpoilers = true
+        const spoilers: AxiosResponse<Spoiler[]> = await axios.get(`${SpoilerStore.CONTEXT}`)
+        this.searchingForSpoilers = false
+        this.allSpoilers = spoilers.data
+        // log.debug(`All spoilers is: ${prettyJson(this.allSpoilers)}`)
+        this.spoilers = this.allSpoilers.slice()
+    }
+
+    saveSpoiler = async (spoiler: Spoiler) => {
         this.savingSpoiler = true
-        axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
-            .then(() => {
-                this.savingSpoiler = false
-                messageStore.setSuccessMessage("Saved spoiler!")
-            })
+        const spoilerId: AxiosResponse<number> = await axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
+        this.savingSpoiler = false
+        await this.loadAllSpoilers()
+        messageStore.setSuccessMessage("Saved spoiler!")
+        return spoilerId.data
     }
 
     addImageToSpoiler = async (spoilerImage: File, spoilerId: number) => {

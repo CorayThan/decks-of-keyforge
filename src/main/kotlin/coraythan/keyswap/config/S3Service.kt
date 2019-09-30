@@ -22,17 +22,17 @@ class S3Service(
                     "AKIAJDCMSGEGUEAQIVLQ",
                     awsSecretkey
             )))
-            .withRegion(Regions.US_EAST_2)
+            .withRegion(Regions.US_WEST_2)
             .build()
 
-    fun addSpoilerCard(spoilerImage: MultipartFile, name: String, set: Int) {
+    fun addSpoilerCard(spoilerImage: MultipartFile, key: String) {
         val spoilerImageNormalFile = File(spoilerImage.originalFilename!!)
         val fileOutputStream = FileOutputStream(spoilerImageNormalFile)
         fileOutputStream.write(spoilerImage.getBytes())
         fileOutputStream.close()
         s3client.putObject(
-                "spoiler-images",
-                set.toString() + "_" + name,
+                "keyforge-card-images",
+                key,
                 spoilerImageNormalFile
         )
     }
