@@ -33,6 +33,10 @@ class SellerService(
         val millisTaken = measureTimeMillis {
             featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
                     .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
+                    .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER))
+                    .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
+                    .toSet()
+                    .toList()
                     .sortedByDescending { it.mostRecentDeckListing }
                     .filter { user ->
                         (user.decks.filter { it.forSale || it.forTrade }.size + user.auctions.filter { it.status == AuctionStatus.ACTIVE }.size) > 9

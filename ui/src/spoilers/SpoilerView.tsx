@@ -1,5 +1,6 @@
 import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { CardSets } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
@@ -12,7 +13,7 @@ import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
 
-export const SpoilerView = (props: { spoiler: Spoiler }) => {
+export const SpoilerView = observer((props: { spoiler: Spoiler }) => {
     const spoiler = props.spoiler
     const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house} = spoiler
 
@@ -52,4 +53,4 @@ export const SpoilerView = (props: { spoiler: Spoiler }) => {
             </GraySidebar>
         </div>
     )
-}
+})

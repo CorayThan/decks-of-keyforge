@@ -12,4 +12,5 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun findByApiKey(apiKey: String): KeyUser?
     fun findByPatreonId(patreonId: String): KeyUser?
     fun findByPatreonTier(tier: PatreonRewardsTier): List<KeyUser>
+    fun findByManualPatreonTier(tier: PatreonRewardsTier): List<KeyUser>
 }

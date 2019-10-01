@@ -80,7 +80,7 @@ class ForSaleNotificationsService(
 
     fun addForSaleQuery(query: ForSaleQuery) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        check(user.patreonTier?.canSaveNotifications == true) { "You must be a patron to save for sale queries." }
+        check(user.realPatreonTier()?.canSaveNotifications == true) { "You must be a patron to save for sale queries." }
 
         val toSave = ForSaleQueryEntity(
                 name = query.queryName,

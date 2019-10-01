@@ -49,6 +49,7 @@ class SpoilerService(
         val frontImage = "spoiler-imgs/${spoiler.expansion}/$name.${spoilerImage.originalFilename!!.split(".").last()}"
         s3Service.addSpoilerCard(spoilerImage, frontImage)
         spoilerRepo.save(spoiler.copy(frontImage = frontImage))
+        this.cachedSpoilers = null
     }
 
 }

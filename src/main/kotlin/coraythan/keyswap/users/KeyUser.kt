@@ -66,6 +66,10 @@ data class KeyUser(
         @Enumerated(EnumType.STRING)
         val patreonTier: PatreonRewardsTier? = null,
 
+        @Enumerated(EnumType.STRING)
+        val manualPatreonTier: PatreonRewardsTier? = null,
+        val removeManualPatreonTier: ZonedDateTime? = null,
+
         val mostRecentDeckListing: ZonedDateTime? = null,
 
         val sellerEmail: String? = null,
@@ -104,12 +108,23 @@ data class KeyUser(
             preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen,
             patreonId = patreonId,
-            patreonTier = patreonTier,
+            patreonTier = realPatreonTier(),
             sellerEmail = sellerEmail,
             discord = discord,
             storeName = storeName,
             auctionCount = auctions.filter { it.status == AuctionStatus.ACTIVE }.count()
     )
+
+    fun realPatreonTier(): PatreonRewardsTier? {
+        if (patreonTier == null && manualPatreonTier == null) return null
+        if (patreonTier != null && manualPatreonTier == null) return patreonTier
+        if (patreonTier == null && manualPatreonTier != null) return manualPatreonTier
+        if (patreonTier!!.ordinal > manualPatreonTier!!.ordinal) {
+            return patreonTier
+        } else {
+            return manualPatreonTier
+        }
+    }
 }
 
 data class KeyUserDto(
