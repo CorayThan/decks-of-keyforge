@@ -103,6 +103,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     storeName: string
 
+    @observable
+    displayCrucibleTrackerWins: boolean
+
     update?: UserProfileUpdate
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +114,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     constructor(props: MyProfileInnerProps) {
         super(props)
         const {
-            publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, sellerEmail, discord, storeName, currencySymbol
+            publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email,
+            sellerEmail, discord, storeName, currencySymbol, displayCrucibleTrackerWins
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
@@ -122,6 +126,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.discord = discord ? discord : ""
         this.storeName = storeName ? storeName : ""
         this.currencySymbol = currencySymbol
+        this.displayCrucibleTrackerWins = displayCrucibleTrackerWins
         uiStore.setTopbarValues(`My Profile`, "My Profile", "")
 
         forSaleNotificationsStore.queries = undefined
@@ -192,7 +197,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             currencySymbol: currencySymbolTrimmed,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
-            preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries
+            preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
+            displayCrucibleTrackerWins: this.displayCrucibleTrackerWins
         }
 
         if (email == null) {
@@ -384,6 +390,16 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     />
                                                 }
                                                 label={"Allow anyone to see which decks I own"}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.displayCrucibleTrackerWins}
+                                                        onChange={(event) => this.displayCrucibleTrackerWins = event.target.checked}
+                                                        tabIndex={6}
+                                                    />
+                                                }
+                                                label={"Display crucible tracker wins and losses"}
                                             />
                                             <Typography style={{marginBottom: spacing(2)}}>
                                                 Use the links below to share your decks with other users. You can also share the URL of any search you make.

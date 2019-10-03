@@ -294,6 +294,14 @@ export class UserStore {
         }
         return false
     }
+
+    @computed
+    get displayCrucibleTrackerWins(): boolean {
+        if (this.user) {
+            return this.user.displayCrucibleTrackerWins
+        }
+        return false
+    }
 }
 
 export const userStore = new UserStore()

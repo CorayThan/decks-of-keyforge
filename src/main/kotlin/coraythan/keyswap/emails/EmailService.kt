@@ -204,11 +204,13 @@ class EmailService(
                 ?: throw BadRequestException("Couldn't find user with username ${sellerMessage.username}")
         val email = seller.sellerEmail ?: seller.email
 
+
         val senderUsername = sellerMessage.senderUsername
         val deckKeyforgeId = sellerMessage.deckKeyforgeId
         val deckName = sellerMessage.deckName
         val senderEmail = sellerMessage.senderEmail
         val message = sellerMessage.message
+        val ccEmail = if (seller.sellerEmail == null) null else senderEmail
 
         sendEmail(email, "A deck you listed on Decks of Keyforge has a message",
                 """
@@ -220,7 +222,12 @@ class EmailService(
                     </div>
                     <br>
                     <div>
-                        We have not given $senderUsername your email address, but you can reply to their message at
+                        ${if (ccEmail == null) {
+                            "We have not given $senderUsername your email address, but you "
+                        } else {
+                            "We have included $senderUsername on this email since you have a pubic sellers email. You "
+                        }}
+                        can reply to their message at
                         <a href="mailto:$senderEmail">$senderEmail</a>
                     </div>
                     <br>
@@ -238,13 +245,14 @@ class EmailService(
                     </i>
                 </div>
             """.trimIndent(),
-                senderEmail
+                senderEmail,
+                ccEmail = ccEmail
         )
     }
 
     private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path\">$name</a>"
 
-    private fun sendEmail(email: String, subject: String, content: String, replyTo: String? = null) {
+    private fun sendEmail(email: String, subject: String, content: String, replyTo: String? = null, ccEmail: String? = null) {
         val mimeMessage = emailSender.createMimeMessage()
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         mimeMessage.setContent(content, "text/html")
@@ -255,6 +263,7 @@ class EmailService(
         if (replyTo != null) helper.setReplyTo(replyTo)
         mimeMessage.addFrom(listOf(fromAddress).toTypedArray())
         helper.setTo(email)
+        if (ccEmail != null) helper.setCc(ccEmail)
         helper.setSubject(subject)
         emailSender.send(mimeMessage)
     }

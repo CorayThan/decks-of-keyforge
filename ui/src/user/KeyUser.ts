@@ -18,6 +18,7 @@ export interface KeyUser {
     forSaleQueries: ForSaleQueryEntity[]
     patreonId?: string
     patreonTier?: PatreonRewardsTier
+    displayCrucibleTrackerWins: boolean
 }
 
 export interface UserLogin {
@@ -59,4 +60,5 @@ export interface KeyUserDto {
     discord?: string
     storeName?: string
     auctionCount: number
+    displayCrucibleTrackerWins: boolean
 }

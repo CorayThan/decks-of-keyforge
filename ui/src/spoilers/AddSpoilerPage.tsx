@@ -192,6 +192,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 fullWidth={true}
                                 variant={"outlined"}
                                 error={this.spoilerId == null && spoilerStore.containsNameIgnoreCase(this.cardTitle)}
+                                autoFocus={true}
                             />
                         </Grid>
                         <Grid item={true} xs={12} md={4}>

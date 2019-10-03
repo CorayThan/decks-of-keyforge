@@ -14,7 +14,7 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.15"
+export const latestVersion = "5.16"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,50 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"5.16"}
+                    date={"9/30/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Looking for help! Worlds Collide Spoilers",
+                            note: "Worlds Collide spoilers are coming to DoK! If you have access to any public card spoilers, please help out by " +
+                                "uploading them to the below google drive folder. Only upload ones that aren't already there. Please make the file name the " +
+                                "same as the card name."
+                        },
+                        {
+                            note: (
+                                <Typography color={"error"} variant={"body2"}>
+                                    If possible, please make the pictures 300px by 420px, a .png or .jpg, and 250kb or less in size. (Ideally ~70kb.)
+                                </Typography>
+                            )
+                        },
+                        {
+                            note: "Once I have enough, I'll make a publicly searchable list available on " +
+                                "the site, hopefully in the next few days."
+                        },
+                        {
+                            note: (
+                                <Link href={"https://drive.google.com/drive/folders/1rwU7870No_gRbG1fYYfxWmfF1TJTM5xg?usp=sharing"}>
+                                    Upload images here
+                                </Link>
+                            )
+                        },
+                        {
+                            highlight: "Opt-in Crucible Tracker Wins",
+                            note: "I had multiple users concerned about the crucible tracker wins being displayed by default. " +
+                                "Due to these concerns, I've made this an opt-in feature. Please enable it in your " +
+                                "profile if you would like to see these stats."
+                        },
+                        {
+                            note: (
+                                <div style={{display: "flex"}}>
+                                    <LinkButton variant={"contained"} color={"primary"} to={Routes.myProfile}>Profile</LinkButton>
+                                </div>
+                            )
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.15"}
                     date={"9/25/2019"}

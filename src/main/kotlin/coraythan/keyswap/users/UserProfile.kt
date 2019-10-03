@@ -23,5 +23,6 @@ data class UserProfileUpdate(
         val preferredCountries: List<Country>? = null,
         val sellerEmail: String? = null,
         val discord: String? = null,
-        val storeName: String? = null
+        val storeName: String? = null,
+        val displayCrucibleTrackerWins: Boolean
 )

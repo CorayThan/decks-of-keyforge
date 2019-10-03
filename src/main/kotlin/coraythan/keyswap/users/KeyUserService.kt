@@ -100,7 +100,8 @@ class KeyUserService(
                 auctions = auctions,
                 sellerEmail = update.sellerEmail,
                 discord = update.discord,
-                storeName = update.storeName
+                storeName = update.storeName,
+                displayCrucibleTrackerWins = update.displayCrucibleTrackerWins
         ))
     }
 

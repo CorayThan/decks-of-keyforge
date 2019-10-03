@@ -1,16 +1,18 @@
 import { Link, Tooltip, Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { ChainIcon } from "../generic/icons/ChainIcon"
 import { PowerIcon } from "../generic/icons/PowerIcon"
 import CrucibleTrackerLogo from "../generic/imgs/crucible-tracker-logo.gif"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 import { Deck } from "./Deck"
 
-export const OrganizedPlayStats = (props: { deck: Deck, style?: React.CSSProperties }) => {
+export const OrganizedPlayStats = observer((props: { deck: Deck, style?: React.CSSProperties }) => {
     const {powerLevel, chains, wins, losses, crucibleTrackerWins, crucibleTrackerLosses, keyforgeId} = props.deck
     const showOpWins = !(!powerLevel && !chains && !wins && !losses)
-    const showCrucibleTrackerWins = crucibleTrackerWins != null
+    const showCrucibleTrackerWins = crucibleTrackerWins != null && userStore.displayCrucibleTrackerWins
     if (!showOpWins && !showCrucibleTrackerWins) {
         return null
     }
@@ -63,7 +65,7 @@ export const OrganizedPlayStats = (props: { deck: Deck, style?: React.CSSPropert
             )}
         </div>
     )
-}
+})
 
 const OpStat = (props: { value: number | string, icon?: React.ReactNode, tooltip: string, style?: React.CSSProperties }) => (
     <Tooltip title={props.tooltip}>
