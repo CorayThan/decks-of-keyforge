@@ -24,7 +24,7 @@ class SpoilerService(
         if (spoilers == null) {
             val loadedSpoilers = spoilerRepo.findAll()
                     .toList()
-                    .sortedBy { it.cardNumber.toIntOrNull() }
+                    .sortedBy { it.cardNumber }
             this.cachedSpoilers = loadedSpoilers
             return loadedSpoilers
         }

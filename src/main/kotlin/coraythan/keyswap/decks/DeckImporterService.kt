@@ -75,7 +75,7 @@ class DeckImporterService(
 
             val maxPageRequests = 100
             while (pagesRequested < maxPageRequests) {
-                if (pagesRequested != 0) Thread.sleep(2000)
+                if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
                     val decks = keyforgeApi.findDecks(currentPage)

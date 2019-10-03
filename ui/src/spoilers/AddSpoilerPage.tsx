@@ -2,7 +2,7 @@ import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, 
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { Redirect, RouteComponentProps } from "react-router-dom"
+import { RouteComponentProps } from "react-router-dom"
 import { CardType } from "../cards/CardType"
 import { Rarity } from "../cards/rarity/Rarity"
 import { spacing } from "../config/MuiConfig"
@@ -85,10 +85,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
 
     spoilerId?: number
 
-    @observable
-    redirectToId?: number
-
-
     componentDidMount(): void {
         this.reset()
     }
@@ -114,6 +110,18 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.cardNumber = spoiler.cardNumber
             this.frontImage = spoiler.frontImage
             this.spoilerId = spoiler.id
+        } else {
+            this.cardTitle = ""
+            this.house = ""
+            this.cardType = CardType.Action
+            this.cardText = ""
+            this.amber = "0"
+            this.power = ""
+            this.armor = ""
+            this.rarity = Rarity.Common
+            this.cardNumber = ""
+            this.frontImage = ""
+            this.spoilerId = undefined
         }
     }
 
@@ -148,23 +156,16 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             powerString: this.power,
             armorString: this.armor,
             cardText: this.cardText.trim(),
-            cardNumber: this.cardNumber.trim(),
+            cardNumber: this.cardNumber.trim().padStart(3, "0"),
             active: true,
             frontImage: this.frontImage,
             id: this.spoilerId
         }
-        const savedId = await spoilerStore.saveSpoiler(spoiler)
-        if (this.spoilerId == null) {
-            this.redirectToId = savedId
-        }
+        await spoilerStore.saveSpoiler(spoiler)
+        this.reset()
     }
 
     render() {
-
-        if (this.redirectToId != null) {
-            log.debug("Redirect to: " + Routes.editSpoiler(this.redirectToId))
-            return <Redirect to={Routes.editSpoiler(this.redirectToId)}/>
-        }
 
         return (
             <div style={{display: "flex", justifyContent: "center"}}>

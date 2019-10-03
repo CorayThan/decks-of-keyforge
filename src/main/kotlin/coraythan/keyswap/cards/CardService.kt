@@ -164,7 +164,6 @@ class CardService(
                     if (synTraitsFromTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(traits = it.extraCardInfo!!.traits.plus(synTraitsFromTraits)))
         }.toMap()
 
-        extraInfo = cards.map { it.key to it.value.extraCardInfo!! }.toMap()
         nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key]) }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList

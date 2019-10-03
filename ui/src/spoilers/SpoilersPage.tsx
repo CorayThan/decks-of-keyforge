@@ -7,6 +7,7 @@ import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
+import { SpoilerKudos } from "./SpoilerKudos"
 import { SpoilerSearchDrawer } from "./SpoilerSearchDrawer"
 import { spoilerStore } from "./SpoilerStore"
 
@@ -15,7 +16,7 @@ export class SpoilersPage extends React.Component {
 
     constructor(props: {}) {
         super(props)
-        uiStore.setTopbarValues("Future Cards of Keyforge", "Spoilers", "A peek into the future")
+        uiStore.setTopbarValues("Worlds Collide", "Spoilers", "A peek into the future")
     }
 
     componentDidMount(): void {
@@ -53,9 +54,20 @@ export class SpoilersPage extends React.Component {
                 <div
                     style={{flexGrow: 1, margin: spacing(2)}}
                 >
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        <Loader show={searchingForSpoilers}/>
-                        {cardsDisplay}
+                    <div>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                paddingBottom: spacing(4)
+                            }}
+                        >
+                            <Loader show={searchingForSpoilers}/>
+                            {cardsDisplay}
+                        </div>
+                        <SpoilerKudos/>
                     </div>
                 </div>
             </div>

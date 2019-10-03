@@ -84,18 +84,20 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                 style={{margin: spacing(1)}}
                                 dropdownOnly={true}
                             />
-                            <LinkMenu
-                                genericOnClick={rightMenuStore.close}
-                                links={[
-                                    {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-                                    {to: Routes.usersFavorites(), text: "My Favorites"},
-                                    {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
-                                    {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
-                                    {to: Routes.sellersView(), text: "Sellers View"},
-                                ]}
-                                style={{margin: spacing(1)}}
-                                dropdownOnly={true}
-                            />
+                            {userStore.loggedIn() && (
+                                <LinkMenu
+                                    genericOnClick={rightMenuStore.close}
+                                    links={[
+                                        {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
+                                        {to: Routes.usersFavorites(), text: "My Favorites"},
+                                        {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
+                                        {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+                                        {to: Routes.sellersView(), text: "Sellers View"},
+                                    ]}
+                                    style={{margin: spacing(1)}}
+                                    dropdownOnly={true}
+                                />
+                            )}
                         </>
                     )}
                     <RightMenu/>
@@ -209,8 +211,8 @@ const AppLinks = observer(() => (
             links={[
                 {to: Routes.landing, text: "Home", mobileActive: true},
                 {to: Routes.cards, text: "Cards", mobileActive: true},
-                {to: Routes.spoilers, text: "Card Spoilers", contentCreatorOnly: true},
-                {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true},
+                {to: Routes.spoilers, text: "Worlds Collide", contentCreatorOnly: true, mobileActive: true},
+                {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
