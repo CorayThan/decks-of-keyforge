@@ -42,6 +42,11 @@ class SpoilerService(
         return saved.id
     }
 
+    fun deleteSpoiler(id: Long) {
+        spoilerRepo.deleteById(id)
+        this.cachedSpoilers = null
+    }
+
     fun addSpoilerCard(spoilerImage: MultipartFile, spoilerId: Long) {
         val spoiler = spoilerRepo.findByIdOrNull(spoilerId) ?: throw IllegalStateException("No spoiler for $spoilerId")
         val name = spoiler.cardTitle.toUrlFriendlyCardTitle()

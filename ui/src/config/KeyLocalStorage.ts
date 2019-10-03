@@ -10,13 +10,21 @@ enum Keys {
     DISPLAY_EXTRA_DECK_STATS = "DISPLAY_EXTRA_DECK_STATS",
     SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
     DECK_LIST_VIEW_TYPE = "DECK_LIST_VIEW_TYPE",
-    SALE_DEFAULTS = "SALE_DEFAULTS"
+    SALE_DEFAULTS = "SALE_DEFAULTS",
+    GENERIC_STORAGE = "GENERIC_STORAGE"
 }
 
 type CardViewType = "image" | "full" | "table"
 type DeckViewType = "graphs" | "grid" | "table"
 
+interface GenericStorage {
+    hideSpoilerKudos?: boolean
+}
+
 class KeyLocalStorage {
+
+    @observable
+    genericStorage: GenericStorage = {}
 
     @observable
     deckListViewType: DeckViewType = "grid"
@@ -49,6 +57,7 @@ class KeyLocalStorage {
         this.loadShowAllCards()
         this.loadCardListViewType()
         this.loadSaleDefaults()
+        this.loadGenericStorage()
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)
@@ -103,6 +112,16 @@ class KeyLocalStorage {
         this.localStorage.setItem(Keys.SALE_DEFAULTS, JSON.stringify(defaults))
     }
 
+    updateGenericStorage = (updates: GenericStorage) => {
+        const updated = {
+            ...this.genericStorage,
+            ...updates
+        }
+        this.genericStorage = updated
+        const asJson = JSON.stringify(updated)
+        this.localStorage.setItem(Keys.GENERIC_STORAGE, asJson)
+    }
+
     clear = () => {
         log.debug("Clearing auth related local storage")
         this.localStorage.removeItem(Keys.AUTH)
@@ -152,6 +171,15 @@ class KeyLocalStorage {
 
     private loadDisplayExtraDeckStats = () => {
         this.displayExtraDeckStats = this.localStorage.getItem(Keys.DISPLAY_EXTRA_DECK_STATS) === "true"
+    }
+
+    private loadGenericStorage = () => {
+        const foundGeneric = this.localStorage.getItem(Keys.GENERIC_STORAGE)
+        if (foundGeneric == null) {
+            this.genericStorage = {}
+        } else {
+            this.genericStorage = JSON.parse(foundGeneric)
+        }
     }
 
 }

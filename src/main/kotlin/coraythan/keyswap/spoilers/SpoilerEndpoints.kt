@@ -26,4 +26,7 @@ class SpoilerEndpoints(
     ) {
         return spoilerService.addSpoilerCard(spoilerImage, spoilerId)
     }
+
+    @DeleteMapping("/secured/{id}")
+    fun delete(@PathVariable id: Long) = spoilerService.deleteSpoiler(id)
 }

@@ -6,4 +6,4 @@ ALTER TABLE
 ALTER TABLE
     IF EXISTS spoiler
     ADD
-        CONSTRAINT card_number_uk UNIQUE (card_title);
+        CONSTRAINT card_number_uk UNIQUE (card_number);

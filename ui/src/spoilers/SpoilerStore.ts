@@ -57,6 +57,11 @@ export class SpoilerStore {
         this.spoiler = spoiler.data
     }
 
+    deleteSpoiler = async (spoilerId: number) => {
+        await axios.delete(`${SpoilerStore.SECURE_CONTEXT}/${spoilerId}`)
+        await this.loadAllSpoilers()
+        messageStore.setWarningMessage("Deleted spoiler.", 2000)
+    }
 
     loadAllSpoilers = async () => {
         this.searchingForSpoilers = true
@@ -72,7 +77,7 @@ export class SpoilerStore {
         const spoilerId: AxiosResponse<number> = await axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
         this.savingSpoiler = false
         await this.loadAllSpoilers()
-        messageStore.setSuccessMessage("Saved spoiler!")
+        messageStore.setSuccessMessage("Saved spoiler!", 1000)
         return spoilerId.data
     }
 
@@ -96,7 +101,16 @@ export class SpoilerStore {
         messageStore.setSuccessMessage("Added image to spoiler!")
     }
 
+    containsNameIgnoreCase = (name: string) => {
+        return !!this.allSpoilers.find(spoiler => spoiler.cardTitle.toLowerCase().trim() === name.toLowerCase().trim())
+    }
+
+    containsCardNumberIgnoreCase = (cardNumber: string) => {
+        return !!this.allSpoilers.find(spoiler => spoiler.cardNumber.toLowerCase().trim() === cardNumber.toLowerCase().trim())
+    }
 }
+
+
 
 export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card: KCard | Spoiler): boolean => {
     return (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))

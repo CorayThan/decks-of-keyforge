@@ -50,6 +50,10 @@ export class EditSpoilerPage extends React.Component<EditSpoilerPageProps> {
 @observer
 export class AddSpoilerPage extends React.Component {
 
+    componentDidMount(): void {
+        spoilerStore.loadAllSpoilers()
+    }
+
     render() {
         return <AddSpoiler/>
     }
@@ -59,15 +63,18 @@ interface AddSpoilerProps {
     spoiler?: Spoiler
 }
 
+let defaultHouse: "" | House = ""
+let defaultCardType: "" | CardType = ""
+
 @observer
 class AddSpoiler extends React.Component<AddSpoilerProps> {
 
     @observable
     cardTitle = ""
     @observable
-    house: "" | House = ""
+    house: "" | House = defaultHouse
     @observable
-    cardType: "" | CardType = ""
+    cardType: "" | CardType = defaultCardType
     @observable
     cardText = ""
     @observable
@@ -77,7 +84,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     @observable
     armor = ""
     @observable
-    rarity: "" | Rarity = ""
+    rarity: "" | Rarity = Rarity.Common
     @observable
     cardNumber = ""
     @observable
@@ -112,8 +119,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.spoilerId = spoiler.id
         } else {
             this.cardTitle = ""
-            this.house = ""
-            this.cardType = CardType.Action
+            this.house = defaultHouse
+            this.cardType = defaultCardType
             this.cardText = ""
             this.amber = "0"
             this.power = ""
@@ -146,6 +153,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             messageStore.setWarningMessage("Please include rarity.")
             return
         }
+        defaultHouse = house
+        defaultCardType = cardType
         const spoiler: Spoiler = {
             cardType,
             cardTitle,
@@ -162,6 +171,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             id: this.spoilerId
         }
         await spoilerStore.saveSpoiler(spoiler)
+        spoilerStore.loadAllSpoilers()
         this.reset()
     }
 
@@ -181,6 +191,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 onChange={(event: EventValue) => this.cardTitle = event.target.value}
                                 fullWidth={true}
                                 variant={"outlined"}
+                                error={this.spoilerId == null && spoilerStore.containsNameIgnoreCase(this.cardTitle)}
                             />
                         </Grid>
                         <Grid item={true} xs={12} md={4}>
@@ -191,6 +202,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 fullWidth={true}
                                 variant={"outlined"}
                                 type={"number"}
+                                error={this.spoilerId == null && spoilerStore.containsCardNumberIgnoreCase(this.cardNumber)}
                             />
                         </Grid>
                         <Grid item={true} xs={12} sm={4}>
@@ -289,16 +301,27 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                         >
                             Spoilers
                         </LinkButton>
+                        <div style={{flexGrow: this.spoilerId == null ? 1 : undefined}}/>
                         {this.spoilerId != null && (
                             <>
                                 <LinkButton
-                                    variant={"outlined"}
                                     to={Routes.createSpoiler}
                                     style={{marginRight: spacing(2)}}
                                 >
                                     Make new Spoiler
                                 </LinkButton>
+                                <div style={{flexGrow: 1}}/>
                                 <AddImage spoilerId={this.spoilerId}/>
+                                <Button
+                                    color={"secondary"}
+                                    variant={"contained"}
+                                    onClick={async () => {
+                                        await spoilerStore.deleteSpoiler(this.spoilerId!)
+                                    }}
+                                    style={{marginRight: spacing(2)}}
+                                >
+                                    Delete
+                                </Button>
                             </>
                         )}
                         <KeyButton
@@ -330,7 +353,7 @@ class AddImage extends React.Component<{ spoilerId: number }> {
     render() {
         return (
             <div>
-                <Button onClick={() => this.open = true} style={{marginRight: spacing(2)}}>
+                <Button variant={"outlined"} onClick={() => this.open = true} style={{marginRight: spacing(2)}}>
                     Add Image
                 </Button>
                 <Dialog
