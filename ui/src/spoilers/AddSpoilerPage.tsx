@@ -32,9 +32,9 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
-import { addRealSpaces, addUrlsToCards, makeOldCards, makeSpoilers } from "./SanctumoniusCards"
 import { Spoiler } from "./Spoiler"
 import { spoilerStore } from "./SpoilerStore"
+import { SpoilerImage } from "./SpoilerView"
 
 interface EditSpoilerPageProps extends RouteComponentProps<{ spoilerId: string }> {
 }
@@ -151,8 +151,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         }
     }
 
-    reset = () => {
-        const {spoiler} = this.props
+    reset = (resetTo?: Spoiler) => {
+        const spoiler = resetTo == null ? this.props.spoiler : resetTo
         if (spoiler != null) {
             this.cardTitle = spoiler.cardTitle
             this.house = spoiler.house == null ? "" : spoiler.house
@@ -270,8 +270,13 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             reprint: this.reprint
         }
         await spoilerStore.saveSpoiler(spoiler)
+        if (this.spoilerId != null) {
+            const saved = await spoilerStore.findSpoiler(this.spoilerId)
+            this.reset(saved)
+        } else {
+            this.reset()
+        }
         spoilerStore.loadAllSpoilers()
-        this.reset()
     }
 
     render() {
@@ -288,7 +293,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             }
         }
         return (
-            <div style={{display: "flex", justifyContent: "center"}}>
+            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <SpoilerImage cardTitle={this.cardTitle} url={this.frontImage}/>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(4), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
@@ -592,43 +598,43 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                         </div>
                     </Card>
 
-                    {userStore.isAdmin && (
-                        <Button
-                            onClick={async () => {
-                                const preexisting = spoilerStore.allSpoilers
-                                if (preexisting.length !== 0) {
-                                    const sanctumonius = makeSpoilers(preexisting)
-                                    for (let x = 0; x < sanctumonius.length; x++) {
-                                        const spoiler = sanctumonius[x]
-                                        await spoilerStore.saveSpoiler(spoiler as Spoiler)
-                                        log.debug("Saved " + spoiler.cardTitle)
-                                    }
-                                    log.debug(`Saved ${sanctumonius.length} new spoilers.`)
-                                    const withUrls = addUrlsToCards(preexisting)
-                                    for (let x = 0; x < withUrls.length; x++) {
-                                        const spoiler = withUrls[x]
-                                        await spoilerStore.saveSpoiler(spoiler)
-                                        log.debug("Added url to " + spoiler.cardTitle)
-                                    }
-                                    log.debug(`Added urls to ${withUrls.length} spoilers.`)
+                    {/*{userStore.isAdmin && (*/}
+                    {/*    <Button*/}
+                    {/*        onClick={async () => {*/}
+                    {/*            const preexisting = spoilerStore.allSpoilers*/}
+                    {/*            if (preexisting.length !== 0) {*/}
+                    {/*                const sanctumonius = makeSpoilers(preexisting)*/}
+                    {/*                for (let x = 0; x < sanctumonius.length; x++) {*/}
+                    {/*                    const spoiler = sanctumonius[x]*/}
+                    {/*                    await spoilerStore.saveSpoiler(spoiler as Spoiler)*/}
+                    {/*                    log.debug("Saved " + spoiler.cardTitle)*/}
+                    {/*                }*/}
+                    {/*                log.debug(`Saved ${sanctumonius.length} new spoilers.`)*/}
+                    {/*                const withUrls = addUrlsToCards(preexisting)*/}
+                    {/*                for (let x = 0; x < withUrls.length; x++) {*/}
+                    {/*                    const spoiler = withUrls[x]*/}
+                    {/*                    await spoilerStore.saveSpoiler(spoiler)*/}
+                    {/*                    log.debug("Added url to " + spoiler.cardTitle)*/}
+                    {/*                }*/}
+                    {/*                log.debug(`Added urls to ${withUrls.length} spoilers.`)*/}
 
-                                    const oldCards = makeOldCards(preexisting)
-                                    for (let x = 0; x < oldCards.length; x++) {
-                                        const spoiler = oldCards[x]
-                                        await spoilerStore.saveSpoiler(spoiler as Spoiler)
-                                        log.debug("Added reprint " + spoiler.cardTitle)
-                                    }
-                                    log.debug(`Added ${oldCards.length} reprints.`)
+                    {/*                const oldCards = makeOldCards(preexisting)*/}
+                    {/*                for (let x = 0; x < oldCards.length; x++) {*/}
+                    {/*                    const spoiler = oldCards[x]*/}
+                    {/*                    await spoilerStore.saveSpoiler(spoiler as Spoiler)*/}
+                    {/*                    log.debug("Added reprint " + spoiler.cardTitle)*/}
+                    {/*                }*/}
+                    {/*                log.debug(`Added ${oldCards.length} reprints.`)*/}
 
-                                    await addRealSpaces()
-                                } else {
-                                    log.debug("Did nothing")
-                                }
-                            }}
-                        >
-                            Add all the sanctumonius cards
-                        </Button>
-                    )}
+                    {/*                await addRealSpaces()*/}
+                    {/*            } else {*/}
+                    {/*                log.debug("Did nothing")*/}
+                    {/*            }*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        Add all the sanctumonius cards*/}
+                    {/*    </Button>*/}
+                    {/*)}*/}
                 </div>
             </div>
         )

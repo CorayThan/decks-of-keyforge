@@ -15,7 +15,7 @@ import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
 import { spoilerStore } from "./SpoilerStore"
 
-const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
+export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
     let url = props.url
     if (url == null) {
         return null
