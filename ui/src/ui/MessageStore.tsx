@@ -7,7 +7,6 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { theme } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { log } from "../config/Utils"
 import { LinkButton } from "../mui-restyled/LinkButton"
 
 export type MessageType = "Error" | "Warn" | "Info" | "Success"
@@ -50,7 +49,6 @@ export class MessageStore {
     }
 
     setMessage = (message: string, messageType: MessageType, action?: React.ReactNode, duration?: number) => {
-        log.debug("Setting message to " + message)
         this.message = message
         this.messageType = messageType
         this.action = action
@@ -83,8 +81,6 @@ export class SnackMessage extends React.Component {
 
     render() {
         const {message} = messageStore
-
-        log.debug(`In snack message with message ${message}`)
 
         const actions = []
 

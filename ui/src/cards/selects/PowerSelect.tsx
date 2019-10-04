@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { MultiSelect, SelectedValues } from "../../mui-restyled/MultiSelect"
 
-const powerOptions = range(1, 13)
+const powerOptions = range(1, 17)
     .map(power => power.toString())
 
 @observer

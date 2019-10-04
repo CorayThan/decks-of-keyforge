@@ -27,6 +27,7 @@ export class SpoilerFilters {
         this.title = ""
         this.description = ""
         this.anomaly = false
+        this.excludeReprints = false
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

@@ -1,4 +1,4 @@
-import { Divider, IconButton, Paper, Typography } from "@material-ui/core"
+import { Divider, IconButton, Link, Paper, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import React from "react"
@@ -11,7 +11,7 @@ import { decksOfKeyForgeDiscord, DiscordNamedButton } from "../thirdpartysites/d
 export class SpoilerKudos extends React.Component {
 
     render() {
-        const open = !keyLocalStorage.genericStorage.hideSpoilerKudos
+        const open = !keyLocalStorage.genericStorage.hideSpoilerKudosTwo
         return (
             <Paper
                 style={{
@@ -30,7 +30,7 @@ export class SpoilerKudos extends React.Component {
                             <Typography variant={"h5"} style={{flexGrow: 1}}>
                                 Kudos and Contributing
                             </Typography>
-                            <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudos: true})}>
+                            <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosTwo: true})}>
                                 {open ? <ChevronRight/> : <ChevronLeft/>}
                             </IconButton>
                         </div>
@@ -42,8 +42,21 @@ export class SpoilerKudos extends React.Component {
                             items={[
                                 "The Sanctumonius Discord",
                                 "C.Æ.N.D.L.E. Bot",
-                                "The Reddit spoiler list",
-                                "Arkonos"
+                                (
+                                    <div key={"brad"}>
+                                        <Typography>
+                                            <Link
+                                                target={"_blank"}
+                                                href={"http://amazingspidertank.blogspot.com/"}
+                                            >
+                                                Brad Minnigh
+                                            </Link>
+                                            {" & the Reddit spoilers"}
+                                        </Typography>
+                                    </div>
+                                ),
+                                "Arkonos",
+                                "The Target disaster of 2019"
                             ]}
                         />
                         <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
@@ -54,7 +67,7 @@ export class SpoilerKudos extends React.Component {
                         <DiscordNamedButton name={"Sanctumonius"} link={"https://discord.gg/3dSVb6v"} style={{marginTop: spacing(1)}}/>
                         <DiscordNamedButton name={"DoK"} link={decksOfKeyForgeDiscord} style={{marginTop: spacing(1)}}/>
                     </div>) : (
-                    <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudos: false})}>
+                    <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosTwo: false})}>
                         {open ? <ChevronRight/> : <ChevronLeft/>}
                     </IconButton>
                 )}

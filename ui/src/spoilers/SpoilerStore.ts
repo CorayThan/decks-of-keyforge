@@ -47,6 +47,10 @@ export class SpoilerStore {
                 (!filters.anomaly || card.anomaly)
                 &&
                 (!filters.excludeReprints || !card.reprint)
+                &&
+                (filters.powers.length === 0 || filters.powers.indexOf(Number(card.powerString)) !== -1)
+                &&
+                (filters.armors.length === 0 || filters.armors.indexOf(Number(card.armorString)) !== -1)
             )
         })
 
@@ -75,11 +79,13 @@ export class SpoilerStore {
         this.spoilers = this.allSpoilers.slice()
     }
 
-    saveSpoiler = async (spoiler: Spoiler) => {
+    saveSpoiler = async (spoiler: Spoiler, noReload?: boolean) => {
         this.savingSpoiler = true
         const spoilerId: AxiosResponse<number> = await axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
         this.savingSpoiler = false
-        await this.loadAllSpoilers()
+        if (!noReload) {
+            await this.loadAllSpoilers()
+        }
         messageStore.setSuccessMessage("Saved spoiler!", 1000)
         return spoilerId.data
     }

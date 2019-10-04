@@ -211,7 +211,7 @@ const AppLinks = observer(() => (
             links={[
                 {to: Routes.landing, text: "Home", mobileActive: true},
                 {to: Routes.cards, text: "Cards", mobileActive: true},
-                {to: Routes.spoilers, text: "Worlds Collide", contentCreatorOnly: true, mobileActive: true},
+                {to: Routes.spoilers, text: "Worlds Collide", mobileActive: true},
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
                 {to: Routes.articles, text: "Articles", mobileActive: true},

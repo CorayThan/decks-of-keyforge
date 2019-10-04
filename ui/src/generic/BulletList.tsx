@@ -3,7 +3,7 @@ import React from "react"
 import { spacing } from "../config/MuiConfig"
 
 interface BulletListProps {
-    items: string[]
+    items: React.ReactNode[]
 }
 
 export const BulletList = (props: BulletListProps) => {
@@ -12,7 +12,13 @@ export const BulletList = (props: BulletListProps) => {
             {props.items.map((item, idx) => (
                 <div key={idx} style={{display: "flex", paddingLeft: spacing(1), marginTop: spacing(1), alignItems: "center"}}>
                     <div style={{backgroundColor: "#555", borderRadius: "50%", height: 8, width: 8, marginRight: spacing(1)}}/>
-                    <Typography variant={"body2"}>{item}</Typography>
+                    {typeof item === "string" ? (
+                        <Typography variant={"body2"}>{item}</Typography>
+                    ) : (
+                        <div>
+                            {item}
+                        </div>
+                    )}
                 </div>
             ))}
         </>

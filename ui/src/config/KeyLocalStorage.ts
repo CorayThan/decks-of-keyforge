@@ -18,7 +18,7 @@ type CardViewType = "image" | "full" | "table"
 type DeckViewType = "graphs" | "grid" | "table"
 
 interface GenericStorage {
-    hideSpoilerKudos?: boolean
+    hideSpoilerKudosTwo?: boolean
 }
 
 class KeyLocalStorage {

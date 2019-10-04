@@ -16,7 +16,7 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
-import { addUrlsToCards, makeOldCards, makeSpoilers } from "./SanctumoniusCards"
+import { addRealSpaces, addUrlsToCards, makeOldCards, makeSpoilers } from "./SanctumoniusCards"
 import { Spoiler } from "./Spoiler"
 import { spoilerStore } from "./SpoilerStore"
 
@@ -541,6 +541,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                         log.debug("Added reprint " + spoiler.cardTitle)
                                     }
                                     log.debug(`Added ${oldCards.length} reprints.`)
+
+                                    await addRealSpaces()
                                 } else {
                                     log.debug("Did nothing")
                                 }

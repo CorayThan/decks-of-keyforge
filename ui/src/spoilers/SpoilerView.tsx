@@ -1,4 +1,4 @@
-import { Divider } from "@material-ui/core"
+import { Button, Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -12,6 +12,26 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
+import { spoilerStore } from "./SpoilerStore"
+
+const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
+    let url = props.url
+    if (url == null) {
+        return null
+    }
+    if (url.includes("googleusercontent")) {
+        url = url + "=w300-h420"
+    } else if (url.includes("http")) {
+
+    } else {
+        url = `https://keyforge-card-images.s3-us-west-2.amazonaws.com/${url}`
+    }
+    return (
+        <div style={{width: 300}}>
+            <img alt={props.cardTitle} src={url} style={{width: 300}}/>
+        </div>
+    )
+}
 
 export const SpoilerView = observer((props: { spoiler: Spoiler }) => {
     const spoiler = props.spoiler
@@ -19,15 +39,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler }) => {
 
     return (
         <div style={{display: "flex", flexDirection: screenStore.screenSizeXs() || frontImage === "" ? "column" : undefined}}>
-            {frontImage && (
-                <div style={{width: 300}}>
-                    {frontImage.startsWith("http") ? (
-                        <img alt={cardTitle} src={frontImage} style={{width: 300}}/>
-                    ) : (
-                        <img alt={cardTitle} src={`https://keyforge-card-images.s3-us-west-2.amazonaws.com/${frontImage}`}/>
-                    )}
-                </div>
-            )}
+            <SpoilerImage cardTitle={cardTitle} url={frontImage}/>
             <GraySidebar width={300} style={{padding: spacing(2)}}>
                 <div style={{width: 300 - spacing(4)}}>
                     <div style={{display: "flex", alignItems: "center"}}>
@@ -50,16 +62,28 @@ export const SpoilerView = observer((props: { spoiler: Spoiler }) => {
                     </div>
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                     <Typography>{cardText}</Typography>
-                    <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                    <AercForCard card={props.spoiler}/>
+
                     {userStore.contentCreator && (
                         <>
                             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                            <LinkButton
-                                to={Routes.editSpoiler(id)}
-                            >
-                                Edit
-                            </LinkButton>
+                            <AercForCard card={props.spoiler}/>
+                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                            <div style={{display: "flex"}}>
+                                <LinkButton
+                                    to={Routes.editSpoiler(id)}
+                                    style={{marginRight: spacing(2)}}
+                                >
+                                    Edit
+                                </LinkButton>
+                                <Button
+                                    onClick={() => {
+                                        spoiler.amber++
+                                        spoilerStore.saveSpoiler(spoiler, true)
+                                    }}
+                                >
+                                    Add Aember
+                                </Button>
+                            </div>
                         </>
                     )}
                 </div>

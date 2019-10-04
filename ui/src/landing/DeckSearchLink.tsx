@@ -29,8 +29,8 @@ export const DeckSearchLink = (props: { name: string, filters: DeckFilters, colo
     )
 }
 
-export const CardSearchLink = (props: { name: string, color?: "secondary", style?: React.CSSProperties }) => {
-    const {name, color, style} = props
+export const CardSearchLink = (props: { name: string, to?: string, color?: "secondary", style?: React.CSSProperties }) => {
+    const {name, color, style, to} = props
 
     return (
         <div style={{display: "flex", ...style}}>
@@ -38,7 +38,7 @@ export const CardSearchLink = (props: { name: string, color?: "secondary", style
                 variant={"contained"}
                 size={"large"}
                 color={color ? color : "primary"}
-                to={Routes.cards}
+                to={to == null ? Routes.cards : to}
                 style={{marginLeft: spacing(2)}}
             >
                 {name}

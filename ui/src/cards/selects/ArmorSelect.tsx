@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { MultiSelect, SelectedValues } from "../../mui-restyled/MultiSelect"
 
-const armorOptions = range(0, 3)
+const armorOptions = range(0, 6)
     .map(armor => armor.toString())
 
 @observer

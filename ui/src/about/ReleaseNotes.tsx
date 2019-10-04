@@ -10,11 +10,11 @@ import { BarData, StatsBar } from "../graphs/StatsBar"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { statsStore } from "../stats/StatsStore"
-import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.16"
+export const latestVersion = "5.17"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -23,34 +23,31 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote
+                    releaseNumber={"5.17"}
+                    date={"10/4/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Worlds Collide Spoilers",
+                            note: "I teamed up with some folks in the Sanctumonius Discord to provide Worlds Collide spoilers " +
+                                "on DoK! They were very generous in providing a data set to build the spoilers from. " +
+                                "Join their discord to discuss the new spoilers, and take a look at them here!"
+                        },
+                        {
+                            note: (
+                                <div style={{display: "flex"}}>
+                                    <LinkButton variant={"contained"} color={"primary"} to={Routes.spoilers}>Worlds Collide</LinkButton>
+                                    <DiscordNamedButton name={"Sanctumonius"} link={"https://discord.gg/3dSVb6v"} style={{marginLeft: spacing(2)}}/>
+                                </div>
+                            )
+                        }
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"5.16"}
                     date={"9/30/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
-                        {
-                            highlight: "Looking for help! Worlds Collide Spoilers",
-                            note: "Worlds Collide spoilers are coming to DoK! If you have access to any public card spoilers, please help out by " +
-                                "uploading them to the below google drive folder. Only upload ones that aren't already there. Please make the file name the " +
-                                "same as the card name."
-                        },
-                        {
-                            note: (
-                                <Typography color={"error"} variant={"body2"}>
-                                    If possible, please make the pictures 300px by 420px, a .png or .jpg, and 250kb or less in size. (Ideally ~70kb.)
-                                </Typography>
-                            )
-                        },
-                        {
-                            note: "Once I have enough, I'll make a publicly searchable list available on " +
-                                "the site, hopefully in the next few days."
-                        },
-                        {
-                            note: (
-                                <Link href={"https://drive.google.com/drive/folders/1rwU7870No_gRbG1fYYfxWmfF1TJTM5xg?usp=sharing"}>
-                                    Upload images here
-                                </Link>
-                            )
-                        },
                         {
                             highlight: "Opt-in Crucible Tracker Wins",
                             note: "I had multiple users concerned about the crucible tracker wins being displayed by default. " +

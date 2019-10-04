@@ -6,6 +6,7 @@ import { Expansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
 import { reprints, sanctumoniusCards } from "./Santumpmius"
 import { Spoiler } from "./Spoiler"
+import { spoilerStore } from "./SpoilerStore"
 
 export const makeSpoilers = (preExisting: Spoiler[]): Partial<Spoiler>[] => {
     const preexistingCardNumbers = preExisting.map(spoiler => spoiler.cardNumber)
@@ -105,4 +106,22 @@ export const makeOldCards = (preExisting: Spoiler[]): Partial<Spoiler>[] => {
         .filter(spoiler => spoiler.cardTitle != null && spoiler.cardTitle.length > 0
             && spoiler.cardNumber != null && spoiler.cardNumber.length > 0)
         .filter(sanctCard => !preexistingCardNumbers.includes(sanctCard.cardNumber!.padStart(3, "0")))
+}
+
+export const addRealSpaces = async () => {
+    await spoilerStore.loadAllSpoilers()
+    const preexisting = spoilerStore.allSpoilers
+    let updated = 0
+    for (let x = 0; x < preexisting.length; x++) {
+        const spoiler = preexisting[x]
+        const updatedCardText = spoiler.cardText
+            .replace("\u000a\u200b", " ")
+            .replace("  ", " ")
+        if (updatedCardText !== spoiler.cardText) {
+            updated++
+            spoiler.cardText = updatedCardText
+            await spoilerStore.saveSpoiler(spoiler)
+        }
+    }
+    log.debug(`updated spaces in ${updated}`)
 }

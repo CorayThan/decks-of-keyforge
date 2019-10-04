@@ -3,7 +3,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, StatsSubPaths } from "../config/Routes"
+import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { Expansion } from "../expansions/Expansions"
@@ -92,21 +92,20 @@ export class LandingPage extends React.Component<{}> {
                             <DeckSearchLink name={"For Sale or Trade"} filters={saleOrTrade}/>
                             {/*<DeckSearchLink name={"Recently Listed"} filters={saleOrTradeRecent} style={{marginTop: spacing(2)}}/>*/}
                             <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Completed Auctions"} filters={completedAuctions} style={{marginTop: spacing(2)}}/>
 
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Cards
                             </ListSubheader>
-                            <CardSearchLink name={"Cards"} color={"secondary"}/>
-
+                            <CardSearchLink name={"Worlds Collide"} color={"secondary"} to={Routes.spoilers}/>
+                            <CardSearchLink name={"Cards"} color={"secondary"} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Fun Searches
                             </ListSubheader>
                             <DeckSearchLink name={"Funniest"} filters={topFunny}/>
-                            <DeckSearchLink name={"Most Favorited"} filters={topWishlisted} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Worst by SAS"} filters={worstSas} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Favorites"} filters={topWishlisted} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Worst"} filters={worstSas} style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>
