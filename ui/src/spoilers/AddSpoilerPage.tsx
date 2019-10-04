@@ -1,4 +1,19 @@
-import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField, Typography } from "@material-ui/core"
+import {
+    Button,
+    Card,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    MenuItem,
+    TextField,
+    Typography
+} from "@material-ui/core"
+import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
@@ -10,6 +25,7 @@ import { Routes } from "../config/Routes"
 import { log, Utils } from "../config/Utils"
 import { Expansion } from "../expansions/Expansions"
 import { EventValue } from "../generic/EventValue"
+import { UnstyledLink } from "../generic/UnstyledLink"
 import { House } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -28,6 +44,9 @@ export class EditSpoilerPage extends React.Component<EditSpoilerPageProps> {
 
     componentDidMount(): void {
         log.debug("component did mount spoilerId: " + this.props.match.params.spoilerId)
+        if (spoilerStore.allSpoilers.length === 0) {
+            spoilerStore.loadAllSpoilers()
+        }
         if (this.props.match.params.spoilerId) {
             spoilerStore.findSpoiler(Number(this.props.match.params.spoilerId))
         }
@@ -115,6 +134,10 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     houseCheating = "0"
     @observable
     other = "0"
+    @observable
+    reprint = false
+    @observable
+    anomaly = false
 
     spoilerId?: number
 
@@ -132,7 +155,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         const {spoiler} = this.props
         if (spoiler != null) {
             this.cardTitle = spoiler.cardTitle
-            this.house = spoiler.house
+            this.house = spoiler.house == null ? "" : spoiler.house
             this.cardType = spoiler.cardType
             this.cardText = spoiler.cardText
             this.amber = spoiler.amber.toString()
@@ -141,6 +164,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.rarity = spoiler.rarity
             this.cardNumber = spoiler.cardNumber
             this.frontImage = spoiler.frontImage
+            this.reprint = spoiler.reprint
+            this.anomaly = spoiler.anomaly
             this.spoilerId = spoiler.id
 
             this.amberControl = spoiler.amberControl.toString()
@@ -164,6 +189,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.rarity = defaultCardRarity
             this.cardNumber = ""
             this.frontImage = ""
+            this.reprint = false
+            this.anomaly = false
             this.spoilerId = undefined
 
             this.amberControl = "0"
@@ -248,14 +275,42 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     }
 
     render() {
-
+        const allSpoilers = spoilerStore.allSpoilers
+        let nextId
+        let prevId
+        if (allSpoilers.length > 0 && this.props.spoiler != null) {
+            const findWith = allSpoilers.find(spoiler => spoiler.id === this.spoilerId)
+            if (findWith != null) {
+                const idx = allSpoilers.indexOf(findWith)
+                log.debug(`Spoiler idx ${idx}`)
+                nextId = idx > -1 && idx < allSpoilers.length - 1 ? allSpoilers[idx + 1].id : undefined
+                prevId = idx > 0 ? allSpoilers[idx - 1].id : undefined
+            }
+        }
         return (
             <div style={{display: "flex", justifyContent: "center"}}>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(4), padding: spacing(2)}}>
-                        <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>
-                            {this.spoilerId == null ? "Create" : "Edit"} Spoiler Card
-                        </Typography>
+                        <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
+                            <Typography variant={"h4"}>
+                                {this.spoilerId == null ? "Create" : "Edit"} Spoiler Card
+                            </Typography>
+                            <div style={{flexGrow: 1}}/>
+                            {prevId != null && (
+                                <UnstyledLink to={Routes.editSpoiler(prevId)} style={{marginLeft: spacing(2)}}>
+                                    <IconButton>
+                                        <ChevronLeft/>
+                                    </IconButton>
+                                </UnstyledLink>
+                            )}
+                            {nextId != null && (
+                                <UnstyledLink to={Routes.editSpoiler(nextId)} style={{marginLeft: spacing(2)}}>
+                                    <IconButton>
+                                        <ChevronRight/>
+                                    </IconButton>
+                                </UnstyledLink>
+                            )}
+                        </div>
                         <Grid container={true} spacing={2}>
                             <Grid item={true} xs={8}>
                                 <TextField
@@ -275,7 +330,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     onChange={(event: EventValue) => this.cardNumber = event.target.value}
                                     fullWidth={true}
                                     variant={"outlined"}
-                                    type={"number"}
                                     error={this.spoilerId == null && spoilerStore.containsCardNumberIgnoreCase(this.cardNumber)}
                                 />
                             </Grid>
@@ -327,7 +381,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     ))}
                                 </TextField>
                             </Grid>
-                            <Grid item={true} xs={4}>
+                            <Grid item={true} xs={4} sm={2}>
                                 <TextField
                                     label={"aember"}
                                     value={this.amber}
@@ -337,7 +391,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     type={"number"}
                                 />
                             </Grid>
-                            <Grid item={true} xs={4}>
+                            <Grid item={true} xs={4} sm={2}>
                                 <TextField
                                     label={"power"}
                                     value={this.power}
@@ -347,7 +401,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     type={"number"}
                                 />
                             </Grid>
-                            <Grid item={true} xs={4}>
+                            <Grid item={true} xs={4} sm={2}>
                                 <TextField
                                     label={"armor"}
                                     value={this.armor}
@@ -355,6 +409,30 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     fullWidth={true}
                                     variant={"outlined"}
                                     type={"number"}
+                                />
+                            </Grid>
+                            <Grid item={true} xs={6} sm={3}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.reprint}
+                                            onChange={() => this.reprint = !this.reprint}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Reprint"
+                                />
+                            </Grid>
+                            <Grid item={true} xs={6} sm={3}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.anomaly}
+                                            onChange={() => this.anomaly = !this.anomaly}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Anomaly"
                                 />
                             </Grid>
                             <Grid item={true} xs={12}>

@@ -114,6 +114,7 @@ export class LandingPage extends React.Component<{}> {
                                 <DeckSearchLink name={"Search"} filters={topSas} dontSearch={true} style={{margin: spacing(2)}}/>
                                 <DeckSearchLink name={"For Sale"} filters={saleOrTrade} style={{margin: spacing(2)}}/>
                                 <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(2)}}/>
+                                <CardSearchLink name={"Worlds Collide"} color={"secondary"} to={Routes.spoilers} style={{margin: spacing(2)}}/>
                             </div>
                         ) : null}
                         <FeaturedSellersView/>

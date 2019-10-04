@@ -44,7 +44,7 @@ export class SpoilerKudos extends React.Component {
                                 "C.Æ.N.D.L.E. Bot",
                                 (
                                     <div key={"brad"}>
-                                        <Typography>
+                                        <Typography variant={"body2"}>
                                             <Link
                                                 target={"_blank"}
                                                 href={"http://amazingspidertank.blogspot.com/"}

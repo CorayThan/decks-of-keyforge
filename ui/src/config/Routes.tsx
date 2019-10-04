@@ -18,6 +18,7 @@ import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { LandingPage } from "../landing/LandingPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
+import { SpoilerPage } from "../spoilers/SpoilerPage"
 import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
@@ -48,6 +49,7 @@ class Routes {
     static privacyPolicy = "/privacy-policy"
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
+    static spoilerPage = (spoilerId?: string | number) => `${Routes.spoilers}/${spoilerId == null ? ":spoilerId" : spoilerId}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
@@ -81,6 +83,7 @@ class Routes {
         filters.owner = userStore.username!
         return Routes.deckSearch(filters) + "&" + Routes.saleViewParam
     }
+
 }
 
 class KeyRouter extends React.Component {
@@ -105,6 +108,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.cardPage()}
                             component={CardPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.spoilerPage()}
+                            component={SpoilerPage}
                         />
                         <Route
                             path={Routes.about}

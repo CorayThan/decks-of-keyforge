@@ -7,6 +7,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { GraySidebar } from "../generic/GraySidebar"
 import { AmberIcon } from "../generic/icons/AmberIcon"
+import { UnstyledLink } from "../generic/UnstyledLink"
 import { HouseImage } from "../houses/HouseBanner"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
@@ -33,7 +34,7 @@ const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
     )
 }
 
-export const SpoilerView = observer((props: { spoiler: Spoiler }) => {
+export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler
     const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house} = spoiler
 
@@ -46,7 +47,16 @@ export const SpoilerView = observer((props: { spoiler: Spoiler }) => {
                         {house != null && (
                             <HouseImage house={house} size={30} style={{marginRight: spacing(1)}}/>
                         )}
-                        <Typography color={"textPrimary"} variant={"h6"}>{cardTitle}</Typography>
+                        {props.noLink ? (
+                            <Typography color={"textPrimary"} variant={"h6"}>{cardTitle}</Typography>
+                        ) : (
+                            <UnstyledLink
+                                to={Routes.spoilerPage(id)}
+                                style={{color: "rgba(0, 0, 0, 0.87)"}}
+                            >
+                                <Typography variant={"h6"}>{cardTitle}</Typography>
+                            </UnstyledLink>
+                        )}
                         <div style={{flexGrow: 1}}/>
                         <Typography style={{marginLeft: spacing(2)}}>#{cardNumber}</Typography>
                     </div>
