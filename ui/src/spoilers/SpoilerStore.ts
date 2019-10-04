@@ -3,7 +3,6 @@ import { observable } from "mobx"
 import { CardFilters } from "../cards/CardFilters"
 import { KCard } from "../cards/KCard"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { Spoiler } from "./Spoiler"
 import { SpoilerFilters } from "./SpoilerFilters"
@@ -38,13 +37,16 @@ export class SpoilerStore {
     }
 
     searchSpoilers = (filters: SpoilerFilters) => {
-        log.debug(`Spoiler filters are ${prettyJson(filters)}`)
         const toSeach = this.allSpoilers
         let filtered = toSeach.slice().filter(card => {
             return (
                 includeCardOrSpoiler(filters, card)
                 &&
                 (filters.expansion == null || card.expansion === filters.expansion)
+                &&
+                (!filters.anomaly || card.anomaly)
+                &&
+                (!filters.excludeReprints || !card.reprint)
             )
         })
 
@@ -55,6 +57,7 @@ export class SpoilerStore {
         this.spoiler = undefined
         const spoiler: AxiosResponse<Spoiler> = await axios.get(`${SpoilerStore.CONTEXT}/${spoilerId}`)
         this.spoiler = spoiler.data
+        return this.spoiler
     }
 
     deleteSpoiler = async (spoilerId: number) => {
@@ -111,13 +114,12 @@ export class SpoilerStore {
 }
 
 
-
 export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card: KCard | Spoiler): boolean => {
     return (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))
         &&
         (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
         &&
-        (filters.houses.length === 0 || filters.houses.indexOf(card.house) !== -1)
+        (filters.houses.length === 0 || (card.house != null && filters.houses.indexOf(card.house) !== -1))
         &&
         (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
         &&

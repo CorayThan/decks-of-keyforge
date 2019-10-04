@@ -211,6 +211,7 @@ export class SasAndAerc extends React.Component {
                             texts={[
                                 "Efficiency is increased by effects that allow you to play extra cards. " +
                                 "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
+                                "One chain is worth approximately -0.5 F.",
                                 "1 point is approximately equal to drawing two cards or archiving a random card. Archiving a card of your choice is 1.5"
                             ]}
                             icon={AercType.F}
@@ -233,6 +234,7 @@ export class SasAndAerc extends React.Component {
                                 "power, like Blood of Titans or Zyzzix the Many.",
                                 "Effective power is also increased by Armor at a 1:1 ratio, and other abilities that affect creature survivability, " +
                                 "like elusive, skirmish, hazardous, assault, healing and damage prevention.",
+                                "A single targetted ward provides 5 effective power.",
                                 "When included in total AERC score, Effective Power is divided by 10."
                             ]}
                             icon={AercType.P}

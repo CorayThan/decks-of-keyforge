@@ -17,7 +17,7 @@ import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { cardStore } from "./CardStore"
-import { findCardImageUrl, KCard } from "./KCard"
+import { findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
 import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 export interface HasFrontImage {
@@ -96,7 +96,7 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                 </div>
                 <Typography>{cardText}</Typography>
                 <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <AercForCard card={card}/>
+                <AercForCard card={hasAercFromCard(card)}/>
                 {card.winRate != null ? (
                     <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
                         <Tooltip
@@ -182,7 +182,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={fullCard as KCard}/>
+                            <AercForCard card={hasAercFromCard(fullCard as KCard)}/>
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>

@@ -296,6 +296,14 @@ export class UserStore {
     }
 
     @computed
+    get isAdmin(): boolean {
+        if (this.user) {
+            return this.user.type === UserType.ADMIN
+        }
+        return false
+    }
+
+    @computed
     get displayCrucibleTrackerWins(): boolean {
         if (this.user) {
             return this.user.displayCrucibleTrackerWins

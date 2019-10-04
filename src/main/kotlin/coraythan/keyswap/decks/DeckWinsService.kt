@@ -51,7 +51,11 @@ class DeckWinsService(
 
 //        var updateCount = 0
 //        var checked = 0
-        this.crucibleWins = crucibleTrackerApi.findWins().decks
+        try {
+            this.crucibleWins = crucibleTrackerApi.findWins().decks
+        } catch (exception: Exception) {
+            log.warn("Couldn't get crucible tracker wins due to ${exception.message}")
+        }
 
 //        entries.forEach {
 //                    checked++

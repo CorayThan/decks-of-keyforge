@@ -1,16 +1,16 @@
 import { Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, TextField, Typography } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
-import { ChevronLeft, ChevronRight, GetApp } from "@material-ui/icons"
+import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CSVLink } from "react-csv"
 import { AercRadar } from "../aerc/AercRadar"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log, Utils } from "../config/Utils"
+import { log } from "../config/Utils"
+import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -145,15 +145,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 )}
                                 <TableCell>
                                     <div style={{display: "flex"}}>
-                                        <CSVLink
-                                            data={DeckUtils.arrayToCSV(decks)}
-                                            target={"_blank"}
-                                            filename={`dok-decks-${Utils.nowDateString()}.csv`}
-                                        >
-                                            <IconButton>
-                                                <GetApp/>
-                                            </IconButton>
-                                        </CSVLink>
+                                        <CsvDownloadButton name={"decks"} data={DeckUtils.arrayToCSV(decks)}/>
                                         <IconButton
                                             onClick={keyLocalStorage.toggleSmallTableView}
                                             style={{marginLeft: spacing(2)}}

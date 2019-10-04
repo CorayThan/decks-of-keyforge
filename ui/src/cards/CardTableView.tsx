@@ -1,16 +1,14 @@
-import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core"
-import { GetApp } from "@material-ui/icons"
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core"
 import React from "react"
-import { CSVLink } from "react-csv"
 import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { Utils } from "../config/Utils"
+import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { CardSetsFromCard, CardSynergies } from "./CardSimpleView"
-import { CardUtils, KCard } from "./KCard"
+import { CardUtils, hasAercFromCard, KCard } from "./KCard"
 
 export const CardTableView = (props: { cards: KCard[] }) => {
     return (
@@ -31,15 +29,7 @@ export const CardTableView = (props: { cards: KCard[] }) => {
                             <TableCell>Synergies</TableCell>
                             <TableCell>
                                 <div style={{display: "flex"}}>
-                                    <CSVLink
-                                        data={CardUtils.arrayToCSV(props.cards)}
-                                        target={"_blank"}
-                                        filename={`dok-cards-${Utils.nowDateString()}.csv`}
-                                    >
-                                        <IconButton>
-                                            <GetApp/>
-                                        </IconButton>
-                                    </CSVLink>
+                                    <CsvDownloadButton name={"cards"} data={CardUtils.arrayToCSV(props.cards)}/>
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -54,7 +44,7 @@ export const CardTableView = (props: { cards: KCard[] }) => {
                                 <TableCell>{card.power}</TableCell>
                                 <TableCell>{card.armor}</TableCell>
                                 <TableCell>{card.cardText}</TableCell>
-                                <TableCell><AercForCard card={card} short={true}/></TableCell>
+                                <TableCell><AercForCard card={hasAercFromCard(card)} short={true}/></TableCell>
                                 <TableCell>
                                     <div style={{display: "flex", flexWrap: "wrap"}}>
                                         {card.extraCardInfo.traits.map(trait => (

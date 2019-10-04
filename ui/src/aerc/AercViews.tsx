@@ -2,7 +2,6 @@ import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardsWithAerc } from "../cards/CardsWithAerc"
 import { CardType } from "../cards/CardType"
-import { hasAercFromCard, KCard } from "../cards/KCard"
 import { spacing, theme } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { Deck } from "../decks/Deck"
@@ -316,21 +315,21 @@ const AercCategory = (props: { name: string, small?: boolean, horizontal?: boole
     )
 }
 
-export const AercForCard = (props: { card: KCard, short?: boolean }) => {
+export const AercForCard = (props: { card: HasAerc, short?: boolean }) => {
     const {card, short} = props
     return (
-        <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
-            <AercScore score={card.extraCardInfo.amberControl} name={short ? "A" : "Aember Control (A)"}/>
-            <AercScore score={card.extraCardInfo.expectedAmber} name={short ? "E" : "Expected Aember (E)"}/>
-            <AercScore score={card.extraCardInfo.artifactControl} name={short ? "R" : "Artifact Control (R)"}/>
-            <AercScore score={card.extraCardInfo.creatureControl} name={short ? "C" : "Creature Control (C)"}/>
+        <div style={{display: "grid", gridTemplateColumns: "2fr 1fr"}}>
+            <AercScore score={card.amberControl} name={short ? "A" : "Aember Control (A)"}/>
+            <AercScore score={card.expectedAmber} name={short ? "E" : "Expected Aember (E)"}/>
+            <AercScore score={card.artifactControl} name={short ? "R" : "Artifact Control (R)"}/>
+            <AercScore score={card.creatureControl} name={short ? "C" : "Creature Control (C)"}/>
             <AercScore score={card.effectivePower} name={short ? "P" : "Effective Power (P)"}/>
-            <AercScore score={card.extraCardInfo.efficiency} name={short ? "F" : "Efficiency (F)"}/>
-            <AercScore score={card.extraCardInfo.disruption} name={short ? "D" : "Disruption (D)"}/>
-            <AercScore score={card.extraCardInfo.amberProtection} name={short ? "AP" : "Aember Protection"}/>
-            <AercScore score={card.extraCardInfo.houseCheating} name={short ? "HC" : "House Cheating"}/>
-            <AercScore score={card.extraCardInfo.other} name={short ? "O" : "Other"}/>
-            <AercScore score={Math.round(hasAercFromCard(card).aercScore * 10) / 10} name={"AERC"}/>
+            <AercScore score={card.efficiency} name={short ? "F" : "Efficiency (F)"}/>
+            <AercScore score={card.disruption} name={short ? "D" : "Disruption (D)"}/>
+            <AercScore score={card.amberProtection} name={short ? "AP" : "Aember Protection"}/>
+            <AercScore score={card.houseCheating} name={short ? "HC" : "House Cheating"}/>
+            <AercScore score={card.other} name={short ? "O" : "Other"}/>
+            <AercScore score={card.aercScore} name={"AERC"}/>
         </div>
     )
 }

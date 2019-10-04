@@ -1,11 +1,10 @@
-import { FormControlLabel, IconButton, Switch, Typography } from "@material-ui/core"
+import { Checkbox, FormControlLabel, IconButton, Switch, Typography } from "@material-ui/core"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import { Close } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardFilters } from "../cards/CardFilters"
 import { AmberSelect, SelectedAmbers } from "../cards/selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "../cards/selects/ArmorSelect"
 import { CardTypeSelect, SelectedCardTypes } from "../cards/selects/CardTypeSelect"
@@ -14,15 +13,18 @@ import { RaritySelect, SelectedRarities } from "../cards/selects/RaritySelect"
 import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
+import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
+import { SpoilerUtils } from "./Spoiler"
+import { SpoilerFilters } from "./SpoilerFilters"
 import { spoilerStore } from "./SpoilerStore"
 
 @observer
 export class SpoilerSearchDrawer extends React.Component {
 
-    filters = new CardFilters()
+    filters = new SpoilerFilters()
     selectedHouses = new SelectedHouses()
     selectedCardTypes = new SelectedCardTypes()
     selectedRarities = new SelectedRarities()
@@ -98,10 +100,38 @@ export class SpoilerSearchDrawer extends React.Component {
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
                         </ListItem>
                         <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.filters.anomaly}
+                                        onChange={() => this.filters.anomaly = !this.filters.anomaly}
+                                        color="primary"
+                                    />
+                                }
+                                label="Anomalies Only"
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.filters.excludeReprints}
+                                        onChange={() => this.filters.excludeReprints = !this.filters.excludeReprints}
+                                        color="primary"
+                                    />
+                                }
+                                label="Exclude Reprints"
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <CsvDownloadButton
+                                data={SpoilerUtils.arrayToCSV(spoilerStore.spoilers)}
+                                name={"spoilers"}
+                            />
                             <KeyButton
                                 variant={"outlined"}
                                 onClick={this.clearSearch}
-                                style={{marginRight: spacing(2)}}
+                                style={{marginLeft: spacing(2), marginRight: spacing(2)}}
                             >
                                 Clear
                             </KeyButton>

@@ -47,7 +47,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         creatureControl,
         artifactControl,
         efficiency,
-        aercScore: aercScore == null ? 0 : aercScore,
+        aercScore: aercScore == null ? 0 : (Math.round(aercScore * 10) / 10),
         effectivePower,
         amberProtection,
         disruption,

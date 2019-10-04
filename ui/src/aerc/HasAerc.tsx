@@ -6,12 +6,12 @@ export interface HasAerc {
     expectedAmber: number
     artifactControl: number
     creatureControl: number
-    aercScore: number
     efficiency: number
     effectivePower: number
     amberProtection: number
     disruption: number
     houseCheating: number
     other: number
+    aercScore: number
     searchResultCards?: KCard[]
 }

@@ -17,9 +17,16 @@ export class SpoilerFilters {
     armors: number[] = []
     expansion?: number
 
+    @observable
+    anomaly = false
+
+    @observable
+    excludeReprints = false
+
     reset = () => {
         this.title = ""
         this.description = ""
+        this.anomaly = false
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
