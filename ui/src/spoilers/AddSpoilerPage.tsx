@@ -266,8 +266,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             other: Number(this.other),
 
             aercScore: 0,
-            anomaly: false,
-            reprint: false
+            anomaly: this.anomaly,
+            reprint: this.reprint
         }
         await spoilerStore.saveSpoiler(spoiler)
         spoilerStore.loadAllSpoilers()

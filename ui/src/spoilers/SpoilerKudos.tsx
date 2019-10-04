@@ -55,6 +55,16 @@ export class SpoilerKudos extends React.Component {
                                         </Typography>
                                     </div>
                                 ),
+                                (
+                                    <Typography variant={"body2"} key={"reapout"}>
+                                        <Link
+                                            target={"_blank"}
+                                            href={"https://reapout.com"}
+                                        >
+                                            Team Reapout
+                                        </Link>
+                                    </Typography>
+                                ),
                                 "Arkonos",
                                 "The Target disaster of 2019"
                             ]}
