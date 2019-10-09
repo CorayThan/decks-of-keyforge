@@ -34,6 +34,10 @@ data class Card(
         @ElementCollection
         val traits: Set<String> = setOf(),
 
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn
+        val extraInfo: ExtraCardInfo?,
+
         @Transient
         var extraCardInfo: ExtraCardInfoOld?
 ) : Comparable<Card> {
@@ -96,12 +100,13 @@ data class KeyforgeCard(
         val is_maverick: Boolean,
         val traits: String? = null
 ) {
-    fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfoOld>): Card {
+    fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfoOld>, extraInfo: ExtraCardInfo? = null): Card {
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
 
         return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, is_maverick,
+                extraInfo = extraInfo,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansion, card_number.toInt())],
                 traits = traits?.split(" • ")?.toSet() ?: setOf())
     }

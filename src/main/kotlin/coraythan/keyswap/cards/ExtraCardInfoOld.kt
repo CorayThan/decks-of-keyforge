@@ -30,8 +30,6 @@ data class ExtraCardInfoOld(
 @Entity
 data class ExtraCardInfo(
 
-        val cardNumbers: List<CardNumberSetPair>,
-
         val expectedAmber: Double = 0.0,
         val expectedAmberMax: Double? = null,
 
@@ -62,6 +60,12 @@ data class ExtraCardInfo(
         val other: Double = 0.0,
         val otherMax: Double? = null,
 
+        @OneToOne(mappedBy = "extraInfo")
+        val card: Card? = null,
+
+        @OneToMany
+        val cardNumbers: List<CardIdentifier> = listOf(),
+
         @OneToMany
         val traits: List<SynTraitValue> = listOf(),
 
@@ -72,5 +76,3 @@ data class ExtraCardInfo(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
 )
-
-

@@ -82,3 +82,7 @@ Unlink and relink with buttons.
 `.\pngquant.exe --ext=.png --force 256 *.png`
 
 upload to S3 public with headers: `Cache-Control: max-age=31536000`
+
+## auto generate table info
+
+Change `ddl-auto` in `application.yml` to `update`. `show-sql` to true. Run. Copy paste. Delete tables. Revert.

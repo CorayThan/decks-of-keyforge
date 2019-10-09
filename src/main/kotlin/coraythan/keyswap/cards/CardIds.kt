@@ -2,9 +2,7 @@ package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
+import javax.persistence.*
 
 data class CardIds(
         val cardIds: Map<House, List<CardNumberSetPair>>
@@ -31,5 +29,7 @@ data class CardIdentifier(
 
         val cardNumber: String,
 
-
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        val id: Long = -1
 )
