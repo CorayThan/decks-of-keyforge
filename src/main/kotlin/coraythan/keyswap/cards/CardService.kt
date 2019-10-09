@@ -31,10 +31,10 @@ class CardService(
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
     private var nonMaverickCachedCardsListNoDups: List<Card>? = null
-    lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfo>
+    lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfoOld>
 
     fun loadExtraInfo() {
-        val extraInfosFromFile: List<ExtraCardInfo> = yamlMapper.readValue(
+        val extraInfosFromFile: List<ExtraCardInfoOld> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
         this.extraInfo = extraInfosFromFile

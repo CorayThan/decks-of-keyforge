@@ -1,6 +1,10 @@
 package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
+import coraythan.keyswap.expansions.Expansion
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 data class CardIds(
         val cardIds: Map<House, List<CardNumberSetPair>>
@@ -17,4 +21,15 @@ data class CardNumberSetPair(
         val expansion: Int,
         // Leave this as an Int for now because 0 padding sucks
         val cardNumber: Int
+)
+
+@Entity
+data class CardIdentifier(
+
+        @Enumerated(EnumType.STRING)
+        val expansion: Expansion,
+
+        val cardNumber: String,
+
+
 )

@@ -294,7 +294,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         }
         return (
             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <SpoilerImage cardTitle={this.cardTitle} url={this.frontImage}/>
+                {this.frontImage && <SpoilerImage cardTitle={this.cardTitle} url={this.frontImage}/>}
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(4), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>

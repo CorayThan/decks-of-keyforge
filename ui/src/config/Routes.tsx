@@ -110,11 +110,6 @@ class KeyRouter extends React.Component {
                             component={CardPage}
                         />
                         <Route
-                            exact={true}
-                            path={Routes.spoilerPage()}
-                            component={SpoilerPage}
-                        />
-                        <Route
                             path={Routes.about}
                             component={AboutPage}
                         />
@@ -185,6 +180,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.createSpoiler}
                             component={AddSpoilerPage}
+                        />
+                        <Route
+                            exact={true}
+                            path={Routes.spoilerPage()}
+                            component={SpoilerPage}
                         />
                         <Route
                             path={Routes.spoilers}
