@@ -225,7 +225,7 @@ class EmailService(
                         ${if (ccEmail == null) {
                             "We have not given $senderUsername your email address, but you "
                         } else {
-                            "We have included $senderUsername on this email since you have a pubic sellers email. You "
+                            "We have included $senderUsername on this email since you have a public sellers email. You "
                         }}
                         can reply to their message at
                         <a href="mailto:$senderEmail">$senderEmail</a>
