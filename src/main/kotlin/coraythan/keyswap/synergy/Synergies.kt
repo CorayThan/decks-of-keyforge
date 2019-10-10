@@ -1,14 +1,25 @@
 package coraythan.keyswap.synergy
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.cards.ExtraCardInfo
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class SynTraitValue(
+        @Enumerated(EnumType.STRING)
         val trait: Synergies,
         val rating: Int = 2,
+        @Enumerated(EnumType.STRING)
         val type: SynTraitType = SynTraitType.anyHouse,
+
+        @JsonIgnoreProperties("traits")
+        @ManyToOne
+        val traitInfo: ExtraCardInfo? = null,
+
+        @JsonIgnoreProperties("synergies")
+        @ManyToOne
+        val synergyInfo: ExtraCardInfo? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()

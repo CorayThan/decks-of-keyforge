@@ -1,5 +1,6 @@
 package coraythan.keyswap.cards
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
 import org.springframework.data.jpa.repository.JpaRepository
@@ -30,6 +31,10 @@ data class CardIdentifier(
         val expansion: Expansion,
 
         val cardNumber: String,
+
+        @JsonIgnoreProperties("cardNumbers")
+        @ManyToOne
+        val info: ExtraCardInfo,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

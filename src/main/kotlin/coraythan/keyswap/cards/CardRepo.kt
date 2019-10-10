@@ -8,4 +8,5 @@ interface CardRepo : JpaRepository<Card, String>, QuerydslPredicateExecutor<Card
     fun findByMaverickFalse(): List<Card>
 
     fun findByExpansionAndCardNumberAndHouse(expansion: Int, cardNumber: String, house: House): List<Card>
+    fun findByExpansionAndCardNumberAndMaverickFalse(expansion: Int, cardNumber: String): Card
 }

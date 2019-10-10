@@ -8,6 +8,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.decks.currentDeckRatingVersion
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.synergy.SynTraitType
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.Synergies
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional
 class CardService(
         private val cardRepo: CardRepo,
         private val keyforgeApi: KeyforgeApi,
+        private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val yamlMapper: YAMLMapper,
         private val objectMapper: ObjectMapper
 ) {
@@ -38,7 +40,45 @@ class CardService(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
 
+        // Fix card numbers
+        cardRepo.findAll()
+                .filter { it.cardNumber.length < 3 }
+                .forEach { cardRepo.save(it.copy(cardNumber = it.cardNumber.padStart(3, '0'))) }
+
         // save new info if needed
+        if (extraCardInfoRepo.count() == 0L) {
+            val newExtraInfo = extraInfosFromFile.map {
+                val cardNumber = it.cardNumbers.first()
+                // val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(cardNumber.expansion, cardNumber.cardNumber.toString().padStart(3, '0'))
+                //       log.info("Found card $card")
+                ExtraCardInfo(
+                        expectedAmber = it.expectedAmber,
+                        amberControl = it.amberControl,
+                        creatureControl = it.creatureControl,
+                        artifactControl = it.artifactControl,
+                        efficiency = it.efficiency,
+                        effectivePower = it.effectivePower ?: 0,
+                        disruption = it.disruption,
+                        amberProtection = it.amberProtection,
+                        houseCheating = it.houseCheating,
+                        other = it.other,
+//                         card = card//,
+                        cardNumbers = it.cardNumbers.map { carNum ->
+                            CardIdentifier(
+                                    cardNumber = carNum.cardNumber.toString().padStart(3, '0'),
+                                    expansion = Expansion.values().find { exp -> exp.expansionNumber == carNum.expansion }!!
+                            )
+                        }.toMutableList()//,
+//                        traits = it.traits.map { trait -> SynTraitValue(trait = trait) }.toMutableList(),
+//                        synergies = it.synergies.map { syn -> SynTraitValue(trait = syn.trait, rating = syn.rating, type = syn.type) }.toMutableList()
+                )
+            }
+            newExtraInfo.forEach {
+                log.info("card numbers to save ${it.cardNumbers}")
+                extraCardInfoRepo.save(it)
+            }
+            log.info("Saved new extra card info")
+        }
 
         this.extraInfo = extraInfosFromFile
                 .map {

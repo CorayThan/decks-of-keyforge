@@ -63,13 +63,16 @@ data class ExtraCardInfo(
         @OneToOne(mappedBy = "extraInfo")
         val card: Card? = null,
 
-        @OneToMany
+        @JsonIgnoreProperties("info")
+        @OneToMany(mappedBy = "info", cascade = [CascadeType.ALL])
         val cardNumbers: List<CardIdentifier> = listOf(),
 
-        @OneToMany
+        @JsonIgnoreProperties("traitInfo")
+        @OneToMany(mappedBy = "traitInfo", cascade = [CascadeType.ALL])
         val traits: List<SynTraitValue> = listOf(),
 
-        @OneToMany
+        @JsonIgnoreProperties("synergyInfo")
+        @OneToMany(mappedBy = "synergyInfo", cascade = [CascadeType.ALL])
         val synergies: List<SynTraitValue> = listOf(),
 
         @Id
