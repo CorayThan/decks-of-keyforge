@@ -55,10 +55,8 @@ data class Spoiler(
                             this.houseCheating +
                             this.amberProtection +
                             this.other +
-                            (this.effectivePower.toDouble() / 10 +
-                                    (if (this.cardType == CardType.Creature) 0.4 else 0.0)
-                                    )
-                            * 10).roundToInt().toDouble() / 10
+                            (if (this.cardType == CardType.Creature) 0.4 else 0.0) +
+                            (((this.effectivePower.toDouble() / 10) * 10).roundToInt().toDouble() / 10)
+                    )
         }
-
 }
