@@ -90,8 +90,8 @@ export const answeringTheCall: Article = {
         },
         makeFinishesSection(
             "Daniel Lloyd / Pokelope",
-            ["2nd Chicago Vault Tour, Many online tournament first place finishes on the Keyforge Events discord."],
-            ["Keyforge is my first competitive game."]
+            ["2nd Chicago Vault Tour, Many online tournament first place finishes on the KeyForge Events discord."],
+            ["KeyForge is my first competitive game."]
         ),
         {
             sectionTitle: "Nathan Westlake / CorayThan of Team SAS of the Luxurious Playstyle",

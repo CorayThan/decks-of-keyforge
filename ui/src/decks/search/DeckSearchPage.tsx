@@ -99,7 +99,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
         } else if (sellerDetails && (filters.forSale || filters.forTrade)) {
             uiStore.setTopbarValues(sellerDetails.storeName, sellerDetails.storeName, "A featured seller store")
         } else {
-            uiStore.setTopbarValues("Decks of Keyforge", "Decks", "Search, evaluate, sell and trade")
+            uiStore.setTopbarValues("Decks of KeyForge", "Decks", "Search, evaluate, sell and trade")
         }
     }
 

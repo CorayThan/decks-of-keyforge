@@ -149,7 +149,7 @@ class DeckWinsService(
             deckPageService.setCurrentPage(page + 1, pageEnum)
 
         } catch (e: HttpClientErrorException.TooManyRequests) {
-            log.warn("Keyforge API says we made too many requests in deck win service. Sad day.")
+            log.warn("KeyForge API says we made too many requests in deck win service. Sad day.")
         }
     }
 

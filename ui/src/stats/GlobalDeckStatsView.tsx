@@ -12,7 +12,7 @@ export class GlobalDeckStatsView extends React.Component<{}> {
 
     constructor(props: RouteComponentProps<{}>) {
         super(props)
-        uiStore.setTopbarValues("Stats of Keyforge", "Stats", "Global deck stats")
+        uiStore.setTopbarValues("Stats of KeyForge", "Stats", "Global deck stats")
     }
 
     render() {

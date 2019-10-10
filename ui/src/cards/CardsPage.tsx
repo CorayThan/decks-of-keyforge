@@ -20,7 +20,7 @@ export class CardsPage extends React.Component {
 
     constructor(props: {}) {
         super(props)
-        uiStore.setTopbarValues("Cards of Keyforge", "Cards", "Search and sort")
+        uiStore.setTopbarValues("Cards of KeyForge", "Cards", "Search and sort")
     }
 
     render() {

@@ -31,6 +31,8 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { messageStore } from "../ui/MessageStore"
+import { screenStore } from "../ui/ScreenStore"
+import { uiStore } from "../ui/UiStore"
 import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
 import { spoilerStore } from "./SpoilerStore"
@@ -178,6 +180,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.disruption = spoiler.disruption.toString()
             this.houseCheating = spoiler.houseCheating.toString()
             this.other = spoiler.other.toString()
+
+            uiStore.setTopbarValues("Edit " + this.cardTitle, "Edit", "")
         } else {
             this.cardTitle = ""
             this.house = defaultHouse
@@ -203,6 +207,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.disruption = "0"
             this.houseCheating = "0"
             this.other = "0"
+
+            uiStore.setTopbarValues("New Spoiler", "New", "")
         }
     }
 
@@ -287,13 +293,19 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             const findWith = allSpoilers.find(spoiler => spoiler.id === this.spoilerId)
             if (findWith != null) {
                 const idx = allSpoilers.indexOf(findWith)
-                log.debug(`Spoiler idx ${idx}`)
                 nextId = idx > -1 && idx < allSpoilers.length - 1 ? allSpoilers[idx + 1].id : undefined
                 prevId = idx > 0 ? allSpoilers[idx - 1].id : undefined
             }
         }
         return (
-            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: screenStore.screenSizeMdPlus() ? undefined : "column"
+                }}
+            >
                 {this.frontImage && <SpoilerImage cardTitle={this.cardTitle} url={this.frontImage}/>}
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(4), padding: spacing(2)}}>

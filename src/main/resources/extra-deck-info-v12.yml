@@ -3765,6 +3765,7 @@
   rating: 3
   expectedAmber: 2.0
   amberControl: 1.0
+  amberProtection: 0.5
   traits: [stealsAmber]
   synergies:
     - trait: increasesKeyCost

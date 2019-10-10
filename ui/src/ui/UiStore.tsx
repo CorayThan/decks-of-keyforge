@@ -23,12 +23,12 @@ export class UiStore {
     }
 
     setDocTitleAndDescription = (name: string) => {
-        document.title = name + (name === "Decks of Keyforge" || name === "Cards of Keyforge" ? "" : " – Decks of Keyforge")
+        document.title = name + (name === "Decks of KeyForge" || name === "Cards of KeyForge" ? "" : " – Decks of KeyForge")
         const description = document.getElementsByTagName("meta").namedItem("description")
         if (description) {
             description.content =
                 (name.length > 0 ? (name + " – ") : "") +
-                "Search, evaluate, buy and sell Keyforge decks. Find synergies and antisynergies for your decks with the SAS rating system."
+                "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies for your decks with the SAS rating system."
         }
     }
 }

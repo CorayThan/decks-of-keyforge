@@ -59,7 +59,7 @@ worstSas.sortDirection = "ASC"
 export class LandingPage extends React.Component<{}> {
 
     componentDidMount(): void {
-        uiStore.setTopbarValues("Decks of Keyforge", "DoK", "Search, evaluate, sell and trade")
+        uiStore.setTopbarValues("Decks of KeyForge", "DoK", "Search, evaluate, sell and trade")
     }
 
     render() {

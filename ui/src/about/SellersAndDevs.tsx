@@ -115,7 +115,7 @@ export class SellersAndDevs extends React.Component {
                         </Typography>
                         <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                         <Typography style={{marginLeft: spacing(1), marginRight: spacing(1)}}>
-                            or join us on the Decks of Keyforge discord:
+                            or join us on the Decks of KeyForge discord:
                         </Typography>
                         <KeyButton
                             style={{margin: spacing(1)}}
@@ -158,7 +158,7 @@ export class SellersAndDevs extends React.Component {
                 <AboutGridItem>
                     <InfoListCard title={"Deck Selling API"} infos={[
                         "If you sell decks on a website, or have the technical know-how, you can list and unlist decks " +
-                        "for sale on Decks of Keyforge via an API.",
+                        "for sale on Decks of KeyForge via an API.",
                         "Generate an API key, and then contact me to get the API details."
                     ]}/>
                 </AboutGridItem>

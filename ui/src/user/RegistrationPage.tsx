@@ -84,7 +84,7 @@ export class RegistrationPage extends React.Component {
         }
         return (
             <KeyTopbarRegistration
-                name={"Decks of Keyforge"}
+                name={"Decks of KeyForge"}
                 rightContent={(
                     <LoginPop/>
                 )}

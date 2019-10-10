@@ -187,7 +187,7 @@ class EmailService(
                         </div>
                         <br>
                         <div>
-                            To turn off these notifications login to Decks of Keyforge and go to your ${makeLink("/my-profile", "profile")}.
+                            To turn off these notifications login to Decks of KeyForge and go to your ${makeLink("/my-profile", "profile")}.
                         </div>
                     </div>
                 """.trimIndent()
@@ -212,7 +212,7 @@ class EmailService(
         val message = sellerMessage.message
         val ccEmail = if (seller.sellerEmail == null) null else senderEmail
 
-        sendEmail(email, "A deck you listed on Decks of Keyforge has a message",
+        sendEmail(email, "$deckName has a message on Decks of KeyForge",
                 """
                 <div>
                     <div>
@@ -257,7 +257,7 @@ class EmailService(
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         mimeMessage.setContent(content, "text/html")
         val fromEmail = "noreply@decksofkeyforge.com"
-        val fromAddress = InternetAddress(fromEmail, "Decks of Keyforge")
+        val fromAddress = InternetAddress(fromEmail, "Decks of KeyForge")
         helper.setFrom(fromAddress)
         helper.setFrom(fromAddress)
         if (replyTo != null) helper.setReplyTo(replyTo)

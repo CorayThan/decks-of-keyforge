@@ -222,7 +222,7 @@ export class ReleaseNotes extends React.Component {
                     <ArticleInternalLink internalLink={`/decks/409dce8d-839d-4bd9-9994-dca5e1573e3b`} text={"Denim, Perfumed Province Rook"}/>,
                     "Also was great getting to meet many people who use SAS and the site, as well as Brad Andres! Brad was telling someone that if anyone, " +
                     "tells them they can tell them how good their deck is, they're lying. So a friend (thanks Erich) immediately introduced me, " +
-                    `"Speaking of which, I wanted to introduce you to Nathan. He makes Decks of Keyforge and SAS!" So I said, "Hi, I've lied to ` +
+                    `"Speaking of which, I wanted to introduce you to Nathan. He makes Decks of KeyForge and SAS!" So I said, "Hi, I've lied to ` +
                     `KeyForge players hundreds of thousands of times." Was a pretty funny introduction!`
                 ]}/>
                 <ReleaseNote releaseNumber={"5.3"} date={"6/9/2019"} expanded={true} releaseNotes={[
@@ -255,7 +255,7 @@ export class ReleaseNotes extends React.Component {
                     "Fixed an issue with notifications not being sent for newly listed auctions."
                 ]}/>
                 <ReleaseNote releaseNumber={"4.4"} date={"5/29/2019"} expanded={true} releaseNotes={[
-                    "Age of Ascension decks are now importing into Decks of Keyforge! Note that these decks have SAS ratings, but those should be " +
+                    "Age of Ascension decks are now importing into Decks of KeyForge! Note that these decks have SAS ratings, but those should be " +
                     "taken with a huge grain of salt. I haven't had time to add traits, synergies or antisynergies yet, so Age of Ascension decks will " +
                     "also have lower scores than they should."
                 ]}/>

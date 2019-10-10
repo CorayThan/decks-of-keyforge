@@ -53,7 +53,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(2), fontStyle: "italic"}}>
                             By buying this deck you agree to pay the seller the buy it now price as well as any shipping listed in the description. You and
-                            the seller will be sent an email from Decks of Keyforge. You can also contact the seller separately with their listed contact
+                            the seller will be sent an email from Decks of KeyForge. You can also contact the seller separately with their listed contact
                             information.
                         </Typography>
                         <BuyingDisclaimer/>

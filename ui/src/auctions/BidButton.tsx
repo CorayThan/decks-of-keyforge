@@ -105,7 +105,7 @@ export class BidButton extends React.Component<BidButtonProps> {
                             {"That price will be equal to the second highest bidder's highest bid. You also agree to pay any shipping listed in the description."}
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
-                            If you win, you and the seller will be sent an email from Decks of Keyforge.
+                            If you win, you and the seller will be sent an email from Decks of KeyForge.
                             You can also contact the seller separately with their listed contact information.
                         </Typography>
                         <BuyingDisclaimer/>

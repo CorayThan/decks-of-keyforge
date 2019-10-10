@@ -37,6 +37,9 @@ class CardService(
         val extraInfosFromFile: List<ExtraCardInfoOld> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
+
+        // save new info if needed
+
         this.extraInfo = extraInfosFromFile
                 .map {
                     when {

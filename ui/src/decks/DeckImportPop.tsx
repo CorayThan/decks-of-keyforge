@@ -105,7 +105,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField
                             variant={"outlined"}
-                            label={"Keyforge Deck Id or URL"}
+                            label={"KeyForge Deck Id or URL"}
                             value={this.deckId}
                             onChange={(event) => this.deckId = event.target.value}
                             style={{marginBottom: spacing(2)}}

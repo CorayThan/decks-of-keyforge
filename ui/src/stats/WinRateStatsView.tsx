@@ -13,7 +13,7 @@ export class WinRateStatsView extends React.Component<{}> {
 
     constructor(props: RouteComponentProps<{}>) {
         super(props)
-        uiStore.setTopbarValues("Stats of Keyforge", "Stats", "Win rates for decks")
+        uiStore.setTopbarValues("Stats of KeyForge", "Stats", "Win rates for decks")
     }
 
     render() {

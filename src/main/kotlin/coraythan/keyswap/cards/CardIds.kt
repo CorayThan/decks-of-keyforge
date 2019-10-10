@@ -2,6 +2,8 @@ package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.querydsl.QuerydslPredicateExecutor
 import javax.persistence.*
 
 data class CardIds(
@@ -33,3 +35,6 @@ data class CardIdentifier(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
 )
+
+interface CardIdentifierRepo : JpaRepository<CardIdentifier, Long>, QuerydslPredicateExecutor<CardIdentifier>
+
