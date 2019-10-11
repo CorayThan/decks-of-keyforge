@@ -17,7 +17,7 @@ export interface KCard {
     armor: number
     rarity: Rarity
     flavorText?: string
-    cardNumber: number
+    cardNumber: string
     expansion: number
     maverick: boolean
     effectivePower: number
@@ -75,7 +75,7 @@ export interface ExtraCardInfo {
 
 export interface CardNumberSetPair {
     expansion: number
-    cardNumber: number
+    cardNumber: string
 }
 
 const cardNameReplacementRegex = /[^\d\w\s]/g

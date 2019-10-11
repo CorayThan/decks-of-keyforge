@@ -261,7 +261,7 @@ class CardService(
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->
             entry.value.map {
-                val realCard = realCards[it]
+                val realCard = realCards[it.padded()]
                 realCard?.copy(house = entry.key, maverick = entry.key != realCard.house) ?: throw java.lang.IllegalStateException("No card for $it")
             }
         }

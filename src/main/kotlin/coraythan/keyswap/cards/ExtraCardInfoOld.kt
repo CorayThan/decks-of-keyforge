@@ -8,7 +8,9 @@ import javax.persistence.*
 data class CardNumberSetPairOld(
         val expansion: Int,
         val cardNumber: String
-)
+) {
+        fun padded() = this.copy(cardNumber = cardNumber.padStart(3, '0'))
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExtraCardInfoOld(
