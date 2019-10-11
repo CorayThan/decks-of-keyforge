@@ -29,7 +29,7 @@ class DeckSynergyService(
         cards.forEach { card ->
             val cardInfo = card.extraCardInfo!!
             cardInfo.traits
-                    // .map { it.trait }
+                    .map { it.trait }
                     .plus(card.traits.mapNotNull { Synergies.fromTrait(it) })
                     .forEach {
                         val cardHouseCount = counts[card.house]
@@ -76,7 +76,7 @@ class DeckSynergyService(
                 }
                 // Max of 4 matches
                 val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it } -
-                        (if (cardInfo.traits.contains(synTraitValue.trait)) 1 else 0)
+                        (if (cardInfo.traits.containsTrait(synTraitValue.trait)) 1 else 0)
                 synTraitValue.trait to synTraitValue.synergyValue(matches)
             }
             val synergy = matchedTraits.map { it.second }.filter { it > 0 }.sum()

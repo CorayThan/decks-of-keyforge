@@ -32,9 +32,7 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
             }}
         >
             {props.rating ? (
-                <div style={{marginRight: spacing(1)}}>
-                    <SynergyEffectIcon effect={props.rating}/>
-                </div>
+                <SynergyEffectIcon effect={props.rating}/>
             ) : null}
             {props.home ? (
                 <Tooltip title={"Synergizes with house traits only"}>

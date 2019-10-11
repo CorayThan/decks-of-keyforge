@@ -24,6 +24,10 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: Expansion.WC, name: "Worlds Collide", abbreviation: "WC", backendEnum: BackendExpansion.WORLDS_COLLIDE},
 ]
 
-export const expansionInfoMap: Map<number, ExpansionInfo> = new Map(expansionInfos.map(info => (
+export const expansionInfoMap: Map<BackendExpansion, ExpansionInfo> = new Map(expansionInfos.map(info => (
+    [info.backendEnum, info] as [BackendExpansion, ExpansionInfo]
+)))
+
+export const expansionInfoMapNumbers: Map<number, ExpansionInfo> = new Map(expansionInfos.map(info => (
     [info.expansionNumber, info] as [number, ExpansionInfo]
 )))

@@ -6,6 +6,7 @@ import HistoryIcon from "@material-ui/icons/History"
 import { range } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { BackendExpansion } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 
 export enum DeckScoreSize {
@@ -23,7 +24,7 @@ interface DeckScoreViewProps {
         synergyRating: number,
         antisynergyRating: number,
         sasPercentile?: number,
-        expansion?: number
+        expansion?: BackendExpansion
     }
     style?: React.CSSProperties
     small?: boolean

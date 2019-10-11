@@ -12,7 +12,7 @@ import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
-import { expansionInfoMap } from "../expansions/Expansions"
+import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { KeyCard } from "../generic/KeyCard"
 import { House, houseValues } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -22,7 +22,7 @@ import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
 
 interface CreateUnregisteredDeckProps {
     initialDeck: SaveUnregisteredDeck
-    expansionNumber: number
+    expansionNumber: BackendExpansion
 }
 
 class SaveUnregisteredDeckStore {

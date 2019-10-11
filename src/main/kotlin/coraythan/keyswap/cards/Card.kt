@@ -37,7 +37,7 @@ data class Card(
         val traits: Set<String> = setOf(),
 
         @Transient
-        var extraCardInfo: ExtraCardInfoOld?
+        var extraCardInfo: ExtraCardInfo?
 ) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int {
@@ -98,13 +98,13 @@ data class KeyforgeCard(
         val is_maverick: Boolean,
         val traits: String? = null
 ) {
-    fun toCard(extraInfoMap: Map<CardNumberSetPairOld, ExtraCardInfoOld>): Card {
+    fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfo>): Card {
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
         val expansionEnum = Expansion.forExpansionNumber(expansion)
         return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick,
-                extraCardInfo = extraInfoMap[CardNumberSetPairOld(expansion, card_number)],
+                extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
                 traits = traits?.split(" • ")?.toSet() ?: setOf())
     }
 }

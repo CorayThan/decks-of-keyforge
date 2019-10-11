@@ -15,6 +15,7 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
+import { BackendExpansion } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
@@ -228,7 +229,7 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     )
 }
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: number, disableTextSelection?: boolean, compact?: boolean }) => {
+const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, disableTextSelection?: boolean, compact?: boolean }) => {
     const deckExpansion = props.deckExpansion
     return (
         <List>

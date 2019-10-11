@@ -20,6 +20,7 @@ import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing, theme } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
+import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
@@ -47,7 +48,7 @@ interface DecksSearchDrawerProps {
 @observer
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
-    selectedExpansion = new SelectedExpansion(this.props.filters.expansions)
+    selectedExpansion = new SelectedExpansion(this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedSortStore = new DeckSortSelectStore(
         this.props.filters.forTrade || this.props.filters.forSale,
@@ -62,7 +63,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             event.preventDefault()
         }
         const filters = this.props.filters
-        filters.expansions = this.selectedExpansion.expansionsAsArray()
+        filters.expansions = this.selectedExpansion.expansionsAsNumberArray()
         filters.houses = this.selectedHouses.toArray()
         filters.sort = this.selectedSortStore.toEnumValue()
         filters.constraints = this.constraintsStore.cleanConstraints()

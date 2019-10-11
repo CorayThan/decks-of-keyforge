@@ -8,7 +8,7 @@ import * as React from "react"
 import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { Expansion, expansionInfoMap } from "../expansions/Expansions"
+import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -115,11 +115,7 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                 ) : null}
                 <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                 {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
-                <div style={{display: "flex", flexWrap: "wrap"}}>
-                    {traits.map(trait => (
-                        <TraitBubble key={trait} name={trait} positive={true} trait={true}/>
-                    ))}
-                </div>
+                <CardTraits card={card}/>
                 {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
                 <CardSynergies card={card}/>
             </div>
@@ -129,8 +125,8 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
 
 interface CardAsLineProps {
     card: Partial<KCard>
-    deckExpansion?: number
-    cardExpansions?: number[]
+    deckExpansion?: BackendExpansion
+    cardExpansions?: BackendExpansion[]
     width?: number
     marginTop?: number
     hideRarity?: boolean
@@ -318,29 +314,21 @@ export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
     )
 }
 
-export const CardSets = (props: { set: Expansion, noDot?: boolean }) => {
-    const sets = [expansionInfoMap.get(props.set)!.abbreviation]
-    return (
-        <div>
-            {sets.map((abbreviation, idx) => (
-                <div style={{display: "flex", alignItems: "center"}} key={idx}>
-                    {idx !== 0 && !props.noDot ? (
-                        <div style={{
-                            height: 4,
-                            width: 4,
-                            borderRadius: "50%",
-                            backgroundColor: "#555",
-                            marginLeft: spacing(1),
-                            marginRight: spacing(1)
-                        }}/>
-                    ) : null}
-
-                    <Typography>{abbreviation}</Typography>
-                </div>
-            ))}
-        </div>
-    )
-}
+export const CardTraits = (props: { card: KCard }) => (
+    <div style={{display: "flex", flexWrap: "wrap"}}>
+        {props.card.extraCardInfo.traits.map(synergy => (
+            <TraitBubble
+                key={synergy.id}
+                name={synergy.trait}
+                positive={synergy.rating > 0}
+                home={synergy.type === SynTraitType.house}
+                noHome={synergy.type === SynTraitType.outOfHouse}
+                rating={synergy.rating}
+                trait={true}
+            />
+        ))}
+    </div>
+)
 
 export const CardSynergies = (props: { card: KCard }) => (
     <div style={{display: "flex", flexWrap: "wrap"}}>

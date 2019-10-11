@@ -1,4 +1,5 @@
 import { HasAerc } from "../aerc/HasAerc"
+import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
 import { SynTraitValue, synTraitValueToString } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
@@ -57,7 +58,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
 }
 
 export interface ExtraCardInfo {
-    cardNumbers: CardNumberSetPair[]
+    cardNumbers: CardIdentifier[]
     rating: number
     expectedAmber: number
     amberControl: number
@@ -69,12 +70,12 @@ export interface ExtraCardInfo {
     houseCheating: number
     other: number
 
-    traits: string[]
+    traits: SynTraitValue[]
     synergies: SynTraitValue[]
 }
 
-export interface CardNumberSetPair {
-    expansion: number
+export interface CardIdentifier {
+    expansion: BackendExpansion
     cardNumber: string
 }
 

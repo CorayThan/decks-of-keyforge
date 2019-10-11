@@ -1,5 +1,6 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
+import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
 import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
 import { UserDeck } from "../userdeck/UserDeck"
@@ -18,7 +19,7 @@ export interface Deck extends HasAerc {
     id: number
     keyforgeId: string
     name: string
-    expansion: number
+    expansion: BackendExpansion
     powerLevel: number
     chains: number
     wins: number

@@ -2,12 +2,13 @@ package coraythan.keyswap.decks.models
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.DeckSearchResultCard
+import coraythan.keyswap.expansions.Expansion
 
 // It takes a long time to load all the crap in hibernate, so avoid that.
 data class DeckSearchResult(
         val id: Long = -1,
         val keyforgeId: String = "",
-        val expansion: Int,
+        val expansion: Expansion,
 
         val name: String = "",
 

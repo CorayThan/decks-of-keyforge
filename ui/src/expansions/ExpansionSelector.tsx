@@ -2,35 +2,43 @@ import { MenuItem, TextField } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { expansionInfos } from "./Expansions"
+import { BackendExpansion, expansionInfoMap, expansionInfos } from "./Expansions"
 
 export class SelectedExpansion {
     @observable
-    expansion = ""
+    expansion: "" | BackendExpansion = ""
 
-    constructor(expansions?: number[]) {
+    constructor(expansions?: BackendExpansion[]) {
         if (expansions && expansions.length > 0) {
-            this.expansion = expansions[0].toString()
+            this.expansion = expansions[0]
         }
     }
 
     handleExpansionSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.expansion = event.target.value
+        this.expansion = event.target.value as "" | BackendExpansion
     }
 
     expansionNumber = () => {
         if (this.expansion) {
-            return Number(this.expansion)
+            return this.expansion
         }
         return undefined
     }
 
-    expansionsAsArray = (): number[] => {
+    expansionsAsArray = (): BackendExpansion[] => {
         const expansionNumber = this.expansionNumber()
         if (expansionNumber == null) {
             return []
         }
         return [expansionNumber]
+    }
+
+    expansionsAsNumberArray = (): number[] => {
+        const expansionNumber = this.expansionNumber()
+        if (expansionNumber == null) {
+            return []
+        }
+        return [expansionInfoMap.get(expansionNumber)!.expansionNumber]
     }
 
     reset = () => this.expansion = ""
@@ -61,7 +69,7 @@ export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
                     </MenuItem>
                 ) : null}
                 {expansionInfos.map(info => (
-                    <MenuItem key={info.expansionNumber} value={info.expansionNumber}>
+                    <MenuItem key={info.backendEnum} value={info.backendEnum}>
                         {small ? info.abbreviation : info.name}
                     </MenuItem>
                 ))}

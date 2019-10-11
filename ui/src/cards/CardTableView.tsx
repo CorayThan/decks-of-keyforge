@@ -6,8 +6,7 @@ import { Routes } from "../config/Routes"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
-import { TraitBubble } from "../synergy/TraitBubble"
-import { CardSetsFromCard, CardSynergies } from "./CardSimpleView"
+import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSimpleView"
 import { CardUtils, hasAercFromCard, KCard } from "./KCard"
 
 export const CardTableView = (props: { cards: KCard[] }) => {
@@ -46,13 +45,11 @@ export const CardTableView = (props: { cards: KCard[] }) => {
                                 <TableCell>{card.cardText}</TableCell>
                                 <TableCell><AercForCard card={hasAercFromCard(card)} short={true}/></TableCell>
                                 <TableCell>
-                                    <div style={{display: "flex", flexWrap: "wrap"}}>
-                                        {card.extraCardInfo.traits.map(trait => (
-                                            <TraitBubble key={trait} name={trait} positive={true} trait={true}/>
-                                        ))}
-                                    </div>
+                                    <CardTraits card={card}/>
                                 </TableCell>
-                                <TableCell> <CardSynergies card={card}/></TableCell>
+                                <TableCell>
+                                    <CardSynergies card={card}/>
+                                </TableCell>
                                 <TableCell>
                                     <KeyLink
                                         to={Routes.cardPage(card.cardTitle)}

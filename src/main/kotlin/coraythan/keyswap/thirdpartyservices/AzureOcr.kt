@@ -2,9 +2,10 @@ package coraythan.keyswap.thirdpartyservices
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.CardNumberSetPairOld
+import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -25,7 +26,7 @@ class AzureOcr(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val numberRegex = "\\d+".toRegex()
 
-    fun readDeckInfoFromImage(deckImage: MultipartFile, expansion: Int): SaveUnregisteredDeck? {
+    fun readDeckInfoFromImage(deckImage: MultipartFile, expansion: Expansion): SaveUnregisteredDeck? {
         val response: ResponseEntity<OcrResults> = restTemplate.exchange(
                 "https://westus.api.cognitive.microsoft.com/vision/v1.0/ocr",
                 HttpMethod.POST,
@@ -49,7 +50,7 @@ class AzureOcr(
         log.info("Deck read lines $lines")
         if (lines.size < 19) return null
         val cardsByName: Map<String, Card> = cardService.allFullCardsNonMaverick()
-                .filter { it.expansion == expansion }
+                .filter { it.expansionEnum == expansion }
                 .map { it.cardTitle to it }.toMap()
 
         var cards: MutableMap<House, MutableList<Card>> = mutableMapOf()
@@ -105,7 +106,7 @@ class AzureOcr(
         )
     }
 
-    private fun findCardFromWords(words: List<String>, expansion: Int, cardsByName: Map<String, Card>): Card? {
+    private fun findCardFromWords(words: List<String>, expansion: Expansion, cardsByName: Map<String, Card>): Card? {
         if (words.isEmpty()) {
             return null
         } else {
@@ -121,8 +122,8 @@ class AzureOcr(
 
             }
 
-            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPairOld(
-                    expansion, cardNumber
+            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPair(
+                    expansion, cardNumber.padStart(3, '0')
             )]
 
             return if (foundCard != null) {

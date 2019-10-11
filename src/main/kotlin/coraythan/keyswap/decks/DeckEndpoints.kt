@@ -5,6 +5,7 @@ import coraythan.keyswap.decks.models.DeckCount
 import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.decks.models.DecksPage
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.thirdpartyservices.AzureOcr
 import coraythan.keyswap.userdeck.UserDeckService
 import org.slf4j.LoggerFactory
@@ -91,7 +92,7 @@ class DeckEndpoints(
     }
 
     @PostMapping("/secured/read-deck-image/{expansion}")
-    fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile, @PathVariable expansion: Int): SaveUnregisteredDeck? {
+    fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile, @PathVariable expansion: Expansion): SaveUnregisteredDeck? {
         return azureOcr.readDeckInfoFromImage(deckImage, expansion)
     }
 

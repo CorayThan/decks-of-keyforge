@@ -1,5 +1,6 @@
 import { observable } from "mobx"
 import * as React from "react"
+import { BackendExpansion } from "../expansions/Expansions"
 import { SortDirection } from "../generic/SortDirection"
 import { House } from "../houses/House"
 import { CardType } from "./CardType"
@@ -16,7 +17,7 @@ export class CardFilters {
     powers: number[] = []
     ambers: number[] = []
     armors: number[] = []
-    expansion?: number
+    expansion?: BackendExpansion
 
     sort?: CardSort
     @observable

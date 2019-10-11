@@ -8,9 +8,11 @@ import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.decks.Wins
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.Synergies
+import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import java.time.ZonedDateTime
@@ -119,7 +121,7 @@ data class Deck(
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
-                expansion = expansion,
+                expansion = Expansion.forExpansionNumber(expansion),
                 name = name,
 
                 powerLevel = powerLevel,
@@ -137,11 +139,11 @@ data class Deck(
                 upgradeCount = upgradeCount,
 
                 cardDrawCount = cards?.filter {
-                    it.extraCardInfo?.traits?.contains(Synergies.drawsCards) == true
-                            || it.extraCardInfo?.traits?.contains(Synergies.increasesHandSize) == true
+                    it.extraCardInfo?.traits?.containsTrait(Synergies.drawsCards) == true
+                            || it.extraCardInfo?.traits?.containsTrait(Synergies.increasesHandSize) == true
                 }?.size,
-                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.contains(Synergies.archives) == true }?.size,
-                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.contains(Synergies.forgesKeys) == true }?.size,
+                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(Synergies.archives) == true }?.size,
+                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(Synergies.forgesKeys) == true }?.size,
                 rawAmber = rawAmber,
                 totalArmor = totalArmor,
 

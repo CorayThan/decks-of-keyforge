@@ -10,7 +10,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { expansionInfoMap } from "../../expansions/Expansions"
+import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -72,7 +72,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                         <>
                                             <TableCell>{query.title}</TableCell>
                                             <TableCell>
-                                                {query.expansions.map(expansionNumber => expansionInfoMap.get(expansionNumber)!.abbreviation)}
+                                                {query.expansions.map(expansionNumber => expansionInfoMapNumbers.get(expansionNumber)!.abbreviation)}
                                             </TableCell>
                                             <TableCell><HouseBanner houses={query.houses} size={36}/></TableCell>
                                             <TableCell>
