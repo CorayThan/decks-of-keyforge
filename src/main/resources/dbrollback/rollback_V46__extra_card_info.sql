@@ -3,9 +3,20 @@ ALTER TABLE IF EXISTS card
 
 DROP TABLE IF EXISTS card_identifier CASCADE;
 DROP TABLE IF EXISTS extra_card_info CASCADE;
-DROP TABLE IF EXISTS extra_card_info_card_numbers CASCADE;
-DROP TABLE IF EXISTS extra_card_info_synergies CASCADE;
-DROP TABLE IF EXISTS extra_card_info_traits CASCADE;
+
+DELETE FROM syn_trait_value;
+
+ALTER TABLE IF EXISTS syn_trait_value
+    DROP COLUMN synergy_info_id;
+ALTER TABLE IF EXISTS syn_trait_value
+    DROP COLUMN trait_info_id;
+ALTER TABLE IF EXISTS syn_trait_value
+    ALTER COLUMN type TYPE INT4 USING (type::integer);
+ALTER TABLE IF EXISTS syn_trait_value
+    ALTER COLUMN trait TYPE INT4 USING (trait::integer);
+
+ALTER TABLE IF EXISTS card
+    DROP COLUMN expansion_enum;
 
 DELETE
 FROM flyway_schema_history

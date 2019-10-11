@@ -2,7 +2,7 @@ package coraythan.keyswap.thirdpartyservices
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.CardNumberSetPair
+import coraythan.keyswap.cards.CardNumberSetPairOld
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import org.slf4j.LoggerFactory
@@ -113,15 +113,17 @@ class AzureOcr(
             val secondWord = words.getOrNull(1)
             val numberString = if (firstWord.length > 2) firstWord else secondWord
 
-            var cardNumber = numberString?.takeLast(3)?.toIntOrNull()
+            var cardNumber = numberString?.takeLast(3)
 
             if (cardNumber == null && numberString != null) {
                 val realNumber = numberRegex.find(numberString)?.value
-                cardNumber = realNumber?.takeLast(3)?.toIntOrNull()
+                cardNumber = realNumber?.takeLast(3)
 
             }
 
-            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPair(expansion, cardNumber)]
+            val foundCard = if (cardNumber == null) null else cardService.allFullCardsNonMaverickMap()[CardNumberSetPairOld(
+                    expansion, cardNumber
+            )]
 
             return if (foundCard != null) {
                 foundCard

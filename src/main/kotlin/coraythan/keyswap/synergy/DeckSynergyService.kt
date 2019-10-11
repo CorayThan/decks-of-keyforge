@@ -29,6 +29,7 @@ class DeckSynergyService(
         cards.forEach { card ->
             val cardInfo = card.extraCardInfo!!
             cardInfo.traits
+                    // .map { it.trait }
                     .plus(card.traits.mapNotNull { Synergies.fromTrait(it) })
                     .forEach {
                         val cardHouseCount = counts[card.house]

@@ -11,6 +11,7 @@ import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.synergy.SynTraitType
 import coraythan.keyswap.synergy.SynTraitValue
+import coraythan.keyswap.synergy.SynTraitValueRepo
 import coraythan.keyswap.synergy.Synergies
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
@@ -25,33 +26,39 @@ class CardService(
         private val cardRepo: CardRepo,
         private val keyforgeApi: KeyforgeApi,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
+        private val cardIdentifierRepo: CardIdentifierRepo,
+        private val synTraitValueRepo: SynTraitValueRepo,
         private val yamlMapper: YAMLMapper,
         private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
+    private var nonMaverickCachedCards: Map<CardNumberSetPairOld, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
     private var nonMaverickCachedCardsListNoDups: List<Card>? = null
-    lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfoOld>
+    lateinit var extraInfo: Map<CardNumberSetPairOld, ExtraCardInfoOld>
 
     fun loadExtraInfo() {
-        val extraInfosFromFile: List<ExtraCardInfoOld> = yamlMapper.readValue(
+        val read: List<ExtraCardInfoOld> = yamlMapper.readValue(
                 ClassPathResource("extra-deck-info-v$currentDeckRatingVersion.yml").inputStream
         )
+        val extraInfosFromFile: List<ExtraCardInfoOld> = read.map { it.copy(cardNumbers = it.cardNumbers.map {
+            carNum -> CardNumberSetPairOld(carNum.expansion, carNum.cardNumber.padStart(3, '0'))
+        }) }
 
-        // Fix card numbers
+        // Fix card numbers TODO remove this!
         cardRepo.findAll()
                 .filter { it.cardNumber.length < 3 }
                 .forEach { cardRepo.save(it.copy(cardNumber = it.cardNumber.padStart(3, '0'))) }
 
         // save new info if needed
         if (extraCardInfoRepo.count() == 0L) {
-            val newExtraInfo = extraInfosFromFile.map {
-                val cardNumber = it.cardNumbers.first()
-                // val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(cardNumber.expansion, cardNumber.cardNumber.toString().padStart(3, '0'))
-                //       log.info("Found card $card")
-                ExtraCardInfo(
+            extraInfosFromFile.forEach {
+                //                val cardNumber = it.cardNumbers.first()
+//                val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(cardNumber.expansion, cardNumber.cardNumber.toString().padStart(3, '0'))
+//                log.info("Found card $card")
+
+                val info = ExtraCardInfo(
                         expectedAmber = it.expectedAmber,
                         amberControl = it.amberControl,
                         creatureControl = it.creatureControl,
@@ -62,23 +69,46 @@ class CardService(
                         amberProtection = it.amberProtection,
                         houseCheating = it.houseCheating,
                         other = it.other,
-//                         card = card//,
-                        cardNumbers = it.cardNumbers.map { carNum ->
-                            CardIdentifier(
-                                    cardNumber = carNum.cardNumber.toString().padStart(3, '0'),
-                                    expansion = Expansion.values().find { exp -> exp.expansionNumber == carNum.expansion }!!
-                            )
-                        }.toMutableList()//,
-//                        traits = it.traits.map { trait -> SynTraitValue(trait = trait) }.toMutableList(),
-//                        synergies = it.synergies.map { syn -> SynTraitValue(trait = syn.trait, rating = syn.rating, type = syn.type) }.toMutableList()
+                        rating = it.rating
                 )
-            }
-            newExtraInfo.forEach {
-                log.info("card numbers to save ${it.cardNumbers}")
-                extraCardInfoRepo.save(it)
+                val saved = extraCardInfoRepo.save(info)
+
+                it.cardNumbers.forEach { carNum ->
+                    cardIdentifierRepo.save(CardIdentifier(
+                            cardNumber = carNum.cardNumber,
+                            expansion = Expansion.forExpansionNumber(carNum.expansion),
+                            info = saved
+                    ))
+                }
+                it.traits.forEach { trait ->
+                    synTraitValueRepo.save(SynTraitValue(trait = trait, traitInfo = saved))
+                }
+                it.synergies.map { syn ->
+                    synTraitValueRepo.save(SynTraitValue(trait = syn.trait, rating = syn.rating, type = syn.type, synergyInfo = saved))
+                }
+
             }
             log.info("Saved new extra card info")
         }
+
+//        this.extraInfo = extraCardInfoRepo.findAll()
+//                .map {
+//                    when {
+//                        it.traits.containsTrait(Synergies.alpha) ->
+//                            it.copy(synergies = it.synergies.plus(SynTraitValue(Synergies.alpha, -3, SynTraitType.house)))
+//                        it.traits.containsTrait(Synergies.omega) ->
+//                            it.copy(synergies = it.synergies.plus(SynTraitValue(Synergies.omega, -3, SynTraitType.house)))
+//                        else -> it
+//                    }
+//                }
+//                .flatMap { cardInfo ->
+//                    cardInfo.cardNumbers.map {
+//                        it.toNumberSetPair() to cardInfo.copy(
+//                                synergies = cardInfo.synergies.sorted()
+//                        )
+//                    }
+//                }
+//                .toMap()
 
         this.extraInfo = extraInfosFromFile
                 .map {
@@ -116,7 +146,7 @@ class CardService(
         return nonMaverickCachedCardsListNoDups!!
     }
 
-    fun allFullCardsNonMaverickMap(): Map<CardNumberSetPair, Card> {
+    fun allFullCardsNonMaverickMap(): Map<CardNumberSetPairOld, Card> {
         if (nonMaverickCachedCards == null) {
             reloadCachedCards()
         }
@@ -199,11 +229,12 @@ class CardService(
 
     fun reloadCachedCards() {
         val cards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
-            val synTraitsFromTraits = it.traits.mapNotNull { trait ->
-                Synergies.fromTrait(trait)
-            }
-            it.traits.size
-            CardNumberSetPair(it.expansion, it.cardNumber.toInt()) to
+            val synTraitsFromTraits = it.traits
+                    .mapNotNull { trait ->
+                        Synergies.fromTrait(trait)
+                    }
+                    //.map { trait -> SynTraitValue(trait = trait) }
+            CardNumberSetPairOld(it.expansion, it.cardNumber) to
                     if (synTraitsFromTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(traits = it.extraCardInfo!!.traits.plus(synTraitsFromTraits)))
         }.toMap()
 
@@ -218,7 +249,7 @@ class CardService(
     }
 
     private fun fullCardsFromCards(cards: List<Card>) = cards.map {
-        it.copy(extraCardInfo = this.extraInfo[CardNumberSetPair(it.expansion, it.cardNumber.toInt())]
+        it.copy(extraCardInfo = this.extraInfo[CardNumberSetPairOld(it.expansion, it.cardNumber)]
                 ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"))
     }
 

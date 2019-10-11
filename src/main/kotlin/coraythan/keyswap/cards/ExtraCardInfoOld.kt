@@ -5,10 +5,15 @@ import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.Synergies
 import javax.persistence.*
 
+data class CardNumberSetPairOld(
+        val expansion: Int,
+        val cardNumber: String
+)
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExtraCardInfoOld(
 
-        val cardNumbers: List<CardNumberSetPair>,
+        val cardNumbers: List<CardNumberSetPairOld>,
         val rating: Double = 2.0,
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,
@@ -29,6 +34,9 @@ data class ExtraCardInfoOld(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 data class ExtraCardInfo(
+
+        // TODO delete me
+        val rating: Double = 2.0,
 
         val expectedAmber: Double = 0.0,
         val expectedAmberMax: Double? = null,
@@ -59,9 +67,6 @@ data class ExtraCardInfo(
 
         val other: Double = 0.0,
         val otherMax: Double? = null,
-
-        @OneToOne(mappedBy = "extraInfo")
-        val card: Card? = null,
 
         @JsonIgnoreProperties("info")
         @OneToMany(mappedBy = "info", cascade = [CascadeType.ALL])

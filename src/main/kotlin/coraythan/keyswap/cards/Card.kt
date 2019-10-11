@@ -26,6 +26,8 @@ data class Card(
         val flavorText: String? = null,
         val cardNumber: String,
         val expansion: Int,
+        @Enumerated(EnumType.STRING)
+        val expansionEnum: Expansion,
         val maverick: Boolean,
 
         val wins: Int? = 0,
@@ -33,10 +35,6 @@ data class Card(
 
         @ElementCollection
         val traits: Set<String> = setOf(),
-
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn
-        val extraInfo: ExtraCardInfo?,
 
         @Transient
         var extraCardInfo: ExtraCardInfoOld?
@@ -100,14 +98,13 @@ data class KeyforgeCard(
         val is_maverick: Boolean,
         val traits: String? = null
 ) {
-    fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfoOld>, extraInfo: ExtraCardInfo? = null): Card {
+    fun toCard(extraInfoMap: Map<CardNumberSetPairOld, ExtraCardInfoOld>): Card {
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
-
+        val expansionEnum = Expansion.forExpansionNumber(expansion)
         return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
-                card_number, expansion, is_maverick,
-                extraInfo = extraInfo,
-                extraCardInfo = extraInfoMap[CardNumberSetPair(expansion, card_number.toInt())],
+                card_number, expansion, expansionEnum, is_maverick,
+                extraCardInfo = extraInfoMap[CardNumberSetPairOld(expansion, card_number)],
                 traits = traits?.split(" • ")?.toSet() ?: setOf())
     }
 }

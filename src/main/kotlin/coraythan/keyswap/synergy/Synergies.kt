@@ -2,6 +2,7 @@ package coraythan.keyswap.synergy
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.ExtraCardInfo
+import org.springframework.data.repository.CrudRepository
 import java.util.*
 import javax.persistence.*
 
@@ -40,6 +41,10 @@ data class SynTraitValue(
         }
     }
 }
+
+interface SynTraitValueRepo : CrudRepository<SynTraitValue, UUID>
+
+fun Collection<SynTraitValue>.containsTrait(trait: Synergies) = this.find { valueTrait -> valueTrait.trait == trait } != null
 
 fun Set<String>.toSynergies(): List<Synergies> {
     return this.mapNotNull {
