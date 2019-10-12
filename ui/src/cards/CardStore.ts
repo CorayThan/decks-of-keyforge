@@ -3,6 +3,7 @@ import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
+import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { OptionType } from "./CardSearchSuggest"
@@ -20,6 +21,10 @@ export class CardStore {
 
     @observable
     allCards: KCard[] = []
+
+    // Format is ExpansionEnum-cardNumber
+    @observable
+    expansionNumberToCard?: Map<string, KCard>
 
     @observable
     cardNameLowercaseToCard?: Map<string, KCard>
@@ -53,7 +58,7 @@ export class CardStore {
                 &&
                 (filters.armors.length === 0 || filters.armors.indexOf(card.armor) !== -1)
                 &&
-                (filters.expansion == null || card.extraCardInfo.cardNumbers.map(cardNumberSetPair => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
+                (filters.expansion == null || card.extraCardInfo.cardNumbers.map((cardNumberSetPair: CardIdentifier) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
             )
         })
 
@@ -78,7 +83,7 @@ export class CardStore {
             })
         } else if (filters.sort === "SET_NUMBER") {
             filtered = sortBy(filtered, (card: KCard) => {
-                const cardNumbers = card.extraCardInfo.cardNumbers.filter(cardNumber => cardNumber.expansion === filters.expansion)
+                const cardNumbers = card.extraCardInfo.cardNumbers.filter((cardNumber: CardIdentifier) => cardNumber.expansion === filters.expansion)
                 if (cardNumbers.length > 0) {
                     return cardNumbers[0].cardNumber
                 } else {
@@ -113,6 +118,7 @@ export class CardStore {
                 this.cards = basisForCards.slice()
                 this.cardNameLowercaseToCard = new Map()
                 this.cardNameHyphenDelimitedLowercaseToCard = new Map()
+                this.expansionNumberToCard = new Map()
                 this.cardFlavors = []
                 this.cardNames = this.allCards!.map(card => {
                     this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
@@ -120,9 +126,19 @@ export class CardStore {
                     if (card.flavorText) {
                         this.cardFlavors.push(card.flavorText)
                     }
+                    card.extraCardInfo.cardNumbers.forEach((cardIdentifier: CardIdentifier) => {
+                        this.expansionNumberToCard!.set(`${cardIdentifier.expansion}-${cardIdentifier.cardNumber}`, card)
+                    })
                     return {label: card.cardTitle, value: card.cardTitle}
                 })
             })
+    }
+
+    findCardByIdentifier = (cardIdentifier: CardIdentifier) => {
+        if (this.expansionNumberToCard == null) {
+            return undefined
+        }
+        return this.expansionNumberToCard.get(`${cardIdentifier.expansion}-${cardIdentifier.cardNumber}`)
     }
 
     findCardsByName = (searchValue: string) => {

@@ -9,7 +9,7 @@ import javax.persistence.*
 @Entity
 data class SynTraitValue(
         @Enumerated(EnumType.STRING)
-        val trait: Synergies,
+        val trait: SynergyTrait,
         val rating: Int = 2,
         @Enumerated(EnumType.STRING)
         val type: SynTraitType = SynTraitType.anyHouse,
@@ -44,15 +44,15 @@ data class SynTraitValue(
 
 interface SynTraitValueRepo : CrudRepository<SynTraitValue, UUID>
 
-fun Collection<SynTraitValue>.containsTrait(trait: Synergies) = this.find { valueTrait -> valueTrait.trait == trait } != null
+fun Collection<SynTraitValue>.containsTrait(trait: SynergyTrait) = this.find { valueTrait -> valueTrait.trait == trait } != null
 
-fun Set<String>.toSynergies(): List<Synergies> {
+fun Set<String>.toSynergies(): List<SynergyTrait> {
     return this.mapNotNull {
-        Synergies.fromTrait(it)
+        SynergyTrait.fromTrait(it)
     }
 }
 
-enum class Synergies {
+enum class SynergyTrait {
 
     // Amber / keys
     capturesAmberOnEnemies,
@@ -181,7 +181,7 @@ enum class Synergies {
     // todo: Add average creature power. Banner of battle, other things synergize with it? Remove the "power lower than etc."???
 
     companion object {
-        fun fromTrait(trait: String): Synergies? {
+        fun fromTrait(trait: String): SynergyTrait? {
             try {
                 return valueOf(trait.toLowerCase())
             } catch (e: IllegalArgumentException) {

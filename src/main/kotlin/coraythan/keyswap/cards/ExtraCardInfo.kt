@@ -11,8 +11,8 @@ data class CardNumberSetPairOld(
         val expansion: Int,
         val cardNumber: String
 ) {
-        fun padded() = this.copy(cardNumber = cardNumber.padStart(3, '0'))
-        fun toNew() = CardNumberSetPair(Expansion.forExpansionNumber(expansion), this.padded().cardNumber)
+    fun toNew() = CardNumberSetPair(Expansion.forExpansionNumber(expansion), this.padded().cardNumber)
+    private fun padded() = this.copy(cardNumber = cardNumber.padStart(3, '0'))
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -64,12 +64,57 @@ data class ExtraCardInfo(
         @OneToMany(mappedBy = "synergyInfo", cascade = [CascadeType.ALL])
         val synergies: List<SynTraitValue> = listOf(),
 
-        val version: Int,
-        val active: Boolean,
+        val version: Int = -1,
+        val active: Boolean = false,
         val created: ZonedDateTime? = now(),
         val updated: ZonedDateTime? = now(),
+//
+//        @OneToOne(mappedBy = "info")
+//        val spoiler: Spoiler? = null,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
-)
+) {
+    fun readyForCreate(version: Int): ExtraCardInfo {
+        return this.copy(
+                created = now(),
+                updated = now(),
+                version = version,
+                active = false,
+                synergies = listOf(),
+                traits = listOf(),
+                cardNumbers = listOf(),
+                id = -1
+        )
+    }
+
+    fun replaceAercInfo(info: ExtraCardInfo): ExtraCardInfo {
+        return this.copy(
+                updated = now(),
+                rating = info.rating,
+                expectedAmber = info.expectedAmber,
+                expectedAmberMax = info.expectedAmberMax,
+                amberControl = info.amberControl,
+                amberControlMax = info.amberControlMax,
+                creatureControl = info.creatureControl,
+                creatureControlMax = info.creatureControlMax,
+                artifactControl = info.artifactControl,
+                artifactControlMax = info.artifactControlMax,
+                efficiency = info.efficiency,
+                efficiencyMax = info.efficiencyMax,
+                effectivePower = info.effectivePower,
+                effectivePowerMax = info.effectivePowerMax,
+                disruption = info.disruption,
+                disruptionMax = info.disruptionMax,
+                amberProtection = info.amberProtection,
+                amberProtectionMax = info.amberProtectionMax,
+                houseCheating = info.houseCheating,
+                houseCheatingMax = info.houseCheatingMax,
+                other = info.other,
+                otherMax = info.otherMax,
+                traits = listOf(),
+                synergies = listOf()
+        )
+    }
+}

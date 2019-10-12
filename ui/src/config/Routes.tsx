@@ -15,6 +15,7 @@ import { DeckViewPage } from "../decks/DeckViewFull"
 import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleQuery"
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
+import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { LandingPage } from "../landing/LandingPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
@@ -37,8 +38,10 @@ class Routes {
     static myProfile = "/my-profile"
     static cards = "/cards"
     static spoilers = "/spoilers"
+    static extraCardInfo = "/extra-card-infos"
     static createSpoiler = `/spoilers/create`
     static editSpoiler = (spoilerId?: string | number) => `${Routes.spoilers}/edit/${spoilerId == null ? ":spoilerId" : spoilerId}`
+    static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
     static stats = "/stats"
@@ -175,6 +178,11 @@ class KeyRouter extends React.Component {
                             exact={true}
                             path={Routes.editSpoiler()}
                             component={EditSpoilerPage}
+                        />
+                        <LoggedInRoute
+                            exact={true}
+                            path={Routes.editExtraCardInfo()}
+                            component={UpdateExtraCardInfoPage}
                         />
                         <LoggedInRoute
                             exact={true}

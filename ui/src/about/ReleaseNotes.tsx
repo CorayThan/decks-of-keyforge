@@ -14,7 +14,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.17"
+export const latestVersion = "5.18"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,19 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"5.18"}
+                    date={"10/12/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Working on SAS update Step 4 + Bug",
+                            note: "I'm working on the Step 4 of the big SAS update, but there is a bug with some decks recently added and their effective " +
+                                "power. Their effective power and total AERC will be lower than they should be until I can finish Step 4 and update AERC " +
+                                "in general, hopefully later this weekend or early next week."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.17"}
                     date={"10/4/2019"}

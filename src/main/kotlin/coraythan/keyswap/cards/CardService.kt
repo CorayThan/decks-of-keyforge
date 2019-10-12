@@ -8,7 +8,7 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.synergy.SynTraitType
 import coraythan.keyswap.synergy.SynTraitValue
-import coraythan.keyswap.synergy.Synergies
+import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
@@ -30,30 +30,33 @@ class CardService(
     private var nonMaverickCachedCardsList: List<Card>? = null
     private var nonMaverickCachedCardsListNoDups: List<Card>? = null
     lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfo>
+    lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
 
     fun loadExtraInfo() {
-
-        this.extraInfo = extraCardInfoRepo.findAll()
-                .map {
-                    when {
-                        it.traits.containsTrait(Synergies.alpha) ->
-                            it.copy(synergies = it.synergies.plus(SynTraitValue(Synergies.alpha, -3, SynTraitType.house)))
-                        it.traits.containsTrait(Synergies.omega) ->
-                            it.copy(synergies = it.synergies.plus(SynTraitValue(Synergies.omega, -3, SynTraitType.house)))
-                        else -> it
-                    }
-                }
-                .flatMap { cardInfo ->
-                    cardInfo.cardNumbers.map {
-                        it.toNumberSetPair() to cardInfo.copy(
-                                synergies = cardInfo.synergies.sorted()
-                        )
-                    }
-                }
-                .toMap()
+        this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
         this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
+        this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
     }
+
+    private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
+            .map {
+                when {
+                    it.traits.containsTrait(SynergyTrait.alpha) && !it.synergies.containsTrait(SynergyTrait.alpha) ->
+                        it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.alpha, -3, SynTraitType.house)))
+                    it.traits.containsTrait(SynergyTrait.omega) && !it.synergies.containsTrait(SynergyTrait.omega) ->
+                        it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.omega, -3, SynTraitType.house)))
+                    else -> it
+                }
+            }
+            .flatMap { cardInfo ->
+                cardInfo.cardNumbers.map {
+                    it.toNumberSetPair() to cardInfo.copy(
+                            synergies = cardInfo.synergies.sorted()
+                    )
+                }
+            }
+            .toMap()
 
     fun findByExpansionCardNumberHouse(expansion: Int, cardNumber: String, house: House) = cardRepo.findByExpansionAndCardNumberAndHouse(expansion, cardNumber, house)
 
@@ -90,7 +93,7 @@ class CardService(
 
     fun cardsForDeck(deck: Deck): List<Card> {
         val cards = cardsFromCardIds(deck.cardIds, deck.keyforgeId)
-        if (cards.size != 36) throw IllegalStateException("Why doesn't this deck have cards? $deck")
+        check(cards.size == 36) { "Why doesn't this deck have cards? $deck" }
         return cards
     }
 
@@ -156,32 +159,32 @@ class CardService(
         val cards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
             val synTraitsFromTraits = it.traits
                     .mapNotNull { trait ->
-                        Synergies.fromTrait(trait)
+                        SynergyTrait.fromTrait(trait)
                     }
                     .map { trait -> SynTraitValue(trait = trait) }
             CardNumberSetPair(it.expansionEnum, it.cardNumber) to
                     if (synTraitsFromTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(traits = it.extraCardInfo!!.traits.plus(synTraitsFromTraits)))
         }.toMap()
-
-        nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key]) }.toMap()
+        nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key], nextExtraCardInfo = nextExtraInfo[it.key]) }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
                 ?.map { it.cardTitle to it }
                 ?.toMap()?.values
                 ?.toList()
                 ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
-
     }
 
     private fun fullCardsFromCards(cards: List<Card>) = cards.map {
-        it.copy(extraCardInfo = this.extraInfo[CardNumberSetPair(it.expansionEnum, it.cardNumber)]
-                ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"))
+        val cardNumber = CardNumberSetPair(it.expansionEnum, it.cardNumber)
+        it.copy(
+                extraCardInfo = this.extraInfo[cardNumber]
+                        ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"),
+                nextExtraCardInfo = this.nextExtraInfo[cardNumber]
+        )
     }
 
     private fun cardsFromCardIds(cardIdsString: String, deckId: String? = null): List<Card> {
-        if (cardIdsString.isBlank()) {
-            throw IllegalArgumentException("Card id string was blank! deck id: $deckId")
-        }
+        require(!cardIdsString.isBlank()) { "Card id string was blank! deck id: $deckId" }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->

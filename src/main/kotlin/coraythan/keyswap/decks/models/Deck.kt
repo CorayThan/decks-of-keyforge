@@ -11,7 +11,7 @@ import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
-import coraythan.keyswap.synergy.Synergies
+import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
@@ -139,11 +139,11 @@ data class Deck(
                 upgradeCount = upgradeCount,
 
                 cardDrawCount = cards?.filter {
-                    it.extraCardInfo?.traits?.containsTrait(Synergies.drawsCards) == true
-                            || it.extraCardInfo?.traits?.containsTrait(Synergies.increasesHandSize) == true
+                    it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
+                            || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
                 }?.size,
-                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(Synergies.archives) == true }?.size,
-                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(Synergies.forgesKeys) == true }?.size,
+                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives) == true }?.size,
+                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size,
                 rawAmber = rawAmber,
                 totalArmor = totalArmor,
 

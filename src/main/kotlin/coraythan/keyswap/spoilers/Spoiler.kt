@@ -38,6 +38,9 @@ data class Spoiler(
         val other: Double = 0.0,
 
         val active: Boolean = true,
+//
+//        @OneToOne
+//        val info: ExtraCardInfo? = null,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

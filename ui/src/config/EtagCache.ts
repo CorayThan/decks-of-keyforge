@@ -4,6 +4,7 @@ import { log } from "./Utils"
 const cacheableEndpoints = [
     "/api/userdeck/secured/for-user",
     "/api/cards",
+    "/api/spoilers",
     "/api/stats",
     "/api/sellers/featured",
 ]

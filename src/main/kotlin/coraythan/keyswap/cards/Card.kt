@@ -37,7 +37,10 @@ data class Card(
         val traits: Set<String> = setOf(),
 
         @Transient
-        var extraCardInfo: ExtraCardInfo?
+        var extraCardInfo: ExtraCardInfo?,
+
+        @Transient
+        var nextExtraCardInfo: ExtraCardInfo? = null
 ) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int {
@@ -50,7 +53,11 @@ data class Card(
     }
 
     val effectivePower: Int
-        get() = extraCardInfo?.effectivePower ?: power + armor
+        get() = if (extraCardInfo?.effectivePower != 0) {
+            extraCardInfo?.effectivePower ?: 0
+        } else {
+            power + armor
+        }
 
     val aercScore: Double
         get() {

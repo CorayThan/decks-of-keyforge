@@ -1,7 +1,7 @@
 import { HasAerc } from "../aerc/HasAerc"
-import { BackendExpansion } from "../expansions/Expansions"
+import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { House } from "../houses/House"
-import { SynTraitValue, synTraitValueToString } from "../synergy/SynTraitValue"
+import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
@@ -55,28 +55,6 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         houseCheating,
         other
     }
-}
-
-export interface ExtraCardInfo {
-    cardNumbers: CardIdentifier[]
-    rating: number
-    expectedAmber: number
-    amberControl: number
-    creatureControl: number
-    artifactControl: number
-    efficiency: number
-    disruption: number
-    amberProtection: number
-    houseCheating: number
-    other: number
-
-    traits: SynTraitValue[]
-    synergies: SynTraitValue[]
-}
-
-export interface CardIdentifier {
-    expansion: BackendExpansion
-    cardNumber: string
 }
 
 const cardNameReplacementRegex = /[^\d\w\s]/g

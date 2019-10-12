@@ -43,5 +43,6 @@ data class CardIdentifier(
     fun toNumberSetPair() = CardNumberSetPair(expansion, cardNumber)
 }
 
-interface CardIdentifierRepo : JpaRepository<CardIdentifier, Long>, QuerydslPredicateExecutor<CardIdentifier>
-
+interface CardIdentifierRepo : JpaRepository<CardIdentifier, Long>, QuerydslPredicateExecutor<CardIdentifier> {
+    fun findByExpansionAndCardNumber(expansion: Expansion, cardNumber: String): List<CardIdentifier>
+}

@@ -13,9 +13,11 @@ import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { LinkButton } from "../mui-restyled/LinkButton"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 import { cardStore } from "./CardStore"
 import { findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
 import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
@@ -118,6 +120,16 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                 <CardTraits card={card}/>
                 {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
                 <CardSynergies card={card}/>
+                {userStore.contentCreator && (
+                    <>
+                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                        <LinkButton
+                            to={Routes.editExtraCardInfo(extraCardInfo.id)}
+                        >
+                            Edit
+                        </LinkButton>
+                    </>
+                )}
             </div>
         </GraySidebar>
     )
