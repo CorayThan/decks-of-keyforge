@@ -64,6 +64,7 @@ enum class SynergyTrait {
     damagesMultipleEnemies,
     damagesAllEnemies,
     damagesFriendlyCreatures,
+    distributableDamage, // eg sack of coins, cooperative hunting
     dealsDamage,
     preventsDamage,
 
@@ -121,6 +122,9 @@ enum class SynergyTrait {
     revealsHand,
     shufflesDiscard,
 
+    // Playing
+    dangerousRandomPlay,
+
     // Houses
     controlsHouseChoice,
     usesCreaturesOutOfHouse,
@@ -157,12 +161,14 @@ enum class SynergyTrait {
     power3OrHigherCreatures, // 13+=1/4, 14+=1/2, 15+=3/4, 17+=1
     power3OrLowerCreatures, // 9+=1/4, 10+=1/2, 11+=3/4, 12+=1
     power2OrLowerCreatures, // 4+=1/4, 5+=1/2, 6+=3/4, 7+=1
+    power1Creatures, // 1=1/4, 2=1/2, 3=3/4, 4+=1
     highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
     lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
     hasMars,
     highTotalArmor, // 4=1/4, 5=1/2, 7=3/4, 9=1
 
     // Deck or House only traits
+    upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
     highTotalCreaturePower, // for house: 22+=1/4, 24+=1/2, 26+=3/4, 28+=1
     // for deck: 68+=1/4, 73+=1/2, 78+=3/4, 84+=1
 

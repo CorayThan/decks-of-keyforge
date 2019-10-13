@@ -137,6 +137,7 @@ class DeckSynergyService(
                 val totalCreaturePower = cardsForHouse.map { it.power }.sum()
                 val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
                 val totalExpectedAmber = cardsForHouse.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
+                val upgradeCount = cardsForHouse.filter { it.cardType == CardType.Upgrade }.size
 
                 if (totalExpectedAmber > 7) houseTraits[SynergyTrait.highExpectedAmber] = when {
                     totalExpectedAmber > 10 -> 4
@@ -155,6 +156,13 @@ class DeckSynergyService(
                     totalCreaturePower > 23 -> 4
                     totalCreaturePower > 25 -> 3
                     totalCreaturePower > 27 -> 2
+                    else -> 1
+                }
+
+                if (upgradeCount > 0) houseTraits[SynergyTrait.upgradeCount] = when {
+                    upgradeCount > 3 -> 4
+                    upgradeCount > 2 -> 3
+                    upgradeCount > 1 -> 2
                     else -> 1
                 }
 
@@ -228,6 +236,20 @@ class DeckSynergyService(
             else -> 1
         }
 
+        if (deck.artifactCount < 4) traits[SynergyTrait.lowArtifactCount] = when {
+            deck.artifactCount < 1 -> 4
+            deck.artifactCount < 2 -> 3
+            deck.artifactCount < 3 -> 2
+            else -> 1
+        }
+
+        if (deck.upgradeCount > 0) traits[SynergyTrait.upgradeCount] = when {
+            deck.upgradeCount > 3 -> 4
+            deck.upgradeCount > 2 -> 3
+            deck.upgradeCount > 1 -> 2
+            else -> 1
+        }
+
         if (deck.creatureCount > 16) traits[SynergyTrait.highCreatureCount] = when {
             deck.creatureCount > 20 -> 4
             deck.creatureCount > 18 -> 3
@@ -242,11 +264,19 @@ class DeckSynergyService(
             else -> 1
         }
 
+        val power1 = cards.filter { it.cardType == CardType.Creature && it.power == 1 }.size
         val power2OrLower = cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size
         val power3OrLower = cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size
         val power3OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size
         val power4OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size
         val power5OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size
+
+        if (power1 > 0) traits[SynergyTrait.power1Creatures] = when {
+            power1 > 3 -> 4
+            power1 > 2 -> 3
+            power1 > 1 -> 2
+            else -> 1
+        }
 
         if (power2OrLower > 3) traits[SynergyTrait.power2OrLowerCreatures] = when {
             power2OrLower > 6 -> 4
