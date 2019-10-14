@@ -54,6 +54,20 @@ SET CLIENT_ENCODING TO 'utf8';
 Find it in downloads 
 
 
+## Dump the manual card data tables
+
+Delete preexisting stuff
+```
+delete from card_identifier;
+delete from syn_trait_value;
+delete from extra_card_info;
+```
+
+```
+pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan --column-inserts -a -t card_identifier -t extra_card_info -t spoiler -t syn_trait_value -f extra-info.sql keyswap
+// enter password: crazysal...
+```
+
 ## Kill long queries stuff
 ```
 SELECT pg_cancel_backend(pg_stat_activity.pid)

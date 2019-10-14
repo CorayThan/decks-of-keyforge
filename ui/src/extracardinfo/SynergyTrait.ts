@@ -5,6 +5,7 @@ export enum SynergyTrait {
     capturesAmber = "capturesAmber",
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
+    scalingSteal = "scalingSteal",
 
     // Damage
     damagesMultipleEnemies = "damagesMultipleEnemies",

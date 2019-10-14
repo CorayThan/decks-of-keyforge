@@ -59,6 +59,7 @@ enum class SynergyTrait {
     capturesAmber,
     stealsAmber,
     increasesKeyCost,
+    scalingSteal,
 
     // Damage
     damagesMultipleEnemies,

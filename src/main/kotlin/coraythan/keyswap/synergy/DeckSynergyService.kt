@@ -38,80 +38,82 @@ class DeckSynergyService(
                         cardHouseCount.incrementValue(it)
                     }
         }
-        val synergyCombos: List<SynergyCombo> = cards.map { card ->
-            val cardInfo = card.extraCardInfo ?: throw IllegalStateException("Oh no, ${card.cardTitle} had null extra info! $card")
-            val positiveSynergies = cardInfo.synergies.filter { it.rating > 0 }
-            val negativeSynergies = cardInfo.synergies.filter { it.rating < 0 }
-            val maxRating = positiveSynergies.maxBy { it.rating }?.rating ?: 0
-            val minRating = negativeSynergies.minBy { it.rating }?.rating ?: 0
-            val maxSynergy = when (maxRating) {
-                0 -> 0.0
-                1 -> 0.5
-                else -> maxRating - 1.0
-            }
-            val minSynergy = when (minRating) {
-                0 -> 0.0
-                -1 -> -0.5
-                else -> minRating + 1.0
-            }
-            val matchedTraits: List<Pair<SynergyTrait, Double>> = cardInfo.synergies.map { synTraitValue ->
-                val matchWith = when {
-                    synTraitValue.type == SynTraitType.anyHouse -> counts[null]!!
-                    synTraitValue.type == SynTraitType.house -> counts[card.house]!!
-                    else -> {
-                        val countsOutOfHouse: MutableMap<SynergyTrait, Int> = mutableMapOf()
-                        val toCombine = counts.keys.filter { it != null && it != card.house }.map { counts[it]!! }
-                        toCombine.forEach { synMap ->
-                            synMap.forEach {
-                                val preValue = countsOutOfHouse[it.key]
-                                if (preValue == null) {
-                                    countsOutOfHouse[it.key] = it.value
-                                } else {
-                                    countsOutOfHouse[it.key] = preValue + it.value
+        val synergyCombos: List<SynergyCombo> = cards
+                .filter { it.extraCardInfo?.synergies?.isNotEmpty() == true }
+                .map { card ->
+                    val cardInfo = card.extraCardInfo ?: throw IllegalStateException("Oh no, ${card.cardTitle} had null extra info! $card")
+                    val positiveSynergies = cardInfo.synergies.filter { it.rating > 0 }
+                    val negativeSynergies = cardInfo.synergies.filter { it.rating < 0 }
+                    val maxRating = positiveSynergies.maxBy { it.rating }?.rating ?: 0
+                    val minRating = negativeSynergies.minBy { it.rating }?.rating ?: 0
+                    val maxSynergy = when (maxRating) {
+                        0 -> 0.0
+                        1 -> 0.5
+                        else -> maxRating - 1.0
+                    }
+                    val minSynergy = when (minRating) {
+                        0 -> 0.0
+                        -1 -> -0.5
+                        else -> minRating + 1.0
+                    }
+                    val matchedTraits: List<Pair<SynergyTrait, Double>> = cardInfo.synergies.map { synTraitValue ->
+                        val matchWith = when {
+                            synTraitValue.type == SynTraitType.anyHouse -> counts[null]!!
+                            synTraitValue.type == SynTraitType.house -> counts[card.house]!!
+                            else -> {
+                                val countsOutOfHouse: MutableMap<SynergyTrait, Int> = mutableMapOf()
+                                val toCombine = counts.keys.filter { it != null && it != card.house }.map { counts[it]!! }
+                                toCombine.forEach { synMap ->
+                                    synMap.forEach {
+                                        val preValue = countsOutOfHouse[it.key]
+                                        if (preValue == null) {
+                                            countsOutOfHouse[it.key] = it.value
+                                        } else {
+                                            countsOutOfHouse[it.key] = preValue + it.value
+                                        }
+                                    }
                                 }
+                                countsOutOfHouse
                             }
                         }
-                        countsOutOfHouse
+                        // Max of 4 matches
+                        val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it } -
+                                (if (cardInfo.traits.containsTrait(synTraitValue.trait)) 1 else 0)
+                        synTraitValue.trait to synTraitValue.synergyValue(matches)
                     }
+                    val synergy = matchedTraits.map { it.second }.filter { it > 0 }.sum()
+                    val antisynergy = matchedTraits.map { it.second }.filter { it < 0 }.sum()
+                    val netSynergy = synergy + antisynergy
+                    val limitedNetSynergy = when {
+                        netSynergy > maxSynergy -> maxSynergy
+                        netSynergy < minSynergy -> minSynergy
+                        else -> netSynergy
+                    }
+                    val matchedSynergies = matchedTraits.filter { it.second > 0 }.map { it.first }
+                    val matchedAntisynergies = matchedTraits.filter { it.second < 0 }.map { it.first }
+                    SynergyCombo(
+                            house = card.house,
+                            cardName = card.cardTitle,
+                            synergies = matchedSynergies.toSet(),
+                            antisynergies = matchedAntisynergies.toSet(),
+                            netSynergy = limitedNetSynergy,
+                            synergy = synergy,
+                            antisynergy = antisynergy,
+                            cardRating = card.extraCardInfo!!.rating,
+
+                            amberControl = card.extraCardInfo?.amberControl ?: 0.0,
+                            expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,
+                            creatureControl = card.extraCardInfo?.creatureControl ?: 0.0,
+                            artifactControl = card.extraCardInfo?.artifactControl ?: 0.0,
+                            efficiency = card.extraCardInfo?.efficiency ?: 0.0,
+                            effectivePower = card.effectivePower,
+
+                            disruption = card.extraCardInfo?.disruption ?: 0.0,
+                            houseCheating = card.extraCardInfo?.houseCheating ?: 0.0,
+                            amberProtection = card.extraCardInfo?.amberProtection ?: 0.0,
+                            other = card.extraCardInfo?.other ?: 0.0
+                    )
                 }
-                // Max of 4 matches
-                val matches = (matchWith[synTraitValue.trait] ?: 0).let { if (it > 4) 4 else it } -
-                        (if (cardInfo.traits.containsTrait(synTraitValue.trait)) 1 else 0)
-                synTraitValue.trait to synTraitValue.synergyValue(matches)
-            }
-            val synergy = matchedTraits.map { it.second }.filter { it > 0 }.sum()
-            val antisynergy = matchedTraits.map { it.second }.filter { it < 0 }.sum()
-            val netSynergy = synergy + antisynergy
-            val limitedNetSynergy = when {
-                netSynergy > maxSynergy -> maxSynergy
-                netSynergy < minSynergy -> minSynergy
-                else -> netSynergy
-            }
-            val matchedSynergies = matchedTraits.filter { it.second > 0 }.map { it.first }
-            val matchedAntisynergies = matchedTraits.filter { it.second < 0 }.map { it.first }
-            SynergyCombo(
-                    house = card.house,
-                    cardName = card.cardTitle,
-                    synergies = matchedSynergies.toSet(),
-                    antisynergies = matchedAntisynergies.toSet(),
-                    netSynergy = limitedNetSynergy,
-                    synergy = synergy,
-                    antisynergy = antisynergy,
-                    cardRating = card.extraCardInfo!!.rating,
-
-                    amberControl = card.extraCardInfo?.amberControl ?: 0.0,
-                    expectedAmber = card.extraCardInfo?.expectedAmber ?: 0.0,
-                    creatureControl = card.extraCardInfo?.creatureControl ?: 0.0,
-                    artifactControl = card.extraCardInfo?.artifactControl ?: 0.0,
-                    efficiency = card.extraCardInfo?.efficiency ?: 0.0,
-                    effectivePower = card.effectivePower,
-
-                    disruption = card.extraCardInfo?.disruption ?: 0.0,
-                    houseCheating = card.extraCardInfo?.houseCheating ?: 0.0,
-                    amberProtection = card.extraCardInfo?.amberProtection ?: 0.0,
-                    other = card.extraCardInfo?.other ?: 0.0
-            )
-        }
 
         val synergyValues = synergyCombos.map { it.netSynergy }
         val antisynergyRating = synergyValues.filter { it < 0 }.sum()
