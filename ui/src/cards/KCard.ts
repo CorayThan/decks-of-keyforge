@@ -40,8 +40,36 @@ export const winPercentForCard = (card: KCard): number | undefined => {
 
 export const hasAercFromCard = (card: KCard): HasAerc => {
     const {extraCardInfo, effectivePower, aercScore} = card
-    const {amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other} = extraCardInfo
+    const {
+        amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other,
+        amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, amberProtectionMax, disruptionMax, houseCheatingMax, otherMax
+    } = extraCardInfo
 
+    var maxAerc: number | undefined = 0
+    if (amberControlMax != null && amberControlMax > 0) maxAerc += amberControlMax
+    if (expectedAmberMax != null && expectedAmberMax > 0) maxAerc += expectedAmberMax
+    if (creatureControlMax != null && creatureControlMax > 0) maxAerc += creatureControlMax
+    if (artifactControlMax != null && artifactControlMax > 0) maxAerc += artifactControlMax
+    if (efficiencyMax != null && efficiencyMax > 0) maxAerc += efficiencyMax
+    if (amberProtectionMax != null && amberProtectionMax > 0) maxAerc += amberProtectionMax
+    if (disruptionMax != null && disruptionMax > 0) maxAerc += disruptionMax
+    if (houseCheatingMax != null && houseCheatingMax > 0) maxAerc += houseCheatingMax
+    if (otherMax != null && otherMax > 0) maxAerc += otherMax
+    
+    if (maxAerc > 0) {
+        if (amberControlMax == null || amberControlMax < 0.01) maxAerc += amberControl
+        if (expectedAmberMax == null || expectedAmberMax < 0.01) maxAerc += expectedAmber
+        if (creatureControlMax == null || creatureControlMax < 0.01) maxAerc += creatureControl
+        if (artifactControlMax == null || artifactControlMax < 0.01) maxAerc += artifactControl
+        if (efficiencyMax == null || efficiencyMax < 0.01) maxAerc += efficiency
+        if (amberProtectionMax == null || amberProtectionMax < 0.01) maxAerc += amberProtection
+        if (disruptionMax == null || disruptionMax < 0.01) maxAerc += disruption
+        if (houseCheatingMax == null || houseCheatingMax < 0.01) maxAerc += houseCheating
+        if (otherMax == null || otherMax < 0.01) maxAerc += other
+    } else {
+        maxAerc = undefined
+    }
+    
     return {
         amberControl,
         expectedAmber,
@@ -53,7 +81,17 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         amberProtection,
         disruption,
         houseCheating,
-        other
+        other,
+        amberControlMax, 
+        expectedAmberMax, 
+        creatureControlMax, 
+        artifactControlMax, 
+        efficiencyMax, 
+        amberProtectionMax, 
+        disruptionMax, 
+        houseCheatingMax, 
+        otherMax,
+        aercScoreMax: maxAerc
     }
 }
 

@@ -177,7 +177,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
             }}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <HouseBanner houses={houses} size={48} vertical={true}/>
-                    <DeckScoreView deck={deck} style={{marginLeft: spacing(6)}}/>
+                    <DeckScoreView deck={{...deck, ...deck.synergies!}} style={{marginLeft: spacing(6)}}/>
                 </div>
                 <OrganizedPlayStats deck={deck} style={{marginTop: spacing(2)}}/>
             </div>
@@ -196,7 +196,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                     <OrganizedPlayStats deck={deck}/>
                 </div>
                 <UnstyledLink to={AboutSubPaths.sas}>
-                    <DeckScoreView deck={deck}/>
+                    <DeckScoreView deck={{...deck, ...deck.synergies!}}/>
                 </UnstyledLink>
             </div>
         )

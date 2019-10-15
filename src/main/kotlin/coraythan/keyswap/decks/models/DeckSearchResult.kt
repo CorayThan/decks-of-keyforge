@@ -3,6 +3,7 @@ package coraythan.keyswap.decks.models
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.synergy.DeckSynergyInfo
 
 // It takes a long time to load all the crap in hibernate, so avoid that.
 data class DeckSearchResult(
@@ -64,5 +65,7 @@ data class DeckSearchResult(
 
         val deckSaleInfo: List<DeckSaleInfo>? = null,
 
-        val owners: List<String>? = null
+        val owners: List<String>? = null,
+
+        val synergies: DeckSynergyInfo? = null
 )

@@ -33,7 +33,7 @@ class CardService(
     lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
 
-    val publishAercVersion = 1
+    val publishAercVersion = 2
 
     fun loadExtraInfo() {
         this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
@@ -41,14 +41,14 @@ class CardService(
         this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
 
         if (activeAercVersion < publishAercVersion) {
-            log.debug("Active aerc version $activeAercVersion published verison $publishAercVersion publishing")
+            log.info("Active aerc version $activeAercVersion published verison $publishAercVersion publishing")
             this.activeAercVersion = publishAercVersion
             val toPublish = this.nextExtraInfo
             val potentiallyUnpublish = this.extraInfo
             val toSave = toPublish.map { it.value.copy(active = true) }
             val unpublish = toPublish.mapNotNull { potentiallyUnpublish[it.key]?.copy(active = false) }
             extraCardInfoRepo.saveAll(toSave.plus(unpublish))
-            log.debug("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +
+            log.info("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +
                     "${toSave.size} unpublished ${unpublish.size}")
             this.loadExtraInfo()
         }

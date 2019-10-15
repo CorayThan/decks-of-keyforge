@@ -13,5 +13,18 @@ export interface HasAerc {
     houseCheating: number
     other: number
     aercScore: number
+
+    amberControlMax?: number
+    expectedAmberMax?: number
+    artifactControlMax?: number
+    creatureControlMax?: number
+    efficiencyMax?: number
+    effectivePowerMax?: number
+    amberProtectionMax?: number
+    disruptionMax?: number
+    houseCheatingMax?: number
+    otherMax?: number
+    aercScoreMax?: number
+    
     searchResultCards?: KCard[]
 }

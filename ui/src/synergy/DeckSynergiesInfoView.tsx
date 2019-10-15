@@ -28,16 +28,17 @@ interface DeckSynergiesInfoViewProps {
 export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoViewProps> {
 
     componentDidMount(): void {
-        synergiesTableViewStore.synergyCombos = this.props.synergies.deckSynergyInfo.synergyCombos as IObservableArray<SynergyCombo>
+        synergiesTableViewStore.synergyCombos = this.props.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
     }
 
     componentWillReceiveProps(nextProps: Readonly<DeckSynergiesInfoViewProps>): void {
-        synergiesTableViewStore.synergyCombos = nextProps.synergies.deckSynergyInfo.synergyCombos as IObservableArray<SynergyCombo>
+        synergiesTableViewStore.synergyCombos = nextProps.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
     }
 
     render() {
         const sasPercentile = this.props.synergies.deck.sasPercentile
-        const {deckSynergyInfo, antisynergyPercentile, synergyPercentile, cardRatingPercentile} = this.props.synergies
+        const {deck, antisynergyPercentile, synergyPercentile, cardRatingPercentile} = this.props.synergies
+        const deckSynergyInfo = deck.synergies!
         const {synergyCombos} = deckSynergyInfo
         return (
             <KeyCard
@@ -127,7 +128,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                         <CardAsLine card={{cardTitle: combo.cardName}}/>
                         {combo.copies === 1 ? "" : ` x ${combo.copies}`}
                     </TableCell>
-                    <TableCell>{combo.cardRating} / {combo.netSynergy}</TableCell>
+                    <TableCell>{combo.aercScore} / {combo.netSynergy}</TableCell>
                 </>
             )
         } else {
@@ -137,19 +138,16 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                     <TableCell>{combo.copies}</TableCell>
                     <TableCell>
                         <div style={{display: "flex", alignItems: "center"}}>
-                            {combo.cardRating}
-                            <CardQualityIcon quality={combo.cardRating} style={{marginLeft: spacing(1)}}/>
+                            {combo.aercScore}
+                            <CardQualityIcon quality={combo.aercScore} style={{marginLeft: spacing(1)}}/>
                         </div>
                     </TableCell>
                     <TableCell>{combo.netSynergy}</TableCell>
-                    <TableCell>{combo.cardRating + combo.netSynergy}</TableCell>
+                    <TableCell>{combo.aercScore + combo.netSynergy}</TableCell>
                     <TableCell>
                         <div style={{display: "flex", flexWrap: "wrap", maxWidth: 280}}>
                             {combo.synergies.map(synergy => (
-                                <TraitBubble key={synergy} name={startCase(synergy)} positive={true}/>
-                            ))}
-                            {combo.antisynergies.map(antisynergy => (
-                                <TraitBubble key={antisynergy} name={startCase(antisynergy)} positive={false}/>
+                                <TraitBubble key={synergy.trait} name={startCase(synergy.trait)} positive={synergy.percentSynergized > 0}/>
                             ))}
                         </div>
                     </TableCell>
@@ -180,7 +178,7 @@ class SynergiesTableViewStore {
         if (this.synergyCombos) {
             if (synergiesTableViewStore.activeTableSort === "value") {
                 this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), (synergy: SynergyCombo) => {
-                    return synergy.netSynergy + synergy.cardRating
+                    return synergy.netSynergy + synergy.aercScore
                 }))
             } else {
                 this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), synergiesTableViewStore.activeTableSort))

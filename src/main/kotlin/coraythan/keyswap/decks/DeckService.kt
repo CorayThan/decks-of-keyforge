@@ -29,7 +29,6 @@ import javax.persistence.EntityManager
 @Service
 class DeckService(
         private val cardService: CardService,
-        private val deckSynergyService: DeckSynergyService,
         private val deckRepo: DeckRepo,
         private val userService: KeyUserService,
         private val currentUserService: CurrentUserService,
@@ -131,11 +130,13 @@ class DeckService(
                 .fetch()
 
         val decks = deckResults.map {
+            val cards = cardService.cardsForDeck(it)
             val searchResult = it.toDeckSearchResult(
                     cardService.deckSearchResultCardsFromCardIds(it.cardIds),
-                    cardService.cardsForDeck(it),
+                    cards,
                     stats = statsService.findCurrentStats(),
-                    crucibleWins = deckWinsService.crucibleWins
+                    crucibleWins = deckWinsService.crucibleWins,
+                    synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
             if (filters.forSale || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(
@@ -366,16 +367,16 @@ class DeckService(
             throw BadRequestException("Request for deck with synergies with bad id: $keyforgeId")
         }
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return null
-        val synergies = deckSynergyService.fromDeck(deck)
         val stats = statsService.findCurrentStats()
+        val cards = cardService.cardsForDeck(deck)
         return DeckWithSynergyInfo(
                 deck = deck.toDeckSearchResult(
                         cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
-                        cardService.cardsForDeck(deck),
+                        cards,
                         stats = statsService.findCurrentStats(),
-                        crucibleWins = deckWinsService.crucibleWins
+                        crucibleWins = deckWinsService.crucibleWins,
+                        synergies = DeckSynergyService.fromDeckWithCards(deck, cards)
                 ),
-                deckSynergyInfo = synergies,
                 cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1.0,
                 synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
                 antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0
@@ -424,7 +425,13 @@ class DeckService(
                 .where(predicate)
                 .limit(5)
                 .fetch()
-                .map { it.toDeckSearchResult(stats = statsService.findCurrentStats()) }
+                .map {
+                    val cards = cardService.cardsForDeck(it)
+                    it.toDeckSearchResult(
+                            stats = statsService.findCurrentStats(),
+                            synergies = DeckSynergyService.fromDeckWithCards(it, cards)
+                    )
+                }
     }
 
 }

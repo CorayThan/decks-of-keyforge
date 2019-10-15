@@ -93,10 +93,10 @@ export class SasAndAerc extends React.Component {
                         <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
                         <DeckScorePill
                             deck={{
-                                cardsRating: 75,
-                                sasRating: 80,
-                                synergyRating: 10,
-                                antisynergyRating: 5,
+                                rawAerc: 70,
+                                sasRating: 75,
+                                synergyRating: 4,
+                                antisynergyRating: 1,
                                 sasPercentile: 75.0
                             }}
                         />,

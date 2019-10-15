@@ -18,11 +18,11 @@ export enum DeckScoreSize {
 
 interface DeckScoreViewProps {
     deck: {
-        cardsRating: number,
-        previousSasRating?: number,
+        rawAerc: number,
         sasRating: number,
         synergyRating: number,
         antisynergyRating: number,
+        previousSasRating?: number,
         sasPercentile?: number,
         expansion?: BackendExpansion
     }
@@ -51,7 +51,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     const {small, deck} = props
     const {
-        cardsRating,
+        rawAerc,
         previousSasRating,
         sasRating,
         synergyRating,
@@ -75,7 +75,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     return (
         <div style={{display: "flex"}}>
             <div style={props.style}>
-                <RatingRow value={cardsRating} name={"CARD RATING"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                <RatingRow value={rawAerc} name={"AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <div style={{borderBottom: "1px solid rgba(255,255,255)"}}/>

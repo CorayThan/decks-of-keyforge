@@ -2,13 +2,12 @@ import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
 import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
-import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
+import { DeckSynergyInfo, SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { UserDeck } from "../userdeck/UserDeck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
 export interface DeckWithSynergyInfo {
     deck: Deck
-    deckSynergyInfo: DeckSynergyInfo
     cardRatingPercentile: number
     synergyPercentile: number
     antisynergyPercentile: number
@@ -68,9 +67,41 @@ export interface Deck extends HasAerc {
     deckSaleInfo?: DeckSaleInfo[]
 
     owners?: string[]
+
+    synergies?: DeckSynergyInfo
+
 }
 
 export class DeckUtils {
+
+    static hasAercFromDeck = (deck: Deck): HasAerc => {
+        if (deck.synergies == null) {
+            return deck
+        }
+        return deck.synergies.synergyCombos.reduce((combo1: SynergyCombo, combo2: SynergyCombo) => {
+            return {
+                amberControl: combo1.amberControl * combo1.copies + combo2.amberControl * combo2.copies,
+                expectedAmber: combo1.expectedAmber * combo1.copies + combo2.expectedAmber * combo2.copies,
+                artifactControl: combo1.artifactControl * combo1.copies + combo2.artifactControl * combo2.copies,
+                creatureControl: combo1.creatureControl * combo1.copies + combo2.creatureControl * combo2.copies,
+                efficiency: combo1.efficiency * combo1.copies + combo2.efficiency * combo2.copies,
+                effectivePower: combo1.effectivePower * combo1.copies + combo2.effectivePower * combo2.copies,
+                amberProtection: combo1.amberProtection * combo1.copies + combo2.amberProtection * combo2.copies,
+                disruption: combo1.disruption * combo1.copies + combo2.disruption * combo2.copies,
+                houseCheating: combo1.houseCheating * combo1.copies + combo2.houseCheating * combo2.copies,
+                other: combo1.other * combo1.copies + combo2.other * combo2.copies,
+                copies: 1,
+                house: House.Brobnar,
+                cardName: "",
+                synergies: [],
+                netSynergy: 0,
+                synergy: 0,
+                antisynergy: 0,
+                aercScore: combo1.aercScore * combo1.copies + combo2.aercScore * combo2.copies,
+            }
+        })
+    }
+
     static cardsInHouses = (deck: Deck) => {
         const cardsByHouse: { house: House, cards: KCard[] }[] = []
         deck.houses

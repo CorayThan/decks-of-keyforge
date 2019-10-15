@@ -33,7 +33,6 @@ import org.springframework.web.client.HttpClientErrorException
 import java.util.*
 import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
-import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT2M"
@@ -47,7 +46,6 @@ const val currentDeckRatingVersion = 12
 class DeckImporterService(
         private val keyforgeApi: KeyforgeApi,
         private val cardService: CardService,
-        private val deckSynergyService: DeckSynergyService,
         private val deckService: DeckService,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
@@ -289,12 +287,8 @@ class DeckImporterService(
     }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
-        if (houses.size != 3) {
-            throw IllegalStateException("Deck doesn't have 3 houses! $deck")
-        }
-        if (cardsList.size != 36) {
-            throw IllegalStateException("Can't have a deck without 36 cards deck: $deck")
-        }
+        check(houses.size == 3) { "Deck doesn't have 3 houses! $deck" }
+        check(cardsList.size == 36) { "Can't have a deck without 36 cards deck: $deck" }
 
         val saveable = deck
                 .withCards(cardsList)
@@ -306,57 +300,38 @@ class DeckImporterService(
 
         val ratedDeck = rateDeck(saveable)
 
-        if (ratedDeck.cardIds.isBlank()) {
-            throw IllegalStateException("Can't save a deck without its card ids: $deck")
-        }
+        check(!ratedDeck.cardIds.isBlank()) { "Can't save a deck without its card ids: $deck" }
 
         return deckRepo.save(ratedDeck)
     }
 
     private fun rateDeck(deck: Deck): Deck {
         val cards = cardService.cardsForDeck(deck)
-        val extraCardInfos = cards.map { it.extraCardInfo!! }
-        val deckSynergyInfo = deckSynergyService.fromDeck(deck)
-        val cardsRating = extraCardInfos.map { it.rating }.sum()
-        val synergy = deckSynergyInfo.synergyRating.roundToInt()
-        val antisynergy = deckSynergyInfo.antisynergyRating.roundToInt()
-        val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
-        val a = extraCardInfos.map { it.amberControl }.sum()
-        val e = extraCardInfos.map { it.expectedAmber }.sum()
-        val r = extraCardInfos.map { it.artifactControl }.sum()
-        val c = extraCardInfos.map { it.creatureControl }.sum()
-        val f = extraCardInfos.map { it.efficiency }.sum()
-        val d = extraCardInfos.map { it.disruption }.sum()
-        val p = cards.map { it.effectivePower }.sum()
-        val o = extraCardInfos.map { it.other }.sum()
-        val s = extraCardInfos.map { it.amberProtection }.sum()
-        val h = extraCardInfos.map { it.houseCheating }.sum()
-        val powerValue = p.toDouble() / 10
-        val newSas = cardsRating.roundToInt() + synergy + antisynergy
+        val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards)
+
         return deck.copy(
 
-                creatureCount = creatureCount,
+                creatureCount = cards.filter { it.cardType == CardType.Creature }.size,
                 actionCount = cards.filter { it.cardType == CardType.Action }.size,
                 artifactCount = cards.filter { it.cardType == CardType.Artifact }.size,
                 upgradeCount = cards.filter { it.cardType == CardType.Upgrade }.size,
 
-                amberControl = a,
-                expectedAmber = e,
-                artifactControl = r,
-                creatureControl = c,
-                efficiency = f,
-                effectivePower = p,
-                disruption = d,
-                amberProtection = s,
-                houseCheating = h,
-                other = o,
-                // Remember! When updating this also update Card
-                aercScore = a + e + r + c + f + d + s + h + o + powerValue + (creatureCount.toDouble() * 0.4),
-                previousSasRating = if (newSas != deck.sasRating) deck.sasRating else deck.previousSasRating,
-                sasRating = newSas,
-                cardsRating = cardsRating.roundToInt(),
-                synergyRating = synergy,
-                antisynergyRating = antisynergy.absoluteValue
+                amberControl = deckSynergyInfo.amberControl,
+                expectedAmber = deckSynergyInfo.expectedAmber,
+                artifactControl = deckSynergyInfo.artifactControl,
+                creatureControl = deckSynergyInfo.creatureControl,
+                efficiency = deckSynergyInfo.efficiency,
+                effectivePower = deckSynergyInfo.effectivePower,
+                disruption = deckSynergyInfo.disruption,
+                amberProtection = deckSynergyInfo.amberProtection,
+                houseCheating = deckSynergyInfo.houseCheating,
+                other = deckSynergyInfo.other,
+                aercScore = deckSynergyInfo.rawAerc.toDouble(),
+                sasRating = deckSynergyInfo.sasRating,
+                previousSasRating = if (deckSynergyInfo.sasRating != deck.sasRating) deck.sasRating else deck.previousSasRating,
+                cardsRating = 0,
+                synergyRating = deckSynergyInfo.synergyRating,
+                antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
         )
     }
 

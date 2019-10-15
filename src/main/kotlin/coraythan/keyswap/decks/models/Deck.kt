@@ -11,6 +11,7 @@ import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
+import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.userdeck.UserDeck
@@ -54,10 +55,10 @@ data class Deck(
         val artifactControl: Double = 0.0,
         val efficiency: Double = 0.0,
         val effectivePower: Int = 0,
-        val amberProtection: Double? = 0.0,
-        val disruption: Double? = 0.0,
-        val houseCheating: Double? = 0.0,
-        val other: Double? = 0.0,
+        val amberProtection: Double = 0.0,
+        val disruption: Double = 0.0,
+        val houseCheating: Double = 0.0,
+        val other: Double = 0.0,
         val aercScore: Double = 0.0,
         val previousSasRating: Int? = 0,
         val sasRating: Int = 0,
@@ -116,7 +117,8 @@ data class Deck(
             searchResultCards: List<DeckSearchResultCard>? = null,
             cards: List<Card>? = null,
             crucibleWins: Map<String, Wins>? = null,
-            stats: DeckStatistics? = null
+            stats: DeckStatistics? = null,
+            synergies: DeckSynergyInfo? = null
     ): DeckSearchResult {
         return DeckSearchResult(
                 id = id,
@@ -153,10 +155,10 @@ data class Deck(
                 artifactControl = artifactControl,
                 efficiency = efficiency,
                 effectivePower = effectivePower,
-                amberProtection = amberProtection ?: 0.0,
-                disruption = disruption ?: 0.0,
-                houseCheating = houseCheating ?: 0.0,
-                other = other ?: 0.0,
+                amberProtection = amberProtection,
+                disruption = disruption,
+                houseCheating = houseCheating,
+                other = other,
                 aercScore = aercScore,
                 previousSasRating = previousSasRating ?: sasRating,
                 sasRating = sasRating,
@@ -172,7 +174,9 @@ data class Deck(
                 searchResultCards = searchResultCards ?: listOf(),
                 houses = houses,
 
-                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0
+                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0,
+
+                synergies = synergies
         )
     }
 

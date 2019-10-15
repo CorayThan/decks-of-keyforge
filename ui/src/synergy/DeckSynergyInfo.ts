@@ -1,21 +1,12 @@
-import { HasAerc } from "../aerc/HasAerc"
 import { SynergyTrait } from "../extracardinfo/SynergyTrait"
 import { House } from "../houses/House"
 
 export interface DeckSynergyInfo {
-    synergyCombos: SynergyCombo[]
+    rawAerc: number
+    sasRating: number
     synergyRating: number
     antisynergyRating: number
-}
-
-export interface SynergyCombo extends HasAerc {
-    house: House
-    cardName: string
-    synergies: SynergyMatch[]
-    synergy: number
-    antisynergy: number
-    netSynergy: number
-    cardRating: number
+    synergyCombos: SynergyCombo[]
 
     expectedAmber: number,
     amberControl: number,
@@ -27,7 +18,28 @@ export interface SynergyCombo extends HasAerc {
     disruption: number,
     houseCheating: number,
     other: number,
-    
+}
+
+export interface SynergyCombo {
+    house: House
+    cardName: string
+    synergies: SynergyMatch[]
+    netSynergy: number
+    synergy: number
+    antisynergy: number
+    aercScore: number
+
+    expectedAmber: number,
+    amberControl: number,
+    creatureControl: number,
+    artifactControl: number,
+    efficiency: number,
+    effectivePower: number,
+    amberProtection: number,
+    disruption: number,
+    houseCheating: number,
+    other: number,
+
     copies: number
 }
 

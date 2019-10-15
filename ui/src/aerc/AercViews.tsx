@@ -1,10 +1,10 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
-import { CardsWithAerc } from "../cards/CardsWithAerc"
+import { CardsWithAerc, CardsWithAercFromCombos } from "../cards/CardsWithAerc"
 import { CardType } from "../cards/CardType"
 import { spacing, theme } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { Deck } from "../decks/Deck"
+import { Deck, DeckUtils } from "../decks/Deck"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../generic/icons/AmberIcon"
 import { ArchiveIcon } from "../generic/icons/ArchiveIcon"
@@ -20,7 +20,11 @@ import { HasAerc } from "./HasAerc"
 export const AercView = (props: {
     hasAerc: HasAerc, deck?: Deck, horizontal?: boolean, excludeMisc?: boolean, style?: React.CSSProperties
 }) => {
-    const {hasAerc, deck, style, horizontal, excludeMisc} = props
+    const {deck, style, horizontal, excludeMisc} = props
+    let hasAerc = props.hasAerc
+    if (deck) {
+        hasAerc = DeckUtils.hasAercFromDeck(deck)
+    }
 
     let columns = "1fr 1fr"
     if (horizontal) {
@@ -101,10 +105,10 @@ export const AercView = (props: {
                                 icon: <AercIcon type={AercType.A}/>,
                                 info: hasAerc.amberControl,
                                 tooltip: (
-                                    <CardsWithAerc
+                                    <CardsWithAercFromCombos
                                         title={"Aember Control (A)"}
-                                        accessor={card => card!.extraCardInfo!.amberControl}
-                                        cards={hasAerc.searchResultCards}
+                                        accessor={combo => combo.amberControl}
+                                        combos={deck!.synergies!.synergyCombos}
                                     />
                                 )
                             },
@@ -112,21 +116,22 @@ export const AercView = (props: {
                                 icon: <AercIcon type={AercType.E}/>,
                                 info: hasAerc.expectedAmber,
                                 tooltip: (
-                                    <CardsWithAerc
+                                    <CardsWithAercFromCombos
                                         title={"Expected Aember (E)"}
-                                        accessor={card => card!.extraCardInfo!.expectedAmber}
-                                        cards={hasAerc.searchResultCards}
+                                        accessor={combo => combo.expectedAmber}
+                                        combos={deck!.synergies!.synergyCombos}
                                     />
+
                                 )
                             },
                             {
                                 icon: <AercIcon type={AercType.S}/>,
                                 info: hasAerc.amberProtection,
                                 tooltip: (
-                                    <CardsWithAerc
+                                    <CardsWithAercFromCombos
                                         title={"Aember Protection"}
-                                        accessor={card => card!.extraCardInfo!.amberProtection}
-                                        cards={hasAerc.searchResultCards}
+                                        accessor={combo => combo.amberProtection}
+                                        combos={deck!.synergies!.synergyCombos}
                                     />
                                 )
                             },
@@ -142,10 +147,10 @@ export const AercView = (props: {
                                 icon: <AercIcon type={AercType.R}/>,
                                 info: hasAerc.artifactControl,
                                 tooltip: (
-                                    <CardsWithAerc
+                                    <CardsWithAercFromCombos
                                         title={"Artifact Control (R)"}
-                                        accessor={card => card!.extraCardInfo!.artifactControl}
-                                        cards={hasAerc.searchResultCards}
+                                        accessor={combo => combo.artifactControl}
+                                        combos={deck!.synergies!.synergyCombos}
                                     />
                                 )
                             },
@@ -153,10 +158,10 @@ export const AercView = (props: {
                                 icon: <AercIcon type={AercType.C}/>,
                                 info: hasAerc.creatureControl,
                                 tooltip: (
-                                    <CardsWithAerc
+                                    <CardsWithAercFromCombos
                                         title={"Creature Control (C)"}
-                                        accessor={card => card!.extraCardInfo!.creatureControl}
-                                        cards={hasAerc.searchResultCards}
+                                        accessor={combo => combo.creatureControl}
+                                        combos={deck!.synergies!.synergyCombos}
                                     />
                                 )
                             },
@@ -164,7 +169,7 @@ export const AercView = (props: {
                                 icon: <AercIcon type={AercType.P}/>,
                                 info: hasAerc.effectivePower,
                                 tooltip: (
-                                    <CardsWithAerc
+                                    <CardsWithAercFromCombos
                                         title={"Effective Power (P)"}
                                         accessor={card => {
                                             const effPower = card!.effectivePower
@@ -173,7 +178,7 @@ export const AercView = (props: {
                                             }
                                             return effPower
                                         }}
-                                        cards={hasAerc.searchResultCards}
+                                        combos={deck!.synergies!.synergyCombos}
                                     />
                                 )
                             },
@@ -197,17 +202,23 @@ export const AercView = (props: {
                                     icon: <AercIcon type={AercType.H}/>,
                                     info: hasAerc.houseCheating,
                                     tooltip: (
-                                        <CardsWithAerc
+                                        <CardsWithAercFromCombos
                                             title={"House Cheating"}
-                                            accessor={card => card!.extraCardInfo!.houseCheating}
-                                            cards={hasAerc.searchResultCards}
+                                            accessor={combo => combo.houseCheating}
+                                            combos={deck!.synergies!.synergyCombos}
                                         />
                                     )
                                 },
                                 {
                                     icon: <AercIcon type={AercType.O}/>,
                                     info: hasAerc.other,
-                                    tooltip: <CardsWithAerc title={"Other"} accessor={card => card!.extraCardInfo!.other} cards={hasAerc.searchResultCards}/>
+                                    tooltip: (
+                                        <CardsWithAercFromCombos
+                                            title={"Other"} 
+                                            accessor={combo => combo.other} 
+                                            combos={deck!.synergies!.synergyCombos}
+                                        />
+                                    )
                                 },
                             ]
                         }
@@ -319,23 +330,23 @@ export const AercForCard = (props: { card: HasAerc, short?: boolean }) => {
     const {card, short} = props
     return (
         <div style={{display: "grid", gridTemplateColumns: "2fr 1fr"}}>
-            <AercScore score={card.amberControl} name={short ? "A" : "Aember Control (A)"}/>
-            <AercScore score={card.expectedAmber} name={short ? "E" : "Expected Aember (E)"}/>
-            <AercScore score={card.artifactControl} name={short ? "R" : "Artifact Control (R)"}/>
-            <AercScore score={card.creatureControl} name={short ? "C" : "Creature Control (C)"}/>
-            <AercScore score={card.effectivePower} name={short ? "P" : "Effective Power (P)"}/>
-            <AercScore score={card.efficiency} name={short ? "F" : "Efficiency (F)"}/>
-            <AercScore score={card.disruption} name={short ? "D" : "Disruption (D)"}/>
-            <AercScore score={card.amberProtection} name={short ? "AP" : "Aember Protection"}/>
-            <AercScore score={card.houseCheating} name={short ? "HC" : "House Cheating"}/>
-            <AercScore score={card.other} name={short ? "O" : "Other"}/>
-            <AercScore score={card.aercScore} name={"AERC"}/>
+            <AercScore score={card.amberControl} max={card.amberControlMax} name={short ? "A" : "Aember Control (A)"}/>
+            <AercScore score={card.expectedAmber} max={card.expectedAmberMax} name={short ? "E" : "Expected Aember (E)"}/>
+            <AercScore score={card.artifactControl} max={card.artifactControlMax} name={short ? "R" : "Artifact Control (R)"}/>
+            <AercScore score={card.creatureControl} max={card.creatureControlMax} name={short ? "C" : "Creature Control (C)"}/>
+            <AercScore score={card.effectivePower} max={card.effectivePowerMax} name={short ? "P" : "Effective Power (P)"}/>
+            <AercScore score={card.efficiency} max={card.efficiencyMax} name={short ? "F" : "Efficiency (F)"}/>
+            <AercScore score={card.disruption} max={card.disruptionMax} name={short ? "D" : "Disruption (D)"}/>
+            <AercScore score={card.amberProtection} max={card.amberProtectionMax} name={short ? "AP" : "Aember Protection"}/>
+            <AercScore score={card.houseCheating} max={card.houseCheatingMax} name={short ? "HC" : "House Cheating"}/>
+            <AercScore score={card.other} max={card.otherMax} name={short ? "O" : "Other"}/>
+            <AercScore score={card.aercScore} max={card.aercScoreMax} name={"AERC"}/>
         </div>
     )
 }
 
-const AercScore = (props: { score: number, name: string }) => {
-    const {score, name} = props
+const AercScore = (props: { score: number, max?: number, name: string }) => {
+    const {score, max, name} = props
     if (score === 0) {
         return null
     }
@@ -345,7 +356,7 @@ const AercScore = (props: { score: number, name: string }) => {
                 {name}:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {score}
+                {score}{max == null || max == 0 ? "" : ` to ${max}`}
             </Typography>
         </>
     )
