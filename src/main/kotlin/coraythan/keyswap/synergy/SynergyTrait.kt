@@ -6,6 +6,12 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 import javax.persistence.*
 
+enum class TraitStrength(val value: Int) {
+    STRONG(3),
+    NORMAL(2),
+    WEAK(1);
+}
+
 @Entity
 data class SynTraitValue(
         @Enumerated(EnumType.STRING)
@@ -39,6 +45,13 @@ data class SynTraitValue(
             3 -> 0.5
             else -> throw IllegalStateException("Can't have synergy rating of $rating")
         }
+    }
+
+    fun strength() = when (rating) {
+        1 -> TraitStrength.WEAK
+        2 -> TraitStrength.NORMAL
+        3 -> TraitStrength.STRONG
+        else -> TraitStrength.NORMAL
     }
 }
 

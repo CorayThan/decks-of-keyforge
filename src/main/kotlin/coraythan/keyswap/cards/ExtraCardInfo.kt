@@ -117,4 +117,6 @@ data class ExtraCardInfo(
                 synergies = listOf()
         )
     }
+
+
 }

@@ -33,10 +33,25 @@ class CardService(
     lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
 
+    val publishAercVersion = 1
+
     fun loadExtraInfo() {
         this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
         this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
         this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
+
+        if (activeAercVersion < publishAercVersion) {
+            log.debug("Active aerc version $activeAercVersion published verison $publishAercVersion publishing")
+            this.activeAercVersion = publishAercVersion
+            val toPublish = this.nextExtraInfo
+            val potentiallyUnpublish = this.extraInfo
+            val toSave = toPublish.map { it.value.copy(active = true) }
+            val unpublish = toPublish.mapNotNull { potentiallyUnpublish[it.key]?.copy(active = false) }
+            extraCardInfoRepo.saveAll(toSave.plus(unpublish))
+            log.debug("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +
+                    "${toSave.size} unpublished ${unpublish.size}")
+            this.loadExtraInfo()
+        }
     }
 
     private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
