@@ -40,6 +40,9 @@ export class CardsSearchDrawer extends React.Component {
     componentDidMount() {
         this.cardStore.reset()
         this.search()
+        if (cardStore.previousExtraInfo == null && keyLocalStorage.genericStorage.historicalAerc) {
+            cardStore.findPreviousExtraInfo()
+        }
     }
 
     search = (event?: React.FormEvent) => {
@@ -160,6 +163,8 @@ export class CardsSearchDrawer extends React.Component {
                                     </ToggleButton>
                                 </ToggleButtonGroup>
                             </Tooltip>
+                        </ListItem>
+                        <ListItem>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -168,6 +173,22 @@ export class CardsSearchDrawer extends React.Component {
                                     />
                                 }
                                 label={"All cards"}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={!!keyLocalStorage.genericStorage.historicalAerc}
+                                        onChange={() => {
+                                            cardStore.findPreviousExtraInfo()
+                                            keyLocalStorage.updateGenericStorage({
+                                                historicalAerc: !keyLocalStorage.genericStorage.historicalAerc
+                                            })
+                                        }}
+                                    />
+                                }
+                                label={"The AERC of History"}
                             />
                         </ListItem>
                     </List>

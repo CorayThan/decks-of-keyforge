@@ -154,7 +154,12 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
                     ) : (
                         <>
                             {this.cardsToDisplay.map(card => (
-                                <CardView card={card} key={card.id} simple={keyLocalStorage.cardListViewType === "image"}/>
+                                <CardView
+                                    card={card}
+                                    key={card.id}
+                                    simple={keyLocalStorage.cardListViewType === "image"}
+                                    displayHistory={keyLocalStorage.genericStorage.historicalAerc}
+                                />
                             ))}
                         </>
                     )}

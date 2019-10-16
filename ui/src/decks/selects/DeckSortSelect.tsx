@@ -59,7 +59,6 @@ export class DeckSortSelectStore implements SelectedStore {
 
         const {forSaleOrTrade, forAuction, completedAuctions} = this
 
-        log.debug(`Deck sort select ${forSaleOrTrade} ${forAuction} ${completedAuctions}`)
         if (completedAuctions) {
             log.debug("completed auctions")
             options = completedAuctionDeckSortOptions
@@ -89,7 +88,6 @@ export const DeckSorts = {
     // recentlyListed: "RECENTLY_LISTED",
     endingSoonest: "ENDING_SOONEST",
     addedDate: "ADDED_DATE",
-    cardsRating: "CARDS_RATING",
     name: "NAME",
     completedRecently: "COMPLETED_RECENTLY"
 }
@@ -97,7 +95,6 @@ export const DeckSorts = {
 const deckSortOptions: SortOption[] = [
     {value: DeckSorts.addedDate, name: "Date Added"},
     {value: DeckSorts.sas, name: "SAS Rating"},
-    {value: DeckSorts.cardsRating, name: "Card Rating"},
     {value: DeckSorts.aerc, name: "AERC Score"},
     {value: DeckSorts.chains, name: "Chains"},
     {value: DeckSorts.funniest, name: "Funniest"},

@@ -86,7 +86,6 @@ class DeckService(
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
-            DeckSortOptions.CARDS_RATING -> deckQ.cardsRating
             DeckSortOptions.AERC_SCORE -> deckQ.aercScore
             DeckSortOptions.CHAINS -> deckQ.chains
             DeckSortOptions.SAS_RATING -> deckQ.sasRating

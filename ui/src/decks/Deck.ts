@@ -1,8 +1,9 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
+import { log } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
-import { DeckSynergyInfo, SynergyCombo } from "../synergy/DeckSynergyInfo"
+import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
 import { UserDeck } from "../userdeck/UserDeck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
@@ -76,30 +77,13 @@ export class DeckUtils {
 
     static hasAercFromDeck = (deck: Deck): HasAerc => {
         if (deck.synergies == null) {
+            log.warn("Synergies shouldnt' be null!")
             return deck
         }
-        return deck.synergies.synergyCombos.reduce((combo1: SynergyCombo, combo2: SynergyCombo) => {
-            return {
-                amberControl: combo1.amberControl * combo1.copies + combo2.amberControl * combo2.copies,
-                expectedAmber: combo1.expectedAmber * combo1.copies + combo2.expectedAmber * combo2.copies,
-                artifactControl: combo1.artifactControl * combo1.copies + combo2.artifactControl * combo2.copies,
-                creatureControl: combo1.creatureControl * combo1.copies + combo2.creatureControl * combo2.copies,
-                efficiency: combo1.efficiency * combo1.copies + combo2.efficiency * combo2.copies,
-                effectivePower: combo1.effectivePower * combo1.copies + combo2.effectivePower * combo2.copies,
-                amberProtection: combo1.amberProtection * combo1.copies + combo2.amberProtection * combo2.copies,
-                disruption: combo1.disruption * combo1.copies + combo2.disruption * combo2.copies,
-                houseCheating: combo1.houseCheating * combo1.copies + combo2.houseCheating * combo2.copies,
-                other: combo1.other * combo1.copies + combo2.other * combo2.copies,
-                copies: 1,
-                house: House.Brobnar,
-                cardName: "",
-                synergies: [],
-                netSynergy: 0,
-                synergy: 0,
-                antisynergy: 0,
-                aercScore: combo1.aercScore * combo1.copies + combo2.aercScore * combo2.copies,
-            }
-        })
+        return {
+            aercScore: deck.synergies.rawAerc,
+            ...deck.synergies
+        }
     }
 
     static cardsInHouses = (deck: Deck) => {
@@ -114,27 +98,26 @@ export class DeckUtils {
 
     static arrayToCSV = (decks: Deck[]) => {
         const data = decks.map(deck => {
-
+            const synergies = deck.synergies!
             return [
                 deck.name.replace(/"/g, "\"\""),
                 deck.houses,
                 deck.expansion,
-                deck.sasRating,
-                deck.cardsRating,
-                deck.synergyRating,
-                deck.antisynergyRating,
+                synergies.sasRating,
+                synergies.synergyRating,
+                synergies.antisynergyRating,
                 deck.sasPercentile,
-                deck.aercScore,
-                deck.amberControl,
-                deck.expectedAmber,
-                deck.amberProtection,
-                deck.artifactControl,
-                deck.creatureControl,
-                deck.effectivePower,
-                deck.efficiency,
-                deck.disruption,
-                deck.houseCheating,
-                deck.other,
+                synergies.rawAerc,
+                synergies.amberControl,
+                synergies.expectedAmber,
+                synergies.amberProtection,
+                synergies.artifactControl,
+                synergies.creatureControl,
+                synergies.effectivePower,
+                synergies.efficiency,
+                synergies.disruption,
+                synergies.houseCheating,
+                synergies.other,
 
                 deck.creatureCount,
                 deck.actionCount,
@@ -168,11 +151,10 @@ export class DeckUtils {
             "Houses",
             "Expansion",
             "Sas Rating",
-            "Cards Rating",
             "Synergy Rating",
             "Antisynergy Rating",
             "Sas Percentile",
-            "Aerc Score",
+            "Raw Aerc Score",
             "Amber Control",
             "Expected Amber",
             "Aember Protection",

@@ -1,9 +1,9 @@
-import { Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardsWithAerc, CardsWithAercFromCombos } from "../cards/CardsWithAerc"
 import { CardType } from "../cards/CardType"
 import { spacing, theme } from "../config/MuiConfig"
-import { AboutSubPaths } from "../config/Routes"
+import { Utils } from "../config/Utils"
 import { Deck, DeckUtils } from "../decks/Deck"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../generic/icons/AmberIcon"
@@ -13,17 +13,18 @@ import { ArtifactIcon } from "../generic/icons/card-types/ArtifactIcon"
 import { CreatureIcon } from "../generic/icons/card-types/CreatureIcon"
 import { UpgradeIcon } from "../generic/icons/card-types/UpgradeIcon"
 import { KeyCheatIcon } from "../generic/icons/KeyCheatIcon"
-import { InfoIcon, InfoIconList, InfoIconValue } from "../generic/InfoIcon"
-import { UnstyledLink } from "../generic/UnstyledLink"
+import { InfoIconList, InfoIconValue } from "../generic/InfoIcon"
+import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { HasAerc } from "./HasAerc"
 
 export const AercView = (props: {
-    hasAerc: HasAerc, deck?: Deck, horizontal?: boolean, excludeMisc?: boolean, style?: React.CSSProperties
+    deck: Deck, horizontal?: boolean, excludeMisc?: boolean, style?: React.CSSProperties
 }) => {
     const {deck, style, horizontal, excludeMisc} = props
-    let hasAerc = props.hasAerc
-    if (deck) {
-        hasAerc = DeckUtils.hasAercFromDeck(deck)
+    let combos
+    const hasAerc = DeckUtils.hasAercFromDeck(deck)
+    if (deck.synergies) {
+        combos = deck.synergies.synergyCombos
     }
 
     let columns = "1fr 1fr"
@@ -33,9 +34,6 @@ export const AercView = (props: {
         } else {
             columns = "1fr 1fr 1fr 1fr 1fr"
         }
-        if (deck) {
-            columns += " 1fr"
-        }
     }
 
     const speedInfos = [
@@ -43,10 +41,10 @@ export const AercView = (props: {
             icon: <AercIcon type={AercType.F}/>,
             info: hasAerc.efficiency,
             tooltip: (
-                <CardsWithAerc
+                <CardsWithAercFromCombos
                     title={"Efficiency (F)"}
-                    accessor={card => card!.extraCardInfo!.efficiency}
-                    cards={hasAerc.searchResultCards}
+                    accessor={combo => combo.efficiency}
+                    combos={combos}
                 />
             )
         },
@@ -54,38 +52,29 @@ export const AercView = (props: {
             icon: <AercIcon type={AercType.D}/>,
             info: hasAerc.disruption,
             tooltip: (
-                <CardsWithAerc
+                <CardsWithAercFromCombos
                     title={"Disruption (D)"}
-                    accessor={card => card!.extraCardInfo!.disruption}
-                    cards={hasAerc.searchResultCards}
+                    accessor={combo => combo.disruption}
+                    combos={combos}
                 />
             )
         },
     ]
 
-    if (horizontal && deck) {
-        speedInfos.push({
-            info: deck.aercScore,
-            icon: <Typography variant={"h5"} color={"primary"} style={{fontSize: "1rem"}}>AERC</Typography>,
-            tooltip: <div>Total AERC Score. Read more on the about page.</div>
-        },)
-    }
-
     return (
         <div
             style={{backgroundColor: "#DFDFDF", padding: spacing(1)}}
         >
-            {deck != null && !horizontal && (
+            {!horizontal && (
                 <div style={{marginLeft: spacing(1)}}>
-                    <UnstyledLink to={AboutSubPaths.sas}>
-                        <InfoIcon
-                            value={{
-                                info: deck.aercScore,
-                                icon: <Typography variant={"h5"} color={"primary"}>AERC</Typography>,
-                                tooltip: "Total AERC Score. Read more on the about page."
-                            }}
-                        />
-                    </UnstyledLink>
+                    <Tooltip title={"SAS Score from before the big update to SAS v4."}>
+                        <div style={{display: "flex", alignItems: "flex-end"}}>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
+                                {deck.previousSasRating}
+                            </Typography>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 2}} noWrap={true}>SAS v3</Typography>
+                        </div>
+                    </Tooltip>
                 </div>
             )}
             <div
@@ -108,7 +97,7 @@ export const AercView = (props: {
                                     <CardsWithAercFromCombos
                                         title={"Aember Control (A)"}
                                         accessor={combo => combo.amberControl}
-                                        combos={deck!.synergies!.synergyCombos}
+                                        combos={combos}
                                     />
                                 )
                             },
@@ -119,7 +108,7 @@ export const AercView = (props: {
                                     <CardsWithAercFromCombos
                                         title={"Expected Aember (E)"}
                                         accessor={combo => combo.expectedAmber}
-                                        combos={deck!.synergies!.synergyCombos}
+                                        combos={combos}
                                     />
 
                                 )
@@ -131,7 +120,7 @@ export const AercView = (props: {
                                     <CardsWithAercFromCombos
                                         title={"Aember Protection"}
                                         accessor={combo => combo.amberProtection}
-                                        combos={deck!.synergies!.synergyCombos}
+                                        combos={combos}
                                     />
                                 )
                             },
@@ -150,7 +139,7 @@ export const AercView = (props: {
                                     <CardsWithAercFromCombos
                                         title={"Artifact Control (R)"}
                                         accessor={combo => combo.artifactControl}
-                                        combos={deck!.synergies!.synergyCombos}
+                                        combos={combos}
                                     />
                                 )
                             },
@@ -161,7 +150,7 @@ export const AercView = (props: {
                                     <CardsWithAercFromCombos
                                         title={"Creature Control (C)"}
                                         accessor={combo => combo.creatureControl}
-                                        combos={deck!.synergies!.synergyCombos}
+                                        combos={combos}
                                     />
                                 )
                             },
@@ -178,7 +167,7 @@ export const AercView = (props: {
                                             }
                                             return effPower
                                         }}
-                                        combos={deck!.synergies!.synergyCombos}
+                                        combos={combos}
                                     />
                                 )
                             },
@@ -205,7 +194,7 @@ export const AercView = (props: {
                                         <CardsWithAercFromCombos
                                             title={"House Cheating"}
                                             accessor={combo => combo.houseCheating}
-                                            combos={deck!.synergies!.synergyCombos}
+                                            combos={combos}
                                         />
                                     )
                                 },
@@ -214,9 +203,9 @@ export const AercView = (props: {
                                     info: hasAerc.other,
                                     tooltip: (
                                         <CardsWithAercFromCombos
-                                            title={"Other"} 
-                                            accessor={combo => combo.other} 
-                                            combos={deck!.synergies!.synergyCombos}
+                                            title={"Other"}
+                                            accessor={combo => combo.other}
+                                            combos={combos}
                                         />
                                     )
                                 },
@@ -224,7 +213,7 @@ export const AercView = (props: {
                         }
                     />
                 )}
-                {deck && (
+                {!excludeMisc && (
                     <AercCategory
                         horizontal={horizontal}
                         name={"Extras"}
@@ -326,28 +315,87 @@ const AercCategory = (props: { name: string, small?: boolean, horizontal?: boole
     )
 }
 
-export const AercForCard = (props: { card: HasAerc, short?: boolean }) => {
-    const {card, short} = props
+export const AercForCard = (props: { card: HasAerc, short?: boolean, realValue?: SynergyCombo }) => {
+    const {card, short, realValue} = props
     return (
-        <div style={{display: "grid", gridTemplateColumns: "2fr 1fr"}}>
-            <AercScore score={card.amberControl} max={card.amberControlMax} name={short ? "A" : "Aember Control (A)"}/>
-            <AercScore score={card.expectedAmber} max={card.expectedAmberMax} name={short ? "E" : "Expected Aember (E)"}/>
-            <AercScore score={card.artifactControl} max={card.artifactControlMax} name={short ? "R" : "Artifact Control (R)"}/>
-            <AercScore score={card.creatureControl} max={card.creatureControlMax} name={short ? "C" : "Creature Control (C)"}/>
-            <AercScore score={card.effectivePower} max={card.effectivePowerMax} name={short ? "P" : "Effective Power (P)"}/>
-            <AercScore score={card.efficiency} max={card.efficiencyMax} name={short ? "F" : "Efficiency (F)"}/>
-            <AercScore score={card.disruption} max={card.disruptionMax} name={short ? "D" : "Disruption (D)"}/>
-            <AercScore score={card.amberProtection} max={card.amberProtectionMax} name={short ? "AP" : "Aember Protection"}/>
-            <AercScore score={card.houseCheating} max={card.houseCheatingMax} name={short ? "HC" : "House Cheating"}/>
-            <AercScore score={card.other} max={card.otherMax} name={short ? "O" : "Other"}/>
-            <AercScore score={card.aercScore} max={card.aercScoreMax} name={"AERC"}/>
+        <div style={{display: "grid", gridTemplateColumns: "4fr 2fr 1fr"}}>
+            <AercScore
+                score={card.amberControl}
+                max={card.amberControlMax}
+                synergizedScore={realValue && realValue.amberControl}
+                name={short ? "A" : "Aember Control (A)"}
+            />
+            <AercScore
+                score={card.expectedAmber} max={card.expectedAmberMax} synergizedScore={realValue && realValue.expectedAmber}
+                name={short ? "E" : "Expected Aember (E)"}
+            />
+            <AercScore
+                score={card.artifactControl} max={card.artifactControlMax} synergizedScore={realValue && realValue.artifactControl}
+                name={short ? "R" : "Artifact Control (R)"}
+            />
+            <AercScore
+                score={card.creatureControl} max={card.creatureControlMax} synergizedScore={realValue && realValue.creatureControl}
+                name={short ? "C" : "Creature Control (C)"}
+            />
+            <AercScore
+                score={card.effectivePower} max={card.effectivePowerMax} synergizedScore={realValue && realValue.effectivePower}
+                name={short ? "P" : "Effective Power (P)"}
+            />
+            <AercScore
+                score={card.efficiency} max={card.efficiencyMax} synergizedScore={realValue && realValue.efficiency}
+                name={short ? "F" : "Efficiency (F)"}
+            />
+            <AercScore
+                score={card.disruption} max={card.disruptionMax} synergizedScore={realValue && realValue.disruption}
+                name={short ? "D" : "Disruption (D)"}
+            />
+            <AercScore
+                score={card.amberProtection} max={card.amberProtectionMax} synergizedScore={realValue && realValue.amberProtection}
+                name={short ? "AP" : "Aember Protection"}
+            />
+            <AercScore
+                score={card.houseCheating} max={card.houseCheatingMax} synergizedScore={realValue && realValue.houseCheating}
+                name={short ? "HC" : "House Cheating"}
+            />
+            <AercScore
+                score={card.other} max={card.otherMax} synergizedScore={realValue && realValue.other} name={short ? "O" : "Other"}
+            />
+            {realValue == null ? (
+                <AercScore
+                    score={card.aercScore} max={card.aercScoreMax} name={"AERC"}
+                />
+            ) : (
+                <AercAercScore score={realValue.aercScore} synergy={realValue.netSynergy}/>
+            )}
         </div>
     )
 }
 
-const AercScore = (props: { score: number, max?: number, name: string }) => {
-    const {score, max, name} = props
+
+const AercAercScore = (props: { score: number, synergy: number }) => {
+    const {score, synergy} = props
     if (score === 0) {
+        return null
+    }
+    return (
+        <>
+            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+                AERC:
+            </Typography>
+            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
+                {synergy === 0 ? "" : `${Utils.roundToTens(score - synergy)} ${synergy > 0 ? "+" : "-"} ${Math.abs(synergy)} =`}
+            </Typography>
+            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
+                {score}
+            </Typography>
+        </>
+    )
+}
+
+
+const AercScore = (props: { score: number, max?: number, name: string, synergizedScore?: number }) => {
+    const {score, max, name, synergizedScore} = props
+    if (score === 0 && max == null) {
         return null
     }
     return (
@@ -356,10 +404,11 @@ const AercScore = (props: { score: number, max?: number, name: string }) => {
                 {name}:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {score}{max == null || max == 0 ? "" : ` to ${max}`}
+                {(max == null || max === 0) && synergizedScore === score ? "" : `${score} ${max == null || max === 0 ? "" : ` to ${max}`}`}
+            </Typography>
+            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
+                {synergizedScore == null ? "" : synergizedScore}
             </Typography>
         </>
     )
 }
-
-

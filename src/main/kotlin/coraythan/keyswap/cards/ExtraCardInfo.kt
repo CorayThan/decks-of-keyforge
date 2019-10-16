@@ -89,6 +89,19 @@ data class ExtraCardInfo(
         )
     }
 
+    fun nullMaxes() = this.copy(
+            amberControlMax = if (this.amberControlMax == 0.0) null else this.amberControlMax,
+            expectedAmberMax = if (this.expectedAmberMax == 0.0) null else this.expectedAmberMax,
+            amberProtectionMax = if (this.amberProtectionMax == 0.0) null else this.amberProtectionMax,
+            artifactControlMax = if (this.artifactControlMax == 0.0) null else this.artifactControlMax,
+            creatureControlMax = if (this.creatureControlMax == 0.0) null else this.creatureControlMax,
+            effectivePowerMax = if (this.effectivePowerMax == 0.0) null else this.effectivePowerMax,
+            efficiencyMax = if (this.efficiencyMax == 0.0) null else this.efficiencyMax,
+            disruptionMax = if (this.disruptionMax == 0.0) null else this.disruptionMax,
+            houseCheatingMax = if (this.houseCheatingMax == 0.0) null else this.houseCheatingMax,
+            otherMax = if (this.otherMax == 0.0) null else this.otherMax
+    )
+
     fun replaceAercInfo(info: ExtraCardInfo): ExtraCardInfo {
         return this.copy(
                 updated = now(),

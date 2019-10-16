@@ -3,7 +3,7 @@ import { clone } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { log, prettyJson } from "../config/Utils"
+import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
@@ -140,7 +140,7 @@ export class DeckStore {
     findDecksByName = (name: string) => {
         axios.get(`${DeckStore.CONTEXT}/by-name/${name}`)
             .then((response: AxiosResponse<Deck[]>) => {
-                log.debug(`Find decks by name results: ${prettyJson(response.data)}`)
+                // log.debug(`Find decks by name results: ${prettyJson(response.data)}`)
                 this.deckNameSearchResults = response.data
             })
     }

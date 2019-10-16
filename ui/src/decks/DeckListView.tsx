@@ -116,10 +116,9 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 {sellerView ? <TableCell>Seller Tools</TableCell> : null}
                                 <DeckHeader title={"SAS"} property={"sasRating"}/>
                                 <DeckHeader title={"SAStars"} property={"sasPercentile"}/>
-                                <DeckHeader title={"Cards"} property={"cardsRating"}/>
                                 <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                                 <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
-                                <DeckHeader title={"AERC"} property={"aercScore"}/>
+                                <DeckHeader title={"Raw AERC"} property={"aercScore"}/>
                                 <DeckHeader title={"A"} property={"amberControl"} tooltip={"Aember Control"}/>
                                 <DeckHeader title={"E"} property={"expectedAmber"} tooltip={"Expected Aember"}/>
                                 <DeckHeader title={"R"} property={"artifactControl"} tooltip={"Artifact Control"}/>
@@ -157,86 +156,88 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {decks.map((deck) => (
-                                <TableRow key={deck.id}>
-                                    <TableCell>
-                                        <KeyLink style={{color: "rgba(0, 0, 0, 0.87)"}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
-                                            {deck.name}
-                                        </KeyLink>
-                                    </TableCell>
-                                    <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
-                                    {displayPrices || sellerView ? (
-                                        <>
-                                            <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
-                                            <TableCell>
-                                                {findBuyItNowForDeck(deck)}
-                                            </TableCell>
-                                        </>
-                                    ) : null}
-                                    {sellerView ? (
-                                        <TableCell style={{minWidth: 200}}>
-                                            <MyDecksButton deck={deck}/>
-                                        </TableCell>
-                                    ) : null}
-                                    <TableCell>{deck.sasRating}</TableCell>
-                                    <TableCell>
-                                        {deck.sasPercentile && (
-                                            <SaStars
-                                                sasPercentile={deck.sasPercentile}
-                                                small={true}
-                                                gray={true}
-                                                style={{
-                                                    display: "flex",
-                                                    flexWrap: "wrap",
-                                                    width: 40,
-                                                    alignItems: "flex-end",
-                                                    justifyContent: "center"
-                                                }}
-                                                halfAtEnd={true}
-                                            />
-                                        )}
-                                    </TableCell>
-                                    <TableCell>{deck.cardsRating}</TableCell>
-                                    <TableCell>{deck.synergyRating}</TableCell>
-                                    <TableCell>{deck.antisynergyRating}</TableCell>
-                                    <TableCell>{Math.round(deck.aercScore)}</TableCell>
-                                    <TableCell>{deck.amberControl}</TableCell>
-                                    <TableCell>{deck.expectedAmber}</TableCell>
-                                    <TableCell>{deck.artifactControl}</TableCell>
-                                    <TableCell>{deck.creatureControl}</TableCell>
-                                    <TableCell>{deck.effectivePower}</TableCell>
-                                    <TableCell>{deck.efficiency}</TableCell>
-                                    <TableCell>{deck.disruption}</TableCell>
-                                    <TableCell>{deck.amberProtection}</TableCell>
-                                    <TableCell>{deck.houseCheating}</TableCell>
-                                    {keyLocalStorage.smallTableView ? null : (
-                                        <>
-                                            <TableCell>{deck.rawAmber}</TableCell>
-                                            <TableCell>{deck.keyCheatCount}</TableCell>
-                                            <TableCell>{deck.cardDrawCount}</TableCell>
-                                            <TableCell>{deck.cardArchiveCount}</TableCell>
-                                            <TableCell>{deck.totalPower}</TableCell>
-                                            <TableCell>{deck.totalArmor}</TableCell>
-                                            <TableCell>{deck.powerLevel}</TableCell>
-                                            <TableCell>{deck.chains}</TableCell>
-                                            <TableCell>{deck.wins}</TableCell>
-                                            <TableCell>{deck.losses}</TableCell>
-                                        </>
-                                    )}
-                                    <TableCell>
-                                        <div style={{display: "flex"}}>
-                                            <KeyLink
-                                                to={Routes.deckPage(deck.keyforgeId)}
-                                                noStyle={true}
-                                                style={{marginRight: spacing(2)}}
-                                            >
-                                                <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
+                            {decks.map((deck) => {
+                                const synergies = deck.synergies!
+                                return (
+                                    <TableRow key={deck.id}>
+                                        <TableCell>
+                                            <KeyLink style={{color: "rgba(0, 0, 0, 0.87)"}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
+                                                {deck.name}
                                             </KeyLink>
-                                            <MoreDeckActions deck={deck} compact={true}/>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                                        </TableCell>
+                                        <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
+                                        {displayPrices || sellerView ? (
+                                            <>
+                                                <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
+                                                <TableCell>
+                                                    {findBuyItNowForDeck(deck)}
+                                                </TableCell>
+                                            </>
+                                        ) : null}
+                                        {sellerView ? (
+                                            <TableCell style={{minWidth: 200}}>
+                                                <MyDecksButton deck={deck}/>
+                                            </TableCell>
+                                        ) : null}
+                                        <TableCell>{synergies.sasRating}</TableCell>
+                                        <TableCell>
+                                            {deck.sasPercentile && (
+                                                <SaStars
+                                                    sasPercentile={deck.sasPercentile}
+                                                    small={true}
+                                                    gray={true}
+                                                    style={{
+                                                        display: "flex",
+                                                        flexWrap: "wrap",
+                                                        width: 40,
+                                                        alignItems: "flex-end",
+                                                        justifyContent: "center"
+                                                    }}
+                                                    halfAtEnd={true}
+                                                />
+                                            )}
+                                        </TableCell>
+                                        <TableCell>{synergies.synergyRating}</TableCell>
+                                        <TableCell>{synergies.antisynergyRating}</TableCell>
+                                        <TableCell>{synergies.rawAerc}</TableCell>
+                                        <TableCell>{synergies.amberControl}</TableCell>
+                                        <TableCell>{synergies.expectedAmber}</TableCell>
+                                        <TableCell>{synergies.artifactControl}</TableCell>
+                                        <TableCell>{synergies.creatureControl}</TableCell>
+                                        <TableCell>{synergies.effectivePower}</TableCell>
+                                        <TableCell>{synergies.efficiency}</TableCell>
+                                        <TableCell>{synergies.disruption}</TableCell>
+                                        <TableCell>{synergies.amberProtection}</TableCell>
+                                        <TableCell>{synergies.houseCheating}</TableCell>
+                                        {keyLocalStorage.smallTableView ? null : (
+                                            <>
+                                                <TableCell>{deck.rawAmber}</TableCell>
+                                                <TableCell>{deck.keyCheatCount}</TableCell>
+                                                <TableCell>{deck.cardDrawCount}</TableCell>
+                                                <TableCell>{deck.cardArchiveCount}</TableCell>
+                                                <TableCell>{deck.totalPower}</TableCell>
+                                                <TableCell>{deck.totalArmor}</TableCell>
+                                                <TableCell>{deck.powerLevel}</TableCell>
+                                                <TableCell>{deck.chains}</TableCell>
+                                                <TableCell>{deck.wins}</TableCell>
+                                                <TableCell>{deck.losses}</TableCell>
+                                            </>
+                                        )}
+                                        <TableCell>
+                                            <div style={{display: "flex"}}>
+                                                <KeyLink
+                                                    to={Routes.deckPage(deck.keyforgeId)}
+                                                    noStyle={true}
+                                                    style={{marginRight: spacing(2)}}
+                                                >
+                                                    <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
+                                                </KeyLink>
+                                                <MoreDeckActions deck={deck} compact={true}/>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
                         </TableBody>
                     </Table>
                 </Paper>

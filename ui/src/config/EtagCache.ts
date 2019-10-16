@@ -45,12 +45,12 @@ export const etagRequestInterceptor = (config: AxiosRequestConfig) => {
 }
 
 export const etagResponseInterceptor = (response: AxiosResponse) => {
-    // if (isCacheableMethod(response.config)) {
-    //     const responseETAG = response.headers.etag
-    //     if (responseETAG && response.config.url != null) {
-    //         cache.set(response.config.url, responseETAG, response.data)
-    //     }
-    // }
+    if (isCacheableMethod(response.config)) {
+        const responseETAG = response.headers.etag
+        if (responseETAG && response.config.url != null) {
+            cache.set(response.config.url, responseETAG, response.data)
+        }
+    }
     return response
 }
 

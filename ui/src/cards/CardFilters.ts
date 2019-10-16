@@ -34,7 +34,6 @@ export class CardFilters {
 }
 
 export enum CardSort {
-    CARD_RATING = "CARD_RATING",
     EXPECTED_AMBER = "EXPECTED_AMBER",
     AMBER_CONTROL = "AMBER_CONTROL",
     CREATURE_CONTROL = "CREATURE_CONTROL",

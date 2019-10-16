@@ -32,7 +32,6 @@ export class WinRateStatsView extends React.Component<{}> {
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                 <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate} quantities={stats.sas}/>
-                <WinRateBar name={"Card Rating Win Rate"} data={stats.cardRatingsWinRate} quantities={stats.cardsRating}/>
                 <WinRateBar name={"Synergy Win Rate"} data={stats.synergyWinRate} quantities={stats.synergy}/>
                 <WinRateBar name={"Antisynergy Win Rate"} data={stats.antisynergyWinRate} quantities={stats.antisynergy}/>
 

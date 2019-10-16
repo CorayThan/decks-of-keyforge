@@ -60,7 +60,7 @@ export const CardsWithAercFromCombos = (props: { title: string, accessor: (combo
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             <Typography key={idx} variant={"inherit"}>
-                                {`${accessor(combo)}` + (combo.copies > 1 ? ` x ${combo.copies} = ${accessor(combo) * combo.copies}` : "")}
+                                {`${accessor(combo)}` + (combo.copies > 1 ? ` x ${combo.copies} = ${Math.round(accessor(combo) * combo.copies * 10) / 10}` : "")}
                             </Typography>
                         </div>
                     ))}

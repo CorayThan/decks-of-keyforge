@@ -25,6 +25,8 @@ export interface HasAerc {
     houseCheatingMax?: number
     otherMax?: number
     aercScoreMax?: number
+
+    averageAercScore?: number
     
     searchResultCards?: KCard[]
 }

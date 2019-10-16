@@ -13,8 +13,8 @@ class ExtraCardInfoEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping("/{infoId}")
-    fun findSpoiler(@PathVariable infoId: Long) = extraCardInfoService.findExtraCardInfo(infoId)
+    fun findInfo(@PathVariable infoId: Long) = extraCardInfoService.findExtraCardInfo(infoId)
 
     @PostMapping("/secured")
-    fun saveSpoiler(@RequestBody extraCardInfo: ExtraCardInfo) = extraCardInfoService.updateExtraCardInfo(extraCardInfo)
+    fun saveInfo(@RequestBody extraCardInfo: ExtraCardInfo) = extraCardInfoService.updateExtraCardInfo(extraCardInfo)
 }

@@ -24,10 +24,14 @@ class CurrentUserService(
         return userDto
     }
 
-    fun contentCreatorOrUnauthorized() {
+    fun contentCreator(): Boolean {
         val userType = loggedInUser()?.type
         log.info("User type is $userType")
-        if (userType != UserType.ADMIN && userType != UserType.CONTENT_CREATOR) throw UnauthorizedException("Unauthorized")
+        return userType == UserType.ADMIN || userType == UserType.CONTENT_CREATOR
+    }
+
+    fun contentCreatorOrUnauthorized() {
+        if (!contentCreator()) throw UnauthorizedException("Unauthorized")
     }
 
     fun adminOrUnauthorized() {

@@ -19,6 +19,7 @@ type DeckViewType = "graphs" | "grid" | "table"
 
 interface GenericStorage {
     hideSpoilerKudosTwo?: boolean
+    historicalAerc?: boolean
 }
 
 class KeyLocalStorage {

@@ -26,8 +26,10 @@ class ExtraCardInfoService(
         return findNextOrCurrentInfo(info)
     }
 
-    fun updateExtraCardInfo(info: ExtraCardInfo): Long {
+    fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): Long {
         currentUserService.contentCreatorOrUnauthorized()
+
+        val info = sourceInfo.nullMaxes()
 
         val currentVersion = cardService.activeAercVersion
         val nextVersion = currentVersion + 1

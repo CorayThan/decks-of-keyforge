@@ -79,6 +79,36 @@ data class Card(
             }
         }
 
+    val aercScoreMax: Double?
+        get() {
+            val cardInfo = this.extraCardInfo
+            return if (cardInfo == null) {
+                null
+            } else {
+                val maxAerc = (cardInfo.amberControlMax ?: cardInfo.amberControl) +
+                        (cardInfo.artifactControlMax ?: cardInfo.artifactControl) +
+                        (cardInfo.creatureControlMax ?: cardInfo.creatureControl) +
+                        (cardInfo.efficiencyMax ?: cardInfo.efficiency) +
+                        (cardInfo.disruptionMax ?: cardInfo.disruption) +
+                        (cardInfo.houseCheatingMax ?: cardInfo.houseCheating) +
+                        (cardInfo.amberProtectionMax ?: cardInfo.amberProtection) +
+                        (cardInfo.otherMax ?: cardInfo.other) +
+                        (cardInfo.expectedAmberMax ?: cardInfo.expectedAmber) +
+                        (if (cardInfo.effectivePowerMax == null) {
+                            this.effectivePower.toDouble() / 10
+                        } else {
+                            cardInfo.effectivePowerMax / 10
+                        }) +
+                        (if (this.cardType == CardType.Creature) 0.4 else 0.0)
+
+                if (maxAerc == this.aercScore) {
+                    null
+                } else {
+                    maxAerc
+                }
+            }
+        }
+
     fun toDeckSearchResultCard() = DeckSearchResultCard(
             cardTitle = cardTitle,
             house = house,

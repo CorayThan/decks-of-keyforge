@@ -8,18 +8,19 @@ import * as React from "react"
 import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { Deck } from "../decks/Deck"
 import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { SynTraitType } from "../synergy/SynTraitType"
+import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { cardStore } from "./CardStore"
-import { findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
+import { CardUtils, findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
 import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 export interface HasFrontImage {
@@ -56,13 +57,19 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
     )
 }
 
-export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolean }) => {
-    const card = props.card
-    if (props.simple) {
+export const CardView = observer((props: { card: KCard, simple?: boolean, noLink?: boolean, combo?: SynergyCombo, displayHistory?: boolean }) => {
+    const {card, simple, noLink, combo, displayHistory} = props
+    if (simple) {
         return <CardSimpleView card={card}/>
     }
     const {cardTitle, cardType, cardText, amber, extraCardInfo} = card
-    const {rating, traits, synergies} = extraCardInfo
+    const cardAerc = hasAercFromCard(card)
+
+    let previousCard
+    const previousExtraInfo = cardStore.previousExtraInfo
+    if (displayHistory && previousExtraInfo != null) {
+        previousCard = previousExtraInfo[card.cardTitle]
+    }
 
     const sidebarProps = screenStore.screenSizeXs() ? {
         vertical: true,
@@ -78,12 +85,12 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
             </div>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <CardQualityIcon quality={rating}/>
-                    {props.noLink ? (
+                    <CardQualityIcon quality={CardUtils.fakeRatingFromAerc(cardAerc)}/>
+                    {noLink ? (
                         <Typography color={"textPrimary"} variant={"h6"} style={{marginLeft: spacing(1), flexGrow: 1}}>{cardTitle}</Typography>
                     ) : (
                         <UnstyledLink
-                            to={Routes.cardPage(props.card.cardTitle)}
+                            to={Routes.cardPage(card.cardTitle)}
                             style={{marginLeft: spacing(1), flexGrow: 1, color: "rgba(0, 0, 0, 0.87)"}}
                         >
                             <Typography variant={"h6"}>{cardTitle}</Typography>
@@ -97,29 +104,29 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
                     {amber > 0 ? <Typography variant={"subtitle1"}>{amber} aember</Typography> : null}
                 </div>
                 <Typography>{cardText}</Typography>
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                <AercForCard card={hasAercFromCard(card)}/>
                 {card.winRate != null ? (
-                    <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
-                        <Tooltip
-                            title={"This win rate is affected by house win rate, so expect cards in better houses to have higher win rates."}
-                        >
-                            <Typography variant={"body2"} noWrap={true} style={{fontStyle: "italic"}}>
-                                {round(card.winRate * 100, 1)}% win rate
-                            </Typography>
-                        </Tooltip>
-                        <Tooltip
-                            title={"Wins / Losses"}
-                        >
-                            <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>{card.wins} / {card.losses}</Typography>
-                        </Tooltip>
-                    </div>
+                    <>
+                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                        <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
+                            <Tooltip
+                                title={"This win rate is affected by house win rate, so expect cards in better houses to have higher win rates."}
+                            >
+                                <Typography variant={"body2"} noWrap={true} style={{fontStyle: "italic"}}>
+                                    {round(card.winRate * 100, 1)}% win rate
+                                </Typography>
+                            </Tooltip>
+                            <Tooltip
+                                title={"Wins / Losses"}
+                            >
+                                <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>{card.wins} / {card.losses}</Typography>
+                            </Tooltip>
+                        </div>
+                    </>
                 ) : null}
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
-                <CardTraits card={card}/>
-                {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
-                <CardSynergies card={card}/>
+                <AercAndSynergies card={card} combo={combo} title={previousCard && "Current AERC"}/>
+                {previousCard && (
+                    <AercAndSynergies card={previousCard} title={"Previous AERC"}/>
+                )}
                 {userStore.contentCreator && (
                     <>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
@@ -133,7 +140,7 @@ export const CardView = (props: { card: KCard, simple?: boolean, noLink?: boolea
             </div>
         </GraySidebar>
     )
-}
+})
 
 interface CardAsLineProps {
     card: Partial<KCard>
@@ -142,6 +149,7 @@ interface CardAsLineProps {
     width?: number
     marginTop?: number
     hideRarity?: boolean
+    deck?: Deck
 }
 
 @observer
@@ -190,7 +198,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={hasAercFromCard(fullCard as KCard)}/>
+                            <AercForCard card={hasAercFromCard(fullCard as KCard)} realValue={findSynegyComboForCardFromDeck(fullCard, this.props.deck)}/>
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
@@ -254,7 +262,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
                 >
-                    <CardView card={fullCard as KCard}/>
+                    <CardView card={fullCard as KCard} combo={findSynegyComboForCardFromDeck(fullCard, this.props.deck)}/>
                 </Popover>
             )
         }
@@ -278,6 +286,14 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
             </div>
         )
     }
+}
+
+const findSynegyComboForCardFromDeck = (card: Partial<KCard>, deck?: Deck) => {
+    const name = card.cardTitle
+    if (name == null || deck == null || deck.synergies == null) {
+        return
+    }
+    return deck.synergies.synergyCombos.find(combo => combo.cardName === name)
 }
 
 const CardLine = (props: CardAsLineProps) => {
@@ -333,8 +349,7 @@ export const CardTraits = (props: { card: KCard }) => (
                 key={synergy.id}
                 name={synergy.trait}
                 positive={synergy.rating > 0}
-                home={synergy.type === SynTraitType.house}
-                noHome={synergy.type === SynTraitType.outOfHouse}
+                synTraitType={synergy.type}
                 rating={synergy.rating}
                 trait={true}
             />
@@ -349,10 +364,27 @@ export const CardSynergies = (props: { card: KCard }) => (
                 key={synergy.id}
                 name={synergy.trait}
                 positive={synergy.rating > 0}
-                home={synergy.type === SynTraitType.house}
-                noHome={synergy.type === SynTraitType.outOfHouse}
+                synTraitType={synergy.type}
                 rating={synergy.rating}
             />
         ))}
     </div>
 )
+
+const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string }) => {
+    const {card, combo, title} = props
+    const {extraCardInfo} = card
+    const {traits, synergies} = extraCardInfo
+    return (
+        <>
+            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+            <Typography variant={"h5"}>{title}</Typography>
+            <AercForCard card={hasAercFromCard(card)} realValue={combo}/>
+            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+            {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
+            <CardTraits card={card}/>
+            {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
+            <CardSynergies card={card}/>
+        </>
+    )
+}

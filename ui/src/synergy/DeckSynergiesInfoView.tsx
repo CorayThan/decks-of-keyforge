@@ -13,7 +13,6 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
-import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { screenStore } from "../ui/ScreenStore"
 import { SynergyCombo } from "./DeckSynergyInfo"
@@ -37,7 +36,7 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
 
     render() {
         const sasPercentile = this.props.synergies.deck.sasPercentile
-        const {deck, antisynergyPercentile, synergyPercentile, cardRatingPercentile} = this.props.synergies
+        const {deck, antisynergyPercentile, synergyPercentile} = this.props.synergies
         const deckSynergyInfo = deck.synergies!
         const {synergyCombos} = deckSynergyInfo
         return (
@@ -50,7 +49,6 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                         </Typography>
                         <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
                             <PercentRatingRow value={(sasPercentile == null ? -1.0 : sasPercentile).toFixed(1)} name={"SAS"}/>
-                            <PercentRatingRow value={cardRatingPercentile.toFixed(1)} name={"CARD RATING"}/>
                             <PercentRatingRow value={synergyPercentile.toFixed(1)} name={"SYNERGY"}/>
                             <PercentRatingRow value={antisynergyPercentile.toFixed(1)} name={"ANTISYNERGY"}/>
                             <div>
@@ -90,7 +88,7 @@ class ColumnHeaders extends React.Component {
             return (
                 <>
                     <TableCell>Card Name</TableCell>
-                    <TableCell>Rating / Synergy</TableCell>
+                    <TableCell>AERC / Synergy</TableCell>
                 </>
             )
         } else {
@@ -98,9 +96,8 @@ class ColumnHeaders extends React.Component {
                 <>
                     <SynergiesHeader title={"Card Name"} property={"cardName"}/>
                     <SynergiesHeader title={"Copies"} property={"copies"}/>
-                    <SynergiesHeader title={"Rating (0-4)"} property={"cardRating"}/>
-                    <SynergiesHeader title={"Synergy (-2 to 2)"} property={"netSynergy"}/>
-                    <SynergiesHeader title={"Value"} property={"value"}/>
+                    <SynergiesHeader title={"Synergy"} property={"netSynergy"}/>
+                    <SynergiesHeader title={"Aerc"} property={"aerc"}/>
                     <TableCell>Synergies</TableCell>
                     <SynergiesHeader title={"Aember Control"} property={"amberControl"}/>
                     <SynergiesHeader title={"Expected Aember"} property={"expectedAmber"}/>
@@ -136,19 +133,25 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                 <>
                     <TableCell><CardAsLine card={{cardTitle: combo.cardName}}/></TableCell>
                     <TableCell>{combo.copies}</TableCell>
-                    <TableCell>
-                        <div style={{display: "flex", alignItems: "center"}}>
-                            {combo.aercScore}
-                            <CardQualityIcon quality={combo.aercScore} style={{marginLeft: spacing(1)}}/>
-                        </div>
-                    </TableCell>
                     <TableCell>{combo.netSynergy}</TableCell>
-                    <TableCell>{combo.aercScore + combo.netSynergy}</TableCell>
+                    <TableCell>{combo.aercScore}</TableCell>
                     <TableCell>
-                        <div style={{display: "flex", flexWrap: "wrap", maxWidth: 280}}>
-                            {combo.synergies.map(synergy => (
-                                <TraitBubble key={synergy.trait} name={startCase(synergy.trait)} positive={synergy.percentSynergized > 0}/>
-                            ))}
+                        <div>
+                            {combo.synergies.map((synergy, idx) => {
+                                return (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Typography style={{width: 48}}>{synergy.percentSynergized}%</Typography>
+                                        <TraitBubble
+                                            key={idx}
+                                            name={startCase(synergy.trait)}
+                                            positive={synergy.rating > 0}
+                                            synergyWith={synergy.traitCards}
+                                            rating={synergy.rating}
+                                            synTraitType={synergy.type}
+                                        />
+                                    </div>
+                                )
+                            })}
                         </div>
                     </TableCell>
                     <TableCell>{combo.amberControl}</TableCell>

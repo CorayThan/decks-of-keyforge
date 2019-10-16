@@ -82,7 +82,6 @@ export class LandingPage extends React.Component<{}> {
                             </ListSubheader>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"}/>
-                                <DeckSearchLink name={"AERC"} filters={topAerc} color={"secondary"}/>
                             </div>
                             <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
@@ -103,9 +102,9 @@ export class LandingPage extends React.Component<{}> {
                             <ListSubheader>
                                 Fun Searches
                             </ListSubheader>
-                            <DeckSearchLink name={"Funniest"} filters={topFunny}/>
+                            <DeckSearchLink name={"Reversal"} filters={worstSas}/>
+                            <DeckSearchLink name={"Funniest"} filters={topFunny} style={{marginTop: spacing(2)}}/>
                             <DeckSearchLink name={"Favorites"} filters={topWishlisted} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Worst"} filters={worstSas} style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>

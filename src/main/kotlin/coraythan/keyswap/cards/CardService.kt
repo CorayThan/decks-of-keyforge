@@ -26,9 +26,11 @@ class CardService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    private var previousInfoWithNames: Map<String, Card>? = null
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
     private var nonMaverickCachedCardsListNoDups: List<Card>? = null
+    lateinit var previousExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     lateinit var extraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
@@ -36,12 +38,24 @@ class CardService(
     val publishAercVersion = 2
 
     fun loadExtraInfo() {
+
+        // TODO delete me
+        val allInfos = extraCardInfoRepo.findAll().mapNotNull {
+            val zeroed = it.nullMaxes()
+            if (it == zeroed) null else zeroed
+        }
+        if (allInfos.isNotEmpty()) {
+            log.info("Clearing out ${allInfos.size} extra infos with maxes with zeros")
+            extraCardInfoRepo.saveAll(allInfos)
+        }
+
         this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
         this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
         this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
+        this.previousExtraInfo = mapInfos(extraCardInfoRepo.findByVersionAndActiveFalse(this.activeAercVersion - 1))
 
+        log.info("Active aerc version $activeAercVersion published verison $publishAercVersion")
         if (activeAercVersion < publishAercVersion) {
-            log.info("Active aerc version $activeAercVersion published verison $publishAercVersion publishing")
             this.activeAercVersion = publishAercVersion
             val toPublish = this.nextExtraInfo
             val potentiallyUnpublish = this.extraInfo
@@ -74,6 +88,13 @@ class CardService(
             .toMap()
 
     fun findByExpansionCardNumberHouse(expansion: Int, cardNumber: String, house: House) = cardRepo.findByExpansionAndCardNumberAndHouse(expansion, cardNumber, house)
+
+    fun previousInfo(): Map<String, Card> {
+        if (previousInfoWithNames == null) {
+            reloadCachedCards()
+        }
+        return previousInfoWithNames!!
+    }
 
     fun allFullCardsNonMaverick(): List<Card> {
         if (nonMaverickCachedCardsList == null) {
@@ -187,6 +208,10 @@ class CardService(
                 ?.toMap()?.values
                 ?.toList()
                 ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
+        previousInfoWithNames = previousExtraInfo.map { entry ->
+            val card = nonMaverickCachedCards!![entry.key] ?: error("")
+            card.cardTitle to card.copy(extraCardInfo = entry.value)
+        }.toMap()
     }
 
     private fun fullCardsFromCards(cards: List<Card>) = cards.map {

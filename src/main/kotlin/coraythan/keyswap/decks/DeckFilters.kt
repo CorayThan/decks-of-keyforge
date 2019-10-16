@@ -68,7 +68,6 @@ data class  DeckCardQuantity(
 enum class DeckSortOptions {
     ADDED_DATE,
     SAS_RATING,
-    CARDS_RATING,
     AERC_SCORE,
     CHAINS,
     FUNNIEST,

@@ -367,8 +367,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             <TraitBubble
                                                 name={synergy.trait}
                                                 positive={synergy.rating > 0}
-                                                home={synergy.type === SynTraitType.house}
-                                                noHome={synergy.type === SynTraitType.outOfHouse}
+                                                synTraitType={synergy.type}
                                                 rating={synergy.rating}
                                                 trait={true}
                                             />
@@ -392,8 +391,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             <TraitBubble
                                                 name={synergy.trait}
                                                 positive={synergy.rating > 0}
-                                                home={synergy.type === SynTraitType.house}
-                                                noHome={synergy.type === SynTraitType.outOfHouse}
+                                                synTraitType={synergy.type}
                                                 rating={synergy.rating}
                                             />
                                             <IconButton

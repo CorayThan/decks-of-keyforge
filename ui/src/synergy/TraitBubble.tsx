@@ -6,8 +6,16 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { AntiIcon } from "../generic/icons/AntiIcon"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
+import { SynTraitType } from "./SynTraitType"
 
-export const TraitBubble = (props: { name: string, positive: boolean, home?: boolean, noHome?: boolean, trait?: boolean, rating?: number }) => {
+export const TraitBubble = (props: {
+    name: string,
+    positive: boolean,
+    synTraitType?: SynTraitType,
+    trait?: boolean,
+    rating?: number,
+    synergyWith?: string[]
+}) => {
     const color = props.positive && !props.trait ? "#FFFFFF" : undefined
     let title
     if (props.trait) {
@@ -34,12 +42,12 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
             {props.rating ? (
                 <SynergyEffectIcon effect={props.rating}/>
             ) : null}
-            {props.home ? (
+            {props.synTraitType === SynTraitType.house ? (
                 <Tooltip title={"Synergizes with house traits only"}>
                     <Home style={{color, marginRight: spacing(1)}}/>
                 </Tooltip>
             ) : null}
-            {props.noHome ? (
+            {props.synTraitType === SynTraitType.outOfHouse ? (
                 <Tooltip title={"Synergizes with out of house traits only"}>
                     <div style={{width: 36, height: 36, marginLeft: spacing(1), marginRight: spacing(1)}}>
                         <div style={{position: "absolute", paddingLeft: 7, paddingTop: 5}}>
@@ -49,7 +57,20 @@ export const TraitBubble = (props: { name: string, positive: boolean, home?: boo
                     </div>
                 </Tooltip>
             ) : null}
-            <Tooltip title={title}>
+            <Tooltip
+                title={(
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <Typography variant={"body2"}>{title}</Typography>
+                        {props.synergyWith != null && (
+                            <>
+                                {props.synergyWith.map((synergy) => (
+                                    <Typography variant={"body2"}>{synergy}</Typography>
+                                ))}
+                            </>
+                        )}
+                    </div>
+                )}
+            >
                 <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
                     {startCase(props.name)}
                 </Typography>

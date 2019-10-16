@@ -85,11 +85,9 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
 
         const barProps: ComparisonBarProps[] = [
             {name: "SAS", data: stats.sas, comparison: sasRating},
-            {name: "Cards Rating", data: stats.cardsRating, comparison: cardsRating},
             {name: "Synergy", data: stats.synergy, comparison: synergyRating},
             {name: "Antisynergy", data: stats.antisynergy, comparison: antisynergyRating},
-            {name: "Creature Power", data: stats.totalCreaturePower, comparison: creaturePowerCompareValue},
-            {name: "AERC", data: stats.aerc, comparison: Math.round(aercScore)},
+            {name: "Raw AERC", data: stats.aerc, comparison: Math.round(aercScore)},
             {name: "Aember Control", data: stats.amberControl, comparison: Math.round(amberControl)},
             {name: "Expected Aember", data: stats.expectedAmber, comparison: Math.round(expectedAmber)},
             {name: "Aember Protection", data: stats.amberProtection, comparison: Math.round(amberProtection)},

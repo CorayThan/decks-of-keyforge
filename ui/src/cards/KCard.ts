@@ -1,4 +1,5 @@
 import { HasAerc } from "../aerc/HasAerc"
+import { Utils } from "../config/Utils"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { House } from "../houses/House"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
@@ -27,6 +28,7 @@ export interface KCard {
     losses?: number
     winRate?: number
     aercScore: number
+    aercScoreMax?: number
 
     extraCardInfo: ExtraCardInfo
 }
@@ -39,59 +41,40 @@ export const winPercentForCard = (card: KCard): number | undefined => {
 }
 
 export const hasAercFromCard = (card: KCard): HasAerc => {
-    const {extraCardInfo, effectivePower, aercScore} = card
+    const {extraCardInfo, effectivePower, aercScore, aercScoreMax} = card
     const {
         amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other,
         amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, amberProtectionMax, disruptionMax, houseCheatingMax, otherMax
     } = extraCardInfo
 
-    var maxAerc: number | undefined = 0
-    if (amberControlMax != null && amberControlMax > 0) maxAerc += amberControlMax
-    if (expectedAmberMax != null && expectedAmberMax > 0) maxAerc += expectedAmberMax
-    if (creatureControlMax != null && creatureControlMax > 0) maxAerc += creatureControlMax
-    if (artifactControlMax != null && artifactControlMax > 0) maxAerc += artifactControlMax
-    if (efficiencyMax != null && efficiencyMax > 0) maxAerc += efficiencyMax
-    if (amberProtectionMax != null && amberProtectionMax > 0) maxAerc += amberProtectionMax
-    if (disruptionMax != null && disruptionMax > 0) maxAerc += disruptionMax
-    if (houseCheatingMax != null && houseCheatingMax > 0) maxAerc += houseCheatingMax
-    if (otherMax != null && otherMax > 0) maxAerc += otherMax
-    
-    if (maxAerc > 0) {
-        if (amberControlMax == null || amberControlMax < 0.01) maxAerc += amberControl
-        if (expectedAmberMax == null || expectedAmberMax < 0.01) maxAerc += expectedAmber
-        if (creatureControlMax == null || creatureControlMax < 0.01) maxAerc += creatureControl
-        if (artifactControlMax == null || artifactControlMax < 0.01) maxAerc += artifactControl
-        if (efficiencyMax == null || efficiencyMax < 0.01) maxAerc += efficiency
-        if (amberProtectionMax == null || amberProtectionMax < 0.01) maxAerc += amberProtection
-        if (disruptionMax == null || disruptionMax < 0.01) maxAerc += disruption
-        if (houseCheatingMax == null || houseCheatingMax < 0.01) maxAerc += houseCheating
-        if (otherMax == null || otherMax < 0.01) maxAerc += other
-    } else {
-        maxAerc = undefined
+    let averageAercScore = card.aercScore
+    if (card.aercScoreMax != null) {
+        averageAercScore = Utils.roundToTens((card.aercScore + card.aercScoreMax) / 2)
     }
-    
+
     return {
         amberControl,
         expectedAmber,
         creatureControl,
         artifactControl,
         efficiency,
-        aercScore: aercScore == null ? 0 : (Math.round(aercScore * 10) / 10),
         effectivePower,
         amberProtection,
         disruption,
         houseCheating,
         other,
-        amberControlMax, 
-        expectedAmberMax, 
-        creatureControlMax, 
-        artifactControlMax, 
-        efficiencyMax, 
-        amberProtectionMax, 
-        disruptionMax, 
-        houseCheatingMax, 
+        amberControlMax,
+        expectedAmberMax,
+        creatureControlMax,
+        artifactControlMax,
+        efficiencyMax,
+        amberProtectionMax,
+        disruptionMax,
+        houseCheatingMax,
         otherMax,
-        aercScoreMax: maxAerc
+        aercScoreMax: aercScoreMax == null ? undefined : Utils.roundToTens(aercScoreMax),
+        aercScore: Utils.roundToTens(aercScore),
+        averageAercScore
     }
 }
 
@@ -107,6 +90,21 @@ export const findCardImageUrl = (card: HasFrontImage) =>
     `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
 
 export class CardUtils {
+
+    static fakeRatingFromAerc = (card: HasAerc) => {
+        const aerc = card.averageAercScore!
+        if (aerc <= 0.5) {
+            return 0
+        } else if (aerc <=1) {
+            return 1
+        } else if (aerc <= 2) {
+            return 2
+        } else if (aerc <= 3) {
+            return 3
+        }
+        return 4
+    }
+
     static arrayToCSV = (cards: KCard[]) => {
         const data = cards.map(card => {
 
@@ -115,16 +113,27 @@ export class CardUtils {
                 card.house,
                 card.extraCardInfo.cardNumbers.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`).join(" | "),
                 card.aercScore,
+                card.aercScoreMax,
                 card.extraCardInfo.amberControl,
+                card.extraCardInfo.amberControlMax,
                 card.extraCardInfo.expectedAmber,
+                card.extraCardInfo.expectedAmberMax,
                 card.extraCardInfo.amberProtection,
+                card.extraCardInfo.amberProtectionMax,
                 card.extraCardInfo.artifactControl,
+                card.extraCardInfo.artifactControlMax,
                 card.extraCardInfo.creatureControl,
+                card.extraCardInfo.creatureControlMax,
                 card.effectivePower,
+                card.extraCardInfo.effectivePowerMax,
                 card.extraCardInfo.efficiency,
+                card.extraCardInfo.efficiencyMax,
                 card.extraCardInfo.disruption,
+                card.extraCardInfo.disruptionMax,
                 card.extraCardInfo.houseCheating,
+                card.extraCardInfo.houseCheatingMax,
                 card.extraCardInfo.other,
+                card.extraCardInfo.otherMax,
 
                 card.amber,
                 card.power,
@@ -143,17 +152,28 @@ export class CardUtils {
             "Name",
             "House",
             "Expansion – #",
-            "Aerc Score",
+            "Aerc Min",
+            "Aerc Max",
             "Amber Control",
+            "Amber Control Max",
             "Expected Amber",
+            "Expected Amber Max",
             "Aember Protection",
+            "Aember Protection Max",
             "Artifact Control",
+            "Artifact Control Max",
             "Creature Control",
+            "Creature Control Max",
             "Effective Power",
+            "Effective Power Max",
             "Efficiency",
+            "Efficiency Max",
             "Disruption",
+            "Disruption Max",
             "House Cheating",
+            "House Cheating Max",
             "Other",
+            "Other Max",
 
             "Raw Amber",
             "Power",

@@ -41,6 +41,12 @@ export class CardStore {
     @observable
     cardNameSearchResults: KCard[] = []
 
+    @observable
+    previousExtraInfo?: { [cardName: string]: KCard }
+
+    @observable
+    findingPreviousInfo = false
+
     reset = () => {
         if (this.cards) {
             this.cards = undefined
@@ -62,10 +68,8 @@ export class CardStore {
             )
         })
 
-        if (filters.sort === "CARD_RATING") {
-            filtered = sortBy(filtered, ["extraCardInfo.rating", "cardNumber"])
-        } else if (filters.sort === CardSort.AERC) {
-            filtered = sortBy(filtered, [(card) => hasAercFromCard(card).aercScore, "cardNumber"])
+        if (filters.sort === CardSort.AERC) {
+            filtered = sortBy(filtered, [(card) => hasAercFromCard(card).averageAercScore!, "cardNumber"])
         } else if (filters.sort === "EXPECTED_AMBER") {
             filtered = sortBy(filtered, ["extraCardInfo.expectedAmber", "cardNumber"])
         } else if (filters.sort === "AMBER_CONTROL") {
@@ -158,6 +162,20 @@ export class CardStore {
                 this.cardNameSearchResults = this.cardNameSearchResults.slice(0, 5)
             }
         }
+    }
+
+    findPreviousExtraInfo = () => {
+        if (this.previousExtraInfo != null || this.findingPreviousInfo) {
+            return
+        }
+        this.findingPreviousInfo = true
+        log.debug("Find previous extra card info")
+        axios.get(`${CardStore.CONTEXT}/historical`)
+            .then((response: AxiosResponse) => {
+                this.findingPreviousInfo = false
+                this.previousExtraInfo = response.data
+                log.debug("Found previous info")
+            })
     }
 
     fullCardFromCardName = (cardTitle: string) => {

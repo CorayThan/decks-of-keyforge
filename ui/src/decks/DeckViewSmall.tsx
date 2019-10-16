@@ -87,7 +87,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 id={deck.keyforgeId}
             >
                 {compact && (
-                    <AercView hasAerc={deck} deck={deck} horizontal={true} excludeMisc={true} style={{marginLeft: spacing(1)}}/>
+                    <AercView deck={deck} horizontal={true} excludeMisc={true} style={{marginLeft: spacing(1)}}/>
                 )}
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}>
@@ -158,7 +158,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardActions>
                         )}
                     </div>
-                    {compact ? null : <AercView hasAerc={deck} deck={deck}/>}
+                    {compact ? null : <AercView deck={deck}/>}
                 </div>
             </KeyCard>
         )
@@ -212,7 +212,8 @@ const DisplayAllCardsByHouse = (props: { deck: Deck }) => {
 
     return (
         <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-            {cardsByHouse.map((cardsForHouse) => (<DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} deckExpansion={props.deck.expansion}/>))}
+            {cardsByHouse.map((cardsForHouse) => (
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} deckExpansion={props.deck.expansion} deck={props.deck}/>))}
         </div>
     )
 }
@@ -223,13 +224,13 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     return (
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
             {cardsByHouse.map((cardsForHouse) => (
-                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true} deckExpansion={deckExpansion}/>
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true} deckExpansion={deckExpansion} deck={props.deck}/>
             ))}
         </div>
     )
 }
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, disableTextSelection?: boolean, compact?: boolean }) => {
+const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, disableTextSelection?: boolean, compact?: boolean, deck: Deck }) => {
     const deckExpansion = props.deckExpansion
     return (
         <List>
@@ -240,16 +241,16 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
                     <div style={{display: "flex"}}>
                         <div style={{marginRight: spacing(1)}}>
                             {props.cards.slice(0, 6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion}/>))}
+                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={props.deck}/>))}
                         </div>
                         <div>
                             {props.cards.slice(6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion}/>))}
+                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={props.deck}/>))}
                         </div>
                     </div>
                 )
                 :
-                props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion}/>))
+                props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion} deck={props.deck}/>))
             }
         </List>
     )

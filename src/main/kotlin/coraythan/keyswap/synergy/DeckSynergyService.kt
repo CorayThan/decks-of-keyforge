@@ -59,10 +59,7 @@ object DeckSynergyService {
                 uncappedValue > max -> max
                 else -> uncappedValue
             }
-            SynergizedValue(
-                    value.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble(),
-                    (value - startingPoint).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
-            )
+            SynergizedValue(value, value - startingPoint)
         }
     }
 
@@ -159,7 +156,7 @@ object DeckSynergyService {
                             matches * ratingsToPercent(synTraitValue.rating, traitStrength)
                         }.sum()
 
-                        SynergyMatch(trait, synPercent, cardNames)
+                        SynergyMatch(trait, synPercent, cardNames, synTraitValue.rating, synTraitValue.type)
                     }
 
                     val totalSynPercent = matchedTraits.map { it.percentSynergized }.sum()
@@ -248,18 +245,17 @@ object DeckSynergyService {
         val rawhc = extraCardInfos.map { if (it.houseCheatingMax == null || it.houseCheatingMax == 0.0) it.houseCheating else (it.houseCheating + it.houseCheatingMax) / 2 }.sum()
 
         val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
-        val powerValue = p.toDouble() / 10
-        // Remember! When updating this also update Card
-        val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawPowerValue = rawp / 10
+        // Remember! When updating this also update Card
         val rawAerc = roundToInt(rawa + rawe + rawr + rawc + rawf + rawd + rawap + rawhc + rawo + rawPowerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
-
+        val synergy = roundToInt(synergyCombos.map { it.synergy * it.copies }.sum(), RoundingMode.HALF_UP)
+        val antisynergy = roundToInt(synergyCombos.map { it.antisynergy * it.copies }.sum(), RoundingMode.HALF_UP).absoluteValue
         return DeckSynergyInfo(
-                synergyRating = roundToInt(synergyCombos.map { it.synergy * it.copies }.sum(), RoundingMode.HALF_UP),
-                antisynergyRating = roundToInt(synergyCombos.map { it.antisynergy * it.copies }.sum(), RoundingMode.HALF_UP),
+                synergyRating = synergy,
+                antisynergyRating = antisynergy,
                 synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
                 rawAerc = rawAerc,
-                sasRating = newSas,
+                sasRating = rawAerc + synergy - antisynergy,
 
                 amberControl = a,
                 expectedAmber = e,
@@ -465,3 +461,4 @@ object DeckSynergyService {
 }
 
 fun Double?.isZeroOrNull() = this == null || this == 0.0
+fun Double.roundToTens() = this.toBigDecimal().setScale(1, RoundingMode.HALF_UP)

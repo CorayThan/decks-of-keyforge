@@ -28,4 +28,7 @@ class CardEndpoints(
 
     @GetMapping("/complete")
     fun realAllCards() = cardService.realAllCards()
+
+    @GetMapping("/historical")
+    fun findHistoricalInfo() = cardService.previousInfo()
 }

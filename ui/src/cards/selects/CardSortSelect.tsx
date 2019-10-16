@@ -5,7 +5,6 @@ import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 
 const cardSortOptions: SortOption[] = [
     {value: "SET_NUMBER", name: "Set Number"},
-    {value: "CARD_RATING", name: "Card Rating"},
     {value: "AERC", name: "Total Aerc"},
     {value: "WIN_RATE", name: "Win Rate"},
     {value: "EXPECTED_AMBER", name: "Expected Aember"},

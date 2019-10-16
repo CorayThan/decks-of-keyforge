@@ -48,7 +48,7 @@ export const FancyDeckMenuItem = observer((props: { deck: Deck, onClick: () => v
                     <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>
                         {deck.name}
                     </Typography>
-                    <AercView hasAerc={deck} excludeMisc={true} horizontal={true}/>
+                    <AercView deck={deck} excludeMisc={true} horizontal={true}/>
                 </div>
                 <div style={{display: "flex", alignItems: "flex-end"}}>
                     <DeckScorePill
