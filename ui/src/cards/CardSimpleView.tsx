@@ -198,7 +198,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={hasAercFromCard(fullCard as KCard)} realValue={findSynegyComboForCardFromDeck(fullCard, this.props.deck)}/>
+                            <AercForCard card={fullCard as KCard} realValue={findSynegyComboForCardFromDeck(fullCard, this.props.deck)}/>
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
@@ -379,7 +379,7 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
         <>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             <Typography variant={"h5"}>{title}</Typography>
-            <AercForCard card={hasAercFromCard(card)} realValue={combo}/>
+            <AercForCard card={card} realValue={combo}/>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
             <CardTraits card={card}/>

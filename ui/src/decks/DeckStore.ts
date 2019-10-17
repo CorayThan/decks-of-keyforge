@@ -200,7 +200,7 @@ export class DeckStore {
     checkIfUpdating = () => axios.get(`${DeckStore.CONTEXT}/updating`)
         .then((response: AxiosResponse<boolean>) => {
             if (response.data) {
-                messageStore.setInfoMessage("SAS / AERC update in progress", 3000)
+                messageStore.setInfoMessage("SAS / AERC indexes and sorting updating", 3000)
             }
         })
 

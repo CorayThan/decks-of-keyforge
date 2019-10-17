@@ -179,9 +179,9 @@ class SynergyServiceTest {
 
         val niffleResults = DeckSynergyService.fromDeckWithCards(boringDeck, queenCards)
         assertEquals(3, niffleResults.synergyCombos.size)
-        assertEquals(1.0, niffleResults.synergyRating, 0.01)
+        assertEquals(1, niffleResults.synergyRating)
 
         val huntingResults = DeckSynergyService.fromDeckWithCards(boringDeck, huntingWitch)
-        assertEquals(0.4, huntingResults.synergyRating, 0.01)
+        assertEquals(0, huntingResults.synergyRating)
     }
 }

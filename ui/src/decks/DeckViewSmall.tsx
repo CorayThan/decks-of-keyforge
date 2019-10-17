@@ -194,7 +194,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                     <HouseBanner houses={houses} size={72}/>
                     <OrganizedPlayStats deck={deck}/>
                 </div>
-                    <DeckScoreView deck={{...deck, ...deck.synergies!}}/>
+                <DeckScoreView deck={{...deck, ...deck.synergies!}}/>
             </div>
         )
     }

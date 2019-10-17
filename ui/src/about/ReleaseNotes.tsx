@@ -43,7 +43,7 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             note: (
-                                    <LinkButton variant={"contained"} color={"primary"} to={AboutSubPaths.sas}>SAS and AERC</LinkButton>
+                                <LinkButton variant={"contained"} color={"primary"} to={AboutSubPaths.sas}>SAS and AERC</LinkButton>
                             )
                         },
                         {

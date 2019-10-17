@@ -2,6 +2,7 @@ import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardsWithAerc, CardsWithAercFromCombos } from "../cards/CardsWithAerc"
 import { CardType } from "../cards/CardType"
+import { hasAercFromCard, KCard } from "../cards/KCard"
 import { spacing, theme } from "../config/MuiConfig"
 import { Utils } from "../config/Utils"
 import { Deck, DeckUtils } from "../decks/Deck"
@@ -15,7 +16,6 @@ import { UpgradeIcon } from "../generic/icons/card-types/UpgradeIcon"
 import { KeyCheatIcon } from "../generic/icons/KeyCheatIcon"
 import { InfoIconList, InfoIconValue } from "../generic/InfoIcon"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
-import { HasAerc } from "./HasAerc"
 
 export const AercView = (props: {
     deck: Deck, horizontal?: boolean, excludeMisc?: boolean, style?: React.CSSProperties
@@ -315,54 +315,64 @@ const AercCategory = (props: { name: string, small?: boolean, horizontal?: boole
     )
 }
 
-export const AercForCard = (props: { card: HasAerc, short?: boolean, realValue?: SynergyCombo }) => {
+export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo }) => {
     const {card, short, realValue} = props
+    const hasAerc = hasAercFromCard(card)
     return (
         <div style={{display: "grid", gridTemplateColumns: "4fr 2fr 1fr"}}>
             <AercScore
-                score={card.amberControl}
-                max={card.amberControlMax}
+                score={hasAerc.amberControl}
+                max={hasAerc.amberControlMax}
                 synergizedScore={realValue && realValue.amberControl}
                 name={short ? "A" : "Aember Control (A)"}
             />
             <AercScore
-                score={card.expectedAmber} max={card.expectedAmberMax} synergizedScore={realValue && realValue.expectedAmber}
+                score={hasAerc.expectedAmber} max={hasAerc.expectedAmberMax} synergizedScore={realValue && realValue.expectedAmber}
                 name={short ? "E" : "Expected Aember (E)"}
             />
             <AercScore
-                score={card.artifactControl} max={card.artifactControlMax} synergizedScore={realValue && realValue.artifactControl}
+                score={hasAerc.artifactControl} max={hasAerc.artifactControlMax} synergizedScore={realValue && realValue.artifactControl}
                 name={short ? "R" : "Artifact Control (R)"}
             />
             <AercScore
-                score={card.creatureControl} max={card.creatureControlMax} synergizedScore={realValue && realValue.creatureControl}
+                score={hasAerc.creatureControl} max={hasAerc.creatureControlMax} synergizedScore={realValue && realValue.creatureControl}
                 name={short ? "C" : "Creature Control (C)"}
             />
             <AercScore
-                score={card.effectivePower} max={card.effectivePowerMax} synergizedScore={realValue && realValue.effectivePower}
+                score={Utils.roundToTens(hasAerc.effectivePower / 10)}
+                max={hasAerc.effectivePowerMax != null ? Utils.roundToTens(hasAerc.effectivePowerMax / 10) : undefined}
+                synergizedScore={realValue && Utils.roundToTens(realValue.effectivePower / 10)}
                 name={short ? "P" : "Effective Power (P)"}
             />
+            {card.cardType === CardType.Creature && (
+                <AercScore
+                    score={0.4}
+                    singleColumn={realValue == null}
+                    name={short ? "CB" : "Creature Bonus"}
+                />
+            )}
             <AercScore
-                score={card.efficiency} max={card.efficiencyMax} synergizedScore={realValue && realValue.efficiency}
+                score={hasAerc.efficiency} max={hasAerc.efficiencyMax} synergizedScore={realValue && realValue.efficiency}
                 name={short ? "F" : "Efficiency (F)"}
             />
             <AercScore
-                score={card.disruption} max={card.disruptionMax} synergizedScore={realValue && realValue.disruption}
+                score={hasAerc.disruption} max={hasAerc.disruptionMax} synergizedScore={realValue && realValue.disruption}
                 name={short ? "D" : "Disruption (D)"}
             />
             <AercScore
-                score={card.amberProtection} max={card.amberProtectionMax} synergizedScore={realValue && realValue.amberProtection}
+                score={hasAerc.amberProtection} max={hasAerc.amberProtectionMax} synergizedScore={realValue && realValue.amberProtection}
                 name={short ? "AP" : "Aember Protection"}
             />
             <AercScore
-                score={card.houseCheating} max={card.houseCheatingMax} synergizedScore={realValue && realValue.houseCheating}
+                score={hasAerc.houseCheating} max={hasAerc.houseCheatingMax} synergizedScore={realValue && realValue.houseCheating}
                 name={short ? "HC" : "House Cheating"}
             />
             <AercScore
-                score={card.other} max={card.otherMax} synergizedScore={realValue && realValue.other} name={short ? "O" : "Other"}
+                score={hasAerc.other} max={hasAerc.otherMax} synergizedScore={realValue && realValue.other} name={short ? "O" : "Other"}
             />
             {realValue == null ? (
                 <AercScore
-                    score={card.aercScore} max={card.aercScoreMax} name={"AERC"}
+                    score={hasAerc.aercScore} max={hasAerc.aercScoreMax} name={"AERC"}
                 />
             ) : (
                 <AercAercScore score={realValue.aercScore} synergy={realValue.netSynergy}/>
@@ -393,10 +403,16 @@ const AercAercScore = (props: { score: number, synergy: number }) => {
 }
 
 
-const AercScore = (props: { score: number, max?: number, name: string, synergizedScore?: number }) => {
-    const {score, max, name, synergizedScore} = props
+const AercScore = (props: { score: number, max?: number, name: string, synergizedScore?: number, singleColumn?: boolean }) => {
+    const {score, max, name, synergizedScore, singleColumn} = props
     if (score === 0 && max == null) {
         return null
+    }
+    let secondColumn = ""
+    if (max != null) {
+        secondColumn = `${score} to ${max}`
+    } else if (singleColumn || (max == null && synergizedScore == null)) {
+        secondColumn = score.toString()
     }
     return (
         <>
@@ -404,10 +420,10 @@ const AercScore = (props: { score: number, max?: number, name: string, synergize
                 {name}:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {max == null ? "" : `${score} to ${max}`}
+                {secondColumn}
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {synergizedScore == null ? "" : synergizedScore}
+                {max == null && synergizedScore != null ? score : synergizedScore}
             </Typography>
         </>
     )

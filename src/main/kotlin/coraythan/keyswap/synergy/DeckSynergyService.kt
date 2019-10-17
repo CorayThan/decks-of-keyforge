@@ -202,7 +202,7 @@ object DeckSynergyService {
                             cardName = card.cardTitle,
                             synergies = matchedTraits,
                             netSynergy = synergyValues.sum(),
-                            aercScore = synergizedValues.map { it.value }.sum(),
+                            aercScore = synergizedValues.map { it.value }.sum() + (if (card.cardType == CardType.Creature) 0.4 else 0.0),
                             synergy = synergyValues.filter { it > 0 }.sum(),
                             antisynergy = synergyValues.filter { it < 0 }.sum(),
 

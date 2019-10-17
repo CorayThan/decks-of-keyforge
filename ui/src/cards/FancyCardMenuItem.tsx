@@ -8,7 +8,7 @@ import { Routes } from "../config/Routes"
 import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { screenStore } from "../ui/ScreenStore"
 import { CardSimpleView } from "./CardSimpleView"
-import { hasAercFromCard, KCard } from "./KCard"
+import { KCard } from "./KCard"
 
 export const FancyCardMenuItem = observer((props: { card: KCard, onClick: () => void }) => {
     const {card, onClick} = props
@@ -36,7 +36,7 @@ export const FancyCardMenuItem = observer((props: { card: KCard, onClick: () => 
                         {card.cardTitle}
                     </Typography>
                     <Divider style={{marginBottom: theme.spacing(0.5)}}/>
-                    <AercForCard card={hasAercFromCard(card)}/>
+                    <AercForCard card={card}/>
                 </div>
             </div>
         </LinkMenuItem>

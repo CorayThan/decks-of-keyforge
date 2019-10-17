@@ -7,7 +7,7 @@ import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSimpleView"
-import { CardUtils, hasAercFromCard, KCard } from "./KCard"
+import { CardUtils, KCard } from "./KCard"
 
 export const CardTableView = (props: { cards: KCard[] }) => {
     return (
@@ -43,7 +43,7 @@ export const CardTableView = (props: { cards: KCard[] }) => {
                                 <TableCell>{card.power}</TableCell>
                                 <TableCell>{card.armor}</TableCell>
                                 <TableCell>{card.cardText}</TableCell>
-                                <TableCell><AercForCard card={hasAercFromCard(card)} short={true}/></TableCell>
+                                <TableCell><AercForCard card={card} short={true}/></TableCell>
                                 <TableCell>
                                     <CardTraits card={card}/>
                                 </TableCell>

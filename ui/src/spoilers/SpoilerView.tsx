@@ -2,7 +2,6 @@ import { Button, Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { GraySidebar } from "../generic/GraySidebar"
@@ -75,8 +74,6 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
 
                     {userStore.contentCreator && (
                         <>
-                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                            <AercForCard card={props.spoiler}/>
                             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                             <div style={{display: "flex"}}>
                                 <LinkButton
