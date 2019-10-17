@@ -45,7 +45,7 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                 topContents={(
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center"}}>
                         <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
-                            Card Details
+                            Synergy Details
                         </Typography>
                         <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
                             <PercentRatingRow value={(sasPercentile == null ? -1.0 : sasPercentile).toFixed(1)} name={"SAS"}/>
@@ -139,10 +139,12 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                         <div>
                             {combo.synergies.map((synergy, idx) => {
                                 return (
-                                    <div style={{display: "flex", alignItems: "center"}}>
+                                    <div
+                                        key={idx}
+                                        style={{display: "flex", alignItems: "center"}}
+                                    >
                                         <Typography style={{width: 48}}>{synergy.percentSynergized}%</Typography>
                                         <TraitBubble
-                                            key={idx}
                                             name={startCase(synergy.trait)}
                                             positive={synergy.rating > 0}
                                             synergyWith={synergy.traitCards}

@@ -14,7 +14,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.18"
+export const latestVersion = "4.0"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -23,7 +23,50 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote
-                    releaseNumber={"5.18"}
+                    releaseNumber={"4.0"}
+                    date={"10/16/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS v4 Released!",
+                            note: "The biggest revision to SAS ever is now complete. AERC traits now have synergies, and those synergies / antisynergies + " +
+                                "the raw AERC score = the new SAS. This means all decks have had their scores shifted significantly. Scores are lower " +
+                                "across the board, usually in the range of 5 to 20 points lower. 63 is now the average SAS rating."
+                        },
+                        {
+                            note: "This change was made made to improve AERC and SAS. AERC and SAS are both strong rating systems, but rating deck quality " +
+                                "based on Aember equivalent value provides a consistent basis for rating decks across sets, and makes it easier to " +
+                                "rate cards more accurately. Adding synergies to AERC stats makes AERC stats a much more realistic evaluation of the " +
+                                "traits of a deck. And changing the Synergy and Antisynergy system to have a dynamic range per card, instead of the set " +
+                                "-2 to 2 range as it previously did, improves the accuracy and flexibility of the system. The SAS + AERC page has been " +
+                                "revised based on these changes. Please review that for more details about how the new system works!"
+                        },
+                        {
+                            note: (
+                                    <LinkButton variant={"contained"} color={"primary"} to={AboutSubPaths.sas}>SAS and AERC</LinkButton>
+                            )
+                        },
+                        {
+                            highlight: "New Ratings show immediately, searches update slowly",
+                            note: "It will take multiple hours or days for all the decks to finish updating for the new ratings. During that time " +
+                                "all decks will show their new ratings, but search results will be inconsistent (some decks will use their old ratings in " +
+                                "searches until done updating)."
+                        },
+                        {
+                            highlight: "Improved Synergy Information",
+                            note: "On hover / click of cards in a deck list you can see the AERC range of the card, as well as the specific rating for that " +
+                                "card in that deck. Also, in the Deck Page Synergy Details table you can see what percent synergy each card's synergies has, " +
+                                "and on hover you can see what cards each synergy is synergizing with."
+                        },
+                        {
+                            highlight: "Historical AERC changes",
+                            note: "Starting now, you can also view past AERC values on the cards page. Just click the toggle at the bottom and you will see " +
+                                "previous and current AERC ratings for the card."
+                        },
+                    ]}
+                />
+                <ReleaseNote
+                    releaseNumber={"3.30"}
                     date={"10/12/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
@@ -36,7 +79,7 @@ export class ReleaseNotes extends React.Component {
                     ]}
                 />
                 <ReleaseNote
-                    releaseNumber={"5.17"}
+                    releaseNumber={"3.29"}
                     date={"10/4/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
@@ -57,7 +100,7 @@ export class ReleaseNotes extends React.Component {
                     ]}
                 />
                 <ReleaseNote
-                    releaseNumber={"5.16"}
+                    releaseNumber={"3.28"}
                     date={"9/30/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
@@ -77,7 +120,7 @@ export class ReleaseNotes extends React.Component {
                     ]}
                 />
                 <ReleaseNote
-                    releaseNumber={"5.15"}
+                    releaseNumber={"3.27"}
                     date={"9/25/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
@@ -93,7 +136,7 @@ export class ReleaseNotes extends React.Component {
                     ]}
                 />
                 <ReleaseNote
-                    releaseNumber={"5.14"}
+                    releaseNumber={"3.26"}
                     date={"9/22/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
@@ -131,7 +174,7 @@ export class ReleaseNotes extends React.Component {
                         },
                     ]}
                 />
-                <ReleaseNote releaseNumber={"5.13"} date={"9/11/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.25"} date={"9/11/2019"} expanded={true} releaseNotes={[
                     "Make sure to check out the toggle buttons on the bottom of the deck search drawer! I added a new graph one to see some graphs on " +
                     "the deck search screen!",
                     "Big changes to AERC! Multiple new Aerc stats, including Aember Protection (cards like Vault Keeper and key cheats), House Cheating " +
@@ -144,18 +187,18 @@ export class ReleaseNotes extends React.Component {
                     "overhead, but this seemed worth it.",
                     "Improved the stats page. The graphs exclude data with very small counts, and display quantity of data available."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.12"} date={"8/24/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.24"} date={"8/24/2019"} expanded={true} releaseNotes={[
                     "Download deck lists as a spreadsheet file! Switch to the table view (toggle button at the bottom of the search bar) and click the " +
                     "download button.",
                     "Deck table view now has a three dots button to perform most of the normal actions for a deck directly from the table.",
                     "Added Master Vault link to the more options button for decks."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.11"} date={"8/23/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.23"} date={"8/23/2019"} expanded={true} releaseNotes={[
                     "Added rate limiting for the deck request API. Some users were misusing this resource. Please use the CSV if you need all SAS / AERC " +
                     "ratings.",
                     "If you are the high bidder on an auction and someone else buys the auction with buy it now, you will receive an email."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.10"} date={"8/22/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.22"} date={"8/22/2019"} expanded={true} releaseNotes={[
                     "Minor improvement to SAS / AERC. These are some lingering changes to the current system I wanted to get out before I start " +
                     "working on the big update.",
                     "Fixed problems like Shadow of Dis having Aember Control instead of Expected Aember.",
@@ -167,7 +210,7 @@ export class ReleaseNotes extends React.Component {
                     "search.",
                     "A few minor bug fixes, like to the tooltips for stars."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.9"} date={"8/20/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.21"} date={"8/20/2019"} expanded={true} releaseNotes={[
                     "Introducing SAStars! These stars are a quick way to know the percentile ranking of a deck by SAS. Check out the new About page section " +
                     "for more info on what they mean. (Scroll down for the SAStars section.)",
                     <LinkButton style={{margin: spacing(1)}} size={"small"} to={AboutSubPaths.sas}>About SAStars</LinkButton>,
@@ -188,14 +231,14 @@ export class ReleaseNotes extends React.Component {
                         <TwitterButton style={{marginLeft: spacing(2)}}/>
                     </div>,
                 ]}/>
-                <ReleaseNote releaseNumber={"5.8"} date={"8/14/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.20"} date={"8/14/2019"} expanded={true} releaseNotes={[
                     "The top search tool is a lot cooler now! Displays relevant info about the decks. It will also search for cards and displays info about " +
                     "them, and let you click to see the full page for the card.",
                     "Also wanted to mention the Gen Con Vault Tour was awesome! Was exciting getting to see the upcoming set previewed, and everyone I met " +
                     "and played against was friendly and cool. I wish I could've made one of the day 2s, but my losses were against great decks and players, " +
                     "so nothing to complain about!"
                 ]}/>
-                <ReleaseNote releaseNumber={"5.7"} date={"8/13/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.19"} date={"8/13/2019"} expanded={true} releaseNotes={[
                     "Improved cards page. The cards page now loads much faster, loads more cards on scroll, and you can link to individual pages for " +
                     "cards.",
                     "Add notes to any deck, and use your notes as custom tags to share collections of decks with a link! You can search for " +
@@ -203,7 +246,7 @@ export class ReleaseNotes extends React.Component {
                     "Deck action buttons have been improved. Less used actions (view cards, add note) are in a three vertical dots menu, and in mobile " +
                     "most deck actions will appear there for a simpler, shorter mobile view."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.6"} date={"6/30/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.18"} date={"6/30/2019"} expanded={true} releaseNotes={[
                     "Updated SAS. Added some new traits, like Deploy and an Out of House synergy type. (Synergizes with traits from cards in other houses " +
                     "only. Also fixed some issues, like the Thief trait not working.",
                     "Highlights of the update for AoA: ",
@@ -218,12 +261,12 @@ export class ReleaseNotes extends React.Component {
                         <ListItem><Typography>Po's Pixies 2 -> 3</Typography></ListItem>
                     </List>
                 ]}/>
-                <ReleaseNote releaseNumber={"5.5"} date={"6/28/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.17"} date={"6/28/2019"} expanded={true} releaseNotes={[
                     "You can now search for a number of copies of any cards. For example, you could search for decks with 1 of Key Charge, Chota Hazri, or " +
                     "Key Abduction.",
                     "Added a search field to the top bar. Should help for quick deck name searches!"
                 ]}/>
-                <ReleaseNote releaseNumber={"5.4"} date={"6/20/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.16"} date={"6/20/2019"} expanded={true} releaseNotes={[
                     "Updated description and terms for auction bidding and listing. Sniping is actively discouraged, and if server slowness or instability " +
                     "significantly affects the ability of users to bid on an auction, sellers are allowed to relist that auction with a description " +
                     "explaining why.",
@@ -238,25 +281,25 @@ export class ReleaseNotes extends React.Component {
                     `"Speaking of which, I wanted to introduce you to Nathan. He makes Decks of KeyForge and SAS!" So I said, "Hi, I've lied to ` +
                     `KeyForge players hundreds of thousands of times." Was a pretty funny introduction!`
                 ]}/>
-                <ReleaseNote releaseNumber={"5.3"} date={"6/9/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.15"} date={"6/9/2019"} expanded={true} releaseNotes={[
                     "Moved Expansion selector down to above search bar to improve spacing on deck search.",
                     "Added a sellers view to make it more convenient for sellers to use the table view to update prices and unlist decks.",
                     "When listing an auction you can now select the time it will end.",
                     "Improved stability by improving the deck statistics update function."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.2"} date={"6/5/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.15"} date={"6/5/2019"} expanded={true} releaseNotes={[
                     "Refined card ratings and synergies for AoA.",
                     "Improved deck importer to better keep up with quantity of decks.",
                     "Cards sorted in a CotA style for AoA decks."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.1"} date={"6/1/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.14"} date={"6/1/2019"} expanded={true} releaseNotes={[
                     "In the process of adding separate stats for expansions.",
                     "Improved deck importer to better keep up with quantity of decks.",
                     "I haven't made changes yet, but I'll be updating and improving SAS ratings for AOA as I get more familiar with the set. " +
                     "While I do think AOA is weaker in general than COTA, and will have generally lower scores, I think it's being a bit underrated " +
                     "by SAS at this time."
                 ]}/>
-                <ReleaseNote releaseNumber={"5.0"} date={"5/31/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.13"} date={"5/31/2019"} expanded={true} releaseNotes={[
                     "Age of Ascension traits, synergies, and antisynergies have been added! There are still some new synergies in AoA that are not yet " +
                     "represented, like an automatic anti-synergy for multiple copies of the Alpha keyword in the same house.",
                     "Revised Bait and Switch as well as Library Access. Despite it being unfortunate that they needed to do it, I'm personally excited about " +
@@ -267,28 +310,28 @@ export class ReleaseNotes extends React.Component {
                     "Legacy symbols now show up next to decks with legacy cards.",
                     "Fixed an issue with notifications not being sent for newly listed auctions."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.4"} date={"5/29/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.12"} date={"5/29/2019"} expanded={true} releaseNotes={[
                     "Age of Ascension decks are now importing into Decks of KeyForge! Note that these decks have SAS ratings, but those should be " +
                     "taken with a huge grain of salt. I haven't had time to add traits, synergies or antisynergies yet, so Age of Ascension decks will " +
                     "also have lower scores than they should."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.3"} date={"5/26/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.11"} date={"5/26/2019"} expanded={true} releaseNotes={[
                     `Search for cards as mavericks in a specific house! Just use the "Copies" drop down and select the house you want.`,
                     "New article previewing SAS ratings for many of the known cards coming out in Age of Ascension!"
                 ]}/>
-                <ReleaseNote releaseNumber={"4.2"} date={"5/22/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.10"} date={"5/22/2019"} expanded={true} releaseNotes={[
                     "Added expansion selectors. The one for cards will show you the COTA cards included in AOA!",
                     "Can add filter on number of chains.",
                     "Temporarily removing house select and recently listed sort to try to improve recent performance issues. " +
                     "Also converted the total deck count to be an estimate that is much faster to calculate, but also isn't necessarily exactly how many " +
                     "decks exist."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.1"} date={"5/19/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.9"} date={"5/19/2019"} expanded={true} releaseNotes={[
                     "AERC now has tool tips that tell you what cards contributed to each score.",
                     "You will receive an email notification when outbid on an auction.",
                     "Added a button to go to a random registered deck."
                 ]}/>
-                <ReleaseNote releaseNumber={"4.0"} date={"5/18/2019"} expanded={true} releaseNotes={[
+                <ReleaseNote releaseNumber={"3.8"} date={"5/18/2019"} expanded={true} releaseNotes={[
                     "Updates to SAS and AERC! Please note the stats will be out of date temporarily. " +
                     "This will be the last big change before Age of Ascension.",
                     "The following are the changes to SAS ratings: ",

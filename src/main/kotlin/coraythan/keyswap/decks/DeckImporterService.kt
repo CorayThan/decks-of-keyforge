@@ -36,10 +36,10 @@ import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT2M"
-private const val lockUpdateRatings = "PT5M"
+private const val lockUpdateRatings = "PT2M"
 private const val lockUpdateCleanUnregistered = "PT48H"
 
-const val currentDeckRatingVersion = 12
+const val currentDeckRatingVersion = 13
 
 @Transactional
 @Service
@@ -52,7 +52,7 @@ class DeckImporterService(
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
         private val objectMapper: ObjectMapper,
-        entityManager: EntityManager
+        val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -161,6 +161,8 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockUpdateRatings)
     fun rateDecks() {
 
+        val quantityToRate = 1000L
+
         if (doneRatingDecks == true) return
         doneRatingDecks = false
         log.info("$scheduledStart rate decks.")
@@ -170,7 +172,7 @@ class DeckImporterService(
 
             val deckResults = query.selectFrom(deckQ)
                     .where(deckQ.ratingVersion.ne(currentDeckRatingVersion).or(deckQ.ratingVersion.isNull))
-                    .limit(10000)
+                    .limit(quantityToRate)
                     .fetch()
 
             if (deckResults.isEmpty()) {
@@ -182,7 +184,7 @@ class DeckImporterService(
             deckRepo.saveAll(rated)
         }
 
-        log.info("$scheduledStop Took $millisTaken ms to rate 10000 decks.")
+        log.info("$scheduledStop Took $millisTaken ms to rate $quantityToRate decks.")
     }
 
     // Non repeatable functions

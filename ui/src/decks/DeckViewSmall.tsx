@@ -14,14 +14,13 @@ import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, Routes } from "../config/Routes"
+import { Routes } from "../config/Routes"
 import { BackendExpansion } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
-import { UnstyledLink } from "../generic/UnstyledLink"
 import { House, houseValues } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -195,9 +194,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                     <HouseBanner houses={houses} size={72}/>
                     <OrganizedPlayStats deck={deck}/>
                 </div>
-                <UnstyledLink to={AboutSubPaths.sas}>
                     <DeckScoreView deck={{...deck, ...deck.synergies!}}/>
-                </UnstyledLink>
             </div>
         )
     }

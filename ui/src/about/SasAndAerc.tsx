@@ -1,12 +1,10 @@
 import { Divider, List, ListItem, Typography } from "@material-ui/core"
+import Link from "@material-ui/core/Link"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { DeckScorePill } from "../decks/DeckScoreView"
-import { AboveAverageIcon } from "../generic/icons/AboveAverageIcon"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
-import { AverageIcon } from "../generic/icons/AverageIcon"
-import { BelowAverageIcon } from "../generic/icons/BelowAverageIcon"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
 import { screenStore } from "../ui/ScreenStore"
@@ -26,138 +24,10 @@ export class SasAndAerc extends React.Component {
         return (
             <>
                 <AboutGridItem>
-                    <InfoListCard title={"How SASy is your deck?"} infos={[
-                        "My formula calculates a rating for every deck based the quality of its cards and their synergies and antisynergies. " +
-                        "This is the deck's SAS rating.",
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Card Ratings</Typography>,
-                        "Every card in the game is given a rating between 0 and 4, where 0 is very bad, and 4 is very good. These create the deck's Card " +
-                        "Rating.",
-                        <div>
-                            <Typography>These ratings are represented, from best to worst, by the symbols:</Typography>
-                            <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
-                                <CardQualityIcon quality={0} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={0.5} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={1} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={1.5} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={2} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={2.5} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={3} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={3.5} style={{marginRight: spacing(1)}}/>
-                                <CardQualityIcon quality={4} style={{marginRight: spacing(1)}}/>
-                            </div>
-                        </div>,
-                        <CardExample
-                            text={"Timetraveller is one of the few cards rated 4. Played by itself or with Help from Future Self it consistently provides " +
-                            "Aember, a creature, and often replaces itself with its draw effect. " +
-                            "Key of Darkness, on the other hand, is one of the few cards rated 0. It provides no aember and is very difficult to use."}
-                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_153_X83CX7XJ5GRX_en.png"}
-                            img2={"https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png"}
-                        />,
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Card Synergies</Typography>,
-                        "Every card is given a list of traits it provides, and synergies and antisynergies it has with card and deck traits.",
-                        "Synergies and antisynergies are rated from 1 to 3, with more powerful effects rated higher. A synergy or antisynergy becomes " +
-                        "stronger the more instances of its trait that exist in a deck, up to a maximum of 4. At maximum effect you can expect " +
-                        "the following increases to total synergy:",
-                        <div style={{display: "flex", alignItems: "center"}}>
-                            <BelowAverageIcon/>
-                            <Typography style={{marginLeft: spacing(1)}}>Level 1 synergy: 0.5</Typography>
-                        </div>,
-                        <div style={{display: "flex", alignItems: "center"}}>
-                            <AverageIcon/>
-                            <Typography style={{marginLeft: spacing(1)}}>Level 2 synergy: 1</Typography>
-                        </div>,
-                        <div style={{display: "flex", alignItems: "center"}}>
-                            <AboveAverageIcon/>
-                            <Typography style={{marginLeft: spacing(1)}}>Level 3 synergy: 2</Typography>
-                        </div>,
-                        "Synergy and antisynergy benefits are limited to 2 and -2 per card, to help reflect diminishing returns.",
-                        <CardExample
-                            text={"Ember Imp and Shadow Self synergize because Ember Imp has a great effect but is easy to kill, and " +
-                            "Shadow Self provides protection."}
-                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ember-imp.png"}
-                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/shadow-self.png"}
-                        />,
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>Deck and House Synergies</Typography>,
-                        "The app calculates statistics for all decks, like how many creatures are usually in a deck, or whether the creatures are high or " +
-                        "low power. Some cards synergize with the traits of a deck, or a house in a deck.",
-                        <CardExample
-                            text={"Ammonia Clouds damages all creatures, but if your creatures have armor, it can prevent much of the damage dealt by " +
-                            "Ammonia clouds. Ammonia Clouds synergizes with decks with high armor."}
-                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ammonia-clouds.png"}
-                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/staunch-knight.png"}
-                        />,
-                        <div style={{paddingBottom: spacing(1)}}/>,
-                        <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
-                        <DeckScorePill
-                            deck={{
-                                rawAerc: 70,
-                                sasRating: 75,
-                                synergyRating: 4,
-                                antisynergyRating: 1,
-                                sasPercentile: 75.0
-                            }}
-                        />,
-                        "I add together the card ratings, synergy, and antisynergy of a deck to create its SAS rating.",
-                        "The system isn't perfect, but it gives a reasonable approximation of the relative quality of decks, and can help you " +
-                        "see the useful synergies in your deck, as well as antisynergies to be aware of.",
-                        "Please keep in mind this system will never judge decks as accurately as a human, and it will inaccurately judge many decks, " +
-                        "especially ones with very complex interactions or strategies. So just because SAS thinks your deck is bad, or average, " +
-                        "doesn't mean it is in real play!"
-                    ]}/>
-                    <div style={{marginBottom: spacing(4)}}/>
-                    <InfoListCard title={"SAStars"} infos={[
-                        "SAStars give you at-a-glance info about the percentile ranking of a deck in terms of SAS among all other decks.",
-                        "Unlike SAS, a deck's ranking in terms of SAStars can change at any time if the quality of all registered decks is changed in " +
-                        "some way, for example by the release of a new set that is rated better or worse than previous sets.",
-                        "SAStars are calculated as follows:",
-                        <List>
-                            <ListItem><Typography>Top 0.01% of decks (1/10,000) will be 5 gold stars</Typography></ListItem>
-                            <ListItem><Typography>Top 0.1% of decks (1/1000) will be 5 stars</Typography></ListItem>
-                            <ListItem><Typography>Top 1% of decks (1/100) will be 4.5 stars</Typography></ListItem>
-                            <ListItem><Typography>Top 10% of decks will be 4 stars</Typography></ListItem>
-                            <ListItem><Typography>Top 25% of decks will be 3.5 stars</Typography></ListItem>
-                            <ListItem><Typography>Middle 50% of decks will be 3 stars (Half of all decks)</Typography></ListItem>
-                            <ListItem><Typography>Bottom 25% of decks will be 2.5 stars</Typography></ListItem>
-                            <ListItem>
-                                <Typography>
-                                    Bottom 10% of decks will be 2 stars
-                                </Typography>
-                            </ListItem>
-                            <ListItem>
-                                <Typography>
-                                    Bottom 1% of decks will be 1.5 stars
-                                </Typography>
-                            </ListItem>
-                            <ListItem>
-                                <Typography>
-                                    Bottom 0.1% of decks will be 1 star
-                                </Typography>
-                            </ListItem>
-                            <ListItem>
-                                <Typography>
-                                    Bottom 0.01% of decks will be 0.5 stars
-                                </Typography>
-                            </ListItem>
-                        </List>
-                    ]}/>
-                    <div style={{marginBottom: spacing(4)}}/>
-                    <InfoListCard title={"Using SAS and AERC"} infos={[
-                        "SAS estimates the total power of the cards in a deck, and how the synergies and antisynergies effect the deck's quality, but " +
-                        "it won't be right about every deck. Many decks have complex combos SAS doesn't take into account, or their component cards " +
-                        "and synergies are very good, but they're missing a key overall trait, like sufficient Aember Control.",
-                        "Using a combination of SAS, AERC deck traits, and human judgement, it's possible to make an educated guess which of your decks " +
-                        "are best, or what would be a good deck to purchase. But even then, the best way to judge the quality of decks will be playing " +
-                        "the game!"
-                    ]}/>
-                </AboutGridItem>
-                <AboutGridItem>
                     <InfoListCard title={"The AERC of your Deck"} infos={[
                         <Typography variant={"h5"}>AERC Deck Traits</Typography>,
                         "I've rated every card in key metrics, like its expected Aember Control (A), Expected Aember (E), Artifact Control (R), " +
-                        "Creature Control (C), Efficiency, Disruption, Effective Creature Power, Aember Protection, " +
+                        "Creature Control (C), Efficiency (F), Disruption (D), Effective Creature Power (P), Aember Protection, " +
                         "House Cheating and Other.",
                         "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
                         "When added together, these metrics represent the value of a deck converted to Aember.",
@@ -273,14 +143,125 @@ export class SasAndAerc extends React.Component {
                         "The AERC score represents how good a deck is at the core mechanics of " +
                         "the game.",
                     ]}/>
+                </AboutGridItem>
+                <AboutGridItem>
+                    <InfoListCard title={"How SASy is your deck?"} infos={[
+                        "My formula calculates a rating for every deck based the quality of its cards and their synergies and antisynergies. " +
+                        "This is the deck's SAS rating.",
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>Card AERC Total</Typography>,
+                        "Each card's AERC total represents the quality of that card. This is mapped to symbols that represent the quality of the " +
+                        "card",
+                        <div>
+                            <Typography>From worst to best:</Typography>
+                            <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
+                                <CardQualityIcon quality={0} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={1} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={2} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={3} style={{marginRight: spacing(1)}}/>
+                                <CardQualityIcon quality={4} style={{marginRight: spacing(1)}}/>
+                            </div>
+                        </div>,
+                        <CardExample
+                            text={"Timetraveller is one of the highest AERC cards with a 3.5 average. Played by itself or with Help from Future Self it consistently provides " +
+                            "Aember, a creature, and often replaces itself with its draw effect. " +
+                            "Key of Darkness, on the other hand, is one of the lowest at 0.2. It provides no aember and is very difficult to use."}
+                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_153_X83CX7XJ5GRX_en.png"}
+                            img2={"https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png"}
+                        />,
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>Card Synergies</Typography>,
+                        "Every card is given a list of traits it provides, and synergies and antisynergies it has with card and deck traits.",
+                        "Traits, synergies and antisynergies are rated from 1 to 3, with more powerful effects rated higher. A synergy or antisynergy becomes " +
+                        "stronger the more instances of its trait that exist in a deck. Each Card with synergies has a range in which it synergizes, and " +
+                        "its value goes up or down within that range based on its synergies and antisynergies.",
+                        <CardExample
+                            text={"Ember Imp and Shadow Self synergize because Ember Imp has a great effect but is easy to kill, and " +
+                            "Shadow Self provides protection. Ember Imp provides more Disruption points to decks when paired with Shadowself."}
+                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ember-imp.png"}
+                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/shadow-self.png"}
+                        />,
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>Deck and House Synergies</Typography>,
+                        "The app calculates statistics for all decks, like how many creatures are usually in a deck, or whether the creatures are high or " +
+                        "low power. Some cards synergize with the traits of a deck, or a house in a deck.",
+                        <CardExample
+                            text={"Ammonia Clouds damages all creatures, but if your creatures have armor, it can prevent much of the damage dealt by " +
+                            "Ammonia clouds. Ammonia Clouds synergizes with decks with high armor."}
+                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ammonia-clouds.png"}
+                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/staunch-knight.png"}
+                        />,
+                        <div style={{paddingBottom: spacing(1)}}/>,
+                        <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
+                        <DeckScorePill
+                            deck={{
+                                rawAerc: 70,
+                                sasRating: 75,
+                                synergyRating: 4,
+                                antisynergyRating: 1,
+                                sasPercentile: 75.0
+                            }}
+                        />,
+                        "I add together the base AERC total for each card, synergies, and antisynergies of a deck to create its SAS rating.",
+                        "The system isn't perfect, but it gives a reasonable approximation of the relative quality of decks, and can help you " +
+                        "see the useful synergies in your deck, as well as antisynergies to be aware of.",
+                        "Please keep in mind this system will never judge decks as accurately as a human, and it will inaccurately judge many decks, " +
+                        "especially ones with very complex interactions or strategies. So just because SAS thinks your deck is bad, or average, " +
+                        "doesn't mean it is in real play!"
+                    ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
-                    <InfoListCard title={"Notes on AERC calculations"} infos={[
-                        "Fight effects are considered to happen half of the time.",
-                        "Actions, reap effects, etc on creatures are expected to happen once.",
-                        "Static effects are expected to take effect for about three turns.",
-                        "The values for all of these effects will vary depending on the durability of the creature. For example, hunting witch " +
-                        "won't be valued at three turns of his static ability because he is easy to kill, while Lord Golgotha will be expected to " +
-                        "execute her ability more than half the time."
+                    <InfoListCard title={"SAStars"} infos={[
+                        "SAStars give you at-a-glance info about the percentile ranking of a deck in terms of SAS among all other decks.",
+                        "Unlike SAS, a deck's ranking in terms of SAStars can change at any time if the quality of all registered decks is changed in " +
+                        "some way, for example by the release of a new set that is rated better or worse than previous sets.",
+                        "SAStars are calculated as follows:",
+                        <List>
+                            <ListItem><Typography>Top 0.01% of decks (1/10,000) will be 5 gold stars</Typography></ListItem>
+                            <ListItem><Typography>Top 0.1% of decks (1/1000) will be 5 stars</Typography></ListItem>
+                            <ListItem><Typography>Top 1% of decks (1/100) will be 4.5 stars</Typography></ListItem>
+                            <ListItem><Typography>Top 10% of decks will be 4 stars</Typography></ListItem>
+                            <ListItem><Typography>Top 25% of decks will be 3.5 stars</Typography></ListItem>
+                            <ListItem><Typography>Middle 50% of decks will be 3 stars (Half of all decks)</Typography></ListItem>
+                            <ListItem><Typography>Bottom 25% of decks will be 2.5 stars</Typography></ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 10% of decks will be 2 stars
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 1% of decks will be 1.5 stars
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 0.1% of decks will be 1 star
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <Typography>
+                                    Bottom 0.01% of decks will be 0.5 stars
+                                </Typography>
+                            </ListItem>
+                        </List>
+                    ]}/>
+                    <div style={{marginBottom: spacing(4)}}/>
+                    <InfoListCard title={"Using SAS and AERC"} infos={[
+                        "SAS estimates the total power of the cards in a deck, and how the synergies and antisynergies effect the deck's quality, but " +
+                        "it won't be right about every deck. Many decks have complex combos SAS doesn't take into account, or their component cards " +
+                        "and synergies are very good, but they're missing a key overall trait, like sufficient Aember Control.",
+                        "Using a combination of SAS, AERC deck traits, and human judgement, it's possible to make an educated guess which of your decks " +
+                        "are best, or what would be a good deck to purchase. But even then, the best way to judge the quality of decks will be playing " +
+                        "the game!"
+                    ]}/>
+                    <div style={{marginBottom: spacing(4)}}/>
+                    <InfoListCard title={"AERC + SAS Details"} infos={[
+                        "For more detailed notes on how AERC and SAS are calculated and rated, please take a look at this google doc.",
+                        (
+                            <Link href={"https://docs.google.com/document/d/1WkphfSzWj-hZ8l7BMhAgNF6-8b3Qj9cFiV7gGkR9HBU/edit?usp=sharing"}>
+                                AERC Rating Guidelines
+                            </Link>
+                        )
                     ]}/>
                 </AboutGridItem>
             </>

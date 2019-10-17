@@ -64,7 +64,7 @@ export const TraitBubble = (props: {
                         {props.synergyWith != null && (
                             <>
                                 {props.synergyWith.map((synergy) => (
-                                    <Typography variant={"body2"}>{synergy}</Typography>
+                                    <Typography key={synergy} variant={"body2"}>{synergy}</Typography>
                                 ))}
                             </>
                         )}

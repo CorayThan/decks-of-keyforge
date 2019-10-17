@@ -70,7 +70,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
 
     render() {
         const {
-            sasRating, cardsRating, synergyRating, antisynergyRating, totalPower,
+            sasRating, synergyRating, antisynergyRating,
             aercScore, amberControl, expectedAmber, artifactControl, creatureControl,
             efficiency, effectivePower, disruption, houseCheating, amberProtection
         } = this.props.deck
@@ -78,7 +78,6 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
         if (!stats) {
             return <Loader/>
         }
-        const creaturePowerCompareValue = Math.floor(totalPower / 5) * 5
         const effectiveCreaturePowerCompareValue = Math.floor(effectivePower / 5) * 5
 
         const rowSize = screenStore.screenWidth / 332

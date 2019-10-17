@@ -6,8 +6,10 @@ import HistoryIcon from "@material-ui/icons/History"
 import { range } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { AboutSubPaths } from "../config/Routes"
 import { BackendExpansion } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
+import { UnstyledLink } from "../generic/UnstyledLink"
 
 export enum DeckScoreSize {
     SMALL,
@@ -83,7 +85,9 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                     <div style={{flexGrow: 1}}/>
                     <Tooltip title={"Synergy and Antisynergy Rating. Read more on the about page."}>
                         <div>
-                            <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                            <UnstyledLink to={AboutSubPaths.sas}>
+                                <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                            </UnstyledLink>
                         </div>
                     </Tooltip>
                     {sasInfo}
@@ -216,7 +220,7 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     )
 }
 
-const RatingRow = (props: { value: number, name: string, operator?: string, size?: DeckScoreSize }) => {
+const RatingRow = (props: { value: number, name: string, operator?: string, size?: DeckScoreSize, tooltip?: string }) => {
     const {size} = props
     let largeText: ThemeStyle = "body1"
     let smallText: ThemeStyle = "body2"

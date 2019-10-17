@@ -65,7 +65,7 @@ export const AercView = (props: {
         <div
             style={{backgroundColor: "#DFDFDF", padding: spacing(1)}}
         >
-            {!horizontal && (
+            {!horizontal && deck.previousSasRating > 0 && (
                 <div style={{marginLeft: spacing(1)}}>
                     <Tooltip title={"SAS Score from before the big update to SAS v4."}>
                         <div style={{display: "flex", alignItems: "flex-end"}}>
@@ -404,7 +404,7 @@ const AercScore = (props: { score: number, max?: number, name: string, synergize
                 {name}:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {(max == null || max === 0) && synergizedScore === score ? "" : `${score} ${max == null || max === 0 ? "" : ` to ${max}`}`}
+                {max == null ? "" : `${score} to ${max}`}
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
                 {synergizedScore == null ? "" : synergizedScore}
