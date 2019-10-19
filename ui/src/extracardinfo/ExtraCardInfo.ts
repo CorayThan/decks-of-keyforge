@@ -25,6 +25,11 @@ export interface ExtraCardInfo {
     other: number
     otherMax?: number
 
+    /**
+     * In seconds since epoch
+     */
+    published: number
+
     traits: SynTraitValue[]
     synergies: SynTraitValue[]
 

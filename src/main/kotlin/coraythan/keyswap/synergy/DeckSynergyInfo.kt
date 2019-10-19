@@ -8,8 +8,6 @@ data class SynergyCombo(
         val cardName: String,
         val synergies: List<SynergyMatch>,
         val netSynergy: Double,
-        val synergy: Double,
-        val antisynergy: Double,
         val aercScore: Double,
 
         val expectedAmber: Double,
@@ -26,7 +24,7 @@ data class SynergyCombo(
         val copies: Int = 1
 ) {
     fun toStrings() = SynergyComboStrings(
-            house, cardName, synergies, netSynergy.roundToTens(), synergy.roundToTens(), antisynergy.roundToTens(), aercScore.roundToTens(),
+            house, cardName, synergies, netSynergy.roundToTens(), aercScore.roundToTens(),
             expectedAmber.roundToTens(), amberControl.roundToTens(), creatureControl.roundToTens(), artifactControl.roundToTens(), efficiency.roundToTens(),
             effectivePower, amberProtection.roundToTens(), disruption.roundToTens(), houseCheating.roundToTens(), other.roundToTens(), copies
     )
@@ -72,8 +70,6 @@ data class SynergyComboStrings(
         val cardName: String,
         val synergies: List<SynergyMatch>,
         val netSynergy: BigDecimal,
-        val synergy: BigDecimal,
-        val antisynergy: BigDecimal,
         val aercScore: BigDecimal,
 
         val expectedAmber: BigDecimal,

@@ -11,6 +11,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
+import { log } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
@@ -28,10 +29,12 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
 
     componentDidMount(): void {
         synergiesTableViewStore.synergyCombos = this.props.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
+        synergiesTableViewStore.resort()
     }
 
     componentWillReceiveProps(nextProps: Readonly<DeckSynergiesInfoViewProps>): void {
         synergiesTableViewStore.synergyCombos = nextProps.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
+        synergiesTableViewStore.resort()
     }
 
     render() {
@@ -41,7 +44,6 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
         const {synergyCombos} = deckSynergyInfo
         return (
             <KeyCard
-                style={{width: this.props.width}}
                 topContents={(
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center"}}>
                         <Typography variant={"h4"} style={{color: "#FFFFFF", marginBottom: spacing(1), marginRight: spacing(1)}}>
@@ -97,17 +99,21 @@ class ColumnHeaders extends React.Component {
                     <SynergiesHeader title={"Card Name"} property={"cardName"}/>
                     <SynergiesHeader title={"Copies"} property={"copies"}/>
                     <SynergiesHeader title={"Synergy"} property={"netSynergy"}/>
-                    <SynergiesHeader title={"Aerc"} property={"aerc"}/>
+                    <SynergiesHeader title={"Aerc"} property={"aercScore"}/>
                     <TableCell>Synergies</TableCell>
-                    <SynergiesHeader title={"Aember Control"} property={"amberControl"}/>
-                    <SynergiesHeader title={"Expected Aember"} property={"expectedAmber"}/>
-                    <SynergiesHeader title={"Aember Protection"} property={"amberProtection"}/>
-                    <SynergiesHeader title={"Artifact Control"} property={"artifactControl"}/>
-                    <SynergiesHeader title={"Creature Control"} property={"creatureControl"}/>
-                    <SynergiesHeader title={"Effective Power"} property={"effectivePower"}/>
-                    <SynergiesHeader title={"Efficiency"} property={"efficiency"}/>
-                    <SynergiesHeader title={"Disruption"} property={"disruption"}/>
-                    <SynergiesHeader title={"House Cheating"} property={"houseCheating"}/>
+                    {screenStore.screenWidth > 1440 && (
+                        <>
+                            <SynergiesHeader title={"Aember Control"} property={"amberControl"}/>
+                            <SynergiesHeader title={"Expected Aember"} property={"expectedAmber"}/>
+                            <SynergiesHeader title={"Aember Protection"} property={"amberProtection"}/>
+                            <SynergiesHeader title={"Artifact Control"} property={"artifactControl"}/>
+                            <SynergiesHeader title={"Creature Control"} property={"creatureControl"}/>
+                            <SynergiesHeader title={"Effective Power"} property={"effectivePower"}/>
+                            <SynergiesHeader title={"Efficiency"} property={"efficiency"}/>
+                            <SynergiesHeader title={"Disruption"} property={"disruption"}/>
+                            <SynergiesHeader title={"House Cheating"} property={"houseCheating"}/>
+                        </>
+                    )}
                 </>
             )
         }
@@ -156,15 +162,19 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                             })}
                         </div>
                     </TableCell>
-                    <TableCell>{combo.amberControl}</TableCell>
-                    <TableCell>{combo.expectedAmber}</TableCell>
-                    <TableCell>{combo.amberProtection}</TableCell>
-                    <TableCell>{combo.artifactControl}</TableCell>
-                    <TableCell>{combo.creatureControl}</TableCell>
-                    <TableCell>{combo.effectivePower}</TableCell>
-                    <TableCell>{combo.efficiency}</TableCell>
-                    <TableCell>{combo.disruption}</TableCell>
-                    <TableCell>{combo.houseCheating}</TableCell>
+                    {screenStore.screenWidth > 1440 && (
+                        <>
+                            <TableCell>{combo.amberControl}</TableCell>
+                            <TableCell>{combo.expectedAmber}</TableCell>
+                            <TableCell>{combo.amberProtection}</TableCell>
+                            <TableCell>{combo.artifactControl}</TableCell>
+                            <TableCell>{combo.creatureControl}</TableCell>
+                            <TableCell>{combo.effectivePower}</TableCell>
+                            <TableCell>{combo.efficiency}</TableCell>
+                            <TableCell>{combo.disruption}</TableCell>
+                            <TableCell>{combo.houseCheating}</TableCell>
+                        </>
+                    )}
                 </>
             )
         }
@@ -177,27 +187,19 @@ class SynergiesTableViewStore {
     @observable
     tableSortDir: "desc" | "asc" = "desc"
 
+    @observable
     synergyCombos?: IObservableArray<SynergyCombo>
 
     resort = () => {
+        const sortWithField = this.activeTableSort.length > 0 ? this.activeTableSort : "aercScore"
         if (this.synergyCombos) {
-            if (synergiesTableViewStore.activeTableSort === "value") {
-                this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), (synergy: SynergyCombo) => {
-                    return synergy.netSynergy + synergy.aercScore
-                }))
-            } else {
-                this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), synergiesTableViewStore.activeTableSort))
-            }
-            if (synergiesTableViewStore.tableSortDir === "desc") {
+            this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), sortWithField))
+            if (this.tableSortDir === "desc") {
                 this.synergyCombos.replace(this.synergyCombos.slice().reverse())
             }
         }
     }
 
-    reset = () => {
-        this.activeTableSort = ""
-        this.tableSortDir = "desc"
-    }
 }
 
 export const synergiesTableViewStore = new SynergiesTableViewStore()
@@ -213,14 +215,17 @@ const changeSortHandler = (property: string) => {
     }
 }
 
-const SynergiesHeader = (props: { title: string, property: string, minWidth?: number }) => (
-    <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined, maxWidth: 72}}>
-        <TableSortLabel
-            active={synergiesTableViewStore.activeTableSort === props.property}
-            direction={synergiesTableViewStore.tableSortDir}
-            onClick={changeSortHandler(props.property)}
-        >
-            {props.title}
-        </TableSortLabel>
-    </TableCell>
-)
+const SynergiesHeader = observer((props: { title: string, property: string, minWidth?: number }) => {
+    log.debug(`For header ${props.title} prop is ${props.property} active sort ${synergiesTableViewStore.activeTableSort} dir ${synergiesTableViewStore.tableSortDir}`)
+    return (
+        <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined, maxWidth: 72}}>
+            <TableSortLabel
+                active={synergiesTableViewStore.activeTableSort === props.property}
+                direction={synergiesTableViewStore.tableSortDir}
+                onClick={changeSortHandler(props.property)}
+            >
+                {props.title}
+            </TableSortLabel>
+        </TableCell>
+    )
+})

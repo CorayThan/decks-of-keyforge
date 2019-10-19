@@ -7,6 +7,7 @@ import { range } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
+import { Utils } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -116,92 +117,92 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     let includeHalf = false
     let type = StarType.NORMAL
     let quantity = 0
-    let tooltip = ""
+    let tooltip = `${Utils.roundToTens(sasPercentile)}%. `
 
     const random = Math.random()
     if (sasPercentile >= 99.99) {
         type = StarType.GOLD
         if (random > 0.5) {
-            tooltip = "A controller of weakling decks. Only one in 10,000 decks is this good"
+            tooltip += "A controller of weakling decks. Only one in 10,000 decks is this good"
         } else {
-            tooltip = "When nature calls, this deck won't have to go. Only one in 10,000 decks is this good"
+            tooltip += "When nature calls, this deck won't have to go. Only one in 10,000 decks is this good"
         }
     }
 
     if (sasPercentile >= 99.9) {
         quantity = 5
         if (random > 0.5) {
-            tooltip = "One of the glorious few. Only one in 1,000 decks is this good"
+            tooltip += "One of the glorious few. Only one in 1,000 decks is this good"
         } else {
-            tooltip = "On the doorstep to heaven. Only one in 1,000 decks is this good"
+            tooltip += "On the doorstep to heaven. Only one in 1,000 decks is this good"
         }
     } else if (sasPercentile >= 90) {
         quantity = 4
         if (random > 0.5) {
-            tooltip = "This deck is lights out. Top 10% of decks"
+            tooltip += "This deck is lights out. Top 10% of decks"
         } else {
-            tooltip = "Culler of weak decks. In the top 10%"
+            tooltip += "Culler of weak decks. In the top 10%"
         }
         if (sasPercentile >= 99) {
             if (random > 0.5) {
-                tooltip = "This deck makes for unfair games. Top 1% of decks"
+                tooltip += "This deck makes for unfair games. Top 1% of decks"
             } else {
-                tooltip = "Don't discard this penny. Top 1% of decks"
+                tooltip += "Don't discard this penny. Top 1% of decks"
             }
             includeHalf = true
         }
     } else if (sasPercentile >= 25) {
         if (random > 0.7) {
-            tooltip = "One Zyzzix among many. In the middle 50% of decks"
+            tooltip += "One Zyzzix among many. In the middle 50% of decks"
         } else if (random > 0.3) {
-            tooltip = "Standardized testing? Yes please. One of the middle 50% of decks"
+            tooltip += "Standardized testing? Yes please. One of the middle 50% of decks"
         } else {
-            tooltip = "Is it mating season? 50% of decks match this deck's profile"
+            tooltip += "Is it mating season? 50% of decks match this deck's profile"
         }
         quantity = 3
         if (sasPercentile >= 75) {
             if (random > 0.5) {
-                tooltip = "Overlord of pedestrian decks. In the top 25% of decks"
+                tooltip += "Overlord of pedestrian decks. In the top 25% of decks"
             } else {
-                tooltip = "Stealer of sub-par souls. Better than 75% of decks out there"
+                tooltip += "Stealer of sub-par souls. Better than 75% of decks out there"
             }
             includeHalf = true
         }
     } else if (sasPercentile > 1) {
         quantity = 2
         if (random > 0.5) {
-            tooltip = "This deck won't save the pack. Among the worst 10% of decks"
+            tooltip += "This deck won't save the pack. Among the worst 10% of decks"
         } else {
-            tooltip = "A shard of pain. Among the worst 10% of decks"
+            tooltip += "A shard of pain. Among the worst 10% of decks"
         }
         if (sasPercentile >= 10) {
             if (random > 0.5) {
-                tooltip = "It would take some experimental therapy to make this deck good. Among the worst 25% of decks"
+                tooltip += "It would take some experimental therapy to make this deck good. Among the worst 25% of decks"
             } else {
-                tooltip = "Wretched doll, wretched deck. Among the worst 25% of decks"
+                tooltip += "Wretched doll, wretched deck. Among the worst 25% of decks"
             }
             includeHalf = true
         }
     } else if (sasPercentile >= 0.01) {
         quantity = 1
         if (random > 0.5) {
-            tooltip = "Baddeck Queen. Only one in 1,000 decks is this bad"
+            tooltip += "Baddeck Queen. Only one in 1,000 decks is this bad"
         } else {
-            tooltip = "Call the troops! Only one in 1,000 decks is this bad"
+            tooltip += "Call the troops! Only one in 1,000 decks is this bad"
         }
         if (sasPercentile >= 0.1) {
             if (random > 0.5) {
-                tooltip = "You're grasping at vines if you think this deck is any good. Among the worst 1% of decks"
+                tooltip += "You're grasping at vines if you think this deck is any good. Among the worst 1% of decks"
             } else {
-                tooltip = "Like Ortannu's Binding without the Ortannu. In the worst 1% of decks"
+                tooltip += "Like Ortannu's Binding without the Ortannu. In the worst 1% of decks"
             }
             includeHalf = true
         }
     } else {
         if (random > 0.5) {
-            tooltip = "The Key to Darkness and Reversal. Only one in 10,000 decks is this bad"
+            tooltip += "The Key to Darkness and Reversal. Only one in 10,000 decks is this bad"
         } else {
-            tooltip = "Image Grommid, but bad. Only one in 10,000 decks is this bad"
+            tooltip += "Image Grommid, but bad. Only one in 10,000 decks is this bad"
         }
         includeHalf = true
     }

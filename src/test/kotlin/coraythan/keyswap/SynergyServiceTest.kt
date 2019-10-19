@@ -12,6 +12,7 @@ import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.slf4j.LoggerFactory
 
 fun basicCard() = Card(
         "",
@@ -37,6 +38,8 @@ fun basicCard() = Card(
 )
 
 class SynergyServiceTest {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     val boringDeck = Deck(
             keyforgeId = "",
@@ -72,6 +75,33 @@ class SynergyServiceTest {
                         cardTitle = "Niffle Ape",
                         extraCardInfo = ExtraCardInfo(
                                 effectivePower = 3
+                        )
+                )
+            })
+
+    val hasOnlySynergies = listOf<Card>()
+            .plus((0..11).map {
+                basicCard().copy(
+                        id = "returns creatures to hand",
+                        extraCardInfo = ExtraCardInfo(
+                                traits = listOf(
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                )
+                        )
+                )
+            })
+            .plus((0..11).map {
+                basicCard().copy(
+                        id = "liked being returned to hand",
+                        house = House.Sanctum,
+                        cardTitle = "Virtuous Works",
+                        amber = 3,
+                        extraCardInfo = ExtraCardInfo(
+                                expectedAmber = 0.0,
+                                expectedAmberMax = 3.0,
+                                synergies = listOf(
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                )
                         )
                 )
             })
@@ -167,6 +197,65 @@ class SynergyServiceTest {
                 )
             })
 
+    val shoolerHyseriaKeyA = listOf<Card>()
+            .plus(
+                    basicCard().copy(
+                            id = "shooler",
+                            house = House.Sanctum,
+                            cardTitle = "shooler",
+                            extraCardInfo = ExtraCardInfo(
+                                    amberControl = 0.0,
+                                    amberControlMax = 16.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.outOfHouse),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.house)
+                                    )
+                            )
+                    )
+            )
+            .plus(
+                    basicCard().copy(
+                            id = "hysteria",
+                            house = House.Sanctum,
+                            cardTitle = "hysteria",
+                            extraCardInfo = ExtraCardInfo(
+                                    traits = listOf(
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                    )
+                            )
+                    )
+            )
+            .plus(
+                basicCard().copy(
+                        id = "key abuduction",
+                        house = House.Brobnar,
+                        cardTitle = "key abuduction",
+                        extraCardInfo = ExtraCardInfo(
+                                traits = listOf(
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 1, SynTraitType.house)
+                                )
+                        )
+                )
+            )
+
+
+    val jammerPack = listOf<Card>()
+            .plus(
+                    basicCard().copy(
+                            id = "jammerpack",
+                            house = House.Brobnar,
+                            cardTitle = "jammerpack",
+                            power = 75,
+                            extraCardInfo = ExtraCardInfo(
+                                    amberControl = 0.0,
+                                    amberControlMax = 4.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.highTotalCreaturePower, 2)
+                                    )
+                            )
+                    )
+            )
+
     @Test
     fun testDecks() {
 
@@ -183,5 +272,34 @@ class SynergyServiceTest {
 
         val huntingResults = DeckSynergyService.fromDeckWithCards(boringDeck, huntingWitch)
         assertEquals(0, huntingResults.synergyRating)
+
+        val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlySynergies)
+        assertEquals(36, hasOnlySynergiesResults.synergyRating)
+        assertEquals(36, hasOnlySynergiesResults.sasRating)
+        assertEquals(0, hasOnlySynergiesResults.rawAerc)
+    }
+
+    @Test
+    fun testShooler() {
+        val shooler = DeckSynergyService.fromDeckWithCards(boringDeck, shoolerHyseriaKeyA)
+        log.info("Combos: ${shooler.synergyCombos}")
+        assertEquals(5, shooler.synergyRating)
+        assertEquals(5, shooler.sasRating)
+        assertEquals(0, shooler.rawAerc)
+        assertEquals(5.28, shooler.amberControl, 0.001)
+        val combo = shooler.synergyCombos.find { it.netSynergy > 0 }!!
+        log.info("Found combo: $combo")
+        assertEquals("shooler", combo.cardName)
+        val synergy = combo.synergies.find { it.percentSynergized > 0 }
+        assertEquals(SynTraitType.house, synergy?.type)
+        assertEquals("hysteria", synergy?.traitCards?.first())
+        assertEquals(5.28, combo.aercScore, 0.001)
+    }
+
+    @Test
+    fun testJammerpack() {
+        val jammerpack = DeckSynergyService.fromDeckWithCards(boringDeck.copy(totalPower = 75), jammerPack)
+        assertEquals(2, jammerpack.synergyRating)
+        assertEquals(2.0, jammerpack.amberControl, 0.001)
     }
 }

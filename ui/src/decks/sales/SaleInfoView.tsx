@@ -83,7 +83,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const yourUsername = userStore.username
         const yourEmail = userStore.email
 
-        const allowEmail = yourEmail && yourUsername && !externalLink
+        const allowEmail = yourEmail && yourUsername
 
         const sellerDetails = sellerStore.findSellerWithUsername(username)
 

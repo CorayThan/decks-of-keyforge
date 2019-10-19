@@ -23,6 +23,42 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote
+                    releaseNumber={"4.1"}
+                    date={"10/19/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS v4 Improvements",
+                            note: "I've received a lot of feedback in the last few days, and wanted to act on it as quickly as possible. This release " +
+                                "includes many fixes and improvements to the synergies of cards. Arise is no longer super overrated. Wild Wormhole is " +
+                                "less underrated. Many cards have had their synergies fixed, like Key Abuduction, John Smyth, and others. " +
+                                "You can see " +
+                                "all the changes using the history toggle on the cards page. The previous versions are now dated so you can recognize " +
+                                "when an update was released."
+                        },
+                        {
+                            highlight: "SAS v4 Fixes",
+                            note: "A bug snuck in late in the development process of SAS v4 and caused many decks to be off by a couple points from their " +
+                                "proper total SAS. Some decks were off by many points. Any cards with only synergies and no antisynergies were gaining " +
+                                "extra points in the total SAS score, and any cards with only antisynergies were losing points. Fixing this problem has " +
+                                "led to a much tighter (and more realistic) band of possible scores. From 38 to 93, with an average of 62. " +
+                                "I also fixed an issue where some cards were synergizing out of house when they shouldn't have, like Shooler synergizing " +
+                                "with Key Abduction's bounce effect. "
+                        },
+                        {
+                            highlight: "SAS v4 Win Rate Correlation",
+                            note: "In its first release a few days ago, SAS v4 was equivalent to SAS v3 in terms of correlation with win rates. This " +
+                                "update improves upon that thanks to the synergy improvements and bug fixes. At approximately 50 and 75 SAS this version " +
+                                "is about 1.5% more strongly correlated than the previous version."
+                        },
+                        {
+                            highlight: "Fixes to Synergy Details Table",
+                            note: "Multiple fixes to this table. Sorting works now. Out of house synergies show the cards they synergize with. Table is " +
+                                "more medium-screen size friendly."
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"4.0"}
                     date={"10/16/2019"}
                     expanded={true}

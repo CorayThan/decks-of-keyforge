@@ -1,4 +1,4 @@
-import { getMinutes, setMinutes, startOfMinute } from "date-fns"
+import { fromUnixTime, getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
 import * as loglevel from "loglevel"
@@ -25,6 +25,8 @@ export class Utils {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(String(email).toLowerCase())
     }
+
+    static epochSecondsToDate = (epochSeconds: number) => format(fromUnixTime(epochSeconds), "MMM d, yyyy")
 
     static formatDate = (date: string) => format(Utils.parseLocalDate(date), "MMM d, yyyy")
 

@@ -65,12 +65,12 @@ export const AercView = (props: {
         <div
             style={{backgroundColor: "#DFDFDF", padding: spacing(1)}}
         >
-            {!horizontal && deck.previousSasRating > 0 && (
+            {!horizontal && deck.sasV3 != null && (
                 <div style={{marginLeft: spacing(1)}}>
                     <Tooltip title={"SAS Score from before the big update to SAS v4."}>
                         <div style={{display: "flex", alignItems: "flex-end"}}>
                             <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
-                                {deck.previousSasRating}
+                                {deck.sasV3}
                             </Typography>
                             <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 2}} noWrap={true}>SAS v3</Typography>
                         </div>

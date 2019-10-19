@@ -19,8 +19,7 @@ data class CardNumberSetPairOld(
 @Entity
 data class ExtraCardInfo(
 
-        // TODO delete me
-        val rating: Double = 2.0,
+        val cardName: String? = null,
 
         val expectedAmber: Double = 0.0,
         val expectedAmberMax: Double? = null,
@@ -68,6 +67,7 @@ data class ExtraCardInfo(
         val active: Boolean = false,
         val created: ZonedDateTime? = now(),
         val updated: ZonedDateTime? = now(),
+        val published: ZonedDateTime? = now(),
 //
 //        @OneToOne(mappedBy = "info")
 //        val spoiler: Spoiler? = null,
@@ -105,7 +105,6 @@ data class ExtraCardInfo(
     fun replaceAercInfo(info: ExtraCardInfo): ExtraCardInfo {
         return this.copy(
                 updated = now(),
-                rating = info.rating,
                 expectedAmber = info.expectedAmber,
                 expectedAmberMax = info.expectedAmberMax,
                 amberControl = info.amberControl,

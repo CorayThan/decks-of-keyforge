@@ -12,6 +12,7 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.synergy.DeckSynergyService
@@ -39,7 +40,8 @@ private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateRatings = "PT10S"
 private const val lockUpdateCleanUnregistered = "PT48H"
 
-const val currentDeckRatingVersion = 13
+const val currentDeckRatingVersion = 14
+var doneRatingDecks: Boolean? = null
 
 @Transactional
 @Service
@@ -79,6 +81,9 @@ class DeckImporterService(
                     val decks = keyforgeApi.findDecks(currentPage)
                     if (decks == null) {
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
+                        break
+                    } else if (decks.data.any { !Expansion.values().map { it.expansionNumber }.contains(it.expansion) }) {
+                        log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
                         break
                     } else {
                         val cards = cardService.importNewCards(decks.data)
@@ -154,11 +159,10 @@ class DeckImporterService(
         log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    var doneRatingDecks: Boolean? = null
-
     // Comment this in whenever rating gets revved
     // don't rate decks until adding new info done
     @Scheduled(fixedDelayString = lockUpdateRatings)
+//    @Scheduled(fixedDelay = 1)
     fun rateDecks() {
 
         val quantityToRate = 1000L

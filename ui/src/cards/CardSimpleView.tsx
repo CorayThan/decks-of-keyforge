@@ -8,6 +8,7 @@ import * as React from "react"
 import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { Utils } from "../config/Utils"
 import { Deck } from "../decks/Deck"
 import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
@@ -374,11 +375,16 @@ export const CardSynergies = (props: { card: KCard }) => (
 const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string }) => {
     const {card, combo, title} = props
     const {extraCardInfo} = card
-    const {traits, synergies} = extraCardInfo
+    const {traits, synergies, published} = extraCardInfo
     return (
         <>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-            <Typography variant={"h5"}>{title}</Typography>
+            <div style={{display: "flex", alignItems: "flex-end"}}>
+                <Typography variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
+                {published && (
+                    <Typography variant={"subtitle2"}>{Utils.epochSecondsToDate(published)}</Typography>
+                )}
+            </div>
             <AercForCard card={card} realValue={combo}/>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}

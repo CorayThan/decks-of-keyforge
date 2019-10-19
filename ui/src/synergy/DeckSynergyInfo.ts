@@ -26,8 +26,6 @@ export interface SynergyCombo {
     cardName: string
     synergies: SynergyMatch[]
     netSynergy: number
-    synergy: number
-    antisynergy: number
     aercScore: number
 
     expectedAmber: number,

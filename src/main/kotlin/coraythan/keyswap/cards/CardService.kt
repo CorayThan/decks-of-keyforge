@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 
 @Transactional
 @Service
@@ -35,31 +36,41 @@ class CardService(
     lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
 
-    val publishAercVersion = 2
+    val publishAercVersion = 3
 
     fun loadExtraInfo() {
 
         // TODO delete me
         val allInfos = extraCardInfoRepo.findAll().mapNotNull {
-            val zeroed = it.nullMaxes()
-            if (it == zeroed) null else zeroed
+            if (it.cardName != null) {
+                null
+            } else {
+                it.copy(cardName = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(
+                        it.cardNumbers.first().expansion.expansionNumber,
+                        it.cardNumbers.first().cardNumber
+                ).cardTitle)
+            }
         }
         if (allInfos.isNotEmpty()) {
-            log.info("Clearing out ${allInfos.size} extra infos with maxes with zeros")
+            log.info("Adding names to ${allInfos.size} extra infos with no names")
             extraCardInfoRepo.saveAll(allInfos)
         }
 
         this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
         this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
         this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
-        this.previousExtraInfo = mapInfos(extraCardInfoRepo.findByVersionAndActiveFalse(this.activeAercVersion - 1))
+        val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(this.activeAercVersion)
+                .filter { it.version < this.activeAercVersion }
+                .groupBy { it.cardName }
+                .mapNotNull { it.value.maxBy { infos -> infos.version } }
+        this.previousExtraInfo = mapInfos(previousOnes)
 
         log.info("Active aerc version $activeAercVersion published verison $publishAercVersion")
         if (activeAercVersion < publishAercVersion) {
             this.activeAercVersion = publishAercVersion
             val toPublish = this.nextExtraInfo
             val potentiallyUnpublish = this.extraInfo
-            val toSave = toPublish.map { it.value.copy(active = true) }
+            val toSave = toPublish.map { it.value.copy(active = true, published = ZonedDateTime.now()) }
             val unpublish = toPublish.mapNotNull { potentiallyUnpublish[it.key]?.copy(active = false) }
             extraCardInfoRepo.saveAll(toSave.plus(unpublish))
             log.info("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +

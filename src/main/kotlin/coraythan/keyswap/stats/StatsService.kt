@@ -5,10 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.DeckPageService
-import coraythan.keyswap.decks.DeckPageType
-import coraythan.keyswap.decks.Wins
-import coraythan.keyswap.decks.addWinsLosses
+import coraythan.keyswap.decks.*
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.expansions.Expansion
@@ -77,10 +74,15 @@ class  StatsService(
         }
     }
 
-    @Scheduled(fixedDelayString = "PT12H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
+//    @Scheduled(fixedDelayString = lockStatsVersionUpdate, initialDelayString = "PT1M")
+    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
         log.info("$scheduledStart start new deck stats.")
+        if (doneRatingDecks != true) {
+            log.info("Skipping stats update as decks are being rated.")
+            return
+        }
         val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
         if (mostRecentVersion == null) {
             deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))

@@ -9,7 +9,25 @@ import org.slf4j.LoggerFactory
 import java.math.RoundingMode
 import kotlin.math.absoluteValue
 
-data class TraitMatchInfo(var matches: Int = 0, var cardNames: MutableList<String> = mutableListOf())
+data class TraitMatchInfo(
+        var matches: Int = 0,
+        var cardNames: MutableList<String> = mutableListOf()
+)
+
+fun reduceTraitMatchInfo(first: TraitMatchInfo?, second: TraitMatchInfo?): TraitMatchInfo? {
+    return if (first == null && second != null) {
+        second
+    } else if (first != null && second == null) {
+        first
+    } else if (first != null && second != null) {
+        TraitMatchInfo(
+                matches = first.matches + second.matches,
+                cardNames = first.cardNames.toList().plus(second.cardNames.toList()).toMutableList()
+        )
+    } else {
+        null
+    }
+}
 
 fun <T> MutableMap<T, TraitMatchInfo>.incrementTraitMatch(key: T, cardName: String) {
     if (this[key] == null) {
@@ -65,15 +83,41 @@ object DeckSynergyService {
 
     fun fromDeckWithCards(deck: Deck, cards: List<Card>): DeckSynergyInfo {
 
-        val traitCounts: Map<TraitStrength, Map<House?, MutableMap<SynergyTrait, TraitMatchInfo>>> = TraitStrength.values()
+        val anyHouseTraits: Map<TraitStrength, MutableMap<SynergyTrait, TraitMatchInfo>> = TraitStrength.values()
                 .map { strength ->
-                    strength to deck.houses.plus(null as House?).map { it to mutableMapOf<SynergyTrait, TraitMatchInfo>() }.toMap()
+                    strength to mutableMapOf<SynergyTrait, TraitMatchInfo>()
                 }
                 .toMap()
-        val normalStrengthTraitCounts = traitCounts[TraitStrength.NORMAL] ?: error("Should have normal strength")
 
-        addDeckTraits(deck, normalStrengthTraitCounts[null] ?: error("Should have normal strength null house"), cards)
-        addHouseTraits(cards, normalStrengthTraitCounts)
+        val inHouseOnlyTraitCountsForAnyHouse: Map<TraitStrength, Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>> = TraitStrength.values()
+                .map { strength ->
+                    strength to deck.houses.map { it to mutableMapOf<SynergyTrait, TraitMatchInfo>() }.toMap()
+                }
+                .toMap()
+
+        val inHouseOnlyTraitCounts: Map<TraitStrength, Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>> = TraitStrength.values()
+                .map { strength ->
+                    strength to deck.houses.map { it to mutableMapOf<SynergyTrait, TraitMatchInfo>() }.toMap()
+                }
+                .toMap()
+
+        // Outside house traits for any house traits
+        val outsideHouseOnlyTraitCountsForAnyHouseTraits: Map<TraitStrength, Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>> = TraitStrength.values()
+                .map { strength ->
+                    strength to deck.houses.map { it to mutableMapOf<SynergyTrait, TraitMatchInfo>() }.toMap()
+                }
+                .toMap()
+
+        // Outside house traits
+        val outsideHouseOnlyTraitCounts: Map<TraitStrength, Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>> = TraitStrength.values()
+                .map { strength ->
+                    strength to deck.houses.map { it to mutableMapOf<SynergyTrait, TraitMatchInfo>() }.toMap()
+                }
+                .toMap()
+
+        val normalStrengthTraitCounts = anyHouseTraits[TraitStrength.NORMAL] ?: error("Should have normal strength")
+        addDeckTraits(deck, normalStrengthTraitCounts, cards)
+        addHouseTraits(cards, inHouseOnlyTraitCountsForAnyHouse[TraitStrength.NORMAL] ?: error("Should have normal strength house traits"))
 
         // Add traits from each card
         cards.forEach { card ->
@@ -84,25 +128,19 @@ object DeckSynergyService {
             }
             val cardAllTraits = cardInfo.traits.plus(cardSpecialTraits)
             cardAllTraits
-                    .forEach {
-                        val countsForStrength = traitCounts[it.strength()] ?: error("Should have counts for ${it.strength()}")
-                        val countsForHouse = countsForStrength[card.house]
-                                ?: throw IllegalArgumentException("No house in deck for card ${card.cardTitle} house ${card.house}")
+                    .forEach { traitValue ->
                         when {
-                            it.type == SynTraitType.house ->
+                            traitValue.type == SynTraitType.house ->
                                 // Trait is house only, only add to house
-                                countsForHouse.incrementTraitMatch(it.trait, card.cardTitle)
-                            it.type == SynTraitType.outOfHouse ->
+                                inHouseOnlyTraitCounts[traitValue.strength()]?.get(card.house)?.incrementTraitMatch(traitValue.trait, card.cardTitle)
+                            traitValue.type == SynTraitType.outOfHouse ->
                                 // Trait is outside of house only, add to not-that-house
-                                countsForStrength.forEach { (house, houseCount) ->
-                                    if (house != null && house != card.house) {
-                                        houseCount.incrementTraitMatch(it.trait, card.cardTitle)
-                                    }
-                                }
+                                outsideHouseOnlyTraitCounts[traitValue.strength()]?.get(card.house)?.incrementTraitMatch(traitValue.trait, card.cardTitle)
                             else -> {
                                 // Trait works for house or any house
-                                countsForStrength[null]?.incrementTraitMatch(it.trait, card.cardTitle)
-                                countsForHouse.incrementTraitMatch(it.trait, card.cardTitle)
+                                inHouseOnlyTraitCountsForAnyHouse[traitValue.strength()]?.get(card.house)?.incrementTraitMatch(traitValue.trait, card.cardTitle)
+                                outsideHouseOnlyTraitCountsForAnyHouseTraits[traitValue.strength()]?.get(card.house)?.incrementTraitMatch(traitValue.trait, card.cardTitle)
+                                anyHouseTraits[traitValue.strength()]?.incrementTraitMatch(traitValue.trait, card.cardTitle)
                             }
                         }
                     }
@@ -120,43 +158,68 @@ object DeckSynergyService {
                     }
                     val cardAllTraits = cardInfo.traits.plus(cardSpecialTraits)
 
-                    val matchedTraits: List<SynergyMatch> = cardInfo.synergies.map { synTraitValue ->
+                    val matchedTraits: List<SynergyMatch> = cardInfo.synergies.map { synergyValues ->
 
-                        val trait = synTraitValue.trait
+                        val trait = synergyValues.trait
                         val cardNames = mutableSetOf<String>()
-                        val synPercent = traitCounts.map { entry ->
-                            val traitStrength = entry.key
-                            val counts = entry.value
+                        val synPercent = TraitStrength.values().map { strength ->
                             val matches: Int = when {
-                                synTraitValue.type == SynTraitType.anyHouse -> {
-                                    val matchInfo = counts[null]?.get(trait)
+                                synergyValues.type == SynTraitType.anyHouse -> {
+                                    val matchInfo = listOf(
+                                            anyHouseTraits[strength]?.get(trait),
+                                            inHouseOnlyTraitCounts[strength]?.get(card.house)?.get(trait)
+                                    )
+                                            .plus(outsideHouseOnlyTraitCounts[strength]
+                                                    ?.filter { it.key != card.house }
+                                                    ?.map { it.value[trait] } ?: listOf())
+                                            .reduce(::reduceTraitMatchInfo)
                                     if (matchInfo != null) {
                                         cardNames.addAll(matchInfo.cardNames)
                                         val matches = matchInfo.matches
-                                        if (matches > 0 && cardAllTraits.containsTrait(synTraitValue.trait)) matches - 1 else matches
+                                        if (matches > 0 && cardAllTraits.containsTrait(synergyValues.trait)) matches - 1 else matches
                                     } else {
                                         0
                                     }
                                 }
-                                synTraitValue.type == SynTraitType.house -> {
-                                    val matchInfo = counts[card.house]?.get(trait)
+                                synergyValues.type == SynTraitType.house -> {
+
+                                    val matchInfo = listOf(
+                                            inHouseOnlyTraitCounts[strength]?.get(card.house)?.get(trait),
+                                            inHouseOnlyTraitCountsForAnyHouse[strength]?.get(card.house)?.get(trait)
+                                    )
+                                            .reduce(::reduceTraitMatchInfo)
+
                                     if (matchInfo != null) {
                                         cardNames.addAll(matchInfo.cardNames)
                                         val matches = matchInfo.matches
-                                        if (matches > 0 && cardAllTraits.containsTrait(synTraitValue.trait)) matches - 1 else matches
+                                        if (matches > 0 && cardAllTraits.containsTrait(synergyValues.trait)) matches - 1 else matches
                                     } else {
                                         0
                                     }
                                 }
                                 else -> {
-                                    counts.filterKeys { it != null && it != card.house }.map { it.value[trait]?.matches ?: 0 }.sum()
+
+                                    val matchInfo = (outsideHouseOnlyTraitCounts[strength]
+                                            ?.filter { it.key != card.house }
+                                            ?.map { it.value[trait] } ?: listOf())
+                                            .plus(outsideHouseOnlyTraitCountsForAnyHouseTraits[strength]
+                                                    ?.filter { it.key != card.house }
+                                                    ?.map { it.value[trait] } ?: listOf())
+                                            .reduce(::reduceTraitMatchInfo)
+
+                                    if (matchInfo != null) {
+                                        cardNames.addAll(matchInfo.cardNames)
+                                        matchInfo.matches
+                                    } else {
+                                        0
+                                    }
                                 }
                             }
 
-                            matches * ratingsToPercent(synTraitValue.rating, traitStrength)
+                            matches * ratingsToPercent(synergyValues.rating, strength)
                         }.sum()
 
-                        SynergyMatch(trait, synPercent, cardNames, synTraitValue.rating, synTraitValue.type)
+                        SynergyMatch(trait, synPercent, cardNames, synergyValues.rating, synergyValues.type)
                     }
 
                     val totalSynPercent = matchedTraits.map { it.percentSynergized }.sum()
@@ -203,8 +266,6 @@ object DeckSynergyService {
                             synergies = matchedTraits,
                             netSynergy = synergyValues.sum(),
                             aercScore = synergizedValues.map { it.value }.sum() + (if (card.cardType == CardType.Creature) 0.4 else 0.0),
-                            synergy = synergyValues.filter { it > 0 }.sum(),
-                            antisynergy = synergyValues.filter { it < 0 }.sum(),
 
                             amberControl = aValue.value,
                             expectedAmber = eValue.value,
@@ -232,30 +293,21 @@ object DeckSynergyService {
         val ap = synergyCombos.map { it.amberProtection * it.copies }.sum()
         val hc = synergyCombos.map { it.houseCheating * it.copies }.sum()
 
-        val extraCardInfos = cards.map { it.extraCardInfo!! }
-        val rawa = extraCardInfos.map { if (it.amberControlMax == null || it.amberControlMax == 0.0) it.amberControl else (it.amberControl + it.amberControlMax) / 2 }.sum()
-        val rawe = extraCardInfos.map { if (it.expectedAmberMax == null || it.expectedAmberMax == 0.0) it.expectedAmber else (it.expectedAmber + it.expectedAmberMax) / 2 }.sum()
-        val rawr = extraCardInfos.map { if (it.artifactControlMax == null || it.artifactControlMax == 0.0) it.artifactControl else (it.artifactControl + it.artifactControlMax) / 2 }.sum()
-        val rawc = extraCardInfos.map { if (it.creatureControlMax == null || it.creatureControlMax == 0.0) it.creatureControl else (it.creatureControl + it.creatureControlMax) / 2 }.sum()
-        val rawf = extraCardInfos.map { if (it.efficiencyMax == null || it.efficiencyMax == 0.0) it.efficiency else (it.efficiency + it.efficiencyMax) / 2 }.sum()
-        val rawd = extraCardInfos.map { if (it.disruptionMax == null || it.disruptionMax == 0.0) it.disruption else (it.disruption + it.disruptionMax) / 2 }.sum()
-        val rawp = extraCardInfos.map { if (it.effectivePowerMax == null || it.effectivePowerMax == 0.0) it.effectivePower.toDouble() else (it.effectivePower + it.effectivePowerMax) / 2 }.sum()
-        val rawo = extraCardInfos.map { if (it.otherMax == null || it.otherMax == 0.0) it.other else (it.other + it.otherMax) / 2 }.sum()
-        val rawap = extraCardInfos.map { if (it.amberProtectionMax == null || it.amberProtectionMax == 0.0) it.amberProtection else (it.amberProtection + it.amberProtectionMax) / 2 }.sum()
-        val rawhc = extraCardInfos.map { if (it.houseCheatingMax == null || it.houseCheatingMax == 0.0) it.houseCheating else (it.houseCheating + it.houseCheatingMax) / 2 }.sum()
-
         val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
-        val rawPowerValue = rawp / 10
+        val powerValue = p / 10
         // Remember! When updating this also update Card
-        val rawAerc = roundToInt(rawa + rawe + rawr + rawc + rawf + rawd + rawap + rawhc + rawo + rawPowerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
-        val synergy = roundToInt(synergyCombos.map { it.synergy * it.copies }.sum(), RoundingMode.HALF_UP)
-        val antisynergy = roundToInt(synergyCombos.map { it.antisynergy * it.copies }.sum(), RoundingMode.HALF_UP).absoluteValue
+        val synergy = roundToInt(synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum(), RoundingMode.HALF_UP)
+        val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
+        val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
+        val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
+        val rawAerc = newSas + antisynergy - synergy
+
         return DeckSynergyInfo(
                 synergyRating = synergy,
                 antisynergyRating = antisynergy,
                 synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
                 rawAerc = rawAerc,
-                sasRating = rawAerc + synergy - antisynergy,
+                sasRating = newSas,
 
                 amberControl = a,
                 expectedAmber = e,
@@ -271,60 +323,58 @@ object DeckSynergyService {
 
     }
 
-    private fun addHouseTraits(cards: List<Card>, counts: Map<House?, MutableMap<SynergyTrait, TraitMatchInfo>>) {
+    private fun addHouseTraits(cards: List<Card>, counts: Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>) {
         counts.forEach { (house, houseTraits) ->
-            if (house != null) {
-                val cardsForHouse = cards.filter { it.house == house }
-                val totalCreaturePower = cardsForHouse.map { it.power }.sum()
-                val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
-                val totalExpectedAmber = cardsForHouse.map {
-                    val max = it.extraCardInfo?.expectedAmberMax ?: 0.0
-                    val min = it.extraCardInfo?.expectedAmber ?: 0.0
-                    if (max == 0.0) min else (min + max) / 2
-                }.sum()
-                val upgradeCount = cardsForHouse.filter { it.cardType == CardType.Upgrade }.size
+            val cardsForHouse = cards.filter { it.house == house }
+            val totalCreaturePower = cardsForHouse.map { it.power }.sum()
+            val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
+            val totalExpectedAmber = cardsForHouse.map {
+                val max = it.extraCardInfo?.expectedAmberMax ?: 0.0
+                val min = it.extraCardInfo?.expectedAmber ?: 0.0
+                if (max == 0.0) min else (min + max) / 2
+            }.sum()
+            val upgradeCount = cardsForHouse.filter { it.cardType == CardType.Upgrade }.size
 
-                if (totalExpectedAmber > 7) houseTraits[SynergyTrait.highExpectedAmber] = TraitMatchInfo(when {
-                    totalExpectedAmber > 10 -> 4
-                    totalExpectedAmber > 9 -> 3
-                    totalExpectedAmber > 8 -> 2
-                    else -> 1
-                })
-                if (totalExpectedAmber < 7) houseTraits[SynergyTrait.lowExpectedAmber] = TraitMatchInfo(when {
-                    totalExpectedAmber < 4 -> 4
-                    totalExpectedAmber < 5 -> 3
-                    totalExpectedAmber < 6 -> 2
-                    else -> 1
-                })
+            if (totalExpectedAmber > 7) houseTraits[SynergyTrait.highExpectedAmber] = TraitMatchInfo(when {
+                totalExpectedAmber > 10 -> 4
+                totalExpectedAmber > 9 -> 3
+                totalExpectedAmber > 8 -> 2
+                else -> 1
+            })
+            if (totalExpectedAmber < 7) houseTraits[SynergyTrait.lowExpectedAmber] = TraitMatchInfo(when {
+                totalExpectedAmber < 4 -> 4
+                totalExpectedAmber < 5 -> 3
+                totalExpectedAmber < 6 -> 2
+                else -> 1
+            })
 
-                if (totalCreaturePower > 21) houseTraits[SynergyTrait.highTotalCreaturePower] = TraitMatchInfo(when {
-                    totalCreaturePower > 23 -> 4
-                    totalCreaturePower > 25 -> 3
-                    totalCreaturePower > 27 -> 2
-                    else -> 1
-                })
+            if (totalCreaturePower > 21) houseTraits[SynergyTrait.highTotalCreaturePower] = TraitMatchInfo(when {
+                totalCreaturePower > 23 -> 4
+                totalCreaturePower > 25 -> 3
+                totalCreaturePower > 27 -> 2
+                else -> 1
+            })
 
-                if (upgradeCount > 0) houseTraits[SynergyTrait.upgradeCount] = TraitMatchInfo(when {
-                    upgradeCount > 3 -> 4
-                    upgradeCount > 2 -> 3
-                    upgradeCount > 1 -> 2
-                    else -> 1
-                })
+            if (upgradeCount > 0) houseTraits[SynergyTrait.upgradeCount] = TraitMatchInfo(when {
+                upgradeCount > 3 -> 4
+                upgradeCount > 2 -> 3
+                upgradeCount > 1 -> 2
+                else -> 1
+            })
 
-                if (creatureCount > 6) houseTraits[SynergyTrait.highCreatureCount] = TraitMatchInfo(when {
-                    creatureCount > 9 -> 4
-                    creatureCount > 8 -> 3
-                    creatureCount > 7 -> 2
-                    else -> 1
-                })
+            if (creatureCount > 6) houseTraits[SynergyTrait.highCreatureCount] = TraitMatchInfo(when {
+                creatureCount > 9 -> 4
+                creatureCount > 8 -> 3
+                creatureCount > 7 -> 2
+                else -> 1
+            })
 
-                if (creatureCount < 6) houseTraits[SynergyTrait.lowCreatureCount] = TraitMatchInfo(when {
-                    creatureCount < 3 -> 4
-                    creatureCount < 4 -> 3
-                    creatureCount < 5 -> 2
-                    else -> 1
-                })
-            }
+            if (creatureCount < 6) houseTraits[SynergyTrait.lowCreatureCount] = TraitMatchInfo(when {
+                creatureCount < 3 -> 4
+                creatureCount < 4 -> 3
+                creatureCount < 5 -> 2
+                else -> 1
+            })
         }
     }
 
@@ -352,7 +402,6 @@ object DeckSynergyService {
             deck.totalPower < 57 -> 2
             else -> 1
         })
-
         if (deck.totalPower > 67) traits[SynergyTrait.highTotalCreaturePower] = TraitMatchInfo(when {
             deck.totalPower > 83 -> 4
             deck.totalPower > 77 -> 3
@@ -371,13 +420,6 @@ object DeckSynergyService {
             deck.artifactCount > 7 -> 4
             deck.artifactCount > 6 -> 3
             deck.artifactCount > 5 -> 2
-            else -> 1
-        })
-
-        if (deck.artifactCount < 4) traits[SynergyTrait.lowArtifactCount] = TraitMatchInfo(when {
-            deck.artifactCount < 1 -> 4
-            deck.artifactCount < 2 -> 3
-            deck.artifactCount < 3 -> 2
             else -> 1
         })
 

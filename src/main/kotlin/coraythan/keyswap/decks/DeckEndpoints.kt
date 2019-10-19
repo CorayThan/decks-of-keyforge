@@ -102,7 +102,7 @@ class DeckEndpoints(
     }
 
     @GetMapping("/updating")
-    fun updating() = deckImporterService.doneRatingDecks == false
+    fun updating() = doneRatingDecks == false
 
     @GetMapping("/update-crucible-tracker-wins")
     fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
