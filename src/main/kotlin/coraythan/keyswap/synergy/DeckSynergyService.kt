@@ -302,7 +302,9 @@ object DeckSynergyService {
         val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy
 
-        return DeckSynergyInfo(
+
+
+        val info = DeckSynergyInfo(
                 synergyRating = synergy,
                 antisynergyRating = antisynergy,
                 synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
@@ -320,6 +322,10 @@ object DeckSynergyService {
                 houseCheating = hc,
                 other = o
         )
+
+        log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
+
+        return info
 
     }
 

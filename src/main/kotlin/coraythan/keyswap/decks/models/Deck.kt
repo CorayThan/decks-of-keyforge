@@ -178,7 +178,7 @@ data class Deck(
 
                 sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0,
 
-                synergies = synergies?.toStrings()
+                synergies = synergies
         )
     }
 

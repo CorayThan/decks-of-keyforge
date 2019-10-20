@@ -1,6 +1,7 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Utils } from "../config/Utils"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { cardStore } from "./CardStore"
 import { KCard } from "./KCard"
@@ -38,9 +39,9 @@ export const CardsWithAerc = (props: { title: string, accessor: (card: Partial<K
     }
 }
 
-export const CardsWithAercFromCombos = (props: { title: string, accessor: (combo: SynergyCombo) => number, combos?: SynergyCombo[] }) => {
-    const {title, accessor, combos} = props
-    const titleComponent = <Typography variant={"inherit"}>{title}</Typography>
+export const CardsWithAercFromCombos = (props: { title: string, accessor: (combo: SynergyCombo) => number, score?: number, combos?: SynergyCombo[] }) => {
+    const {title, accessor, combos, score} = props
+    const titleComponent = <Typography style={{marginBottom: spacing(1)}} variant={"inherit"}>{title}</Typography>
     if (combos == null) {
         return titleComponent
     }
@@ -64,6 +65,16 @@ export const CardsWithAercFromCombos = (props: { title: string, accessor: (combo
                             </Typography>
                         </div>
                     ))}
+                {score != null && score !== 0 && (
+                    <div style={{display: "flex", marginTop: spacing(1)}}>
+                        <Typography variant={"inherit"} style={{flexGrow: 1}}>
+                            Total:
+                        </Typography>
+                        <Typography variant={"inherit"}>
+                            {Utils.roundToHundreds(score)}
+                        </Typography>
+                    </div>
+                )}
             </div>
         )
     }

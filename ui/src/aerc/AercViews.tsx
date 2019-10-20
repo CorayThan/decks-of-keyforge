@@ -45,6 +45,7 @@ export const AercView = (props: {
                     title={"Efficiency (F)"}
                     accessor={combo => combo.efficiency}
                     combos={combos}
+                    score={hasAerc.efficiency}
                 />
             )
         },
@@ -56,6 +57,7 @@ export const AercView = (props: {
                     title={"Disruption (D)"}
                     accessor={combo => combo.disruption}
                     combos={combos}
+                    score={hasAerc.disruption}
                 />
             )
         },
@@ -98,6 +100,7 @@ export const AercView = (props: {
                                         title={"Aember Control (A)"}
                                         accessor={combo => combo.amberControl}
                                         combos={combos}
+                                        score={hasAerc.amberControl}
                                     />
                                 )
                             },
@@ -109,8 +112,8 @@ export const AercView = (props: {
                                         title={"Expected Aember (E)"}
                                         accessor={combo => combo.expectedAmber}
                                         combos={combos}
+                                        score={hasAerc.expectedAmber}
                                     />
-
                                 )
                             },
                             {
@@ -121,6 +124,7 @@ export const AercView = (props: {
                                         title={"Aember Protection"}
                                         accessor={combo => combo.amberProtection}
                                         combos={combos}
+                                        score={hasAerc.amberProtection}
                                     />
                                 )
                             },
@@ -140,6 +144,7 @@ export const AercView = (props: {
                                         title={"Artifact Control (R)"}
                                         accessor={combo => combo.artifactControl}
                                         combos={combos}
+                                        score={hasAerc.artifactControl}
                                     />
                                 )
                             },
@@ -151,6 +156,7 @@ export const AercView = (props: {
                                         title={"Creature Control (C)"}
                                         accessor={combo => combo.creatureControl}
                                         combos={combos}
+                                        score={hasAerc.creatureControl}
                                     />
                                 )
                             },
@@ -168,6 +174,7 @@ export const AercView = (props: {
                                             return effPower
                                         }}
                                         combos={combos}
+                                        score={hasAerc.effectivePower}
                                     />
                                 )
                             },
@@ -195,6 +202,7 @@ export const AercView = (props: {
                                             title={"House Cheating"}
                                             accessor={combo => combo.houseCheating}
                                             combos={combos}
+                                            score={hasAerc.houseCheating}
                                         />
                                     )
                                 },
@@ -206,6 +214,7 @@ export const AercView = (props: {
                                             title={"Other"}
                                             accessor={combo => combo.other}
                                             combos={combos}
+                                            score={hasAerc.other}
                                         />
                                     )
                                 },

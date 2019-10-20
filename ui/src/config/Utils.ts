@@ -14,6 +14,7 @@ export class Utils {
     static readonly localDateFormat = "yyyy-MM-dd"
 
     static roundToTens = (round: number) =>  Math.round(round * 10) / 10
+    static roundToHundreds = (round: number) =>  Math.round(round * 100) / 100
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
