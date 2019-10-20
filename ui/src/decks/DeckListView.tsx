@@ -157,7 +157,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                         </TableHead>
                         <TableBody>
                             {decks.map((deck) => {
-                                const synergies = deck.synergies!
+                                const synergies = DeckUtils.synergiesRounded(deck.synergies!)
                                 return (
                                     <TableRow key={deck.id}>
                                         <TableCell>

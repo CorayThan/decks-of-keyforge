@@ -1,7 +1,7 @@
 import { TableSortLabel, Tooltip, Typography } from "@material-ui/core"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
-import TableCell from "@material-ui/core/TableCell"
+import TableCell, { TableCellProps } from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import { Info } from "@material-ui/icons"
@@ -11,7 +11,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
+import { log, roundToHundreds, roundToTens } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
@@ -50,9 +50,9 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                             Synergy Details
                         </Typography>
                         <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
-                            <PercentRatingRow value={(sasPercentile == null ? -1.0 : sasPercentile).toFixed(1)} name={"SAS"}/>
-                            <PercentRatingRow value={synergyPercentile.toFixed(1)} name={"SYNERGY"}/>
-                            <PercentRatingRow value={antisynergyPercentile.toFixed(1)} name={"ANTISYNERGY"}/>
+                            <PercentRatingRow value={roundToTens(sasPercentile == null ? -1.0 : sasPercentile)} name={"SAS"}/>
+                            <PercentRatingRow value={roundToTens(synergyPercentile)} name={"SYNERGY"}/>
+                            <PercentRatingRow value={roundToTens(antisynergyPercentile)} name={"ANTISYNERGY"}/>
                             <div>
                                 <Tooltip
                                     title={"Percentile ranking among all decks. Higher is better."}
@@ -98,8 +98,9 @@ class ColumnHeaders extends React.Component {
                 <>
                     <SynergiesHeader title={"Card Name"} property={"cardName"}/>
                     <SynergiesHeader title={"Copies"} property={"copies"}/>
+                    <TableCell>Base AERC</TableCell>
                     <SynergiesHeader title={"Synergy"} property={"netSynergy"}/>
-                    <SynergiesHeader title={"Aerc"} property={"aercScore"}/>
+                    <SynergiesHeader title={"AERC"} property={"aercScore"}/>
                     <TableCell>Synergies</TableCell>
                     {screenStore.screenWidth > 1440 && (
                         <>
@@ -112,6 +113,7 @@ class ColumnHeaders extends React.Component {
                             <SynergiesHeader title={"Efficiency"} property={"efficiency"}/>
                             <SynergiesHeader title={"Disruption"} property={"disruption"}/>
                             <SynergiesHeader title={"House Cheating"} property={"houseCheating"}/>
+                            <SynergiesHeader title={"Other"} property={"other"}/>
                         </>
                     )}
                 </>
@@ -131,7 +133,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                         <CardAsLine card={{cardTitle: combo.cardName}}/>
                         {combo.copies === 1 ? "" : ` x ${combo.copies}`}
                     </TableCell>
-                    <TableCell>{combo.aercScore} / {combo.netSynergy}</TableCell>
+                    <TableCell>{roundToHundreds(combo.aercScore)} / {roundToHundreds(combo.netSynergy)}</TableCell>
                 </>
             )
         } else {
@@ -139,8 +141,9 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                 <>
                     <TableCell><CardAsLine card={{cardTitle: combo.cardName}}/></TableCell>
                     <TableCell>{combo.copies}</TableCell>
-                    <TableCell>{combo.netSynergy}</TableCell>
-                    <TableCell>{combo.aercScore}</TableCell>
+                    <TableCellRounded>{combo.aercScore - combo.netSynergy}</TableCellRounded>
+                    <TableCellRounded>{combo.netSynergy}</TableCellRounded>
+                    <TableCellRounded>{combo.aercScore}</TableCellRounded>
                     <TableCell>
                         <div>
                             {combo.synergies.map((synergy, idx) => {
@@ -164,21 +167,31 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                     </TableCell>
                     {screenStore.screenWidth > 1440 && (
                         <>
-                            <TableCell>{combo.amberControl}</TableCell>
-                            <TableCell>{combo.expectedAmber}</TableCell>
-                            <TableCell>{combo.amberProtection}</TableCell>
-                            <TableCell>{combo.artifactControl}</TableCell>
-                            <TableCell>{combo.creatureControl}</TableCell>
-                            <TableCell>{combo.effectivePower}</TableCell>
-                            <TableCell>{combo.efficiency}</TableCell>
-                            <TableCell>{combo.disruption}</TableCell>
-                            <TableCell>{combo.houseCheating}</TableCell>
+                            <TableCellRounded>{combo.amberControl}</TableCellRounded>
+                            <TableCellRounded>{combo.expectedAmber}</TableCellRounded>
+                            <TableCellRounded>{combo.amberProtection}</TableCellRounded>
+                            <TableCellRounded>{combo.artifactControl}</TableCellRounded>
+                            <TableCellRounded>{combo.creatureControl}</TableCellRounded>
+                            <TableCellRounded>{combo.effectivePower}</TableCellRounded>
+                            <TableCellRounded>{combo.efficiency}</TableCellRounded>
+                            <TableCellRounded>{combo.disruption}</TableCellRounded>
+                            <TableCellRounded>{combo.houseCheating}</TableCellRounded>
+                            <TableCellRounded>{combo.other}</TableCellRounded>
                         </>
                     )}
                 </>
             )
         }
     }
+}
+
+const TableCellRounded = (props: TableCellProps) => {
+    const {children, ...rest} = props
+    return (
+        <TableCell {...rest}>
+            {roundToHundreds(children as number)}
+        </TableCell>
+    )
 }
 
 class SynergiesTableViewStore {

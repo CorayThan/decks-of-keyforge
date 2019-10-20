@@ -4,7 +4,7 @@ import { CardsWithAerc, CardsWithAercFromCombos } from "../cards/CardsWithAerc"
 import { CardType } from "../cards/CardType"
 import { hasAercFromCard, KCard } from "../cards/KCard"
 import { spacing, theme } from "../config/MuiConfig"
-import { Utils } from "../config/Utils"
+import { roundToHundreds, roundToTens } from "../config/Utils"
 import { Deck, DeckUtils } from "../decks/Deck"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../generic/icons/AmberIcon"
@@ -328,7 +328,7 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
     const {card, short, realValue} = props
     const hasAerc = hasAercFromCard(card)
     return (
-        <div style={{display: "grid", gridTemplateColumns: "4fr 2fr 1fr"}}>
+        <div style={{display: "grid", gridTemplateColumns: "6fr 4fr 2fr"}}>
             <AercScore
                 score={hasAerc.amberControl}
                 max={hasAerc.amberControlMax}
@@ -348,15 +348,15 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
                 name={short ? "C" : "Creature Control (C)"}
             />
             <AercScore
-                score={Utils.roundToTens(hasAerc.effectivePower / 10)}
-                max={hasAerc.effectivePowerMax != null ? Utils.roundToTens(hasAerc.effectivePowerMax / 10) : undefined}
-                synergizedScore={realValue && Utils.roundToTens(realValue.effectivePower / 10)}
+                score={roundToTens(hasAerc.effectivePower / 10)}
+                max={hasAerc.effectivePowerMax != null ? roundToTens(hasAerc.effectivePowerMax / 10) : undefined}
+                synergizedScore={realValue && roundToTens(realValue.effectivePower / 10)}
                 name={short ? "P" : "Effective Power (P)"}
             />
             {card.cardType === CardType.Creature && (
                 <AercScore
                     score={0.4}
-                    singleColumn={realValue == null}
+                    singleColumn={realValue != null}
                     name={short ? "CB" : "Creature Bonus"}
                 />
             )}
@@ -402,10 +402,10 @@ const AercAercScore = (props: { score: number, synergy: number }) => {
                 AERC:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {synergy === 0 ? "" : `${Utils.roundToTens(score - synergy)} ${synergy > 0 ? "+" : "-"} ${Math.abs(synergy)} =`}
+                {synergy === 0 ? "" : `${roundToHundreds(score - synergy)} ${synergy > 0 ? "+" : "-"} ${roundToHundreds(Math.abs(synergy))} =`}
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {score}
+                {roundToHundreds(score)}
             </Typography>
         </>
     )
@@ -417,11 +417,17 @@ const AercScore = (props: { score: number, max?: number, name: string, synergize
     if (score === 0 && max == null) {
         return null
     }
-    let secondColumn = ""
+    let secondColumn
     if (max != null) {
-        secondColumn = `${score} to ${max}`
-    } else if (singleColumn || (max == null && synergizedScore == null)) {
-        secondColumn = score.toString()
+        secondColumn = `${roundToHundreds(score)} to ${roundToHundreds(max)}`
+    } else if (max == null && synergizedScore == null && !singleColumn) {
+        secondColumn = roundToHundreds(score)
+    }
+    let thirdColumn = max == null && synergizedScore != null ? score : synergizedScore
+    if (thirdColumn != null) {
+        thirdColumn = roundToHundreds(thirdColumn)
+    } else if (singleColumn) {
+        thirdColumn = roundToHundreds(score)
     }
     return (
         <>
@@ -432,7 +438,7 @@ const AercScore = (props: { score: number, max?: number, name: string, synergize
                 {secondColumn}
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
-                {max == null && synergizedScore != null ? score : synergizedScore}
+                {thirdColumn}
             </Typography>
         </>
     )

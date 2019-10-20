@@ -1,6 +1,6 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
-import { log } from "../config/Utils"
+import { log, roundToHundreds } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
 import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
@@ -96,10 +96,39 @@ export class DeckUtils {
             })
         return cardsByHouse
     }
+    
+    static synergiesRounded = (synergies: DeckSynergyInfo) => {
+        const {
+            amberControl,
+            expectedAmber,
+            amberProtection,
+            artifactControl,
+            creatureControl,
+            effectivePower,
+            efficiency,
+            disruption,
+            houseCheating,
+            other,
+            ...rest
+        } = synergies
+        return {
+            amberControl: roundToHundreds(amberControl),
+            expectedAmber: roundToHundreds(expectedAmber),
+            amberProtection: roundToHundreds(amberProtection),
+            artifactControl: roundToHundreds(artifactControl),
+            creatureControl: roundToHundreds(creatureControl),
+            effectivePower: roundToHundreds(effectivePower),
+            efficiency: roundToHundreds(efficiency),
+            disruption: roundToHundreds(disruption),
+            houseCheating: roundToHundreds(houseCheating),
+            other: roundToHundreds(other),
+            ...rest
+        }
+    }
 
     static arrayToCSV = (decks: Deck[]) => {
         const data = decks.map(deck => {
-            const synergies = deck.synergies!
+            const synergies = DeckUtils.synergiesRounded(deck.synergies!)
             return [
                 deck.name.replace(/"/g, "\"\""),
                 deck.houses,

@@ -1,5 +1,5 @@
 import { HasAerc } from "../aerc/HasAerc"
-import { Utils } from "../config/Utils"
+import { roundToHundreds } from "../config/Utils"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { House } from "../houses/House"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
@@ -49,7 +49,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
 
     let averageAercScore = card.aercScore
     if (card.aercScoreMax != null) {
-        averageAercScore = Utils.roundToTens((card.aercScore + card.aercScoreMax) / 2)
+        averageAercScore = roundToHundreds((card.aercScore + card.aercScoreMax) / 2)
     }
 
     return {
@@ -72,8 +72,8 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         disruptionMax,
         houseCheatingMax,
         otherMax,
-        aercScoreMax: aercScoreMax == null ? undefined : Utils.roundToTens(aercScoreMax),
-        aercScore: Utils.roundToTens(aercScore),
+        aercScoreMax: aercScoreMax == null ? undefined : roundToHundreds(aercScoreMax),
+        aercScore: roundToHundreds(aercScore),
         averageAercScore
     }
 }
@@ -95,7 +95,7 @@ export class CardUtils {
         const aerc = card.averageAercScore!
         if (aerc <= 0.5) {
             return 0
-        } else if (aerc <=1) {
+        } else if (aerc <= 1) {
             return 1
         } else if (aerc <= 2) {
             return 2

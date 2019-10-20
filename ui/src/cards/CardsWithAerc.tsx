@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Utils } from "../config/Utils"
+import { roundToHundreds } from "../config/Utils"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { cardStore } from "./CardStore"
 import { KCard } from "./KCard"
@@ -61,7 +61,7 @@ export const CardsWithAercFromCombos = (props: { title: string, accessor: (combo
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             <Typography key={idx} variant={"inherit"}>
-                                {`${accessor(combo)}` + (combo.copies > 1 ? ` x ${combo.copies} = ${Math.round(accessor(combo) * combo.copies * 10) / 10}` : "")}
+                                {`${roundToHundreds(accessor(combo))}` + (combo.copies > 1 ? ` x ${combo.copies} = ${roundToHundreds(accessor(combo) * combo.copies)}` : "")}
                             </Typography>
                         </div>
                     ))}
@@ -71,7 +71,7 @@ export const CardsWithAercFromCombos = (props: { title: string, accessor: (combo
                             Total:
                         </Typography>
                         <Typography variant={"inherit"}>
-                            {Utils.roundToHundreds(score)}
+                            {roundToHundreds(score)}
                         </Typography>
                     </div>
                 )}

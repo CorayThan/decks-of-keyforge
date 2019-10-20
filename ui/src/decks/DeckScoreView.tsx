@@ -7,7 +7,7 @@ import { range } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { Utils } from "../config/Utils"
+import { roundToHundreds } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -78,13 +78,17 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     return (
         <div style={{display: "flex"}}>
             <div style={props.style}>
-                <RatingRow value={rawAerc} name={"AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                <Tooltip title={"Total SAS / AERC score without synergies and antisynergies."}>
+                    <div>
+                        <RatingRow value={rawAerc} name={"AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                    </div>
+                </Tooltip>
                 <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <div style={{borderBottom: "1px solid rgba(255,255,255)"}}/>
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}/>
-                    <Tooltip title={"Synergy and Antisynergy Rating. Read more on the about page."}>
+                    <Tooltip title={"Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."}>
                         <div>
                             <UnstyledLink to={AboutSubPaths.sas}>
                                 <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
@@ -117,7 +121,7 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     let includeHalf = false
     let type = StarType.NORMAL
     let quantity = 0
-    let tooltip = `${Utils.roundToTens(sasPercentile)}%. `
+    let tooltip = `${roundToHundreds(sasPercentile)}%. `
 
     const random = Math.random()
     if (sasPercentile >= 99.99) {
@@ -260,8 +264,8 @@ const RatingRow = (props: { value: number, name: string, operator?: string, size
     )
 }
 
-export const PercentRatingRow = (props: { value: string, name: string }) => {
-    if (props.value === "-1.0") {
+export const PercentRatingRow = (props: { value: number, name: string }) => {
+    if (props.value === -1.0) {
         return null
     }
     return (

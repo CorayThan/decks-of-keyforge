@@ -381,7 +381,7 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             <div style={{display: "flex", alignItems: "flex-end"}}>
                 <Typography variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
-                {published && (
+                {title && published && (
                     <Typography variant={"subtitle2"}>{Utils.epochSecondsToDate(published)}</Typography>
                 )}
             </div>
