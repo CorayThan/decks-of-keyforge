@@ -14,7 +14,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.0"
+export const latestVersion = "4.2"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,28 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.2"}
+                    date={"10/20/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAStars Percent",
+                            note: "SAStars now includes a percent. This represents the deck's current percentile ranking among all decks that exist. " +
+                                "Unlike SAS, this could change just by virtue of more better or worse decks coming into existence. " +
+                                "For example, if a generally higher or lower powered set were released."
+                        },
+                        {
+                            highlight: "Rounding Improvements",
+                            note: "Most rounding is now out to 2 significant digits, making it more clear what the AERC / SAS numbers really are. " +
+                                "You can see unrounded AERC values for the deck on the hover tooltip."
+                        },
+                        {
+                            highlight: "New Decks CSV",
+                            note: "I've added a new all-decks CSV for SAS v4. Find it on the About APIs page."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.1"}
                     date={"10/19/2019"}

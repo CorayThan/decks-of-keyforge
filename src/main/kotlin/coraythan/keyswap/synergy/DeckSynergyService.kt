@@ -323,7 +323,7 @@ object DeckSynergyService {
                 other = o
         )
 
-        log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
+        // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
         return info
 
@@ -509,4 +509,3 @@ object DeckSynergyService {
 }
 
 fun Double?.isZeroOrNull() = this == null || this == 0.0
-fun Double.roundToTens() = this.toBigDecimal().setScale(1, RoundingMode.HALF_UP)

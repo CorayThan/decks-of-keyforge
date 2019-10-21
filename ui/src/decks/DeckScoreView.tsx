@@ -80,7 +80,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
             <div style={props.style}>
                 <Tooltip title={"Total SAS / AERC score without synergies and antisynergies."}>
                     <div>
-                        <RatingRow value={rawAerc} name={"AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                        <RatingRow value={rawAerc} name={"BASE AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                     </div>
                 </Tooltip>
                 <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
@@ -88,7 +88,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                 <div style={{borderBottom: "1px solid rgba(255,255,255)"}}/>
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}/>
-                    <Tooltip title={"Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."}>
+                    <Tooltip
+                        title={"Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."}>
                         <div>
                             <UnstyledLink to={AboutSubPaths.sas}>
                                 <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
@@ -99,25 +100,24 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                 </div>
             </div>
             {sasPercentile && (
-                <SaStars
-                    sasPercentile={sasPercentile}
-                    small={small}
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-end",
-                        marginLeft: spacing(2),
-                        marginBottom: spacing(0.5)
-                    }}
-                />
+                <div style={{marginLeft: spacing(2), display: "flex", alignItems: "flex-end"}}>
+                    <SaStars
+                        sasPercentile={sasPercentile}
+                        small={small}
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                        }}
+                    />
+                </div>
             )}
         </div>
     )
 }
 
-export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean, halfAtEnd?: boolean }) => {
-    const {sasPercentile, small, style, gray, halfAtEnd} = props
+export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean, halfAtEnd?: boolean, noPercent?: boolean }) => {
+    const {sasPercentile, small, style, gray, halfAtEnd, noPercent} = props
     let includeHalf = false
     let type = StarType.NORMAL
     let quantity = 0
@@ -125,15 +125,14 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
 
     const random = Math.random()
     if (sasPercentile >= 99.99) {
+        quantity = 5
         type = StarType.GOLD
         if (random > 0.5) {
             tooltip += "A controller of weakling decks. Only one in 10,000 decks is this good"
         } else {
             tooltip += "When nature calls, this deck won't have to go. Only one in 10,000 decks is this good"
         }
-    }
-
-    if (sasPercentile >= 99.9) {
+    } else if (sasPercentile >= 99.9) {
         quantity = 5
         if (random > 0.5) {
             tooltip += "One of the glorious few. Only one in 1,000 decks is this good"
@@ -213,13 +212,23 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
 
     tooltip += " according to SAS."
 
-    const starStyle = {marginTop: spacing(1)}
+    const starStyle = {marginTop: spacing(0.5)}
     return (
         <Tooltip title={tooltip}>
-            <div style={style}>
-                {includeHalf && !halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
-                {range(quantity).map((idx) => <StarIcon key={idx} starType={type} style={starStyle} small={small} gray={gray}/>)}
-                {includeHalf && halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <div style={style}>
+                    {includeHalf && !halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
+                    {range(quantity).map((idx) => <StarIcon key={idx} starType={type} style={starStyle} small={small} gray={gray}/>)}
+                    {includeHalf && halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
+                </div>
+                {!noPercent && (
+                    <Typography
+                        variant={"body2"}
+                        style={{color: "#FFFFFF", marginTop: spacing(0.5)}}
+                    >
+                        {Math.round(sasPercentile)}%
+                    </Typography>
+                )}
             </div>
         </Tooltip>
     )

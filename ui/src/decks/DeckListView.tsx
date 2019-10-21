@@ -9,7 +9,7 @@ import { AercRadar } from "../aerc/AercRadar"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log } from "../config/Utils"
+import { log, roundToTens } from "../config/Utils"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { HouseBanner } from "../houses/HouseBanner"
@@ -116,6 +116,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 {sellerView ? <TableCell>Seller Tools</TableCell> : null}
                                 <DeckHeader title={"SAS"} property={"sasRating"}/>
                                 <DeckHeader title={"SAStars"} property={"sasPercentile"}/>
+                                <DeckHeader title={"SAS%"} property={"sasPercentile"}/>
                                 <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                                 <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
                                 <DeckHeader title={"Raw AERC"} property={"aercScore"}/>
@@ -189,14 +190,16 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                                     style={{
                                                         display: "flex",
                                                         flexWrap: "wrap",
-                                                        width: 40,
                                                         alignItems: "flex-end",
-                                                        justifyContent: "center"
+                                                        justifyContent: "center",
+                                                        width: 48
                                                     }}
                                                     halfAtEnd={true}
+                                                    noPercent={true}
                                                 />
                                             )}
                                         </TableCell>
+                                        <TableCell>{deck.sasPercentile && roundToTens(deck.sasPercentile)}</TableCell>
                                         <TableCell>{synergies.synergyRating}</TableCell>
                                         <TableCell>{synergies.antisynergyRating}</TableCell>
                                         <TableCell>{synergies.rawAerc}</TableCell>

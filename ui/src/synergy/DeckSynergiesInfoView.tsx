@@ -11,7 +11,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { log, roundToHundreds, roundToTens } from "../config/Utils"
+import { log, roundToHundreds } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
@@ -50,9 +50,9 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
                             Synergy Details
                         </Typography>
                         <div style={{display: "flex", alignItems: "flex-end", flexWrap: "wrap"}}>
-                            <PercentRatingRow value={roundToTens(sasPercentile == null ? -1.0 : sasPercentile)} name={"SAS"}/>
-                            <PercentRatingRow value={roundToTens(synergyPercentile)} name={"SYNERGY"}/>
-                            <PercentRatingRow value={roundToTens(antisynergyPercentile)} name={"ANTISYNERGY"}/>
+                            <PercentRatingRow value={roundToHundreds(sasPercentile == null ? -1.0 : sasPercentile)} name={"SAS"}/>
+                            <PercentRatingRow value={roundToHundreds(synergyPercentile)} name={"SYNERGY"}/>
+                            <PercentRatingRow value={roundToHundreds(antisynergyPercentile)} name={"ANTISYNERGY"}/>
                             <div>
                                 <Tooltip
                                     title={"Percentile ranking among all decks. Higher is better."}
