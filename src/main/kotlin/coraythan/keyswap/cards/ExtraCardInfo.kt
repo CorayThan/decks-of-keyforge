@@ -5,6 +5,7 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValue
 import java.time.ZonedDateTime
+import java.util.*
 import javax.persistence.*
 
 data class CardNumberSetPairOld(
@@ -19,7 +20,7 @@ data class CardNumberSetPairOld(
 @Entity
 data class ExtraCardInfo(
 
-        val cardName: String? = null,
+        val cardName: String = "",
 
         val expectedAmber: Double = 0.0,
         val expectedAmberMax: Double? = null,
@@ -72,8 +73,10 @@ data class ExtraCardInfo(
 //        @OneToOne(mappedBy = "info")
 //        val spoiler: Spoiler? = null,
 
+        val uuidId: UUID? = UUID.randomUUID(),
+
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id: Long = -1
 ) {
     fun readyForCreate(version: Int): ExtraCardInfo {

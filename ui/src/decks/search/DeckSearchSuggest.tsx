@@ -144,6 +144,22 @@ const SuggestPopper = observer(React.forwardRef((props: { menuOpen: boolean, pla
                                     overflowY: "auto"
                                 }}
                             >
+                                {cardStore.cardNameSearchResults.length > 0 ? (
+                                    <>
+                                        <ListSubheader disableSticky={true}>
+                                            Cards
+                                        </ListSubheader>
+                                        {cardStore.cardNameSearchResults.map((card) => (
+                                            <FancyCardMenuItem card={card} onClick={searchDeckNameStore.reset} key={card.id}/>
+                                        ))}
+                                        <LinkMenuItem
+                                            to={Routes.cards}
+                                        >
+                                            Search Cards...
+                                        </LinkMenuItem>
+                                    </>
+                                ) : null}
+                                {deckStore.deckNameSearchResults.length > 0 && cardStore.cardNameSearchResults.length > 0 ? <Divider/> : null}
                                 {deckStore.deckNameSearchResults.length > 0 ? (
                                     <>
                                         <ListSubheader disableSticky={true}>
@@ -157,22 +173,6 @@ const SuggestPopper = observer(React.forwardRef((props: { menuOpen: boolean, pla
                                             onClick={searchDeckNameStore.reset}
                                         >
                                             All results...
-                                        </LinkMenuItem>
-                                    </>
-                                ) : null}
-                                {deckStore.deckNameSearchResults.length > 0 && cardStore.cardNameSearchResults.length > 0 ? <Divider/> : null}
-                                {cardStore.cardNameSearchResults.length > 0 ? (
-                                    <>
-                                        <ListSubheader disableSticky={true}>
-                                            Cards
-                                        </ListSubheader>
-                                        {cardStore.cardNameSearchResults.map((card) => (
-                                            <FancyCardMenuItem card={card} onClick={searchDeckNameStore.reset} key={card.id}/>
-                                        ))}
-                                        <LinkMenuItem
-                                            to={Routes.cards}
-                                        >
-                                            Search Cards...
                                         </LinkMenuItem>
                                     </>
                                 ) : null}

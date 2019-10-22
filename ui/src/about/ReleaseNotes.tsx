@@ -31,7 +31,9 @@ export class ReleaseNotes extends React.Component {
                             highlight: "SAStars Percent",
                             note: "SAStars now includes a percent. This represents the deck's current percentile ranking among all decks that exist. " +
                                 "Unlike SAS, this could change just by virtue of more better or worse decks coming into existence. " +
-                                "For example, if a generally higher or lower powered set were released."
+                                "For example, if a generally higher or lower powered set were released. This also makes it a lot easier " +
+                                "to see things like the fact that 62 is the current Average SAS value, as decks with that score are better " +
+                                "than 52% of decks."
                         },
                         {
                             highlight: "Rounding Improvements",

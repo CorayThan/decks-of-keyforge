@@ -32,7 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '205'
+version = '206'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
@@ -78,7 +78,7 @@ dependencies {
     implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
     implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2')
     implementation("com.patreon:patreon:0.4.2")
-    implementation("com.amazonaws:aws-java-sdk:1.11.640")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.11.656")
 
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtime("io.jsonwebtoken:jjwt-impl:$jjwtVersion")

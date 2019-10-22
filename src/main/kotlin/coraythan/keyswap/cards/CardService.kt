@@ -6,6 +6,8 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.House
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.SynTraitType
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
+import java.util.*
 
 @Transactional
 @Service
@@ -23,6 +26,8 @@ class CardService(
         private val cardRepo: CardRepo,
         private val keyforgeApi: KeyforgeApi,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
+        private val spoilerRepo: SpoilerRepo,
+        private val cardIdentifierRepo: CardIdentifierRepo,
         private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -40,20 +45,18 @@ class CardService(
 
     fun loadExtraInfo() {
 
-        // TODO delete me
-        val allInfos = extraCardInfoRepo.findAll().mapNotNull {
-            if (it.cardName != null) {
-                null
-            } else {
-                it.copy(cardName = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(
-                        it.cardNumbers.first().expansion.expansionNumber,
-                        it.cardNumbers.first().cardNumber
-                ).cardTitle)
+        val allInfos = extraCardInfoRepo.findAll()
+        allInfos.forEach {
+            if (it.uuidId == null) {
+                extraCardInfoRepo.save(it.copy(uuidId = UUID.randomUUID()))
             }
         }
-        if (allInfos.isNotEmpty()) {
-            log.info("Adding names to ${allInfos.size} extra infos with no names")
-            extraCardInfoRepo.saveAll(allInfos)
+
+        val allIds = cardIdentifierRepo.findAll()
+        allIds.forEach {
+            if (it.uuidId == null) {
+                cardIdentifierRepo.save(it.copy(uuidId = UUID.randomUUID()))
+            }
         }
 
         this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
@@ -77,6 +80,45 @@ class CardService(
                     "${toSave.size} unpublished ${unpublish.size}")
             this.loadExtraInfo()
         }
+    }
+
+    fun convertSpoilers() {
+        log.info("Converting spoilers to extra info")
+        val toSave = spoilerRepo.findAll().mapNotNull { spoiler ->
+
+            if (!spoiler.reprint) {
+                val info = ExtraCardInfo(
+                        cardName = spoiler.cardTitle,
+                        expectedAmber = spoiler.expectedAmber,
+                        amberControl = spoiler.amberControl,
+                        creatureControl = spoiler.creatureControl,
+                        artifactControl = spoiler.artifactControl,
+                        efficiency = spoiler.efficiency,
+                        effectivePower = spoiler.effectivePower,
+                        disruption = spoiler.disruption,
+                        amberProtection = spoiler.amberProtection,
+                        houseCheating = spoiler.houseCheating,
+                        other = spoiler.other
+                )
+                log.info("Saving info for ${spoiler.cardTitle} info: $info")
+                val saved = extraCardInfoRepo.save(info)
+                log.info("Saved info for ${spoiler.cardTitle}")
+                cardIdentifierRepo.save(CardIdentifier(
+                        cardNumber = spoiler.cardNumber,
+                        expansion = Expansion.WORLDS_COLLIDE,
+                        info = saved
+                ))
+            } else {
+                null
+            }
+
+        }
+
+        log.info("To save ids: ${toSave.map { it.id }} info ids: ${toSave.map { it.info?.id }}")
+        // cardIdentifierRepo.saveAll(toSave)
+
+        this.loadExtraInfo()
+        log.info("converted spoilers to extra info and reloaded extra info")
     }
 
     private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
@@ -199,6 +241,24 @@ class CardService(
     }
 
     fun saveNewCard(card: Card): Card {
+        if (card.extraCardInfo == null) {
+            val preexistingInfo = extraInfo.values.filter { it.cardName == card.cardTitle }
+
+            val cardId = CardIdentifier(expansion = card.expansionEnum, cardNumber = card.cardNumber)
+            if (preexistingInfo.isEmpty()) {
+                val info = ExtraCardInfo(
+                        cardName = card.cardTitle,
+                        active = true,
+                        version = activeAercVersion
+                )
+                extraCardInfoRepo.save(info)
+                cardIdentifierRepo.save(cardId.copy(info = info))
+            } else {
+                preexistingInfo.forEach {
+                    cardIdentifierRepo.save(cardId.copy(info = it))
+                }
+            }
+        }
         return cardRepo.save(card)
     }
 

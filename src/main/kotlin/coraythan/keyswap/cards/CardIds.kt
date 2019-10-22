@@ -5,6 +5,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.querydsl.QuerydslPredicateExecutor
+import java.util.*
 import javax.persistence.*
 
 data class CardIds(
@@ -33,11 +34,13 @@ data class CardIdentifier(
 
         // Should never be null in DB
         @JsonIgnoreProperties("cardNumbers")
-        @ManyToOne
+        @ManyToOne(cascade = [CascadeType.ALL])
         val info: ExtraCardInfo? = null,
 
+        val uuidId: UUID? = UUID.randomUUID(),
+
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id: Long = -1
 ) {
     fun toNumberSetPair() = CardNumberSetPair(expansion, cardNumber)
