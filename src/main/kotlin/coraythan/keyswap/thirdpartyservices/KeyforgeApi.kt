@@ -1,7 +1,6 @@
 package coraythan.keyswap.thirdpartyservices
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.House
 import coraythan.keyswap.cards.KeyforgeCard
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import org.slf4j.LoggerFactory
@@ -21,7 +20,7 @@ data class KeyforgeDecksPageDto(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDeckLinks(
-        val houses: List<House>?,
+        val houses: List<String>?,
         val cards: List<String>?
 )
 

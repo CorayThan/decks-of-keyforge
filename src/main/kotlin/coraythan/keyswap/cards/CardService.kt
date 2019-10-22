@@ -6,7 +6,6 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.House
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
-import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.SynTraitType
 import coraythan.keyswap.synergy.SynTraitValue
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
 
 @Transactional
 @Service
@@ -45,20 +43,6 @@ class CardService(
 
     fun loadExtraInfo() {
 
-        val allInfos = extraCardInfoRepo.findAll()
-        allInfos.forEach {
-            if (it.uuidId == null) {
-                extraCardInfoRepo.save(it.copy(uuidId = UUID.randomUUID()))
-            }
-        }
-
-        val allIds = cardIdentifierRepo.findAll()
-        allIds.forEach {
-            if (it.uuidId == null) {
-                cardIdentifierRepo.save(it.copy(uuidId = UUID.randomUUID()))
-            }
-        }
-
         this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
         this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
         this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
@@ -82,44 +66,41 @@ class CardService(
         }
     }
 
-    fun convertSpoilers() {
-        log.info("Converting spoilers to extra info")
-        val toSave = spoilerRepo.findAll().mapNotNull { spoiler ->
-
-            if (!spoiler.reprint) {
-                val info = ExtraCardInfo(
-                        cardName = spoiler.cardTitle,
-                        expectedAmber = spoiler.expectedAmber,
-                        amberControl = spoiler.amberControl,
-                        creatureControl = spoiler.creatureControl,
-                        artifactControl = spoiler.artifactControl,
-                        efficiency = spoiler.efficiency,
-                        effectivePower = spoiler.effectivePower,
-                        disruption = spoiler.disruption,
-                        amberProtection = spoiler.amberProtection,
-                        houseCheating = spoiler.houseCheating,
-                        other = spoiler.other
-                )
-                log.info("Saving info for ${spoiler.cardTitle} info: $info")
-                val saved = extraCardInfoRepo.save(info)
-                log.info("Saved info for ${spoiler.cardTitle}")
-                cardIdentifierRepo.save(CardIdentifier(
-                        cardNumber = spoiler.cardNumber,
-                        expansion = Expansion.WORLDS_COLLIDE,
-                        info = saved
-                ))
-            } else {
-                null
-            }
-
-        }
-
-        log.info("To save ids: ${toSave.map { it.id }} info ids: ${toSave.map { it.info?.id }}")
-        // cardIdentifierRepo.saveAll(toSave)
-
-        this.loadExtraInfo()
-        log.info("converted spoilers to extra info and reloaded extra info")
-    }
+//    @Scheduled(fixedDelayString = "PT1S")
+//    fun convertSpoilers() {
+//        val spoilers = spoilerRepo.findByMigratedFalse()
+//        val spoiler = spoilers.firstOrNull() ?: return
+//
+//        log.info("Converting spoiler ${spoiler.cardTitle} to extra info")
+//        if (!spoiler.reprint) {
+//            val info = ExtraCardInfo(
+//                    cardName = spoiler.cardTitle,
+//                    expectedAmber = spoiler.expectedAmber,
+//                    amberControl = spoiler.amberControl,
+//                    creatureControl = spoiler.creatureControl,
+//                    artifactControl = spoiler.artifactControl,
+//                    efficiency = spoiler.efficiency,
+//                    effectivePower = spoiler.effectivePower,
+//                    disruption = spoiler.disruption,
+//                    amberProtection = spoiler.amberProtection,
+//                    houseCheating = spoiler.houseCheating,
+//                    other = spoiler.other
+//            )
+//            val saved = extraCardInfoRepo.save(info)
+//            log.info("Saved info for ${spoiler.cardTitle}")
+//            cardIdentifierRepo.save(CardIdentifier(
+//                    cardNumber = spoiler.cardNumber,
+//                    expansion = Expansion.WORLDS_COLLIDE,
+//                    info = saved
+//            ))
+//        }
+//
+//        spoilerRepo.save(spoiler.copy(migrated = true))
+//
+//        this.loadExtraInfo()
+//        log.info("converted spoiler ${spoiler.cardTitle} to extra info and reloaded extra info")
+//        if (spoilers.size == 1) log.info("Done with spoilers")
+//    }
 
     private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
             .map {
@@ -251,11 +232,11 @@ class CardService(
                         active = true,
                         version = activeAercVersion
                 )
-                extraCardInfoRepo.save(info)
-                cardIdentifierRepo.save(cardId.copy(info = info))
+                val saved = extraCardInfoRepo.save(info)
+                cardIdentifierRepo.save(cardId.copy(info = saved))
             } else {
                 preexistingInfo.forEach {
-                    cardIdentifierRepo.save(cardId.copy(info = it))
+                    cardIdentifierRepo.save(cardId.copy(info = extraCardInfoRepo.getOne(it.id)))
                 }
             }
         }

@@ -1,0 +1,5 @@
+ALTER TABLE card
+    ADD COLUMN created TIMESTAMP;
+
+UPDATE card
+SET created = '2019-06-01 01:00:00.000000';

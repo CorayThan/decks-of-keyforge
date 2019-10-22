@@ -21,7 +21,7 @@ export class HouseSelect extends React.Component<HouseSelectProps> {
         const selectedHousesGotten = selectedHouses.getSelectedHouses()
         let houses = houseValuesArray
         if (!includeWorldsCollide) {
-            houses = houseValuesArray.filter(houseValue => houseValue.house !== House.SaurianRepublic && houseValue.house !== House.StarAlliance)
+            houses = houseValuesArray.filter(houseValue => houseValue.house !== House.Saurian && houseValue.house !== House.StarAlliance)
         }
         return (
             <FormControl>

@@ -3,6 +3,8 @@ package coraythan.keyswap.cards
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.now
+import java.time.ZonedDateTime
 import javax.persistence.*
 
 @Entity
@@ -32,6 +34,8 @@ data class Card(
 
         val wins: Int? = 0,
         val losses: Int? = 0,
+
+        val created: ZonedDateTime = now(),
 
         @ElementCollection
         val traits: Set<String> = setOf(),
@@ -121,7 +125,7 @@ data class Card(
 data class KeyforgeCard(
         val id: String,
         val card_title: String,
-        val house: House,
+        val house: String,
         val card_type: CardType,
         val front_image: String,
         val card_text: String,
@@ -139,7 +143,7 @@ data class KeyforgeCard(
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
         val expansionEnum = Expansion.forExpansionNumber(expansion)
-        return Card(id, card_title, house, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
+        return Card(id, card_title, House.fromMasterVaultValue(house)!!, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
                 traits = traits?.split(" • ")?.toSet() ?: setOf())

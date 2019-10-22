@@ -1,23 +1,19 @@
 package coraythan.keyswap
 
-enum class House {
-    Brobnar,
-    Dis,
-    Logos,
-    Mars,
-    Sanctum,
-    Shadows,
-    Untamed,
-    StarAlliance,
-    SaurianRepublic;
+enum class House(val masterVaultValue: String) {
+    Brobnar("Brobnar"),
+    Dis("Dis"),
+    Logos("Logos"),
+    Mars("Mars"),
+    Sanctum("Sanctum"),
+    Shadows("Shadows"),
+    Untamed("Untamed"),
+    StarAlliance("Star Alliance"),
+    Saurian("Saurian");
 
     companion object {
-        fun valueOfOrNull(value: String): House? {
-            try {
-                return House.valueOf(value)
-            } catch (e: Exception) {
-                return null
-            }
+        fun fromMasterVaultValue(value: String): House? {
+            return values().find { it.masterVaultValue == value }
         }
     }
 }

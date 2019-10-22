@@ -44,6 +44,11 @@ data class CardIdentifier(
         val id: Long = -1
 ) {
     fun toNumberSetPair() = CardNumberSetPair(expansion, cardNumber)
+
+    override fun toString(): String {
+        return "CardIdentifier(expansion=$expansion, cardNumber='$cardNumber', uuidId=$uuidId, id=$id, extraInfoId=${info?.id})"
+    }
+
 }
 
 interface CardIdentifierRepo : JpaRepository<CardIdentifier, Long>, QuerydslPredicateExecutor<CardIdentifier> {

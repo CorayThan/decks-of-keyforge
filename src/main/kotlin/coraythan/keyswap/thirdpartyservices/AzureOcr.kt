@@ -58,7 +58,7 @@ class AzureOcr(
         var houseCount = 0
         val lineResults = lines
                 .mapIndexed { index, line ->
-                    if (line.size == 1 && House.valueOfOrNull(line[0]) != null) {
+                    if (line.size == 1 && House.fromMasterVaultValue(line[0]) != null) {
                         houseCount++
                         LineResult(house = House.valueOf(line[0]), idx = index)
                     } else {

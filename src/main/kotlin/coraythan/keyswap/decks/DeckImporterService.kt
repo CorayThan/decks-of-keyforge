@@ -82,7 +82,12 @@ class DeckImporterService(
                     if (decks == null) {
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
                         break
-                    } else if (decks.data.any { !Expansion.values().map { it.expansionNumber }.contains(it.expansion) }) {
+                    } else if (decks.data.any {
+                                // Only import decks from these sets
+                                !listOf(Expansion.CALL_OF_THE_ARCHONS, Expansion.AGE_OF_ASCENSION)
+                                        .map { expansion -> expansion.expansionNumber }.contains(it.expansion)
+                            }) {
+
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
                         break
                     } else {
@@ -267,7 +272,9 @@ class DeckImporterService(
                 .forEach { keyforgeDeck ->
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
                         val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
-                        val houses = keyforgeDeck._links?.houses ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                        val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
+                                ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
+                        check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
                         val deckToSave = keyforgeDeck.toDeck()
 
                         try {

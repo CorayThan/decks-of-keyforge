@@ -6,7 +6,7 @@ import disImg from "./imgs/dis.png"
 import logosImg from "./imgs/logos.png"
 import marsImg from "./imgs/mars.png"
 import sanctumImg from "./imgs/sanctum.png"
-import saurianRepublicImg from "./imgs/saurian-republic.png"
+import saurianRepublicImg from "./imgs/saurian.png"
 import shadowsImg from "./imgs/shadows.png"
 import starAllianceImg from "./imgs/star-alliance.png"
 import untamedImg from "./imgs/untamed.png"
@@ -20,7 +20,7 @@ export enum House {
     Shadows = "Shadows",
     Untamed = "Untamed",
     StarAlliance = "StarAlliance",
-    SaurianRepublic = "SaurianRepublic"
+    Saurian = "Saurian"
 }
 
 export interface HouseValue {
@@ -73,7 +73,7 @@ export const houseValuesArray: HouseValue[] = [
         displayName: "Star Alliance"
     },
     {
-        house: House.SaurianRepublic,
+        house: House.Saurian,
         img: saurianRepublicImg,
         displayName: "Saurians"
     },

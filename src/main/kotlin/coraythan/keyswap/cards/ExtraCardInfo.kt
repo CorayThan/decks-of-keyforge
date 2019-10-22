@@ -79,6 +79,9 @@ data class ExtraCardInfo(
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id: Long = -1
 ) {
+
+
+
     fun readyForCreate(version: Int): ExtraCardInfo {
         return this.copy(
                 created = now(),
@@ -132,6 +135,5 @@ data class ExtraCardInfo(
                 synergies = listOf()
         )
     }
-
 
 }

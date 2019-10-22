@@ -34,7 +34,7 @@ export const makeSpoilers = (preExisting: Spoiler[]): Partial<Spoiler>[] => {
                 } else if (spoiler.H === "Star Alliance") {
                     mySpoiler.house = House.StarAlliance
                 } else if (spoiler.H === "Saurian") {
-                    mySpoiler.house = House.SaurianRepublic
+                    mySpoiler.house = House.Saurian
                 } else {
                     mySpoiler.house = spoiler.H as House
                 }
@@ -95,7 +95,7 @@ export const makeOldCards = (preExisting: Spoiler[]): Partial<Spoiler>[] => {
                 } else if (spoiler.H === "Star Alliance") {
                     mySpoiler.house = House.StarAlliance
                 } else if (spoiler.H === "Saurian") {
-                    mySpoiler.house = House.SaurianRepublic
+                    mySpoiler.house = House.Saurian
                 } else {
                     mySpoiler.house = spoiler.H as House
                 }

@@ -103,6 +103,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     style={{zIndex: screenStore.zindexes.menuPops}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
+                        <Typography color={"error"} style={{marginBottom: spacing(2)}}>Importing is currently disabled while I work on Worlds Collide.</Typography>
                         <TextField
                             variant={"outlined"}
                             label={"KeyForge Deck Id or URL"}
@@ -141,6 +142,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                 variant={"contained"}
                                 onClick={this.import}
                                 loading={deckStore.importingDeck}
+                                disabled={true}
                             >
                                 Import
                             </KeyButton>
@@ -150,6 +152,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                     color={"primary"}
                                     onClick={this.importAndAdd}
                                     loading={deckStore.importingAndAddingDeck}
+                                    disabled={true}
                                     style={{marginLeft: spacing(2)}}
                                 >
                                     Import to my Decks

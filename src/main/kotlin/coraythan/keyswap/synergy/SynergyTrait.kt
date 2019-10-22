@@ -53,6 +53,11 @@ data class SynTraitValue(
         3 -> TraitStrength.STRONG
         else -> TraitStrength.NORMAL
     }
+
+    override fun toString(): String {
+        return "SynTraitValue(trait=$trait, rating=$rating, type=$type, traitInfoId=${traitInfo?.id}, synergyInfoId=${synergyInfo?.id}, id=$id)"
+    }
+
 }
 
 interface SynTraitValueRepo : CrudRepository<SynTraitValue, UUID>
