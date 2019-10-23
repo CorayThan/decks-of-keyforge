@@ -1,4 +1,5 @@
 import * as React from "react"
+import anomaly from "../imgs/anomaly.svg"
 import common from "../imgs/common.svg"
 import legacy from "../imgs/legacy.svg"
 import maverick from "../imgs/maverick.svg"
@@ -49,6 +50,7 @@ rarityValuesArray.forEach((rarityValue) => {
 
 export const MaverickIcon = () => (<img alt={"maverick"} src={maverick} style={{width: 16, height: 16, color: "#FFD700"}}/>)
 export const LegacyIcon = () => (<img alt={"legacy"} src={legacy} style={{width: 16, height: 16}}/>)
+export const AnomalyIcon = () => (<img alt={"anomaly"} src={anomaly} style={{width: 16, height: 16}}/>)
 
 export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.map(rarityValue => (
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]

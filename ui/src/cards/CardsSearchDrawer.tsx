@@ -112,7 +112,13 @@ export class CardsSearchDrawer extends React.Component {
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
                         </ListItem>
                         <ListItem>
-                            <ExpansionSelector store={this.selectedExpansion} small={false} displayNoneOption={true} style={{marginRight: spacing(2)}}/>
+                            <ExpansionSelector
+                                store={this.selectedExpansion}
+                                small={false}
+                                displayNoneOption={true}
+                                displayAnomaly={true}
+                                style={{marginRight: spacing(2)}}
+                            />
                             <CardSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={this.filters}/>

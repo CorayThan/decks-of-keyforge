@@ -49,12 +49,13 @@ interface ExpansionSelectorProps {
     displayNoneOption?: boolean
     small?: boolean
     style?: React.CSSProperties
+    displayAnomaly?: boolean
 }
 
 @observer
 export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
     render() {
-        const {store, displayNoneOption, small, style} = this.props
+        const {store, displayNoneOption, small, style, displayAnomaly} = this.props
         return (
             <TextField
                 select={true}
@@ -68,11 +69,13 @@ export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
                         Any
                     </MenuItem>
                 ) : null}
-                {expansionInfos.map(info => (
-                    <MenuItem key={info.backendEnum} value={info.backendEnum}>
-                        {small ? info.abbreviation : info.name}
-                    </MenuItem>
-                ))}
+                {expansionInfos
+                    .filter(info => displayAnomaly ? true : info.backendEnum !== BackendExpansion.ANOMALY_EXPANSION)
+                    .map(info => (
+                        <MenuItem key={info.backendEnum} value={info.backendEnum}>
+                            {small ? info.abbreviation : info.name}
+                        </MenuItem>
+                    ))}
             </TextField>
         )
     }

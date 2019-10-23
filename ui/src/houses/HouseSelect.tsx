@@ -55,7 +55,7 @@ export class HouseCheckbox extends React.Component<HouseCheckboxProps> {
                         onChange={this.handleChange}
                     />
                 }
-                label={<HouseLabel house={selectedHouse.house} width={64}/>}
+                label={<HouseLabel house={selectedHouse.house} width={56}/>}
             />
         )
     }

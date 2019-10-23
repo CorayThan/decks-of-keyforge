@@ -22,7 +22,7 @@ import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { cardStore } from "./CardStore"
 import { CardUtils, findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
-import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
+import { AnomalyIcon, LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 export interface HasFrontImage {
     cardTitle: string
@@ -213,7 +213,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
         return (
             <div>
                 <div onClick={this.handleOpen}>
-                    <CardLine {...this.props}/>
+                    <CardLine {...this.props} card={fullCard == null ? this.props.card : fullCard}/>
                 </div>
                 {dialog}
             </div>
@@ -284,7 +284,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine  {...this.props} cardExpansions={expansions}/>
+                <CardLine  {...this.props} card={fullCard == null ? this.props.card : fullCard} cardExpansions={expansions}/>
                 {pop}
             </div>
         )
@@ -301,7 +301,8 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, deck?: Deck) => {
 
 const CardLine = (props: CardAsLineProps) => {
 
-    const isLegacy = props.deckExpansion != null && props.cardExpansions != null && !props.cardExpansions.includes(props.deckExpansion)
+    const isAnomaly = props.card.anomaly
+    const isLegacy = !isAnomaly && props.deckExpansion != null && props.cardExpansions != null && !props.cardExpansions.includes(props.deckExpansion)
 
     return (
         <div
@@ -317,6 +318,7 @@ const CardLine = (props: CardAsLineProps) => {
             </Typography>
             {props.card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
             {isLegacy ? <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div> : null}
+            {isAnomaly ? <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div> : null}
         </div>
     )
 }

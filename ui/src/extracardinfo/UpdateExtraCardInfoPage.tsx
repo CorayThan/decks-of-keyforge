@@ -48,15 +48,22 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
     render() {
         const extraCardInfo = extraCardInfoStore.extraCardInfo
         const allCards = cardStore.allCards
+        log.debug(`Found extra card info to update ${prettyJson(extraCardInfo)}`)
         if (extraCardInfo == null || allCards.length === 0) {
             return <Loader/>
         }
-        return <UpdateExtraCardInfo extraCardInfo={extraCardInfo}/>
+        const card = cardStore.findCardByIdentifier(extraCardInfo.cardNumbers[0])
+        log.debug(`Card we're updating ${prettyJson(card)}`)
+        if (card == null) {
+            return <Loader/>
+        }
+        return <UpdateExtraCardInfo extraCardInfo={extraCardInfo} card={card}/>
     }
 }
 
 interface UpdateExtraCardInfoProps {
     extraCardInfo: ExtraCardInfo
+    card: KCard
 }
 
 @observer
@@ -136,7 +143,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
     reset = (resetTo: ExtraCardInfo) => {
         const extraCardInfo = resetTo == null ? this.props.extraCardInfo : resetTo
         this.infoId = extraCardInfo.id
-        this.card = cardStore.findCardByIdentifier(extraCardInfo.cardNumbers[0])!
+        this.card = this.props.card
 
         this.amberControl = extraCardInfo.amberControl.toString()
         this.expectedAmber = extraCardInfo.expectedAmber.toString()

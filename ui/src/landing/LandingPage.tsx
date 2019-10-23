@@ -24,6 +24,8 @@ const cota = new DeckFilters()
 cota.expansions = [Expansion.COTA]
 const aoa = new DeckFilters()
 aoa.expansions = [Expansion.AOA]
+const wc = new DeckFilters()
+wc.expansions = [Expansion.WC]
 const topAerc = new DeckFilters()
 topAerc.sort = DeckSorts.aerc
 const topChains = new DeckFilters()
@@ -75,6 +77,7 @@ export class LandingPage extends React.Component<{}> {
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 <DeckSearchLink name={"COTA"} filters={cota} style={{marginTop: spacing(2)}}/>
                                 <DeckSearchLink name={"AOA"} filters={aoa} style={{marginTop: spacing(2)}}/>
+                                <DeckSearchLink name={"WC"} filters={wc} style={{marginTop: spacing(2)}}/>
                             </div>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
@@ -82,8 +85,8 @@ export class LandingPage extends React.Component<{}> {
                             </ListSubheader>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"}/>
+                                <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"}/>
                             </div>
-                            <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Decks for Sale

@@ -209,7 +209,7 @@ const AppLinks = observer(() => (
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[
-                {to: Routes.landing, text: "Stats & More", mobileActive: true},
+                {to: Routes.landing, text: screenStore.smallScreenTopBar() ? "Home" : "Stats & More", mobileActive: true},
                 {to: Routes.cards, text: "Cards", mobileActive: true},
                 {to: Routes.spoilers, text: "Worlds Collide", mobileActive: true},
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},

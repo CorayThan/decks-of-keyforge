@@ -59,8 +59,8 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Transactional(propagation = Propagation.NEVER)
-//    @Scheduled(fixedDelayString = lockImportNewDecksFor)
-//    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = "PT30S")
+    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 

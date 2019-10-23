@@ -24,6 +24,7 @@ export interface KCard {
     cardNumber: string
     expansion: number
     maverick: boolean
+    anomaly: boolean
     effectivePower: number
 
     wins?: number
@@ -89,7 +90,7 @@ export const cardNameToCardNameKey = (name: string) => {
 }
 
 export const findCardImageUrl = (card: HasFrontImage) => {
-    if (card.expansion === Expansion.WC) {
+    if (card.expansion === Expansion.WC || card.expansion === Expansion.ANOM) {
         return card.frontImage
     }
     return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`

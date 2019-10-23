@@ -14,7 +14,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.2"
+export const latestVersion = "4.3"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,19 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.3"}
+                    date={"10/23/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Worlds Collide importing, no scores yet",
+                            note: "Worlds Collide decks can now be added to Decks of KeyForge, although due to rate limiting I expect " +
+                                "them to be added very slowly by the automatic function. You can try importing them yourself, but that " +
+                                "will probably be slow too. SAS scores are being worked on as quickly as possible."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.2"}
                     date={"10/20/2019"}
