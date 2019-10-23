@@ -40,38 +40,15 @@ class DeckWinsService(
 
     // TODO delete the columns
     @Scheduled(fixedDelayString = lockCrucibleTrackerUpdateWinsLosses)
-//    @SchedulerLock(
-//            name = "updateCrucibleTrackerWinsAndLosses",
-//            lockAtLeastForString = lockCrucibleTrackerUpdateWinsLosses,
-//            lockAtMostForString = lockCrucibleTrackerUpdateWinsLosses
-//    )
     fun updateCrucibleTrackerWinsAndLosses() {
 
         log.info("$scheduledStart start crucible tracker deck win loss update")
 
-//        var updateCount = 0
-//        var checked = 0
         try {
             this.crucibleWins = crucibleTrackerApi.findWins().decks
         } catch (exception: Exception) {
             log.warn("Couldn't get crucible tracker wins due to ${exception.message}")
         }
-
-//        entries.forEach {
-//                    checked++
-//                    try {
-//                        val preexisting = deckRepo.findByKeyforgeId(it.key)
-//                        if (preexisting == null) {
-//                            log.warn("Couldn't find deck with id from crucible tracker ${it.key}")
-//                        } else if (preexisting.crucibleTrackerWins != it.value.wins || preexisting.crucibleTrackerLosses != it.value.losses) {
-//                            updateCount++
-//                            deckRepo.updateCrucibleTrackerWins(preexisting.id, it.value.wins, it.value.losses)
-//                        }
-//                    } catch (e: Exception) {
-//                        log.warn("Problem with crucible wins for ${it.key}.", e)
-//                    }
-//                    if (checked % 1000 == 0) log.info("Checked $checked decks for crucible tracker. Updated $updateCount. Out of ${entries.size}")
-//                }
 
         log.info("$scheduledStop done crucible tracker deck win loss update.")
     }
@@ -94,8 +71,8 @@ class DeckWinsService(
         log.info("$scheduledStop done deck win loss update starting")
     }
 
-    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
-    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
+//    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
+//    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 
         if (updatingWinsAndLosses == null) {

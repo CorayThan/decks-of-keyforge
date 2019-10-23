@@ -10,3 +10,5 @@ enum class Expansion(val expansionNumber: Int) {
                 ?: throw IllegalStateException("No expansion for number $expansionNumber")
     }
 }
+
+val activeExpansions = setOf(Expansion.CALL_OF_THE_ARCHONS, Expansion.AGE_OF_ASCENSION, Expansion.WORLDS_COLLIDE)

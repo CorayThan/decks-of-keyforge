@@ -122,6 +122,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                     to={Routes.importUnregisteredDeck}
                                     color={"primary"}
                                     onClick={() => deckImportPopStore.popOpen = false}
+                                    disabled={true}
                                 >
                                     Import Unregistered Deck
                                 </LinkButton>

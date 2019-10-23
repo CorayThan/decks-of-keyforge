@@ -21,7 +21,7 @@ export class ExtraCardInfoStore {
         }
     }
 
-    findExtraCardInfo = async (extraCardInfoId: number) => {
+    findExtraCardInfo = async (extraCardInfoId: string) => {
         this.extraCardInfo = undefined
         const extraCardInfo: AxiosResponse<ExtraCardInfo> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/${extraCardInfoId}`)
         this.extraCardInfo = extraCardInfo.data

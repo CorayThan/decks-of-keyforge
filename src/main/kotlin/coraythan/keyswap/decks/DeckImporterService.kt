@@ -3,16 +3,13 @@ package coraythan.keyswap.decks
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.CardIds
-import coraythan.keyswap.cards.CardService
-import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.decks.models.SaveUnregisteredDeck
-import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.synergy.DeckSynergyService
@@ -53,6 +50,7 @@ class DeckImporterService(
         private val deckPageService: DeckPageService,
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
+        private val cardIdentifierRepo: CardIdentifierRepo,
         private val objectMapper: ObjectMapper,
         val entityManager: EntityManager
 ) {
@@ -61,8 +59,8 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = lockImportNewDecksFor)
-    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+//    @Scheduled(fixedDelayString = lockImportNewDecksFor)
+//    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
@@ -84,8 +82,7 @@ class DeckImporterService(
                         break
                     } else if (decks.data.any {
                                 // Only import decks from these sets
-                                !listOf(Expansion.CALL_OF_THE_ARCHONS, Expansion.AGE_OF_ASCENSION)
-                                        .map { expansion -> expansion.expansionNumber }.contains(it.expansion)
+                                !activeExpansions.map { expansion -> expansion.expansionNumber }.contains(it.expansion)
                             }) {
 
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
@@ -197,6 +194,51 @@ class DeckImporterService(
     }
 
     // Non repeatable functions
+
+//    var currentPage = 3
+//    var cardsFound = 0
+//
+//    @Scheduled(fixedDelayString = "PT15S")
+//    fun addCardsForExpansion() {
+//        try {
+//            val expansionId = 452
+//            val cardsInExpansion = 515
+//            cardsFound = cardIdentifierRepo.countByExpansion(Expansion.forExpansionNumber(expansionId)).toInt()
+//
+//            if (cardsFound < cardsInExpansion) {
+//                log.info("Looking for more cards with page $currentPage, cards found $cardsFound out of $cardsInExpansion")
+//
+//                try {
+//                    val decks = keyforgeApi.findDecks(currentPage, expansion = expansionId)
+//
+//                    decks?.data?.forEach {
+//                        val deckId = it.id
+//                        val preExistingDeck = deckRepo.findByKeyforgeId(deckId)
+//                        if (preExistingDeck == null) {
+//                            val deck = keyforgeApi.findDeck(deckId)
+//                            if (deck != null) {
+//                                val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
+//                                cardService.importNewCards(deckList)
+//                            }
+//                        }
+//                    }
+//
+//                    log.info("Cards added for $expansionId count: $cardsFound out of $cardsInExpansion")
+//                    currentPage++
+//                } catch (exception: Exception) {
+//                    if (exception.message == "429 Too Many Requests") {
+//                        log.warn("Keyforge api hates me")
+//                    } else {
+//                        log.error("Uh oh, adding new cards didn't work due to ${exception.message}", exception)
+//                    }
+//                }
+//            } else {
+//                log.info("Done adding cards for expansion")
+//            }
+//        } catch (exception: Exception) {
+//            log.error("argh", exception)
+//        }
+//    }
 
     fun importDeck(deckId: String): Long? {
         val preExistingDeck = deckRepo.findByKeyforgeId(deckId)

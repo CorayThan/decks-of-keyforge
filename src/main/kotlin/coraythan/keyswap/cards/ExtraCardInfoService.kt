@@ -20,13 +20,13 @@ class ExtraCardInfoService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun findExtraCardInfo(id: Long): ExtraCardInfo {
+    fun findExtraCardInfo(id: UUID): ExtraCardInfo {
 
         val info = extraCardInfoRepo.findByIdOrNull(id) ?: throw IllegalStateException("No extra card info for id $id")
         return findNextOrCurrentInfo(info)
     }
 
-    fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): Long {
+    fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): UUID {
         currentUserService.contentCreatorOrUnauthorized()
 
         val info = sourceInfo.nullMaxes()
@@ -69,7 +69,7 @@ class ExtraCardInfoService(
 
             info.cardNumbers.forEach { carNum ->
                 log.info("Save card num ${carNum.toNumberSetPair()}")
-                cardIdentifierRepo.save(carNum.copy(info = saved, id = -1))
+                cardIdentifierRepo.save(carNum.copy(info = saved, id = UUID.randomUUID()))
             }
             info.traits.forEach { trait ->
                 synTraitValueRepo.save(trait.copy(traitInfo = saved, id = UUID.randomUUID()))

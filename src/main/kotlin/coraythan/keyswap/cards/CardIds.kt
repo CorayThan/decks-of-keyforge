@@ -35,22 +35,20 @@ data class CardIdentifier(
         // Should never be null in DB
         @JsonIgnoreProperties("cardNumbers")
         @ManyToOne(cascade = [CascadeType.ALL])
-        val info: ExtraCardInfo? = null,
-
-        val uuidId: UUID? = UUID.randomUUID(),
+        var info: ExtraCardInfo? = null,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        val id: Long = -1
+        val id: UUID = UUID.randomUUID()
 ) {
     fun toNumberSetPair() = CardNumberSetPair(expansion, cardNumber)
 
     override fun toString(): String {
-        return "CardIdentifier(expansion=$expansion, cardNumber='$cardNumber', uuidId=$uuidId, id=$id, extraInfoId=${info?.id})"
+        return "CardIdentifier(expansion=$expansion, cardNumber='$cardNumber', id=$id, extraInfoId=${info?.id})"
     }
 
 }
 
-interface CardIdentifierRepo : JpaRepository<CardIdentifier, Long>, QuerydslPredicateExecutor<CardIdentifier> {
+interface CardIdentifierRepo : JpaRepository<CardIdentifier, UUID>, QuerydslPredicateExecutor<CardIdentifier> {
     fun findByExpansionAndCardNumber(expansion: Expansion, cardNumber: String): List<CardIdentifier>
+    fun countByExpansion(expansion: Expansion): Long
 }

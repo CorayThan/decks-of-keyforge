@@ -7,29 +7,24 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { House, houseValues, houseValuesArray } from "./House"
+import { House, HouseLabel, houseValuesArray } from "./House"
 
 interface HouseSelectProps {
     selectedHouses: SelectedHouses
-    includeWorldsCollide?: boolean
 }
 
 @observer
 export class HouseSelect extends React.Component<HouseSelectProps> {
     render() {
-        const {selectedHouses, includeWorldsCollide} = this.props
+        const {selectedHouses} = this.props
         const selectedHousesGotten = selectedHouses.getSelectedHouses()
-        let houses = houseValuesArray
-        if (!includeWorldsCollide) {
-            houses = houseValuesArray.filter(houseValue => houseValue.house !== House.Saurian && houseValue.house !== House.StarAlliance)
-        }
         return (
             <FormControl>
                 <FormLabel style={{marginBottom: spacing(1)}}>Houses</FormLabel>
                 <FormGroup
                     row={true}
                 >
-                    {houses.map((houseValue) => {
+                    {houseValuesArray.map((houseValue) => {
                         const select = selectedHousesGotten.filter((selectedHouse) => selectedHouse.house === houseValue.house)
                         return (<HouseCheckbox key={houseValue.house} selectedHouse={select[0]}/>)
                     })}
@@ -60,7 +55,7 @@ export class HouseCheckbox extends React.Component<HouseCheckboxProps> {
                         onChange={this.handleChange}
                     />
                 }
-                label={houseValues.get(selectedHouse.house)!.label}
+                label={<HouseLabel house={selectedHouse.house} width={64}/>}
             />
         )
     }

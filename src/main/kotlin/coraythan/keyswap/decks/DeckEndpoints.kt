@@ -106,6 +106,9 @@ class DeckEndpoints(
 
     @GetMapping("/update-crucible-tracker-wins")
     fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
+
+//    @PostMapping("/add-cards-for-expansion/{expansionId}/{cardsInExpansion}")
+//    fun addCardsForExpansion(@PathVariable expansionId: Int, @PathVariable cardsInExpansion: Int) = deckImporterService.addCardsForExpansion(expansionId, cardsInExpansion)
 }
 
 data class SimpleDeckResponse(

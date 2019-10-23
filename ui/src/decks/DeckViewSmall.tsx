@@ -15,13 +15,13 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { BackendExpansion } from "../expansions/Expansions"
+import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
-import { House, houseValues } from "../houses/House"
+import { House, HouseLabel } from "../houses/House"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
@@ -85,7 +85,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 }}
                 id={deck.keyforgeId}
             >
-                {compact && (
+                {compact && activeExpansions.includes(deck.expansion) && (
                     <AercView deck={deck} horizontal={true} excludeMisc={true} style={{marginLeft: spacing(1)}}/>
                 )}
                 <div style={{display: "flex"}}>
@@ -157,7 +157,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardActions>
                         )}
                     </div>
-                    {compact ? null : <AercView deck={deck}/>}
+                    {!compact && activeExpansions.includes(deck.expansion) && <AercView deck={deck}/>}
                 </div>
             </KeyCard>
         )
@@ -231,7 +231,7 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
     const deckExpansion = props.deckExpansion
     return (
         <List>
-            {houseValues.get(props.house)!.title}
+            <HouseLabel house={props.house} title={true}/>
             <Divider style={{marginTop: 4}}/>
             {props.compact ?
                 (

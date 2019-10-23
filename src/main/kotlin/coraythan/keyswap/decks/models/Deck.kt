@@ -36,6 +36,7 @@ data class Deck(
 
         val registered: Boolean = true,
 
+        val anomalyCount: Int? = 0,
         val maverickCount: Int = 0,
         val specialsCount: Int = 0,
         val raresCount: Int = 0,
@@ -216,6 +217,18 @@ data class Deck(
                                         val firstCard = houseToCards.value[0]
                                         "${firstCard.cardTitle}${firstCard.house}"
                                     }
+                        }.sorted().joinToString("~") + "~" +
+                // Add duplicates for anomalies with the house
+                newCardsList
+                        .filter { it.anomaly }
+                        .groupBy { it.cardTitle }
+                        .flatMap { entry ->
+                            entry.value
+                                    .groupBy { it.house }
+                                    .map { houseToCards ->
+                                        val firstCard = houseToCards.value[0]
+                                        "${firstCard.cardTitle}${firstCard.house}"
+                                    }
                         }.sorted().joinToString("~") + "~"
 
         return this.copy(
@@ -228,6 +241,7 @@ data class Deck(
                 artifactCount = newCardsList.filter { it.cardType == CardType.Artifact }.size,
                 upgradeCount = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
                 maverickCount = newCardsList.filter { it.maverick }.size,
+                anomalyCount = newCardsList.filter { it.anomaly }.size,
                 specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
                 raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
                 uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size

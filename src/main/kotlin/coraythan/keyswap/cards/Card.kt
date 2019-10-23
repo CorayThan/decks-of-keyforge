@@ -31,6 +31,7 @@ data class Card(
         @Enumerated(EnumType.STRING)
         val expansionEnum: Expansion,
         val maverick: Boolean,
+        val anomaly: Boolean,
 
         val wins: Int? = 0,
         val losses: Int? = 0,
@@ -137,6 +138,7 @@ data class KeyforgeCard(
         val card_number: String,
         val expansion: Int,
         val is_maverick: Boolean,
+        val is_anomaly: Boolean,
         val traits: String? = null
 ) {
     fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfo>): Card {
@@ -144,7 +146,7 @@ data class KeyforgeCard(
         val armorNumber = armor?.toIntOrNull() ?: 0
         val expansionEnum = Expansion.forExpansionNumber(expansion)
         return Card(id, card_title, House.fromMasterVaultValue(house)!!, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
-                card_number, expansion, expansionEnum, is_maverick,
+                card_number, expansion, expansionEnum, is_maverick, is_anomaly,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
                 traits = traits?.split(" • ")?.toSet() ?: setOf())
     }

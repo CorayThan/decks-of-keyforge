@@ -27,16 +27,7 @@ export interface HouseValue {
     house: House
     img: string
     displayName?: string
-    label?: React.ReactNode
-    title?: React.ReactNode
 }
-
-const HouseLabel = (props: { house: string, img: string, title?: boolean, displayName?: string }) => (
-    <div style={{display: "flex", alignItems: "center", width: 96}}>
-        <img alt={props.house} src={props.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
-        <Typography variant={props.title ? "subtitle2" : "body2"}>{props.displayName == null ? props.house : props.displayName}</Typography>
-    </div>
-)
 
 export const houseValuesArray: HouseValue[] = [
     {
@@ -75,15 +66,23 @@ export const houseValuesArray: HouseValue[] = [
     {
         house: House.Saurian,
         img: saurianRepublicImg,
-        displayName: "Saurians"
+        displayName: "Saurian"
     },
 ]
-
-houseValuesArray.forEach((houseValue) => {
-    houseValue.label = <HouseLabel house={houseValue.house} img={houseValue.img} title={false} displayName={houseValue.displayName}/>
-    houseValue.title = <HouseLabel house={houseValue.house} img={houseValue.img} title={true} displayName={houseValue.displayName}/>
-})
 
 export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(houseValue => (
     [houseValue.house, houseValue] as [House, HouseValue]
 )))
+
+export const HouseLabel = (props: { house: House, title?: boolean, width?: number }) => {
+    const value = houseValues.get(props.house)!
+
+    return (
+        <div style={{display: "flex", alignItems: "center"}}>
+            <img alt={props.house} src={value.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
+            <Typography noWrap={false} variant={props.title ? "subtitle2" : "body2"} style={{width: props.width}}>
+                {value.displayName == null ? props.house : value.displayName}
+            </Typography>
+        </div>
+    )
+}

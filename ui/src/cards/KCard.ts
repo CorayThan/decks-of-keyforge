@@ -1,5 +1,6 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { roundToHundreds } from "../config/Utils"
+import { Expansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { House } from "../houses/House"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
@@ -11,6 +12,7 @@ export interface KCard {
     id: string
     cardTitle: string
     house: House
+    frontImage: string
     cardType: CardType
     cardText: string
     traits: string[]
@@ -86,8 +88,12 @@ export const cardNameToCardNameKey = (name: string) => {
         .toLowerCase()
 }
 
-export const findCardImageUrl = (card: HasFrontImage) =>
-    `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
+export const findCardImageUrl = (card: HasFrontImage) => {
+    if (card.expansion === Expansion.WC) {
+        return card.frontImage
+    }
+    return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
+}
 
 export class CardUtils {
 

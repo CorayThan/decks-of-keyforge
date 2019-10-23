@@ -6,6 +6,7 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.House
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.SynTraitType
 import coraythan.keyswap.synergy.SynTraitValue
@@ -66,41 +67,50 @@ class CardService(
         }
     }
 
-//    @Scheduled(fixedDelayString = "PT1S")
-//    fun convertSpoilers() {
-//        val spoilers = spoilerRepo.findByMigratedFalse()
-//        val spoiler = spoilers.firstOrNull() ?: return
-//
-//        log.info("Converting spoiler ${spoiler.cardTitle} to extra info")
-//        if (!spoiler.reprint) {
-//            val info = ExtraCardInfo(
-//                    cardName = spoiler.cardTitle,
-//                    expectedAmber = spoiler.expectedAmber,
-//                    amberControl = spoiler.amberControl,
-//                    creatureControl = spoiler.creatureControl,
-//                    artifactControl = spoiler.artifactControl,
-//                    efficiency = spoiler.efficiency,
-//                    effectivePower = spoiler.effectivePower,
-//                    disruption = spoiler.disruption,
-//                    amberProtection = spoiler.amberProtection,
-//                    houseCheating = spoiler.houseCheating,
-//                    other = spoiler.other
-//            )
-//            val saved = extraCardInfoRepo.save(info)
-//            log.info("Saved info for ${spoiler.cardTitle}")
-//            cardIdentifierRepo.save(CardIdentifier(
-//                    cardNumber = spoiler.cardNumber,
-//                    expansion = Expansion.WORLDS_COLLIDE,
-//                    info = saved
-//            ))
-//        }
-//
-//        spoilerRepo.save(spoiler.copy(migrated = true))
-//
-//        this.loadExtraInfo()
-//        log.info("converted spoiler ${spoiler.cardTitle} to extra info and reloaded extra info")
-//        if (spoilers.size == 1) log.info("Done with spoilers")
-//    }
+    fun convertSpoilers() {
+        val spoilers = spoilerRepo.findAll()
+
+        spoilers.forEach { spoiler ->
+            log.info("Converting spoiler ${spoiler.cardTitle} to extra info")
+            if (spoiler.reprint) {
+                val existingInfos = extraCardInfoRepo.findByCardName(spoiler.cardTitle)
+                check(existingInfos.isNotEmpty()) { "No info for ${spoiler.cardTitle}" }
+                existingInfos.forEach {
+                    val cardId = CardIdentifier(
+                            cardNumber = spoiler.cardNumber,
+                            expansion = Expansion.WORLDS_COLLIDE,
+                            info = it
+                    )
+                    it.cardNumbers.add(cardId)
+                    extraCardInfoRepo.save(it)
+                }
+            } else {
+                val info = ExtraCardInfo(
+                        cardName = spoiler.cardTitle,
+                        expectedAmber = spoiler.expectedAmber,
+                        amberControl = spoiler.amberControl,
+                        creatureControl = spoiler.creatureControl,
+                        artifactControl = spoiler.artifactControl,
+                        efficiency = spoiler.efficiency,
+                        effectivePower = spoiler.effectivePower,
+                        disruption = spoiler.disruption,
+                        amberProtection = spoiler.amberProtection,
+                        houseCheating = spoiler.houseCheating,
+                        other = spoiler.other,
+                        active = true
+                )
+                val saved = extraCardInfoRepo.save(info)
+                log.info("Saved info for ${spoiler.cardTitle}")
+                cardIdentifierRepo.save(CardIdentifier(
+                        cardNumber = spoiler.cardNumber,
+                        expansion = Expansion.WORLDS_COLLIDE,
+                        info = saved
+                ))
+            }
+        }
+
+        log.info("converted spoilers to extra info")
+    }
 
     private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
             .map {
@@ -222,24 +232,36 @@ class CardService(
     }
 
     fun saveNewCard(card: Card): Card {
-        if (card.extraCardInfo == null) {
-            val preexistingInfo = extraInfo.values.filter { it.cardName == card.cardTitle }
-
-            val cardId = CardIdentifier(expansion = card.expansionEnum, cardNumber = card.cardNumber)
-            if (preexistingInfo.isEmpty()) {
-                val info = ExtraCardInfo(
-                        cardName = card.cardTitle,
-                        active = true,
-                        version = activeAercVersion
-                )
-                val saved = extraCardInfoRepo.save(info)
-                cardIdentifierRepo.save(cardId.copy(info = saved))
-            } else {
-                preexistingInfo.forEach {
-                    cardIdentifierRepo.save(cardId.copy(info = extraCardInfoRepo.getOne(it.id)))
-                }
-            }
-        }
+//        if (card.extraCardInfo == null) {
+//            val preexistingInfo = extraInfo.values.filter { it.cardName == card.cardTitle }
+//
+//            if (preexistingInfo.isEmpty()) {
+//                val cardId = CardIdentifier(expansion = card.expansionEnum, cardNumber = card.cardNumber)
+//                val info = ExtraCardInfo(
+//                        cardName = card.cardTitle,
+//                        active = true,
+//                        version = activeAercVersion
+//                )
+//
+//                val savedInfo = extraCardInfoRepo.save(info)
+//                cardId.info = savedInfo
+//                cardIdentifierRepo.save(cardId)
+//
+//                // log.info("Saved ${card.cardTitle} ${card.cardNumber}")
+//
+//            } else {
+//                preexistingInfo.forEach {
+//                    val savedCardId = cardIdentifierRepo.save(CardIdentifier(
+//                            expansion = card.expansionEnum,
+//                            cardNumber = card.cardNumber,
+//                            info = extraCardInfoRepo.findByIdOrNull(it.id)!!
+//                    ))
+//                    it.cardNumbers.add(savedCardId)
+//                    extraCardInfoRepo.save(it)
+//                }
+//                // log.info("Added new sets for ${card.cardTitle} ${card.cardNumber}")
+//            }
+//        }
         return cardRepo.save(card)
     }
 
@@ -260,9 +282,13 @@ class CardService(
                 ?.toMap()?.values
                 ?.toList()
                 ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
-        previousInfoWithNames = previousExtraInfo.map { entry ->
-            val card = nonMaverickCachedCards!![entry.key] ?: error("")
-            card.cardTitle to card.copy(extraCardInfo = entry.value)
+        previousInfoWithNames = previousExtraInfo.mapNotNull { entry ->
+            val card = nonMaverickCachedCards!![entry.key]
+            if (card == null) {
+                null
+            } else {
+                card.cardTitle to card.copy(extraCardInfo = entry.value)
+            }
         }.toMap()
     }
 

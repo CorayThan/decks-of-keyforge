@@ -34,14 +34,14 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
     componentDidMount(): void {
         log.debug("component did mount infoId: " + this.props.match.params.infoId)
         if (this.props.match.params.infoId) {
-            extraCardInfoStore.findExtraCardInfo(Number(this.props.match.params.infoId))
+            extraCardInfoStore.findExtraCardInfo(this.props.match.params.infoId)
         }
     }
 
     componentWillReceiveProps(nextProps: UpdateExtraCardInfoPageProps): void {
         log.debug("component will receive infoId: " + this.props.match.params.infoId + " next: " + nextProps.match.params.infoId)
         if (this.props.match.params.infoId && this.props.match.params.infoId != nextProps.match.params.infoId) {
-            extraCardInfoStore.findExtraCardInfo(Number(nextProps.match.params.infoId))
+            extraCardInfoStore.findExtraCardInfo(nextProps.match.params.infoId)
         }
     }
 
@@ -114,7 +114,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
     synergies: SynTraitValue[] = []
 
     // @ts-ignore
-    infoId: number
+    infoId: string
     // @ts-ignore
     card: KCard
 

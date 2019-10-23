@@ -8,7 +8,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { roundToHundreds } from "../config/Utils"
-import { BackendExpansion } from "../expansions/Expansions"
+import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
 
@@ -59,8 +59,15 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         sasRating,
         synergyRating,
         antisynergyRating,
-        sasPercentile
+        sasPercentile,
+        expansion
     } = deck
+
+    if (expansion != null && !activeExpansions.includes(expansion)) {
+        return (
+            <Typography variant={"h5"} style={{color: "#FFFFFF"}}>Score Pending</Typography>
+        )
+    }
 
     let sasInfo = null
     if (previousSasRating != null && previousSasRating !== sasRating && previousSasRating !== 0) {

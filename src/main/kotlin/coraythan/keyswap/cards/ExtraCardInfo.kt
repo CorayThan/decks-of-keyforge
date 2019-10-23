@@ -6,7 +6,10 @@ import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValue
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.OneToMany
 
 data class CardNumberSetPairOld(
         val expansion: Int,
@@ -54,7 +57,7 @@ data class ExtraCardInfo(
 
         @JsonIgnoreProperties("info")
         @OneToMany(mappedBy = "info", cascade = [CascadeType.ALL])
-        val cardNumbers: List<CardIdentifier> = listOf(),
+        val cardNumbers: MutableList<CardIdentifier> = mutableListOf(),
 
         @JsonIgnoreProperties("traitInfo")
         @OneToMany(mappedBy = "traitInfo", cascade = [CascadeType.ALL])
@@ -64,7 +67,7 @@ data class ExtraCardInfo(
         @OneToMany(mappedBy = "synergyInfo", cascade = [CascadeType.ALL])
         val synergies: List<SynTraitValue> = listOf(),
 
-        val version: Int = -1,
+        val version: Int = 1,
         val active: Boolean = false,
         val created: ZonedDateTime? = now(),
         val updated: ZonedDateTime? = now(),
@@ -73,13 +76,9 @@ data class ExtraCardInfo(
 //        @OneToOne(mappedBy = "info")
 //        val spoiler: Spoiler? = null,
 
-        val uuidId: UUID? = UUID.randomUUID(),
-
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        val id: Long = -1
+        val id: UUID = UUID.randomUUID()
 ) {
-
 
 
     fun readyForCreate(version: Int): ExtraCardInfo {
@@ -88,10 +87,10 @@ data class ExtraCardInfo(
                 updated = now(),
                 version = version,
                 active = false,
-                synergies = listOf(),
-                traits = listOf(),
-                cardNumbers = listOf(),
-                id = -1
+                synergies = mutableListOf(),
+                traits = mutableListOf(),
+                cardNumbers = mutableListOf(),
+                id = UUID.randomUUID()
         )
     }
 
@@ -131,8 +130,8 @@ data class ExtraCardInfo(
                 houseCheatingMax = info.houseCheatingMax,
                 other = info.other,
                 otherMax = info.otherMax,
-                traits = listOf(),
-                synergies = listOf()
+                traits = mutableListOf(),
+                synergies = mutableListOf()
         )
     }
 

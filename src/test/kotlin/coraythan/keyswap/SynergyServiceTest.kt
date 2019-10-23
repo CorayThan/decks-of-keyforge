@@ -32,6 +32,7 @@ fun basicCard() = Card(
         1,
         Expansion.CALL_OF_THE_ARCHONS,
         false,
+        false,
         extraCardInfo = ExtraCardInfo(
 
         )

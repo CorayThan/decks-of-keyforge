@@ -90,7 +90,7 @@ export class SpoilerSearchDrawer extends React.Component {
                             />
                         </ListItem>
                         <ListItem>
-                            <HouseSelect selectedHouses={this.selectedHouses} includeWorldsCollide={true}/>
+                            <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
                         <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>

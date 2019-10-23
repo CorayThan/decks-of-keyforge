@@ -55,13 +55,14 @@ class KeyforgeApi(
     /**
      * Null implies no decks available.
      */
-    fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize): KeyforgeDecksPageDto? {
+    fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize, expansion: Int? = null): KeyforgeDecksPageDto? {
         var decks: KeyforgeDecksPageDto? = null
 
         val keyforgeRequestDuration = measureTimeMillis {
             decks = keyforgeGetRequest(
                     KeyforgeDecksPageDto::class.java,
-                    "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering"
+                    "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering" +
+                            if (expansion == null) "" else "&expansion=$expansion"
             )
         }
         log.debug("Getting $pageSize decks from keyforge api took $keyforgeRequestDuration got decks ${decks?.count}")

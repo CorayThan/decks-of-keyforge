@@ -36,10 +36,11 @@ export interface ExtraCardInfo {
     version: number
     active: boolean
 
-    id: number
+    id: string
 }
 
 export interface CardIdentifier {
     expansion: BackendExpansion
     cardNumber: string
+    id: string
 }

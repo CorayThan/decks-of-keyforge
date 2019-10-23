@@ -26,6 +26,8 @@ import { LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
 export interface HasFrontImage {
     cardTitle: string
+    expansion?: number
+    frontImage?: string
 }
 
 interface CardSimpleViewProps {

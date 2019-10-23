@@ -14,7 +14,7 @@ import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
 import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { KeyCard } from "../generic/KeyCard"
-import { House, houseValues } from "../houses/House"
+import { House, HouseLabel } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { deckImportStore } from "./DeckImportStore"
 import { deckImportViewStore } from "./DeckImportView"
@@ -191,7 +191,7 @@ class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards:
     render() {
         return (
             <div style={{display: "flex", flexDirection: "column"}}>
-                {houseValues.get(this.props.house)!.title}
+                <HouseLabel title={true} house={this.props.house}/>
                 <Divider style={{marginTop: 4}}/>
                 {this.props.cards.map((card, idx) => (
                     <div key={idx} style={{display: "flex", alignItems: "center"}}>
