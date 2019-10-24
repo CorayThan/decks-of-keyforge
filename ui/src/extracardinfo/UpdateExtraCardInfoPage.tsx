@@ -1,4 +1,4 @@
-import { Card, Grid, IconButton, MenuItem, TextField, Typography } from "@material-ui/core"
+import { Card, Checkbox, Grid, IconButton, MenuItem, TextField, Tooltip, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight, Delete, Save } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -7,9 +7,11 @@ import { RouteComponentProps } from "react-router-dom"
 import { CardView } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
+import { BackendExpansion } from "../expansions/Expansions"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -20,7 +22,6 @@ import { SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
-import { userStore } from "../user/UserStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
 import { SynergyTrait } from "./SynergyTrait"
@@ -48,12 +49,10 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
     render() {
         const extraCardInfo = extraCardInfoStore.extraCardInfo
         const allCards = cardStore.allCards
-        log.debug(`Found extra card info to update ${prettyJson(extraCardInfo)}`)
         if (extraCardInfo == null || allCards.length === 0) {
             return <Loader/>
         }
         const card = cardStore.findCardByIdentifier(extraCardInfo.cardNumbers[0])
-        log.debug(`Card we're updating ${prettyJson(card)}`)
         if (card == null) {
             return <Loader/>
         }
@@ -211,15 +210,17 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
     }
 
     render() {
-        const allCards = cardStore.allCards
+        const wcOnly = keyLocalStorage.genericStorage.wcOnly
+        const filteredCards = cardStore.allCards
+            .filter(card => wcOnly ? card.extraCardInfo.cardNumbers.length === 1 && card.extraCardInfo.cardNumbers.find(cardNum => cardNum.expansion === BackendExpansion.WORLDS_COLLIDE || cardNum.expansion === BackendExpansion.ANOMALY_EXPANSION) : true)
         let nextId
         let prevId
-        if (allCards.length > 0 && this.props.extraCardInfo != null) {
-            const findWith = allCards.find(card => card.id === this.card.id)
+        if (filteredCards.length > 0 && this.props.extraCardInfo != null) {
+            const findWith = filteredCards.find(card => card.id === this.card.id)
             if (findWith != null) {
-                const idx = allCards.indexOf(findWith)
-                nextId = idx > -1 && idx < allCards.length - 1 ? allCards[idx + 1].extraCardInfo.id : undefined
-                prevId = idx > 0 ? allCards[idx - 1].extraCardInfo.id : undefined
+                const idx = filteredCards.indexOf(findWith)
+                nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
+                prevId = idx > 0 ? filteredCards[idx - 1].extraCardInfo.id : undefined
             }
         }
         return (
@@ -244,6 +245,13 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                 Edit {this.card.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
+                            <Tooltip title={"Worlds Collide Only"}>
+                                <Checkbox
+                                    style={{marginLeft: spacing(2)}}
+                                    checked={wcOnly}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => keyLocalStorage.updateGenericStorage({wcOnly: event.target.checked})}
+                                />
+                            </Tooltip>
                             {prevId != null && (
                                 <UnstyledLink to={Routes.editExtraCardInfo(prevId)} style={{marginLeft: spacing(2)}}>
                                     <IconButton>
@@ -262,7 +270,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                         <Grid
                             container={true}
                             spacing={2}
-                            style={{display: userStore.isAdmin ? undefined : "none", marginTop: spacing(2)}}
+                            style={{marginTop: spacing(2)}}
                         >
                             <InfoInput
                                 name={"expected aember"}

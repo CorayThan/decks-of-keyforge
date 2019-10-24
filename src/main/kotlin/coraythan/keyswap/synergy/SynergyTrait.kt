@@ -78,6 +78,8 @@ enum class SynergyTrait {
     stealsAmber,
     increasesKeyCost,
     scalingSteal,
+    exalt,
+    spendsCapturedAmber,
 
     // Damage
     damagesMultipleEnemies,
@@ -91,6 +93,7 @@ enum class SynergyTrait {
     destroysFriendlyCreatures,
     destroysEnemyCreatures,
     causesFighting,
+    causesReaping,
     stuns,
     addsArmor,
     protectsCreatures,
@@ -109,9 +112,11 @@ enum class SynergyTrait {
     skirmish,
     poison,
     deploy,
+    ward,
 
     // Purging
     purgesFriendlyCreatures,
+    purges,
 
     // Archives
     archives,
@@ -164,6 +169,7 @@ enum class SynergyTrait {
     beast,
     thief,
     shard,
+    wolf,
 
     // Special cards
     badPenny,

@@ -6,6 +6,8 @@ export enum SynergyTrait {
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
     scalingSteal = "scalingSteal",
+    exalt = "exalt",
+    spendsCapturedAmber = "spendsCapturedAmber",
 
     // Damage
     damagesMultipleEnemies = "damagesMultipleEnemies",
@@ -19,6 +21,7 @@ export enum SynergyTrait {
     destroysFriendlyCreatures = "destroysFriendlyCreatures",
     destroysEnemyCreatures = "destroysEnemyCreatures",
     causesFighting = "causesFighting",
+    causesReaping = "causesReaping",
     stuns = "stuns",
     addsArmor = "addsArmor",
     protectsCreatures = "protectsCreatures",
@@ -37,9 +40,11 @@ export enum SynergyTrait {
     skirmish = "skirmish",
     poison = "poison",
     deploy = "deploy",
+    ward = "ward",
 
     // Purging
     purgesFriendlyCreatures = "purgesFriendlyCreatures",
+    purges = "purges",
 
     // Archives
     archives = "archives",
@@ -92,6 +97,7 @@ export enum SynergyTrait {
     beast = "beast",
     thief = "thief",
     shard = "shard",
+    wolf = "wolf",
 
     // Special cards
     badPenny = "badPenny",
