@@ -146,6 +146,9 @@ enum class SynergyTrait {
     revealsHand,
     shufflesDiscard,
 
+    // Deck manip
+    reorderDeck,
+
     // Playing
     dangerousRandomPlay,
 

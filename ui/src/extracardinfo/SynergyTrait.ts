@@ -74,6 +74,9 @@ export enum SynergyTrait {
     revealsHand = "revealsHand",
     shufflesDiscard = "shufflesDiscard",
 
+    // deck manip
+    reorderDeck = "reorderDeck",
+
     // Playing
     dangerousRandomPlay = "dangerousRandomPlay",
 
