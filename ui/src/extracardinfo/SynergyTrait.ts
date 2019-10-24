@@ -98,6 +98,7 @@ export enum SynergyTrait {
     thief = "thief",
     shard = "shard",
     wolf = "wolf",
+    robot = "robot",
 
     // Special cards
     badPenny = "badPenny",

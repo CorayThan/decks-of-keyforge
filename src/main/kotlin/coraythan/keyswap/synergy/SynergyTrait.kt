@@ -170,6 +170,7 @@ enum class SynergyTrait {
     thief,
     shard,
     wolf,
+    robot,
 
     // Special cards
     badPenny,
