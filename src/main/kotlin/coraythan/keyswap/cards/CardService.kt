@@ -44,26 +44,30 @@ class CardService(
 
     fun loadExtraInfo() {
 
-        this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
-        this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
-        this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
-        val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(this.activeAercVersion)
-                .filter { it.version < this.activeAercVersion }
-                .groupBy { it.cardName }
-                .mapNotNull { it.value.maxBy { infos -> infos.version } }
-        this.previousExtraInfo = mapInfos(previousOnes)
+        try {
+            this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
+            this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
+            this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
+            val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(this.activeAercVersion)
+                    .filter { it.version < this.activeAercVersion }
+                    .groupBy { it.cardName }
+                    .mapNotNull { it.value.maxBy { infos -> infos.version } }
+            this.previousExtraInfo = mapInfos(previousOnes)
 
-        log.info("Active aerc version $activeAercVersion published verison $publishAercVersion")
-        if (activeAercVersion < publishAercVersion) {
-            this.activeAercVersion = publishAercVersion
-            val toPublish = this.nextExtraInfo
-            val potentiallyUnpublish = this.extraInfo
-            val toSave = toPublish.map { it.value.copy(active = true, published = ZonedDateTime.now()) }
-            val unpublish = toPublish.mapNotNull { potentiallyUnpublish[it.key]?.copy(active = false) }
-            extraCardInfoRepo.saveAll(toSave.plus(unpublish))
-            log.info("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +
-                    "${toSave.size} unpublished ${unpublish.size}")
-            this.loadExtraInfo()
+            log.info("Active aerc version $activeAercVersion published verison $publishAercVersion")
+            if (activeAercVersion < publishAercVersion) {
+                this.activeAercVersion = publishAercVersion
+                val toPublish = this.nextExtraInfo
+                val potentiallyUnpublish = this.extraInfo
+                val toSave = toPublish.map { it.value.copy(active = true, published = ZonedDateTime.now()) }
+                val unpublish = toPublish.mapNotNull { potentiallyUnpublish[it.key]?.copy(active = false) }
+                extraCardInfoRepo.saveAll(toSave.plus(unpublish))
+                log.info("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +
+                        "${toSave.size} unpublished ${unpublish.size}")
+                this.loadExtraInfo()
+            }
+        } catch (exception: Exception) {
+            log.error("Nothing is going to work because we couldn't load extra info!", exception)
         }
     }
 
