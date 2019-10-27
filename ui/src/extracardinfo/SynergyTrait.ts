@@ -7,6 +7,7 @@ export enum SynergyTrait {
     increasesKeyCost = "increasesKeyCost",
     scalingSteal = "scalingSteal",
     exalt = "exalt",
+    exaltFriendly = "exaltFriendly",
     spendsCapturedAmber = "spendsCapturedAmber",
 
     // Damage
@@ -102,6 +103,9 @@ export enum SynergyTrait {
     shard = "shard",
     wolf = "wolf",
     robot = "robot",
+    dinosaur = "dinosaur",
+    demon = "demon",
+    giant = "giant",
 
     // Special cards
     badPenny = "badPenny",

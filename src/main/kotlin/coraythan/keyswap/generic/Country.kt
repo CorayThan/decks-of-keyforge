@@ -73,6 +73,7 @@ enum class Country {
     Guyana,
     Haiti,
     Honduras,
+    HongKong,
     Hungary,
     Iceland,
     India,

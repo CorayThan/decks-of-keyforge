@@ -79,6 +79,7 @@ enum class SynergyTrait {
     increasesKeyCost,
     scalingSteal,
     exalt,
+    exaltFriendly,
     spendsCapturedAmber,
 
     // Damage
@@ -176,6 +177,7 @@ enum class SynergyTrait {
     robot,
     dinosaur,
     demon,
+    giant,
 
     // Special cards
     badPenny,
