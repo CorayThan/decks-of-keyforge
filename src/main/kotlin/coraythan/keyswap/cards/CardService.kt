@@ -32,6 +32,7 @@ class CardService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var previousInfoWithNames: Map<String, Card>? = null
+    private var nextInfoWithNames: Map<String, Card>? = null
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
     private var nonMaverickCachedCardsListNoDups: List<Card>? = null
@@ -40,10 +41,56 @@ class CardService(
     lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
 
-    val publishAercVersion = 3
+    // Manually update this when publishing a new version of AERC
+    val publishAercVersion = 4
+
+    fun publishNextInfo() {
+        log.info("Publishing next extra info started")
+
+        try {
+            val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
+            this.activeAercVersion = currentInfo.maxBy { it.value.version }?.value?.version ?: 0
+
+            log.info("Active aerc version $activeAercVersion published version $publishAercVersion")
+            if (activeAercVersion < publishAercVersion) {
+
+                val allInfosToPotentiallyUpdateNamesFor = extraCardInfoRepo.findAll()
+                        .mapNotNull {
+                            val num = it.cardNumbers.first()
+                            val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(num.expansion.expansionNumber, num.cardNumber).first()
+                            if (card.cardTitle == it.cardName) {
+                                null
+                            } else {
+                                log.info("Card name to update: ${it.cardName} -> ${card.cardTitle}")
+                                it.cardName = card.cardTitle
+                                it
+                            }
+                        }
+
+                if (allInfosToPotentiallyUpdateNamesFor.isNotEmpty()) {
+                    extraCardInfoRepo.saveAll(allInfosToPotentiallyUpdateNamesFor)
+                }
+
+                this.activeAercVersion = publishAercVersion
+                val toPublish = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
+                toPublish.forEach {
+                    it.value.active = true
+                    it.value.published = ZonedDateTime.now()
+                }
+                val unpublish = toPublish.mapNotNull { currentInfo[it.key]?.copy(active = false) }
+                extraCardInfoRepo.saveAll(toPublish.map { it.value }.plus(unpublish))
+                log.info("Publishing next extra info fully complete. Active aerc version $activeAercVersion published verison $publishAercVersion " +
+                        "done publishing published " +
+                        "${toPublish.size} unpublished ${unpublish.size}")
+            }
+        } catch (exception: Exception) {
+            log.error("Nothing is going to work because we couldn't publish extra info!", exception)
+            throw IllegalStateException(exception)
+        }
+    }
 
     fun loadExtraInfo() {
-
+        log.info("Loading extra info started")
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
             this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
@@ -54,21 +101,11 @@ class CardService(
                     .mapNotNull { it.value.maxBy { infos -> infos.version } }
             this.previousExtraInfo = mapInfos(previousOnes)
 
-            log.info("Active aerc version $activeAercVersion published verison $publishAercVersion")
-            if (activeAercVersion < publishAercVersion) {
-                this.activeAercVersion = publishAercVersion
-                val toPublish = this.nextExtraInfo
-                val potentiallyUnpublish = this.extraInfo
-                val toSave = toPublish.map { it.value.copy(active = true, published = ZonedDateTime.now()) }
-                val unpublish = toPublish.mapNotNull { potentiallyUnpublish[it.key]?.copy(active = false) }
-                extraCardInfoRepo.saveAll(toSave.plus(unpublish))
-                log.info("Active aerc version $activeAercVersion published verison $publishAercVersion done publishing published " +
-                        "${toSave.size} unpublished ${unpublish.size}")
-                this.loadExtraInfo()
-            }
         } catch (exception: Exception) {
             log.error("Nothing is going to work because we couldn't load extra info!", exception)
+            throw IllegalStateException(exception)
         }
+        log.info("Loading extra info fully complete")
     }
 
     fun convertSpoilers() {
@@ -142,6 +179,13 @@ class CardService(
             reloadCachedCards()
         }
         return previousInfoWithNames!!
+    }
+
+    fun nextInfo(): Map<String, Card> {
+        if (nextInfoWithNames == null) {
+            reloadCachedCards()
+        }
+        return nextInfoWithNames!!
     }
 
     fun allFullCardsNonMaverick(): List<Card> {
@@ -287,6 +331,14 @@ class CardService(
                 ?.toList()
                 ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
         previousInfoWithNames = previousExtraInfo.mapNotNull { entry ->
+            val card = nonMaverickCachedCards!![entry.key]
+            if (card == null) {
+                null
+            } else {
+                card.cardTitle to card.copy(extraCardInfo = entry.value)
+            }
+        }.toMap()
+        nextInfoWithNames = nextExtraInfo.mapNotNull { entry ->
             val card = nonMaverickCachedCards!![entry.key]
             if (card == null) {
                 null

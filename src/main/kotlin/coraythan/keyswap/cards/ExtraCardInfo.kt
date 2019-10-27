@@ -23,7 +23,7 @@ data class CardNumberSetPairOld(
 @Entity
 data class ExtraCardInfo(
 
-        val cardName: String = "",
+        var cardName: String = "",
 
         val expectedAmber: Double = 0.0,
         val expectedAmberMax: Double? = null,
@@ -68,10 +68,10 @@ data class ExtraCardInfo(
         val synergies: List<SynTraitValue> = listOf(),
 
         val version: Int = 1,
-        val active: Boolean = false,
+        var active: Boolean = false,
         val created: ZonedDateTime? = now(),
         val updated: ZonedDateTime? = now(),
-        val published: ZonedDateTime? = now(),
+        var published: ZonedDateTime? = now(),
 //
 //        @OneToOne(mappedBy = "info")
 //        val spoiler: Spoiler? = null,

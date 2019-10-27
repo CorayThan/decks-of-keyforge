@@ -22,3 +22,5 @@
 /card-imgs*
 
 application-nocommit.yml
+restore-cards/load-cards.cmd
+*/extra-info.dump

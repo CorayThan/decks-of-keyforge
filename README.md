@@ -56,17 +56,14 @@ Find it in downloads
 
 ## Dump the manual card data tables
 
-Delete preexisting stuff
 ```
-delete from card_identifier;
-delete from syn_trait_value;
-delete from extra_card_info;
-delete from spoiler;
-```
+set PGPASSWORD=password
+pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan -F c -a -t card_traits -t card_identifier -t extra_card_info -t card -t spoiler -t syn_trait_value -f .\restore-cards\extra-info.dump keyswap
 
-```
-pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan --column-inserts -a -t card_identifier -t extra_card_info -t spoiler -t syn_trait_value -f extra-info.sql keyswap
-// enter password: crazysal...
+set PGPASSWORD=postgres
+psql -U postgres -d keyswap -f .\restore-cards\truncate-card-tables.sql
+pg_restore -h localhost -U postgres -d keyswap .\restore-cards\extra-info.dump
+
 ```
 
 ## Kill long queries stuff

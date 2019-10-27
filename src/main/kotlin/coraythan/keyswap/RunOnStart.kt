@@ -24,6 +24,7 @@ class RunOnStart(
 
     override fun run(vararg args: String?) {
 
+        cardService.publishNextInfo()
         cardService.loadExtraInfo()
         cardService.allFullCardsNonMaverick()
 
