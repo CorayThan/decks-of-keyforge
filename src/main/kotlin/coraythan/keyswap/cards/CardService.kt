@@ -42,7 +42,7 @@ class CardService(
     var activeAercVersion: Int = 0
 
     // Manually update this when publishing a new version of AERC
-    val publishAercVersion = 4
+    val publishAercVersion = 5
 
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
@@ -54,22 +54,22 @@ class CardService(
             log.info("Active aerc version $activeAercVersion published version $publishAercVersion")
             if (activeAercVersion < publishAercVersion) {
 
-                val allInfosToPotentiallyUpdateNamesFor = extraCardInfoRepo.findAll()
-                        .mapNotNull {
-                            val num = it.cardNumbers.first()
-                            val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(num.expansion.expansionNumber, num.cardNumber).first()
-                            if (card.cardTitle == it.cardName) {
-                                null
-                            } else {
-                                log.info("Card name to update: ${it.cardName} -> ${card.cardTitle}")
-                                it.cardName = card.cardTitle
-                                it
-                            }
-                        }
-
-                if (allInfosToPotentiallyUpdateNamesFor.isNotEmpty()) {
-                    extraCardInfoRepo.saveAll(allInfosToPotentiallyUpdateNamesFor)
-                }
+//                val allInfosToPotentiallyUpdateNamesFor = extraCardInfoRepo.findAll()
+//                        .mapNotNull {
+//                            val num = it.cardNumbers.first()
+//                            val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(num.expansion.expansionNumber, num.cardNumber).first()
+//                            if (card.cardTitle == it.cardName) {
+//                                null
+//                            } else {
+//                                log.info("Card name to update: ${it.cardName} -> ${card.cardTitle}")
+//                                it.cardName = card.cardTitle
+//                                it
+//                            }
+//                        }
+//
+//                if (allInfosToPotentiallyUpdateNamesFor.isNotEmpty()) {
+//                    extraCardInfoRepo.saveAll(allInfosToPotentiallyUpdateNamesFor)
+//                }
 
                 val toPublish = mapInfosOnly(extraCardInfoRepo.findByVersion(this.publishAercVersion))
                 toPublish.forEach {
