@@ -1,4 +1,3 @@
-
 export interface ExpansionInfo {
     expansionNumber: Expansion
     name: string
@@ -20,7 +19,11 @@ export enum BackendExpansion {
     ANOMALY_EXPANSION = "ANOMALY_EXPANSION"
 }
 
-export const activeExpansions = [BackendExpansion.CALL_OF_THE_ARCHONS, BackendExpansion.AGE_OF_ASCENSION]
+export const activeExpansions = [
+    BackendExpansion.CALL_OF_THE_ARCHONS,
+    BackendExpansion.AGE_OF_ASCENSION,
+    BackendExpansion.WORLDS_COLLIDE
+]
 
 export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: Expansion.COTA, name: "Call of the Archons", abbreviation: "COTA", backendEnum: BackendExpansion.CALL_OF_THE_ARCHONS},
@@ -28,6 +31,8 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: Expansion.WC, name: "Worlds Collide", abbreviation: "WC", backendEnum: BackendExpansion.WORLDS_COLLIDE},
     {expansionNumber: Expansion.ANOM, name: "Anomalies", abbreviation: "ANOM", backendEnum: BackendExpansion.ANOMALY_EXPANSION},
 ]
+
+export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))
 
 export const expansionInfoMap: Map<BackendExpansion, ExpansionInfo> = new Map(expansionInfos.map(info => (
     [info.backendEnum, info] as [BackendExpansion, ExpansionInfo]

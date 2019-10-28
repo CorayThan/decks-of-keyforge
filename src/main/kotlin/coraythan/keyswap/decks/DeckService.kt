@@ -376,7 +376,6 @@ class DeckService(
                         crucibleWins = deckWinsService.crucibleWins,
                         synergies = DeckSynergyService.fromDeckWithCards(deck, cards)
                 ),
-                cardRatingPercentile = stats?.cardsRatingStats?.percentileForValue?.get(deck.cardsRating) ?: -1.0,
                 synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
                 antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0
         )

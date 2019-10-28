@@ -59,6 +59,9 @@ class Routes {
     static usersDecks = () => `/decks?owner=${userStore.username}&includeUnregistered=true`
     static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&includeUnregistered=true&notForSale=true`
     static usersFavorites = () => `/decks?myFavorites=true&includeUnregistered=true`
+    static usersCota = () => `/decks?owner=${userStore.username}&expansions=341&includeUnregistered=true`
+    static usersAoa = () => `/decks?owner=${userStore.username}&expansions=435&includeUnregistered=true`
+    static usersWc = () => `/decks?owner=${userStore.username}&expansions=452&includeUnregistered=true`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
 
     /**
@@ -222,6 +225,7 @@ export class AboutSubPaths {
 export class StatsSubPaths {
     static winRates = Routes.stats + "/win-rates"
     static deckStats = Routes.stats + "/deck-stats"
+    static aercStats = Routes.stats + "/aerc-stats"
 }
 
 export {

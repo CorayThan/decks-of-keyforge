@@ -14,6 +14,7 @@ import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
+import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import java.time.ZonedDateTime
@@ -64,7 +65,6 @@ data class Deck(
         val previousSasRating: Int? = 0,
         val sasV3: Int? = 0,
         val sasRating: Int = 0,
-        val cardsRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,
 
@@ -92,19 +92,15 @@ data class Deck(
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
         val auctions: List<Auction> = listOf(),
 
-        /**
-         * To redo the ratings:
-        ALTER TABLE deck DROP COLUMN rating_version;
-        ALTER TABLE deck ADD COLUMN rating_version int4;
-        CREATE INDEX deck_ratings_version_idx ON deck (rating_version);
-         */
-        val ratingVersion: Int? = 0,
-
         val listedOn: ZonedDateTime? = null,
         val auctionEnd: ZonedDateTime? = null,
         val auctionEndedOn: ZonedDateTime? = null,
 
         val importDateTime: ZonedDateTime? = now(),
+
+        /**
+         * Last SAS update
+         */
         val lastUpdate: ZonedDateTime? = now(),
 
         @Id
@@ -165,7 +161,6 @@ data class Deck(
                 previousSasRating = previousSasRating ?: sasRating,
                 sasV3 = sasV3,
                 sasRating = sasRating,
-                cardsRating = cardsRating,
                 synergyRating = synergyRating,
                 antisynergyRating = antisynergyRating,
                 totalPower = totalPower,
@@ -177,7 +172,10 @@ data class Deck(
                 searchResultCards = searchResultCards ?: listOf(),
                 houses = houses,
 
-                sasPercentile = stats?.sasStats?.percentileForValue?.get(sasRating) ?: if (sasRating < 75) 0.0 else 100.0,
+                lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString() ?: "",
+
+                sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
+                        ?: if (sasRating < 75) 0.0 else 100.0,
 
                 synergies = synergies
         )

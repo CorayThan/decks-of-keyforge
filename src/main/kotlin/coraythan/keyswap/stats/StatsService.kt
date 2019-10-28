@@ -1,13 +1,15 @@
 package coraythan.keyswap.stats
 
-import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.*
+import coraythan.keyswap.decks.DeckPageService
+import coraythan.keyswap.decks.DeckPageType
+import coraythan.keyswap.decks.Wins
+import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.QDeck
+import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
@@ -22,7 +24,7 @@ import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT1M"
+private const val lockUpdateStats = "PT10S"
 private const val statsUpdateQuantity = 10000L
 
 @Transactional
@@ -79,12 +81,13 @@ class  StatsService(
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
         log.info("$scheduledStart start new deck stats.")
-        if (doneRatingDecks != true) {
+        if (!doneRatingDecks) {
             log.info("Skipping stats update as decks are being rated.")
             return
         }
         val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
         if (mostRecentVersion == null) {
+            log.info("No stats existed")
             deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
             deckPageService.setCurrentPage(0, DeckPageType.STATS)
             updateStats = true
@@ -128,16 +131,7 @@ class  StatsService(
                 }
                 else -> {
                     val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
-                    val idStart = currentPage * statsUpdateQuantity
-                    val idEnd = ((currentPage + 1) * statsUpdateQuantity) - 1
-                    log.info("Deck stats id start $idStart end $idEnd")
-                    val deckQ = QDeck.deck
-                    val predicate = BooleanBuilder()
-                            .and(deckQ.registered.isTrue)
-                            .and(deckQ.id.between(idStart, idEnd))
-                    val deckResults = query.selectFrom(deckQ)
-                            .where(predicate)
-                            .fetch()
+                    val deckResults = deckPageService.decksForPage(currentPage, DeckPageType.STATS)
 
                     if (deckResults.isEmpty()) {
                         updateStats = false
@@ -177,7 +171,6 @@ class  StatsService(
                         stats.other.incrementValue(ratedDeck.other.roundToInt())
                         stats.effectivePower.incrementValue(ratedDeck.effectivePower)
                         stats.sas.incrementValue(ratedDeck.sasRating)
-                        stats.cardsRating.incrementValue(ratedDeck.cardsRating)
                         stats.synergy.incrementValue(ratedDeck.synergyRating)
                         stats.antisynergy.incrementValue(ratedDeck.antisynergyRating)
                         stats.creatureCount.incrementValue(ratedDeck.creatureCount)
@@ -195,7 +188,6 @@ class  StatsService(
                         if (ratedDeck.wins != 0 || ratedDeck.losses != 0) {
                             val wins = Wins(ratedDeck.wins, ratedDeck.losses)
                             stats.sasToWinsLosses.addWinsLosses(ratedDeck.sasRating, wins)
-                            stats.cardRatingsToWinsLosses.addWinsLosses(ratedDeck.cardsRating, wins)
                             stats.synergyToWinsLosses.addWinsLosses(ratedDeck.synergyRating, wins)
                             stats.antisynergyToWinsLosses.addWinsLosses(ratedDeck.antisynergyRating, wins)
                             stats.aercToWinsLosses.addWinsLosses(ratedDeck.aercScore.roundToInt(), wins)

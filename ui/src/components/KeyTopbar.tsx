@@ -39,6 +39,17 @@ export const keyTopbarStore = new KeyTopbarStore()
 interface KeyTopbarProps extends RouteComponentProps<{}> {
 }
 
+const myDeckLinks = () => [
+    {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
+    {to: Routes.usersCota(), text: "My COTA"},
+    {to: Routes.usersAoa(), text: "My AOA"},
+    {to: Routes.usersWc(), text: "My WC"},
+    {to: Routes.usersFavorites(), text: "My Favorites"},
+    {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
+    {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+    {to: Routes.sellersView(), text: "Sellers View"},
+]
+
 @observer
 class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
@@ -87,13 +98,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             {userStore.loggedIn() && (
                                 <LinkMenu
                                     genericOnClick={rightMenuStore.close}
-                                    links={[
-                                        {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-                                        {to: Routes.usersFavorites(), text: "My Favorites"},
-                                        {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
-                                        {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
-                                        {to: Routes.sellersView(), text: "Sellers View"},
-                                    ]}
+                                    links={myDeckLinks()}
                                     style={{margin: spacing(1)}}
                                     dropdownOnly={true}
                                 />
@@ -211,7 +216,6 @@ const AppLinks = observer(() => (
             links={[
                 {to: Routes.landing, text: screenStore.smallScreenTopBar() ? "Home" : "Stats & More", mobileActive: true},
                 {to: Routes.cards, text: "Cards", mobileActive: true},
-                {to: Routes.spoilers, text: "Worlds Collide", mobileActive: true},
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
@@ -289,13 +293,7 @@ class UserLinks extends React.Component {
                 <>
                     <LinkMenu
                         genericOnClick={rightMenuStore.close}
-                        links={[
-                            {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-                            {to: Routes.usersFavorites(), text: "My Favorites"},
-                            {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
-                            {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
-                            {to: Routes.sellersView(), text: "Sellers View"},
-                        ]}
+                        links={myDeckLinks()}
                         style={{margin: spacing(1)}}
                     />
                     <ListItemLink
@@ -355,13 +353,7 @@ class UserLinksDesktop extends React.Component {
                 <>
                     <LinkMenu
                         genericOnClick={rightMenuStore.close}
-                        links={[
-                            {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-                            {to: Routes.usersFavorites(), text: "My Favorites"},
-                            {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
-                            {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
-                            {to: Routes.sellersView(), text: "Sellers View"},
-                        ]}
+                        links={myDeckLinks()}
                         style={{margin: spacing(1)}}
                     />
                     <LinkButton

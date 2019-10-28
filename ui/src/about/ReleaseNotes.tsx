@@ -5,7 +5,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { ArticleInternalLink } from "../articles/ArticleView"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, Routes } from "../config/Routes"
+import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { BarData, StatsBar } from "../graphs/StatsBar"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -14,7 +14,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.3"
+export const latestVersion = "4.4"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +22,28 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.4"}
+                    date={"10/27/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Worlds Collide Ratings!",
+                            note: "Worlds Collide decks now have SAS ratings. This is just the first version. " +
+                                "Saurians especially are a difficult " +
+                                "house to rate in the current system, and I expect these initial ratings to improve over the coming weeks and months."
+                        },
+                        {
+                            highlight: "AERC Graphs",
+                            note: "I've added new graphs to help visualize AERC stats for cards by set and house."
+                        },
+                        {
+                            note: (
+                                <LinkButton variant={"contained"} color={"primary"} to={StatsSubPaths.aercStats}>AERC Stats</LinkButton>
+                            )
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.3"}
                     date={"10/23/2019"}

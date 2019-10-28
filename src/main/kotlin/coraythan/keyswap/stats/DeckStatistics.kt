@@ -19,7 +19,6 @@ data class DeckStatistics(
         val other: MutableMap<Int, Int> = mutableMapOf(),
         val effectivePower: MutableMap<Int, Int> = mutableMapOf(),
         val sas: MutableMap<Int, Int> = mutableMapOf(),
-        val cardsRating: MutableMap<Int, Int> = mutableMapOf(),
         val synergy: MutableMap<Int, Int> = mutableMapOf(),
         val antisynergy: MutableMap<Int, Int> = mutableMapOf(),
         val creatureCount: MutableMap<Int, Int> = mutableMapOf(),
@@ -78,8 +77,6 @@ data class DeckStatistics(
         get() = IndividalDeckTraitStats.fromValues(effectivePower)
     val sasStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(sas)
-    val cardsRatingStats: IndividalDeckTraitStats
-        get() = IndividalDeckTraitStats.fromValues(cardsRating)
     val synergyStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(synergy)
     val antisynergyStats: IndividalDeckTraitStats
@@ -109,7 +106,6 @@ data class DeckStatistics(
             averageOther = otherStats.median,
             averageEffectivePower = effectivePowerStats.median,
             sas = sas.map { BarData(it.key, it.value) },
-            cardsRating = cardsRating.map { BarData(it.key, it.value) },
             synergy = synergy.map { BarData(it.key, it.value) },
             antisynergy = antisynergy.map { BarData(it.key, it.value) },
             totalCreaturePower = groupCreaturePowerByTens(),

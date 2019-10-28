@@ -1,20 +1,22 @@
 package coraythan.keyswap.decks
 
+import com.querydsl.core.BooleanBuilder
+import com.querydsl.jpa.impl.JPAQueryFactory
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.QDeck
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
+import javax.persistence.*
 
-enum class DeckPageType {
-    IMPORT,
-    STATS,
-    RATINGS,
-    WINS,
-    LOSSES
+enum class DeckPageType(val quantity: Int) {
+    IMPORT(10),
+    STATS(10000),
+    RATING(1000),
+    WINS(25),
+    LOSSES(25)
 }
 
 @Entity
@@ -32,8 +34,12 @@ data class DeckPage(
 @Transactional
 @Service
 class DeckPageService(
-        val deckPageRepo: DeckPageRepo
+        val deckPageRepo: DeckPageRepo,
+        entityManager: EntityManager
 ) {
+    private val query = JPAQueryFactory(entityManager)
+    private val log = LoggerFactory.getLogger(this::class.java)
+
     fun findCurrentPage(type: DeckPageType = DeckPageType.IMPORT): Int {
         val all = deckPageRepo.findAllByType(type).toList()
         return when {
@@ -49,6 +55,23 @@ class DeckPageService(
     fun setCurrentPage(currentPage: Int, type: DeckPageType = DeckPageType.IMPORT) {
         deckPageRepo.deleteAllByType(type)
         deckPageRepo.save(DeckPage(currentPage, type))
+    }
+
+    fun decksForPage(currentPage: Int, type: DeckPageType): List<Deck> {
+        val idStart = currentPage * type.quantity
+        val idEnd = idEndForPage(currentPage, type)
+        log.info("Deck $type id start $idStart end $idEnd")
+        val deckQ = QDeck.deck
+        val predicate = BooleanBuilder()
+                .and(deckQ.registered.isTrue)
+                .and(deckQ.id.between(idStart, idEnd))
+        return query.selectFrom(deckQ)
+                .where(predicate)
+                .fetch()
+    }
+
+    fun idEndForPage(currentPage: Int, type: DeckPageType): Int {
+        return ((currentPage + 1) * type.quantity) - 1
     }
 }
 

@@ -3,15 +3,16 @@ package coraythan.keyswap.decks
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.*
+import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardIds
+import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.KeyforgeDeck
-import coraythan.keyswap.decks.models.QDeck
-import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
+import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
@@ -36,9 +38,6 @@ import kotlin.system.measureTimeMillis
 private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateRatings = "PT10S"
 private const val lockUpdateCleanUnregistered = "PT48H"
-
-const val currentDeckRatingVersion = 14
-var doneRatingDecks: Boolean? = null
 
 @Transactional
 @Service
@@ -50,7 +49,8 @@ class DeckImporterService(
         private val deckPageService: DeckPageService,
         private val currentUserService: CurrentUserService,
         private val userDeckRepo: UserDeckRepo,
-        private val cardIdentifierRepo: CardIdentifierRepo,
+        private val deckRatingProgressService: DeckRatingProgressService,
+        private val statsService: StatsService,
         private val objectMapper: ObjectMapper,
         val entityManager: EntityManager
 ) {
@@ -163,34 +163,54 @@ class DeckImporterService(
 
     // Comment this in whenever rating gets revved
     // don't rate decks until adding new info done
-    @Scheduled(fixedDelayString = lockUpdateRatings)
-//    @Scheduled(fixedDelay = 1)
+    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
+//    @Scheduled(fixedDelay = 1, initialDelayString = "PT5S")
     fun rateDecks() {
 
-        val quantityToRate = 1000L
+        // If next page is null, we know we are done
+        val nextDeckPage = deckRatingProgressService.nextPage() ?: return
 
-        if (doneRatingDecks == true) return
-        doneRatingDecks = false
         log.info("$scheduledStart rate decks.")
 
+        var quantFound = 0
+        var quantRerated = 0
+
         val millisTaken = measureTimeMillis {
+
+            val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
+            quantFound = deckResults.size
+
             val deckQ = QDeck.deck
-
-            val deckResults = query.selectFrom(deckQ)
-                    .where(deckQ.ratingVersion.ne(currentDeckRatingVersion).or(deckQ.ratingVersion.isNull))
-                    .limit(quantityToRate)
+            val mostRecentDeck = query.selectFrom(deckQ)
+                    .orderBy(deckQ.id.desc())
+                    .limit(1)
                     .fetch()
+                    .first()
 
-            if (deckResults.isEmpty()) {
-                doneRatingDecks = true
+            val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
+
+            val rated = deckResults.mapNotNull {
+                val rated = rateDeck(it)
+                if (rated == it) {
+                    null
+                } else {
+                    rated.copy(lastUpdate = ZonedDateTime.now())
+                }
+            }
+            quantRerated = rated.size
+            if (quantRerated > 0) {
+                deckRepo.saveAll(rated)
+            }
+            deckRatingProgressService.revPage()
+
+            if (mostRecentDeck.id < idEndForPage) {
+                deckRatingProgressService.complete()
+                statsService.startNewDeckStats()
                 log.info("Done rating decks!")
             }
-
-            val rated = deckResults.map { rateDeck(it).copy(ratingVersion = currentDeckRatingVersion) }
-            deckRepo.saveAll(rated)
         }
 
-        log.info("$scheduledStop Took $millisTaken ms to rate $quantityToRate decks.")
+        log.info("$scheduledStop Took $millisTaken ms to rate decks. Page: $nextDeckPage Found: $quantFound Rerated: $quantRerated.")
     }
 
     // Non repeatable functions
@@ -309,7 +329,7 @@ class DeckImporterService(
     @Transactional(propagation = Propagation.REQUIRED)
     fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>, currentPage: Int? = null): Int {
         var savedCount = 0
-        val cardsById: Map<String, Card> = cardsForDecks.associate { it.id to it }
+        val cardsById: Map<String, Card> = cardsForDecks.associateBy { it.id }
         deck
                 .forEach { keyforgeDeck ->
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
@@ -349,8 +369,7 @@ class DeckImporterService(
                 .withCards(cardsList)
                 .copy(
                         houseNamesString = houses.sorted().joinToString("|"),
-                        cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
-                        ratingVersion = currentDeckRatingVersion
+                        cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                 )
 
         val ratedDeck = rateDeck(saveable)
@@ -384,7 +403,6 @@ class DeckImporterService(
                 aercScore = deckSynergyInfo.rawAerc.toDouble(),
                 sasRating = deckSynergyInfo.sasRating,
                 previousSasRating = if (deckSynergyInfo.sasRating != deck.sasRating) deck.sasRating else deck.previousSasRating,
-                cardsRating = 0,
                 synergyRating = deckSynergyInfo.synergyRating,
                 antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
         )

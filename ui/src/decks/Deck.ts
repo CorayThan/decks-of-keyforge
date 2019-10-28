@@ -50,7 +50,6 @@ export interface Deck extends HasAerc {
     previousSasRating: number
     sasV3?: number
     sasRating: number
-    cardsRating: number
     synergyRating: number
     antisynergyRating: number
 
@@ -59,6 +58,8 @@ export interface Deck extends HasAerc {
     forAuction: boolean
     wishlistCount: number
     funnyCount: number
+
+    lastSasUpdate: string
 
     sasPercentile?: number
 
@@ -173,7 +174,8 @@ export class DeckUtils {
                 deck.wishlistCount,
                 deck.funnyCount,
                 `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,
-                `https://www.keyforgegame.com/deck-details/${deck.keyforgeId}`
+                `https://www.keyforgegame.com/deck-details/${deck.keyforgeId}`,
+                deck.lastSasUpdate
             ]
         })
         data.unshift([
@@ -221,7 +223,8 @@ export class DeckUtils {
             "Wishlist",
             "Funny",
             "DoK Link",
-            "Master Vault Link"
+            "Master Vault Link",
+            "Last SAS Update"
         ])
         return data
     }

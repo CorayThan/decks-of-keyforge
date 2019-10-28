@@ -41,7 +41,6 @@ data class DeckSearchResult(
         val previousSasRating: Int = 0,
         val sasV3: Int? = null,
         val sasRating: Int = 0,
-        val cardsRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,
 
@@ -57,6 +56,8 @@ data class DeckSearchResult(
         val forAuction: Boolean = false,
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
+
+        val lastSasUpdate: String = "",
 
         val sasPercentile: Double = 0.0,
 

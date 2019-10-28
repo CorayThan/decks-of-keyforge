@@ -21,7 +21,6 @@ export interface GlobalStats {
     averageOther: number
     averageEffectivePower: number
     sas: BarData[]
-    cardsRating: BarData[]
     synergy: BarData[]
     antisynergy: BarData[]
     totalCreaturePower: BarData[]

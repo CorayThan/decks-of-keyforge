@@ -1,7 +1,7 @@
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { expansionInfos } from "../expansions/Expansions"
+import { activeExpansionInfos } from "../expansions/Expansions"
 import { statsStore } from "./StatsStore"
 
 @observer
@@ -28,7 +28,7 @@ export class ToggleStats extends React.Component<{ style?: React.CSSProperties }
                 <ToggleButton value={-1}>
                     All
                 </ToggleButton>
-                {expansionInfos.map(expansionInfo => {
+                {activeExpansionInfos.map(expansionInfo => {
                     return (
                         <ToggleButton value={expansionInfo.expansionNumber} key={expansionInfo.expansionNumber}>
                             {expansionInfo.abbreviation}

@@ -48,7 +48,7 @@ class CardService(
         log.info("Publishing next extra info started")
 
         try {
-            val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
+            val currentInfo = mapInfosOnly(extraCardInfoRepo.findByActiveTrue())
             this.activeAercVersion = currentInfo.maxBy { it.value.version }?.value?.version ?: 0
 
             log.info("Active aerc version $activeAercVersion published version $publishAercVersion")
@@ -71,13 +71,16 @@ class CardService(
                     extraCardInfoRepo.saveAll(allInfosToPotentiallyUpdateNamesFor)
                 }
 
-                this.activeAercVersion = publishAercVersion
-                val toPublish = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
+                val toPublish = mapInfosOnly(extraCardInfoRepo.findByVersion(this.publishAercVersion))
                 toPublish.forEach {
                     it.value.active = true
                     it.value.published = ZonedDateTime.now()
                 }
-                val unpublish = toPublish.mapNotNull { currentInfo[it.key]?.copy(active = false) }
+                val unpublish = toPublish.mapNotNull {
+                    val oldInfo = currentInfo[it.key]
+                    oldInfo?.active = false
+                    oldInfo
+                }
                 extraCardInfoRepo.saveAll(toPublish.map { it.value }.plus(unpublish))
                 log.info("Publishing next extra info fully complete. Active aerc version $activeAercVersion published verison $publishAercVersion " +
                         "done publishing published " +
@@ -105,7 +108,7 @@ class CardService(
             log.error("Nothing is going to work because we couldn't load extra info!", exception)
             throw IllegalStateException(exception)
         }
-        log.info("Loading extra info fully complete")
+        log.info("Loading extra info fully complete for AERC version ${this.activeAercVersion}")
     }
 
     fun convertSpoilers() {
@@ -153,7 +156,7 @@ class CardService(
         log.info("converted spoilers to extra info")
     }
 
-    private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
+    private fun mapInfos(extraInfos: List<ExtraCardInfo>) = mapInfosOnly(extraInfos
             .map {
                 when {
                     it.traits.containsTrait(SynergyTrait.alpha) && !it.synergies.containsTrait(SynergyTrait.alpha) ->
@@ -161,13 +164,15 @@ class CardService(
                     it.traits.containsTrait(SynergyTrait.omega) && !it.synergies.containsTrait(SynergyTrait.omega) ->
                         it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.omega, -3, SynTraitType.house)))
                     else -> it
-                }
-            }
+                }.copy(
+                        synergies = it.synergies.sorted()
+                )
+            })
+
+    private fun mapInfosOnly(extraInfos: List<ExtraCardInfo>) = extraInfos
             .flatMap { cardInfo ->
                 cardInfo.cardNumbers.map {
-                    it.toNumberSetPair() to cardInfo.copy(
-                            synergies = cardInfo.synergies.sorted()
-                    )
+                    it.toNumberSetPair() to cardInfo
                 }
             }
             .toMap()

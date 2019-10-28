@@ -1,10 +1,7 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
-import coraythan.keyswap.decks.models.DeckCount
-import coraythan.keyswap.decks.models.DeckSaleInfo
-import coraythan.keyswap.decks.models.DecksPage
-import coraythan.keyswap.decks.models.SaveUnregisteredDeck
+import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.thirdpartyservices.AzureOcr
 import coraythan.keyswap.userdeck.UserDeckService
@@ -102,7 +99,7 @@ class DeckEndpoints(
     }
 
     @GetMapping("/updating")
-    fun updating() = doneRatingDecks == false
+    fun updating() = !doneRatingDecks
 
     @GetMapping("/update-crucible-tracker-wins")
     fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()

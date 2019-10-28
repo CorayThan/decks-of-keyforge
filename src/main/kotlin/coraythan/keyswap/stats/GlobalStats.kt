@@ -18,7 +18,6 @@ data class GlobalStats(
         val averageOther: Int = 0,
         val averageEffectivePower:  Int = 0,
         val sas: List<BarData> = listOf(),
-        val cardsRating: List<BarData> = listOf(),
         val synergy: List<BarData> = listOf(),
         val antisynergy: List<BarData> = listOf(),
         val totalCreaturePower: List<BarData> = listOf(),

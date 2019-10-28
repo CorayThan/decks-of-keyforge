@@ -4,7 +4,6 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.CrucibleTrackerApi
@@ -119,7 +118,7 @@ class DeckWinsService(
                             val updated = preexisting.withCards(cards).addGameStats(it)
 
                             if (updated != null) {
-                                deckRepo.save(updated.copy(lastUpdate = now()))
+                                deckRepo.save(updated)
                             }
                         }
                     }

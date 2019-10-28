@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
+import { log } from "../config/Utils"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -53,8 +53,8 @@ export class CardStore {
         }
     }
 
-    searchCards = (filters: CardFilters) => {
-        log.debug(`Card filters are ${prettyJson(filters)}`)
+    searchAndReturnCards = (filters: CardFilters) => {
+        // log.debug(`Card filters are ${prettyJson(filters)}`)
         const toSeach = this.allCards
         let filtered = toSeach.slice().filter(card => {
             return (
@@ -103,7 +103,11 @@ export class CardStore {
         } else if (filters.sortDirection === "DESC") {
             filtered.reverse()
         }
-        this.cards = filtered.slice()
+        return filtered.slice()
+    }
+
+    searchCards = (filters: CardFilters) => {
+        this.cards = this.searchAndReturnCards(filters)
     }
 
     loadAllCards = () => {
