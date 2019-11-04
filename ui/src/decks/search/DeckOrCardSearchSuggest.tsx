@@ -9,6 +9,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
+import { CardFilters } from "../../cards/CardFilters"
 import { cardStore } from "../../cards/CardStore"
 import { FancyCardMenuItem } from "../../cards/FancyCardMenuItem"
 import { spacing } from "../../config/MuiConfig"
@@ -79,7 +80,9 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
     const filters = new DeckFilters()
     filters.title = searchDeckNameStore.searchValue
     const search = Routes.deckSearch(filters)
-    const firstCard = cardStore.cardNameSearchResults[0]
+    const cardFilters = new CardFilters()
+    cardFilters.title = searchDeckNameStore.searchValue
+    const goToCards = cardStore.searchAndReturnCards(cardFilters).length > 0
     return (
         <>
             <div
@@ -103,11 +106,12 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
                     value={searchDeckNameStore.searchValue}
                     onKeyPress={(event) => {
                         if (event.key === "Enter") {
-                            if (firstCard == null) {
+                            if (goToCards) {
+                                // go to card search
+                                props.history.push(Routes.cardSearch(cardFilters))
+                            } else {
                                 // Go to deck search
                                 props.history.push(search)
-                            } else {
-                                // go to card search
                             }
                             searchDeckNameStore.reset()
                         }

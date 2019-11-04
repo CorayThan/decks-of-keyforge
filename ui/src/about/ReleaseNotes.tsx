@@ -23,6 +23,22 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote
+                    releaseNumber={"4.5"}
+                    date={"11/3/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Worlds Collide Ratings Improvements",
+                            note: ""
+                        },
+                        {
+                            highlight: "Improved Card Search",
+                            note: "Card searches are now bookmarkable and shareable. Also, the deck or card search will go to the card search " +
+                                "page by default if there are card results."
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"4.4"}
                     date={"10/27/2019"}
                     expanded={true}

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { clone, sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
+import { log } from "../config/Utils"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -59,7 +59,6 @@ export class CardStore {
         if (filters.sort == null) {
             filters.sort = CardSort.SET_NUMBER
         }
-        log.debug(`Card filters are ${prettyJson(filters)}`)
         const toSearch = this.allCards
         let filtered = toSearch.slice().filter(card => {
             return (

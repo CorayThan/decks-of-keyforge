@@ -31,6 +31,7 @@ interface DeckScoreViewProps {
     }
     style?: React.CSSProperties
     small?: boolean
+    noLinks?: boolean
 }
 
 export const DeckScorePill = (props: DeckScoreViewProps) => {
@@ -52,7 +53,7 @@ export const DeckScorePill = (props: DeckScoreViewProps) => {
 
 export const DeckScoreView = (props: DeckScoreViewProps) => {
 
-    const {small, deck} = props
+    const {small, deck, noLinks} = props
     const {
         rawAerc,
         previousSasRating,
@@ -98,9 +99,13 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                     <Tooltip
                         title={"Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."}>
                         <div>
-                            <UnstyledLink to={AboutSubPaths.sas}>
+                            {noLinks ? (
                                 <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
-                            </UnstyledLink>
+                            ) : (
+                                <UnstyledLink to={AboutSubPaths.sas}>
+                                    <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                                </UnstyledLink>
+                            )}
                         </div>
                     </Tooltip>
                     {sasInfo}

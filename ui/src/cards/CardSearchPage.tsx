@@ -7,7 +7,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
-import { log, prettyJson } from "../config/Utils"
+import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { Spoiler } from "../spoilers/Spoiler"
 import { SpoilerView } from "../spoilers/SpoilerView"
@@ -28,7 +28,6 @@ export class CardSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     render() {
         const filters = this.makeFilters(this.props)
-        log.debug(`Render Card Search Page ${prettyJson(filters)}`)
         return <WaitForAllCards filters={filters} history={this.props.history}/>
     }
 }
@@ -42,7 +41,6 @@ interface WaitForAllCardsProps {
 class WaitForAllCards extends React.Component<WaitForAllCardsProps> {
 
     render() {
-        log.debug(`Render Wait for all cards`)
         if (cardStore.allCards.length === 0) {
             return <Loader/>
         }

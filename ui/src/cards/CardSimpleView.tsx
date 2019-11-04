@@ -41,11 +41,12 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
     if (props.card == null) {
         return null
     }
+    const width = props.size ? props.size : 300
     const contents = (
         <img
             alt={props.card.cardTitle}
             src={findCardImageUrl(props.card)}
-            style={{width: props.size ? props.size : 300, margin: spacing(2), ...props.style}}
+            style={{width, height: (width * 420) / 300, margin: spacing(2), ...props.style}}
         />
     )
     if (props.noLink) {

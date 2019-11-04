@@ -53,6 +53,7 @@ export const FancyDeckMenuItem = observer((props: { deck: Deck, onClick: () => v
                 <div style={{display: "flex", alignItems: "flex-end"}}>
                     <DeckScorePill
                         deck={{...deck, ...deck.synergies!}}
+                        noLinks={true}
                     />
                 </div>
             </div>
