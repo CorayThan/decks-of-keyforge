@@ -4,8 +4,9 @@ import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { AboutPage } from "../about/AboutPage"
 import { PrivacyPolicy } from "../about/PrivacyPolicy"
 import { ArticlesPage } from "../articles/ArticlesPage"
+import { CardFilters, prepareCardFiltersForQueryString } from "../cards/CardFilters"
 import { CardPage } from "../cards/CardPage"
-import { CardsPage } from "../cards/CardsPage"
+import { CardSearchPage } from "../cards/CardSearchPage"
 import { cardNameToCardNameKey } from "../cards/KCard"
 import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
@@ -73,6 +74,15 @@ class Routes {
         return `${Routes.decks}?${QueryString.stringify(cleaned)}`
     }
 
+    /**
+     * Card filters should be cleaned.
+     * @param filters
+     */
+    static cardSearch = (filters: CardFilters) => {
+        const cleaned = prepareCardFiltersForQueryString(filters)
+        return `${Routes.cards}?${QueryString.stringify(cleaned)}`
+    }
+
     static deckSearchForSaleQuery = (filters: ForSaleQuery) => {
         const cleaned = prepareForSaleQueryForQueryString(filters)
         return `${Routes.decks}?${QueryString.stringify(cleaned)}`
@@ -122,7 +132,7 @@ class KeyRouter extends React.Component {
                         <Route
                             exact={true}
                             path={Routes.cards}
-                            component={CardsPage}
+                            component={CardSearchPage}
                         />
                         <Route
                             path={Routes.decks}

@@ -19,7 +19,7 @@
 /out/
 
 /src/main/resources/static/
-/card-imgs*
+/card-imgs/*.png
 
 application-nocommit.yml
 restore-cards/load-cards.cmd

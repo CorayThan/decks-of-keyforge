@@ -1,4 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core"
+import { observer } from "mobx-react"
 import React from "react"
 import { AercForCard } from "../aerc/AercViews"
 import { spacing } from "../config/MuiConfig"
@@ -9,7 +10,7 @@ import { KeyLink } from "../mui-restyled/KeyLink"
 import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSimpleView"
 import { CardUtils, KCard } from "./KCard"
 
-export const CardTableView = (props: { cards: KCard[] }) => {
+export const CardTableView = observer((props: { cards: KCard[] }) => {
     return (
         <div>
             <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
@@ -65,4 +66,4 @@ export const CardTableView = (props: { cards: KCard[] }) => {
             </Paper>
         </div>
     )
-}
+})

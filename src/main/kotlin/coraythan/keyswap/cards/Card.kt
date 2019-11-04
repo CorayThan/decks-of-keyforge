@@ -120,6 +120,7 @@ data class Card(
             rarity = rarity,
             maverick = maverick
     )
+
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

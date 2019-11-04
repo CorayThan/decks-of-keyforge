@@ -15,7 +15,7 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
 import { DeckFilters } from "../decks/search/DeckFilters"
-import { DeckSearchSuggest } from "../decks/search/DeckSearchSuggest"
+import { DeckOrCardSearchSuggest } from "../decks/search/DeckOrCardSearchSuggest"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu } from "../generic/LinkMenu"
@@ -82,7 +82,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                         {screenStore.screenWidth < 800 ? topbarShortName : topbarName}
                     </Typography>
                     <div style={{flexGrow: 1}}/>
-                    <DeckSearchSuggest placement={"bottom-end"}/>
+                    <DeckOrCardSearchSuggest placement={"bottom-end"}/>
                     {screenStore.screenWidth > 1000 && (
                         <>
                             <LinkMenu
@@ -120,7 +120,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                     </Typography>
                     {screenStore.screenWidth < 1820 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
-                    <DeckSearchSuggest placement={"bottom-start"}/>
+                    <DeckOrCardSearchSuggest placement={"bottom-start"}/>
                     <RightMenu/>
                 </>
             )

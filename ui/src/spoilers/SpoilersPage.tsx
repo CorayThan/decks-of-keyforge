@@ -1,7 +1,7 @@
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardsContainerWithScroll } from "../cards/CardsPage"
+import { CardsContainerWithScroll } from "../cards/CardSearchPage"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"

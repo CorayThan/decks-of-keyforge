@@ -125,7 +125,7 @@ export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card
         &&
         (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
         &&
-        (filters.houses.length === 0 || (card.house != null && filters.houses.indexOf(card.house) !== -1))
+        (filters.houses.length === 0 || (card.house != null && !card.anomaly && filters.houses.indexOf(card.house) !== -1))
         &&
         (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
         &&

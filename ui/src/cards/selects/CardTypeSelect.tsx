@@ -1,7 +1,7 @@
 import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Utils } from "../../config/Utils"
+import { log, prettyJson, Utils } from "../../config/Utils"
 import { MultiSelect, SelectedValues } from "../../mui-restyled/MultiSelect"
 import { CardType } from "../CardType"
 
@@ -19,7 +19,16 @@ export class CardTypeSelect extends React.Component<{ selectedCardTypes: Selecte
 }
 
 export class SelectedCardTypes implements SelectedValues<CardType> {
+
+    @observable
     selectedValues: IObservableArray<CardType> = observable([])
+
+    constructor(initialCardTypes?: CardType[]) {
+        if (initialCardTypes != null) {
+            log.debug(`card types: ${prettyJson(initialCardTypes)}`)
+            this.selectedValues = observable(initialCardTypes)
+        }
+    }
 
     reset = () => this.selectedValues.clear()
 }

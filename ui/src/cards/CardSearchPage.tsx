@@ -1,59 +1,127 @@
 import Typography from "@material-ui/core/Typography/Typography"
+import * as History from "history"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
+import * as QueryString from "query-string"
 import * as React from "react"
+import { RouteComponentProps } from "react-router-dom"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
+import { log, prettyJson } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { Spoiler } from "../spoilers/Spoiler"
 import { SpoilerView } from "../spoilers/SpoilerView"
 import { uiStore } from "../ui/UiStore"
+import { CardFilters } from "./CardFilters"
 import { CardView } from "./CardSimpleView"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { cardStore } from "./CardStore"
 import { CardTableView } from "./CardTableView"
 import { KCard } from "./KCard"
 
-@observer
-export class CardsPage extends React.Component {
+export class CardSearchPage extends React.Component<RouteComponentProps<{}>> {
 
-    constructor(props: {}) {
+    makeFilters = (props: Readonly<RouteComponentProps<{}>>): CardFilters => {
+        const queryValues = QueryString.parse(props.location.search)
+        return CardFilters.rehydrateFromQuery(queryValues)
+    }
+
+    render() {
+        const filters = this.makeFilters(this.props)
+        log.debug(`Render Card Search Page ${prettyJson(filters)}`)
+        return <WaitForAllCards filters={filters} history={this.props.history}/>
+    }
+}
+
+interface WaitForAllCardsProps {
+    filters: CardFilters
+    history: History.History
+}
+
+@observer
+class WaitForAllCards extends React.Component<WaitForAllCardsProps> {
+
+    render() {
+        log.debug(`Render Wait for all cards`)
+        if (cardStore.allCards.length === 0) {
+            return <Loader/>
+        }
+        return <LoadInitialCardSearch {...this.props}/>
+    }
+}
+
+
+@observer
+class LoadInitialCardSearch extends React.Component<WaitForAllCardsProps> {
+
+    componentDidMount(): void {
+        this.search(this.props)
+    }
+
+    componentWillReceiveProps(nextProps: WaitForAllCardsProps): void {
+        this.search(nextProps)
+    }
+
+    componentWillUnmount(): void {
+        cardStore.reset()
+    }
+
+    search = (props: WaitForAllCardsProps) => {
+        log.debug("Search card search page")
+        cardStore.searchCards(props.filters)
+        if (cardStore.previousExtraInfo == null && keyLocalStorage.genericStorage.historicalAerc) {
+            cardStore.findPreviousExtraInfo()
+        }
+    }
+
+    render() {
+        const cards = cardStore.cards
+        if (cards == null) {
+            return <Loader/>
+        }
+        return <CardSearchContainer {...this.props} cards={cards}/>
+    }
+}
+
+interface CardSearchContainerProps extends WaitForAllCardsProps {
+    cards: KCard[]
+}
+
+@observer
+class CardSearchContainer extends React.Component<CardSearchContainerProps> {
+
+    constructor(props: CardSearchContainerProps) {
         super(props)
         uiStore.setTopbarValues("Cards of KeyForge", "Cards", "Search and sort")
     }
 
     render() {
-
-        const {cards, searchingForCards} = cardStore
+        const {cards} = this.props
 
         let cardsDisplay
-        if (!searchingForCards && cards) {
-            if (cards.length === 0) {
-                cardsDisplay = (
-                    <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
-                        Sorry, no cards match your search criteria.
-                    </Typography>
-                )
-            } else if (keyLocalStorage.cardListViewType === "table") {
-                cardsDisplay = (
-                    <CardTableView cards={cards}/>
-                )
-            } else {
-                cardsDisplay = (
-                    <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards}/>
-                )
-            }
+        if (cards.length === 0) {
+            cardsDisplay = (
+                <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
+                    Sorry, no cards match your search criteria.
+                </Typography>
+            )
+        } else if (keyLocalStorage.cardListViewType === "table") {
+            cardsDisplay = (
+                <CardTableView cards={cards}/>
+            )
+        } else {
+            cardsDisplay = (
+                <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards}/>
+            )
         }
 
         return (
             <div style={{display: "flex"}}>
-                <CardsSearchDrawer/>
+                <CardsSearchDrawer history={this.props.history} filters={this.props.filters}/>
                 <div
                     style={{flexGrow: 1, margin: spacing(2)}}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        <Loader show={searchingForCards}/>
                         {cardsDisplay}
                     </div>
                 </div>
@@ -83,6 +151,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
 
     constructor(props: CardsContainerWithScrollProps) {
         super(props)
+        log.debug(`constructor All cards length: ${props.allCards!.length}`)
         this.resetCardsToDisplay(props)
     }
 
@@ -95,6 +164,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
     }
 
     componentWillReceiveProps(nextProps: Readonly<CardsContainerWithScrollProps>) {
+        log.debug(`receive props All cards length: ${nextProps.allCards!.length}`)
         this.resetCardsToDisplay(nextProps)
     }
 
@@ -108,6 +178,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
                 this.spoilersToDisplay = props.allSpoilers!.slice(0, 40 * this.pageQuantity)
             }
         } else {
+            log.debug(`All cards length: ${props.allCards.length}`)
             if (props.allCards.length < 101 || props.showAllCards) {
                 this.cardsToDisplay = props.allCards.slice()
             } else {

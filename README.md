@@ -91,6 +91,8 @@ Unlink and relink with buttons.
 
 ## Make reduced size card images
 
+Delete `*.png` in `/card-imgs/`. Uncomment line in RunOnStart. Run app. In `/card-imgs/` run:
+
 `.\pngquant.exe --ext=.png --force 256 *.png`
 
 upload to S3 public with headers: `Cache-Control: max-age=31536000`

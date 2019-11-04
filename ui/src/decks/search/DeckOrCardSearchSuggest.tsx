@@ -71,7 +71,7 @@ interface DeckSearchSuggestProps {
     placement: PopperPlacementType
 }
 
-export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestProps & RouteComponentProps) => {
+export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSuggestProps & RouteComponentProps) => {
     const classes = useStyles()
     const deckNameSuggestions = deckStore.deckNameSearchResults.map(deckNameId => ({label: deckNameId.name, value: deckNameId.id}))
     const menuOpen = deckNameSuggestions.length > 0 || cardStore.cardNameSearchResults.length > 0
@@ -79,6 +79,7 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
     const filters = new DeckFilters()
     filters.title = searchDeckNameStore.searchValue
     const search = Routes.deckSearch(filters)
+    const firstCard = cardStore.cardNameSearchResults[0]
     return (
         <>
             <div
@@ -102,7 +103,12 @@ export const DeckSearchSuggest = withRouter(observer((props: DeckSearchSuggestPr
                     value={searchDeckNameStore.searchValue}
                     onKeyPress={(event) => {
                         if (event.key === "Enter") {
-                            props.history.push(search)
+                            if (firstCard == null) {
+                                // Go to deck search
+                                props.history.push(search)
+                            } else {
+                                // go to card search
+                            }
                             searchDeckNameStore.reset()
                         }
                     }}

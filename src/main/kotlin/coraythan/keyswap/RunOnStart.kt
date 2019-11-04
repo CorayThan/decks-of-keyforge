@@ -2,6 +2,7 @@ package coraythan.keyswap
 
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckImporterService
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.stats.StatsService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
@@ -32,12 +33,21 @@ class RunOnStart(
 
 //        deckImporterService.updateDeckStats()
 
-        // this.downloadAllCardImages()
+         this.downloadAllCardImages()
 
     }
 
     private fun downloadAllCardImages() {
-        cardService.allFullCardsNonMaverickNoDups()
+        val allRealCards = cardService.realAllCards()
+        val preExistingCardNames = allRealCards
+                .filter { it.expansionEnum != Expansion.WORLDS_COLLIDE && it.expansionEnum != Expansion.ANOMALY_EXPANSION }
+                .map { it.cardTitle }
+                .toSet()
+        cardService.realAllCards()
+                .filter {
+                    (it.expansionEnum == Expansion.WORLDS_COLLIDE || it.expansionEnum == Expansion.ANOMALY_EXPANSION) &&
+                            !preExistingCardNames.contains(it.cardTitle)
+                }
                 .forEach { card ->
 
                     val headers = HttpHeaders()
@@ -56,6 +66,7 @@ class RunOnStart(
                         log.info("Wrote card image to location ${written.toAbsolutePath()}")
                     }
                 }
+        log.info("Creating card imgs complete.")
     }
 }
 

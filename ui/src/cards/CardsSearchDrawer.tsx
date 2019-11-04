@@ -4,12 +4,14 @@ import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import { Close, Image, ViewList, ViewModule } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
+import * as History from "history"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -23,48 +25,47 @@ import { CardTypeSelect, SelectedCardTypes } from "./selects/CardTypeSelect"
 import { PowerSelect, SelectedPowers } from "./selects/PowerSelect"
 import { RaritySelect, SelectedRarities } from "./selects/RaritySelect"
 
+interface CardsSearchDrawerProps {
+    filters: CardFilters
+    history: History.History
+}
+
 @observer
-export class CardsSearchDrawer extends React.Component {
+export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
 
     cardStore = cardStore
-    filters = new CardFilters()
-    selectedHouses = new SelectedHouses()
-    selectedCardTypes = new SelectedCardTypes()
-    selectedRarities = new SelectedRarities()
-    selectedPowers = new SelectedPowers()
-    selectedAmbers = new SelectedAmbers()
-    selectedArmors = new SelectedArmors()
+    selectedHouses = new SelectedHouses(this.props.filters.houses)
+    selectedCardTypes = new SelectedCardTypes(this.props.filters.types)
+    selectedRarities = new SelectedRarities(this.props.filters.rarities)
+    selectedPowers = new SelectedPowers(this.props.filters.powers)
+    selectedAmbers = new SelectedAmbers(this.props.filters.ambers)
+    selectedArmors = new SelectedArmors(this.props.filters.armors)
     selectedSortStore = new CardSortSelectStore()
     selectedExpansion = new SelectedExpansion()
-
-    componentDidMount() {
-        this.cardStore.reset()
-        this.search()
-        if (cardStore.previousExtraInfo == null && keyLocalStorage.genericStorage.historicalAerc) {
-            cardStore.findPreviousExtraInfo()
-        }
-    }
 
     search = (event?: React.FormEvent) => {
         if (event) {
             event.preventDefault()
         }
-        this.filters.houses = this.selectedHouses.toArray()
-        this.filters.types = this.selectedCardTypes.selectedValues
-        this.filters.rarities = this.selectedRarities.toArray()
-        this.filters.powers = this.selectedPowers.toArray()
-        this.filters.ambers = this.selectedAmbers.toArray()
-        this.filters.armors = this.selectedArmors.toArray()
-        this.filters.sort = this.selectedSortStore.toEnumValue() as CardSort
-        this.filters.expansion = this.selectedExpansion.expansionNumber()
-        this.cardStore.searchCards(this.filters)
+        const {filters} = this.props
+        filters.houses = this.selectedHouses.toArray()
+        filters.types = this.selectedCardTypes.selectedValues
+        filters.rarities = this.selectedRarities.toArray()
+        filters.powers = this.selectedPowers.toArray()
+        filters.ambers = this.selectedAmbers.toArray()
+        filters.armors = this.selectedArmors.toArray()
+        filters.sort = this.selectedSortStore.toEnumValue() as CardSort
+        filters.expansion = this.selectedExpansion.expansionNumber()
+        this.cardStore.searchCards(filters)
         keyDrawerStore.closeIfSmall()
+        this.props.history.push(Routes.cardSearch(filters))
     }
 
     clearSearch = () => {
+        const {filters} = this.props
         this.selectedHouses.reset()
         this.selectedSortStore.selectedValue = ""
-        this.filters.reset()
+        filters.reset()
         this.selectedCardTypes.reset()
         this.selectedRarities.reset()
         this.selectedPowers.reset()
@@ -74,7 +75,8 @@ export class CardsSearchDrawer extends React.Component {
     }
 
     render() {
-        const {title, description, handleTitleUpdate, handleDescriptionUpdate} = this.filters
+        const {filters} = this.props
+        const {title, description, handleTitleUpdate, handleDescriptionUpdate} = filters
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -121,7 +123,7 @@ export class CardsSearchDrawer extends React.Component {
                             />
                             <CardSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
-                                <SortDirectionView hasSort={this.filters}/>
+                                <SortDirectionView hasSort={filters}/>
                             </div>
                         </ListItem>
                         <ListItem>

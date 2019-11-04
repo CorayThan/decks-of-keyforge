@@ -1,6 +1,5 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { roundToHundreds } from "../config/Utils"
-import { Expansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { House } from "../houses/House"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
@@ -90,9 +89,9 @@ export const cardNameToCardNameKey = (name: string) => {
 }
 
 export const findCardImageUrl = (card: HasFrontImage) => {
-    if (card.expansion === Expansion.WC || card.expansion === Expansion.ANOM) {
-        return card.frontImage
-    }
+    // if (card.expansion === Expansion.WC || card.expansion === Expansion.ANOM) {
+    //     return card.frontImage
+    // }
     return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
 }
 

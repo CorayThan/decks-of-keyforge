@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios"
-import { sortBy } from "lodash"
+import { clone, sortBy } from "lodash"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log } from "../config/Utils"
+import { log, prettyJson } from "../config/Utils"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -48,15 +48,20 @@ export class CardStore {
     findingPreviousInfo = false
 
     reset = () => {
+        log.debug(`Reset this.cards in card store`)
         if (this.cards) {
             this.cards = undefined
         }
     }
 
-    searchAndReturnCards = (filters: CardFilters) => {
-        // log.debug(`Card filters are ${prettyJson(filters)}`)
-        const toSeach = this.allCards
-        let filtered = toSeach.slice().filter(card => {
+    searchAndReturnCards = (filtersValue: CardFilters) => {
+        const filters: CardFilters = clone(filtersValue)
+        if (filters.sort == null) {
+            filters.sort = CardSort.SET_NUMBER
+        }
+        log.debug(`Card filters are ${prettyJson(filters)}`)
+        const toSearch = this.allCards
+        let filtered = toSearch.slice().filter(card => {
             return (
                 includeCardOrSpoiler(filters, card)
                 &&
@@ -108,12 +113,14 @@ export class CardStore {
 
     searchCards = (filters: CardFilters) => {
         this.cards = this.searchAndReturnCards(filters)
+        log.debug(`Changed this.cards to ${this.cards.length}`)
     }
 
     loadAllCards = () => {
         this.searchingForCards = true
         axios.get(`${CardStore.CONTEXT}`)
             .then((response: AxiosResponse) => {
+                log.debug(`Start load all cards async`)
                 this.searchingForCards = false
                 const basisForCards: KCard[] = response.data.slice()
                 let allWins = 0
@@ -122,8 +129,6 @@ export class CardStore {
                     card.winRate = winPercentForCard(card)
                 })
                 log.debug(`All wins: ${allWins}`)
-                this.allCards = basisForCards
-                this.cards = basisForCards.slice()
                 this.cardNameLowercaseToCard = new Map()
                 this.cardNameHyphenDelimitedLowercaseToCard = new Map()
                 this.expansionNumberToCard = new Map()
@@ -139,6 +144,8 @@ export class CardStore {
                     })
                     return {label: card.cardTitle, value: card.cardTitle}
                 })
+                this.allCards = basisForCards
+                log.debug(`End load all cards async`)
             })
     }
 
