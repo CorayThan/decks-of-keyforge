@@ -242,7 +242,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                     <Card style={{maxWidth: 800, margin: spacing(4), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
                             <Typography variant={"h4"}>
-                                Edit {this.card.cardTitle}'s AERC
+                                {this.card.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             <Tooltip title={"Worlds Collide Only"}>
