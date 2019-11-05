@@ -14,7 +14,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.4"
+export const latestVersion = "4.5"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -24,7 +24,7 @@ export class ReleaseNotes extends React.Component {
             <AboutGridItem>
                 <ReleaseNote
                     releaseNumber={"4.5"}
-                    date={"11/3/2019"}
+                    date={"11/5/2019"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
