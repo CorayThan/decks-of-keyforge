@@ -132,7 +132,7 @@ export class CardStore {
                 this.cardNameHyphenDelimitedLowercaseToCard = new Map()
                 this.expansionNumberToCard = new Map()
                 this.cardFlavors = []
-                this.cardNames = this.allCards!.map(card => {
+                this.cardNames = basisForCards.map(card => {
                     this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
                     this.cardNameHyphenDelimitedLowercaseToCard!.set(cardNameToCardNameKey(card.cardTitle), card)
                     if (card.flavorText) {

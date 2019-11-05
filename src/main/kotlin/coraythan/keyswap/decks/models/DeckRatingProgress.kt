@@ -26,7 +26,7 @@ interface DeckRatingProgressRepo : CrudRepository<DeckRatingProgress, UUID> {
 }
 
 // Rev to rerate all decks
-const val currentDeckRatingVersion = 1
+const val currentDeckRatingVersion = 2
 
 var doneRatingDecks: Boolean = true
 

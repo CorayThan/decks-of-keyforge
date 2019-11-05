@@ -31,9 +31,9 @@ class RunOnStart(
 
         // log.info("Deck stats json: \n\n${statsService.findDeckStatsJson().toList()[0].deckStats}\n\n")
 
-//        deckImporterService.updateDeckStats()
+        // deckImporterService.updateDeckStats()
 
-         this.downloadAllCardImages()
+        // this.downloadAllCardImages()
 
     }
 

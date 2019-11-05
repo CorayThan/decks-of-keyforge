@@ -56,6 +56,8 @@ Find it in downloads
 
 ## Dump the manual card data tables
 
+Run the `load-cards.cmd` with the Reload Cards run config.
+
 ```
 set PGPASSWORD=password
 pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan -F c -a -t card_traits -t card_identifier -t extra_card_info -t card -t spoiler -t syn_trait_value -f .\restore-cards\extra-info.dump keyswap

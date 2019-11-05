@@ -305,7 +305,9 @@ interface SingleCardSearchSuggestProps {
 @observer
 export class SingleCardSearchSuggest extends React.Component<SingleCardSearchSuggestProps> {
     render() {
-        return <SingleCardSearchSuggestInner {...this.props} cards={cardStore.cardNames}/>
+        const names = cardStore.cardNames
+        log.debug(`Card names length: ${names.length}`)
+        return <SingleCardSearchSuggestInner {...this.props} cards={names}/>
     }
 }
 

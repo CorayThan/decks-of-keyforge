@@ -28,13 +28,26 @@ export class ReleaseNotes extends React.Component {
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
-                            highlight: "Worlds Collide Ratings Improvements",
-                            note: ""
+                            highlight: "Saurians Ratings Improvements",
+                            note: "There were many cards in Saurians that were causing cards in that house to be overrated. The Spends Captured Aember " +
+                                "trait has been removed to combat this. Cards that used to have that trait should synergize based on exalt / capture " +
+                                "themselves to represent a more realistic value. Additionally, multiple Saurian cards were overrated in the first place, " +
+                                "like Exile (could go up to 6.5 total value), Tribute (4), Crassosaurus (3.8), and others. Further improvements will " +
+                                "be made when I add card-to-card synergies and some more deck / house traits."
                         },
                         {
                             highlight: "Improved Card Search",
                             note: "Card searches are now bookmarkable and shareable. Also, the deck or card search will go to the card search " +
-                                "page by default if there are card results."
+                                "page by default if there are card results. I hope to further improve this page's search capabilities in the future."
+                        },
+                        {
+                            highlight: "Improved Deck / Card Search Bar",
+                            note: "If you hit enter it will now take you to the card search page if there are any matching card results. Otherwise it will " +
+                                "take you to the deck search page."
+                        },
+                        {
+                            highlight: "Reactivated Unregistered Deck Import",
+                            note: "This was turned off for the Worlds Collide release. It is now turned back on."
                         },
                     ]}
                 />

@@ -77,8 +77,7 @@ class DeckImportStore {
             messageStore.setWarningMessage("Please try a higher quality image.")
         }
 
-        log.debug(`Found deck: ${prettyJson(this.readDeck)}`)
-
+        // log.debug(`Found deck: ${prettyJson(this.readDeck)}`)
         this.readingDeckImage = false
     }
 }

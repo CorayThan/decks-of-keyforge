@@ -42,7 +42,7 @@ class CardService(
     var activeAercVersion: Int = 0
 
     // Manually update this when publishing a new version of AERC
-    val publishAercVersion = 5
+    val publishAercVersion = 6
 
     fun publishNextInfo() {
         log.info("Publishing next extra info started")

@@ -163,8 +163,8 @@ class DeckImporterService(
 
     // Comment this in whenever rating gets revved
     // don't rate decks until adding new info done
-    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
-//    @Scheduled(fixedDelay = 1, initialDelayString = "PT5S")
+//    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
+    @Scheduled(fixedDelay = 1, initialDelayString = "PT1S")
     fun rateDecks() {
 
         // If next page is null, we know we are done
