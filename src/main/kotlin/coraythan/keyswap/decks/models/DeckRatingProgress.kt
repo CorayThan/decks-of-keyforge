@@ -1,5 +1,6 @@
 package coraythan.keyswap.decks.models
 
+import coraythan.keyswap.cards.publishedAercVersion
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
@@ -25,9 +26,6 @@ interface DeckRatingProgressRepo : CrudRepository<DeckRatingProgress, UUID> {
     fun findByVersion(version: Int): DeckRatingProgress?
 }
 
-// Rev to rerate all decks
-const val currentDeckRatingVersion = 2
-
 var doneRatingDecks: Boolean = true
 
 @Service
@@ -38,7 +36,7 @@ class DeckRatingProgressService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun nextPage(): Int? {
-        val progress = repo.findByVersion(currentDeckRatingVersion) ?: repo.save(DeckRatingProgress(currentDeckRatingVersion))
+        val progress = repo.findByVersion(publishedAercVersion) ?: repo.save(DeckRatingProgress(publishedAercVersion))
         return if (progress.completeDateTime == null) {
             doneRatingDecks = false
             progress.currentPage
@@ -49,7 +47,7 @@ class DeckRatingProgressService(
     }
 
     fun revPage() {
-        val preexisting = repo.findByVersion(currentDeckRatingVersion)
+        val preexisting = repo.findByVersion(publishedAercVersion)
         if (preexisting != null) {
             val nextPage = preexisting.currentPage + 1
             log.info("Next deck rating page: $nextPage")
@@ -59,7 +57,7 @@ class DeckRatingProgressService(
 
     fun complete() {
         doneRatingDecks = true
-        val preexisting = repo.findByVersion(currentDeckRatingVersion)
+        val preexisting = repo.findByVersion(publishedAercVersion)
         if (preexisting != null) {
             repo.save(preexisting.copy(completeDateTime = ZonedDateTime.now()))
         }

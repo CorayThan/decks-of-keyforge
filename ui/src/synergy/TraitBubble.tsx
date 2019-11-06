@@ -13,6 +13,7 @@ export const TraitBubble = (props: {
     positive: boolean,
     synTraitType?: SynTraitType,
     trait?: boolean,
+    cardName?: string,
     rating?: number,
     synergyWith?: string[]
 }) => {
@@ -72,7 +73,7 @@ export const TraitBubble = (props: {
                 )}
             >
                 <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
-                    {startCase(props.name)}
+                    {startCase(props.cardName == null ? props.name : props.cardName)}
                 </Typography>
             </Tooltip>
         </span>

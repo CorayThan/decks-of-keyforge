@@ -285,7 +285,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine  {...this.props} card={fullCard == null ? this.props.card : fullCard} cardExpansions={expansions}/>
+                <CardLine  {...this.props} card={this.props.card} cardExpansions={expansions}/>
                 {pop}
             </div>
         )
@@ -304,6 +304,7 @@ const CardLine = (props: CardAsLineProps) => {
 
     const isAnomaly = props.card.anomaly
     const isLegacy = !isAnomaly && props.deckExpansion != null && props.cardExpansions != null && !props.cardExpansions.includes(props.deckExpansion)
+    const isMaverick = props.card.maverick && !isAnomaly
 
     return (
         <div
@@ -317,7 +318,7 @@ const CardLine = (props: CardAsLineProps) => {
             >
                 {props.card.cardTitle}
             </Typography>
-            {props.card.maverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
+            {isMaverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
             {isLegacy ? <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div> : null}
             {isAnomaly ? <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div> : null}
         </div>

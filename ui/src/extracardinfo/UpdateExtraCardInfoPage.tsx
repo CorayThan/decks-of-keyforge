@@ -4,6 +4,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { RouteComponentProps } from "react-router-dom"
+import { SingleCardSearchSuggest } from "../cards/CardSearchSuggest"
 import { CardView } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
@@ -393,7 +394,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             </IconButton>
                                         </div>
                                     ))}
-                                    <AddTrait name={"trait"} addTo={this.traits}/>
+                                    <AddTrait name={"trait"} addTo={this.traits} trait={true}/>
                                 </div>
                             </Grid>
                             <Grid item={true} xs={12} sm={6}>
@@ -408,6 +409,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                                 positive={synergy.rating > 0}
                                                 synTraitType={synergy.type}
                                                 rating={synergy.rating}
+                                                cardName={synergy.cardName}
                                             />
                                             <IconButton
                                                 onClick={() => this.synergies.splice(idx, 1)}
@@ -416,7 +418,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             </IconButton>
                                         </div>
                                     ))}
-                                    <AddTrait name={"synergy"} addTo={this.synergies}/>
+                                    <AddTrait name={"synergy"} addTo={this.synergies} trait={false}/>
                                 </div>
                             </Grid>
                         </Grid>
@@ -461,7 +463,7 @@ const InfoInput = (props: { name: string, value: string, update: (event: EventVa
 }
 
 @observer
-class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[] }> {
+class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], trait?: boolean }> {
 
     @observable
     trait: SynergyTrait = SynergyTrait.dealsDamage
@@ -472,9 +474,14 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[] }>
     @observable
     type: SynTraitType = SynTraitType.anyHouse
 
+    @observable
+    holdsCard = {
+        cardName: ""
+    }
+
     render() {
         return (
-            <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
+            <div style={{display: "flex", alignItems: "center", flexWrap: "wrap", marginTop: spacing(1)}}>
                 <TextField
                     select={true}
                     label={this.props.name}
@@ -488,6 +495,11 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[] }>
                         </MenuItem>
                     ))}
                 </TextField>
+                {!this.props.trait && (
+                    <div style={{width: 120, marginRight: spacing(2)}}>
+                        <SingleCardSearchSuggest card={this.holdsCard} placeholder={"Card"}/>
+                    </div>
+                )}
                 <TextField
                     select={true}
                     label="rating"
@@ -529,8 +541,9 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[] }>
                 </TextField>
                 <IconButton
                     onClick={() => this.props.addTo.push({
-                        trait: this.trait,
+                        trait: this.holdsCard.cardName.length > 0 ? SynergyTrait.card : this.trait,
                         rating: this.rating,
+                        cardName: this.holdsCard.cardName.length > 0 ? this.holdsCard.cardName : undefined,
                         type: this.type
                     })}
                 >

@@ -4,6 +4,7 @@ export interface SynTraitValue {
     trait: SynergyTrait
     rating: SynTraitRatingValues
     type: SynTraitType
+    cardName?: string
     id?: string
 }
 

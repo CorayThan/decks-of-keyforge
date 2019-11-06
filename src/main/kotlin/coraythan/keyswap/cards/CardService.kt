@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
+// Manually update this when publishing a new version of AERC. Also rerates all decks
+val publishedAercVersion = 6
+
 @Transactional
 @Service
 class CardService(
@@ -41,9 +44,6 @@ class CardService(
     lateinit var nextExtraInfo: Map<CardNumberSetPair, ExtraCardInfo>
     var activeAercVersion: Int = 0
 
-    // Manually update this when publishing a new version of AERC
-    val publishAercVersion = 6
-
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
 
@@ -51,8 +51,8 @@ class CardService(
             val currentInfo = mapInfosOnly(extraCardInfoRepo.findByActiveTrue())
             this.activeAercVersion = currentInfo.maxBy { it.value.version }?.value?.version ?: 0
 
-            log.info("Active aerc version $activeAercVersion published version $publishAercVersion")
-            if (activeAercVersion < publishAercVersion) {
+            log.info("Active aerc version $activeAercVersion published version $publishedAercVersion")
+            if (activeAercVersion < publishedAercVersion) {
 
 //                val allInfosToPotentiallyUpdateNamesFor = extraCardInfoRepo.findAll()
 //                        .mapNotNull {
@@ -71,7 +71,7 @@ class CardService(
 //                    extraCardInfoRepo.saveAll(allInfosToPotentiallyUpdateNamesFor)
 //                }
 
-                val toPublish = mapInfosOnly(extraCardInfoRepo.findByVersion(this.publishAercVersion))
+                val toPublish = mapInfosOnly(extraCardInfoRepo.findByVersion(publishedAercVersion))
                 toPublish.forEach {
                     it.value.active = true
                     it.value.published = ZonedDateTime.now()
@@ -82,7 +82,7 @@ class CardService(
                     oldInfo
                 }
                 extraCardInfoRepo.saveAll(toPublish.map { it.value }.plus(unpublish))
-                log.info("Publishing next extra info fully complete. Active aerc version $activeAercVersion published verison $publishAercVersion " +
+                log.info("Publishing next extra info fully complete. Active aerc version $activeAercVersion published verison $publishedAercVersion " +
                         "done publishing published " +
                         "${toPublish.size} unpublished ${unpublish.size}")
             }
@@ -328,7 +328,7 @@ class CardService(
             CardNumberSetPair(it.expansionEnum, it.cardNumber) to
                     if (synTraitsFromTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(traits = it.extraCardInfo!!.traits.plus(synTraitsFromTraits)))
         }.toMap()
-        nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key], nextExtraCardInfo = nextExtraInfo[it.key]) }.toMap()
+        nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key]) }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
                 ?.map { it.cardTitle to it }
@@ -357,8 +357,7 @@ class CardService(
         val cardNumber = CardNumberSetPair(it.expansionEnum, it.cardNumber)
         it.copy(
                 extraCardInfo = this.extraInfo[cardNumber]
-                        ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}"),
-                nextExtraCardInfo = this.nextExtraInfo[cardNumber]
+                        ?: throw IllegalStateException("No extra info for ${it.expansion} ${it.cardNumber}")
         )
     }
 

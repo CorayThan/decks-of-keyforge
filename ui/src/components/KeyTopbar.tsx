@@ -214,10 +214,20 @@ const AppLinks = observer(() => (
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[
-                {to: Routes.landing, text: screenStore.smallScreenTopBar() ? "Home" : "Stats & More", mobileActive: true},
-                {to: Routes.cards, text: "Cards", mobileActive: true},
+                {to: Routes.cards, text: screenStore.smallScreenTopBar() ? "Home" : "Cards", mobileActive: true},
+                {to: Routes.cotaCards, text: "CotA Cards", mobileActive: false},
+                {to: Routes.aoaCards, text: "AoA Cards", mobileActive: false},
+                {to: Routes.wcCards, text: "WC Cards", mobileActive: false},
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
+            ]}
+            style={{margin: spacing(1)}}
+        />
+        <LinkMenu
+            genericOnClick={rightMenuStore.close}
+            links={[
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
+                {to: StatsSubPaths.deckStats, text: "Deck Stats", mobileActive: false},
+                {to: StatsSubPaths.aercStats, text: "AERC Stats", mobileActive: false},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
             style={{margin: spacing(1)}}

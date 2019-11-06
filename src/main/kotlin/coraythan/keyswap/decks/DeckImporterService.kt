@@ -23,6 +23,7 @@ import coraythan.keyswap.users.KeyUser
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -52,6 +53,8 @@ class DeckImporterService(
         private val deckRatingProgressService: DeckRatingProgressService,
         private val statsService: StatsService,
         private val objectMapper: ObjectMapper,
+        @Value("\${env}")
+        private val env: String,
         val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -161,10 +164,8 @@ class DeckImporterService(
         log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
     }
 
-    // Comment this in whenever rating gets revved
-    // don't rate decks until adding new info done
-//    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
-    @Scheduled(fixedDelay = 1, initialDelayString = "PT1S")
+    // Rev publishAercVersion to rerate decks
+    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
     fun rateDecks() {
 
         // If next page is null, we know we are done
@@ -176,37 +177,39 @@ class DeckImporterService(
         var quantRerated = 0
 
         val millisTaken = measureTimeMillis {
+            while (quantRerated < DeckPageType.RATING.quantity * (if (env == "dev") 25 else 1)) {
+                val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
+                quantFound += deckResults.size
 
-            val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
-            quantFound = deckResults.size
+                val deckQ = QDeck.deck
+                val mostRecentDeck = query.selectFrom(deckQ)
+                        .orderBy(deckQ.id.desc())
+                        .limit(1)
+                        .fetch()
+                        .first()
 
-            val deckQ = QDeck.deck
-            val mostRecentDeck = query.selectFrom(deckQ)
-                    .orderBy(deckQ.id.desc())
-                    .limit(1)
-                    .fetch()
-                    .first()
+                val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
 
-            val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
-
-            val rated = deckResults.mapNotNull {
-                val rated = rateDeck(it)
-                if (rated == it) {
-                    null
-                } else {
-                    rated.copy(lastUpdate = ZonedDateTime.now())
+                val rated = deckResults.mapNotNull {
+                    val rated = rateDeck(it)
+                    if (rated == it) {
+                        null
+                    } else {
+                        rated.copy(lastUpdate = ZonedDateTime.now())
+                    }
                 }
-            }
-            quantRerated = rated.size
-            if (quantRerated > 0) {
-                deckRepo.saveAll(rated)
-            }
-            deckRatingProgressService.revPage()
+                quantRerated += rated.size
+                if (rated.isNotEmpty()) {
+                    deckRepo.saveAll(rated)
+                }
+                deckRatingProgressService.revPage()
 
-            if (mostRecentDeck.id < idEndForPage) {
-                deckRatingProgressService.complete()
-                statsService.startNewDeckStats()
-                log.info("Done rating decks!")
+                if (mostRecentDeck.id < idEndForPage) {
+                    deckRatingProgressService.complete()
+                    statsService.startNewDeckStats()
+                    log.info("Done rating decks!")
+                    break
+                }
             }
         }
 

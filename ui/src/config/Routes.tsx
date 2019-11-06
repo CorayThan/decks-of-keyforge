@@ -38,6 +38,9 @@ class Routes {
     static users = "/users"
     static myProfile = "/my-profile"
     static cards = "/cards"
+    static cotaCards = "/cards?expansion=CALL_OF_THE_ARCHONS"
+    static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
+    static wcCards = "/cards?expansion=WORLDS_COLLIDE"
     static spoilers = "/spoilers"
     static extraCardInfo = "/extra-card-infos"
     static createSpoiler = `/spoilers/create`

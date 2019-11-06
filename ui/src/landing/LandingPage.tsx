@@ -99,7 +99,7 @@ export class LandingPage extends React.Component<{}> {
                             <ListSubheader>
                                 Cards
                             </ListSubheader>
-                            <CardSearchLink name={"Worlds Collide"} color={"secondary"} to={Routes.spoilers}/>
+                            <CardSearchLink name={"Worlds Collide"} color={"secondary"} to={Routes.wcCards}/>
                             <CardSearchLink name={"Cards"} color={"secondary"} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>

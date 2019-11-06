@@ -42,10 +42,7 @@ data class Card(
         val traits: Set<String> = setOf(),
 
         @Transient
-        var extraCardInfo: ExtraCardInfo?,
-
-        @Transient
-        var nextExtraCardInfo: ExtraCardInfo? = null
+        var extraCardInfo: ExtraCardInfo?
 ) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int {
@@ -118,7 +115,8 @@ data class Card(
             cardTitle = cardTitle,
             house = house,
             rarity = rarity,
-            maverick = maverick
+            maverick = maverick,
+            anomaly = anomaly
     )
 
 }
@@ -157,7 +155,8 @@ data class DeckSearchResultCard(
         val cardTitle: String,
         val house: House,
         val rarity: Rarity,
-        val maverick: Boolean
+        val maverick: Boolean,
+        val anomaly: Boolean
 )
 
 enum class CardType {
