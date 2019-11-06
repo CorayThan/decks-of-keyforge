@@ -91,7 +91,6 @@ export enum SynergyTrait {
     forgesKeys = "forgesKeys",
     alpha = "alpha",
     omega = "omega",
-    self = "self",
 
     // Traits (these don't need to be traits on the extra info)
     knight = "knight",

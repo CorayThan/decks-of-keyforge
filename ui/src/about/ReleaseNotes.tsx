@@ -3,6 +3,7 @@ import Link from "@material-ui/core/Link"
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { Link as RrLink } from "react-router-dom"
 import { ArticleInternalLink } from "../articles/ArticleView"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
@@ -14,7 +15,8 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.5"
+
+export const latestVersion = "4.6"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -22,6 +24,34 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.6"}
+                    date={"11/6/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Card to Card Synergies",
+                            note: "I'm working on improving the synergy system. To that end, cards can now easily synergize directly with other cards. " +
+                                "I've added direct synergies for cards like: "
+                        },
+                        {
+                            note: (
+                                <div style={{display: "flex"}}>
+                                    <RrLink to={Routes.cardPage("Drummernaut")} style={{marginRight: spacing(2)}}>Drummernaut</RrLink>
+                                    <RrLink to={Routes.cardPage("Sic Semper Tyrannosaurus")} style={{marginRight: spacing(2)}}>
+                                        Sic Semper Tyrannosaurus
+                                    </RrLink>
+                                    <RrLink to={Routes.cardPage("Cincinnatus Rex")}>Cincinnatus Rex</RrLink>
+                                </div>
+                            )
+                        },
+                        {
+                            highlight: "Manual Deck Wins Refresh",
+                            note: "If you are logged in, you can now manually refresh power level / chains / wins from Master Vault. Just use the " +
+                                "three dots button on the deck view."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.5"}
                     date={"11/5/2019"}

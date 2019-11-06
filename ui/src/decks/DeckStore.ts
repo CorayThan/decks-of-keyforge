@@ -14,6 +14,7 @@ export class DeckStore {
 
     static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
+    static readonly CONTEXT_SECURE = HttpConfig.API + "/decks/secured"
 
     @observable
     simpleDecks: Map<string, Deck> = new Map()
@@ -100,6 +101,13 @@ export class DeckStore {
                     this.simpleDecks.set(keyforgeId, deck)
                 })
         }
+    }
+
+    refreshDeckScores = (keyforgeId: string) => {
+        axios.post(`${DeckStore.CONTEXT_SECURE}/${keyforgeId}/refresh-deck-scores`)
+            .then((response: AxiosResponse) => {
+                messageStore.setSuccessMessage("Scores refreshed! Reload the page to see them.")
+            })
     }
 
     importDeck = (keyforgeId: string) => {

@@ -17,6 +17,7 @@ sellerImgs.set("TiggerClone".toLowerCase(), tiggerClone)
 sellerImgs.set("NeveroutGamed".toLowerCase(), neverOutGamed)
 sellerImgs.set("Jupiter".toLowerCase(), fifthPlanet)
 sellerImgs.set("Keysader".toLowerCase(), keysader)
+sellerImgs.set("TTC".toLowerCase(), keysader)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

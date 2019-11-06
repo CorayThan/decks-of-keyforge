@@ -163,7 +163,8 @@ object DeckSynergyService {
                         val trait = synergyValues.trait
                         val cardName = synergyValues.cardName
                         val cardNames = mutableSetOf<String>()
-                        val synPercent = TraitStrength.values().map { strength ->
+                        val strengths = if (cardName == null) TraitStrength.values() else arrayOf(TraitStrength.NORMAL)
+                        val synPercent = strengths.map { strength ->
                             val matches: Int = when {
                                 synergyValues.type == SynTraitType.anyHouse -> {
                                     val matchInfo = if (cardName == null) {
@@ -232,7 +233,7 @@ object DeckSynergyService {
                             matches * ratingsToPercent(synergyValues.rating, strength)
                         }.sum()
 
-                        SynergyMatch(trait, synPercent, cardNames, synergyValues.rating, synergyValues.type)
+                        SynergyMatch(trait, synPercent, cardNames, synergyValues.rating, synergyValues.type, cardName)
                     }
 
                     val totalSynPercent = matchedTraits.map { it.percentSynergized }.sum()

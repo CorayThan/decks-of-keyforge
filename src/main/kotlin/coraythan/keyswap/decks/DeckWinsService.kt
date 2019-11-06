@@ -4,6 +4,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.CrucibleTrackerApi
@@ -70,8 +71,15 @@ class DeckWinsService(
         log.info("$scheduledStop done deck win loss update starting")
     }
 
-//    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
-//    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
+    fun updateSingleDeck(deckId: String) {
+        val deck = keyforgeApi.findDeck(deckId, false)
+        if (deck != null) {
+            saveDeckWins(deck.data)
+        }
+    }
+
+    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
+    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 
         if (updatingWinsAndLosses == null) {
@@ -110,18 +118,7 @@ class DeckWinsService(
                 return
             }
             if (page % 100 == 0) log.info("Update $order for decks on page $page")
-            updateDecks
-                    .forEach {
-                        val preexisting = deckRepo.findByKeyforgeId(it.id)
-                        if (preexisting != null) {
-                            val cards = cardService.cardsForDeck(preexisting)
-                            val updated = preexisting.withCards(cards).addGameStats(it)
-
-                            if (updated != null) {
-                                deckRepo.save(updated)
-                            }
-                        }
-                    }
+            updateDecks.forEach { saveDeckWins(it) }
             deckPageService.setCurrentPage(page + 1, pageEnum)
 
         } catch (e: HttpClientErrorException.TooManyRequests) {
@@ -166,6 +163,18 @@ class DeckWinsService(
 
         log.info("$scheduledStop It took ${updateCardAndHouseWinsLossesDuration / 1000} seconds to update wins and losses for cards and houses.")
 
+    }
+
+    private fun saveDeckWins(deck: KeyforgeDeck) {
+        val preexisting = deckRepo.findByKeyforgeId(deck.id)
+        if (preexisting != null) {
+            val cards = cardService.cardsForDeck(preexisting)
+            val updated = preexisting.withCards(cards).addGameStats(deck)
+
+            if (updated != null) {
+                deckRepo.save(updated)
+            }
+        }
     }
 
     private fun saveCardWins(wins: Map<String, Wins>) {

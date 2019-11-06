@@ -373,6 +373,7 @@ export const CardSynergies = (props: { card: KCard }) => (
                 positive={synergy.rating > 0}
                 synTraitType={synergy.type}
                 rating={synergy.rating}
+                cardName={synergy.cardName}
             />
         ))}
     </div>

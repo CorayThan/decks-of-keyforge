@@ -159,6 +159,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                                             synergyWith={synergy.traitCards}
                                             rating={synergy.rating}
                                             synTraitType={synergy.type}
+                                            cardName={synergy.cardName}
                                         />
                                     </div>
                                 )

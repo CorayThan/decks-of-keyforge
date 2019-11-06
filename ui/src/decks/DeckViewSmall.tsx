@@ -26,14 +26,17 @@ import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 import { DeckNote } from "../userdeck/DeckNote"
 import { OwnersButton } from "../userdeck/OwnersButton"
 import { userDeckStore } from "../userdeck/UserDeckStore"
+import { DeckActionClickable } from "./buttons/DeckActionClickable"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
 import { DeckScoreView } from "./DeckScoreView"
+import { deckStore } from "./DeckStore"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 
 interface DeckViewSmallProps {
@@ -287,6 +290,17 @@ export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
                 >
                     Master Vault
                 </MenuItem>
+                {userStore.loggedIn() && (
+                    <DeckActionClickable
+                        onClick={() => {
+                            handleClose()
+                            deckStore.refreshDeckScores(deck.keyforgeId)
+                        }}
+                        menuItem={true}
+                    >
+                        Refresh MV Wins
+                    </DeckActionClickable>
+                )}
             </Menu>
         </>
     )

@@ -165,7 +165,6 @@ enum class SynergyTrait {
     forgesKeys,
     alpha,
     omega,
-    self,
 
     // Traits (these don't need to be traits on the extra info)
     knight,
@@ -181,6 +180,7 @@ enum class SynergyTrait {
     demon,
     giant,
 
+    // TODO remove these
     // Special cards
     badPenny,
     routineJob,

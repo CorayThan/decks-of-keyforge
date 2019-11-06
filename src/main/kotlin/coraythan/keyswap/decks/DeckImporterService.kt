@@ -168,16 +168,23 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
     fun rateDecks() {
 
+
         // If next page is null, we know we are done
-        val nextDeckPage = deckRatingProgressService.nextPage() ?: return
-
-        log.info("$scheduledStart rate decks.")
-
+        var nextDeckPage = deckRatingProgressService.nextPage() ?: return
         var quantFound = 0
         var quantRerated = 0
 
+        log.info("$scheduledStart rate decks.")
+
+        val maxToRate = DeckPageType.RATING.quantity * (if (env == "dev") 10 else 1)
+
         val millisTaken = measureTimeMillis {
-            while (quantRerated < DeckPageType.RATING.quantity * (if (env == "dev") 25 else 1)) {
+
+            while (quantRerated < maxToRate && quantFound < 100000) {
+
+                // If next page is null, we know we are done
+                nextDeckPage = deckRatingProgressService.nextPage() ?: break
+
                 val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
                 quantFound += deckResults.size
 
@@ -210,6 +217,7 @@ class DeckImporterService(
                     log.info("Done rating decks!")
                     break
                 }
+                log.info("Got next page, quant rerated $quantRerated found $quantFound max $maxToRate")
             }
         }
 

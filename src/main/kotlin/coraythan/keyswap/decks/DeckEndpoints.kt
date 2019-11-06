@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.thirdpartyservices.AzureOcr
@@ -104,13 +105,16 @@ class DeckEndpoints(
     @GetMapping("/update-crucible-tracker-wins")
     fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
 
+    @PostMapping("/secured/{id}/refresh-deck-scores")
+    fun refreshDeckScores(@PathVariable id: String) = deckWinsService.updateSingleDeck(id)
+
 //    @PostMapping("/add-cards-for-expansion/{expansionId}/{cardsInExpansion}")
 //    fun addCardsForExpansion(@PathVariable expansionId: Int, @PathVariable cardsInExpansion: Int) = deckImporterService.addCardsForExpansion(expansionId, cardsInExpansion)
 }
 
 data class SimpleDeckResponse(
         val deck: Any,
-        val sasVersion: Int = currentDeckRatingVersion
+        val sasVersion: Int = publishedAercVersion
 )
 
 class Nothing()

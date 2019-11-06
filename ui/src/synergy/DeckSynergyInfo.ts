@@ -48,4 +48,5 @@ export interface SynergyMatch {
     traitCards: string[]
     rating: number
     type: SynTraitType
+    cardName?: string
 }
