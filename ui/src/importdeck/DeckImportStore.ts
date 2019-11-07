@@ -18,7 +18,7 @@ class DeckImportStore {
     @observable
     readingDeckMessage = ""
 
-    messageIntervalId: number = 0
+    messageIntervalId = 0
 
     @observable
     readDeck?: SaveUnregisteredDeck

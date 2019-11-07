@@ -35,10 +35,10 @@ class KeyLocalStorage {
     cardListViewType: CardViewType = "full"
 
     @observable
-    showAllCards: boolean = false
+    showAllCards = false
 
     @observable
-    deckPageSize: number = 20
+    deckPageSize = 20
 
     @observable
     displayExtraDeckStats = false

@@ -103,12 +103,12 @@ export class DeckFilters {
 
     houses: House[] = []
     @observable
-    title: string = ""
+    title = ""
     @observable
-    notes: string = ""
+    notes = ""
     @observable
-    notesUser: string = ""
-    page: number = 0
+    notesUser = ""
+    page = 0
     @observable
     sort: string = defaultSort.value
     @observable
@@ -128,7 +128,7 @@ export class DeckFilters {
     @observable
     includeUnregistered = false
     @observable
-    myFavorites: boolean = false
+    myFavorites = false
     constraints: Constraint[] = []
     expansions: number[] = []
     @observable
@@ -136,7 +136,7 @@ export class DeckFilters {
     @observable
     sortDirection: SortDirection = "DESC"
     @observable
-    owner: string = ""
+    owner = ""
     pageSize = 20
 
     reset = () => {

@@ -77,8 +77,8 @@ export class LandingPage extends React.Component<{}> {
                             <div style={{display: "flex", flexWrap: "wrap"}}>
                                 <DeckSearchLink name={"COTA"} filters={cota} style={{marginTop: spacing(2)}}/>
                                 <DeckSearchLink name={"AOA"} filters={aoa} style={{marginTop: spacing(2)}}/>
-                                <DeckSearchLink name={"WC"} filters={wc} style={{marginTop: spacing(2)}}/>
                             </div>
+                            <DeckSearchLink name={"WC"} filters={wc} style={{marginTop: spacing(2)}}/>
                             <Divider style={{marginTop: spacing(2)}}/>
                             <ListSubheader>
                                 Top Decks

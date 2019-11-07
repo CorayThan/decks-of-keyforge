@@ -24,6 +24,12 @@ export class CardSortSelectStore implements SelectedStore {
     @observable
     selectedValue = cardSortOptions[0].name
 
+    constructor(initial?: string) {
+        if (initial != null) {
+            this.selectedValue = cardSortOptions.find(option => option.value === initial)?.name ?? cardSortOptions[0].name
+        }
+    }
+
     toEnumValue = () => {
         if (!this.selectedValue) {
             return cardSortOptions[0].value

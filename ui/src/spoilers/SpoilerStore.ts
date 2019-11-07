@@ -38,7 +38,7 @@ export class SpoilerStore {
 
     searchSpoilers = (filters: SpoilerFilters) => {
         const toSeach = this.allSpoilers
-        let filtered = toSeach.slice().filter(card => {
+        const filtered = toSeach.slice().filter(card => {
             return (
                 includeCardOrSpoiler(filters, card)
                 &&

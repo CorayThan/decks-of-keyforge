@@ -32,9 +32,9 @@ export class RegistrationPage extends React.Component {
     @observable
     publicContactInfo = ""
     @observable
-    allowUsersToSeeDeckOwnership: boolean = false
+    allowUsersToSeeDeckOwnership = false
     @observable
-    country: string = ""
+    country = ""
 
     signUp = (submitEvent: React.FormEvent) => {
         submitEvent.preventDefault()

@@ -16,7 +16,7 @@ export class UserDeckStore {
     userDecks?: Map<number, UserDeckDto>
 
     @observable
-    loadingDecks: boolean = false
+    loadingDecks = false
 
     wishlist = (deckName: string, deckId: number, wishlist: boolean) => {
         this.loadingDecks = true

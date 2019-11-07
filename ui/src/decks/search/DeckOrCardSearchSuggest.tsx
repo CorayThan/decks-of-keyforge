@@ -31,7 +31,7 @@ const useStyles = makeStyles(() =>
 
 class SearchDeckNameStore {
     @observable
-    searchValue: string = ""
+    searchValue = ""
 
     quietPeriodTimeoutId?: number
 

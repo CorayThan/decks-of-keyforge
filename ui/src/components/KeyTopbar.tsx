@@ -214,7 +214,7 @@ const AppLinks = observer(() => (
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[
-                {to: Routes.cards, text: screenStore.smallScreenTopBar() ? "Home" : "Cards", mobileActive: true},
+                {to: Routes.cards, text: "Cards", mobileActive: true},
                 {to: Routes.cotaCards, text: "CotA Cards", mobileActive: false},
                 {to: Routes.aoaCards, text: "AoA Cards", mobileActive: false},
                 {to: Routes.wcCards, text: "WC Cards", mobileActive: false},

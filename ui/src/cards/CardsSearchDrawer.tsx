@@ -40,8 +40,8 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedPowers = new SelectedPowers(this.props.filters.powers)
     selectedAmbers = new SelectedAmbers(this.props.filters.ambers)
     selectedArmors = new SelectedArmors(this.props.filters.armors)
-    selectedSortStore = new CardSortSelectStore()
-    selectedExpansion = new SelectedExpansion()
+    selectedSortStore = new CardSortSelectStore(this.props.filters.sort)
+    selectedExpansion = new SelectedExpansion(this.props.filters.expansion == null ? undefined : [this.props.filters.expansion])
 
     search = (event?: React.FormEvent) => {
         if (event) {

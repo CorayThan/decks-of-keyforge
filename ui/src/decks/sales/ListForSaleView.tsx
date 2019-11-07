@@ -73,7 +73,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     update = false
 
     @observable
-    auctionEndTime: string = ""
+    auctionEndTime = ""
 
     componentDidMount(): void {
         this.auctionEndTime = format(Utils.roundToNearestMinutes(new Date(), 15), "HH:mm")
@@ -132,7 +132,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
     }
 
-    handleChangeDays = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    handleChangeDays = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.expireInDays = event.target.value
     }
 

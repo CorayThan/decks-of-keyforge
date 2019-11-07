@@ -105,7 +105,7 @@ export class DeckStore {
 
     refreshDeckScores = (keyforgeId: string) => {
         axios.post(`${DeckStore.CONTEXT_SECURE}/${keyforgeId}/refresh-deck-scores`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 messageStore.setSuccessMessage("Scores refreshed! Reload the page to see them.")
             })
     }

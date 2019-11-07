@@ -100,6 +100,8 @@ NoOptionsMessage.propTypes = {
 type InputComponentProps = Pick<BaseTextFieldProps, "inputRef"> & HTMLAttributes<HTMLDivElement>
 
 function inputComponent({inputRef, ...props}: InputComponentProps) {
+    // eslint-disable-next-line
+    //@ts-ignore
     return <div ref={inputRef} {...props} />
 }
 
@@ -141,6 +143,7 @@ Control.propTypes = {
 
 function Option(props: OptionProps<OptionType>) {
     return (
+        // eslint-disable-next-line
         // @ts-ignore
         <MenuItem
             ref={props.innerRef}

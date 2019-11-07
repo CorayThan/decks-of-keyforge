@@ -78,7 +78,6 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                         .map(linkInfo => {
                             if (linkInfo.randomDeck) {
                                 return (
-                                    // @ts-ignore
                                     <ListItem
                                         key={linkInfo.text}
                                         color={"inherit"}
@@ -89,6 +88,8 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                                 genericOnClick()
                                             }
                                         }}
+                                        // eslint-disable-next-line
+                                        // @ts-ignore
                                         component={linkInfo.component}
                                     >
                                         <ListItemText primary={linkInfo.text}/>

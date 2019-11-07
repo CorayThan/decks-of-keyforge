@@ -27,8 +27,10 @@ export class AercUtils {
             .forEach(cardAerc => {
                 const aerc = cardAerc.aerc
                 aercProperties.forEach(prop => {
+                    // eslint-disable-next-line
                     // @ts-ignore
                     const cardMinAerc = aerc[prop]
+                    // eslint-disable-next-line
                     // @ts-ignore
                     const cardMaxAerc = aerc[prop + "Max"]
                     let value = cardMinAerc

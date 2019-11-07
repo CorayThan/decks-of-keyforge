@@ -120,8 +120,10 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
     @observable
     synergies: SynTraitValue[] = []
 
+    // eslint-disable-next-line
     // @ts-ignore
     infoId: string
+    // eslint-disable-next-line
     // @ts-ignore
     card: KCard
 
