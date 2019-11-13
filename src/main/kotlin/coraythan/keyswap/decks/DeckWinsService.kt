@@ -82,6 +82,11 @@ class DeckWinsService(
     @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 
+        if (!deckImportingUpToDate) {
+            log.info("Skipping find and update deck win rates due to deck importing not up to date.")
+            return
+        }
+
         if (updatingWinsAndLosses == null) {
             val winsPage = deckPageService.findCurrentPage(DeckPageType.WINS)
             val lossesPage = deckPageService.findCurrentPage(DeckPageType.LOSSES)

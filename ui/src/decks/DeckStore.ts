@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { clone } from "lodash"
 import { observable } from "mobx"
+import { deckMenuStore, rightMenuStore } from "../components/KeyTopbar"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
@@ -120,6 +121,8 @@ export class DeckStore {
                 }
 
                 this.importingDeck = false
+                rightMenuStore.close()
+                deckMenuStore.handleClose()
             })
     }
 
@@ -135,6 +138,8 @@ export class DeckStore {
                 }
 
                 this.importingAndAddingDeck = false
+                rightMenuStore.close()
+                deckMenuStore.handleClose()
             })
     }
 

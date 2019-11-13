@@ -5,6 +5,7 @@ import { spacing } from "../config/MuiConfig"
 import { InfoListCard } from "../generic/InfoListCard"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { publicApiStore } from "../sellers/PublicApiStore"
+import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
@@ -117,13 +118,7 @@ export class SellersAndDevs extends React.Component {
                         <Typography style={{marginLeft: spacing(1), marginRight: spacing(1)}}>
                             or join us on the Decks of KeyForge discord:
                         </Typography>
-                        <KeyButton
-                            style={{margin: spacing(1)}}
-                            color={"inherit"}
-                            href={"https://discord.gg/T5taTHm"}
-                        >
-                            Discord
-                        </KeyButton>
+                        <DiscordButton/>
                     </div>
                 </div>
             )

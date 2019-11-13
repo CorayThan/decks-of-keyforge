@@ -12,6 +12,11 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import kotlin.system.measureTimeMillis
 
+data class KeyForgeDeckResponse(
+        val deck: KeyForgeDeckDto? = null,
+        val error: String? = null
+)
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyforgeDecksPageDto(
         val count: Int,
@@ -31,7 +36,7 @@ data class KeyforgeDeckLinksFullCards(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeDeckDto(
+data class KeyForgeDeckDto(
         val data: KeyforgeDeck,
         val _linked: KeyforgeDeckLinksFullCards
 )
@@ -69,9 +74,22 @@ class KeyforgeApi(
         return decks
     }
 
-    fun findDeck(deckId: String, withCards: Boolean = true): KeyforgeDeckDto? {
+    fun findDeckToImport(deckId: String): KeyForgeDeckDto? {
+        val deckResponse = restTemplate.getForObject(
+                "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks/$deckId",
+                    KeyForgeDeckResponse::class.java
+        )
+        if (deckResponse == null) {
+            log.warn("Deck response was null for $deckId")
+        } else if (deckResponse.error != null) {
+            log.warn("Deck response error: ${deckResponse.error}")
+        }
+        return deckResponse?.deck
+    }
+
+    fun findDeck(deckId: String, withCards: Boolean = true): KeyForgeDeckDto? {
         return keyforgeGetRequest(
-                KeyforgeDeckDto::class.java,
+                KeyForgeDeckDto::class.java,
                 "decks/$deckId${if (withCards) "/?links=cards" else ""}"
         )
     }

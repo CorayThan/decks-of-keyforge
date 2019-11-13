@@ -18,7 +18,7 @@ import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckOrCardSearchSuggest } from "../decks/search/DeckOrCardSearchSuggest"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
-import { LinkMenu } from "../generic/LinkMenu"
+import { LinkMenu, LinkMenuStore } from "../generic/LinkMenu"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton, ListItemLink } from "../mui-restyled/LinkButton"
@@ -94,6 +94,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                 ]}
                                 style={{margin: spacing(1)}}
                                 dropdownOnly={true}
+                                linkMenuStore={new LinkMenuStore()}
                             />
                             {userStore.loggedIn() && (
                                 <LinkMenu
@@ -101,6 +102,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                     links={myDeckLinks()}
                                     style={{margin: spacing(1)}}
                                     dropdownOnly={true}
+                                    linkMenuStore={new LinkMenuStore()}
                                 />
                             )}
                         </>
@@ -152,7 +154,7 @@ class RightMenuStore {
     }
 }
 
-const rightMenuStore = new RightMenuStore()
+export const rightMenuStore = new RightMenuStore()
 
 @observer
 class RightMenu extends React.Component {
@@ -198,6 +200,8 @@ class RightMenu extends React.Component {
     }
 }
 
+export const deckMenuStore = new LinkMenuStore()
+
 const AppLinks = observer(() => (
     <>
         <LinkMenu
@@ -208,6 +212,7 @@ const AppLinks = observer(() => (
                 randomDeckMenuItem,
             ]}
             style={{margin: spacing(1)}}
+            linkMenuStore={deckMenuStore}
         >
             <DeckImportPop/>
         </LinkMenu>
@@ -221,6 +226,7 @@ const AppLinks = observer(() => (
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
             ]}
             style={{margin: spacing(1)}}
+            linkMenuStore={new LinkMenuStore()}
         />
         <LinkMenu
             genericOnClick={rightMenuStore.close}
@@ -231,6 +237,7 @@ const AppLinks = observer(() => (
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
             style={{margin: spacing(1)}}
+            linkMenuStore={new LinkMenuStore()}
         />
         {screenStore.smallScreenTopBar() ? (
             <>
@@ -284,6 +291,7 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
                 ]}
                 style={{margin: spacing(1)}}
+                linkMenuStore={new LinkMenuStore()}
             />
         )}
     </>
@@ -305,6 +313,7 @@ class UserLinks extends React.Component {
                         genericOnClick={rightMenuStore.close}
                         links={myDeckLinks()}
                         style={{margin: spacing(1)}}
+                        linkMenuStore={new LinkMenuStore()}
                     />
                     <ListItemLink
                         to={Routes.myProfile}
@@ -365,6 +374,7 @@ class UserLinksDesktop extends React.Component {
                         genericOnClick={rightMenuStore.close}
                         links={myDeckLinks()}
                         style={{margin: spacing(1)}}
+                        linkMenuStore={new LinkMenuStore()}
                     />
                     <LinkButton
                         color={"inherit"}

@@ -2,6 +2,7 @@ import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { landingPageDrawerWidth } from "../landing/LandingPage"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
 import { SellerCard } from "./SellerCard"
@@ -24,7 +25,7 @@ export class FeaturedSellersView extends React.Component<{}> {
         }
 
         const screenWidth = screenStore.screenWidth
-        const availableWidth = screenWidth - (screenStore.screenSizeSm() ? 0 : 240)
+        const availableWidth = screenWidth - (screenStore.screenSizeSm() ? 0 : (landingPageDrawerWidth + 24))
 
         return (
             <>

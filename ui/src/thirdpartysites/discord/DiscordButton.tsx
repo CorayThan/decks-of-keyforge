@@ -3,7 +3,7 @@ import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { DiscordIcon } from "../../generic/icons/DiscordIcon"
 
-export const decksOfKeyForgeDiscord = "https://discord.gg/T5taTHm"
+export const decksOfKeyForgeDiscord = "https://discord.gg/sNkHD7k"
 
 export class DiscordButton extends React.Component<{ style?: React.CSSProperties }> {
     render() {

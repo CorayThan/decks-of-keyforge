@@ -40,6 +40,8 @@ private const val lockImportNewDecksFor = "PT2M"
 private const val lockUpdateRatings = "PT10S"
 private const val lockUpdateCleanUnregistered = "PT48H"
 
+var deckImportingUpToDate = false
+
 @Transactional
 @Service
 class DeckImporterService(
@@ -69,6 +71,7 @@ class DeckImporterService(
 
         val deckCountBeforeImport = deckRepo.estimateRowCount()
 
+        deckImportingUpToDate = false
         var decksAdded = 0
         var pagesRequested = 0
         val importDecksDuration = measureTimeMillis {
@@ -81,6 +84,7 @@ class DeckImporterService(
                 try {
                     val decks = keyforgeApi.findDecks(currentPage)
                     if (decks == null) {
+                        deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
                         break
                     } else if (decks.data.any {
@@ -276,7 +280,7 @@ class DeckImporterService(
         if (preExistingDeck != null) {
             return preExistingDeck.id
         } else {
-            val deck = keyforgeApi.findDeck(deckId)
+            val deck = keyforgeApi.findDeckToImport(deckId)
             if (deck != null) {
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 val cards = cardService.importNewCards(deckList)

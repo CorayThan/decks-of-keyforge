@@ -103,8 +103,8 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     style={{zIndex: screenStore.zindexes.menuPops}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
-                        <Typography color={"error"} style={{marginBottom: spacing(2)}}>
-                            Due to Master Vault rate limiting this feature will not always work.
+                        <Typography color={"error"} noWrap={false} style={{marginBottom: spacing(2)}}>
+                            Due to Master Vault blocking Decks of KeyForge requests, this feature will not always work.
                         </Typography>
                         <TextField
                             variant={"outlined"}

@@ -27,10 +27,11 @@ interface LinkMenuProps {
     genericOnClick?: () => void
     style?: React.CSSProperties,
     dropdownOnly?: boolean
+    linkMenuStore: LinkMenuStore
     children?: React.ReactNode
 }
 
-class LinkMenuStore {
+export class LinkMenuStore {
     @observable
     open = false
 
@@ -61,11 +62,9 @@ class LinkMenuStore {
 
 @observer
 export class LinkMenu extends React.Component<LinkMenuProps> {
-
-    store = new LinkMenuStore()
-
+    
     render() {
-        const {links, genericOnClick, style, dropdownOnly, children} = this.props
+        const {links, genericOnClick, style, dropdownOnly, linkMenuStore, children} = this.props
         const filteredLinks = links.filter(link => link.contentCreatorOnly == null || userStore.contentCreator)
         if (deckStore.randomDeckId) {
             return <Redirect to={Routes.deckPage(deckStore.randomDeckId)}/>
@@ -84,7 +83,7 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                         style={{...style}}
                                         onClick={() => {
                                             if (genericOnClick) {
-                                                this.store.handleClose()
+                                                linkMenuStore.handleClose()
                                                 genericOnClick()
                                             }
                                         }}
@@ -117,7 +116,7 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
         const firstLink = filteredLinks[0]
         return (
             <div>
-                <div ref={this.store.anchorElRef}>
+                <div ref={linkMenuStore.anchorElRef}>
                     <div>
                         <LinkButton
                             color={"inherit"}
@@ -127,17 +126,17 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                 if (genericOnClick) {
                                     genericOnClick()
                                 }
-                                this.store.buttonIsHovered = false
+                                linkMenuStore.buttonIsHovered = false
                             }}
-                            onMouseEnter={this.store.handleOpen}
-                            onMouseLeave={this.store.autoCloseIfNotHovered}
+                            onMouseEnter={linkMenuStore.handleOpen}
+                            onMouseLeave={linkMenuStore.autoCloseIfNotHovered}
                         >
                             {firstLink.text}
                             <ArrowDropDown style={{marginLeft: spacing(1)}}/>
                         </LinkButton>
                     </div>
                 </div>
-                <MenuPopper store={this.store} links={filteredLinks} ref={this.store.anchorElRef}>
+                <MenuPopper store={linkMenuStore} links={filteredLinks} ref={linkMenuStore.anchorElRef}>
                     {children}
                 </MenuPopper>
             </div>

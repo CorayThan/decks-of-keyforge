@@ -33,7 +33,7 @@ export class MessageStore {
     setErrorMessage = (message: string) => this.setMessage(message, "Error")
     setWarningMessage = (message: string, duration?: number) => this.setMessage(message, "Warn", undefined, duration)
     setSuccessMessage = (message: string, duration?: number) => this.setMessage(message, "Success", undefined, duration)
-    setInfoMessage = (message: string, duration?: number) => this.setMessage(message, "Info", undefined, duration)
+    setInfoMessage = (message: string, durationMs?: number) => this.setMessage(message, "Info", undefined, durationMs)
 
     setReleaseMessage = (version: string) => {
         messageStore.setMessage(`Version ${version} has been released!`, "Success", (

@@ -57,6 +57,8 @@ saleOrTradeAERC.sort = DeckSorts.aerc
 const worstSas = new DeckFilters()
 worstSas.sortDirection = "ASC"
 
+export const landingPageDrawerWidth = 280
+
 @observer
 export class LandingPage extends React.Component<{}> {
 
@@ -71,7 +73,7 @@ export class LandingPage extends React.Component<{}> {
         return (
             <div>
                 <div style={{display: "flex"}}>
-                    <KeyDrawer width={280} hamburgerMenu={true}>
+                    <KeyDrawer width={landingPageDrawerWidth} hamburgerMenu={true}>
                         <List>
                             <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
                             <div style={{display: "flex", flexWrap: "wrap"}}>
