@@ -102,6 +102,7 @@ class DeckImporterService(
                         pagesRequested++
 
                         if (decksToSaveCount < keyforgeApiDeckPageSize) {
+                            deckImportingUpToDate = true
                             log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
                             break
                         }
