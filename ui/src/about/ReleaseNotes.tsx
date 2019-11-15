@@ -16,7 +16,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
 
-export const latestVersion = "4.6"
+export const latestVersion = "4.7"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -24,6 +24,23 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.7"}
+                    date={"11/14/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Deck Import Improvements",
+                            note: "Deck importing now runs separately from the auto import, to help prevent Master Vault from blocking decks getting " +
+                                "imported so often. Hopefully the release of set 4 can go a little smoother with decks being fully imported earlier."
+                        },
+                        {
+                            highlight: "AERC Improvements",
+                            note: "Various minor improvements to AERC, including fixes to mistakes, and changeds based on impressions from the " +
+                                "Indianapolis VT. Also, I had a lot of fun at the vault tour! Great getting to meet new people and the new set."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.6"}
                     date={"11/6/2019"}
