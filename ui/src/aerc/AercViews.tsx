@@ -32,7 +32,7 @@ export const AercView = (props: {
         if (excludeMisc) {
             columns = "1fr 1fr 1fr"
         } else {
-            columns = "1fr 1fr 1fr 1fr 1fr"
+            columns = "1fr 1fr 1fr 1fr"
         }
     }
 
@@ -188,7 +188,7 @@ export const AercView = (props: {
                         speedInfos
                     }
                 />
-                {!excludeMisc && (
+                {!excludeMisc && !horizontal && (
                     <AercCategory
                         horizontal={horizontal}
                         name={"Misc"}
@@ -247,7 +247,7 @@ export const AercView = (props: {
                         }
                     />
                 )}
-                {!excludeMisc && deck && (
+                {!excludeMisc && !horizontal && deck && (
                     <AercCategory
                         horizontal={horizontal}
                         name={"Counts"}

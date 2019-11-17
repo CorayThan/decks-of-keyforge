@@ -89,7 +89,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 id={deck.keyforgeId}
             >
                 {compact && activeExpansions.includes(deck.expansion) && (
-                    <AercView deck={deck} horizontal={true} excludeMisc={true} style={{marginLeft: spacing(1)}}/>
+                    <AercView deck={deck} horizontal={true} style={{marginLeft: spacing(1)}}/>
                 )}
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}>
