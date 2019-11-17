@@ -46,7 +46,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
     const {extraCardInfo, effectivePower, aercScore, aercScoreMax} = card
     const {
         amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other,
-        amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, amberProtectionMax, disruptionMax, houseCheatingMax, otherMax
+        amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, amberProtectionMax, disruptionMax, houseCheatingMax, otherMax
     } = extraCardInfo
 
     let averageAercScore = card.aercScore
@@ -70,6 +70,7 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         creatureControlMax,
         artifactControlMax,
         efficiencyMax,
+        effectivePowerMax,
         amberProtectionMax,
         disruptionMax,
         houseCheatingMax,
