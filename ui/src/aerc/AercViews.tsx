@@ -1,11 +1,11 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
-import { CardsWithAerc, CardsWithAercFromCombos } from "../cards/CardsWithAerc"
 import { CardType } from "../cards/CardType"
 import { hasAercFromCard, KCard } from "../cards/KCard"
 import { spacing, theme } from "../config/MuiConfig"
 import { roundToHundreds, roundToTens } from "../config/Utils"
 import { Deck, DeckUtils } from "../decks/Deck"
+import { SynergyTrait } from "../extracardinfo/SynergyTrait"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../generic/icons/AmberIcon"
 import { ArchiveIcon } from "../generic/icons/ArchiveIcon"
@@ -40,26 +40,20 @@ export const AercView = (props: {
         {
             icon: <AercIcon type={AercType.F}/>,
             info: hasAerc.efficiency,
-            tooltip: (
-                <CardsWithAercFromCombos
-                    title={"Efficiency (F)"}
-                    accessor={combo => combo.efficiency}
-                    combos={combos}
-                    score={hasAerc.efficiency}
-                />
-            )
+            combosTips: {
+                title: "Efficiency (F)",
+                combos: combos?.filter(combo => combo.efficiency != null && combo.efficiency != 0) ?? undefined,
+                accessor: (combo: SynergyCombo) => combo.efficiency
+            }
         },
         {
             icon: <AercIcon type={AercType.D}/>,
             info: hasAerc.disruption,
-            tooltip: (
-                <CardsWithAercFromCombos
-                    title={"Disruption (D)"}
-                    accessor={combo => combo.disruption}
-                    combos={combos}
-                    score={hasAerc.disruption}
-                />
-            )
+            combosTips: {
+                title: "Disruption (D)",
+                combos: combos?.filter(combo => combo.disruption != null && combo.disruption != 0) ?? undefined,
+                accessor: (combo: SynergyCombo) => combo.disruption
+            }
         },
     ]
 
@@ -95,38 +89,29 @@ export const AercView = (props: {
                             {
                                 icon: <AercIcon type={AercType.A}/>,
                                 info: hasAerc.amberControl,
-                                tooltip: (
-                                    <CardsWithAercFromCombos
-                                        title={"Aember Control (A)"}
-                                        accessor={combo => combo.amberControl}
-                                        combos={combos}
-                                        score={hasAerc.amberControl}
-                                    />
-                                )
+                                combosTips: {
+                                    title: "Aember Control (A)",
+                                    combos: combos?.filter(combo => combo.amberControl != null && combo.amberControl != 0) ?? undefined,
+                                    accessor: combo => combo.amberControl
+                                }
                             },
                             {
                                 icon: <AercIcon type={AercType.E}/>,
                                 info: hasAerc.expectedAmber,
-                                tooltip: (
-                                    <CardsWithAercFromCombos
-                                        title={"Expected Aember (E)"}
-                                        accessor={combo => combo.expectedAmber}
-                                        combos={combos}
-                                        score={hasAerc.expectedAmber}
-                                    />
-                                )
+                                combosTips: {
+                                    title: "Expected Aember (E)",
+                                    combos: combos?.filter(combo => combo.expectedAmber != null && combo.expectedAmber != 0) ?? undefined,
+                                    accessor: combo => combo.expectedAmber
+                                }
                             },
                             {
                                 icon: <AercIcon type={AercType.S}/>,
                                 info: hasAerc.amberProtection,
-                                tooltip: (
-                                    <CardsWithAercFromCombos
-                                        title={"Aember Protection"}
-                                        accessor={combo => combo.amberProtection}
-                                        combos={combos}
-                                        score={hasAerc.amberProtection}
-                                    />
-                                )
+                                combosTips: {
+                                    title: "Aember Protection",
+                                    combos: combos?.filter(combo => combo.amberProtection != null && combo.amberProtection != 0) ?? undefined,
+                                    accessor: combo => combo.amberProtection
+                                }
                             },
                         ]
                     }
@@ -139,44 +124,29 @@ export const AercView = (props: {
                             {
                                 icon: <AercIcon type={AercType.R}/>,
                                 info: hasAerc.artifactControl,
-                                tooltip: (
-                                    <CardsWithAercFromCombos
-                                        title={"Artifact Control (R)"}
-                                        accessor={combo => combo.artifactControl}
-                                        combos={combos}
-                                        score={hasAerc.artifactControl}
-                                    />
-                                )
+                                combosTips: {
+                                    title: "Artifact Control (R)",
+                                    combos: combos?.filter(combo => combo.artifactControl != null && combo.artifactControl != 0) ?? undefined,
+                                    accessor: combo => combo.artifactControl
+                                }
                             },
                             {
                                 icon: <AercIcon type={AercType.C}/>,
                                 info: hasAerc.creatureControl,
-                                tooltip: (
-                                    <CardsWithAercFromCombos
-                                        title={"Creature Control (C)"}
-                                        accessor={combo => combo.creatureControl}
-                                        combos={combos}
-                                        score={hasAerc.creatureControl}
-                                    />
-                                )
+                                combosTips: {
+                                    title: "Creature Control (C)",
+                                    combos: combos?.filter(combo => combo.creatureControl != null && combo.creatureControl != 0) ?? undefined,
+                                    accessor: combo => combo.creatureControl
+                                }
                             },
                             {
                                 icon: <AercIcon type={AercType.P}/>,
                                 info: hasAerc.effectivePower,
-                                tooltip: (
-                                    <CardsWithAercFromCombos
-                                        title={"Effective Power (P)"}
-                                        accessor={card => {
-                                            const effPower = card!.effectivePower
-                                            if (effPower == null) {
-                                                return 0
-                                            }
-                                            return effPower
-                                        }}
-                                        combos={combos}
-                                        score={hasAerc.effectivePower}
-                                    />
-                                )
+                                combosTips: {
+                                    title: "Effective Power (P)",
+                                    combos: combos?.filter(combo => combo.effectivePower != null && combo.effectivePower != 0) ?? undefined,
+                                    accessor: combo => combo.effectivePower
+                                }
                             },
                         ]
                     }
@@ -197,26 +167,20 @@ export const AercView = (props: {
                                 {
                                     icon: <AercIcon type={AercType.H}/>,
                                     info: hasAerc.houseCheating,
-                                    tooltip: (
-                                        <CardsWithAercFromCombos
-                                            title={"House Cheating"}
-                                            accessor={combo => combo.houseCheating}
-                                            combos={combos}
-                                            score={hasAerc.houseCheating}
-                                        />
-                                    )
+                                    combosTips: {
+                                        title: "House Cheating",
+                                        combos: combos?.filter(combo => combo.houseCheating != null && combo.houseCheating != 0) ?? undefined,
+                                        accessor: combo => combo.houseCheating
+                                    }
                                 },
                                 {
                                     icon: <AercIcon type={AercType.O}/>,
                                     info: hasAerc.other,
-                                    tooltip: (
-                                        <CardsWithAercFromCombos
-                                            title={"Other"}
-                                            accessor={combo => combo.other}
-                                            combos={combos}
-                                            score={hasAerc.other}
-                                        />
-                                    )
+                                    combosTips: {
+                                        title: "Other",
+                                        combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? undefined,
+                                        accessor: combo => combo.other
+                                    }
                                 },
                             ]
                         }
@@ -231,17 +195,29 @@ export const AercView = (props: {
                                 {
                                     icon: <AmberIcon/>,
                                     info: deck.rawAmber,
-                                    tooltip: "Bonus Aember"
+                                    cardsTips: {
+                                        matches: card => card.amber > 0,
+                                        cards: deck.searchResultCards,
+                                        title: "Bonus Aember"
+                                    }
                                 },
                                 {
                                     icon: <KeyCheatIcon/>,
                                     info: deck.keyCheatCount,
-                                    tooltip: "Key Cheat Cards"
+                                    cardsTips: {
+                                        matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
+                                        cards: deck.searchResultCards,
+                                        title: "Key Cheat Cards"
+                                    }
                                 },
                                 {
                                     icon: <ArchiveIcon/>,
                                     info: deck.cardArchiveCount,
-                                    tooltip: "Archive Cards"
+                                    cardsTips: {
+                                        matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.archives),
+                                        cards: deck.searchResultCards,
+                                        title: "Archive Cards"
+                                    }
                                 }
                             ]
                         }
@@ -257,50 +233,38 @@ export const AercView = (props: {
                                 {
                                     icon: <ActionIcon width={20}/>,
                                     info: deck.actionCount,
-                                    tooltip: (
-                                        <CardsWithAerc
-                                            title={"Actions"}
-                                            accessor={card => card!.cardType === CardType.Action ? 1 : 0}
-                                            cards={hasAerc.searchResultCards}
-                                            noScore={true}
-                                        />
-                                    )
+                                    cardsTips: {
+                                        matches: card => card.cardType === CardType.Action,
+                                        cards: deck.searchResultCards,
+                                        title: "Actions"
+                                    }
                                 },
                                 {
                                     icon: <CreatureIcon width={20}/>,
                                     info: deck.creatureCount,
-                                    tooltip: (
-                                        <CardsWithAerc
-                                            title={"Creatures"}
-                                            accessor={card => card!.cardType === CardType.Creature ? 1 : 0}
-                                            cards={hasAerc.searchResultCards}
-                                            noScore={true}
-                                        />
-                                    )
+                                    cardsTips: {
+                                        matches: card => card.cardType === CardType.Creature,
+                                        cards: deck.searchResultCards,
+                                        title: "Creatures"
+                                    }
                                 },
                                 {
                                     icon: <ArtifactIcon width={20}/>,
                                     info: deck.artifactCount,
-                                    tooltip: (
-                                        <CardsWithAerc
-                                            title={"Artifacts"}
-                                            accessor={card => card!.cardType === CardType.Artifact ? 1 : 0}
-                                            cards={hasAerc.searchResultCards}
-                                            noScore={true}
-                                        />
-                                    )
+                                    cardsTips: {
+                                        matches: card => card.cardType === CardType.Artifact,
+                                        cards: deck.searchResultCards,
+                                        title: "Artifacts"
+                                    }
                                 },
                                 {
                                     icon: <UpgradeIcon width={20}/>,
                                     info: deck.upgradeCount,
-                                    tooltip: (
-                                        <CardsWithAerc
-                                            title={"Upgrades"}
-                                            accessor={card => card!.cardType === CardType.Upgrade ? 1 : 0}
-                                            cards={hasAerc.searchResultCards}
-                                            noScore={true}
-                                        />
-                                    )
+                                    cardsTips: {
+                                        matches: card => card.cardType === CardType.Upgrade,
+                                        cards: deck.searchResultCards,
+                                        title: "Upgrades"
+                                    }
                                 }
                             ]
                         }

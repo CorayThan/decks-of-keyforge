@@ -1,12 +1,15 @@
-import { Tooltip, Typography } from "@material-ui/core"
+import { Typography } from "@material-ui/core"
 import { TypographyClassKey } from "@material-ui/core/Typography"
 import * as React from "react"
+import { AercForCombos, AercForCombosProps } from "../aerc/AercForCombos"
+import { CardsMatchSasTip, CardsMatchSasTipProps } from "../aerc/CardsMatchSasTip"
 import { spacing } from "../config/MuiConfig"
 
 export interface InfoIconValue {
     info: number | string
     icon: React.ReactNode
-    tooltip: React.ReactNode
+    combosTips?: Partial<AercForCombosProps>
+    cardsTips?: Partial<CardsMatchSasTipProps>
 }
 
 export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: boolean, small?: boolean, style?: React.CSSProperties }) => {
@@ -23,9 +26,11 @@ export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: bool
 }
 
 export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?: React.CSSProperties }) => {
-    let value = props.value.info
-    if (typeof value === "number") {
-        value = value.toFixed(value < 10 && value % 1 !== 0 ? 1 : 0)
+    const {value} = props
+    const {info, combosTips, cardsTips} = value
+    let displayValue = info
+    if (typeof displayValue === "number") {
+        displayValue = displayValue.toFixed(displayValue < 10 && displayValue % 1 !== 0 ? 1 : 0)
     }
 
     let variant: TypographyClassKey
@@ -36,16 +41,32 @@ export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?:
     } else {
         variant = "h6"
     }
-    return (
-        <Tooltip title={props.value.tooltip}>
-            <div style={{display: "flex", alignItems: "center", ...props.style}}>
-                <Typography variant={variant} style={{marginRight: spacing(1), width: 32, textAlign: "right"}}>
-                    {value}
-                </Typography>
-                <div style={{display: "flex", width: iconSize}}>
-                    {props.value.icon}
-                </div>
+
+    const content = (
+        <div style={{display: "flex", alignItems: "center", ...props.style}}>
+            <Typography variant={variant} style={{marginRight: spacing(1), width: 32, textAlign: "right"}}>
+                {displayValue}
+            </Typography>
+            <div style={{display: "flex", width: iconSize}}>
+                {props.value.icon}
             </div>
-        </Tooltip>
+        </div>
     )
+    if (combosTips != null) {
+        return (
+            // @ts-ignore
+            <AercForCombos {...combosTips}>
+                {content}
+            </AercForCombos>
+        )
+    } else if (cardsTips != null) {
+        return (
+            // @ts-ignore
+            <CardsMatchSasTip {...cardsTips}>
+                {content}
+            </CardsMatchSasTip>
+        )
+    } else {
+        return content
+    }
 }

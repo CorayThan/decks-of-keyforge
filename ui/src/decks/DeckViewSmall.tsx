@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography/Typography"
 import { MoreVert } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { AercForCombos } from "../aerc/AercForCombos"
 import { AercView } from "../aerc/AercViews"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
@@ -230,27 +231,29 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     )
 }
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, disableTextSelection?: boolean, compact?: boolean, deck: Deck }) => {
-    const deckExpansion = props.deckExpansion
+const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, compact?: boolean, deck: Deck }) => {
+    const {house, deck, cards, deckExpansion, compact} = props
     return (
         <List>
-            <HouseLabel house={props.house} title={true}/>
+            <AercForCombos combos={deck.synergies!.synergyCombos.filter(combo => combo.house === house)}>
+                <HouseLabel house={house} title={true}/>
+            </AercForCombos>
             <Divider style={{marginTop: 4}}/>
-            {props.compact ?
+            {compact ?
                 (
                     <div style={{display: "flex"}}>
                         <div style={{marginRight: spacing(1)}}>
-                            {props.cards.slice(0, 6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={props.deck}/>))}
+                            {cards.slice(0, 6).map((card, idx) => (
+                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))}
                         </div>
                         <div>
-                            {props.cards.slice(6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={props.deck}/>))}
+                            {cards.slice(6).map((card, idx) => (
+                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))}
                         </div>
                     </div>
                 )
                 :
-                props.cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion} deck={props.deck}/>))
+                cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))
             }
         </List>
     )

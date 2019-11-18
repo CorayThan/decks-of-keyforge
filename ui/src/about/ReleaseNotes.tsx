@@ -16,7 +16,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
 
-export const latestVersion = "4.7"
+export const latestVersion = "4.8"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -24,6 +24,21 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.8"}
+                    date={"11/18/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS by House",
+                            note: "You can now hover (click on mobile) a deck's house name to see the SAS contribution from that house, as well as each card's."
+                        },
+                        {
+                            highlight: "Tooltip Improvements",
+                            note: "Tooltips on decks should look nicer and be easier to open on mobile. Just click them!"
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.7"}
                     date={"11/14/2019"}

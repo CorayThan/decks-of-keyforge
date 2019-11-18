@@ -55,8 +55,9 @@ export const houseValuesArray: HouseValue[] = [
         img: shadowsImg
     },
     {
-        house: House.Untamed,
-        img: untamedImg
+        house: House.Saurian,
+        img: saurianRepublicImg,
+        displayName: "Saurian"
     },
     {
         house: House.StarAlliance,
@@ -64,11 +65,17 @@ export const houseValuesArray: HouseValue[] = [
         displayName: "Star Alliance"
     },
     {
-        house: House.Saurian,
-        img: saurianRepublicImg,
-        displayName: "Saurian"
+        house: House.Untamed,
+        img: untamedImg
     },
 ]
+    .map(value => {
+        if (value.displayName == null) {
+            // @ts-ignore
+            value.displayName = value.house
+        }
+        return value
+    })
 
 export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(houseValue => (
     [houseValue.house, houseValue] as [House, HouseValue]
