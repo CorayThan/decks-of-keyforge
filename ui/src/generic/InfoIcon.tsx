@@ -8,8 +8,8 @@ import { spacing } from "../config/MuiConfig"
 export interface InfoIconValue {
     info: number | string
     icon: React.ReactNode
-    combosTips?: Partial<AercForCombosProps>
-    cardsTips?: Partial<CardsMatchSasTipProps>
+    combosTips?: Omit<AercForCombosProps, "children">
+    cardsTips?: Omit<CardsMatchSasTipProps, "children">
 }
 
 export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: boolean, small?: boolean, style?: React.CSSProperties }) => {
@@ -54,14 +54,12 @@ export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?:
     )
     if (combosTips != null) {
         return (
-            // @ts-ignore
             <AercForCombos {...combosTips}>
                 {content}
             </AercForCombos>
         )
     } else if (cardsTips != null) {
         return (
-            // @ts-ignore
             <CardsMatchSasTip {...cardsTips}>
                 {content}
             </CardsMatchSasTip>

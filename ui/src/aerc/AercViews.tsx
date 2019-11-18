@@ -42,7 +42,7 @@ export const AercView = (props: {
             info: hasAerc.efficiency,
             combosTips: {
                 title: "Efficiency (F)",
-                combos: combos?.filter(combo => combo.efficiency != null && combo.efficiency != 0) ?? undefined,
+                combos: combos?.filter(combo => combo.efficiency != null && combo.efficiency != 0) ?? [],
                 accessor: (combo: SynergyCombo) => combo.efficiency
             }
         },
@@ -51,7 +51,7 @@ export const AercView = (props: {
             info: hasAerc.disruption,
             combosTips: {
                 title: "Disruption (D)",
-                combos: combos?.filter(combo => combo.disruption != null && combo.disruption != 0) ?? undefined,
+                combos: combos?.filter(combo => combo.disruption != null && combo.disruption != 0) ?? [],
                 accessor: (combo: SynergyCombo) => combo.disruption
             }
         },
@@ -91,7 +91,7 @@ export const AercView = (props: {
                                 info: hasAerc.amberControl,
                                 combosTips: {
                                     title: "Aember Control (A)",
-                                    combos: combos?.filter(combo => combo.amberControl != null && combo.amberControl != 0) ?? undefined,
+                                    combos: combos?.filter(combo => combo.amberControl != null && combo.amberControl != 0) ?? [],
                                     accessor: combo => combo.amberControl
                                 }
                             },
@@ -100,7 +100,7 @@ export const AercView = (props: {
                                 info: hasAerc.expectedAmber,
                                 combosTips: {
                                     title: "Expected Aember (E)",
-                                    combos: combos?.filter(combo => combo.expectedAmber != null && combo.expectedAmber != 0) ?? undefined,
+                                    combos: combos?.filter(combo => combo.expectedAmber != null && combo.expectedAmber != 0) ?? [],
                                     accessor: combo => combo.expectedAmber
                                 }
                             },
@@ -109,7 +109,7 @@ export const AercView = (props: {
                                 info: hasAerc.amberProtection,
                                 combosTips: {
                                     title: "Aember Protection",
-                                    combos: combos?.filter(combo => combo.amberProtection != null && combo.amberProtection != 0) ?? undefined,
+                                    combos: combos?.filter(combo => combo.amberProtection != null && combo.amberProtection != 0) ?? [],
                                     accessor: combo => combo.amberProtection
                                 }
                             },
@@ -126,7 +126,7 @@ export const AercView = (props: {
                                 info: hasAerc.artifactControl,
                                 combosTips: {
                                     title: "Artifact Control (R)",
-                                    combos: combos?.filter(combo => combo.artifactControl != null && combo.artifactControl != 0) ?? undefined,
+                                    combos: combos?.filter(combo => combo.artifactControl != null && combo.artifactControl != 0) ?? [],
                                     accessor: combo => combo.artifactControl
                                 }
                             },
@@ -135,7 +135,7 @@ export const AercView = (props: {
                                 info: hasAerc.creatureControl,
                                 combosTips: {
                                     title: "Creature Control (C)",
-                                    combos: combos?.filter(combo => combo.creatureControl != null && combo.creatureControl != 0) ?? undefined,
+                                    combos: combos?.filter(combo => combo.creatureControl != null && combo.creatureControl != 0) ?? [],
                                     accessor: combo => combo.creatureControl
                                 }
                             },
@@ -144,7 +144,7 @@ export const AercView = (props: {
                                 info: hasAerc.effectivePower,
                                 combosTips: {
                                     title: "Effective Power (P)",
-                                    combos: combos?.filter(combo => combo.effectivePower != null && combo.effectivePower != 0) ?? undefined,
+                                    combos: combos?.filter(combo => combo.effectivePower != null && combo.effectivePower != 0) ?? [],
                                     accessor: combo => combo.effectivePower
                                 }
                             },
@@ -169,7 +169,7 @@ export const AercView = (props: {
                                     info: hasAerc.houseCheating,
                                     combosTips: {
                                         title: "House Cheating",
-                                        combos: combos?.filter(combo => combo.houseCheating != null && combo.houseCheating != 0) ?? undefined,
+                                        combos: combos?.filter(combo => combo.houseCheating != null && combo.houseCheating != 0) ?? [],
                                         accessor: combo => combo.houseCheating
                                     }
                                 },
@@ -178,7 +178,7 @@ export const AercView = (props: {
                                     info: hasAerc.other,
                                     combosTips: {
                                         title: "Other",
-                                        combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? undefined,
+                                        combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? [],
                                         accessor: combo => combo.other
                                     }
                                 },
@@ -197,7 +197,7 @@ export const AercView = (props: {
                                     info: deck.rawAmber,
                                     cardsTips: {
                                         matches: card => card.amber > 0,
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Bonus Aember"
                                     }
                                 },
@@ -206,7 +206,7 @@ export const AercView = (props: {
                                     info: deck.keyCheatCount,
                                     cardsTips: {
                                         matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Key Cheat Cards"
                                     }
                                 },
@@ -215,7 +215,7 @@ export const AercView = (props: {
                                     info: deck.cardArchiveCount,
                                     cardsTips: {
                                         matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.archives),
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Archive Cards"
                                     }
                                 }
@@ -235,7 +235,7 @@ export const AercView = (props: {
                                     info: deck.actionCount,
                                     cardsTips: {
                                         matches: card => card.cardType === CardType.Action,
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Actions"
                                     }
                                 },
@@ -244,7 +244,7 @@ export const AercView = (props: {
                                     info: deck.creatureCount,
                                     cardsTips: {
                                         matches: card => card.cardType === CardType.Creature,
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Creatures"
                                     }
                                 },
@@ -253,7 +253,7 @@ export const AercView = (props: {
                                     info: deck.artifactCount,
                                     cardsTips: {
                                         matches: card => card.cardType === CardType.Artifact,
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Artifacts"
                                     }
                                 },
@@ -262,7 +262,7 @@ export const AercView = (props: {
                                     info: deck.upgradeCount,
                                     cardsTips: {
                                         matches: card => card.cardType === CardType.Upgrade,
-                                        cards: deck.searchResultCards,
+                                        cards: deck.searchResultCards ?? [],
                                         title: "Upgrades"
                                     }
                                 }
