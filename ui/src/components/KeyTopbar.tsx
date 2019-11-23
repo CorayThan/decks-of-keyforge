@@ -28,6 +28,7 @@ import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { userStore } from "../user/UserStore"
+import { ShareButton } from "./ShareButton"
 
 class KeyTopbarStore {
     @observable
@@ -107,6 +108,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             )}
                         </>
                     )}
+                    <ShareButton/>
                     <RightMenu/>
                 </>
             )

@@ -6,5 +6,6 @@ export enum DeckLanguage {
     SPANISH = "SPANISH",
     POLISH = "POLISH",
     CHINESE = "CHINESE",
+    THAI = "THAI",
     OTHER = "OTHER"
 }

@@ -16,7 +16,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
 
-export const latestVersion = "4.8"
+export const latestVersion = "4.81"
 
 @observer
 export class ReleaseNotes extends React.Component {

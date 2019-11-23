@@ -1,3 +1,4 @@
+import * as Bowser from "bowser"
 import { fromUnixTime, getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
@@ -15,6 +16,7 @@ export const roundToHundreds = (round: number) =>  Math.round(round * 100) / 100
 export class Utils {
 
     static readonly localDateFormat = "yyyy-MM-dd"
+    static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
@@ -53,6 +55,33 @@ export class Utils {
             return Math.round(percentile)
         }
         return 0
+    }
+
+    static shareUrl = (url: string, title?: string, text?: string) => {
+        if (Utils.canShare()) {
+            // @ts-ignore
+            navigator.share({
+                title,
+                text,
+                url
+            })
+        } else {
+            log.warn("Can't share in this case!")
+        }
+    }
+
+    static canShare = () => {
+        return Utils.bowser
+            .satisfies({
+                mobile: {
+                    safari: ">=12.2",
+                    "chrome for android": ">=61",
+                    "opera for android": ">=48"
+                },
+                macos: {
+                    safari: ">=12.1"
+                }
+            })
     }
 }
 

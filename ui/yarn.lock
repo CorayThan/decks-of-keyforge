@@ -1523,10 +1523,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@material-ui/core@^4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.6.0.tgz#098a61d2af1778433d2d9a76de95be5f6aa87922"
-  integrity sha512-nzD0oO3R2dcX/+hmi5FUFSddMKySK76Ryuno3J/iOotbKvzXwbf9szzhL8KPNmsj+vizVNfkEfhzOuuCHRBKKQ==
+"@material-ui/core@^4.7.0":
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.7.0.tgz#84c02a6d1c99c7900e184538c5f9d87e30cf4c23"
+  integrity sha512-mwLehUo0Q9ZxjuWo7J1uy1/Grh3nRxlOAaWJ3EtKeJP2HwqlSy8bWrcvRQYlapaYIPXa5jN8zWbTwi8Pk30VQg==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@material-ui/styles" "^4.6.0"
@@ -1549,10 +1549,10 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@material-ui/lab@^4.0.0-alpha.31":
-  version "4.0.0-alpha.31"
-  resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.31.tgz#d566678bd1a9ac969d515145b3b1a2fef4a16a26"
-  integrity sha512-sn9G2llXVMFbgIqkHvoYLMh5Z4Ea8O1qrecxvQEBs1aWs/0X1GOs8jpX+QkSs6MHvMQXijPmXNH5KVabS2aDUQ==
+"@material-ui/lab@^4.0.0-alpha.33":
+  version "4.0.0-alpha.33"
+  resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.33.tgz#3de96da1e813afcea5a07d56e54ec41cfa636e2c"
+  integrity sha512-+xttHUZLwH4+yfkB7B5A3pNDtQO27tGftuUxMRDMevNXwQtAB7mgYco34JwMr9kmvESYmacoZReOacJ6rxym/Q==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@material-ui/utils" "^4.5.2"
@@ -1871,6 +1871,13 @@
   integrity sha512-CeBpmX1J8kWLcDEnI3Cl2Eo6RfbGvzUctA+CjZUhOKDFbLfcr7fc4usEqLNWetrlJd7RhAkyYe2czXop4fICpw==
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/bowser@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/bowser/-/bowser-1.1.1.tgz#9bbe3c93fef1c787f565d252ce51326ada506611"
+  integrity sha512-JEJrXQI6H+wJsj8Q5gmR2u3v+fsI00cmatVKq9EzXk66xGNueUi8MFOnuHo3S9poNnTxrLiEUMFuiLW7JVVN8g==
+  dependencies:
+    bowser "*"
 
 "@types/d3-path@*":
   version "1.0.8"
@@ -2932,6 +2939,11 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
+
+bowser@*, bowser@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.7.0.tgz#96eab1fa07fab08c1ec4c75977a7c8ddf8e0fe1f"
+  integrity sha512-aIlMvstvu8x+34KEiOHD3AsBgdrzg6sxALYiukOWhFvGMbQI6TRP/iY0LMhUrHs56aD6P1G0Z7h45PUJaa5m9w==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
