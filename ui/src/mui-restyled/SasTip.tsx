@@ -23,8 +23,8 @@ export class SasTip extends React.Component<SasTipProps> {
         const {title, contents, children, items} = this.props
         return (
             <SasTipInner
-                enterTouchDelay={1}
-                leaveTouchDelay={100000}
+                enterTouchDelay={1000}
+                leaveTouchDelay={20000}
                 title={
                     <React.Fragment>
                         {title}
@@ -42,7 +42,9 @@ export class SasTip extends React.Component<SasTipProps> {
                     </React.Fragment>
                 }
             >
-                <div>
+                <div
+                    style={{userSelect: "none"}}
+                >
                     {children}
                 </div>
             </SasTipInner>

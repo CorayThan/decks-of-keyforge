@@ -48,7 +48,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     auction = false
     @observable
-    condition = DeckCondition.NEW_IN_PLASTIC
+    condition = DeckCondition.NEAR_MINT
     @observable
     buyItNow = ""
     @observable

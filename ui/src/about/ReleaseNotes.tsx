@@ -35,7 +35,7 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             highlight: "Tooltip Improvements",
-                            note: "Tooltips on decks should look nicer and be easier to open on mobile. Just click them!"
+                            note: "Tooltips on decks should look nicer and be easier to open on mobile. Update: long press for 1 second."
                         }
                     ]}
                 />
