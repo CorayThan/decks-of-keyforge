@@ -1,9 +1,11 @@
+import { Deck } from "@material-ui/icons"
 import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
 import { log, roundToHundreds } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
 import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
+import { userStore } from "../user/UserStore"
 import { UserDeck } from "../userdeck/UserDeck"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
@@ -77,6 +79,24 @@ export interface Deck extends HasAerc {
 
 export class DeckUtils {
 
+    static findPrice = (deck: Deck, myPriceOnly?: boolean): number | undefined => {
+        const saleInfo = deck.deckSaleInfo
+        if (saleInfo && saleInfo.length > 0) {
+            for (const info of saleInfo) {
+                if (!myPriceOnly || info.username === userStore.username) {
+                    if (info.askingPrice) {
+                        return info.askingPrice
+                    } else if (info.highestBid) {
+                        return info.highestBid
+                    } else if (info.nextBid) {
+                        return info.nextBid
+                    }
+                }
+            }
+        }
+        return undefined
+    }
+
     static hasAercFromDeck = (deck: Deck): HasAerc => {
         if (deck.synergies == null) {
             log.warn("Synergies shouldnt' be null!")
@@ -97,7 +117,7 @@ export class DeckUtils {
             })
         return cardsByHouse
     }
-    
+
     static synergiesRounded = (synergies: DeckSynergyInfo) => {
         const {
             amberControl,
@@ -170,6 +190,7 @@ export class DeckUtils {
                 deck.forSale,
                 deck.forAuction,
                 deck.forTrade,
+                DeckUtils.findPrice(deck),
                 deck.searchResultCards == null ? "" : `${deck.searchResultCards.map(card => card.cardTitle).join("|")}`,
                 deck.wishlistCount,
                 deck.funnyCount,
@@ -218,6 +239,7 @@ export class DeckUtils {
             "For Sale",
             "For Auction",
             "For Trade",
+            "Price",
 
             "Cards",
             "Wishlist",

@@ -278,29 +278,12 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
 
     setPriceForSeller = (props: SellerViewCellProps) => {
         const {deck, sellerVersion} = props
-        const saleInfos = deck.deckSaleInfo
-        let foundInfo = false
-        // log.debug(`seller version: ${sellerView} For deck ${deck.name} sale infos is ${prettyJson(saleInfos)}`)
-        if (sellerVersion && saleInfos != null) {
-            saleInfos.forEach(info => {
-                if (info.username === userStore.username && !info.forAuction) {
-                    if (info.askingPrice == null) {
-                        this.priceForSeller = ""
-                    } else {
-                        this.priceForSeller = info.askingPrice.toString()
-                    }
-                    foundInfo = true
-                }
-            })
-        }
-        if (!foundInfo) {
-            this.priceForSeller = undefined
-        }
+        this.priceForSeller = DeckUtils.findPrice(deck, sellerVersion)?.toString()
     }
 
     render() {
-        const {deck} = this.props
-        if (this.priceForSeller != null) {
+        const {deck, sellerVersion} = this.props
+        if (this.priceForSeller != null && sellerVersion) {
             return (
                 <TableCell>
                     <TextField
@@ -314,13 +297,15 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
                             const realPrice = asNumber < 1 ? undefined : asNumber
                             deckTableViewStore.addPriceChange(deck.id, realPrice)
                         }}
+                        style={{width: 64}}
                     />
                 </TableCell>
             )
         }
+        const price = DeckUtils.findPrice(deck)
         return (
             <TableCell>
-                {findPriceForDeck(deck)}
+                {price == null ? "" : price}
                 {highestBidder(deck) ? " High Bidder" : ""}
             </TableCell>
         )
@@ -351,19 +336,6 @@ const DeckHeader = (props: { title: React.ReactNode, property: string, tooltip?:
         </Tooltip>
     </TableCell>
 )
-
-const findPriceForDeck = (deck: Deck): number | null => {
-
-    if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0]) {
-        const firstSaleInfo = deck.deckSaleInfo[0]
-        if (firstSaleInfo.askingPrice) {
-            return firstSaleInfo.askingPrice
-        } else if (firstSaleInfo.nextBid) {
-            return firstSaleInfo.nextBid
-        }
-    }
-    return null
-}
 
 const findBuyItNowForDeck = (deck: Deck): number | null => {
 
