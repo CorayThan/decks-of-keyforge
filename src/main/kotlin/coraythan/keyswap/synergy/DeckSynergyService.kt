@@ -147,7 +147,7 @@ object DeckSynergyService {
         }
 
         val synergyCombos: List<SynergyCombo> = cards
-                .groupBy { it.id }
+                .groupBy { Pair(it.id, it.house) }
                 .map { cardsById ->
                     val count = cardsById.value.size
                     val card = cardsById.value[0]

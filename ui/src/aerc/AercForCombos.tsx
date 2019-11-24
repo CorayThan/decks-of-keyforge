@@ -43,7 +43,7 @@ export class AercForCombos extends React.Component<AercForCombosProps> {
                 contents={(combos.length > 0 &&
                     <div style={{display: "grid", gridTemplateColumns: "3fr 1fr"}}>
                         {combos.map(combo => (
-                            <React.Fragment key={combo.cardName}>
+                            <React.Fragment key={combo.cardName + combo.house}>
                                 <Typography variant={"body2"} style={{marginRight: spacing(2)}}>
                                     {combo.cardName}
                                 </Typography>

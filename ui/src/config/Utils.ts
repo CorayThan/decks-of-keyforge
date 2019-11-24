@@ -15,12 +15,16 @@ export const prettyJson = (write: any): string => JSON.stringify(write, null, 2)
 export const roundToTens = (round: number) => Math.round(round * 10) / 10
 export const roundToHundreds = (round: number) => Math.round(round * 100) / 100
 
-// @ts-ignore
-navigator.permissions.query({name: "clipboard-write"}).then(result => {
-    if (result.state == "granted" || result.state == "prompt") {
-        Utils.canWriteToClipboard = true
-    }
-})
+try {
+    // @ts-ignore
+    navigator.permissions.query({name: "clipboard-write"}).then(result => {
+        if (result.state == "granted" || result.state == "prompt") {
+            Utils.canWriteToClipboard = true
+        }
+    })
+} catch (e) {
+    log.warn("Can't write to clipboard due to " + e)
+}
 
 export class Utils {
 
@@ -71,12 +75,16 @@ export class Utils {
 
     static copyToClipboard = (url: string) => {
         if (Utils.canWriteToClipboard) {
-            navigator.clipboard.writeText(url)
-                .then(() => {
-                    messageStore.setSuccessMessage("Copied URL", 3000)
-                }, () => {
-                    messageStore.setWarningMessage("Couldn't copy URL", 3000)
-                })
+            try {
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        messageStore.setSuccessMessage("Copied URL", 3000)
+                    }, () => {
+                        messageStore.setWarningMessage("Couldn't copy URL", 3000)
+                    })
+            } catch (e) {
+                messageStore.setWarningMessage("Couldn't copy URL", 3000)
+            }
         } else {
             log.warn("Can't write to clipboard in this case!")
         }

@@ -14,6 +14,7 @@ import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
+import { House } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
@@ -202,7 +203,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={fullCard as KCard} realValue={findSynegyComboForCardFromDeck(fullCard, this.props.deck)}/>
+                            <AercForCard card={fullCard as KCard} realValue={findSynegyComboForCardFromDeck(fullCard, card.house, this.props.deck)}/>
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
@@ -266,7 +267,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
                 >
-                    <CardView card={fullCard as KCard} combo={findSynegyComboForCardFromDeck(fullCard, this.props.deck)}/>
+                    <CardView card={fullCard as KCard} combo={findSynegyComboForCardFromDeck(fullCard, card.house, this.props.deck)}/>
                 </Popover>
             )
         }
@@ -292,12 +293,12 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     }
 }
 
-const findSynegyComboForCardFromDeck = (card: Partial<KCard>, deck?: Deck) => {
+const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, deck?: Deck) => {
     const name = card.cardTitle
     if (name == null || deck == null || deck.synergies == null) {
         return
     }
-    return deck.synergies.synergyCombos.find(combo => combo.cardName === name)
+    return deck.synergies.synergyCombos.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
 const CardLine = (props: CardAsLineProps) => {
