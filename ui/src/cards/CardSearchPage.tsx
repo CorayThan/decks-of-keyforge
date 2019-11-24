@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography/Typography"
 import * as History from "history"
+import { isEqual } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
@@ -53,20 +54,22 @@ class WaitForAllCards extends React.Component<WaitForAllCardsProps> {
 class LoadInitialCardSearch extends React.Component<WaitForAllCardsProps> {
 
     componentDidMount(): void {
-        this.search(this.props)
+        this.search()
     }
 
-    componentWillReceiveProps(nextProps: WaitForAllCardsProps): void {
-        this.search(nextProps)
+    componentDidUpdate(prevProps: WaitForAllCardsProps): void {
+        if (!isEqual(this.props.filters, prevProps.filters)) {
+            this.search()
+        }
     }
 
     componentWillUnmount(): void {
         cardStore.reset()
     }
 
-    search = (props: WaitForAllCardsProps) => {
+    search = () => {
         log.debug("Search card search page")
-        cardStore.searchCards(props.filters)
+        cardStore.searchCards(this.props.filters)
         if (cardStore.previousExtraInfo == null && keyLocalStorage.genericStorage.historicalAerc) {
             cardStore.findPreviousExtraInfo()
         }
@@ -161,7 +164,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
         window.removeEventListener("scroll", this.handleScroll)
     }
 
-    componentWillReceiveProps(nextProps: Readonly<CardsContainerWithScrollProps>) {
+    UNSAFE_componentWillReceiveProps(nextProps: Readonly<CardsContainerWithScrollProps>) {
         log.debug(`receive props All cards length: ${nextProps.allCards!.length}`)
         this.resetCardsToDisplay(nextProps)
     }

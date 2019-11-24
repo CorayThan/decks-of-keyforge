@@ -3,6 +3,8 @@ import { fromUnixTime, getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
 import * as loglevel from "loglevel"
+import { observable } from "mobx"
+import { messageStore } from "../ui/MessageStore"
 
 export const log = loglevel
 log.setDefaultLevel("debug")
@@ -10,13 +12,23 @@ log.setDefaultLevel("debug")
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const prettyJson = (write: any): string => JSON.stringify(write, null, 2)
 
-export const roundToTens = (round: number) =>  Math.round(round * 10) / 10
-export const roundToHundreds = (round: number) =>  Math.round(round * 100) / 100
+export const roundToTens = (round: number) => Math.round(round * 10) / 10
+export const roundToHundreds = (round: number) => Math.round(round * 100) / 100
+
+// @ts-ignore
+navigator.permissions.query({name: "clipboard-write"}).then(result => {
+    if (result.state == "granted" || result.state == "prompt") {
+        Utils.canWriteToClipboard = true
+    }
+})
 
 export class Utils {
 
     static readonly localDateFormat = "yyyy-MM-dd"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
+
+    @observable
+    static canWriteToClipboard = false
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
@@ -57,16 +69,29 @@ export class Utils {
         return 0
     }
 
-    static shareUrl = (url: string, title?: string, text?: string) => {
-        if (Utils.canShare()) {
+    static copyToClipboard = (url: string) => {
+        if (Utils.canWriteToClipboard) {
+            navigator.clipboard.writeText(url)
+                .then(() => {
+                    messageStore.setSuccessMessage("Copied URL", 3000)
+                }, () => {
+                    messageStore.setWarningMessage("Couldn't copy URL", 3000)
+                })
+        } else {
+            log.warn("Can't write to clipboard in this case!")
+        }
+    }
+
+    static shareUrl = (url: string, title?: string) => {
+        try {
             // @ts-ignore
             navigator.share({
                 title,
-                text,
                 url
             })
-        } else {
-            log.warn("Can't share in this case!")
+        } catch (e) {
+            Utils.copyToClipboard(url)
+            log.debug(`Couldn't share with bowser info ${prettyJson(Utils.bowser.getBrowser())} ` + e.toString())
         }
     }
 
@@ -75,12 +100,11 @@ export class Utils {
             .satisfies({
                 mobile: {
                     safari: ">=12.2",
-                    "chrome for android": ">=61",
-                    "opera for android": ">=48"
+                    chrome: ">=61"
                 },
                 macos: {
                     safari: ">=12.1"
-                }
+                },
             })
     }
 }

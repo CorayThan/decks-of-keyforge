@@ -45,15 +45,15 @@ interface SpoilerProps {
 class SpoilerPageView extends React.Component<SpoilerProps> {
 
     componentDidMount(): void {
-        this.setTopbarValues(this.props)
+        this.setTopbarValues()
     }
 
-    componentWillReceiveProps(nextProps: SpoilerProps) {
-        this.setTopbarValues(nextProps)
+    componentDidUpdate() {
+        this.setTopbarValues()
     }
 
-    setTopbarValues = (props: SpoilerProps) => {
-        uiStore.setTopbarValues(props.spoiler.cardTitle, props.spoiler.cardTitle, "")
+    setTopbarValues = () => {
+        uiStore.setTopbarValues(this.props.spoiler.cardTitle, this.props.spoiler.cardTitle, "")
     }
 
     render() {

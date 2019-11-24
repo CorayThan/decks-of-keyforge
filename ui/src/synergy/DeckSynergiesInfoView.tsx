@@ -28,12 +28,17 @@ interface DeckSynergiesInfoViewProps {
 export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoViewProps> {
 
     componentDidMount(): void {
-        synergiesTableViewStore.synergyCombos = this.props.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
-        synergiesTableViewStore.resort()
+        this.update()
     }
 
-    componentWillReceiveProps(nextProps: Readonly<DeckSynergiesInfoViewProps>): void {
-        synergiesTableViewStore.synergyCombos = nextProps.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
+    componentDidUpdate(prevProps: DeckSynergiesInfoViewProps): void {
+        if (prevProps.synergies.deck.keyforgeId !== this.props.synergies.deck.keyforgeId) {
+            this.update()
+        }
+    }
+
+    update = () => {
+        synergiesTableViewStore.synergyCombos = this.props.synergies.deck.synergies!.synergyCombos as IObservableArray<SynergyCombo>
         synergiesTableViewStore.resort()
     }
 

@@ -40,18 +40,23 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
     }
 
     componentDidMount(): void {
-        this.refreshDeck(this.props.keyforgeDeckId)
+        log.debug(`Refresh deck in component did mount.`)
+        this.refreshDeck()
     }
 
-    componentWillReceiveProps(nextProps: Readonly<DeckViewFullProps>) {
-        this.refreshDeck(nextProps.keyforgeDeckId)
+    componentDidUpdate(prevProps: DeckViewFullProps) {
+        if (this.props.keyforgeDeckId != prevProps.keyforgeDeckId) {
+            log.debug(`Component did update refresh deck because this id is ${this.props.keyforgeDeckId} and prev is ${prevProps.keyforgeDeckId}`)
+            this.refreshDeck()
+        }
     }
 
     componentWillUnmount(): void {
         deckStore.deck = undefined
     }
 
-    refreshDeck = (deckId: string) => {
+    refreshDeck = () => {
+        const deckId = this.props.keyforgeDeckId
         deckStore.randomDeckId = undefined
         deckStore.findDeck(deckId)
         deckStore.findDeckSaleInfo(deckId)
@@ -80,13 +85,15 @@ class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
     }
 
     componentDidMount(): void {
-        uiStore.setTopbarValues(this.props.deck.deck.name, "Deck", "")
-
+        this.setTopBarValues()
     }
 
-    componentWillReceiveProps(nextProps: Readonly<{ deck: DeckWithSynergyInfo }>) {
-        uiStore.setTopbarValues(nextProps.deck.deck.name, "Deck", "")
+    componentDidUpdate() {
+        log.debug("Component did update set top bar values")
+        this.setTopBarValues()
     }
+
+    setTopBarValues = () => uiStore.setTopbarValues(this.props.deck.deck.name, "Deck", "")
 
     render() {
         const deck = this.props.deck

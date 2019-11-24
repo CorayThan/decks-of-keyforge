@@ -34,16 +34,14 @@ interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: str
 export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfoPageProps> {
 
     componentDidMount(): void {
-        log.debug("component did mount infoId: " + this.props.match.params.infoId)
         if (this.props.match.params.infoId) {
             extraCardInfoStore.findExtraCardInfo(this.props.match.params.infoId)
         }
     }
 
-    componentWillReceiveProps(nextProps: UpdateExtraCardInfoPageProps): void {
-        log.debug("component will receive infoId: " + this.props.match.params.infoId + " next: " + nextProps.match.params.infoId)
-        if (this.props.match.params.infoId && this.props.match.params.infoId != nextProps.match.params.infoId) {
-            extraCardInfoStore.findExtraCardInfo(nextProps.match.params.infoId)
+    componentDidUpdate(prevProps: UpdateExtraCardInfoPageProps): void {
+        if (prevProps.match.params.infoId && this.props.match.params.infoId != this.props.match.params.infoId) {
+            extraCardInfoStore.findExtraCardInfo(this.props.match.params.infoId)
         }
     }
 
@@ -132,12 +130,8 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
         this.reset(props.extraCardInfo)
     }
 
-    componentDidMount(): void {
-        this.reset(this.props.extraCardInfo)
-    }
-
-    componentWillReceiveProps(nextProps: Readonly<UpdateExtraCardInfoProps>) {
-        if (this.props.extraCardInfo !== nextProps.extraCardInfo) {
+    componentDidUpdate(prevProps: Readonly<UpdateExtraCardInfoProps>) {
+        if (prevProps.extraCardInfo !== this.props.extraCardInfo) {
             this.reset(this.props.extraCardInfo)
         }
     }

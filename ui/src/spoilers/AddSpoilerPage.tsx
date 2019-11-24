@@ -54,10 +54,9 @@ export class EditSpoilerPage extends React.Component<EditSpoilerPageProps> {
         }
     }
 
-    componentWillReceiveProps(nextProps: EditSpoilerPageProps): void {
-        log.debug("component will receive spoilerId: " + this.props.match.params.spoilerId + " next: " + nextProps.match.params.spoilerId)
-        if (this.props.match.params.spoilerId && this.props.match.params.spoilerId != nextProps.match.params.spoilerId) {
-            spoilerStore.findSpoiler(Number(nextProps.match.params.spoilerId))
+    componentDidUpdate(prevProps: EditSpoilerPageProps): void {
+        if (prevProps.match.params.spoilerId && prevProps.match.params.spoilerId != this.props.match.params.spoilerId) {
+            spoilerStore.findSpoiler(Number(this.props.match.params.spoilerId))
         }
     }
 
@@ -147,8 +146,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         this.reset()
     }
 
-    componentWillReceiveProps(nextProps: Readonly<AddSpoilerProps>) {
-        if (this.props.spoiler !== nextProps.spoiler) {
+    componentDidUpdate(prevProps: Readonly<AddSpoilerProps>) {
+        if (prevProps.spoiler !== this.props.spoiler) {
             this.reset()
         }
     }

@@ -1,5 +1,4 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
-import { log } from "./Utils"
 
 const cacheableEndpoints = [
     "/api/userdeck/secured/for-user",
@@ -76,16 +75,6 @@ class Cache {
     set = (url: string, etag: string, value: any) => {
         this.storage.setItem(Cache.ETAG_KEY + url, JSON.stringify({etag, value}))
     }
-
-    clearBadEtags = () => {
-        log.debug("Clearing bad etags! Delete me after a while.")
-        Object.keys(this.storage).forEach((key) => {
-            if (key.includes(Cache.ETAG_KEY) && !cacheableEndpoints.includes(key.replace(Cache.ETAG_KEY, ""))) {
-                this.storage.removeItem(key)
-            }
-        })
-    }
 }
 
 const cache = new Cache()
-cache.clearBadEtags()

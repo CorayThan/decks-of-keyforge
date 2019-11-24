@@ -1,21 +1,24 @@
 import { IconButton } from "@material-ui/core"
 import { Share } from "@material-ui/icons"
+import { observer } from "mobx-react"
 import React from "react"
 import { Utils } from "../config/Utils"
-import { userStore } from "../user/UserStore"
 
-export const ShareButton = () => {
+export const ShareButton = observer((props: { url: string, title?: string, style?: React.CSSProperties }) => {
 
-    if (userStore.username?.toLowerCase() !== "coraythan") {
+    if (!Utils.canWriteToClipboard && !Utils.canShare()) {
         return null
     }
 
+    const {url, title, style} = props
+
     return (
         <IconButton
-            onClick={() => Utils.shareUrl("http://google.com")}
+            onClick={() => Utils.shareUrl(url, title)}
             color={"inherit"}
+            style={style}
         >
             <Share/>
         </IconButton>
     )
-}
+})

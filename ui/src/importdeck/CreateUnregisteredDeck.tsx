@@ -96,9 +96,9 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
         deckImportStore.newDeckId = undefined
     }
 
-    componentWillReceiveProps(nextProps: Readonly<CreateUnregisteredDeckProps>): void {
-        if (saveUnregisteredDeckStore.currentDeck == null && nextProps.initialDeck != null) {
-            this.setInfoFromProps(nextProps)
+    componentDidUpdate(): void {
+        if (saveUnregisteredDeckStore.currentDeck == null && this.props.initialDeck != null) {
+            this.setInfoFromProps(this.props)
         }
     }
 

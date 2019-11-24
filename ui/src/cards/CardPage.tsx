@@ -42,15 +42,16 @@ interface CardProps {
 class CardPageView extends React.Component<CardProps> {
 
     componentDidMount(): void {
-        this.setTopbarValues(this.props)
+        this.setTopbarValues()
     }
 
-    componentWillReceiveProps(nextProps: CardProps) {
-        this.setTopbarValues(nextProps)
+    componentDidUpdate() {
+        this.setTopbarValues()
     }
 
-    setTopbarValues = (props: CardProps) => {
-        uiStore.setTopbarValues(props.card.cardTitle, props.card.cardTitle, "")
+    setTopbarValues = () => {
+        const cardTitle = this.props.card.cardTitle
+        uiStore.setTopbarValues(cardTitle, cardTitle, "")
     }
 
     render() {

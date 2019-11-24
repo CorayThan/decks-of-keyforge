@@ -1,4 +1,4 @@
-import { Tooltip, Typography } from "@material-ui/core"
+import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardType } from "../cards/CardType"
 import { hasAercFromCard, KCard } from "../cards/KCard"
@@ -61,18 +61,6 @@ export const AercView = (props: {
         <div
             style={{backgroundColor: "#DFDFDF", padding: spacing(1)}}
         >
-            {!horizontal && deck.sasV3 != null && deck.sasV3 != 0 && (
-                <div style={{marginLeft: spacing(1)}}>
-                    <Tooltip title={"SAS Score from before the big update to SAS v4."}>
-                        <div style={{display: "flex", alignItems: "flex-end"}}>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
-                                {deck.sasV3}
-                            </Typography>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 2}} noWrap={true}>SAS v3</Typography>
-                        </div>
-                    </Tooltip>
-                </div>
-            )}
             <div
                 style={{
                     display: "grid",

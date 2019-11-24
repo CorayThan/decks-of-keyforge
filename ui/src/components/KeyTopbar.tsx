@@ -73,12 +73,11 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         if (screenStore.smallScreenTopBar()) {
             menuContents = (
                 <>
-                    <div style={{marginLeft: spacing(2), marginRight: spacing(2)}}>
+                    <div style={{marginRight: spacing(2)}}>
                         <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
                     </div>
                     <Typography
                         variant={screenStore.screenSizeXs() ? "h5" : "h4"}
-                        style={{marginLeft: spacing(1)}}
                         color={"inherit"}>
                         {screenStore.screenWidth < 800 ? topbarShortName : topbarName}
                     </Typography>
@@ -108,7 +107,12 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                             )}
                         </>
                     )}
-                    <ShareButton/>
+                    {screenStore.smallDeckView() && (
+                        <ShareButton
+                            url={window.location.href}
+                            title={topbarName}
+                        />
+                    )}
                     <RightMenu/>
                 </>
             )
@@ -133,7 +137,12 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         return (
             <div>
                 <AppBar position={"fixed"} style={{zIndex: screenStore.zindexes.keyTopBar}}>
-                    <Toolbar>
+                    <Toolbar
+                        style={{
+                            paddingLeft: screenStore.smallDeckView() ? spacing(2) : undefined,
+                            paddingRight: screenStore.smallDeckView() ? spacing(2) : undefined
+                        }}
+                    >
                         {menuContents}
                     </Toolbar>
                 </AppBar>

@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography"
 import * as History from "history"
+import { isEqual } from "lodash"
 import { autorun, IReactionDisposer } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
@@ -23,11 +24,15 @@ import { DecksSearchDrawer } from "./DecksSearchDrawer"
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     componentDidMount(): void {
-        this.search(this.props)
+        this.search(this.makeFilters(this.props).cleaned())
     }
 
-    componentWillReceiveProps(nextProps: Readonly<RouteComponentProps<{}>>): void {
-        this.search(nextProps)
+    componentDidUpdate(prevProps: RouteComponentProps<{}>): void {
+        const filters = this.makeFilters(this.props).cleaned()
+        const prevFilters = this.makeFilters(prevProps).cleaned()
+        if (!isEqual(filters, prevFilters)) {
+            this.search(filters)
+        }
     }
 
     componentWillUnmount(): void {
@@ -39,10 +44,10 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
         return DeckFilters.rehydrateFromQuery(queryValues)
     }
 
-    search = (props: RouteComponentProps<{}>) => {
+    search = (filters: DeckFilters) => {
         // log.debug(`Search with filters ${prettyJson(this.makeFilters(props).cleaned())}`)
         if (deckStore.autoSearch) {
-            deckStore.searchDecks(this.makeFilters(props).cleaned())
+            deckStore.searchDecks(filters)
         } else {
             deckStore.autoSearch = true
         }

@@ -40,10 +40,9 @@ export class ProfileContainer extends React.Component<ProfileContainerProps> {
         userStore.findUserProfile(this.props.username)
     }
 
-    componentWillReceiveProps(nextProps: Readonly<ProfileContainerProps>): void {
-        log.info(`Profile will receive props next username: ${nextProps.username} this ${this.props.username}`)
-        if (this.props.username !== nextProps.username) {
-            userStore.findUserProfile(nextProps.username)
+    componentDidUpdate(prevProps: Readonly<ProfileContainerProps>): void {
+        if (prevProps.username !== this.props.username) {
+            userStore.findUserProfile(this.props.username)
         }
     }
 
