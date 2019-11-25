@@ -7,7 +7,7 @@ import { range } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { roundToHundreds } from "../config/Utils"
+import { roundToThousands } from "../config/Utils"
 import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -226,7 +226,7 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
         includeHalf = true
     }
 
-    tooltip = `${roundToHundreds(sasPercentile)}%. ${tooltip} according to SAS.`
+    tooltip = `${roundToThousands(sasPercentile)}%. ${tooltip} according to SAS.`
 
     const starStyle = {marginTop: spacing(0.5)}
     return (
