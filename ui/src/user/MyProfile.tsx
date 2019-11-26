@@ -174,8 +174,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
         const storeNameTrimmed = this.storeName.trim()
         const storeName = storeNameTrimmed.length === 0 ? undefined : storeNameTrimmed
-        if (storeNameTrimmed.length > 40) {
-            messageStore.setWarningMessage(`Please make your store name 40 or fewer characters.`)
+        if (storeNameTrimmed.length > 30) {
+            messageStore.setWarningMessage(`Please make your store name 30 or fewer characters.`)
             return
         }
 
