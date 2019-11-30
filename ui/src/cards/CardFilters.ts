@@ -37,7 +37,6 @@ export class CardFilters {
         } else if (queryObject.armors != null) {
             queryObject.armors = queryObject.armors .map((val: string) => Number(val))
         }
-        log.debug(`Expansions is: ${queryObject.expansions}`)
         if (queryObject.expansions != null) {
             if (queryObject.expansions.constructor === Array) {
                 queryObject.expansions = queryObject.expansions.map((expansion: string) => Number(expansion))
@@ -46,11 +45,17 @@ export class CardFilters {
                 queryObject.expansions = [expansionAsNumber]
             }
         }
+        if (queryObject.aercHistory) {
+            queryObject.aercHistory = queryObject.aercHistory === "true"
+        }
+        if (queryObject.aercHistoryDate === "") {
+            queryObject.aercHistoryDate = undefined
+        }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const filters = new CardFilters() as any
         Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
-        // log.debug(`Rehydrated to: ${prettyJson(filters)}`)
+        log.debug(`Rehydrated to: ${prettyJson(filters)}`)
         return filters
     }
 
@@ -65,6 +70,10 @@ export class CardFilters {
     ambers: number[] = []
     armors: number[] = []
     expansion?: BackendExpansion
+
+    @observable
+    aercHistory?: boolean
+    aercHistoryDate?: string
 
     sort?: CardSort
     @observable
@@ -82,7 +91,8 @@ export class CardFilters {
         this.armors = []
         this.expansion = undefined
         this.sort = undefined
-
+        this.aercHistory = undefined
+        this.aercHistoryDate = undefined
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

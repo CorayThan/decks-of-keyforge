@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios"
 import { clone, sortBy } from "lodash"
 import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
@@ -46,9 +45,6 @@ export class CardStore {
     previousExtraInfo?: { [cardName: string]: KCard }
 
     @observable
-    mostRecentlyUpdatedExtraInfo?: { [cardName: string]: KCard }
-
-    @observable
     findingPreviousInfo = false
 
     reset = () => {
@@ -59,6 +55,11 @@ export class CardStore {
     }
 
     searchAndReturnCards = (filtersValue: CardFilters) => {
+
+        if (filtersValue.aercHistory) {
+            this.findPreviousExtraInfo()
+        }
+
         const filters: CardFilters = clone(filtersValue)
         if (filters.sort == null) {
             filters.sort = CardSort.SET_NUMBER
@@ -66,6 +67,8 @@ export class CardStore {
         const toSearch = this.allCards
         let filtered = toSearch.slice().filter(card => {
             return (
+                (filters.aercHistoryDate == null || card.extraCardInfo.publishedDate === filters.aercHistoryDate)
+                &&
                 includeCardOrSpoiler(filters, card)
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
@@ -175,18 +178,16 @@ export class CardStore {
         }
     }
 
-    findPreviousExtraInfo = () => {
+    findPreviousExtraInfo = async () => {
         if (this.previousExtraInfo != null || this.findingPreviousInfo) {
             return
         }
         this.findingPreviousInfo = true
         log.debug("Find previous extra card info")
-        axios.get(`${CardStore.CONTEXT}/historical`)
-            .then((response: AxiosResponse) => {
-                this.findingPreviousInfo = false
-                this.previousExtraInfo = response.data
-                log.debug("Found previous info")
-            })
+        const prevInfo = await axios.get(`${CardStore.CONTEXT}/historical`)
+        this.findingPreviousInfo = false
+        this.previousExtraInfo = prevInfo.data
+        log.debug("Found previous info")
     }
 
     fullCardFromCardName = (cardTitle: string) => {
@@ -208,14 +209,13 @@ export class CardStore {
     }
 
     @computed
-    get cardSearchResults(): KCard[] | undefined {
-        if (!keyLocalStorage.genericStorage.allAercHistory) {
-            if (this.previousExtraInfo != null && this.cards != null) {
-                const mostRecentDate = Math.max(...this.allCards.map(card => card.extraCardInfo.published))
-                return this.cards.filter(card => card.extraCardInfo.published === mostRecentDate)
-            }
+    get aercUpdateDates(): string[] {
+        if (this.allCards != null) {
+            const datesSet = new Set(this.allCards.map(card => card.extraCardInfo.publishedDate))
+            log.debug("Update dates: " + Array.from(datesSet.values()).sort().reverse())
+            return Array.from(datesSet.values()).sort().reverse()
         }
-        return this.cards
+        return []
     }
 
     private cardSearchTokenized = (searchValue: string) => searchValue

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValue
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.CascadeType
@@ -80,6 +81,8 @@ data class ExtraCardInfo(
         val id: UUID = UUID.randomUUID()
 ) {
 
+    val publishedDate: LocalDate?
+        get() = published?.toLocalDate()
 
     fun readyForCreate(version: Int): ExtraCardInfo {
         return this.copy(

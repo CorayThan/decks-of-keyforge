@@ -29,6 +29,7 @@ export interface ExtraCardInfo {
      * In seconds since epoch
      */
     published: number
+    publishedDate: string
 
     traits: SynTraitValue[]
     synergies: SynTraitValue[]

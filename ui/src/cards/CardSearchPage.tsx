@@ -70,13 +70,10 @@ class LoadInitialCardSearch extends React.Component<WaitForAllCardsProps> {
     search = () => {
         log.debug("Search card search page")
         cardStore.searchCards(this.props.filters)
-        if (cardStore.previousExtraInfo == null && keyLocalStorage.genericStorage.historicalAerc) {
-            cardStore.findPreviousExtraInfo()
-        }
     }
 
     render() {
-        const cards = cardStore.cardSearchResults
+        const cards = cardStore.cards
         if (cards == null) {
             return <Loader/>
         }
@@ -97,7 +94,7 @@ class CardSearchContainer extends React.Component<CardSearchContainerProps> {
     }
 
     render() {
-        const {cards} = this.props
+        const {cards, filters} = this.props
 
         let cardsDisplay
         if (cards.length === 0) {
@@ -112,7 +109,7 @@ class CardSearchContainer extends React.Component<CardSearchContainerProps> {
             )
         } else {
             cardsDisplay = (
-                <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards}/>
+                <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards} showHistory={filters.aercHistory}/>
             )
         }
 
@@ -135,6 +132,7 @@ interface CardsContainerWithScrollProps {
     allCards?: KCard[]
     allSpoilers?: Spoiler[]
     showAllCards: boolean
+    showHistory?: boolean
 }
 
 @observer
@@ -210,8 +208,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
     }
 
     render() {
-        const allCards = this.props.allCards
-        const allSpoilers = this.props.allSpoilers
+        const {allCards, allSpoilers, showHistory} = this.props
         const allCardsLength = allCards == null ? allSpoilers!.length : allCards.length
         const cardsDisplayedLength = allCards == null ? this.spoilersToDisplay.length : this.cardsToDisplay.length
         return (
@@ -230,7 +227,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
                                     card={card}
                                     key={card.id}
                                     simple={keyLocalStorage.cardListViewType === "image"}
-                                    displayHistory={keyLocalStorage.genericStorage.historicalAerc}
+                                    displayHistory={showHistory}
                                 />
                             ))}
                         </>

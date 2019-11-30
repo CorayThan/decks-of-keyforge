@@ -1,4 +1,4 @@
-import { FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@material-ui/core"
+import { Checkbox, FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@material-ui/core"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
@@ -23,6 +23,7 @@ import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
 import { CardTypeSelect, SelectedCardTypes } from "./selects/CardTypeSelect"
 import { PowerSelect, SelectedPowers } from "./selects/PowerSelect"
+import { PublishDateSelect, SelectedPublishDate } from "./selects/PublishDateSelect"
 import { RaritySelect, SelectedRarities } from "./selects/RaritySelect"
 
 interface CardsSearchDrawerProps {
@@ -33,7 +34,6 @@ interface CardsSearchDrawerProps {
 @observer
 export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
 
-    cardStore = cardStore
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedCardTypes = new SelectedCardTypes(this.props.filters.types)
     selectedRarities = new SelectedRarities(this.props.filters.rarities)
@@ -42,6 +42,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedArmors = new SelectedArmors(this.props.filters.armors)
     selectedSortStore = new CardSortSelectStore(this.props.filters.sort)
     selectedExpansion = new SelectedExpansion(this.props.filters.expansion == null ? undefined : [this.props.filters.expansion])
+    selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
 
     search = (event?: React.FormEvent) => {
         if (event) {
@@ -56,7 +57,8 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.armors = this.selectedArmors.toArray()
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
         filters.expansion = this.selectedExpansion.expansionNumber()
-        this.cardStore.searchCards(filters)
+        filters.aercHistoryDate = this.selectedPublishDate.date
+        cardStore.searchCards(filters)
         keyDrawerStore.closeIfSmall()
         this.props.history.push(Routes.cardSearch(filters))
     }
@@ -114,6 +116,25 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
                         </ListItem>
                         <ListItem>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={filters.aercHistory}
+                                        onChange={() => {
+                                            filters.aercHistory = !filters.aercHistory
+                                            if (!filters.aercHistory) {
+                                                this.selectedPublishDate.reset()
+                                            }
+                                        }}
+                                    />
+                                }
+                                label={"Past AERC"}
+                            />
+                            {filters.aercHistory && (
+                                <PublishDateSelect selected={this.selectedPublishDate}/>
+                            )}
+                        </ListItem>
+                        <ListItem>
                             <ExpansionSelector
                                 store={this.selectedExpansion}
                                 small={false}
@@ -138,15 +159,15 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 variant={"contained"}
                                 color={"secondary"}
                                 type={"submit"}
-                                loading={this.cardStore.searchingForCards}
-                                disabled={this.cardStore.searchingForCards}
+                                loading={cardStore.searchingForCards}
+                                disabled={cardStore.searchingForCards}
                             >
                                 Search
                             </KeyButton>
                         </ListItem>
-                        {this.cardStore.cards && !this.cardStore.searchingForCards ? (
+                        {cardStore.cards && !cardStore.searchingForCards ? (
                             <ListItem>
-                                <Typography variant={"subtitle2"}>You found {this.cardStore.cards.length} cards</Typography>
+                                <Typography variant={"subtitle2"}>You found {cardStore.cards.length} cards</Typography>
                             </ListItem>
                         ) : null}
                         <ListItem>
@@ -183,42 +204,6 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 label={"All cards"}
                             />
                         </ListItem>
-                        <ListItem>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={!!keyLocalStorage.genericStorage.historicalAerc}
-                                        onChange={() => {
-                                            const historicalAerc = !keyLocalStorage.genericStorage.historicalAerc
-                                            if (historicalAerc) {
-                                                cardStore.findPreviousExtraInfo()
-                                            }
-                                            keyLocalStorage.updateGenericStorage({
-                                                historicalAerc
-                                            })
-                                        }}
-                                    />
-                                }
-                                label={"The AERC of History"}
-                            />
-                        </ListItem>
-                        {keyLocalStorage.genericStorage.historicalAerc && (
-                            <ListItem>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={!keyLocalStorage.genericStorage.allAercHistory}
-                                            onChange={() => {
-                                                keyLocalStorage.updateGenericStorage({
-                                                    allAercHistory: !keyLocalStorage.genericStorage.allAercHistory
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    label={"Most recent AERC updates only"}
-                                />
-                            </ListItem>
-                        )}
                     </List>
                 </form>
             </KeyDrawer>
