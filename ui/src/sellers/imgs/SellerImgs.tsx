@@ -4,6 +4,7 @@ import bigz from "../../user/imgs/big-z.png"
 import abtabdn from "./abtabdn.png"
 import coraythan from "./dok.png"
 import fifthPlanet from "./fifth-planet.jpg"
+import justiceBlinded from "./jb-logo.png"
 import keysader from "./keysader.png"
 import neverOutGamed from "./never-out-gamed.png"
 import tiggerClone from "./protoman.jpg"
@@ -21,6 +22,7 @@ sellerImgs.set("Jupiter".toLowerCase(), fifthPlanet)
 sellerImgs.set("Keysader".toLowerCase(), keysader)
 sellerImgs.set("TTC".toLowerCase(), ttc)
 sellerImgs.set("abtabdn".toLowerCase(), abtabdn)
+sellerImgs.set("JusticeBlinded".toLowerCase(), justiceBlinded)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

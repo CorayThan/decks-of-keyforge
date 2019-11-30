@@ -465,7 +465,7 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], t
     trait: SynergyTrait = SynergyTrait.dealsDamage
 
     @observable
-    rating: SynTraitRatingValues = 2
+    rating: SynTraitRatingValues = 3
 
     @observable
     type: SynTraitType = SynTraitType.anyHouse
@@ -506,6 +506,9 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], t
                     onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
                     style={{marginRight: spacing(2)}}
                 >
+                    <MenuItem value={-4}>
+                        -4
+                    </MenuItem>
                     <MenuItem value={-3}>
                         -3
                     </MenuItem>
@@ -523,6 +526,9 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], t
                     </MenuItem>
                     <MenuItem value={3}>
                         3
+                    </MenuItem>
+                    <MenuItem value={4}>
+                        4
                     </MenuItem>
                 </TextField>
                 <TextField
