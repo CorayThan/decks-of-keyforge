@@ -45,14 +45,14 @@ export const TraitBubble = (props: {
             ) : null}
             {props.synTraitType === SynTraitType.house ? (
                 <Tooltip title={"Synergizes with house traits only"}>
-                    <Home style={{color, marginRight: spacing(1)}}/>
+                    <Home style={{color, marginRight: spacing(1), height: 18}}/>
                 </Tooltip>
             ) : null}
             {props.synTraitType === SynTraitType.outOfHouse ? (
                 <Tooltip title={"Synergizes with out of house traits only"}>
-                    <div style={{width: 36, height: 36, marginLeft: spacing(1), marginRight: spacing(1)}}>
-                        <div style={{position: "absolute", paddingLeft: 7, paddingTop: 5}}>
-                            <Home style={{color,}}/>
+                    <div style={{width: 18, height: 18, marginLeft: spacing(1), marginRight: spacing(1)}}>
+                        <div style={{position: "absolute", paddingLeft: 2, paddingTop: 1}}>
+                            <Home style={{color, width: 14, height: 14}}/>
                         </div>
                         <AntiIcon style={{position: "absolute"}}/>
                     </div>

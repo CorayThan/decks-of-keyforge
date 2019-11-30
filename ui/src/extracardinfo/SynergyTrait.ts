@@ -1,8 +1,11 @@
+import { Utils } from "../config/Utils"
+
 export enum SynergyTrait {
 
     // Amber / keys
     capturesAmberOnEnemies = "capturesAmberOnEnemies",
     capturesAmber = "capturesAmber",
+    capturesOntoTarget = "capturesOntoTarget",
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
     scalingSteal = "scalingSteal",
@@ -28,6 +31,7 @@ export enum SynergyTrait {
     protectsCreatures = "protectsCreatures",
     increasesCreaturePower = "increasesCreaturePower",
     heals = "heals",
+    movesFriendly = "movesFriendly",
     controlsCreatures = "controlsCreatures",
     goodReap = "goodReap",
     goodAction = "goodAction",
@@ -85,10 +89,14 @@ export enum SynergyTrait {
     controlsHouseChoice = "controlsHouseChoice",
     usesCreaturesOutOfHouse = "usesCreaturesOutOfHouse",
 
+
     // other
     revealsTopDeck = "revealsTopDeck",
     chains = "chains",
     forgesKeys = "forgesKeys",
+
+
+    // Special traits, don't use these in manual traits
     alpha = "alpha",
     omega = "omega",
 
@@ -106,13 +114,6 @@ export enum SynergyTrait {
     demon = "demon",
     giant = "giant",
 
-    // Special cards
-    badPenny = "badPenny",
-    routineJob = "routineJob",
-    urchin = "urchin",
-    ancientBear = "ancientBear",
-    warGrumpus = "warGrumpus",
-    ortannusBinding = "ortannusBinding",
 
     // Deck traits In general these are 50 to 60 percentile = "0, 60+ = "1, 70+ = "2, 80+ = "3 90+ = "4
     power5OrHigherCreatures = "power5OrHigherCreatures", // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
@@ -142,5 +143,15 @@ export enum SynergyTrait {
     // for deck: 22+=1/4, 24+=1/2, 26=3/4, 27+=1
 
     lowExpectedAmber = "lowExpectedAmber", // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
-    card = "card"
+
+    goodCreature = "goodCreature",
+
+    // no synergy traits
+    card = "card",
 }
+
+const allSynergyTraits = Utils.enumValues(SynergyTrait)
+const firstSpecialIndex = allSynergyTraits.indexOf(SynergyTrait.alpha)
+export const specialTraits = allSynergyTraits.slice(firstSpecialIndex, allSynergyTraits.length)
+
+export const noSynTraits = [SynergyTrait.card]

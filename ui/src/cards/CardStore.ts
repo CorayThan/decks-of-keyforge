@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from "axios"
 import { clone, sortBy } from "lodash"
-import { observable } from "mobx"
+import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
@@ -43,6 +44,9 @@ export class CardStore {
 
     @observable
     previousExtraInfo?: { [cardName: string]: KCard }
+
+    @observable
+    mostRecentlyUpdatedExtraInfo?: { [cardName: string]: KCard }
 
     @observable
     findingPreviousInfo = false
@@ -122,12 +126,9 @@ export class CardStore {
                 log.debug(`Start load all cards async`)
                 this.searchingForCards = false
                 const basisForCards: KCard[] = response.data.slice()
-                let allWins = 0
                 basisForCards.forEach(card => {
-                    allWins += card.wins!
                     card.winRate = winPercentForCard(card)
                 })
-                log.debug(`All wins: ${allWins}`)
                 this.cardNameLowercaseToCard = new Map()
                 this.cardNameHyphenDelimitedLowercaseToCard = new Map()
                 this.expansionNumberToCard = new Map()
@@ -204,6 +205,17 @@ export class CardStore {
             return this.cardNameLowercaseToCard.get(card.cardTitle.toLowerCase())
         }
         return card
+    }
+
+    @computed
+    get cardSearchResults(): KCard[] | undefined {
+        if (!keyLocalStorage.genericStorage.allAercHistory) {
+            if (this.previousExtraInfo != null && this.cards != null) {
+                const mostRecentDate = Math.max(...this.allCards.map(card => card.extraCardInfo.published))
+                return this.cards.filter(card => card.extraCardInfo.published === mostRecentDate)
+            }
+        }
+        return this.cards
     }
 
     private cardSearchTokenized = (searchValue: string) => searchValue

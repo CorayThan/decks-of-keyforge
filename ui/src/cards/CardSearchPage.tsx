@@ -76,7 +76,7 @@ class LoadInitialCardSearch extends React.Component<WaitForAllCardsProps> {
     }
 
     render() {
-        const cards = cardStore.cards
+        const cards = cardStore.cardSearchResults
         if (cards == null) {
             return <Loader/>
         }

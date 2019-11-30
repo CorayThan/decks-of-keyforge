@@ -86,7 +86,7 @@ class SynergyServiceTest {
                         id = "returns creatures to hand",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
                                 )
                         )
                 )
@@ -101,7 +101,7 @@ class SynergyServiceTest {
                                 expectedAmber = 0.0,
                                 expectedAmberMax = 3.0,
                                 synergies = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
                                 )
                         )
                 )
@@ -118,10 +118,10 @@ class SynergyServiceTest {
                                     expectedAmber = 1.0,
                                     expectedAmberMax = 4.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.highCreatureCount, 2, SynTraitType.house),
-                                            SynTraitValue(SynergyTrait.lowCreatureCount, -2, SynTraitType.house),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitType.house),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 1, SynTraitType.outOfHouse)
+                                            SynTraitValue(SynergyTrait.highCreatureCount, 3, SynTraitType.house),
+                                            SynTraitValue(SynergyTrait.lowCreatureCount, -3, SynTraitType.house),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4, SynTraitType.house),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.outOfHouse)
                                     ))
                     )
             )
@@ -142,7 +142,7 @@ class SynergyServiceTest {
                             cardTitle = "Nature's Call",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
                                     ))
                     )
             )
@@ -153,7 +153,7 @@ class SynergyServiceTest {
                             cardTitle = "Hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
                                     ))
                     )
             )
@@ -191,8 +191,8 @@ class SynergyServiceTest {
                                 effectivePower = 6,
                                 effectivePowerMax = 12.0,
                                 synergies = listOf(
-                                        SynTraitValue(SynergyTrait.niffle, 2),
-                                        SynTraitValue(SynergyTrait.beast, 2)
+                                        SynTraitValue(SynergyTrait.niffle, 3),
+                                        SynTraitValue(SynergyTrait.beast, 3)
                                 )
                         )
                 )
@@ -208,8 +208,8 @@ class SynergyServiceTest {
                                     amberControl = 0.0,
                                     amberControlMax = 16.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.outOfHouse),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.house)
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitType.outOfHouse),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitType.house)
                                     )
                             )
                     )
@@ -221,7 +221,7 @@ class SynergyServiceTest {
                             cardTitle = "hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3)
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
                                     )
                             )
                     )
@@ -233,7 +233,7 @@ class SynergyServiceTest {
                         cardTitle = "key abuduction",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 1, SynTraitType.house)
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.house)
                                 )
                         )
                 )
@@ -251,7 +251,7 @@ class SynergyServiceTest {
                                     amberControl = 0.0,
                                     amberControlMax = 4.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.highTotalCreaturePower, 2)
+                                            SynTraitValue(SynergyTrait.highTotalCreaturePower, 3)
                                     )
                             )
                     )

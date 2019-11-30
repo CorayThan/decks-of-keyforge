@@ -189,9 +189,12 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                     <Switch
                                         checked={!!keyLocalStorage.genericStorage.historicalAerc}
                                         onChange={() => {
-                                            cardStore.findPreviousExtraInfo()
+                                            const historicalAerc = !keyLocalStorage.genericStorage.historicalAerc
+                                            if (historicalAerc) {
+                                                cardStore.findPreviousExtraInfo()
+                                            }
                                             keyLocalStorage.updateGenericStorage({
-                                                historicalAerc: !keyLocalStorage.genericStorage.historicalAerc
+                                                historicalAerc
                                             })
                                         }}
                                     />
@@ -199,6 +202,23 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 label={"The AERC of History"}
                             />
                         </ListItem>
+                        {keyLocalStorage.genericStorage.historicalAerc && (
+                            <ListItem>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={!keyLocalStorage.genericStorage.allAercHistory}
+                                            onChange={() => {
+                                                keyLocalStorage.updateGenericStorage({
+                                                    allAercHistory: !keyLocalStorage.genericStorage.allAercHistory
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    label={"Most recent AERC updates only"}
+                                />
+                            </ListItem>
+                        )}
                     </List>
                 </form>
             </KeyDrawer>

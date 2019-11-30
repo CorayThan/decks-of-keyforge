@@ -25,7 +25,7 @@ import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
-import { SynergyTrait } from "./SynergyTrait"
+import { noSynTraits, specialTraits, SynergyTrait } from "./SynergyTrait"
 
 interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
 }
@@ -476,6 +476,9 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], t
     }
 
     render() {
+        const {trait} = this.props
+        const selectableTraits = Utils.enumValues(SynergyTrait)
+            .filter(traitValue => !(trait ? specialTraits : noSynTraits).includes(traitValue as SynergyTrait))
         return (
             <div style={{display: "flex", alignItems: "center", flexWrap: "wrap", marginTop: spacing(1)}}>
                 <TextField
@@ -485,13 +488,13 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], t
                     onChange={(event) => this.trait = event.target.value as SynergyTrait}
                     style={{marginRight: spacing(2)}}
                 >
-                    {Utils.enumValues(SynergyTrait).map(option => (
+                    {selectableTraits.map(option => (
                         <MenuItem key={option} value={option}>
                             {option}
                         </MenuItem>
                     ))}
                 </TextField>
-                {!this.props.trait && (
+                {!trait && (
                     <div style={{width: 120, marginRight: spacing(2)}}>
                         <SingleCardSearchSuggest card={this.holdsCard} placeholder={"Card"}/>
                     </div>

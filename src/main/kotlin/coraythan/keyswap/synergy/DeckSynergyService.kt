@@ -46,11 +46,13 @@ object DeckSynergyService {
 
     private fun ratingsToPercent(synRating: Int, traitStrength: TraitStrength): Int {
         return (if (synRating < 0) -1 else 1) * when (synRating.absoluteValue + traitStrength.value) {
-            2 -> 10
-            3 -> 15
-            4 -> 25
-            5 -> 33
-            6 -> 50
+            2 -> 2
+            3 -> 5
+            4 -> 10
+            5 -> 15
+            6 -> 25
+            7 -> 33
+            8 -> 50
             else -> {
                 log.warn("Bad ratings! $synRating $traitStrength")
                 0

@@ -15,6 +15,6 @@ export enum SynTraitType {
     outOfHouse = "outOfHouse",
 }
 
-export type SynTraitRatingValues = -3 | -2 | -1 | 1 | 2 | 3
+export type SynTraitRatingValues = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4
 
 export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.type}`

@@ -7,16 +7,17 @@ import java.util.*
 import javax.persistence.*
 
 enum class TraitStrength(val value: Int) {
-    STRONG(3),
-    NORMAL(2),
-    WEAK(1);
+    STRONG(4),
+    NORMAL(3),
+    WEAK(2),
+    EXTRA_WEAK(1)
 }
 
 @Entity
 data class SynTraitValue(
         @Enumerated(EnumType.STRING)
         val trait: SynergyTrait,
-        val rating: Int = 2,
+        val rating: Int = 3,
         @Enumerated(EnumType.STRING)
         val type: SynTraitType = SynTraitType.anyHouse,
 
@@ -37,22 +38,11 @@ data class SynTraitValue(
         return other.rating - this.rating
     }
 
-    fun synergyValue(matches: Int): Double {
-        return matches * when (rating) {
-            -3 -> -0.5
-            -2 -> -0.25
-            -1 -> -0.125
-            1 -> 0.125
-            2 -> 0.25
-            3 -> 0.5
-            else -> throw IllegalStateException("Can't have synergy rating of $rating")
-        }
-    }
-
     fun strength() = when (rating) {
-        1 -> TraitStrength.WEAK
-        2 -> TraitStrength.NORMAL
-        3 -> TraitStrength.STRONG
+        1 -> TraitStrength.EXTRA_WEAK
+        2 -> TraitStrength.WEAK
+        3 -> TraitStrength.NORMAL
+        4 -> TraitStrength.STRONG
         else -> TraitStrength.NORMAL
     }
 
@@ -77,6 +67,7 @@ enum class SynergyTrait {
     // Amber / keys
     capturesAmberOnEnemies,
     capturesAmber,
+    capturesOntoTarget,
     stealsAmber,
     increasesKeyCost,
     scalingSteal,
@@ -102,6 +93,7 @@ enum class SynergyTrait {
     protectsCreatures,
     increasesCreaturePower,
     heals,
+    movesFriendly,
     controlsCreatures,
     goodReap,
     goodAction,
@@ -180,15 +172,6 @@ enum class SynergyTrait {
     demon,
     giant,
 
-    // TODO remove these
-    // Special cards
-    badPenny,
-    routineJob,
-    urchin,
-    ancientBear,
-    warGrumpus,
-    ortannusBinding,
-
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4
     power5OrHigherCreatures, // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
     power4OrHigherCreatures, // 9+=1/4, 10+=1/2, 11+=3/4, 13+=1
@@ -219,7 +202,10 @@ enum class SynergyTrait {
     lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
     // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
 
-    card;
+    // Special traits
+    card,
+    // Automatically applied
+    goodCreature;
 
     companion object {
         fun fromTrait(trait: String): SynergyTrait? {
