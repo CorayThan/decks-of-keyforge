@@ -5,6 +5,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { Link as RrLink } from "react-router-dom"
 import { ArticleInternalLink } from "../articles/ArticleView"
+import { CardFilters } from "../cards/CardFilters"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { BarData, StatsBar } from "../graphs/StatsBar"
@@ -15,8 +16,11 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
+export const latestVersion = "4.9"
 
-export const latestVersion = "4.81"
+const decFirstUpdateCards = new CardFilters()
+decFirstUpdateCards.aercHistory = true
+decFirstUpdateCards.aercHistoryDate = "2019-12-01"
 
 @observer
 export class ReleaseNotes extends React.Component {
@@ -24,6 +28,32 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.9"}
+                    date={"11/30/2019"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Better AERC History",
+                            note: `When viewing "Past AERC" on the card search page you can now select specific dates! Should make it much easier to ` +
+                            "review changes to AERC."
+                        },
+                        {
+                            highlight: "Extra Weak Traits for AERC",
+                            note: "AERC now has extra-weak traits as an option, to help properly synergize cards that synergize a small " +
+                                "amount with many types of cards, like many Saurians."
+                        },
+                        {
+                            highlight: "New Traits",
+                            note: "I've now added new traits for Good Creature (for cards like Exhume), Captures onto Target for targetted aember capture" +
+                                "(for cards like The Callipygian Ideal), and Moves Friendly (for positioning-relevant creatures)."
+                        },
+                        {
+                            highlight: "Link to updated cards",
+                            note: <RrLink to={Routes.cardSearch(decFirstUpdateCards)}>Updated Cards</RrLink>
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.8"}
                     date={"11/18/2019"}

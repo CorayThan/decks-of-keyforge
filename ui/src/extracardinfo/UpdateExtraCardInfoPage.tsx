@@ -1,4 +1,4 @@
-import { Card, Checkbox, Grid, IconButton, MenuItem, TextField, Tooltip, Typography } from "@material-ui/core"
+import { Card, CardActions, Checkbox, Grid, IconButton, MenuItem, TextField, Tooltip, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight, Delete, Save } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -21,7 +21,6 @@ import { Loader } from "../mui-restyled/Loader"
 import { SynTraitType } from "../synergy/SynTraitType"
 import { SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
-import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
@@ -224,9 +223,8 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
             <div
                 style={{
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: screenStore.screenWidth > 1200 ? undefined : "column"
+                    flexWrap: "wrap",
+                    justifyContent: "center"
                 }}
             >
                 {this.card && (
@@ -418,7 +416,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                 </div>
                             </Grid>
                         </Grid>
-                        <div style={{marginTop: spacing(2), display: "flex"}}>
+                        <CardActions>
                             <LinkButton
                                 to={Routes.cards}
                                 style={{marginRight: spacing(2)}}
@@ -434,7 +432,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                             >
                                 Save
                             </KeyButton>
-                        </div>
+                        </CardActions>
                     </Card>
                 </div>
             </div>

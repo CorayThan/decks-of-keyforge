@@ -24,8 +24,6 @@ export enum SynergyTrait {
     // Creatures
     destroysFriendlyCreatures = "destroysFriendlyCreatures",
     destroysEnemyCreatures = "destroysEnemyCreatures",
-    causesFighting = "causesFighting",
-    causesReaping = "causesReaping",
     stuns = "stuns",
     addsArmor = "addsArmor",
     protectsCreatures = "protectsCreatures",
@@ -33,6 +31,9 @@ export enum SynergyTrait {
     heals = "heals",
     movesFriendly = "movesFriendly",
     controlsCreatures = "controlsCreatures",
+    causesFighting = "causesFighting",
+    causesReaping = "causesReaping",
+    usesCreatures = "usesCreatures",
     goodReap = "goodReap",
     goodAction = "goodAction",
     goodPlay = "goodPlay",

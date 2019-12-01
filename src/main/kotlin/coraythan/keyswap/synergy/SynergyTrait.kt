@@ -86,8 +86,6 @@ enum class SynergyTrait {
     // Creatures
     destroysFriendlyCreatures,
     destroysEnemyCreatures,
-    causesFighting,
-    causesReaping,
     stuns,
     addsArmor,
     protectsCreatures,
@@ -95,6 +93,9 @@ enum class SynergyTrait {
     heals,
     movesFriendly,
     controlsCreatures,
+    causesFighting,
+    causesReaping,
+    usesCreatures,
     goodReap,
     goodAction,
     goodPlay,
