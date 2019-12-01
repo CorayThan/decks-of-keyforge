@@ -49,7 +49,12 @@ export class ReleaseNotes extends React.Component {
                                 "(for cards like The Callipygian Ideal), and Moves Friendly (for positioning-relevant creatures)."
                         },
                         {
-                            highlight: "Link to updated cards",
+                            highlight: "AERC Update Summary",
+                            note: "The biggest difference is that many Saurian sets have dropped a point or two, and some of their " +
+                                "more extreme yet misleading Aember control numbers have been toned down. I've also changed the AERC " +
+                                "for most house leaders, and made many other minor changes. Take a look in the link below!"
+                        },
+                        {
                             note: <RrLink to={Routes.cardSearch(decFirstUpdateCards)}>Updated Cards</RrLink>
                         },
                     ]}
