@@ -160,19 +160,12 @@ export class SellersAndDevs extends React.Component {
                 <AboutGridItem>
                     <InfoListCard title={"File with all SAS and AERC"} infos={[
                         "Please use this instead of the API if it fits your needs to help conserve DoK's server resources.",
-                        "I've created a csv (spreadsheet) file with the deck info for all decks up to the time it was generated.",
-                        <Link href={"https://drive.google.com/file/d/1ARvGL-Ai8nvmryBSXzfCesXmzg-0Lsu3/view?usp=sharing"} target={"_blank"} key={"sas-link4"}>
-                            10/20/2019 SAS v4
-                        </Link>,
-                        <Link href={"https://drive.google.com/open?id=1yZfHZN1FOEjb_D0N7ZbbRmfpY8qtP2Km"} target={"_blank"} key={"sas-link3"}>
-                            9/13/2019
-                        </Link>,
-                        <Link href={"https://drive.google.com/open?id=1gupFw4Q7irQqkDbkY77L96yjYgjT0CEW"} target={"_blank"} key={"sas-link2"}>
-                            7/2/2019
+                        "I've created csv files (spreadsheets) with the deck info for all decks up to the time they were generated.",
+                        <Link href={"https://drive.google.com/drive/folders/1Yk4x221rqeIr32WrC5hkMXyBmWC311rS?usp=sharing"} target={"_blank"} key={"sas-link4"}>
+                            Folder with deck csv files
                         </Link>,
                         "Like with the API, if you use this please attribute decksofkeyforge.com on your site / material.",
-                        "I will plan to create a new file whenever I update SAS or AERC, but this file will only contain the decks up to the time it was " +
-                        "generated."
+                        "I plan to create a new file whenever I update SAS or AERC."
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
