@@ -45,10 +45,12 @@ class SearchDeckNameStore {
         }
 
         const trimmed = this.searchValue.trim()
-        if (trimmed.length > 3) {
+        if (trimmed.length > 2) {
             this.quietPeriodTimeoutId = window.setTimeout(() => {
                 log.debug(`Delayed search with ${trimmed}`)
-                deckStore.findDecksByName(trimmed)
+                if (trimmed.length > 3) {
+                    deckStore.findDecksByName(trimmed)
+                }
                 cardStore.findCardsByName(trimmed)
             }, 500)
         } else {
