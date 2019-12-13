@@ -19,7 +19,7 @@ class AuctionEndpoints(
             = auctionService.list(listingInfo, offsetMinutes)
 
     @PostMapping("/secured/cancel/{deckId}")
-    fun cancel(@PathVariable deckId: Long) = auctionService.cancel(deckId)
+    fun cancel(@PathVariable deckId: Long) = auctionService.cancelAuction(deckId)
 
     @PostMapping("/secured/bid/{auctionId}/{bid}")
     fun bid(@PathVariable auctionId: UUID, @PathVariable bid: Int) = auctionService.bid(auctionId, bid)

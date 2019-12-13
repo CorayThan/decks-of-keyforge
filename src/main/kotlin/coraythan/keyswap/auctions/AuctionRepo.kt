@@ -10,4 +10,7 @@ interface AuctionRepo : CrudRepository<Auction, UUID> {
     fun findAllBySellerIdAndStatus(sellerId: UUID, status: AuctionStatus): List<Auction>
 
     fun findBySellerIdAndDeckIdAndStatus(sellerId: UUID, deckId: Long, status: AuctionStatus): List<Auction>
+    fun findBySellerIdAndDeckId(sellerId: UUID, deckId: Long): Auction?
+
+    fun findByStatusIn(statuses: Set<AuctionStatus>): List<Auction>
 }

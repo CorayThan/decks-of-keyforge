@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.auctions.Auction
 import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.purchases.Purchase
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
@@ -75,12 +76,22 @@ data class KeyUser(
         val sellerEmail: String? = null,
         val discord: String? = null,
         val storeName: String? = null,
+        val shippingCost: String? = null,
+        val allowsTrades: Boolean = false,
 
         val displayCrucibleTrackerWins: Boolean? = false,
 
         @JsonIgnoreProperties("seller")
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-        val auctions: List<Auction> = listOf()
+        val auctions: List<Auction> = listOf(),
+
+        @JsonIgnoreProperties("buyer")
+        @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
+        val purchases: List<Purchase> = listOf(),
+
+        @JsonIgnoreProperties("seller")
+        @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
+        val sales: List<Purchase> = listOf()
 
 ) {
     val primaryEmail: String

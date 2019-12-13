@@ -18,9 +18,9 @@ data class Auction(
 
         val endDateTime: ZonedDateTime,
 
-        val bidIncrement: Int = 5,
+        val bidIncrement: Int? = 5,
 
-        val startingBid: Int = 0,
+        val startingBid: Int? = 0,
 
         val buyItNow: Int? = null,
 
@@ -36,6 +36,10 @@ data class Auction(
         @JsonIgnoreProperties("auction")
         @OneToMany(mappedBy = "auction", cascade = [CascadeType.ALL])
         val bids: List<AuctionBid> = listOf(),
+
+        @JsonIgnoreProperties("auction")
+        @OneToMany(mappedBy = "auction", cascade = [CascadeType.ALL])
+        val offers: List<Offer> = listOf(),
 
         @JsonIgnoreProperties("auctions")
         @ManyToOne
@@ -57,6 +61,7 @@ data class Auction(
         val redeemed: Boolean = true,
         val externalLink: String? = null,
         val listingInfo: String? = null,
+        val shippingCost: String? = null,
 
         val dateListed: ZonedDateTime = now(),
 
@@ -82,13 +87,13 @@ data class Auction(
     val highestBidderUsername: String?
         get() = highestBidder()?.username
 
-    val nextBid: Int
+    val nextBid: Int?
         get() {
             val highBid = highestBid
             return if (highBid == null) {
                 startingBid
             } else {
-                highBid + bidIncrement
+                highBid + (bidIncrement ?: 1)
             }
         }
 
@@ -120,8 +125,8 @@ data class Auction(
 data class AuctionDto(
         val durationDays: Int = 7,
         val endDateTime: ZonedDateTime,
-        val bidIncrement: Int = 5,
-        val startingBid: Int = 0,
+        val bidIncrement: Int? = 5,
+        val startingBid: Int? = null,
         val buyItNow: Int? = null,
         val status: AuctionStatus = AuctionStatus.ACTIVE,
         val highestBid: Int? = null,
@@ -132,6 +137,7 @@ data class AuctionDto(
 )
 
 enum class AuctionStatus {
+    BUY_IT_NOW_ONLY,
     ACTIVE,
     COMPLETE
 }
