@@ -5,3 +5,8 @@ data class BidPlacementResult(
         val youAreHighBidder: Boolean,
         val message: String
 )
+
+data class OfferPlacementResult(
+        val successful: Boolean,
+        val message: String
+)

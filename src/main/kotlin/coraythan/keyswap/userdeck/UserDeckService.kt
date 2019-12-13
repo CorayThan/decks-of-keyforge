@@ -3,7 +3,6 @@ package coraythan.keyswap.userdeck
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.auctions.AuctionRepo
 import coraythan.keyswap.auctions.AuctionStatus
-import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
@@ -62,18 +61,22 @@ class UserDeckService(
     // Don't want this running regularly
     @Scheduled(fixedDelayString = "PT144H")
     fun correctCounts() {
-        log.info("$scheduledStart to correct counts.")
-        userDeckRepo
-                .findAll(QUserDeck.userDeck.wishlist.isTrue)
-                .groupBy { it.deck.id }
-                .map { it.value.first().deck to it.value.size }
-                .forEach { if (it.first.wishlistCount != it.second) deckRepo.save(it.first.copy(wishlistCount = it.second)) }
+        log.info("$scheduledStart correcting counts.")
+        try {
+            userDeckRepo
+                    .findAll(QUserDeck.userDeck.wishlist.isTrue)
+                    .groupBy { it.deck.id }
+                    .map { it.value.first().deck to it.value.size }
+                    .forEach { if (it.first.wishlistCount != it.second) deckRepo.save(it.first.copy(wishlistCount = it.second)) }
 
-        userDeckRepo
-                .findAll(QUserDeck.userDeck.funny.isTrue)
-                .groupBy { it.deck.id }
-                .map { it.value.first().deck to it.value.size }
-                .forEach { if (it.first.funnyCount != it.second) deckRepo.save(it.first.copy(funnyCount = it.second)) }
+            userDeckRepo
+                    .findAll(QUserDeck.userDeck.funny.isTrue)
+                    .groupBy { it.deck.id }
+                    .map { it.value.first().deck to it.value.size }
+                    .forEach { if (it.first.funnyCount != it.second) deckRepo.save(it.first.copy(funnyCount = it.second)) }
+        } catch (exception: Exception) {
+            log.error("Couldn't correct wishlist counts", exception)
+        }
         log.info("$scheduledStop correcting counts.")
     }
 
@@ -120,54 +123,7 @@ class UserDeckService(
             val currentUser = currentUserService.loggedInUserOrUnauthorized()
             val preexisting = userDeckRepo.findByDeckIdAndUserId(price.deckId, currentUser.id)
                     ?: throw IllegalArgumentException("There was no listing info for deck with id ${price.deckId}")
-            userDeckRepo.save(preexisting.copy(askingPrice = price.askingPrice))
-        }
-    }
-
-    fun list(
-            listingInfo: ListingInfo,
-            user: KeyUser? = null
-    ) {
-        val currentUser = user ?: (currentUserService.loggedInUserOrUnauthorized())
-
-        // Unlist if it is currently listed to support "updates"
-        val preexisting = userDeckRepo.findByDeckIdAndUserId(listingInfo.deckId, currentUser.id)
-        val preexistingForSale = preexisting?.forSale
-        val preexistingForTrade = preexisting?.forTrade
-        if (preexisting != null) {
-            unlistUserDeck(preexisting)
-        }
-
-        if (!listingInfo.forSale && !listingInfo.forTrade && listingInfo.auctionListingInfo == null) {
-            throw BadRequestException("Listing info must be for sale, trade or auction.")
-        }
-        modOrCreateUserDeck(listingInfo.deckId, currentUser, {
-            it.copy(
-                    forSale = it.forSale || listingInfo.forSale,
-                    forTrade = it.forTrade || listingInfo.forTrade,
-                    forAuction = it.forAuction || listingInfo.auctionListingInfo != null,
-                    listedOn = now()
-            )
-        }) {
-            it.copy(
-                    forSale = listingInfo.forSale,
-                    forTrade = listingInfo.forTrade,
-                    forSaleInCountry = listingInfo.forSaleInCountry,
-                    language = listingInfo.language,
-                    askingPrice = listingInfo.askingPrice,
-                    listingInfo = if (listingInfo.listingInfo.isNullOrBlank()) null else listingInfo.listingInfo,
-                    condition = listingInfo.condition,
-                    externalLink = if (listingInfo.externalLink.isNullOrBlank()) null else listingInfo.externalLink,
-                    dateListed = now(),
-                    expiresAt = if (listingInfo.expireInDays == null) null else now().plusDays(listingInfo.expireInDays.toLong()),
-                    ownedBy = currentUser.username,
-                    currencySymbol = currentUser.currencySymbol
-            )
-        }
-        if (preexisting == null || (preexistingForSale == false && preexistingForTrade == false)) {
-            // Send email since this is a new listing
-            forSaleNotificationsService.sendNotifications(listingInfo)
-            userRepo.save(userRepo.getOne(currentUser.id).copy(mostRecentDeckListing = now()))
+            userDeckRepo.save(preexisting.copy(askingPrice = price.askingPrice?.toDouble()))
         }
     }
 

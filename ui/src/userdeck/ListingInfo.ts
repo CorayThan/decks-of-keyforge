@@ -1,11 +1,8 @@
-import { AuctionListingInfo } from "../auctions/AuctionListingInfo"
 import { DeckLanguage } from "../decks/DeckLanguage"
 import { DeckCondition } from "./UserDeck"
 
 export interface ListingInfo {
     deckId: number
-    forSale: boolean
-    forTrade: boolean
     forSaleInCountry: string,
     language: DeckLanguage
     condition: DeckCondition
@@ -13,7 +10,10 @@ export interface ListingInfo {
     listingInfo: string
     externalLink: string
     expireInDays: number
-    auctionListingInfo?: AuctionListingInfo
+    bidIncrement?: number
+    startingBid?: number
+    buyItNow?: number
+    endTime?: string
 }
 
 export interface UpdatePrice {

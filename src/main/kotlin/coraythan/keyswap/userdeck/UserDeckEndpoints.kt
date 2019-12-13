@@ -30,9 +30,6 @@ class UserDeckEndpoints(
     @PostMapping("/{id}/unowned")
     fun unowned(@PathVariable id: Long) = userDeckService.markAsOwned(id, false)
 
-    @PostMapping("/list")
-    fun list(@RequestBody listingInfo: ListingInfo) = userDeckService.list(listingInfo)
-
     @PostMapping("/{id}/unlist")
     fun unlist(@PathVariable id: Long) = userDeckService.unlist(id)
 
@@ -40,7 +37,7 @@ class UserDeckEndpoints(
     fun findAllForUser() = userDeckService.findAllForUser()
 
     @PostMapping("/update-prices")
-    fun list(@RequestBody prices: List<UpdatePrice>) = userDeckService.updatePrices(prices)
+    fun updatePrices(@RequestBody prices: List<UpdatePrice>) = userDeckService.updatePrices(prices)
 
     @PostMapping("/{id}/notes")
     fun notes(@PathVariable id: Long, @RequestBody notes: Notes) = userDeckService.updateNotes(id, notes.notes)

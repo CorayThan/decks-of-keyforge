@@ -21,6 +21,7 @@ object TimeUtils {
 }
 
 fun now() = ZonedDateTime.now(TimeUtils.zoneId)
+fun nowLocal() = LocalDateTime.now()
 
 fun LocalTime.withOffsetMinutes(offsetMinutes: Int): LocalTime {
     return minusMinutes(offsetMinutes.toLong())

@@ -160,11 +160,8 @@ class EmailService(
         try {
 
             val availableFor = when {
-                listingInfo.auctionListingInfo != null -> "as an auction"
-                listingInfo.forSale && listingInfo.forTrade -> "for sale or trade"
-                listingInfo.forSale -> "for sale"
-                listingInfo.forTrade -> "for trade"
-                else -> throw BadRequestException("Deck must be available for sale, trade, or auction.")
+                listingInfo.auction -> "as an auction"
+                else -> "for sale"
             }
 
             log.info("Sending deck listed notification.")
