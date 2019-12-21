@@ -92,6 +92,7 @@ enum class SynergyTrait {
     increasesCreaturePower,
     heals,
     movesFriendly,
+    movesEnemy,
     controlsCreatures,
     causesFighting,
     causesReaping,

@@ -173,3 +173,9 @@ data class KeyUserDto(
 
         val displayCrucibleTrackerWins: Boolean
 )
+
+data class KeyUserSimple(
+        val id: UUID,
+        val username: String,
+
+)

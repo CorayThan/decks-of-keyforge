@@ -27,11 +27,24 @@ CREATE TABLE offer (
     date_listed TIMESTAMP NOT NULL,
     status VARCHAR(255) NOT NULL,
     message VARCHAR(2000) NOT NULL,
+    offerFrom VARCHAR(255) NOT NULL,
+    recipient_id UUID NOT NULL,
+    sender_id UUID NOT NULL,
     PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS offer
     ADD CONSTRAINT offer_auction_fk FOREIGN KEY (auction_id) REFERENCES auction;
+
+ALTER TABLE offer
+    ADD CONSTRAINT recipient_offer_fk FOREIGN KEY (recipient_id) REFERENCES key_user;
+
+ALTER TABLE offer
+    ADD CONSTRAINT sender_offer_fk FOREIGN KEY (sender_id) REFERENCES key_user;
+
+CREATE INDEX offer_recipient_idx ON offer(recipient_id);
+CREATE INDEX offer_sender_idx ON offer(sender_id);
+CREATE INDEX offer_auction_idx ON offer(auction_id);
 
 CREATE TABLE purchase (
     id UUID NOT NULL,
@@ -60,3 +73,7 @@ ALTER TABLE IF EXISTS purchase
 
 ALTER TABLE IF EXISTS purchase
     ADD CONSTRAINT purchase_buyer_fk FOREIGN KEY (buyer_id) REFERENCES key_user;
+
+CREATE INDEX purchase_seller_idx ON purchase(seller_id);
+CREATE INDEX purchase_buyer_idx ON purchase(buyer_id);
+CREATE INDEX purchase_deck_idx ON purchase(deck_id);
