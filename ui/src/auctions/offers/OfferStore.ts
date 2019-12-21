@@ -1,74 +1,53 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
-import { HttpConfig } from "../config/HttpConfig"
-import { messageStore } from "../ui/MessageStore"
-import { userStore } from "../user/UserStore"
-import { userDeckStore } from "../userdeck/UserDeckStore"
-import { AuctionDto } from "./AuctionDto"
-import { BidPlacementResult } from "./BidPlacementResult"
+import { HttpConfig } from "../../config/HttpConfig"
+import { messageStore } from "../../ui/MessageStore"
+import { AuctionDto } from "../AuctionDto"
+import { MyOffers } from "./MyOffers"
 import { MakeOffer } from "./Offer"
 
-export class AuctionStore {
+export class OfferStore {
 
     static readonly SECURE_CONTEXT = HttpConfig.API + "/offers/secured"
 
     @observable
     auctionInfo?: AuctionDto
 
+    @observable
+    myOffers?: MyOffers
+
+    @observable
+    loadingMyOffers = false
+
     makeOffer = (deckName: string, makeOffer: MakeOffer) => {
-        axios.post(`${AuctionStore.SECURE_CONTEXT}/make-offer`, makeOffer)
+        axios.post(`${OfferStore.SECURE_CONTEXT}/make-offer`, makeOffer)
             .then(() => {
                 messageStore.setSuccessMessage(`Offer sent for ${deckName}.`)
-                userStore.loadLoggedInUser()
+                this.loadMyOffers()
             })
     }
 
-    bid = (auctionId: string, bid: number) => {
-        return axios.post(`${AuctionStore.SECURE_CONTEXT}/bid/${auctionId}/${bid}`)
-            .then((response: AxiosResponse<BidPlacementResult>) => {
-                const result = response.data
-                if (result.successful && result.youAreHighBidder) {
-                    messageStore.setSuccessMessage(result.message)
-                } else {
-                    messageStore.setWarningMessage(result.message)
-                }
+    loadMyOffers = () => {
+        this.loadingMyOffers = true
+        axios.get(`${OfferStore.SECURE_CONTEXT}/my-offers`)
+            .then((response: AxiosResponse<MyOffers>) => {
+                this.loadingMyOffers = false
+                this.myOffers = response.data
             })
     }
 
-    buyItNow = (auctionId: string) => {
-        return axios.post(`${AuctionStore.SECURE_CONTEXT}/buy-it-now/${auctionId}`)
-            .then((response: AxiosResponse<BidPlacementResult>) => {
-                const result = response.data
-                if (result.successful && result.youAreHighBidder) {
-                    messageStore.setSuccessMessage(result.message)
-                } else {
-                    messageStore.setWarningMessage(result.message)
-                }
-            })
-    }
-
-    findAuctionInfo = (auctionId: string) => {
-        axios.get(`${AuctionStore.CONTEXT}/${auctionId}`)
-            .then((response: AxiosResponse<AuctionDto>) => {
-                this.auctionInfo = response.data
-            })
-    }
-
-    cancel = (deckId: number) => {
-        axios.post(`${AuctionStore.SECURE_CONTEXT}/cancel/${deckId}`)
+    cancelOffer = (offerId: string) => {
+        axios.post(`${OfferStore.SECURE_CONTEXT}/cancel/${offerId}`)
             .then((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    messageStore.setSuccessMessage(`Canceled your auction.`)
+                    messageStore.setSuccessMessage(`Your offer has been cancelled`)
                 } else {
-                    messageStore.setWarningMessage("Couldn't cancel your auction as it has been bid on.")
+                    messageStore.setWarningMessage("Your offer couldn't be cancelled as it was already accepted.")
                 }
-
-                userStore.loadLoggedInUser()
-                userDeckStore.findAllForUser()
-                userDeckStore.refreshDeckInfo()
+                this.loadMyOffers()
             })
     }
 
 }
 
-export const auctionStore = new AuctionStore()
+export const offerStore = new OfferStore()

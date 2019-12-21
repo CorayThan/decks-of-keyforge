@@ -1,11 +1,9 @@
-package coraythan.keyswap.auctions
+package coraythan.keyswap.auctions.offers
 
 import coraythan.keyswap.Api
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("${Api.base}/offers/secured")
@@ -17,5 +15,8 @@ class OfferEndpoints(
 
     @PostMapping("/make-offer")
     fun makeOffer(@RequestBody makeOffer: MakeOffer) = offerService.makeOffer(makeOffer.auctionId, makeOffer.amount, makeOffer.message)
+
+    @PostMapping("/cancel/{id}")
+    fun cancel(@PathVariable id: UUID) = offerService.cancelOffer(id)
 
 }

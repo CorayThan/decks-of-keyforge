@@ -1,6 +1,7 @@
 package coraythan.keyswap.auctions
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.auctions.offers.Offer
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckLanguage
 import coraythan.keyswap.generic.Country

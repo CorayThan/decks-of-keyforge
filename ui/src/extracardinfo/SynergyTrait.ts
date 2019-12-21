@@ -30,6 +30,7 @@ export enum SynergyTrait {
     increasesCreaturePower = "increasesCreaturePower",
     heals = "heals",
     movesFriendly = "movesFriendly",
+    movesEnemy = "movesEnemy",
     controlsCreatures = "controlsCreatures",
     causesFighting = "causesFighting",
     causesReaping = "causesReaping",
