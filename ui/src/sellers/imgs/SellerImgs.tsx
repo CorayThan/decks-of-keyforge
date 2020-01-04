@@ -6,6 +6,7 @@ import coraythan from "./dok.png"
 import fifthPlanet from "./fifth-planet.jpg"
 import justiceBlinded from "./jb-logo.png"
 import keysader from "./keysader.png"
+import musicgal from "./musicgal.jpg"
 import neverOutGamed from "./never-out-gamed.png"
 import tiggerClone from "./protoman.jpg"
 import reapout from "./reapout.jpg"
@@ -23,6 +24,7 @@ sellerImgs.set("Keysader".toLowerCase(), keysader)
 sellerImgs.set("TTC".toLowerCase(), ttc)
 sellerImgs.set("abtabdn".toLowerCase(), abtabdn)
 sellerImgs.set("JusticeBlinded".toLowerCase(), justiceBlinded)
+sellerImgs.set("musicgal", musicgal)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

@@ -29,6 +29,23 @@ export class ReleaseNotes extends React.Component {
         return (
             <AboutGridItem>
                 <ReleaseNote
+                    releaseNumber={"4.10"}
+                    date={"1/3/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "New year new SAS Improvements!",
+                            note: "I've updated AERC values for about 40 cards. This fine tunes some decks' scores, but won't have a large effect " +
+                                "on most decks."
+                        },
+                        {
+                            highlight: "Marketplace improvements pending",
+                            note: "As an aside, I'm working on more long-running improvements to the site as a marketplace. " +
+                                "Currently working on incorporating an offer system and purchase tracking."
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"4.9"}
                     date={"11/30/2019"}
                     expanded={true}
