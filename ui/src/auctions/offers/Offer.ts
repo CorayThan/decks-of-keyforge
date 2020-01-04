@@ -1,6 +1,7 @@
 
 export interface OfferDto {
     auctionId: string
+    deckId: string
     amount: number
     message: string
     status: OfferStatus
@@ -19,7 +20,8 @@ export interface MakeOffer {
 }
 
 export enum OfferStatus {
-    SENT,
-    ACCEPTED,
-    REJECTED
+    SENT = "SENT",
+    ACCEPTED = "ACCEPTED",
+    REJECTED = "REJECTED",
+    CANCELED = "CANCELED"
 }

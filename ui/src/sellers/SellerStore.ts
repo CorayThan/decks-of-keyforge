@@ -1,14 +1,27 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { messageStore } from "../ui/MessageStore"
+import { UpdatePrice } from "../userdeck/ListingInfo"
+import { userDeckStore } from "../userdeck/UserDeckStore"
 import { SellerDetails } from "./SellerDetails"
 
 export class SellerStore {
 
     static readonly CONTEXT = HttpConfig.API + "/sellers"
+    static readonly SECURE_CONTEXT = HttpConfig.API + "/sellers/secured"
 
     @observable
     featuredSellers?: SellerDetails[] = undefined
+
+    updatePrices = (prices: UpdatePrice[]) => {
+        axios.post(`${SellerStore.SECURE_CONTEXT}/update-prices`, prices)
+            .then(() => {
+                messageStore.setInfoMessage(`Updated prices for ${prices.length} decks.`)
+                userDeckStore.findAllForUser()
+                userDeckStore.refreshDeckInfo()
+            })
+    }
 
     findFeaturedSellers = () => {
         axios.get(SellerStore.CONTEXT + "/featured")
