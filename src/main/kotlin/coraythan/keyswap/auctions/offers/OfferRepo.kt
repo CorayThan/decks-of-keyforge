@@ -4,8 +4,8 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface OfferRepo : CrudRepository<Offer, UUID> {
-    fun findByRecipientId(id: UUID): List<Offer>
-    fun findBySenderId(id: UUID): List<Offer>
+    fun findByRecipientIdAndStatusIn(id: UUID, statuses: Set<OfferStatus>): List<Offer>
+    fun findBySenderIdAndStatusIn(id: UUID, statuses: Set<OfferStatus>): List<Offer>
 
     fun existsByRecipientIdAndViewedTimeIsNull(id: UUID): Boolean
 }

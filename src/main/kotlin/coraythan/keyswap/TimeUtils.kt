@@ -27,6 +27,10 @@ fun LocalTime.withOffsetMinutes(offsetMinutes: Int): LocalTime {
     return minusMinutes(offsetMinutes.toLong())
 }
 
+fun LocalDateTime.toReadableStringWithOffsetMinutes(offsetMinutes: Int, format: DateTimeFormatter = TimeUtils.localDateTimeFormatter): String {
+    return this.atZone(TimeUtils.zoneId).toReadableStringWithOffsetMinutes(offsetMinutes, format)
+}
+
 fun ZonedDateTime.toLocalDateTimeWithOffsetMinutes(offsetMinutes: Int): LocalDateTime {
     return toOffsetDateTime().withOffsetSameInstant(ZoneOffset.ofHoursMinutes(offsetMinutes / 60, offsetMinutes % 60)).toLocalDateTime()
 }

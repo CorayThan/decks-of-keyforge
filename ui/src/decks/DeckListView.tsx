@@ -16,11 +16,11 @@ import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { Loader } from "../mui-restyled/Loader"
+import { sellerStore } from "../sellers/SellerStore"
 import { CardTypeRadar } from "../stats/CardTypeRadar"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { UpdatePrice } from "../userdeck/ListingInfo"
-import { userDeckStore } from "../userdeck/UserDeckStore"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck, DeckUtils } from "./Deck"
 import { SaStars } from "./DeckScoreView"
@@ -250,7 +250,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                         variant={"contained"}
                         color={"primary"}
                         onClick={() => {
-                            userDeckStore.updatePrices(deckTableViewStore.priceChanges)
+                            sellerStore.updatePrices(deckTableViewStore.priceChanges)
                             deckTableViewStore.priceChanges = []
                         }}
                     >

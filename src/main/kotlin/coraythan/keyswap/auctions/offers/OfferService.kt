@@ -55,11 +55,11 @@ class OfferService(
     fun hasOffersToView() =
             offerRepo.existsByRecipientIdAndViewedTimeIsNull(currentUserService.loggedInUserOrUnauthorized().id)
 
-    fun findMyOffers(): MyOffers {
+    fun findMyOffers(offsetMinutes: Int, statuses: Set<OfferStatus>): MyOffers {
         val user = currentUserService.loggedInUserOrUnauthorized()
         return MyOffers(
-                offersToMe = offerRepo.findByRecipientId(user.id).map { it.toDto() },
-                offersIMade = offerRepo.findBySenderId(user.id).map { it.toDto() }
+                offersToMe = offerRepo.findByRecipientIdAndStatusIn(user.id, statuses).map { it.toDto(offsetMinutes) },
+                offersIMade = offerRepo.findBySenderIdAndStatusIn(user.id, statuses).map { it.toDto(offsetMinutes) }
         )
     }
 }

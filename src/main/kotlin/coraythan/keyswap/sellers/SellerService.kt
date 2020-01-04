@@ -1,11 +1,14 @@
 package coraythan.keyswap.sellers
 
+import coraythan.keyswap.auctions.AuctionRepo
 import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
+import coraythan.keyswap.userdeck.UpdatePrice
+import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -20,7 +23,9 @@ data class SellerDetailsWithFullDate(val mostRecent: ZonedDateTime?, val sellerD
 @Transactional
 @Service
 class SellerService(
-        private val userRepo: KeyUserRepo
+        private val userRepo: KeyUserRepo,
+        private val currentUserService: CurrentUserService,
+        private val auctionRepo: AuctionRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -67,6 +72,15 @@ class SellerService(
                     mostRecentListing =
                     it.mostRecent?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: placeholderDate
             )
+        }
+    }
+
+    fun updatePrices(prices: List<UpdatePrice>) {
+        for (price in prices) {
+            val currentUser = currentUserService.loggedInUserOrUnauthorized()
+            val preexisting = auctionRepo.findBySellerIdAndDeckId(currentUser.id, price.deckId)
+                    ?: throw IllegalArgumentException("There was no listing info for deck with id ${price.deckId}")
+            auctionRepo.save(preexisting.copy(buyItNow = price.askingPrice))
         }
     }
 }

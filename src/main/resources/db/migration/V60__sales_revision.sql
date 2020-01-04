@@ -17,19 +17,17 @@ ALTER TABLE key_user
     ALTER COLUMN allows_trades SET NOT NULL;
 
 CREATE TABLE offer (
-    id UUID NOT NULL,
+    amount INT4 NOT NULL,
     auction_id UUID NOT NULL,
+    recipient_id UUID NOT NULL,
+    sender_id UUID NOT NULL,
+    message VARCHAR(2000) NOT NULL,
+    offer_from VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL,
     sent_time TIMESTAMP NOT NULL,
     viewed_time TIMESTAMP,
     resolved_time TIMESTAMP,
-    starting_bid INT4 NOT NULL,
-    condition INT4 NOT NULL,
-    date_listed TIMESTAMP NOT NULL,
-    status VARCHAR(255) NOT NULL,
-    message VARCHAR(2000) NOT NULL,
-    offerFrom VARCHAR(255) NOT NULL,
-    recipient_id UUID NOT NULL,
-    sender_id UUID NOT NULL,
+    id UUID NOT NULL,
     PRIMARY KEY (id)
 );
 

@@ -33,10 +33,11 @@ class PublicApiEndpoints(
     fun generateApiKey() = publicApiService.generateApiKey()
 
     @PostMapping("/sellers/list-deck")
-    fun listDeckForSale(@RequestHeader("Api-Key") apiKey: String, @RequestBody listDeck: ListDeck) {
-        val seller = publicApiService.userForApiKey(apiKey)
-        log.info("List deck request from ${seller.email}")
-        publicApiService.listDeckForSeller(listDeck, seller)
+    fun listDeckForSale(@RequestHeader("Api-Key") apiKey: String, @RequestBody listDeck: ListDeck): String {
+        return "This feature has been turned off. Let me know if you still want to use it!"
+//        val seller = publicApiService.userForApiKey(apiKey)
+//        log.info("List deck request from ${seller.email}")
+//        publicApiService.listDeckForSeller(listDeck, seller)
     }
 
     @DeleteMapping("/sellers/unlist-deck/{id}")

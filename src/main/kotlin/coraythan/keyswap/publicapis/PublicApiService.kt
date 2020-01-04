@@ -6,7 +6,6 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.DeckSearchResult
-import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
@@ -58,67 +57,67 @@ class PublicApiService(
         return keyUserRepo.findByApiKey(apiKey) ?: throw BadRequestException("Your api key is invalid. Please generate a new one.")
     }
 
-    fun listDeckForSeller(listDeck: ListDeck, seller: KeyUser) {
-        if (seller.country == null) throw IllegalStateException("Please select a country on your user profile before listing decks.")
-        val deckId: Long
-        if (listDeck.deckInfo == null) {
-            // preexisting deck
-
-            val deck = if (listDeck.keyforgeId != null && listDeck.keyforgeId.isNotBlank()) {
-                deckRepo.findByKeyforgeId(listDeck.keyforgeId) ?: throw BadRequestException("Couldn't find a registered deck with id ${listDeck.keyforgeId}")
-            } else if (listDeck.deckName != null && listDeck.deckName.isNotBlank()) {
-                deckRepo.findByNameAndRegisteredTrue(listDeck.deckName)
-                        ?: throw BadRequestException("Couldn't find a registered deck with name ${listDeck.keyforgeId}")
-            } else {
-                throw BadRequestException("Must include keyforge id or deck name to list a registered deck.")
-            }
-
-            deckId = deck.id
-
-        } else {
-            listDeck.deckInfo.cards.groupBy { it.house }
-                    .forEach { if (it.value.size != 12) throw BadRequestException("${it.key} has the wrong number of cards") }
-            // create a new deck
-            if (listDeck.keyforgeId != null) throw BadRequestException("Unregistered decks should not have a keyforge deck id.")
-
-            val preexistingUnregisteredDeck = deckRepo.findByName(listDeck.deckInfo.name)
-
-            deckId = if (preexistingUnregisteredDeck != null) {
-                preexistingUnregisteredDeck.id
-            } else {
-                val cards = listDeck.deckInfo.cards.map {
-                    val cardsByEch = cardRepo.findByExpansionAndCardNumberAndHouse(
-                            listDeck.deckInfo.expansion,
-                            it.cardNumber.toString(),
-                            it.house
-                    )
-                    if (cardsByEch.isEmpty()) {
-                        throw BadRequestException("No card for expansion ${listDeck.deckInfo.expansion} card number ${it.cardNumber} house ${it.house}")
-                    }
-                    cardsByEch[0]
-                }
-
-                val deckKeyforgeId = deckImporterService.addUnregisteredDeck(
-                        SaveUnregisteredDeck(
-                                cards = cards.groupBy { it.house },
-                                name = listDeck.deckInfo.name,
-                                expansion = listDeck.expansion
-                        ),
-                        seller
-                )
-
-                deckRepo.findByKeyforgeId(deckKeyforgeId)?.id ?: throw BadRequestException("Couldn't make the unregistered deck.")
-            }
-        }
-
-        userDeckService.list(
-                listDeck.listingInfo.copy(
-                        deckId = deckId,
-                        forSaleInCountry = seller.country
-                ),
-                seller
-        )
-    }
+//    fun listDeckForSeller(listDeck: ListDeck, seller: KeyUser) {
+//        if (seller.country == null) throw IllegalStateException("Please select a country on your user profile before listing decks.")
+//        val deckId: Long
+//        if (listDeck.deckInfo == null) {
+//            // preexisting deck
+//
+//            val deck = if (listDeck.keyforgeId != null && listDeck.keyforgeId.isNotBlank()) {
+//                deckRepo.findByKeyforgeId(listDeck.keyforgeId) ?: throw BadRequestException("Couldn't find a registered deck with id ${listDeck.keyforgeId}")
+//            } else if (listDeck.deckName != null && listDeck.deckName.isNotBlank()) {
+//                deckRepo.findByNameAndRegisteredTrue(listDeck.deckName)
+//                        ?: throw BadRequestException("Couldn't find a registered deck with name ${listDeck.keyforgeId}")
+//            } else {
+//                throw BadRequestException("Must include keyforge id or deck name to list a registered deck.")
+//            }
+//
+//            deckId = deck.id
+//
+//        } else {
+//            listDeck.deckInfo.cards.groupBy { it.house }
+//                    .forEach { if (it.value.size != 12) throw BadRequestException("${it.key} has the wrong number of cards") }
+//            // create a new deck
+//            if (listDeck.keyforgeId != null) throw BadRequestException("Unregistered decks should not have a keyforge deck id.")
+//
+//            val preexistingUnregisteredDeck = deckRepo.findByName(listDeck.deckInfo.name)
+//
+//            deckId = if (preexistingUnregisteredDeck != null) {
+//                preexistingUnregisteredDeck.id
+//            } else {
+//                val cards = listDeck.deckInfo.cards.map {
+//                    val cardsByEch = cardRepo.findByExpansionAndCardNumberAndHouse(
+//                            listDeck.deckInfo.expansion,
+//                            it.cardNumber.toString(),
+//                            it.house
+//                    )
+//                    if (cardsByEch.isEmpty()) {
+//                        throw BadRequestException("No card for expansion ${listDeck.deckInfo.expansion} card number ${it.cardNumber} house ${it.house}")
+//                    }
+//                    cardsByEch[0]
+//                }
+//
+//                val deckKeyforgeId = deckImporterService.addUnregisteredDeck(
+//                        SaveUnregisteredDeck(
+//                                cards = cards.groupBy { it.house },
+//                                name = listDeck.deckInfo.name,
+//                                expansion = listDeck.expansion
+//                        ),
+//                        seller
+//                )
+//
+//                deckRepo.findByKeyforgeId(deckKeyforgeId)?.id ?: throw BadRequestException("Couldn't make the unregistered deck.")
+//            }
+//        }
+//
+//        userDeckService.list(
+//                listDeck.listingInfo.copy(
+//                        deckId = deckId,
+//                        forSaleInCountry = seller.country
+//                ),
+//                seller
+//        )
+//    }
 
     fun unlistDeckForSeller(keyforgeId: String, seller: KeyUser) {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Couldn't find a registered deck with id ${keyforgeId}")

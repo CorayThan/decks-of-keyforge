@@ -152,6 +152,20 @@ export class LandingPage extends React.Component<{}> {
                                 <DiscordButton style={{marginLeft: spacing(2)}}/>
                                 <TwitterButton style={{marginLeft: spacing(2)}}/>
                             </div>
+                            <Typography
+                                variant={"h4"}
+                                color={"primary"}
+                                style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+                            >
+                                Disclaimers
+                            </Typography>
+                            <Typography>
+                                Decks of KeyForge is not associated with or endorsed by Fantasy Flight games, the producers of KeyForge, in any way.
+                            </Typography>
+                            <Typography>
+                                When using Decks of KeyForge you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
+                                any transactions.
+                            </Typography>
                         </div>
                     </div>
                 </div>

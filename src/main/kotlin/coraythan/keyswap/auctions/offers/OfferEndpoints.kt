@@ -19,4 +19,11 @@ class OfferEndpoints(
     @PostMapping("/cancel/{id}")
     fun cancel(@PathVariable id: UUID) = offerService.cancelOffer(id)
 
+    @GetMapping("/has-offers-to-view")
+    fun hasOffersToView() = offerService.hasOffersToView()
+
+    @PostMapping("/my-offers")
+    fun myOffers(@RequestBody statuses: Set<OfferStatus>, @RequestHeader(value = "Timezone") offsetMinutes: Int)
+            = offerService.findMyOffers(offsetMinutes, statuses)
+
 }

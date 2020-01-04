@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.auctions.Auction
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
+import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDateTime
 import java.util.*
@@ -25,6 +26,7 @@ data class Offer(
 
         val message: String,
 
+        @Enumerated(EnumType.STRING)
         val offerFrom: Country,
 
         @Enumerated(EnumType.STRING)
@@ -37,9 +39,16 @@ data class Offer(
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
-    fun toDto() = OfferDto(
+    fun toDto(offsetMinutes: Int) = OfferDto(
             auctionId = this.auction.id,
-
+            deckId = this.auction.deck.keyforgeId,
+            amount = this.amount,
+            message = this.message,
+            status = this.status,
+            sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes),
+            viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+            resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+            id = id
     )
 }
 
@@ -58,6 +67,7 @@ data class MakeOffer(
 
 data class OfferDto(
         val auctionId: UUID,
+        val deckId: String,
         val amount: Int,
         val message: String,
         val status: OfferStatus,
