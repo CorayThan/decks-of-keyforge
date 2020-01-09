@@ -8,10 +8,7 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.spoilers.SpoilerRepo
-import coraythan.keyswap.synergy.SynTraitType
-import coraythan.keyswap.synergy.SynTraitValue
-import coraythan.keyswap.synergy.SynergyTrait
-import coraythan.keyswap.synergy.containsTrait
+import coraythan.keyswap.synergy.*
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
@@ -320,13 +317,30 @@ class CardService(
 
     fun reloadCachedCards() {
         val cards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
-            val synTraitsFromTraits = it.traits
+            val extraTraits = it.traits
                     .mapNotNull { trait ->
                         SynergyTrait.fromTrait(trait)
                     }
                     .map { trait -> SynTraitValue(trait = trait) }
+                    .let { traitsToAdd ->
+                        if (it.cardType == CardType.Creature && it.aercScoreAverage >= 2.5) {
+                            traitsToAdd.plus(SynTraitValue(
+                                    trait = SynergyTrait.goodCreature,
+                                    type = SynTraitType.anyHouse,
+                                    rating = when {
+                                        it.aercScoreAverage >= 3.5 -> TraitStrength.STRONG.value
+                                        it.aercScoreAverage >= 3 -> TraitStrength.NORMAL.value
+                                        else -> TraitStrength.WEAK.value
+                                    }
+                            ))
+                        } else {
+                            traitsToAdd
+                        }
+                    }
             CardNumberSetPair(it.expansionEnum, it.cardNumber) to
-                    if (synTraitsFromTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(traits = it.extraCardInfo!!.traits.plus(synTraitsFromTraits)))
+                    if (extraTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(
+                            traits = it.extraCardInfo!!.traits.plus(extraTraits)
+                    ))
         }.toMap()
         nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key]) }.toMap()
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()

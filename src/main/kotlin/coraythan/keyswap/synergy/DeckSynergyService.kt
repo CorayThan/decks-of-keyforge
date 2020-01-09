@@ -120,6 +120,7 @@ object DeckSynergyService {
         val normalStrengthTraitCounts = anyHouseTraits[TraitStrength.NORMAL] ?: error("Should have normal strength")
         addDeckTraits(deck, normalStrengthTraitCounts, cards)
         addHouseTraits(cards, inHouseOnlyTraitCountsForAnyHouse[TraitStrength.NORMAL] ?: error("Should have normal strength house traits"))
+        addOutOfHouseTraits(cards, outsideHouseOnlyTraitCountsForAnyHouseTraits[TraitStrength.NORMAL] ?: error("Should have normal strength out of house traits"))
 
         // Add traits from each card
         cards.forEach { card ->
@@ -318,7 +319,6 @@ object DeckSynergyService {
         val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy
 
-
         val info = DeckSynergyInfo(
                 synergyRating = synergy,
                 antisynergyRating = antisynergy,
@@ -342,6 +342,27 @@ object DeckSynergyService {
 
         return info
 
+    }
+
+    private fun addOutOfHouseTraits(cards: List<Card>, counts: Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>) {
+        counts.forEach { (house, outOfHouseTraits) ->
+            val cardsNotForHouse = cards.filter { it.house != house }
+            val creatureCount = cardsNotForHouse.filter { it.cardType == CardType.Creature }.size
+
+            if (creatureCount > 12) outOfHouseTraits[SynergyTrait.highCreatureCount] = TraitMatchInfo(when {
+                creatureCount > 16 -> 4
+                creatureCount > 15 -> 3
+                creatureCount > 14 -> 2
+                else -> 1
+            })
+
+            if (creatureCount < 10) outOfHouseTraits[SynergyTrait.lowCreatureCount] = TraitMatchInfo(when {
+                creatureCount < 6 -> 4
+                creatureCount < 7 -> 3
+                creatureCount < 8 -> 2
+                else -> 1
+            })
+        }
     }
 
     private fun addHouseTraits(cards: List<Card>, counts: Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>) {

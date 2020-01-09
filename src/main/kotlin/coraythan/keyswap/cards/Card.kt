@@ -61,6 +61,12 @@ data class Card(
             power + armor
         }
 
+    val aercScoreAverage: Double
+        get() {
+            val max = aercScoreMax
+            return if (max == null) aercScore else (aercScore + max) / 2
+        }
+
     val aercScore: Double
         get() {
             val cardInfo = this.extraCardInfo

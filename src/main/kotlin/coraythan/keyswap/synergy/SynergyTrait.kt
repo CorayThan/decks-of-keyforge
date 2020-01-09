@@ -192,6 +192,8 @@ enum class SynergyTrait {
     // for deck: 68+=1/4, 73+=1/2, 78+=3/4, 84+=1
     lowTotalCreaturePower, // 60-=1/4, 56-=1/2, 51-=3/4, 46-=1
 
+    // creature count has out-of-house numbers
+
     highCreatureCount, // for house: =<6=0, 7=1/4, 8=1/2, 9 =3/4, 10,11,12=1
     // for deck: 17+=1/4, 18+=1/2, 19+=3/4, 21+=1
 
