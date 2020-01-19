@@ -119,18 +119,18 @@ class PublicApiService(
 //        )
 //    }
 
-    fun unlistDeckForSeller(keyforgeId: String, seller: KeyUser) {
-        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Couldn't find a registered deck with id ${keyforgeId}")
-        unlist(deck.id, seller)
-    }
+//    fun unlistDeckForSeller(keyforgeId: String, seller: KeyUser) {
+//        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("Couldn't find a registered deck with id ${keyforgeId}")
+//        unlist(deck.id, seller)
+//    }
+//
+//    fun unlistDeckForSellerWithName(deckName: String, seller: KeyUser) {
+//        val deck = deckRepo.findByName(deckName) ?: throw BadRequestException("Couldn't find a deck with name ${deckName}")
+//        unlist(deck.id, seller)
+//    }
 
-    fun unlistDeckForSellerWithName(deckName: String, seller: KeyUser) {
-        val deck = deckRepo.findByName(deckName) ?: throw BadRequestException("Couldn't find a deck with name ${deckName}")
-        unlist(deck.id, seller)
-    }
-
-    private fun unlist(deckId: Long, seller: KeyUser) {
-        userDeckService.unlistForUser(deckId, seller)
-        userDeckService.unmarkAsOwnedForSeller(deckId, seller)
-    }
+//    private fun unlist(deckId: Long, seller: KeyUser) {
+//        userDeckService.unlistForUser(deckId, seller)
+//        userDeckService.unmarkAsOwnedForSeller(deckId, seller)
+//    }
 }

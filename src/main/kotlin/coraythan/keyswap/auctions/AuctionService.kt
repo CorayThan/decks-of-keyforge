@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
+import java.time.LocalTime
 import java.util.*
 
 private const val fourteenMin = "PT14M"
@@ -39,7 +40,7 @@ class AuctionService(
 
     @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
     fun unlistExpiredDecks() {
-        log.info("$scheduledStart unlisting expired auction decks.")
+        log.info("$scheduledStart unlisting expired for sale decks.")
 
         val buyItNowsToComplete = auctionRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(AuctionStatus.BUY_IT_NOW_ONLY, now())
 
@@ -48,7 +49,7 @@ class AuctionService(
             auctionRepo.delete(it)
         }
 
-        log.info("$scheduledStop unlisting expired auction decks.")
+        log.info("$scheduledStop unlisting expired for sale decks.")
     }
 
     @Scheduled(cron = "0 */15 * * * *")
@@ -69,9 +70,6 @@ class AuctionService(
 
     fun list(listingInfo: ListingInfo, offsetMinutes: Int) {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        if (listingInfo.startingBid == null && listingInfo.buyItNow == null) {
-            throw BadRequestException("Listing must include starting bid or buy it now.")
-        }
         val status = if (!listingInfo.auction) {
             AuctionStatus.BUY_IT_NOW_ONLY
         } else {
@@ -85,7 +83,7 @@ class AuctionService(
         if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
 
         val listingDate = now()
-        val endTime = listingInfo.endTimeLocalTime.withOffsetMinutes(offsetMinutes)
+        val endTime = listingInfo.endTimeLocalTime?.withOffsetMinutes(offsetMinutes) ?: LocalTime.now()
         val endDateTime = listingDate.plusDays(listingInfo.expireInDays.toLong())
                 .withHour(endTime.hour)
                 .withMinute(endTime.minute)
@@ -94,22 +92,46 @@ class AuctionService(
         val realEnd = endDateTime.withMinute(endMinutes)
 //        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
-        val auction = Auction(
-                durationDays = listingInfo.expireInDays,
-                endDateTime = realEnd,
-                bidIncrement = listingInfo.bidIncrement,
-                startingBid = listingInfo.startingBid,
-                buyItNow = listingInfo.buyItNow,
-                deck = deck,
-                seller = currentUser,
-                language = listingInfo.language,
-                condition = listingInfo.condition,
-                externalLink = listingInfo.externalLink,
-                listingInfo = listingInfo.listingInfo,
-                forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
-                currencySymbol = currentUser.currencySymbol,
-                status = status
-        )
+        val auction = if (listingInfo.editAuctionId == null) {
+            val preexistingListing = auctionRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId, AuctionStatus.COMPLETE)
+            if (preexistingListing.isNotEmpty()) throw BadRequestException("You've already listed this deck for sale.")
+            Auction(
+                    durationDays = listingInfo.expireInDays,
+                    endDateTime = realEnd,
+                    bidIncrement = listingInfo.bidIncrement,
+                    startingBid = listingInfo.startingBid,
+                    buyItNow = listingInfo.buyItNow,
+                    deck = deck,
+                    seller = currentUser,
+                    language = listingInfo.language,
+                    condition = listingInfo.condition,
+                    externalLink = listingInfo.externalLink,
+                    listingInfo = listingInfo.listingInfo,
+                    forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
+                    currencySymbol = currentUser.currencySymbol,
+                    status = status,
+                    forTrade = currentUser.allowsTrades
+            )
+        } else {
+            auctionRepo.findByIdOrNull(listingInfo.editAuctionId)!!
+                    .copy(
+                            durationDays = listingInfo.expireInDays,
+                            endDateTime = realEnd,
+                            bidIncrement = listingInfo.bidIncrement,
+                            startingBid = listingInfo.startingBid,
+                            buyItNow = listingInfo.buyItNow,
+                            deck = deck,
+                            seller = currentUser,
+                            language = listingInfo.language,
+                            condition = listingInfo.condition,
+                            externalLink = listingInfo.externalLink,
+                            listingInfo = listingInfo.listingInfo,
+                            forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
+                            currencySymbol = currentUser.currencySymbol,
+                            status = status,
+                            forTrade = currentUser.allowsTrades
+                    )
+        }
         auctionRepo.save(auction)
         if (listingInfo.auction) {
             // for auction
@@ -261,31 +283,40 @@ class AuctionService(
 
     fun cancelAuction(deckId: Long): Boolean {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val auctions = auctionRepo.findBySellerIdAndDeckIdAndStatus(user.id, deckId, AuctionStatus.ACTIVE)
+        val auctions = auctionRepo.findBySellerIdAndDeckIdAndStatusNot(user.id, deckId, AuctionStatus.COMPLETE)
         if (auctions.size > 1) {
-            throw IllegalStateException("Seller shouldn't have more than one active auction for a single deck ${user.username} deckId: ${deckId}")
+            log.error("Seller shouldn't have more than one active auction for a single deck ${user.username} deckId: ${deckId}")
         }
         if (auctions.isEmpty()) return true
         val auction = auctions[0]
-        if (auction.bids.isNotEmpty()) return false
+        if (auction.status == AuctionStatus.ACTIVE) {
+            if (auction.bids.isNotEmpty()) return false
+        }
         updateDeckListingStatus(auction)
         auctionRepo.delete(auction)
         return true
     }
 
+    fun findActiveListingsForUser(offsetMinutes: Int): List<AuctionDto> {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        return auctionRepo.findAllBySellerIdAndStatusNot(currentUser.id, AuctionStatus.COMPLETE)
+                .map { it.toDto(offsetMinutes) }
+    }
+
     private fun updateDeckListingStatus(auction: Auction, sold: Boolean = false) {
         val auctionsForDeck = auction.deck.auctions
         val otherListingsForDeck = auctionsForDeck
-                .filter { (it.status == AuctionStatus.ACTIVE || it.status == AuctionStatus.BUY_IT_NOW_ONLY) && it.id != auction.id }
+                .filter { it.isActive && it.id != auction.id }
 
         // This might be someone else unlisting the deck for sale while a different person has an active auction for it
         val stillForAuction = otherListingsForDeck.any { it.status == AuctionStatus.ACTIVE }
+        val stillForTrade = otherListingsForDeck.any { it.forTrade }
         deckRepo.save(auction.deck.copy(
                 forAuction = stillForAuction,
                 auctionEnd = if (stillForAuction) auction.deck.auctionEnd else null,
                 listedOn = if (stillForAuction) auction.deck.listedOn else null,
-                forSale = otherListingsForDeck.isEmpty(),
-                forTrade = false,
+                forSale = otherListingsForDeck.isNotEmpty(),
+                forTrade = stillForTrade,
                 completedAuction = sold || auction.deck.completedAuction
         ))
     }

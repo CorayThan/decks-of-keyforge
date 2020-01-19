@@ -5,7 +5,6 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
 import { messageStore } from "../ui/MessageStore"
-import { ListingInfo } from "./ListingInfo"
 import { UserDeckDto } from "./UserDeck"
 
 export class UserDeckStore {
@@ -41,24 +40,6 @@ export class UserDeckStore {
             .then(() => {
                 messageStore.setInfoMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
                 this.findAllForUser()
-            })
-    }
-
-    listDeck = (deckName: string, listingInfo: ListingInfo) => {
-        axios.post(`${UserDeckStore.CONTEXT}/list`, listingInfo)
-            .then(() => {
-                messageStore.setInfoMessage(`Listed ${deckName} for sale or trade.`)
-                this.findAllForUser()
-                this.refreshDeckInfo()
-            })
-    }
-
-    unlist = (deckName: string, deckId: number) => {
-        axios.post(`${UserDeckStore.CONTEXT}/${deckId}/unlist`)
-            .then(() => {
-                messageStore.setInfoMessage(`${deckName} is no longer listed for sale or trade.`)
-                this.findAllForUser()
-                this.refreshDeckInfo()
             })
     }
 

@@ -6,6 +6,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
 import { AuctionStatus } from "../../auctions/AuctionDto"
+import { auctionStore } from "../../auctions/AuctionStore"
 import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
@@ -24,8 +25,7 @@ import { sellerStore } from "../../sellers/SellerStore"
 import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
-import { userDeckStore } from "../../userdeck/UserDeckStore"
-import { DeckSaleInfo, deckSaleInfoFromUserDeckDto } from "./DeckSaleInfo"
+import { DeckSaleInfo, deckSaleInfoFromAuctionDto } from "./DeckSaleInfo"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
 interface SaleInfoViewProps {
@@ -47,8 +47,9 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 
                     let userDeckInfo
                     if (saleInfo.username === userStore.username) {
-                        const userDeck = userDeckStore.userDecks && userDeckStore.userDecks.get(this.props.deckId)
-                        userDeckInfo = userDeck ? deckSaleInfoFromUserDeckDto(userDeck) : undefined
+                        userDeckInfo = auctionStore.auctionInfoForDeck(this.props.deckId)
+                        const userDeck = auctionStore.auctionInfoForDeck(this.props.deckId)
+                        userDeckInfo = userDeck ? deckSaleInfoFromAuctionDto(userDeck) : undefined
                     }
 
                     return (
@@ -75,7 +76,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         }
 
         const {
-            forSale, forTrade, forAuction, forSaleInCountry, askingPrice, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
+            forTrade, forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
             startingBid
         } = this.props.saleInfo
@@ -94,47 +95,44 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     (
                         <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
                             <div style={{display: "flex"}}>
-                                {forSale ? (
-                                    <Tooltip title={"For sale"}>
-                                        <div><SellDeckIcon height={48}/></div>
-                                    </Tooltip>
-                                ) : null}
-                                {forTrade && forSale ? <div style={{marginRight: spacing(1)}}/> : null}
-                                {forTrade ? (
-                                    <Tooltip title={"For trade"}>
-                                        <div><TradeDeckIcon height={48}/></div>
-                                    </Tooltip>
-                                ) : null}
                                 {forAuction ? (
                                     <Tooltip title={"Auction"}>
                                         <div><AuctionDeckIcon height={48}/></div>
                                     </Tooltip>
+                                ) : (
+                                    <Tooltip title={"For sale"}>
+                                        <div><SellDeckIcon height={48}/></div>
+                                    </Tooltip>
+                                )}
+                                {forTrade ? (
+                                    <>
+                                        <div style={{marginRight: spacing(1)}}/>
+                                        <Tooltip title={"For trade"}>
+                                            <div><TradeDeckIcon height={48}/></div>
+                                        </Tooltip>
+                                    </>
                                 ) : null}
                             </div>
-                            {askingPrice == null ? null :
-                                (
-                                    <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                        {currencySymbol}{askingPrice}
+                            {!forAuction && buyItNow != null && (
+                                <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                    {currencySymbol}{buyItNow}
+                                </Typography>
+                            )}
+                            {forAuction && (
+                                <div>
+                                    <Typography
+                                        variant={"h5"}
+                                        style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+                                    >
+                                        Bid: {currencySymbol}{highestBid ? highestBid : startingBid}
                                     </Typography>
-                                )
-                            }
-                            {!forAuction ? null :
-                                (
-                                    <div>
-                                        <Typography
-                                            variant={"h5"}
-                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                                        >
-                                            Bid: {currencySymbol}{highestBid ? highestBid : startingBid}
+                                    {buyItNow == null ? null : (
+                                        <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                            BIN: {currencySymbol}{buyItNow}
                                         </Typography>
-                                        {buyItNow == null ? null : (
-                                            <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                                BIN: {currencySymbol}{buyItNow}
-                                            </Typography>
-                                        )}
-                                    </div>
-                                )
-                            }
+                                    )}
+                                </div>
+                            )}
                             <Typography variant={"subtitle1"} style={{color: "#FFFFFF"}}>
                                 {deckConditionReadableValue(condition)}
                             </Typography>
@@ -143,7 +141,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                 }
             >
                 <div>
-                    {!forAuction || auctionId == null ? null : (
+                    {forAuction && (
                         <div style={{margin: spacing(2)}}>
                             <div style={{display: "flex"}}>
                                 <Typography variant={"subtitle2"} style={{marginRight: spacing(2)}}>Ending on:</Typography>

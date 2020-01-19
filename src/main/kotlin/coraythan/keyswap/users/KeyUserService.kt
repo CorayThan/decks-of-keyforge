@@ -3,6 +3,7 @@ package coraythan.keyswap.users
 import coraythan.keyswap.auctions.AuctionRepo
 import coraythan.keyswap.auctions.AuctionStatus
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import org.slf4j.LoggerFactory
@@ -19,7 +20,8 @@ class KeyUserService(
         private val currentUserService: CurrentUserService,
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
         private val passwordResetCodeService: PasswordResetCodeService,
-        private val auctionRepo: AuctionRepo
+        private val auctionRepo: AuctionRepo,
+        private val deckRepo: DeckRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -70,7 +72,7 @@ class KeyUserService(
 
     fun updateUserProfile(update: UserProfileUpdate) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        var userDecks = user.decks
+        val userAllowsTrades = user.allowsTrades
         var auctions = user.auctions
 
         if (update.currencySymbol != user.currencySymbol && auctionRepo.findAllBySellerIdAndStatus(user.id, AuctionStatus.ACTIVE).isNotEmpty()) {
@@ -78,9 +80,6 @@ class KeyUserService(
         }
 
         if (update.country != user.country || update.currencySymbol != user.currencySymbol) {
-            userDecks = user.decks.map {
-                it.copy(forSaleInCountry = update.country, currencySymbol = update.currencySymbol)
-            }
             auctions = user.auctions.map {
                 it.copy(forSaleInCountry = update.country ?: Country.UnitedStates, currencySymbol = update.currencySymbol)
             }
@@ -92,17 +91,26 @@ class KeyUserService(
                 email = update.email ?: user.email,
                 emailVerified = if (update.email == null) user.emailVerified else false,
                 publicContactInfo = update.publicContactInfo,
+                allowsTrades = update.allowsTrades,
                 allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
                 currencySymbol = update.currencySymbol,
                 country = update.country,
                 preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
-                decks = userDecks,
+                decks = user.decks,
                 auctions = auctions,
                 sellerEmail = update.sellerEmail,
                 discord = update.discord,
                 storeName = update.storeName,
                 displayCrucibleTrackerWins = update.displayCrucibleTrackerWins
         ))
+
+       if (userAllowsTrades != update.allowsTrades) {
+            val activeListings = auctionRepo.findAllBySellerIdAndStatus(user.id, AuctionStatus.BUY_IT_NOW_ONLY)
+            activeListings.forEach {
+                auctionRepo.save(it.copy(forTrade = update.allowsTrades))
+                deckRepo.save(it.deck.copy(forTrade = update.allowsTrades))
+            }
+        }
     }
 
     fun resetPasswordTo(code: String, newPassword: String) {

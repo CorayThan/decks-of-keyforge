@@ -11,6 +11,7 @@ export interface UserProfile {
 export interface UserProfileUpdate {
     email?: string
     publicContactInfo?: string
+    allowsTrades: boolean
     allowUsersToSeeDeckOwnership: boolean
     currencySymbol: string
     country?: string

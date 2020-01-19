@@ -8,6 +8,7 @@ import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.QAuction
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
@@ -234,14 +235,13 @@ class DeckService(
                 if (allowToSeeAllDecks) {
                     predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
                 } else {
-                    val userDeckQ = QUserDeck.userDeck
+                    val deckListingQ = QAuction.auction
                     predicate.and(
-                            deckQ.userDecks.any().`in`(
-                                    JPAExpressions.selectFrom(userDeckQ)
+                            deckQ.auctions.any().`in`(
+                                    JPAExpressions.selectFrom(deckListingQ)
                                             .where(
-                                                    userDeckQ.ownedBy.eq(filters.owner),
-                                                    userDeckQ.forSale.isTrue
-                                                            .or(userDeckQ.forTrade.isTrue)
+                                                    deckListingQ.seller.username.eq(filters.owner),
+                                                    deckListingQ.status.ne(AuctionStatus.COMPLETE)
                                             )
                             )
                     )
@@ -282,16 +282,12 @@ class DeckService(
             if (filters.forSaleInCountry != null) {
                 val preferredCountries = userHolder.user?.preferredCountries
                 if (preferredCountries.isNullOrEmpty()) {
-                    predicate.andAnyOf(
-                            deckQ.userDecks.any().forSaleInCountry.eq(filters.forSaleInCountry),
+                    predicate.and(
                             deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
                     )
                 } else {
-                    predicate.andAnyOf(*preferredCountries.flatMap {
-                        listOf(
-                                deckQ.userDecks.any().forSaleInCountry.eq(it),
-                                deckQ.auctions.any().forSaleInCountry.eq(it)
-                        )
+                    predicate.andAnyOf(*preferredCountries.map {
+                        deckQ.auctions.any().forSaleInCountry.eq(it)
                     }.toTypedArray())
                 }
             }
@@ -299,10 +295,10 @@ class DeckService(
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
                 if (it.property == "listedWithinDays") {
-                    predicate.and(deckQ.userDecks.any().dateListed.gt(now().minusDays(it.value.toLong())))
+                    predicate.and(deckQ.auctions.any().dateListed.gt(now().minusDays(it.value.toLong())))
                 } else {
                     val entityRef = if (it.property == "askingPrice") {
-                        predicate.and(deckQ.userDecks.any().askingPrice.isNotNull)
+                        predicate.and(deckQ.auctions.any().buyItNow.isNotNull)
                         deckQ.userDecks.any()
                     } else {
                         deckQ
@@ -389,17 +385,8 @@ class DeckService(
             deck.auctions.filter { it.status == AuctionStatus.COMPLETE }
                     .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
         } else {
-            deck.userDecks
-                    .mapNotNull {
-                        DeckSaleInfo.fromUserDeck(
-                                offsetMinutes = offsetMinutes,
-                                userDeck = it
-                        )
-                    }
-                    .plus(
-                            deck.auctions.filter { it.status == AuctionStatus.ACTIVE }
-                                    .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
-                    )
+            deck.auctions.filter { it.status != AuctionStatus.COMPLETE }
+                    .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
         }
 
         return mapped

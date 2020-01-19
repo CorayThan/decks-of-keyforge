@@ -42,10 +42,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     open = false
 
     @observable
-    forSale = true
-    @observable
-    forTrade = true
-    @observable
     auction = false
     @observable
     condition = DeckCondition.NEAR_MINT
@@ -54,26 +50,24 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     @observable
     language = DeckLanguage.ENGLISH
     @observable
-    askingPrice = ""
-    @observable
     listingInfo = ""
     @observable
     externalLink = ""
     @observable
     expireInDays = "7"
     @observable
-    bidIncrement = "1"
+    bidIncrement = ""
     @observable
-    startingBid = "1"
+    startingBid = ""
 
     @observable
     preExistingDays = ""
 
     @observable
-    update = false
+    auctionEndTime = ""
 
     @observable
-    auctionEndTime = ""
+    editAuctionId?: string
 
     componentDidMount(): void {
         this.auctionEndTime = format(Utils.roundToNearestMinutes(new Date(), 15), "HH:mm")
@@ -84,20 +78,16 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.open = true
 
         const defaults = keyLocalStorage.saleDefaults == null ? {} : keyLocalStorage.saleDefaults
-        this.forSale = defaults.forSale == null ? true : defaults.forSale
-        this.forTrade = defaults.forTrade == null ? true : defaults.forTrade
-        this.auction = defaults.auctionListingInfo != null
         this.language = defaults.language == null ? DeckLanguage.ENGLISH : defaults.language
         this.condition = defaults.condition == null ? DeckCondition.NEW_IN_PLASTIC : defaults.condition
-        this.askingPrice = defaults.askingPrice == null ? "" : defaults.askingPrice.toString()
         this.listingInfo = defaults.listingInfo == null ? "" : defaults.listingInfo
         this.externalLink = defaults.externalLink == null ? "" : defaults.externalLink
-        this.bidIncrement = defaults.auctionListingInfo == null ? "1" : defaults.auctionListingInfo.bidIncrement.toString()
-        this.startingBid = defaults.auctionListingInfo == null ? "1" : defaults.auctionListingInfo.startingBid.toString()
-        this.buyItNow = defaults.auctionListingInfo == null || defaults.auctionListingInfo.buyItNow == null ? "" : defaults.auctionListingInfo.buyItNow.toString()
+        this.bidIncrement = defaults.bidIncrement == null ? "" : defaults.bidIncrement.toString()
+        this.startingBid = defaults.startingBid == null ? "" : defaults.startingBid.toString()
+        this.buyItNow = defaults.buyItNow == null ? "" : defaults.buyItNow.toString()
         this.expireInDays = defaults.expireInDays == null ? "7" : defaults.expireInDays.toString()
 
-        this.update = false
+        this.editAuctionId = undefined
 
         if (!userStore.canListMoreAuctions && userStore.auctionsListed > 0) {
             // Check if their auctions have expired.
@@ -106,19 +96,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     handleOpenForEdit = () => {
-        const userDeck = userDeckStore.userDeckByDeckId(this.props.deck.id)
-        if (userDeck != null) {
-            const {forSale, forTrade, forAuction, condition, askingPrice, listingInfo, externalLink, expiresAtLocalDate, language} = userDeck
+        const saleInfo = auctionStore.auctionInfoForDeck(this.props.deck.id)
+        if (saleInfo != null) {
+            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, startingBid} = saleInfo
             this.open = true
-            this.update = true
-            this.forSale = forSale
-            this.forTrade = forTrade
-            this.language = language ? language : DeckLanguage.ENGLISH
-            this.condition = condition ? condition : DeckCondition.NEW_IN_PLASTIC
-            this.askingPrice = askingPrice ? askingPrice.toString() : ""
-            this.listingInfo = listingInfo ? listingInfo : ""
-            this.externalLink = externalLink ? externalLink : ""
-            if (forAuction) {
+            this.editAuctionId = saleInfo.id
+            this.language = language ?? DeckLanguage.ENGLISH
+            this.condition = condition ?? DeckCondition.NEW_IN_PLASTIC
+            this.listingInfo = listingInfo ?? ""
+            this.externalLink = externalLink ?? ""
+            this.buyItNow = buyItNow?.toString() ?? ""
+            if (startingBid != null) {
                 throw new Error("Can't edit auctions.")
             }
 
@@ -138,28 +126,23 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
     list = (saveAsDefault?: boolean) => {
         const {
-            forSale, forTrade, auction, condition, askingPrice, listingInfo, externalLink, expireInDays, language, bidIncrement,
+            auction, condition, listingInfo, externalLink, expireInDays, language, bidIncrement,
             startingBid, buyItNow
         } = this
-        if (!forSale && !forTrade && !auction) {
-            messageStore.setWarningMessage("The deck must be listed for sale, trade or auction.")
-            return
-        }
         if (listingInfo.length > 2000) {
             messageStore.setWarningMessage("The listing info must be less than 2000 characters long.")
             return
         }
-        let askingPriceNumber
-        if (askingPrice.trim().length > 0) {
-            askingPriceNumber = Number(askingPrice.trim())
-            if (isNaN(askingPriceNumber)) {
-                messageStore.setWarningMessage("The asking price must be a number.")
+        let buyItNowNumber
+        if (buyItNow.trim().length > 0) {
+            buyItNowNumber = Number(buyItNow.trim())
+            if (isNaN(buyItNowNumber)) {
+                messageStore.setWarningMessage("The buy it now must be a number.")
                 return
             }
         }
         let bidIncrementNumber
         let startingBidNumber
-        let buyItNowNumber
         if (auction) {
             if (bidIncrement.trim().length > 0) {
                 bidIncrementNumber = Number(bidIncrement.trim())
@@ -184,13 +167,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 messageStore.setWarningMessage("You must include a starting bid.")
                 return
             }
-            if (buyItNow.trim().length > 0) {
-                buyItNowNumber = Number(buyItNow.trim())
-                if (isNaN(buyItNowNumber)) {
-                    messageStore.setWarningMessage("The buy it now must be a number.")
-                    return
-                }
-            }
         }
         const forSaleInCountry = userStore.country
 
@@ -199,37 +175,34 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             return
         }
 
+        const externalLinkTrimmed = externalLink.trim()
+        if (externalLinkTrimmed.length > 0 && !externalLinkTrimmed.startsWith("http")) {
+            messageStore.setWarningMessage(`Please ensure the external link is a web URL starting with "http".`)
+            return
+        }
+
         const listingInfoDto: ListingInfo = {
             deckId: this.props.deck.id,
-            forSale,
-            forTrade,
             forSaleInCountry,
             language,
             condition,
             listingInfo,
-            externalLink,
-            expireInDays: Number(expireInDays)
+            externalLink: externalLinkTrimmed,
+            buyItNow: buyItNowNumber,
+            expireInDays: Number(expireInDays),
+            editAuctionId: this.editAuctionId
         }
         if (auction) {
-            listingInfoDto.auctionListingInfo = {
-                startingBid: startingBidNumber as number,
-                bidIncrement: bidIncrementNumber as number,
-                buyItNow: buyItNowNumber as number,
-                endTime: this.auctionEndTime
-            }
-            if (!saveAsDefault) {
-                auctionStore.createAuction(this.props.deck.name, listingInfoDto)
-            }
-        } else {
-            listingInfoDto.askingPrice = askingPriceNumber
-            if (!saveAsDefault) {
-                userDeckStore.listDeck(this.props.deck.name, listingInfoDto)
-            }
+            listingInfoDto.startingBid = startingBidNumber
+            listingInfoDto.bidIncrement = bidIncrementNumber
+            listingInfoDto.endTime = this.auctionEndTime
         }
+
         if (saveAsDefault) {
             delete listingInfoDto.deckId
             keyLocalStorage.setSaleDefaults(listingInfoDto)
         } else {
+            auctionStore.listForSale(this.props.deck.name, listingInfoDto)
             this.handleClose()
         }
     }
@@ -237,35 +210,35 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     render() {
         const {deck, menuItem} = this.props
         const userDeck = userDeckStore.userDeckByDeckId(deck.id)
+        if (userDeck == null) {
+            return null
+        }
+        const auctionInfo = auctionStore.auctionInfoForDeck(deck.id)
         let saleButton
-        if (userDeck && userDeck.forAuction && !userDeck.hasBids) {
+        if (auctionInfo && auctionInfo.startingBid != null && auctionInfo.bids.length === 0) {
             saleButton = (
                 <DeckActionClickable
                     menuItem={menuItem}
-                    onClick={() => auctionStore.cancel(deck.id)}
+                    onClick={() => auctionStore.cancel(deck.name, deck.id)}
                 >
                     Cancel Auction
                 </DeckActionClickable>
             )
-        } else if (userDeck && (userDeck.forSale || userDeck.forTrade || userDeck.forAuction)) {
+        } else if (auctionInfo) {
             saleButton = (
                 <>
-                    {userDeck.forAuction ? null : (
-                        <>
-                            <DeckActionClickable
-                                menuItem={menuItem}
-                                onClick={this.handleOpenForEdit}
-                            >
-                                Edit Listing
-                            </DeckActionClickable>
-                            <DeckActionClickable
-                                menuItem={menuItem}
-                                onClick={() => userDeckStore.unlist(deck.name, deck.id)}
-                            >
-                                Unlist
-                            </DeckActionClickable>
-                        </>
-                    )}
+                    <DeckActionClickable
+                        menuItem={menuItem}
+                        onClick={this.handleOpenForEdit}
+                    >
+                        Edit Listing
+                    </DeckActionClickable>
+                    <DeckActionClickable
+                        menuItem={menuItem}
+                        onClick={() => auctionStore.cancel(deck.name, deck.id)}
+                    >
+                        Unlist
+                    </DeckActionClickable>
                 </>
             )
         } else {
@@ -280,7 +253,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
 
         const forSaleInCountry = userStore.country
-        const forSaleOrAuction = this.forSale || this.auction
 
         const marginTopRight: React.CSSProperties = {
             marginTop: spacing(2), marginRight: spacing(2)
@@ -294,7 +266,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     onClose={this.handleClose}
                 >
                     <DialogTitle>
-                        {this.update ? (
+                        {this.editAuctionId != null ? (
                             `Update listing for "${deck.name}"`
                         ) : (
                             `Sell or trade "${deck.name}"`
@@ -328,40 +300,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             </div>
                         )}
                         <FormGroup row={true}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.forSale}
-                                        onChange={(event) => {
-                                            this.forSale = event.target.checked
-                                            if (!this.forSale) {
-                                                this.askingPrice = ""
-                                            } else {
-                                                this.auction = false
-                                            }
-                                        }}
-                                        color={"primary"}
-                                    />
-                                }
-                                label={"For sale"}
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.forTrade}
-                                        onChange={(event) => {
-                                            const forTrade = event.target.checked
-                                            this.forTrade = forTrade
-                                            if (forTrade) {
-                                                this.auction = false
-                                            }
-                                        }}
-                                        color={"primary"}
-                                    />
-                                }
-                                label={"For trade"}
-                            />
-                            {this.update ? null : (
+                            {!this.editAuctionId && (
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -369,11 +308,16 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                             onChange={(event) => {
                                                 const auction = event.target.checked
                                                 this.auction = auction
-                                                this.forSale = !auction
-                                                this.forTrade = !auction
                                                 if (auction) {
                                                     this.expireInDays = "3"
+                                                    this.bidIncrement = "1"
+                                                    this.startingBid = "1"
+                                                } else {
+                                                    this.expireInDays = "7"
+                                                    this.bidIncrement = ""
+                                                    this.startingBid = ""
                                                 }
+                                                this.auctionEndTime = ""
                                             }}
                                             color={"primary"}
                                         />
@@ -464,17 +408,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 )
                             })}
                         </TextField>
-                        {forSaleOrAuction ? (
+                        {this.auction ? (
                             <TextField
-                                label={this.auction ? "Starting bid" : "Asking price"}
+                                label={"Starting bid"}
                                 type={"number"}
-                                value={this.auction ? this.startingBid : this.askingPrice}
+                                value={this.startingBid}
                                 onChange={(event) => {
-                                    if (this.auction) {
-                                        this.startingBid = event.target.value
-                                    } else {
-                                        this.askingPrice = event.target.value
-                                    }
+                                    this.startingBid = event.target.value
                                 }}
                                 style={{width: 120, ...marginTopRight}}
                             />
@@ -488,22 +428,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                     onChange={(event) => this.bidIncrement = event.target.value}
                                     style={{width: 120, ...marginTopRight}}
                                 />
-                                <TextField
-                                    label={"Buy it now"}
-                                    type={"number"}
-                                    value={this.buyItNow}
-                                    onChange={(event) => this.buyItNow = event.target.value}
-                                    style={{width: 120, ...marginTopRight}}
-                                />
                             </>
                         ) : null}
                         <TextField
-                            label={"External listing link"}
-                            value={this.externalLink}
-                            onChange={(event) => this.externalLink = event.target.value}
-                            fullWidth={true}
-                            helperText={"Ebay link, store link, etc."}
-                            style={{marginTop: spacing(2)}}
+                            label={this.auction ? "Buy it now" : "Price"}
+                            type={"number"}
+                            value={this.buyItNow}
+                            onChange={(event) => this.buyItNow = event.target.value}
+                            style={{width: 120, ...marginTopRight}}
                         />
                         <TextField
                             label={"Listing Info"}
@@ -514,10 +446,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             helperText={"Trade requests, detailed condition info, etc."}
                             style={{marginTop: spacing(2)}}
                         />
-
+                        <TextField
+                            label={"External listing link"}
+                            value={this.externalLink}
+                            onChange={(event) => this.externalLink = event.target.value}
+                            fullWidth={true}
+                            helperText={"Ebay link, store link, etc."}
+                            style={{marginTop: spacing(2)}}
+                        />
                         <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
                             <Typography>
-                                Add generic info for all deck listings on your
+                                Add generic info and toggle trades on your
                             </Typography>
                             <LinkButton
                                 to={Routes.myProfile}
@@ -561,7 +500,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             onClick={() => this.list()}
                             disabled={!userStore.emailVerified || !forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}
                         >
-                            {this.update ? "Update Listing" : "List"}
+                            {this.editAuctionId != null ? "Update Listing" : "List"}
                         </KeyButton>
                     </DialogActions>
                 </Dialog>

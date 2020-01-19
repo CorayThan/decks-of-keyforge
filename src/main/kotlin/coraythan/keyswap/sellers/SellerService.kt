@@ -11,6 +11,7 @@ import coraythan.keyswap.userdeck.UpdatePrice
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -44,7 +45,7 @@ class SellerService(
                     .toList()
                     .sortedByDescending { it.mostRecentDeckListing }
                     .filter { user ->
-                        (user.decks.filter { it.forSale || it.forTrade }.size + user.auctions.filter { it.status == AuctionStatus.ACTIVE }.size) > 9
+                        user.auctions.filter { it.status != AuctionStatus.COMPLETE }.size > 9
                     }
                     .map { user ->
                         SellerDetailsWithFullDate(
@@ -52,8 +53,7 @@ class SellerService(
                                 SellerDetails(
                                         storeName = user.storeName ?: "${user.username}'s Store",
                                         username = user.username,
-                                        decksAvailable = user.decks.filter { it.forSale || it.forTrade }.size +
-                                                user.auctions.filter { it.status ==  AuctionStatus.ACTIVE}.size,
+                                        decksAvailable = user.auctions.filter { it.isActive}.size,
                                         country = user.country ?: Country.UnitedStates,
                                         mostRecentListing = placeholderDate,
                                         storeDescription = user.publicContactInfo,
@@ -76,11 +76,9 @@ class SellerService(
     }
 
     fun updatePrices(prices: List<UpdatePrice>) {
-        for (price in prices) {
-            val currentUser = currentUserService.loggedInUserOrUnauthorized()
-            val preexisting = auctionRepo.findBySellerIdAndDeckId(currentUser.id, price.deckId)
-                    ?: throw IllegalArgumentException("There was no listing info for deck with id ${price.deckId}")
-            auctionRepo.save(preexisting.copy(buyItNow = price.askingPrice))
+        prices.forEach {
+            val auction = auctionRepo.findByIdOrNull(it.auctionId)
+            if (auction != null) auctionRepo.save(auction.copy(buyItNow = it.askingPrice))
         }
     }
 }

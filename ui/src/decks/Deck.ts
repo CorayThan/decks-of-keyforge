@@ -84,13 +84,19 @@ export class DeckUtils {
         if (saleInfo && saleInfo.length > 0) {
             for (const info of saleInfo) {
                 if (!myPriceOnly || info.username === userStore.username) {
-                    if (info.askingPrice) {
-                        return info.askingPrice
-                    } else if (info.highestBid) {
-                        return info.highestBid
-                    } else if (info.nextBid) {
-                        return info.nextBid
-                    }
+                    return info.buyItNow
+                }
+            }
+        }
+        return undefined
+    }
+
+    static findHighestBid = (deck: Deck): number | undefined => {
+        const saleInfo = deck.deckSaleInfo
+        if (saleInfo && saleInfo.length > 0) {
+            for (const info of saleInfo) {
+                if (info.highestBid != null) {
+                    return info.highestBid
                 }
             }
         }

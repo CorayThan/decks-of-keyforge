@@ -81,6 +81,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     allowUsersToSeeDeckOwnership: boolean
     @observable
+    allowsTrades: boolean
+    @observable
     country: string
 
     @observable
@@ -115,11 +117,12 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         super(props)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email,
-            sellerEmail, discord, storeName, currencySymbol, displayCrucibleTrackerWins
+            sellerEmail, discord, storeName, currencySymbol, displayCrucibleTrackerWins, allowsTrades
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
+        this.allowsTrades = allowsTrades
         this.country = country ? country : ""
         this.preferredCountries = preferredCountries ? preferredCountries : []
         this.sellerEmail = sellerEmail ? sellerEmail : ""
@@ -195,6 +198,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             discord,
             storeName,
             currencySymbol: currencySymbolTrimmed,
+            allowsTrades: this.allowsTrades,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
@@ -381,6 +385,16 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             </FormHelperText>
                                         </Grid>
                                         <Grid item={true} xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.allowsTrades}
+                                                        onChange={(event) => this.allowsTrades = event.target.checked}
+                                                        tabIndex={6}
+                                                    />
+                                                }
+                                                label={"Open to trading decks for sale"}
+                                            />
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox

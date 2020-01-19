@@ -49,6 +49,7 @@ export interface KeyUserDto {
     emailVerified: boolean
     type: UserType
     publicContactInfo?: string
+    allowsTrades: boolean
     allowUsersToSeeDeckOwnership: boolean
     currencySymbol: string
     country?: string

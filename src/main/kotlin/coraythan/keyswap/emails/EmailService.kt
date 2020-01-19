@@ -180,7 +180,7 @@ class EmailService(
                         </div>
                         <br>
                         <div>
-                            ${if (listingInfo.askingPrice == null) "" else "Its price is ${listingInfo.askingPrice}."}
+                            ${if (listingInfo.buyItNow == null) "" else "Its price is ${listingInfo.buyItNow}."}
                         </div>
                         <br>
                         <div>

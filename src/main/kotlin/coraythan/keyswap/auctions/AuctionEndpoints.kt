@@ -31,4 +31,7 @@ class AuctionEndpoints(
     fun auctionInfo(@PathVariable auctionId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int)
             = auctionService.auctionInfo(auctionId, offsetMinutes)
 
+    @GetMapping("/secured/listings-for-user")
+    fun activeListingsForUser(@RequestHeader(value="Timezone") offsetMinutes: Int) = auctionService.findActiveListingsForUser(offsetMinutes)
+
 }

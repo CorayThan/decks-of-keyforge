@@ -59,34 +59,7 @@ export interface UserDeckDto {
     funny: boolean
     ownedBy: string
 
-    forSale: boolean
-    forTrade: boolean
-
-    // On DTO version only
-    forAuction: boolean
-    // On DTO version only
-    hasBids: boolean
-
-    currencySymbol: string
-    forSaleInCountry?: string,
-    language?: DeckLanguage,
-
-    askingPrice?: number
-
-    listingInfo?: string
-    condition?: DeckCondition
-    redeemed: boolean
-    externalLink?: string
-    dateListed?: string
-    expiresAt?: string
-
-    dateListedLocalDate?: string
-    expiresAtLocalDate?: string
-
     // On DTO version only
     deckId: number
     notes?: string
-
-    username: string
-    publicContactInfo?: string
 }

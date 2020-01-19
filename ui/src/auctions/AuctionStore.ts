@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { messageStore } from "../ui/MessageStore"
-import { userStore } from "../user/UserStore"
 import { ListingInfo } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { AuctionDto } from "./AuctionDto"
@@ -16,12 +16,26 @@ export class AuctionStore {
     @observable
     auctionInfo?: AuctionDto
 
-    createAuction = (deckName: string, listingInfo: ListingInfo) => {
+    @observable
+    decksForSale?: Map<number, AuctionDto>
+
+    findListingsForUser = (refresh?: boolean) => {
+        if (keyLocalStorage.hasAuthKey() && (refresh || this.decksForSale == null)) {
+            axios.get(`${AuctionStore.SECURE_CONTEXT}/listings-for-user`)
+                .then((response: AxiosResponse<AuctionDto[]>) => {
+                    this.decksForSale = new Map()
+                    response.data.forEach(auctionDto => {
+                        this.decksForSale?.set(auctionDto.deckId, auctionDto)
+                    })
+                })
+        }
+    }
+
+    listForSale = (deckName: string, listingInfo: ListingInfo) => {
         axios.post(`${AuctionStore.SECURE_CONTEXT}/list`, listingInfo)
             .then(() => {
                 messageStore.setSuccessMessage(`Created an auction for ${deckName}.`)
-                userStore.loadLoggedInUser()
-                userDeckStore.findAllForUser()
+                auctionStore.findListingsForUser(true)
                 userDeckStore.refreshDeckInfo()
             })
     }
@@ -57,21 +71,24 @@ export class AuctionStore {
             })
     }
 
-    cancel = (deckId: number) => {
+    cancel = (deckName: string, deckId: number) => {
         axios.post(`${AuctionStore.SECURE_CONTEXT}/cancel/${deckId}`)
             .then((response: AxiosResponse<boolean>) => {
                 if (response.data) {
-                    messageStore.setSuccessMessage(`Canceled your auction.`)
+                    messageStore.setSuccessMessage(`Canceled your listing for ${deckName}.`)
                 } else {
-                    messageStore.setWarningMessage("Couldn't cancel your auction as it has been bid on.")
+                    messageStore.setWarningMessage(`Couldn't cancel listing of ${deckName}.`)
                 }
-
-                userStore.loadLoggedInUser()
-                userDeckStore.findAllForUser()
-                userDeckStore.refreshDeckInfo()
+                this.findListingsForUser(true)
             })
     }
 
+    auctionInfoForDeck = (deckId: number): AuctionDto | undefined => {
+        if (this.decksForSale != null) {
+            return this.decksForSale.get(deckId)
+        }
+        return undefined
+    }
 }
 
 export const auctionStore = new AuctionStore()

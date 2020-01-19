@@ -6,13 +6,11 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.userdeck.DeckCondition
-import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
 import java.util.*
 
 data class DeckSaleInfo(
-        val forSale: Boolean,
         val forTrade: Boolean,
         val forAuction: Boolean,
 
@@ -20,11 +18,9 @@ data class DeckSaleInfo(
         val currencySymbol: String,
         val language: DeckLanguage? = null,
 
-        val askingPrice: Double?,
-
         val highestBid: Int? = null,
-        val startingBid: Int? = null,
         val buyItNow: Int? = null,
+        val startingBid: Int? = null,
         val auctionEndDateTime: String? = null,
         val auctionId: UUID? = null,
         val nextBid: Int? = null,
@@ -47,46 +43,21 @@ data class DeckSaleInfo(
         val discord: String?
 ) {
     companion object {
-        fun fromUserDeck(offsetMinutes: Int, userDeck: UserDeck): DeckSaleInfo? {
-            return if (!userDeck.availableToBuy) {
-                null
-            } else {
-                DeckSaleInfo(
-                        forSale = userDeck.forSale,
-                        forTrade = userDeck.forTrade,
-                        forAuction = false,
-                        forSaleInCountry = userDeck.forSaleInCountry,
-                        language = userDeck.language,
-                        currencySymbol = userDeck.currencySymbol ?: "$",
-                        askingPrice = userDeck.askingPrice,
-                        listingInfo = userDeck.listingInfo,
-                        externalLink = userDeck.externalLink,
-                        condition = userDeck.condition!!,
-                        dateListed = userDeck.dateListed?.toLocalDateWithOffsetMinutes(offsetMinutes) ?: LocalDate.parse("2019-04-07"),
-                        expiresAt = userDeck.expiresAt?.toLocalDateWithOffsetMinutes(offsetMinutes),
-                        username = userDeck.user.username,
-                        publicContactInfo = userDeck.user.publicContactInfo,
-                        discord = userDeck.user.discord
-                )
-            }
-        }
         
         fun fromAuction(offsetMinutes: Int, auction: Auction, currentUser: KeyUser?): DeckSaleInfo {
             val youAreHighest = auction.highestBidderUsername == currentUser?.username && currentUser != null
 
             return DeckSaleInfo(
-                    forSale = false,
-                    forTrade = false,
-                    forAuction = true,
+                    forTrade = auction.forTrade,
+                    forAuction = auction.status == AuctionStatus.ACTIVE,
                     forSaleInCountry = auction.forSaleInCountry,
                     language = auction.language,
                     currencySymbol = auction.currencySymbol,
-                    askingPrice = null,
                     listingInfo = auction.listingInfo,
                     externalLink = auction.externalLink,
-                    condition = auction.condition!!,
+                    condition = auction.condition,
                     dateListed = auction.dateListed.toLocalDateWithOffsetMinutes(offsetMinutes),
-                    expiresAt = null,
+                    expiresAt = auction.endDateTime.toLocalDateWithOffsetMinutes(offsetMinutes),
                     username = auction.seller.username,
                     publicContactInfo = auction.seller.publicContactInfo,
                     discord = auction.seller.discord,

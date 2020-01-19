@@ -1,18 +1,15 @@
-import { AuctionStatus } from "../../auctions/AuctionDto"
+import { AuctionDto, AuctionStatus } from "../../auctions/AuctionDto"
 import { userStore } from "../../user/UserStore"
-import { DeckCondition, UserDeckDto } from "../../userdeck/UserDeck"
+import { DeckCondition } from "../../userdeck/UserDeck"
 import { DeckLanguage } from "../DeckLanguage"
 
 export interface DeckSaleInfo {
-    forSale: boolean
     forTrade: boolean
     forAuction: boolean
 
     forSaleInCountry?: string
     currencySymbol: string
     language?: DeckLanguage
-
-    askingPrice?: number
 
     highestBid?: number
     buyItNow?: number
@@ -25,6 +22,7 @@ export interface DeckSaleInfo {
     bidIncrement?: number
     auctionStatus?: AuctionStatus
     boughtBy?: string
+    boughtWithBuyItNow?: boolean
     boughtNowOn?: string
 
     listingInfo?: string
@@ -38,20 +36,19 @@ export interface DeckSaleInfo {
     discord?: string
 }
 
-export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo | undefined => {
+export const deckSaleInfoFromAuctionDto = (auctionDto: AuctionDto): DeckSaleInfo | undefined => {
 
     const {
-        forSale, forTrade, forAuction, askingPrice, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol,
-        language
-    } = userDeck
+        buyItNow, forTrade, id, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol, language, startingBid, status
+    } = auctionDto
+    const forAuction = status === AuctionStatus.ACTIVE
 
     const user = userStore.user
 
-    if ((!userDeck.forSale && !userDeck.forTrade) || user == null) {
+    if (user == null) {
         return undefined
     }
     return {
-        forSale,
         forTrade,
         forAuction,
 
@@ -59,10 +56,12 @@ export const deckSaleInfoFromUserDeckDto = (userDeck: UserDeckDto): DeckSaleInfo
         currencySymbol,
         language,
 
-        askingPrice,
+        auctionId: id,
 
+        startingBid,
         listingInfo,
         externalLink,
+        buyItNow,
 
         dateListed: dateListedLocalDate!,
         expiresAt: expiresAtLocalDate,

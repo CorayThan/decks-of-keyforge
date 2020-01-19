@@ -1,6 +1,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { App } from "./App"
+import { auctionStore } from "./auctions/AuctionStore"
 import { offerStore } from "./auctions/offers/OfferStore"
 import { cardStore } from "./cards/CardStore"
 import { HttpConfig } from "./config/HttpConfig"
@@ -15,6 +16,7 @@ TextConfig.loadFonts()
 HttpConfig.setupAxios()
 userStore.loadLoggedInUser()
 userDeckStore.findAllForUser()
+auctionStore.findListingsForUser()
 cardStore.loadAllCards()
 statsStore.findGlobalStats()
 sellerStore.findFeaturedSellers()

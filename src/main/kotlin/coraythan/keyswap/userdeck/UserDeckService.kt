@@ -1,13 +1,8 @@
 package coraythan.keyswap.userdeck
 
-import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.auctions.AuctionRepo
-import coraythan.keyswap.auctions.AuctionStatus
-import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
-import coraythan.keyswap.now
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
@@ -25,38 +20,10 @@ class UserDeckService(
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val userDeckRepo: UserDeckRepo,
-        private val forSaleNotificationsService: ForSaleNotificationsService,
         private val auctionRepo: AuctionRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
-    fun unlistExpiredDecks() {
-        log.info("$scheduledStart unlisting expired decks.")
-        val toUnlist = userDeckRepo.findAll(
-                QUserDeck.userDeck.expiresAt.before(now())
-        )
-        log.info("Unlisting ${toUnlist.toList().size} decks.")
-        toUnlist.forEach {
-            unlistUserDeck(it)
-            log.info("Unlisted ${it.id}")
-        }
-
-        // Something is causing decks without for sale or trade, but with country + currency symbol
-        val removeBadValues = userDeckRepo
-                .findAll(BooleanBuilder()
-                        .and(QUserDeck.userDeck.forSale.isFalse)
-                        .and(QUserDeck.userDeck.forTrade.isFalse)
-                        .andAnyOf(QUserDeck.userDeck.forSaleInCountry.isNotNull, QUserDeck.userDeck.askingPrice.isNotNull)
-                ).toList()
-        val safeBadValues = removeBadValues.filter { !it.forSale && !it.forTrade }
-        log.info("Removing ${safeBadValues.map { it.id }} decks that had the country still when they shouldn't have.")
-        if (removeBadValues.size != safeBadValues.size) log.warn("Removing bad values and we found ones we didn't want.")
-        userDeckRepo.saveAll(safeBadValues.map { it.copy(forSaleInCountry = null, askingPrice = null) })
-
-        log.info("$scheduledStop unlisting expired decks.")
-    }
 
     // Don't want this running regularly
     @Scheduled(fixedDelayString = "PT144H")
@@ -107,9 +74,6 @@ class UserDeckService(
         modOrCreateUserDeck(deckId, user, null) {
             it.copy(ownedBy = if (mark) user.username else null)
         }
-        if (!mark) {
-            this.unlist(deckId)
-        }
     }
 
     fun unmarkAsOwnedForSeller(deckId: Long, owner: KeyUser) {
@@ -117,60 +81,6 @@ class UserDeckService(
             it.copy(ownedBy = null)
         }
     }
-
-    fun updatePrices(prices: List<UpdatePrice>) {
-        for (price in prices) {
-            val currentUser = currentUserService.loggedInUserOrUnauthorized()
-            val preexisting = userDeckRepo.findByDeckIdAndUserId(price.deckId, currentUser.id)
-                    ?: throw IllegalArgumentException("There was no listing info for deck with id ${price.deckId}")
-            userDeckRepo.save(preexisting.copy(askingPrice = price.askingPrice?.toDouble()))
-        }
-    }
-
-    fun unlist(deckId: Long) {
-        val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        unlistForUser(deckId, currentUser)
-    }
-
-    fun unlistForUser(deckId: Long, user: KeyUser) {
-        unlistUserDeck(userDeckRepo.findByDeckIdAndUserId(deckId, user.id) ?: throw IllegalStateException("Couldn't find your deck listing."))
-    }
-
-    fun unlistUserDeck(userDeck: UserDeck) {
-        val deckId = userDeck.deck.id
-        userDeckRepo.save(userDeckWithoutListingInfo(userDeck))
-        val userDeckQ = QUserDeck.userDeck
-        val userDecksForSale = userDeckRepo.findAll(
-                userDeckQ.forSale.isTrue
-                        .and(userDeckQ.deck.id.eq(deckId))
-                        .and(userDeckQ.id.ne(userDeck.id))
-        )
-        val userDecksForTrade = userDeckRepo.findAll(
-                userDeckQ.forTrade.isTrue
-                        .and(userDeckQ.deck.id.eq(deckId))
-                        .and(userDeckQ.id.ne(userDeck.id))
-        )
-        val forSale = userDecksForSale.toList().isNotEmpty()
-        val forTrade = userDecksForTrade.toList().isNotEmpty()
-        deckRepo.save(userDeck.deck.copy(
-                forSale = forSale,
-                forTrade = forTrade,
-                listedOn = if (forSale || forTrade) userDeck.deck.listedOn else null
-        ))
-    }
-
-    private fun userDeckWithoutListingInfo(userDeck: UserDeck) = userDeck.copy(
-            forSale = false,
-            forTrade = false,
-            forSaleInCountry = null,
-            askingPrice = null,
-            listingInfo = null,
-            condition = null,
-            dateListed = null,
-            expiresAt = null,
-            externalLink = null
-    )
-
 
     private fun modOrCreateUserDeck(
             deckId: Long,
@@ -195,10 +105,8 @@ class UserDeckService(
 
     fun findAllForUser(): List<UserDeckDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        val auctions = auctionRepo.findAllBySellerIdAndStatus(currentUser.id, AuctionStatus.ACTIVE)
-        val activeAuctionDeckIds = auctions.map { it.deck.id to it }.toMap()
         return userDeckRepo.findByUserId(currentUser.id).map {
-            it.toDto(activeAuctionDeckIds.contains(it.deck.id), activeAuctionDeckIds[it.deck.id]?.bids?.isNotEmpty() ?: false)
+            it.toDto()
         }
     }
 }

@@ -40,19 +40,19 @@ class PublicApiEndpoints(
 //        publicApiService.listDeckForSeller(listDeck, seller)
     }
 
-    @DeleteMapping("/sellers/unlist-deck/{id}")
-    fun unlistDeck(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String) {
-        val seller = publicApiService.userForApiKey(apiKey)
-        log.info("Unlist deck request from ${seller.email}")
-        publicApiService.unlistDeckForSeller(id, seller)
-    }
-
-    @DeleteMapping("/sellers/unlist-deck-by-name/{name}")
-    fun unlistDeckWithName(@RequestHeader("Api-Key") apiKey: String, @PathVariable name: String) {
-        val seller = publicApiService.userForApiKey(apiKey)
-        log.info("Unlist deck with name request from ${seller.email}")
-        publicApiService.unlistDeckForSellerWithName(name, seller)
-    }
+//    @DeleteMapping("/sellers/unlist-deck/{id}")
+//    fun unlistDeck(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String) {
+//        val seller = publicApiService.userForApiKey(apiKey)
+//        log.info("Unlist deck request from ${seller.email}")
+//        publicApiService.unlistDeckForSeller(id, seller)
+//    }
+//
+//    @DeleteMapping("/sellers/unlist-deck-by-name/{name}")
+//    fun unlistDeckWithName(@RequestHeader("Api-Key") apiKey: String, @PathVariable name: String) {
+//        val seller = publicApiService.userForApiKey(apiKey)
+//        log.info("Unlist deck with name request from ${seller.email}")
+//        publicApiService.unlistDeckForSellerWithName(name, seller)
+//    }
 
     @CrossOrigin
     @GetMapping("/v3/decks/{id}")

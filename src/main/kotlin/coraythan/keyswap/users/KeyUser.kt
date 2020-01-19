@@ -115,6 +115,7 @@ data class KeyUser(
             emailVerified = emailVerified,
             type = type,
             publicContactInfo = publicContactInfo,
+            allowsTrades = allowsTrades,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             currencySymbol = currencySymbol,
             country = country,
@@ -153,6 +154,7 @@ data class KeyUserDto(
         val type: UserType,
 
         val publicContactInfo: String? = null,
+        val allowsTrades: Boolean,
         val allowUsersToSeeDeckOwnership: Boolean,
 
         val currencySymbol: String = "$",

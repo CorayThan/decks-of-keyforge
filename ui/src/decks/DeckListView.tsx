@@ -6,6 +6,7 @@ import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
+import { auctionStore } from "../auctions/AuctionStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -41,9 +42,9 @@ class DeckTableViewStore {
     @observable
     priceChanges: UpdatePrice[] = []
 
-    addPriceChange = (deckId: number, askingPrice?: number) => {
-        this.priceChanges = this.priceChanges.filter(priceChange => priceChange.deckId !== deckId)
-        this.priceChanges.push({deckId, askingPrice})
+    addPriceChange = (auctionId: string, askingPrice?: number) => {
+        this.priceChanges = this.priceChanges.filter(priceChange => priceChange.auctionId !== auctionId)
+        this.priceChanges.push({auctionId, askingPrice})
     }
 
     resort = () => {
@@ -51,8 +52,8 @@ class DeckTableViewStore {
             const decks: IObservableArray<Deck> = deckStore.deckPage.decks as IObservableArray<Deck>
             if (deckTableViewStore.activeTableSort === "price") {
                 decks.replace(sortBy(decks.slice(), (deck: Deck) => {
-                    if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].askingPrice) {
-                        return deck.deckSaleInfo[0].askingPrice
+                    if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].buyItNow) {
+                        return deck.deckSaleInfo[0].buyItNow
                     } else {
                         return deckTableViewStore.tableSortDir === "desc" ? 0 : 1000000
                     }
@@ -109,8 +110,8 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <TableCell>Houses</TableCell>
                                 {displayPrices ? (
                                     <>
-                                        <DeckHeader title={"Price / Bid"} property={"price"}/>
-                                        <DeckHeader title={"BIN"} property={"buyItNow"}/>
+                                        <DeckHeader title={"Price"} property={"price"}/>
+                                        <DeckHeader title={"Bid"} property={"buyItNow"}/>
                                     </>
                                 ) : null}
                                 {sellerView ? <TableCell>Seller Tools</TableCell> : null}
@@ -170,9 +171,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                         {displayPrices || sellerView ? (
                                             <>
                                                 <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
-                                                <TableCell>
-                                                    {findBuyItNowForDeck(deck)}
-                                                </TableCell>
+                                                <TableCell>{DeckUtils.findHighestBid(deck)}</TableCell>
                                             </>
                                         ) : null}
                                         {sellerView ? (
@@ -283,7 +282,8 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
 
     render() {
         const {deck, sellerVersion} = this.props
-        if (this.priceForSeller != null && sellerVersion) {
+        const auctionInfo = auctionStore.auctionInfoForDeck(deck.id)
+        if (auctionInfo != null && this.priceForSeller != null && sellerVersion) {
             return (
                 <TableCell>
                     <TextField
@@ -295,7 +295,7 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
                             log.debug(`Price for seller is ${this.priceForSeller}`)
                             const asNumber = Number(this.priceForSeller)
                             const realPrice = asNumber < 1 ? undefined : asNumber
-                            deckTableViewStore.addPriceChange(deck.id, realPrice)
+                            deckTableViewStore.addPriceChange(auctionInfo.id, realPrice)
                         }}
                         style={{width: 64}}
                     />
@@ -306,7 +306,6 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
         return (
             <TableCell>
                 {price == null ? "" : price}
-                {highestBidder(deck) ? " High Bidder" : ""}
             </TableCell>
         )
     }

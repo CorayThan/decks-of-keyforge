@@ -8,6 +8,7 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.userdeck.DeckCondition
 import coraythan.keyswap.users.KeyUser
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
@@ -58,7 +59,7 @@ data class Auction(
         @Enumerated(EnumType.STRING)
         val language: DeckLanguage,
 
-        val condition: DeckCondition? = null,
+        val condition: DeckCondition,
         val redeemed: Boolean = true,
         val externalLink: String? = null,
         val listingInfo: String? = null,
@@ -66,12 +67,24 @@ data class Auction(
 
         val dateListed: ZonedDateTime = now(),
 
+        val forTrade: Boolean,
+
         @Id
         val id: UUID = UUID.randomUUID()
 ) {
     private fun realMaxBidObject() = bids.sorted().firstOrNull()
     fun realMaxBid() = realMaxBidObject()?.bid
     fun highestBidder() = realMaxBidObject()?.bidder
+
+    val isActive: Boolean
+        get() {
+            return status != AuctionStatus.COMPLETE
+        }
+
+    val highestOffer: Int?
+        get() {
+            return offers.map { it.amount }.max()
+        }
 
     val highestBid: Int?
         get() {
@@ -101,6 +114,7 @@ data class Auction(
     fun toDto(offsetMinutes: Int = 0): AuctionDto {
         val highestBid = highestBid
         return AuctionDto(
+                dateListed = dateListed,
                 durationDays = durationDays,
                 endDateTime = endDateTime,
                 bidIncrement = bidIncrement,
@@ -116,14 +130,21 @@ data class Auction(
                                     highest = it == realMaxBidObject()
                             )
                         },
+                highestOffer = highestOffer,
                 deckId = deck.id,
                 currencySymbol = currencySymbol,
+                language = language,
+                condtion = condition,
+                listingInfo = listingInfo,
+                externalLink = externalLink,
+                forTrade = forTrade,
                 id = id
         )
     }
 }
 
 data class AuctionDto(
+        val dateListed: ZonedDateTime,
         val durationDays: Int = 7,
         val endDateTime: ZonedDateTime,
         val bidIncrement: Int? = 5,
@@ -134,8 +155,20 @@ data class AuctionDto(
         val bids: List<AuctionBidDto> = listOf(),
         val deckId: Long,
         val currencySymbol: String,
+        val highestOffer: Int? = null,
+        val language: DeckLanguage,
+        val condtion: DeckCondition,
+        val listingInfo: String?,
+        val externalLink: String?,
+        val forTrade: Boolean,
         val id: UUID
-)
+) {
+    val dateListedLocalDate: LocalDate
+        get() = this.dateListed.toLocalDate()
+
+    val expiresAtLocalDate: LocalDate
+        get() = this.endDateTime.toLocalDate()
+}
 
 enum class AuctionStatus {
     BUY_IT_NOW_ONLY,

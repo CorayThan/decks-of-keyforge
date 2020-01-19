@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
+import { auctionStore } from "../auctions/AuctionStore"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { UpdatePrice } from "../userdeck/ListingInfo"
-import { userDeckStore } from "../userdeck/UserDeckStore"
 import { SellerDetails } from "./SellerDetails"
 
 export class SellerStore {
@@ -18,8 +18,7 @@ export class SellerStore {
         axios.post(`${SellerStore.SECURE_CONTEXT}/update-prices`, prices)
             .then(() => {
                 messageStore.setInfoMessage(`Updated prices for ${prices.length} decks.`)
-                userDeckStore.findAllForUser()
-                userDeckStore.refreshDeckInfo()
+                auctionStore.findListingsForUser(true)
             })
     }
 

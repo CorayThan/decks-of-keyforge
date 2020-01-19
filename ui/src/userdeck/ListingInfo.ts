@@ -6,17 +6,17 @@ export interface ListingInfo {
     forSaleInCountry: string,
     language: DeckLanguage
     condition: DeckCondition
-    askingPrice?: number
     listingInfo: string
     externalLink: string
-    expireInDays: number
     bidIncrement?: number
     startingBid?: number
     buyItNow?: number
+    expireInDays: number
     endTime?: string
+    editAuctionId?: string
 }
 
 export interface UpdatePrice {
-    deckId: number
+    auctionId: string
     askingPrice?: number
 }

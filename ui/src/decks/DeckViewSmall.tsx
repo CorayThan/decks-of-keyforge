@@ -11,11 +11,13 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCombos } from "../aerc/AercForCombos"
 import { AercView } from "../aerc/AercViews"
+import { auctionStore } from "../auctions/AuctionStore"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { log } from "../config/Utils"
 import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
@@ -30,7 +32,6 @@ import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { DeckNote } from "../userdeck/DeckNote"
 import { OwnersButton } from "../userdeck/OwnersButton"
-import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckActionClickable } from "./buttons/DeckActionClickable"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
@@ -57,14 +58,15 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             id, keyforgeId, name, wishlistCount, funnyCount,
             forSale, forTrade, forAuction, registered, owners
         } = deck
-        const userDeck = userDeckStore.userDeckByDeckId(id)
+        const saleInfo = auctionStore.auctionInfoForDeck(id)
         let userDeckForSale = false
         let userDeckForTrade = false
         let userDeckForAuction = false
-        if (userDeck) {
-            userDeckForSale = userDeck.forSale
-            userDeckForTrade = userDeck.forTrade
-            userDeckForAuction = userDeck.forAuction
+        if (saleInfo) {
+            log.debug(`Deck sale info wasn't null for ${deck.name}`)
+            userDeckForSale = true
+            userDeckForTrade = saleInfo.forTrade
+            userDeckForAuction = saleInfo.startingBid != null
         }
         const compact = screenStore.smallDeckView()
 

@@ -1,6 +1,9 @@
 ALTER TABLE auction
     DROP COLUMN IF EXISTS shipping_cost;
 
+ALTER TABLE auction
+    DROP COLUMN IF EXISTS for_trade;
+
 ALTER TABLE key_user
     DROP COLUMN IF EXISTS shipping_cost;
 
