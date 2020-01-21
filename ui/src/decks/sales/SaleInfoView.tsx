@@ -9,7 +9,6 @@ import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { DeckListingStatus } from "../../auctions/DeckListingDto"
-import { auctionStore } from "../../auctions/DeckListingStore"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -25,7 +24,7 @@ import { sellerStore } from "../../sellers/SellerStore"
 import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
-import { DeckSaleInfo, deckSaleInfoFromAuctionDto } from "./DeckSaleInfo"
+import { DeckSaleInfo } from "./DeckSaleInfo"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
 interface SaleInfoViewProps {
@@ -45,17 +44,10 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
             <div>
                 {this.props.saleInfo.map((saleInfo) => {
 
-                    let userDeckInfo
-                    if (saleInfo.username === userStore.username) {
-                        userDeckInfo = auctionStore.listingInfoForDeck(this.props.deckId)
-                        const userDeck = auctionStore.listingInfoForDeck(this.props.deckId)
-                        userDeckInfo = userDeck ? deckSaleInfoFromAuctionDto(userDeck) : undefined
-                    }
-
                     return (
                         <div style={{marginTop: spacing(2), marginBottom: spacing(2)}} key={saleInfo.username}>
                             <SingleSaleInfoView
-                                saleInfo={userDeckInfo ? userDeckInfo : saleInfo}
+                                saleInfo={saleInfo}
                                 deckName={this.props.deckName}
                                 keyforgeId={this.props.keyforgeId}
                             />

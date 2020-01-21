@@ -222,7 +222,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         const profile = this.props.profile
         const filters = new DeckFilters()
         filters.owner = profile.username
-        filters.includeUnregistered = true
         const decksLink = Routes.deckSearch(filters)
 
         const decksForSaleLink = Routes.userDecksForSale(profile.username)

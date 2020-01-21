@@ -30,6 +30,7 @@ data class ForSaleQueryEntity(
         val id: UUID = UUID.randomUUID()
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class ForSaleQuery(
 
         val queryName: String,
@@ -42,7 +43,7 @@ data class ForSaleQuery(
         override val forTrade: Boolean = false,
         override val forAuction: Boolean = false,
         override val forSaleInCountry: Country? = null,
-        override val includeUnregistered: Boolean = false,
+        override val registered: Boolean = false,
         override val expansions: List<Int> = listOf(),
 
         override val constraints: List<Constraint> = listOf(),

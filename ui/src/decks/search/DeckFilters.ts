@@ -13,9 +13,6 @@ export class DeckFilters {
     static forSaleOrTrade = () => {
         const filters = new DeckFilters()
         filters.forSale = true
-        filters.forTrade = true
-        filters.forAuction = true
-        filters.includeUnregistered = true
         return filters
     }
 
@@ -69,29 +66,29 @@ export class DeckFilters {
         if (queryObject.page) {
             queryObject.page = Number(queryObject.page)
         }
-        if (queryObject.forSale) {
-            queryObject.forSale = Boolean(queryObject.forSale)
+        if (queryObject.forSale != null) {
+            queryObject.forSale = queryObject.forSale === "true"
         }
-        if (queryObject.notForSale) {
-            queryObject.notForSale = Boolean(queryObject.notForSale)
+        if (queryObject.notForSale != null) {
+            queryObject.notForSale = queryObject.notForSale === "true"
         }
-        if (queryObject.forTrade) {
-            queryObject.forTrade = Boolean(queryObject.forTrade)
+        if (queryObject.forTrade != null) {
+            queryObject.forTrade = queryObject.forTrade === "true"
         }
-        if (queryObject.forAuction) {
-            queryObject.forAuction = Boolean(queryObject.forAuction)
+        if (queryObject.forAuction != null) {
+            queryObject.forAuction = queryObject.forAuction === "true"
         }
-        if (queryObject.completedAuctions) {
-            queryObject.completedAuctions = Boolean(queryObject.completedAuctions)
+        if (queryObject.completedAuctions != null) {
+            queryObject.completedAuctions = queryObject.completedAuctions === "true"
         }
-        if (queryObject.includeUnregistered) {
-            queryObject.includeUnregistered = Boolean(queryObject.includeUnregistered)
+        if (queryObject.registered != null) {
+            queryObject.registered = queryObject.registered === "true"
         }
-        if (queryObject.myFavorites) {
-            queryObject.myFavorites = Boolean(queryObject.myFavorites)
+        if (queryObject.myFavorites != null) {
+            queryObject.myFavorites = queryObject.myFavorites === "true"
         }
-        if (queryObject.withOwners) {
-            queryObject.withOwners = Boolean(queryObject.withOwners)
+        if (queryObject.withOwners != null) {
+            queryObject.withOwners = queryObject.withOwners === "true"
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,7 +109,7 @@ export class DeckFilters {
     @observable
     sort: string = defaultSort.value
     @observable
-    forSale = false
+    forSale?: boolean
     @observable
     notForSale = false
     @observable
@@ -126,7 +123,7 @@ export class DeckFilters {
     @observable
     forSaleInCountry?: string
     @observable
-    includeUnregistered = false
+    registered?: boolean
     @observable
     myFavorites = false
     constraints: Constraint[] = []
@@ -144,14 +141,14 @@ export class DeckFilters {
         this.title = ""
         this.notes = ""
         this.notesUser = ""
-        this.forSale = false
+        this.forSale = undefined
         this.notForSale = false
         this.forTrade = false
         this.forAuction = false
         this.completedAuctions = false
         this.forSaleInCountry = undefined
         this.myFavorites = false
-        this.includeUnregistered = false
+        this.registered = undefined
         this.cards = []
         this.expansions = []
         this.constraints = []
@@ -177,12 +174,19 @@ export class DeckFilters {
             this.owner = ""
         }
     }
-    handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.myFavorites = event.target.checked
+    handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.myFavorites = event.target.checked
+        if (this.myFavorites) {
+            const username = userStore.username
+            this.owner = username ? username : ""
+        }
+    }
 
     handleCompletedAuctionsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.completedAuctions = event.target.checked
-        this.forSale = false
+        this.forSale = undefined
         this.forTrade = false
+        this.forAuction = false
     }
 
     cleaned = () => {

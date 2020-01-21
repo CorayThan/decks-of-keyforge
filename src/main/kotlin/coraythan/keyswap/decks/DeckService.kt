@@ -67,7 +67,7 @@ class DeckService(
                         .select(deckQ.id)
                         .from(deckQ)
                         .where(predicate)
-                        .limit(if (filters.forSale || filters.forTrade || filters.forAuction) 10000 else 1000)
+                        .limit(if (filters.forSale == true || filters.forTrade || filters.forAuction) 10000 else 1000)
                         .fetch()
                         .count()
                         .toLong()
@@ -138,7 +138,7 @@ class DeckService(
                     crucibleWins = deckWinsService.crucibleWins,
                     synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
-            if (filters.forSale || filters.forTrade || filters.forAuction) {
+            if (filters.forSale == true || filters.forTrade || filters.forAuction) {
                 searchResult.copy(deckSaleInfo = saleInfoForDeck(
                         searchResult.keyforgeId,
                         timezoneOffsetMinutes,
@@ -147,7 +147,7 @@ class DeckService(
                         filters.completedAuctions
                 ))
             } else if (filters.withOwners) {
-                if (userHolder.user?.email != "coraythan@gmail.com" && userHolder.user?.email?.toLowerCase() != "randomjoe@gmail.com") throw BadRequestException("You do not have permission to see owners.")
+                if (userHolder.user?.email != "coraythan@gmail.com") throw BadRequestException("You do not have permission to see owners.")
                 searchResult.copy(owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
                     userDeck.ownedBy
                 })
@@ -177,8 +177,10 @@ class DeckService(
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
 
-        if (!filters.includeUnregistered) {
+        if (filters.registered == true) {
             predicate.and(deckQ.registered.isTrue)
+        } else if (filters.registered == false) {
+            predicate.and(deckQ.registered.isFalse)
         }
 
         if (filters.expansions.isNotEmpty()) {
@@ -263,17 +265,18 @@ class DeckService(
                 )
             }
         }
-        if (filters.notForSale) {
+        if (filters.completedAuctions) {
+            predicate.and(deckQ.completedAuction.isTrue)
+        } else if (filters.forSale == false) {
             predicate.and(deckQ.forSale.isFalse)
             predicate.and(deckQ.forTrade.isFalse)
             predicate.and(deckQ.forAuction.isFalse)
         } else {
-            if (filters.completedAuctions) {
-                predicate.and(deckQ.completedAuction.isTrue)
-            } else if (filters.forSale || filters.forTrade || filters.forAuction) {
+            if (filters.forSale == true) {
+                predicate.and(deckQ.forSale.isTrue)
+            } else if (filters.forTrade || filters.forAuction) {
                 predicate.and(BooleanBuilder().andAnyOf(
                         *listOfNotNull(
-                                if (filters.forSale) deckQ.forSale.isTrue else null,
                                 if (filters.forTrade) deckQ.forTrade.isTrue else null,
                                 if (filters.forAuction) deckQ.forAuction.isTrue else null
                         ).toTypedArray()

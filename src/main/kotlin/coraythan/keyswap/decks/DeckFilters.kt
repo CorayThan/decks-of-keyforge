@@ -11,12 +11,12 @@ interface DeckQuery {
     val notesUser: String
 
     val notForSale: Boolean
-    val forSale: Boolean
+    val forSale: Boolean?
     val forTrade: Boolean
     val forAuction: Boolean
     val completedAuctions: Boolean
     val forSaleInCountry: Country?
-    val includeUnregistered: Boolean
+    val registered: Boolean?
     val myFavorites: Boolean
     val expansions: List<Int>
     val withOwners: Boolean
@@ -36,12 +36,12 @@ data class DeckFilters(
         val page: Long = 0,
 
         override val notForSale: Boolean = false,
-        override val forSale: Boolean = false,
+        override val forSale: Boolean? = null,
         override val forTrade: Boolean = false,
         override val forAuction: Boolean = false,
         override val completedAuctions: Boolean = false,
         override val forSaleInCountry: Country? = null,
-        override val includeUnregistered: Boolean = false,
+        override val registered: Boolean? = null,
         override val myFavorites: Boolean = false,
         override val expansions: List<Int> = listOf(),
         override val withOwners: Boolean = false,

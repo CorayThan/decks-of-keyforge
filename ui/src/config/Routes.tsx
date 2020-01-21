@@ -36,7 +36,6 @@ import { spacing } from "./MuiConfig"
 import { serverStatusStore } from "./ServerStatusStore"
 
 class Routes {
-    static readonly saleViewParam = "sellersView=true"
 
     static landing = ""
     static users = "/users"
@@ -64,12 +63,12 @@ class Routes {
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
-    static usersDecks = () => `/decks?owner=${userStore.username}&includeUnregistered=true`
-    static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&includeUnregistered=true&notForSale=true`
-    static usersFavorites = () => `/decks?myFavorites=true&includeUnregistered=true`
-    static usersCota = () => `/decks?owner=${userStore.username}&expansions=341&includeUnregistered=true`
-    static usersAoa = () => `/decks?owner=${userStore.username}&expansions=435&includeUnregistered=true`
-    static usersWc = () => `/decks?owner=${userStore.username}&expansions=452&includeUnregistered=true`
+    static usersDecks = () => `/decks?owner=${userStore.username}`
+    static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&forSale=false`
+    static usersFavorites = () => `/decks?myFavorites=true`
+    static usersCota = () => `/decks?owner=${userStore.username}&expansions=341`
+    static usersAoa = () => `/decks?owner=${userStore.username}&expansions=435`
+    static usersWc = () => `/decks?owner=${userStore.username}&expansions=452`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
 
     /**
@@ -104,7 +103,8 @@ class Routes {
     static sellersView = () => {
         const filters = DeckFilters.forSaleOrTrade()
         filters.owner = userStore.username!
-        return Routes.deckSearch(filters) + "&" + Routes.saleViewParam
+        filters.forSale = false
+        return Routes.deckSearch(filters)
     }
 
 }

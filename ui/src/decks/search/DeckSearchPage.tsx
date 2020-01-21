@@ -8,7 +8,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
+import { log } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerDetails } from "../../sellers/SellerDetails"
@@ -40,6 +40,7 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     }
 
     makeFilters = (props: Readonly<RouteComponentProps<{}>>): DeckFilters => {
+        log.debug(`Location search is ${props.location.search}`)
         const queryValues = QueryString.parse(props.location.search)
         return DeckFilters.rehydrateFromQuery(queryValues)
     }
@@ -121,7 +122,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     </Typography>
                 )
             } else {
-                const sellerView = location.search.includes(Routes.saleViewParam)
+                const sellerView = location.search.includes("forSale=false")
                 decksToDisplay = (
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {keyLocalStorage.deckListViewType === "table" ?

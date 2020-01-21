@@ -1,5 +1,4 @@
-import { DeckListingDto, DeckListingStatus } from "../../auctions/DeckListingDto"
-import { userStore } from "../../user/UserStore"
+import { DeckListingStatus } from "../../auctions/DeckListingDto"
 import { DeckCondition } from "../../userdeck/UserDeck"
 import { DeckLanguage } from "../DeckLanguage"
 
@@ -36,39 +35,41 @@ export interface DeckSaleInfo {
     discord?: string
 }
 
-export const deckSaleInfoFromAuctionDto = (deckListingDto: DeckListingDto): DeckSaleInfo | undefined => {
-
-    const {
-        buyItNow, forTrade, id, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol, language, startingBid, status
-    } = deckListingDto
-    const forAuction = status === DeckListingStatus.ACTIVE
-
-    const user = userStore.user
-
-    if (user == null) {
-        return undefined
-    }
-    return {
-        forTrade,
-        forAuction,
-
-        forSaleInCountry: user.country,
-        currencySymbol,
-        language,
-
-        auctionId: id,
-
-        startingBid,
-        listingInfo,
-        externalLink,
-        buyItNow,
-
-        dateListed: dateListedLocalDate!,
-        expiresAt: expiresAtLocalDate,
-
-        condition: condition == null ? DeckCondition.NEW_IN_PLASTIC : condition,
-        username: user.username,
-        publicContactInfo: user.publicContactInfo,
-        discord: user.discord
-    }
-}
+// export const deckSaleInfoFromAuctionDto = (deckListingDto: DeckListingDto): DeckSaleInfo | undefined => {
+//
+//     const {
+//         buyItNow, forTrade, id, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol, language, startingBid, status,
+//         bidIncrement
+//     } = deckListingDto
+//     const forAuction = status === DeckListingStatus.ACTIVE
+//
+//     const user = userStore.user
+//
+//     if (user == null) {
+//         return undefined
+//     }
+//     return {
+//         forTrade,
+//         forAuction,
+//
+//         forSaleInCountry: user.country,
+//         currencySymbol,
+//         language,
+//
+//         auctionId: id,
+//
+//         startingBid,
+//         bidIncrement,
+//         listingInfo,
+//         externalLink,
+//         buyItNow,
+//
+//         dateListed: dateListedLocalDate!,
+//         expiresAt: expiresAtLocalDate,
+//
+//         condition: condition == null ? DeckCondition.NEW_IN_PLASTIC : condition,
+//         username: user.username,
+//         publicContactInfo: user.publicContactInfo,
+//         discord: user.discord
+//     }
+// }

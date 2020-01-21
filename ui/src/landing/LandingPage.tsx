@@ -39,12 +39,9 @@ const saleOrTrade = DeckFilters.forSaleOrTrade()
 
 const auctions = new DeckFilters()
 auctions.forAuction = true
-auctions.includeUnregistered = true
 auctions.sort = DeckSorts.endingSoonest
 
 const completedAuctions = new DeckFilters()
-completedAuctions.forAuction = true
-completedAuctions.includeUnregistered = true
 completedAuctions.completedAuctions = true
 completedAuctions.sort = DeckSorts.completedRecently
 

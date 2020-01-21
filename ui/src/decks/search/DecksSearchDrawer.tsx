@@ -1,4 +1,4 @@
-import { Button, FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
+import { Button, Collapse, FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import FormLabel from "@material-ui/core/FormLabel"
@@ -7,7 +7,7 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { Add, BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
+import { Add, BarChart, Close, Delete, ExpandLess, ExpandMore, ViewList, ViewModule } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
 import { computed } from "mobx"
@@ -51,7 +51,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     selectedExpansion = new SelectedExpansion(this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
     selectedHouses = new SelectedHouses(this.props.filters.houses)
     selectedSortStore = new DeckSortSelectStore(
-        this.props.filters.forTrade || this.props.filters.forSale,
+        this.props.filters.forTrade || (this.props.filters.forSale === true),
         this.props.filters.forAuction && !(this.props.filters.forTrade || this.props.filters.forSale),
         this.props.filters.completedAuctions,
         this.props.filters.sort
@@ -89,17 +89,36 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.selectedExpansion.reset()
     }
 
-    updateForSaleOrTrade = (forSale?: boolean, forTrade?: boolean, forAuction?: boolean) => {
+    updateForSale = (forSale?: boolean) => {
         const filters = this.props.filters
-        if (forSale != null) {
-            filters.forSale = forSale
+        filters.forSale = forSale
+        if (forSale === false) {
+            filters.forTrade = false
+            filters.forAuction = false
         }
-        if (forTrade != null) {
-            filters.forTrade = forTrade
+        this.handleOtherValuesForSaleOrTrade()
+    }
+
+    updateForAuction = (forAuction: boolean) => {
+        const filters = this.props.filters
+        filters.forAuction = forAuction
+        if (forAuction && filters.forSale === false) {
+            filters.forSale = undefined
         }
-        if (forAuction != null) {
-            filters.forAuction = forAuction
+        this.handleOtherValuesForSaleOrTrade()
+    }
+
+    updateForTrade = (forTrade: boolean) => {
+        const filters = this.props.filters
+        filters.forTrade = forTrade
+        if (forTrade && filters.forSale === false) {
+            filters.forSale = undefined
         }
+        this.handleOtherValuesForSaleOrTrade()
+    }
+
+    private handleOtherValuesForSaleOrTrade = () => {
+        const filters = this.props.filters
         if (!(filters.forSale || filters.forTrade || filters.forAuction)) {
             filters.forSaleInCountry = undefined
         }
@@ -134,39 +153,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const showLoginForCountry = !myCountry && (forSale || forTrade || forAuction)
         const showMyDecks = userStore.loggedIn()
         const showDecksOwner = !!owner && owner !== userStore.username
-        const optionals = !showMyDecks && !showDecksOwner ? null : (
-            <>
-                {showMyDecks ? (
-                    <div style={{display: "flex"}}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.myDecks}
-                                    onChange={handleMyDecksUpdate}
-                                />
-                            }
-                            label={<Typography variant={"body2"}>My Decks</Typography>}
-                            style={{width: 144}}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={myFavorites}
-                                    onChange={handleMyFavoritesUpdate}
-                                />
-                            }
-                            label={<Typography variant={"body2"}>My Favorites</Typography>}
-                        />
-                    </div>
-                ) : null}
-                {showDecksOwner ? (
-                    <div style={{display: "flex", alignItems: "center"}}>
-                        <Typography>Owner: {owner}</Typography>
-                        <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
-                    </div>
-                ) : null}
-            </>
-        )
 
         const constraintOptions = [
             "amberControl",
@@ -223,12 +209,24 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                         {notes.length > 0 || userStore.loggedIn() ? (
                             <ListItem>
                                 {notesUser.length === 0 || userStore.username === notesUser ? (
-                                    <TextField
-                                        label={"My Notes"}
-                                        onChange={handleNotesUpdate}
-                                        value={notes}
-                                        fullWidth={true}
-                                    />
+                                    <div style={{display: "flex", alignItems: "flex-end"}}>
+                                        <TextField
+                                            label={"Search Notes"}
+                                            onChange={handleNotesUpdate}
+                                            value={notes}
+                                            style={{marginRight: spacing(2), width: 128}}
+                                        />
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={myFavorites}
+                                                    onChange={handleMyFavoritesUpdate}
+                                                    disabled={!showMyDecks}
+                                                />
+                                            }
+                                            label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
+                                        />
+                                    </div>
                                 ) : (
                                     <div>
                                         <div style={{display: "flex", alignItems: "center", marginBottom: theme.spacing(1)}}>
@@ -254,8 +252,19 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={this.props.filters.forSale}
-                                            onChange={(event) => this.updateForSaleOrTrade(event.target.checked)}
+                                            checked={this.myDecks}
+                                            onChange={handleMyDecksUpdate}
+                                            disabled={!showMyDecks}
+                                        />
+                                    }
+                                    label={<Typography variant={"body2"}>My Decks</Typography>}
+                                    style={{width: 144}}
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.props.filters.forSale === true}
+                                            onChange={(event) => this.updateForSale(event.target.checked ? true : undefined)}
                                         />
                                     }
                                     label={(
@@ -266,53 +275,100 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     )}
                                     style={{width: 144}}
                                 />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.props.filters.forTrade}
-                                            onChange={(event) => this.updateForSaleOrTrade(undefined, event.target.checked)}
-                                        />
-                                    }
-                                    label={(
-                                        <div style={{display: "flex", alignItems: "center"}}>
-                                            <TradeDeckIcon style={{minWidth: 18}}/>
-                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Trade</Typography>
-                                        </div>
-                                    )}
-                                />
                                 <div style={{display: "flex"}}>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={this.props.filters.forAuction}
-                                                onChange={(event) => this.updateForSaleOrTrade(undefined, undefined, event.target.checked)}
+                                                checked={myCountry != null && forSaleInCountry === myCountry}
+                                                onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
+                                                disabled={!myCountry}
                                             />
                                         }
-                                        label={(
-                                            <div style={{display: "flex", alignItems: "center"}}>
-                                                <AuctionDeckIcon style={{minWidth: 18}}/>
-                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Auctions</Typography>
-                                            </div>
-                                        )}
+                                        label={<Typography variant={"body2"}>In My Country</Typography>}
                                         style={{width: 144}}
                                     />
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={this.props.filters.includeUnregistered}
-                                                onChange={(event) => this.props.filters.includeUnregistered = event.target.checked}
+                                                checked={this.props.filters.forSale === false}
+                                                onChange={(event) => this.updateForSale(event.target.checked ? false : undefined)}
                                             />
                                         }
-                                        label={(
-                                            <div style={{display: "flex", alignItems: "center"}}>
-                                                <UnregisteredDeckIcon/>
-                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Unregistered</Typography>
-                                            </div>
-                                        )}
+                                        label={<Typography variant={"body2"}>Not For Sale</Typography>}
+                                        style={{width: 144}}
                                     />
                                 </div>
-                                <div style={{display: "flex"}}>
-                                    {this.props.filters.forAuction ? (
+                                <Collapse in={keyLocalStorage.genericStorage.showMoreDeckSearchOptions}>
+                                    <div style={{display: "flex"}}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.forAuction}
+                                                    onChange={(event) => this.updateForAuction(event.target.checked)}
+                                                />
+                                            }
+                                            label={(
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <AuctionDeckIcon style={{minWidth: 18}}/>
+                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Auctions</Typography>
+                                                </div>
+                                            )}
+                                            style={{width: 144}}
+                                        />
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.forTrade}
+                                                    onChange={(event) => this.updateForTrade(event.target.checked)}
+                                                />
+                                            }
+                                            label={(
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <TradeDeckIcon style={{minWidth: 18}}/>
+                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Trade</Typography>
+                                                </div>
+                                            )}
+                                        />
+                                    </div>
+                                    <div style={{display: "flex"}}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.registered === false}
+                                                    onChange={(event) => this.props.filters.registered = event.target.checked ? false : undefined}
+                                                />
+                                            }
+                                            label={(
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <UnregisteredDeckIcon/>
+                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Unregistered</Typography>
+                                                </div>
+                                            )}
+                                            style={{width: 144}}
+                                        />
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.registered === true}
+                                                    onChange={(event) => this.props.filters.registered = event.target.checked ? true : undefined}
+                                                />
+                                            }
+                                            label={<Typography variant={"body2"}>Registered</Typography>}
+                                            style={{width: 144}}
+                                        />
+                                    </div>
+                                    <div style={{display: "flex"}}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={myFavorites}
+                                                    onChange={handleMyFavoritesUpdate}
+                                                    disabled={!showMyDecks}
+                                                />
+                                            }
+                                            label={<Typography variant={"body2"}>My Favorites</Typography>}
+                                            style={{width: 144}}
+                                        />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -323,36 +379,34 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     }}
                                                 />
                                             }
-                                            label={<Typography variant={"body2"}>Completed Auctions</Typography>}
+                                            label={<Typography variant={"body2"}>Past Auctions</Typography>}
                                             style={{width: 144}}
                                         />
-                                    ) : null}
-                                    {myCountry ? (
+                                    </div>
+                                    {userStore.username === "Coraythan" ? (
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    checked={forSaleInCountry === myCountry}
-                                                    onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
+                                                    checked={this.props.filters.withOwners}
+                                                    onChange={(event) => this.props.filters.withOwners = event.target.checked}
                                                 />
                                             }
-                                            label={<Typography variant={"body2"}>In My Country</Typography>}
+                                            label={<Typography variant={"body2"}>With Owners</Typography>}
                                             style={{width: 144}}
                                         />
                                     ) : null}
-                                </div>
-                                {optionals}
-                                {userStore.username === "Coraythan" || userStore.username === "randomjoe" ? (
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.props.filters.withOwners}
-                                                onChange={(event) => this.props.filters.withOwners = event.target.checked}
-                                            />
-                                        }
-                                        label={<Typography variant={"body2"}>With Owners</Typography>}
-                                        style={{width: 144}}
-                                    />
-                                ) : null}
+                                </Collapse>
+                                <IconButton
+                                    onClick={() => keyLocalStorage.updateGenericStorage({showMoreDeckSearchOptions: !keyLocalStorage.genericStorage.showMoreDeckSearchOptions})}>
+                                    {keyLocalStorage.genericStorage.showMoreDeckSearchOptions ? <ExpandLess fontSize={"small"}/> :
+                                        <ExpandMore fontSize={"small"}/>}
+                                </IconButton>
+                                {showDecksOwner && (
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <Typography>Owner: {owner}</Typography>
+                                        <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
+                                    </div>
+                                )}
                                 {showLoginForCountry ? (
                                     <div style={{display: "flex"}}>
                                         <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>

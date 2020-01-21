@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { log, prettyJson } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { ListingInfo } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -27,7 +26,6 @@ export class DeckListingStore {
                     this.decksForSale = new Map()
                     response.data.forEach(auctionDto => {
                         this.decksForSale?.set(auctionDto.deckId, auctionDto)
-                        log.debug(`My deck's listing: ${prettyJson(auctionDto)}`)
                     })
                 })
         }

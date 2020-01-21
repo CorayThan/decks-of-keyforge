@@ -73,8 +73,13 @@ export class ProfileView extends React.Component<ProfileViewProps> {
 
         const filters = new DeckFilters()
         filters.owner = profile.username
-
         const decksLink = Routes.deckSearch(filters)
+
+        const forSaleFilters = new DeckFilters()
+        forSaleFilters.owner = profile.username
+        forSaleFilters.forSale = true
+        const forSaleLink = Routes.deckSearch(forSaleFilters)
+
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
                 <Card style={{padding: spacing(2), maxWidth: 400}}>
@@ -87,8 +92,13 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                         )
                     }
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
-                    <LinkButton color={"primary"} to={decksLink}>
-                        {profile.username}'s {profile.allowUsersToSeeDeckOwnership ? "" : "For Sale or Trade "}Decks
+                    {profile.allowUsersToSeeDeckOwnership && (
+                        <LinkButton color={"primary"} to={decksLink}>
+                            {profile.username}'s Decks
+                        </LinkButton>
+                    )}
+                    <LinkButton color={"primary"} to={forSaleLink}>
+                        {profile.username}'s Decks for Sale
                     </LinkButton>
                 </Card>
             </div>
