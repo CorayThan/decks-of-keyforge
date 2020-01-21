@@ -9,4 +9,6 @@ interface UserDeckRepo : JpaRepository<UserDeck, UUID>, QuerydslPredicateExecuto
     fun findByDeckIdAndOwnedByNotNull(deckId: Long): List<UserDeck>
 
     fun findByUserId(userId: UUID): List<UserDeck>
+
+    fun findAllByForSaleTrue(): List<UserDeck>
 }

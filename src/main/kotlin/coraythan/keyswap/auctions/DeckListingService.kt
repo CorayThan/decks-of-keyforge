@@ -5,9 +5,13 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.models.DeckLanguage
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
+import coraythan.keyswap.generic.Country
+import coraythan.keyswap.userdeck.DeckCondition
 import coraythan.keyswap.userdeck.ListingInfo
+import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -22,15 +26,18 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.LocalTime
 import java.util.*
+import kotlin.math.roundToInt
+import kotlin.system.measureTimeMillis
 
 private const val fourteenMin = "PT14M"
 
 @Service
 @Transactional
-class AuctionService(
-        private val auctionRepo: AuctionRepo,
+class DeckListingService(
+        private val deckListingRepo: DeckListingRepo,
         private val currentUserService: CurrentUserService,
         private val deckRepo: DeckRepo,
+        private val userDeckRepo: UserDeckRepo,
         private val emailService: EmailService,
         private val forSaleNotificationsService: ForSaleNotificationsService,
         private val userRepo: KeyUserRepo
@@ -42,11 +49,11 @@ class AuctionService(
     fun unlistExpiredDecks() {
         log.info("$scheduledStart unlisting expired for sale decks.")
 
-        val buyItNowsToComplete = auctionRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(AuctionStatus.BUY_IT_NOW_ONLY, now())
+        val buyItNowsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.BUY_IT_NOW_ONLY, now())
 
         buyItNowsToComplete.forEach {
             updateDeckListingStatus(it)
-            auctionRepo.delete(it)
+            deckListingRepo.delete(it)
         }
 
         log.info("$scheduledStop unlisting expired for sale decks.")
@@ -57,7 +64,7 @@ class AuctionService(
     fun completeAuctions() {
         log.info("$scheduledStart complete auctions.")
 
-        val auctionsToComplete = auctionRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(AuctionStatus.ACTIVE, now())
+        val auctionsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.ACTIVE, now())
 
         auctionsToComplete.forEach {
             val buyer = it.highestBidder()
@@ -71,10 +78,10 @@ class AuctionService(
     fun list(listingInfo: ListingInfo, offsetMinutes: Int) {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val status = if (!listingInfo.auction) {
-            AuctionStatus.BUY_IT_NOW_ONLY
+            DeckListingStatus.BUY_IT_NOW_ONLY
         } else {
             if (listingInfo.bidIncrement == null || listingInfo.bidIncrement < 1) throw BadRequestException("Bid increment must not be null or less than 1.")
-            AuctionStatus.ACTIVE
+            DeckListingStatus.ACTIVE
         }
         listingInfo.expireInDays ?: throw BadRequestException("Must include expires in days for auctions.")
 
@@ -93,9 +100,9 @@ class AuctionService(
 //        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
         val auction = if (listingInfo.editAuctionId == null) {
-            val preexistingListing = auctionRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId, AuctionStatus.COMPLETE)
+            val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId, DeckListingStatus.COMPLETE)
             if (preexistingListing.isNotEmpty()) throw BadRequestException("You've already listed this deck for sale.")
-            Auction(
+            DeckListing(
                     durationDays = listingInfo.expireInDays,
                     endDateTime = realEnd,
                     bidIncrement = listingInfo.bidIncrement,
@@ -113,7 +120,7 @@ class AuctionService(
                     forTrade = currentUser.allowsTrades
             )
         } else {
-            auctionRepo.findByIdOrNull(listingInfo.editAuctionId)!!
+            deckListingRepo.findByIdOrNull(listingInfo.editAuctionId)!!
                     .copy(
                             durationDays = listingInfo.expireInDays,
                             endDateTime = realEnd,
@@ -132,7 +139,7 @@ class AuctionService(
                             forTrade = currentUser.allowsTrades
                     )
         }
-        auctionRepo.save(auction)
+        deckListingRepo.save(auction)
         if (listingInfo.auction) {
             // for auction
             deckRepo.save(deck.copy(forAuction = true, auctionEnd = realEnd, listedOn = listingDate, forSale = listingInfo.buyItNow != null))
@@ -143,12 +150,45 @@ class AuctionService(
         forSaleNotificationsService.sendNotifications(listingInfo)
     }
 
+    fun convertAllDeckSalesToListings() {
+        log.info("Begin convert all deck sales to listings")
+        val ms = measureTimeMillis {
+            val toConvert = userDeckRepo.findAllByForSaleTrue()
+            log.info("Converting ${toConvert.size} decks to listings")
+            toConvert.forEach {
+                val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatus(it.user.id, it.deck.id, DeckListingStatus.BUY_IT_NOW_ONLY)
+                if (preexistingListing.isNotEmpty()) {
+                    log.info("Skipping due to pre-existing listing.")
+                } else {
+                    log.info("Saving deck listing for ${it.deck.name}")
+                    deckListingRepo.save(DeckListing(
+                            durationDays = 7,
+                            endDateTime = it.expiresAt ?: now().plusDays(7),
+                            buyItNow = it.askingPrice?.roundToInt(),
+                            status = DeckListingStatus.BUY_IT_NOW_ONLY,
+                            deck = it.deck,
+                            seller = it.user,
+                            currencySymbol = it.user.currencySymbol,
+                            forSaleInCountry = it.user.country ?: Country.UnitedStates,
+                            language = it.language ?: DeckLanguage.ENGLISH,
+                            condition = it.condition ?: DeckCondition.NEAR_MINT,
+                            redeemed = it.redeemed,
+                            externalLink = it.externalLink,
+                            listingInfo = it.listingInfo,
+                            dateListed = it.dateListed ?: now()
+                    ))
+                }
+            }
+        }
+        log.info("Done converting all deck sales to listings time taken $ms")
+    }
+
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val auction = auctionRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
+        val auction = deckListingRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
         val requiredBid = auction.nextBid ?: throw BadRequestException("Cannot bid on a sale that is not an auction, id $auctionId")
         val now = now()
-        if (auction.status != AuctionStatus.ACTIVE || now.isAfter(auction.endDateTime)) {
+        if (auction.status != DeckListingStatus.ACTIVE || now.isAfter(auction.endDateTime)) {
             return BidPlacementResult(false, false, "Sorry, your bid could not be placed because the auction has ended.")
         }
         if (user.id == auction.seller.id) {
@@ -184,7 +224,7 @@ class AuctionService(
                 endDateTime = if (updateEndDateTime) newAuctionEnd else auction.endDateTime
         )
 
-        val saved = auctionRepo.save(withBid)
+        val saved = deckListingRepo.save(withBid)
         if (updateEndDateTime) deckRepo.save(auction.deck.copy(auctionEnd = newAuctionEnd))
         val newHighBidder = saved.highestBidderUsername
         val highBid = saved.highestBid
@@ -208,7 +248,7 @@ class AuctionService(
 
     fun buyItNow(auctionId: UUID): BidPlacementResult {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val auction = auctionRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
+        val auction = deckListingRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
         val now = now()
         if (now.isAfter(auction.endDateTime)) {
             return BidPlacementResult(false, false, "Sorry, you couldn't buy it now because the sale has ended.")
@@ -231,8 +271,8 @@ class AuctionService(
         )
     }
 
-    fun auctionInfo(auctionId: UUID, offsetMinutes: Int): AuctionDto {
-        val auction = auctionRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction with id $auctionId")
+    fun deckListingInfo(auctionId: UUID, offsetMinutes: Int): DeckListingDto {
+        val auction = deckListingRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction with id $auctionId")
         val fakeUsernames = auction.bids.sortedBy { it.bidTime }.map { it.bidder.username }
         val dto = auction.toDto(offsetMinutes)
         if (auction.endDateTime.plusDays(14) < now()) {
@@ -251,11 +291,11 @@ class AuctionService(
         })
     }
 
-    private fun endAuction(sold: Boolean, auction: Auction, buyItNowUser: KeyUser? = null) {
+    private fun endAuction(sold: Boolean, auction: DeckListing, buyItNowUser: KeyUser? = null) {
 
         val end = now()
-        auctionRepo.save(auction.copy(
-                status = AuctionStatus.COMPLETE,
+        deckListingRepo.save(auction.copy(
+                status = DeckListingStatus.COMPLETE,
                 boughtWithBuyItNow = buyItNowUser,
                 boughtNowOn = if (buyItNowUser == null) null else end
         ))
@@ -281,43 +321,43 @@ class AuctionService(
         }
     }
 
-    fun cancelAuction(deckId: Long): Boolean {
+    fun cancelListing(deckId: Long): Boolean {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val auctions = auctionRepo.findBySellerIdAndDeckIdAndStatusNot(user.id, deckId, AuctionStatus.COMPLETE)
+        val auctions = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(user.id, deckId, DeckListingStatus.COMPLETE)
         if (auctions.size > 1) {
             log.error("Seller shouldn't have more than one active auction for a single deck ${user.username} deckId: ${deckId}")
         }
         if (auctions.isEmpty()) return true
         val auction = auctions[0]
-        if (auction.status == AuctionStatus.ACTIVE) {
+        if (auction.status == DeckListingStatus.ACTIVE) {
             if (auction.bids.isNotEmpty()) return false
         }
         updateDeckListingStatus(auction)
-        auctionRepo.delete(auction)
+        deckListingRepo.delete(auction)
         return true
     }
 
-    fun findActiveListingsForUser(offsetMinutes: Int): List<AuctionDto> {
+    fun findActiveListingsForUser(offsetMinutes: Int): List<DeckListingDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        return auctionRepo.findAllBySellerIdAndStatusNot(currentUser.id, AuctionStatus.COMPLETE)
+        return deckListingRepo.findAllBySellerIdAndStatusNot(currentUser.id, DeckListingStatus.COMPLETE)
                 .map { it.toDto(offsetMinutes) }
     }
 
-    private fun updateDeckListingStatus(auction: Auction, sold: Boolean = false) {
-        val auctionsForDeck = auction.deck.auctions
+    private fun updateDeckListingStatus(listing: DeckListing, sold: Boolean = false) {
+        val auctionsForDeck = listing.deck.auctions
         val otherListingsForDeck = auctionsForDeck
-                .filter { it.isActive && it.id != auction.id }
+                .filter { it.isActive && it.id != listing.id }
 
         // This might be someone else unlisting the deck for sale while a different person has an active auction for it
-        val stillForAuction = otherListingsForDeck.any { it.status == AuctionStatus.ACTIVE }
+        val stillForAuction = otherListingsForDeck.any { it.status == DeckListingStatus.ACTIVE }
         val stillForTrade = otherListingsForDeck.any { it.forTrade }
-        deckRepo.save(auction.deck.copy(
+        deckRepo.save(listing.deck.copy(
                 forAuction = stillForAuction,
-                auctionEnd = if (stillForAuction) auction.deck.auctionEnd else null,
-                listedOn = if (stillForAuction) auction.deck.listedOn else null,
+                auctionEnd = if (stillForAuction) listing.deck.auctionEnd else null,
+                listedOn = if (stillForAuction) listing.deck.listedOn else null,
                 forSale = otherListingsForDeck.isNotEmpty(),
                 forTrade = stillForTrade,
-                completedAuction = sold || auction.deck.completedAuction
+                completedAuction = sold || listing.deck.completedAuction
         ))
     }
 

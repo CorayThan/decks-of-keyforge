@@ -2,7 +2,7 @@ package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
-import coraythan.keyswap.auctions.Auction
+import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.DeckSearchResultCard
@@ -90,7 +90,7 @@ data class Deck(
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
-        val auctions: List<Auction> = listOf(),
+        val auctions: List<DeckListing> = listOf(),
 
         val listedOn: ZonedDateTime? = null,
         val auctionEnd: ZonedDateTime? = null,

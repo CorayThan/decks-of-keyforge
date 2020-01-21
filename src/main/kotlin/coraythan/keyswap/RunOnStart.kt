@@ -1,5 +1,6 @@
 package coraythan.keyswap
 
+import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.expansions.Expansion
@@ -12,12 +13,14 @@ import org.springframework.web.client.RestTemplate
 import java.nio.file.Files
 import java.nio.file.Paths
 
+var startupComplete = false
 
 @Component
 class RunOnStart(
         private val cardService: CardService,
         private val deckImporterService: DeckImporterService,
         private val statsService: StatsService,
+        private val deckListingService: DeckListingService,
         private val restTemplate: RestTemplate
 ) : CommandLineRunner {
 
@@ -35,6 +38,8 @@ class RunOnStart(
 
         // this.downloadAllCardImages()
 
+        deckListingService.convertAllDeckSalesToListings()
+        startupComplete = true
     }
 
     private fun downloadAllCardImages() {

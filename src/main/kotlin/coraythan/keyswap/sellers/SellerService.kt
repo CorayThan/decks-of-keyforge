@@ -1,7 +1,7 @@
 package coraythan.keyswap.sellers
 
-import coraythan.keyswap.auctions.AuctionRepo
-import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.DeckListingRepo
+import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledStart
@@ -26,7 +26,7 @@ data class SellerDetailsWithFullDate(val mostRecent: ZonedDateTime?, val sellerD
 class SellerService(
         private val userRepo: KeyUserRepo,
         private val currentUserService: CurrentUserService,
-        private val auctionRepo: AuctionRepo
+        private val deckListingRepo: DeckListingRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -45,7 +45,7 @@ class SellerService(
                     .toList()
                     .sortedByDescending { it.mostRecentDeckListing }
                     .filter { user ->
-                        user.auctions.filter { it.status != AuctionStatus.COMPLETE }.size > 9
+                        user.auctions.filter { it.status != DeckListingStatus.COMPLETE }.size > 9
                     }
                     .map { user ->
                         SellerDetailsWithFullDate(
@@ -77,8 +77,8 @@ class SellerService(
 
     fun updatePrices(prices: List<UpdatePrice>) {
         prices.forEach {
-            val auction = auctionRepo.findByIdOrNull(it.auctionId)
-            if (auction != null) auctionRepo.save(auction.copy(buyItNow = it.askingPrice))
+            val auction = deckListingRepo.findByIdOrNull(it.auctionId)
+            if (auction != null) deckListingRepo.save(auction.copy(buyItNow = it.askingPrice))
         }
     }
 }

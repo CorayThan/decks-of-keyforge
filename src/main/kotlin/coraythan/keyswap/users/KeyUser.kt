@@ -2,8 +2,8 @@ package coraythan.keyswap.users
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import coraythan.keyswap.auctions.Auction
-import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.DeckListing
+import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.purchases.Purchase
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
@@ -55,7 +55,7 @@ data class KeyUser(
 
         @JsonIgnoreProperties("boughtWithBuyItNow")
         @OneToMany(mappedBy = "boughtWithBuyItNow", fetch = FetchType.LAZY)
-        val buyItNows: List<Auction> = listOf(),
+        val buyItNows: List<DeckListing> = listOf(),
 
         val lastVersionSeen: String?,
 
@@ -83,7 +83,7 @@ data class KeyUser(
 
         @JsonIgnoreProperties("seller")
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-        val auctions: List<Auction> = listOf(),
+        val auctions: List<DeckListing> = listOf(),
 
         @JsonIgnoreProperties("buyer")
         @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
@@ -127,7 +127,7 @@ data class KeyUser(
             discord = discord,
             storeName = storeName,
             displayCrucibleTrackerWins = displayCrucibleTrackerWins == true,
-            auctionCount = auctions.filter { it.status == AuctionStatus.ACTIVE }.count()
+            auctionCount = auctions.filter { it.status == DeckListingStatus.ACTIVE }.count()
     )
 
     fun realPatreonTier(): PatreonRewardsTier? {

@@ -210,13 +210,6 @@ export class DeckStore {
     moreDecksAvailable = () => (this.deckPage && this.decksCount && this.deckPage.page + 1 < this.decksCount.pages)
         || (this.deckPage && !this.decksCount && this.deckPage.decks.length % DeckStore.DECK_PAGE_SIZE === 0)
 
-    checkIfUpdating = () => axios.get(`${DeckStore.CONTEXT}/updating`)
-        .then((response: AxiosResponse<boolean>) => {
-            if (response.data) {
-                messageStore.setInfoMessage("SAS / AERC indexes and sorting updating", 3000)
-            }
-        })
-
     private findDecks = async (filters: DeckFilters) => new Promise<DeckPage>(resolve => {
         axios.post(`${DeckStore.CONTEXT}/filter`, filters)
             .then((response: AxiosResponse) => {

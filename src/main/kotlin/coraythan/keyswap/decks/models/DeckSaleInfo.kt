@@ -1,7 +1,7 @@
 package coraythan.keyswap.decks.models
 
-import coraythan.keyswap.auctions.Auction
-import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.DeckListing
+import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
@@ -27,7 +27,7 @@ data class DeckSaleInfo(
         val youAreHighestBidder: Boolean? = null,
         val yourMaxBid: Int? = null,
         val bidIncrement: Int? = null,
-        val auctionStatus: AuctionStatus? = null,
+        val deckListingStatus: DeckListingStatus? = null,
         val boughtBy: String? = null,
         val boughtWithBuyItNow: Boolean? = null,
         val boughtNowOn: String? = null,
@@ -44,12 +44,12 @@ data class DeckSaleInfo(
 ) {
     companion object {
         
-        fun fromAuction(offsetMinutes: Int, auction: Auction, currentUser: KeyUser?): DeckSaleInfo {
+        fun fromAuction(offsetMinutes: Int, auction: DeckListing, currentUser: KeyUser?): DeckSaleInfo {
             val youAreHighest = auction.highestBidderUsername == currentUser?.username && currentUser != null
 
             return DeckSaleInfo(
                     forTrade = auction.forTrade,
-                    forAuction = auction.status == AuctionStatus.ACTIVE,
+                    forAuction = auction.status == DeckListingStatus.ACTIVE,
                     forSaleInCountry = auction.forSaleInCountry,
                     language = auction.language,
                     currencySymbol = auction.currencySymbol,
@@ -71,8 +71,8 @@ data class DeckSaleInfo(
                     youAreHighestBidder = youAreHighest,
                     yourMaxBid = if (youAreHighest) auction.realMaxBid() else null,
                     bidIncrement = auction.bidIncrement,
-                    auctionStatus = auction.status,
-                    boughtBy = auction.boughtWithBuyItNow?.username ?: if (auction.status == AuctionStatus.COMPLETE) auction.highestBidder()?.username else null,
+                    deckListingStatus = auction.status,
+                    boughtBy = auction.boughtWithBuyItNow?.username ?: if (auction.status == DeckListingStatus.COMPLETE) auction.highestBidder()?.username else null,
                     boughtNowOn = auction.boughtNowOn?.toReadableStringWithOffsetMinutes(offsetMinutes)
             )
         }

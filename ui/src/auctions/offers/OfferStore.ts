@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
-import { AuctionDto } from "../AuctionDto"
+import { DeckListingDto } from "../DeckListingDto"
 import { MyOffers } from "./MyOffers"
 import { MakeOffer, OfferStatus } from "./Offer"
 
@@ -11,7 +11,7 @@ export class OfferStore {
     static readonly SECURE_CONTEXT = HttpConfig.API + "/offers/secured"
 
     @observable
-    auctionInfo?: AuctionDto
+    auctionInfo?: DeckListingDto
 
     @observable
     myOffers?: MyOffers

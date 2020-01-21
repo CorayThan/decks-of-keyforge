@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import * as React from "react"
-import { auctionStore } from "../../auctions/AuctionStore"
+import { auctionStore } from "../../auctions/DeckListingStore"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { Deck } from "../Deck"
@@ -22,9 +22,9 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
             return null
         }
         const userDeck = userDeckStore.userDeckByDeckId(id)
-        const saleInfo = auctionStore.auctionInfoForDeck(id)
+        const saleInfo = auctionStore.listingInfoForDeck(id)
         const owned = userDeck ? !!userDeck.ownedBy : false
-        let forSale = saleInfo != null
+        const forSale = saleInfo != null
 
         let listButton = null
         if (owned) {

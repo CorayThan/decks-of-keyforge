@@ -1,3 +1,5 @@
+import { Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
@@ -17,6 +19,7 @@ import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/saleno
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
+import { DokIcon } from "../generic/icons/DokIcon"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { LandingPage } from "../landing/LandingPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
@@ -30,6 +33,7 @@ import { RegistrationPage } from "../user/RegistrationPage"
 import { userStore } from "../user/UserStore"
 import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
+import { serverStatusStore } from "./ServerStatusStore"
 
 class Routes {
     static readonly saleViewParam = "sellersView=true"
@@ -105,126 +109,135 @@ class Routes {
 
 }
 
-class KeyRouter extends React.Component {
-    render() {
+const KeyRouter = observer(() => {
+
+    if (serverStatusStore.siteUpdating) {
         return (
-            <BrowserRouter>
-                <div>
-                    <KeyTopbar/>
-                    <div style={{marginBottom: spacing(2)}}/>
-                    <Switch>
-                        <LoggedInRoute
-                            exact={true}
-                            path={Routes.importUnregisteredDeck}
-                            component={DeckImportView}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.deckPage()}
-                            component={DeckViewPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.cardPage()}
-                            component={CardPage}
-                        />
-                        <Route
-                            path={Routes.about}
-                            component={AboutPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.cards}
-                            component={CardSearchPage}
-                        />
-                        <Route
-                            path={Routes.decks}
-                            component={DeckSearchPage}
-                        />
-                        <Route
-                            path={Routes.stats}
-                            component={StatsPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.articles}
-                            component={ArticlesPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.articlePage()}
-                            component={ArticlesPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.registration}
-                            component={RegistrationPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.forgotPassword}
-                            component={ForgotPasswordPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.privacyPolicy}
-                            component={PrivacyPolicy}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.changePasswordPage()}
-                            component={ChangePasswordPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.verifyEmailPage()}
-                            component={VerifyEmailPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.userProfilePage()}
-                            component={ProfilePage}
-                        />
-                        <LoggedInRoute
-                            exact={true}
-                            path={Routes.myProfile}
-                            component={MyProfile}
-                        />
-                        <LoggedInRoute
-                            exact={true}
-                            path={Routes.editSpoiler()}
-                            component={EditSpoilerPage}
-                        />
-                        <LoggedInRoute
-                            exact={true}
-                            path={Routes.editExtraCardInfo()}
-                            component={UpdateExtraCardInfoPage}
-                        />
-                        <LoggedInRoute
-                            exact={true}
-                            path={Routes.createSpoiler}
-                            component={AddSpoilerPage}
-                        />
-                        <Route
-                            exact={true}
-                            path={Routes.spoilerPage()}
-                            component={SpoilerPage}
-                        />
-                        <Route
-                            path={Routes.spoilers}
-                            component={SpoilersPage}
-                        />
-                        <Route
-                            path={Routes.landing}
-                            component={LandingPage}
-                        />
-                    </Switch>
-                    <SnackMessage/>
-                </div>
-            </BrowserRouter>
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: spacing(4)}}>
+                <DokIcon height={80} style={{}}/>
+                <Typography variant={"h4"} style={{marginTop: spacing(2)}}>Site update in progress</Typography>
+                <Typography style={{marginTop: spacing(2)}}>Refresh this page to check if the update is complete.</Typography>
+            </div>
         )
     }
-}
+
+    return (
+        <BrowserRouter>
+            <div>
+                <KeyTopbar/>
+                <div style={{marginBottom: spacing(2)}}/>
+                <Switch>
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.importUnregisteredDeck}
+                        component={DeckImportView}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.deckPage()}
+                        component={DeckViewPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.cardPage()}
+                        component={CardPage}
+                    />
+                    <Route
+                        path={Routes.about}
+                        component={AboutPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.cards}
+                        component={CardSearchPage}
+                    />
+                    <Route
+                        path={Routes.decks}
+                        component={DeckSearchPage}
+                    />
+                    <Route
+                        path={Routes.stats}
+                        component={StatsPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.articles}
+                        component={ArticlesPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.articlePage()}
+                        component={ArticlesPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.registration}
+                        component={RegistrationPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.forgotPassword}
+                        component={ForgotPasswordPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.privacyPolicy}
+                        component={PrivacyPolicy}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.changePasswordPage()}
+                        component={ChangePasswordPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.verifyEmailPage()}
+                        component={VerifyEmailPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.userProfilePage()}
+                        component={ProfilePage}
+                    />
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.myProfile}
+                        component={MyProfile}
+                    />
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.editSpoiler()}
+                        component={EditSpoilerPage}
+                    />
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.editExtraCardInfo()}
+                        component={UpdateExtraCardInfoPage}
+                    />
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.createSpoiler}
+                        component={AddSpoilerPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.spoilerPage()}
+                        component={SpoilerPage}
+                    />
+                    <Route
+                        path={Routes.spoilers}
+                        component={SpoilersPage}
+                    />
+                    <Route
+                        path={Routes.landing}
+                        component={LandingPage}
+                    />
+                </Switch>
+                <SnackMessage/>
+            </div>
+        </BrowserRouter>
+    )
+})
 
 export class AboutSubPaths {
     static sas = Routes.about + "/sas"

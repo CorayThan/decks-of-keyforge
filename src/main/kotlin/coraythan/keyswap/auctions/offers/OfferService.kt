@@ -1,7 +1,7 @@
 package coraythan.keyswap.auctions.offers
 
-import coraythan.keyswap.auctions.AuctionRepo
-import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.DeckListingRepo
+import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.OfferPlacementResult
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
@@ -15,7 +15,7 @@ import java.util.*
 @Service
 class OfferService(
         private val offerRepo: OfferRepo,
-        private val auctionRepo: AuctionRepo,
+        private val deckListingRepo: DeckListingRepo,
         private val currentUserService: CurrentUserService
 ) {
 
@@ -25,12 +25,12 @@ class OfferService(
         if (user.country == null) {
             return OfferPlacementResult(false, "Please select a country on your profile before making an offer.")
         }
-        val auction = auctionRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
+        val auction = deckListingRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
 
-        if (auction.status == AuctionStatus.COMPLETE) {
+        if (auction.status == DeckListingStatus.COMPLETE) {
             return OfferPlacementResult(false, "This deck is not for sale, so you cannot make an offer.")
         }
-        if (auction.status == AuctionStatus.ACTIVE) throw BadRequestException("Can't make an offer on an auction.")
+        if (auction.status == DeckListingStatus.ACTIVE) throw BadRequestException("Can't make an offer on an auction.")
         if (user.id == auction.seller.id) {
             throw UnauthorizedException("You can't buy your own deck.")
         }

@@ -12,7 +12,8 @@ import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { auctionStore } from "../../auctions/AuctionStore"
+import { DeckListingStatus } from "../../auctions/DeckListingDto"
+import { auctionStore } from "../../auctions/DeckListingStore"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
@@ -96,9 +97,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     handleOpenForEdit = () => {
-        const saleInfo = auctionStore.auctionInfoForDeck(this.props.deck.id)
+        const saleInfo = auctionStore.listingInfoForDeck(this.props.deck.id)
         if (saleInfo != null) {
-            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, startingBid} = saleInfo
+            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status} = saleInfo
             this.open = true
             this.editAuctionId = saleInfo.id
             this.language = language ?? DeckLanguage.ENGLISH
@@ -106,7 +107,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             this.listingInfo = listingInfo ?? ""
             this.externalLink = externalLink ?? ""
             this.buyItNow = buyItNow?.toString() ?? ""
-            if (startingBid != null) {
+            if (status !== DeckListingStatus.BUY_IT_NOW_ONLY) {
                 throw new Error("Can't edit auctions.")
             }
 
@@ -213,9 +214,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         if (userDeck == null) {
             return null
         }
-        const auctionInfo = auctionStore.auctionInfoForDeck(deck.id)
+        const auctionInfo = auctionStore.listingInfoForDeck(deck.id)
         let saleButton
-        if (auctionInfo && auctionInfo.startingBid != null && auctionInfo.bids.length === 0) {
+        if (auctionInfo && auctionInfo.status === DeckListingStatus.ACTIVE && auctionInfo.bids.length === 0) {
             saleButton = (
                 <DeckActionClickable
                     menuItem={menuItem}

@@ -5,11 +5,11 @@ import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
-import { AuctionStatus } from "../../auctions/AuctionDto"
-import { auctionStore } from "../../auctions/AuctionStore"
 import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
+import { DeckListingStatus } from "../../auctions/DeckListingDto"
+import { auctionStore } from "../../auctions/DeckListingStore"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -47,8 +47,8 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 
                     let userDeckInfo
                     if (saleInfo.username === userStore.username) {
-                        userDeckInfo = auctionStore.auctionInfoForDeck(this.props.deckId)
-                        const userDeck = auctionStore.auctionInfoForDeck(this.props.deckId)
+                        userDeckInfo = auctionStore.listingInfoForDeck(this.props.deckId)
+                        const userDeck = auctionStore.listingInfoForDeck(this.props.deckId)
                         userDeckInfo = userDeck ? deckSaleInfoFromAuctionDto(userDeck) : undefined
                     }
 
@@ -71,7 +71,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
     render() {
 
-        if (this.props.saleInfo.auctionStatus === AuctionStatus.COMPLETE) {
+        if (this.props.saleInfo.auctionStatus === DeckListingStatus.COMPLETE) {
             return <SingleSaleInfoViewCompleteAuction {...this.props} />
         }
 

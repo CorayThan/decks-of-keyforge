@@ -11,13 +11,13 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCombos } from "../aerc/AercForCombos"
 import { AercView } from "../aerc/AercViews"
-import { auctionStore } from "../auctions/AuctionStore"
+import { DeckListingStatus } from "../auctions/DeckListingDto"
+import { auctionStore } from "../auctions/DeckListingStore"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log } from "../config/Utils"
 import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
@@ -58,16 +58,16 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             id, keyforgeId, name, wishlistCount, funnyCount,
             forSale, forTrade, forAuction, registered, owners
         } = deck
-        const saleInfo = auctionStore.auctionInfoForDeck(id)
+        const saleInfo = auctionStore.listingInfoForDeck(id)
         let userDeckForSale = false
         let userDeckForTrade = false
         let userDeckForAuction = false
         if (saleInfo) {
-            log.debug(`Deck sale info wasn't null for ${deck.name}`)
             userDeckForSale = true
             userDeckForTrade = saleInfo.forTrade
-            userDeckForAuction = saleInfo.startingBid != null
+            userDeckForAuction = saleInfo.status === DeckListingStatus.ACTIVE
         }
+
         const compact = screenStore.smallDeckView()
 
         let width
@@ -114,12 +114,12 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         <Typography variant={"h5"}>{name}</Typography>
                                     </KeyLink>
                                 </div>
-                                {forSale || userDeckForSale ? (
+                                {!forAuction && (forSale || userDeckForSale) ? (
                                     <Tooltip title={"For sale"}>
                                         <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
                                     </Tooltip>
                                 ) : null}
-                                {forTrade || userDeckForTrade ? (
+                                {!forAuction && (forTrade || userDeckForTrade) ? (
                                     <Tooltip title={"For trade"}>
                                         <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
                                     </Tooltip>

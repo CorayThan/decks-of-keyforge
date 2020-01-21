@@ -1,6 +1,6 @@
 package coraythan.keyswap.userdeck
 
-import coraythan.keyswap.auctions.AuctionRepo
+import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.scheduledStart
@@ -20,7 +20,7 @@ class UserDeckService(
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val userDeckRepo: UserDeckRepo,
-        private val auctionRepo: AuctionRepo
+        private val deckListingRepo: DeckListingRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)

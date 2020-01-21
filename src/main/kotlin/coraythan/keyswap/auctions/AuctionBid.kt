@@ -22,7 +22,7 @@ data class AuctionBid(
 
         @JsonIgnoreProperties("bids")
         @ManyToOne
-        val auction: Auction? = null,
+        val auction: DeckListing? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()

@@ -14,15 +14,15 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-data class Auction(
+data class DeckListing(
 
         val durationDays: Int = 7,
 
         val endDateTime: ZonedDateTime,
 
-        val bidIncrement: Int? = 5,
+        val bidIncrement: Int? = null,
 
-        val startingBid: Int? = 0,
+        val startingBid: Int? = null,
 
         val buyItNow: Int? = null,
 
@@ -33,7 +33,7 @@ data class Auction(
         val boughtNowOn: ZonedDateTime? = null,
 
         @Enumerated(EnumType.STRING)
-        val status: AuctionStatus = AuctionStatus.ACTIVE,
+        val status: DeckListingStatus = DeckListingStatus.ACTIVE,
 
         @JsonIgnoreProperties("auction")
         @OneToMany(mappedBy = "auction", cascade = [CascadeType.ALL])
@@ -67,7 +67,7 @@ data class Auction(
 
         val dateListed: ZonedDateTime = now(),
 
-        val forTrade: Boolean,
+        val forTrade: Boolean = false,
 
         @Id
         val id: UUID = UUID.randomUUID()
@@ -78,7 +78,7 @@ data class Auction(
 
     val isActive: Boolean
         get() {
-            return status != AuctionStatus.COMPLETE
+            return status != DeckListingStatus.COMPLETE
         }
 
     val highestOffer: Int?
@@ -111,9 +111,9 @@ data class Auction(
             }
         }
 
-    fun toDto(offsetMinutes: Int = 0): AuctionDto {
+    fun toDto(offsetMinutes: Int = 0): DeckListingDto {
         val highestBid = highestBid
-        return AuctionDto(
+        return DeckListingDto(
                 dateListed = dateListed,
                 durationDays = durationDays,
                 endDateTime = endDateTime,
@@ -143,14 +143,14 @@ data class Auction(
     }
 }
 
-data class AuctionDto(
+data class DeckListingDto(
         val dateListed: ZonedDateTime,
         val durationDays: Int = 7,
         val endDateTime: ZonedDateTime,
         val bidIncrement: Int? = 5,
         val startingBid: Int? = null,
         val buyItNow: Int? = null,
-        val status: AuctionStatus = AuctionStatus.ACTIVE,
+        val status: DeckListingStatus = DeckListingStatus.ACTIVE,
         val highestBid: Int? = null,
         val bids: List<AuctionBidDto> = listOf(),
         val deckId: Long,
@@ -170,7 +170,7 @@ data class AuctionDto(
         get() = this.endDateTime.toLocalDate()
 }
 
-enum class AuctionStatus {
+enum class DeckListingStatus {
     BUY_IT_NOW_ONLY,
     ACTIVE,
     COMPLETE

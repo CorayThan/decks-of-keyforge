@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
-import { auctionStore } from "../auctions/AuctionStore"
+import { auctionStore } from "../auctions/DeckListingStore"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { UpdatePrice } from "../userdeck/ListingInfo"

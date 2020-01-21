@@ -1,7 +1,7 @@
 package coraythan.keyswap.auctions.offers
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.auctions.Auction
+import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
@@ -17,7 +17,7 @@ data class Offer(
 
         @JsonIgnoreProperties("offers")
         @ManyToOne
-        val auction: Auction,
+        val auction: DeckListing,
 
         @ManyToOne
         val recipient: KeyUser,

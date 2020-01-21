@@ -1,7 +1,7 @@
 package coraythan.keyswap.users
 
-import coraythan.keyswap.auctions.AuctionRepo
-import coraythan.keyswap.auctions.AuctionStatus
+import coraythan.keyswap.auctions.DeckListingRepo
+import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.generic.Country
@@ -20,7 +20,7 @@ class KeyUserService(
         private val currentUserService: CurrentUserService,
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
         private val passwordResetCodeService: PasswordResetCodeService,
-        private val auctionRepo: AuctionRepo,
+        private val deckListingRepo: DeckListingRepo,
         private val deckRepo: DeckRepo
 ) {
 
@@ -75,7 +75,7 @@ class KeyUserService(
         val userAllowsTrades = user.allowsTrades
         var auctions = user.auctions
 
-        if (update.currencySymbol != user.currencySymbol && auctionRepo.findAllBySellerIdAndStatus(user.id, AuctionStatus.ACTIVE).isNotEmpty()) {
+        if (update.currencySymbol != user.currencySymbol && deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.ACTIVE).isNotEmpty()) {
             throw BadRequestException("You cannot update your currency symbol while you have active auctions.")
         }
 
@@ -105,9 +105,9 @@ class KeyUserService(
         ))
 
        if (userAllowsTrades != update.allowsTrades) {
-            val activeListings = auctionRepo.findAllBySellerIdAndStatus(user.id, AuctionStatus.BUY_IT_NOW_ONLY)
+            val activeListings = deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.BUY_IT_NOW_ONLY)
             activeListings.forEach {
-                auctionRepo.save(it.copy(forTrade = update.allowsTrades))
+                deckListingRepo.save(it.copy(forTrade = update.allowsTrades))
                 deckRepo.save(it.deck.copy(forTrade = update.allowsTrades))
             }
         }

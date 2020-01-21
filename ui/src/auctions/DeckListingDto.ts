@@ -2,7 +2,7 @@ import { DeckLanguage } from "../decks/DeckLanguage"
 import { DeckCondition } from "../userdeck/UserDeck"
 import { AuctionBidDto } from "./AuctionBidDto"
 
-export interface AuctionDto {
+export interface DeckListingDto {
     expiresAtLocalDate: string
     dateListedLocalDate: string
     durationDays: number
@@ -10,7 +10,7 @@ export interface AuctionDto {
     bidIncrement?: number
     startingBid?: number
     buyItNow?: number
-    status: AuctionStatus
+    status: DeckListingStatus
     bids: AuctionBidDto[]
     highestBid?: number
     highestOffer?: number
@@ -24,7 +24,7 @@ export interface AuctionDto {
     id: string
 }
 
-export enum AuctionStatus {
+export enum DeckListingStatus {
     BUY_IT_NOW_ONLY = "BUY_IT_NOW_ONLY",
     ACTIVE = "ACTIVE",
     COMPLETE = "COMPLETE"

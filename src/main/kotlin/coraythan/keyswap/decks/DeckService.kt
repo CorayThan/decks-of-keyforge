@@ -7,8 +7,8 @@ import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
-import coraythan.keyswap.auctions.AuctionStatus
-import coraythan.keyswap.auctions.QAuction
+import coraythan.keyswap.auctions.DeckListingStatus
+import coraythan.keyswap.auctions.QDeckListing
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
@@ -235,13 +235,13 @@ class DeckService(
                 if (allowToSeeAllDecks) {
                     predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
                 } else {
-                    val deckListingQ = QAuction.auction
+                    val deckListingQ = QDeckListing.deckListing
                     predicate.and(
                             deckQ.auctions.any().`in`(
                                     JPAExpressions.selectFrom(deckListingQ)
                                             .where(
                                                     deckListingQ.seller.username.eq(filters.owner),
-                                                    deckListingQ.status.ne(AuctionStatus.COMPLETE)
+                                                    deckListingQ.status.ne(DeckListingStatus.COMPLETE)
                                             )
                             )
                     )
@@ -382,10 +382,10 @@ class DeckService(
         val currentUser = userParam ?: currentUserService.loggedInUser()
 
         val mapped = if (completedAuctionsOnly) {
-            deck.auctions.filter { it.status == AuctionStatus.COMPLETE }
+            deck.auctions.filter { it.status == DeckListingStatus.COMPLETE }
                     .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
         } else {
-            deck.auctions.filter { it.status != AuctionStatus.COMPLETE }
+            deck.auctions.filter { it.status != DeckListingStatus.COMPLETE }
                     .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
         }
 

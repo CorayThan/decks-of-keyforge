@@ -1,4 +1,4 @@
-import { AuctionDto, AuctionStatus } from "../../auctions/AuctionDto"
+import { DeckListingDto, DeckListingStatus } from "../../auctions/DeckListingDto"
 import { userStore } from "../../user/UserStore"
 import { DeckCondition } from "../../userdeck/UserDeck"
 import { DeckLanguage } from "../DeckLanguage"
@@ -20,7 +20,7 @@ export interface DeckSaleInfo {
     youAreHighestBidder?: boolean
     yourMaxBid?: number
     bidIncrement?: number
-    auctionStatus?: AuctionStatus
+    auctionStatus?: DeckListingStatus
     boughtBy?: string
     boughtWithBuyItNow?: boolean
     boughtNowOn?: string
@@ -36,12 +36,12 @@ export interface DeckSaleInfo {
     discord?: string
 }
 
-export const deckSaleInfoFromAuctionDto = (auctionDto: AuctionDto): DeckSaleInfo | undefined => {
+export const deckSaleInfoFromAuctionDto = (deckListingDto: DeckListingDto): DeckSaleInfo | undefined => {
 
     const {
         buyItNow, forTrade, id, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol, language, startingBid, status
-    } = auctionDto
-    const forAuction = status === AuctionStatus.ACTIVE
+    } = deckListingDto
+    const forAuction = status === DeckListingStatus.ACTIVE
 
     const user = userStore.user
 

@@ -6,7 +6,7 @@ import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
-import { auctionStore } from "../auctions/AuctionStore"
+import { auctionStore } from "../auctions/DeckListingStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -282,7 +282,7 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
 
     render() {
         const {deck, sellerVersion} = this.props
-        const auctionInfo = auctionStore.auctionInfoForDeck(deck.id)
+        const auctionInfo = auctionStore.listingInfoForDeck(deck.id)
         if (auctionInfo != null && this.priceForSeller != null && sellerVersion) {
             return (
                 <TableCell>
@@ -346,18 +346,6 @@ const findBuyItNowForDeck = (deck: Deck): number | null => {
         }
     }
     return null
-}
-
-const highestBidder = (deck: Deck): boolean => {
-
-    if (deck.deckSaleInfo) {
-        for (const saleInfo of deck.deckSaleInfo) {
-            if (saleInfo.youAreHighestBidder) {
-                return true
-            }
-        }
-    }
-    return false
 }
 
 @observer
