@@ -122,7 +122,9 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     </Typography>
                 )
             } else {
-                const sellerView = location.search.includes("forSale=false")
+                const sellerView = location.search.includes("forSale=true")
+                    && location.search.includes(`owner=${userStore.username}`)
+                    && keyLocalStorage.deckListViewType === "table"
                 decksToDisplay = (
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {keyLocalStorage.deckListViewType === "table" ?

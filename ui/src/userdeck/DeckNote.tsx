@@ -1,12 +1,14 @@
-import { Dialog, Typography } from "@material-ui/core"
+import { Dialog, IconButton, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import MenuItem from "@material-ui/core/MenuItem"
 import TextField from "@material-ui/core/TextField"
+import { Save } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
@@ -33,7 +35,7 @@ export class DeckNote extends React.Component<DeckNoteProps> {
         }
         const deck = userDeckStore.userDeckByDeckId(id)
 
-        return <DeckNoteLoaded id={id} name={name} notes={deck == null || deck.notes == null ? "" : deck.notes} onClick={onClick} />
+        return <DeckNoteLoaded id={id} name={name} notes={deck == null || deck.notes == null ? "" : deck.notes} onClick={onClick}/>
     }
 }
 
@@ -67,7 +69,7 @@ class DeckNoteLoaded extends React.Component<DeckNoteLoadedProps> {
     save = async () => {
         const {name, id} = this.props
         this.spinner = true
-        await userDeckStore.updateNotes(name, this.notes.trim(), id)
+        await userDeckStore.updateNotes(this.notes.trim(), id, name)
         this.handleClose()
         this.spinner = false
     }
@@ -105,6 +107,72 @@ class DeckNoteLoaded extends React.Component<DeckNoteLoadedProps> {
                     </DialogActions>
                 </Dialog>
             </>
+        )
+    }
+}
+
+interface InlineDeckNoteProps {
+    id: number
+}
+
+@observer
+export class InlineDeckNote extends React.Component<InlineDeckNoteProps> {
+
+    render() {
+        const {id} = this.props
+
+        if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.userDecks == null) {
+            return null
+        }
+        const deck = userDeckStore.userDeckByDeckId(id)
+
+        return <InlineDeckNoteLoaded id={id} notes={deck?.notes}/>
+    }
+}
+
+interface InlineDeckNoteLoadedProps {
+    id: number
+    notes?: string
+}
+
+@observer
+class InlineDeckNoteLoaded extends React.Component<InlineDeckNoteLoadedProps> {
+
+    @observable
+    notes = ""
+
+    componentDidMount(): void {
+        this.notes = this.props.notes ?? ""
+    }
+
+    save = () => {
+        const {id} = this.props
+        userDeckStore.updateNotes(this.notes.trim(), id)
+    }
+
+    render() {
+        return (
+            <div
+                style={{marginTop: spacing(2), display: "flex"}}
+            >
+                <TextField
+                    multiline={true}
+                    rowsMax={3}
+                    value={this.notes}
+                    variant={"filled"}
+                    fullWidth={true}
+                    label={"Notes"}
+                    onChange={(event) => this.notes = event.target.value}
+                    style={{marginRight: spacing(2)}}
+                />
+                <div>
+                    <IconButton
+                        onClick={this.save}
+                    >
+                        <Save fontSize={"small"}/>
+                    </IconButton>
+                </div>
+            </div>
         )
     }
 }

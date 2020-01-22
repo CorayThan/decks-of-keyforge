@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from "@material-ui/core"
+import { Collapse, IconButton, Tooltip } from "@material-ui/core"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
@@ -30,8 +30,9 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
-import { DeckNote } from "../userdeck/DeckNote"
+import { DeckNote, InlineDeckNote } from "../userdeck/DeckNote"
 import { OwnersButton } from "../userdeck/OwnersButton"
+import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckActionClickable } from "./buttons/DeckActionClickable"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MyDecksButton } from "./buttons/MyDecksButton"
@@ -131,6 +132,9 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 ) : null}
                             </div>
                             <DisplayAllCardsByHouse deck={deck}/>
+                            <Collapse in={userDeckStore.viewNotes}>
+                                <InlineDeckNote id={deck.id}/>
+                            </Collapse>
                         </CardContent>
                         {hideActions ? null : (
                             <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>

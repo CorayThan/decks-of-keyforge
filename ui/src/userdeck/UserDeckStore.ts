@@ -17,6 +17,9 @@ export class UserDeckStore {
     @observable
     loadingDecks = false
 
+    @observable
+    viewNotes = false
+
     wishlist = (deckName: string, deckId: number, wishlist: boolean) => {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)
@@ -43,12 +46,12 @@ export class UserDeckStore {
             })
     }
 
-    updateNotes = (deckName: string, notes: string, deckId: number) => {
+    updateNotes = (notes: string, deckId: number, deckName?: string) => {
         return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
             .then(() => {
-                messageStore.setInfoMessage(`Update notes for ${deckName}.`)
+                messageStore.setInfoMessage(deckName == null ? "Notes saved." : `Updated notes for ${deckName}.`, 2000)
+
                 this.findAllForUser()
-                this.refreshDeckInfo()
             })
     }
 

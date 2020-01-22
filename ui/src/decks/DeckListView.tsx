@@ -21,7 +21,9 @@ import { sellerStore } from "../sellers/SellerStore"
 import { CardTypeRadar } from "../stats/CardTypeRadar"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
+import { InlineDeckNote } from "../userdeck/DeckNote"
 import { UpdatePrice } from "../userdeck/ListingInfo"
+import { userDeckStore } from "../userdeck/UserDeckStore"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck, DeckUtils } from "./Deck"
 import { SaStars } from "./DeckScoreView"
@@ -121,6 +123,9 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                                 <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
                                 <DeckHeader title={"Raw AERC"} property={"aercScore"}/>
+                                {userDeckStore.viewNotes && (
+                                    <TableCell>Notes</TableCell>
+                                )}
                                 <DeckHeader title={"A"} property={"amberControl"} tooltip={"Aember Control"}/>
                                 <DeckHeader title={"E"} property={"expectedAmber"} tooltip={"Expected Aember"}/>
                                 <DeckHeader title={"R"} property={"artifactControl"} tooltip={"Artifact Control"}/>
@@ -202,6 +207,13 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                         <TableCell>{synergies.synergyRating}</TableCell>
                                         <TableCell>{synergies.antisynergyRating}</TableCell>
                                         <TableCell>{synergies.rawAerc}</TableCell>
+                                        {userDeckStore.viewNotes && (
+                                            <TableCell>
+                                                <div style={{width: 280}}>
+                                                    <InlineDeckNote id={deck.id}/>
+                                                </div>
+                                            </TableCell>
+                                        )}
                                         <TableCell>{synergies.amberControl}</TableCell>
                                         <TableCell>{synergies.expectedAmber}</TableCell>
                                         <TableCell>{synergies.artifactControl}</TableCell>

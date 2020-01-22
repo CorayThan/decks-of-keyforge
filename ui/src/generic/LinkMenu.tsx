@@ -16,6 +16,7 @@ import { userStore } from "../user/UserStore"
 export interface LinkInfo {
     to?: string
     component?: React.ElementType<MenuItemProps>
+    onClick?: () => void
     text: string
     mobileActive?: boolean
     randomDeck?: boolean
@@ -62,7 +63,7 @@ export class LinkMenuStore {
 
 @observer
 export class LinkMenu extends React.Component<LinkMenuProps> {
-    
+
     render() {
         const {links, genericOnClick, style, dropdownOnly, linkMenuStore, children} = this.props
         const filteredLinks = links.filter(link => link.contentCreatorOnly == null || userStore.contentCreator)
@@ -85,6 +86,9 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                             if (genericOnClick) {
                                                 linkMenuStore.handleClose()
                                                 genericOnClick()
+                                                if (linkInfo.onClick) {
+                                                    linkInfo.onClick()
+                                                }
                                             }
                                         }}
                                         // eslint-disable-next-line
@@ -102,6 +106,9 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                     onClick={() => {
                                         if (genericOnClick) {
                                             genericOnClick()
+                                        }
+                                        if (linkInfo.onClick) {
+                                            linkInfo.onClick()
                                         }
                                     }}
                                     primary={linkInfo.text}
@@ -127,6 +134,9 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                     genericOnClick()
                                 }
                                 linkMenuStore.buttonIsHovered = false
+                                if (firstLink.onClick) {
+                                    firstLink.onClick()
+                                }
                             }}
                             onMouseEnter={linkMenuStore.handleOpen}
                             onMouseLeave={linkMenuStore.autoCloseIfNotHovered}
@@ -176,7 +186,12 @@ const MenuPopper = observer(React.forwardRef((props: MenuPopperProps, ref: React
                                         return (
                                             <LinkMenuItem
                                                 key={linkInfo.text}
-                                                onClick={store.handleClose}
+                                                onClick={() => {
+                                                    store.handleClose()
+                                                    if (linkInfo.onClick) {
+                                                        linkInfo.onClick()
+                                                    }
+                                                }}
                                                 to={linkInfo.to}
                                             >
                                                 {linkInfo.text}

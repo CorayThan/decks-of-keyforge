@@ -103,7 +103,7 @@ class Routes {
     static sellersView = () => {
         const filters = DeckFilters.forSaleOrTrade()
         filters.owner = userStore.username!
-        filters.forSale = false
+        filters.forSale = true
         return Routes.deckSearch(filters)
     }
 

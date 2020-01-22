@@ -152,15 +152,19 @@ class DeckListingService(
 
     fun convertAllDeckSalesToListings() {
         log.info("Begin convert all deck sales to listings")
+        var skippedCount = 0
+        var savedCount = 0
         val ms = measureTimeMillis {
             val toConvert = userDeckRepo.findAllByForSaleTrue()
             log.info("Converting ${toConvert.size} decks to listings")
             toConvert.forEach {
                 val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatus(it.user.id, it.deck.id, DeckListingStatus.BUY_IT_NOW_ONLY)
                 if (preexistingListing.isNotEmpty()) {
-                    log.info("Skipping due to pre-existing listing.")
+                    if (skippedCount % 1000 == 0) log.info("Skipped $skippedCount updated listings so far.")
+                    skippedCount++
                 } else {
-                    log.info("Saving deck listing for ${it.deck.name}")
+                    if (savedCount % 1000 == 0) log.info("Saved $savedCount updated listings so far.")
+                    savedCount++
                     deckListingRepo.save(DeckListing(
                             durationDays = 7,
                             endDateTime = it.expiresAt ?: now().plusDays(7),
@@ -180,7 +184,7 @@ class DeckListingService(
                 }
             }
         }
-        log.info("Done converting all deck sales to listings time taken $ms")
+        log.info("Done converting all deck sales to listings time taken $ms saved: $savedCount skipped: $skippedCount")
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {

@@ -10,6 +10,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
@@ -48,7 +49,7 @@ const myDeckLinks = () => [
     {to: Routes.usersFavorites(), text: "My Favorites"},
     {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
     {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
-    {to: Routes.sellersView(), text: "Sellers View"},
+    {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
 ]
 
 @observer
