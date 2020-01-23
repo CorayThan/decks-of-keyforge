@@ -2,7 +2,7 @@ import { Paper, Typography } from "@material-ui/core"
 import { ResponsiveRadar } from "@nivo/radar"
 import { observer } from "mobx-react"
 import React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { screenStore } from "../ui/ScreenStore"
 
 interface DokRadarProps {
@@ -37,9 +37,37 @@ export class DokRadar extends React.Component<DokRadarProps> {
                         colors={{scheme: "category10"}}
                         margin={{top: margin, right: marginLeftRight, bottom: margin, left: marginLeftRight}}
                         legends={[]}
-                    />
+                        // @ts-ignore
+                        theme={themeStore.darkMode ? darkTheme : undefined}                    />
                 </div>
             </Paper>
         )
+    }
+}
+
+const darkTheme = {
+    axis: {
+        ticks: {
+            text: {
+                fill: "#EEEEEE"
+            }
+        },
+    },
+    grid: {
+        line: {
+            stroke: "#EEEEEE"
+        }
+    },
+    dots: {
+        text: {
+            fill: "#EEEEEE"
+        }
+    },
+    tooltip: {
+        container: {
+            background: '#2d374d',
+            color: 'inherit',
+            boxShadow: '0 3px 9px rgba(0, 0, 0, 0.5)',
+        }
     }
 }

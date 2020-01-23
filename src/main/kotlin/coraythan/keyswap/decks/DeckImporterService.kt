@@ -131,7 +131,7 @@ class DeckImporterService(
             unregDeckCount = allUnregDecks.size
             allUnregDecks.forEach { unreg ->
                 try {
-                    val decksLike = deckRepo.findByNameIgnoreCase(unreg.name)
+                    val decksLike = deckRepo.findByNameIgnoreCase(unreg.name.trim().dropLastWhile { it == '\\' })
                             .filter { it.id != unreg.id }
                     when {
                         decksLike.isNotEmpty() -> {
@@ -316,6 +316,10 @@ class DeckImporterService(
         if (dup.isNotEmpty()) {
             // This string is used in the front end, so don't change it!
             throw BadRequestException("Duplicate deck name ${unregisteredDeck.name}")
+        }
+
+        if (unregisteredDeck.name.contains('\\')) {
+            throw BadRequestException("Unregistered deck names should not contain \\.")
         }
 
         val cards = cardsAsList.map {

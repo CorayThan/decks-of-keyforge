@@ -2,7 +2,7 @@ import { AppBar, Tabs } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Route, RouteComponentProps, Switch } from "react-router"
-import { spacing, theme } from "../config/MuiConfig"
+import { spacing, theme, themeStore } from "../config/MuiConfig"
 import { StatsSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
@@ -16,7 +16,7 @@ export class StatsPage extends React.Component<RouteComponentProps<{}>> {
 
     render() {
         return (
-            <div style={{margin: spacing(4), backgroundColor: "#FFF"}}>
+            <div style={{margin: spacing(4), backgroundColor: themeStore.lightBackgroundColor}}>
                 <AppBar position={"static"} color={"default"}>
                     <Tabs
                         value={this.props.location.pathname}

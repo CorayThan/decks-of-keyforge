@@ -241,7 +241,7 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
     const {house, deck, cards, deckExpansion, compact} = props
     return (
         <List>
-            <AercForCombos combos={deck.synergies!.synergyCombos.filter(combo => combo.house === house)}>
+            <AercForCombos combos={deck.synergies?.synergyCombos.filter(combo => combo.house === house)}>
                 <HouseLabel house={house} title={true}/>
             </AercForCombos>
             <Divider style={{marginTop: 4}}/>

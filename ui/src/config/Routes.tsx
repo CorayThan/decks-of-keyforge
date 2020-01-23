@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
@@ -19,7 +18,6 @@ import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/saleno
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
-import { DokIcon } from "../generic/icons/DokIcon"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { LandingPage } from "../landing/LandingPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
@@ -33,7 +31,6 @@ import { RegistrationPage } from "../user/RegistrationPage"
 import { userStore } from "../user/UserStore"
 import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
-import { serverStatusStore } from "./ServerStatusStore"
 
 class Routes {
 
@@ -111,15 +108,15 @@ class Routes {
 
 const KeyRouter = observer(() => {
 
-    if (serverStatusStore.siteUpdating) {
-        return (
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: spacing(4)}}>
-                <DokIcon height={80} style={{}}/>
-                <Typography variant={"h4"} style={{marginTop: spacing(2)}}>Site update in progress</Typography>
-                <Typography style={{marginTop: spacing(2)}}>Refresh this page to check if the update is complete.</Typography>
-            </div>
-        )
-    }
+    // if (serverStatusStore.siteUpdating) {
+    //     return (
+    //         <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: spacing(4)}}>
+    //             <DokIcon height={80} style={{}}/>
+    //             <Typography variant={"h4"} style={{marginTop: spacing(2)}}>Site update in progress</Typography>
+    //             <Typography style={{marginTop: spacing(2)}}>Refresh this page to check if the update is complete.</Typography>
+    //         </div>
+    //     )
+    // }
 
     return (
         <BrowserRouter>

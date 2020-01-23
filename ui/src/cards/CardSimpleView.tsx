@@ -6,7 +6,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../aerc/AercViews"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { Deck } from "../decks/Deck"
@@ -98,17 +98,17 @@ export const CardView = observer((props: { card: KCard, simple?: boolean, noLink
                             to={Routes.cardPage(card.cardTitle)}
                             style={{marginLeft: spacing(1), flexGrow: 1, color: "rgba(0, 0, 0, 0.87)"}}
                         >
-                            <Typography variant={"h6"}>{cardTitle}</Typography>
+                            <Typography color={"textPrimary"} variant={"h6"}>{cardTitle}</Typography>
                         </UnstyledLink>
                     )}
                     <CardSetsFromCard card={card}/>
                 </div>
                 <div style={{display: "flex"}}>
-                    <Typography variant={"subtitle1"}>{cardType}</Typography>
+                    <Typography color={"textPrimary"} variant={"subtitle1"}>{cardType}</Typography>
                     <div style={{flexGrow: 1}}/>
-                    {amber > 0 ? <Typography variant={"subtitle1"}>{amber} aember</Typography> : null}
+                    {amber > 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>{amber} aember</Typography> : null}
                 </div>
-                <Typography>{cardText}</Typography>
+                <Typography color={"textPrimary"}>{cardText}</Typography>
                 {card.winRate != null ? (
                     <>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
@@ -116,14 +116,14 @@ export const CardView = observer((props: { card: KCard, simple?: boolean, noLink
                             <Tooltip
                                 title={"This win rate is affected by house win rate, so expect cards in better houses to have higher win rates."}
                             >
-                                <Typography variant={"body2"} noWrap={true} style={{fontStyle: "italic"}}>
+                                <Typography color={"textPrimary"} variant={"body2"} noWrap={true} style={{fontStyle: "italic"}}>
                                     {round(card.winRate * 100, 1)}% win rate
                                 </Typography>
                             </Tooltip>
                             <Tooltip
                                 title={"Wins / Losses"}
                             >
-                                <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>{card.wins} / {card.losses}</Typography>
+                                <Typography color={"textPrimary"} variant={"body2"} style={{marginLeft: spacing(1)}}>{card.wins} / {card.losses}</Typography>
                             </Tooltip>
                         </div>
                     </>
@@ -326,7 +326,7 @@ const CardLine = (props: CardAsLineProps) => {
     )
 }
 
-export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
+export const CardSetsFromCard = observer((props: { card: KCard, noDot?: boolean }) => {
     const sets = props.card.extraCardInfo.cardNumbers.map(cardNumber => expansionInfoMap.get(cardNumber.expansion)!.abbreviation)
     return (
         <div>
@@ -337,18 +337,18 @@ export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
                             height: 4,
                             width: 4,
                             borderRadius: "50%",
-                            backgroundColor: "#555",
+                            backgroundColor: themeStore.darkMode ? "#DFDFDF" : "#555",
                             marginLeft: spacing(1),
                             marginRight: spacing(1)
                         }}/>
                     ) : null}
 
-                    <Typography>{abbreviation}</Typography>
+                    <Typography color={"textPrimary"}>{abbreviation}</Typography>
                 </div>
             ))}
         </div>
     )
-}
+})
 
 export const CardTraits = (props: { card: KCard }) => (
     <div style={{display: "flex", flexWrap: "wrap"}}>
@@ -388,16 +388,16 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
         <>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             <div style={{display: "flex", alignItems: "flex-end"}}>
-                <Typography variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
+                <Typography color={"textPrimary"} variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
                 {title && published && (
-                    <Typography variant={"subtitle2"}>{Utils.epochSecondsToDate(published)}</Typography>
+                    <Typography color={"textPrimary"} variant={"subtitle2"}>{Utils.epochSecondsToDate(published)}</Typography>
                 )}
             </div>
             <AercForCard card={card} realValue={combo}/>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-            {traits.length !== 0 ? <Typography variant={"subtitle1"}>Traits</Typography> : null}
+            {traits.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Traits</Typography> : null}
             <CardTraits card={card}/>
-            {synergies.length !== 0 ? <Typography variant={"subtitle1"}>Synergies</Typography> : null}
+            {synergies.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Synergies</Typography> : null}
             <CardSynergies card={card}/>
         </>
     )

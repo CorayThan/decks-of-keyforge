@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardType } from "../cards/CardType"
 import { hasAercFromCard, KCard } from "../cards/KCard"
-import { spacing, theme } from "../config/MuiConfig"
+import { spacing, theme, themeStore } from "../config/MuiConfig"
 import { roundToHundreds, roundToTens } from "../config/Utils"
 import { Deck, DeckUtils } from "../decks/Deck"
 import { SynergyTrait } from "../extracardinfo/SynergyTrait"
@@ -59,7 +59,7 @@ export const AercView = (props: {
 
     return (
         <div
-            style={{backgroundColor: "#DFDFDF", padding: spacing(1)}}
+            style={{backgroundColor: themeStore.aercViewBackground, padding: spacing(1)}}
         >
             <div
                 style={{

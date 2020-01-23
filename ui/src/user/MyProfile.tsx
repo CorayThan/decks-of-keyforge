@@ -26,7 +26,7 @@ import * as QueryString from "query-string"
 import * as React from "react"
 import ReactDOM from "react-dom"
 import { RouteComponentProps } from "react-router"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
@@ -413,6 +413,17 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     />
                                                 }
                                                 label={"Display crucible tracker wins and losses"}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={themeStore.darkMode}
+                                                        onChange={themeStore.toggleMode}
+                                                        tabIndex={7}
+                                                        disabled={!userStore.patron}
+                                                    />
+                                                }
+                                                label={"Dark mode (Patron only)"}
                                             />
                                             <Typography style={{marginBottom: spacing(2)}}>
                                                 Use the links below to share your decks with other users. You can also share the URL of any search you make.

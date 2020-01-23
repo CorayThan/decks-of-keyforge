@@ -8,7 +8,7 @@ import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 export interface AercForCombosProps {
     title?: string
     accessor?: (combo: SynergyCombo) => number,
-    combos: SynergyCombo[]
+    combos?: SynergyCombo[]
     children: React.ReactNode
 }
 
@@ -16,6 +16,9 @@ export class AercForCombos extends React.Component<AercForCombosProps> {
 
     render() {
         const {title, combos, children, accessor} = this.props
+        if (combos == null) {
+            return children
+        }
         const totalHouseAerc = combos.length === 0 ? 0 : combos
             .map(combo => (accessor == null ? combo.aercScore : accessor(combo)) * combo.copies)
             .reduce((prev, next) => prev + next)

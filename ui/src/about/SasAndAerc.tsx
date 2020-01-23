@@ -2,7 +2,7 @@ import { Divider, List, ListItem, Typography } from "@material-ui/core"
 import Link from "@material-ui/core/Link"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { DeckScorePill } from "../decks/DeckScoreView"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
@@ -290,7 +290,7 @@ export const AercTraitDescription = observer((props: { title: string, texts: str
             </div>
             {screenStore.screenWidth > 500 && (
                 <div>
-                    <div style={{marginLeft: spacing(2), padding: spacing(2), backgroundColor: "#DDDDDD"}}>
+                    <div style={{marginLeft: spacing(2), padding: spacing(2), backgroundColor: themeStore.aercViewBackground}}>
                         <img
                             style={{width: 200}}
                             src={props.img}
@@ -306,7 +306,7 @@ export const AercTraitDescription = observer((props: { title: string, texts: str
 
 
 export const CardExample = (props: { text: string, img1: string, img2: string }) => (
-    <div style={{padding: spacing(2), backgroundColor: "#DDDDDD"}}>
+    <div style={{padding: spacing(2), backgroundColor: themeStore.aercViewBackground}}>
         <Typography>{props.text}</Typography>
         <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2), justifyContent: "center"}}>
             <div>

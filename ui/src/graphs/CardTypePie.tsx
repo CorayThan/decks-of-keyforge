@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core"
 import Paper from "@material-ui/core/Paper"
 import { Pie } from "@nivo/pie"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { GlobalStats } from "../stats/GlobalStats"
 
 export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?: number }) =>
@@ -34,7 +34,7 @@ export const CardTypePie = (props: {
             padAngle={4}
             cornerRadius={4}
             margin={{top: 32, right: 72, bottom: 32, left: 72}}
-            colors={{scheme: "accent"}}
+            colors={{scheme: themeStore.darkMode ? "category10" : "accent"}}
             data={[
                 {
                     id: "Actions",
@@ -57,6 +57,22 @@ export const CardTypePie = (props: {
                     value: props.upgrades,
                 },
             ]}
+            theme={themeStore.darkMode ? darkTheme : undefined}
         />
     </Paper>
 )
+
+const darkTheme = {
+    labels: {
+        text: {
+            fill: "#EEEEEE"
+        }
+    },
+    tooltip: {
+        container: {
+            background: "#2d374d",
+            color: "inherit",
+            boxShadow: "0 3px 9px rgba(0, 0, 0, 0.5)",
+        }
+    }
+}

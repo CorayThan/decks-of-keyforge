@@ -1,5 +1,6 @@
+import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 
 interface GraySidebarProps {
     width: number
@@ -8,13 +9,14 @@ interface GraySidebarProps {
     children?: React.ReactNode
 }
 
+@observer
 export class GraySidebar extends React.Component<GraySidebarProps> {
     render() {
         const {width, vertical, style, ...rest} = this.props
         return (
             <div
                 style={{
-                    backgroundColor: "#DFDFDF",
+                    backgroundColor: themeStore.aercViewBackground,
                     display: "flex",
                     flexDirection: vertical ? "column" : undefined,
                     width,

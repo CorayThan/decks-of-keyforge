@@ -3,7 +3,7 @@ import { GridProps } from "@material-ui/core/Grid"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Route, RouteComponentProps, Switch } from "react-router"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
@@ -26,7 +26,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
 
     render() {
         return (
-            <div style={{margin: spacing(4), backgroundColor: "#FFF"}}>
+            <div style={{margin: spacing(4), backgroundColor: themeStore.lightBackgroundColor}}>
                 {!screenStore.smallScreenTopBar() && (
                     <AppBar position={"static"} color={"default"}>
                         <Tabs

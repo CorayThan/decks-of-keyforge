@@ -8,7 +8,7 @@ import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
 import { auctionStore } from "../auctions/DeckListingStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, roundToTens } from "../config/Utils"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
@@ -168,7 +168,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 return (
                                     <TableRow key={deck.id}>
                                         <TableCell>
-                                            <KeyLink style={{color: "rgba(0, 0, 0, 0.87)"}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
+                                            <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
                                                 {deck.name}
                                             </KeyLink>
                                         </TableCell>

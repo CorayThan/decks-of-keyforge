@@ -8,16 +8,19 @@ import coraythan.keyswap.users.KeyUserService
 import coraythan.keyswap.users.PasswordResetCodeService
 import coraythan.keyswap.users.ResetEmail
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import javax.mail.internet.InternetAddress
 
 @Service
-class EmailService(
+class  EmailService(
         private val emailSender: JavaMailSender,
         private val keyUserService: KeyUserService,
-        private val passwordResetCodeService: PasswordResetCodeService
+        private val passwordResetCodeService: PasswordResetCodeService,
+        @Value("\${env}")
+        private val env: String
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -259,8 +262,8 @@ class EmailService(
         helper.setFrom(fromAddress)
         if (replyTo != null) helper.setReplyTo(replyTo)
         mimeMessage.addFrom(listOf(fromAddress).toTypedArray())
-        helper.setTo(email)
-        if (ccEmail != null) helper.setCc(ccEmail)
+        helper.setTo(if (env == "dev") "decksofkeyforge@gmail.com" else email)
+        if (ccEmail != null) helper.setCc(if (env == "dev") "decksofkeyforge@gmail.com" else ccEmail)
         helper.setSubject(subject)
         emailSender.send(mimeMessage)
     }

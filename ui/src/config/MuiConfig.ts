@@ -1,14 +1,61 @@
 import { createMuiTheme } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
+import { computed, observable } from "mobx"
 import { screenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
 
 export const spacing = (spacingValue = 1) => spacingValue * 8 * (screenStore.screenSizeXs() ? 0.5 : 1)
 
-export const theme = createMuiTheme({
+export const darkModeKey = "DARK_MODE"
+
+export class ThemeStore {
+
+    @observable
+    darkMode = window.localStorage.getItem(darkModeKey) === "true"
+
+    toggleMode = () => {
+        this.darkMode = !this.darkMode
+        window.localStorage.setItem(darkModeKey, this.darkMode ? "true" : "false")
+        updateTheme()
+    }
+
+    @computed
+    get aercViewBackground() {
+        if (this.darkMode) {
+            return "#5F5F5F"
+        } else {
+            return "#DFDFDF"
+        }
+    }
+
+    @computed
+    get graphText() {
+        return this.darkMode ? "#FFFFFF" : "#222222"
+    }
+
+    @computed
+    get backgroundColor() {
+        return this.darkMode ? "#888888" : "#FFFFFF"
+    }
+
+    @computed
+    get lightBackgroundColor() {
+        return this.darkMode ? "#999999" : "#F9F9F9"
+    }
+
+    @computed
+    get defaultTextColor() {
+        return this.darkMode ? "rgba(255, 255, 255)" : "rgba(0, 0, 0, 0.87)"
+    }
+}
+
+export const themeStore = new ThemeStore()
+
+const makeTheme = () => createMuiTheme({
     palette: {
         primary: blue,
         secondary: amber,
+        type: themeStore.darkMode ? "dark" : "light"
     },
     typography: {
         fontFamily: TextConfig.BODY,
@@ -29,3 +76,9 @@ export const theme = createMuiTheme({
         },
     },
 })
+
+export let theme = makeTheme()
+
+export const updateTheme = () => {
+    theme = makeTheme()
+}
