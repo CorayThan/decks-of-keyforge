@@ -34,11 +34,9 @@ export class ReleaseNotes extends React.Component {
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
-                            highlight: "Dark Mode for Patrons: Celebrate DoK's 1 year anniversary by saving your eyes at night!",
-                            note: "I've updated AERC values for about 40 cards. This fine tunes some decks' scores, but won't have a large effect " +
-                                "on most decks."
+                            highlight: "Dark Mode for Patrons: Celebrate DoK's 1 year anniversary by supporting the site and saving your eyes at night!",
+                            note: <RrLink to={Routes.myProfile}>Switch on your Profile</RrLink>
                         },
-                        {note: <RrLink to={Routes.myProfile}>Switch on your Profile</RrLink>},
                         {note: <RrLink to={AboutSubPaths.patreon}>Patron Benefits</RrLink>},
                         {
                             highlight: "Improvements to deck search panel",
