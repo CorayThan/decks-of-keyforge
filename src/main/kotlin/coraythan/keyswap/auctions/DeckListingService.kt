@@ -5,11 +5,8 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
-import coraythan.keyswap.decks.models.DeckLanguage
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
-import coraythan.keyswap.generic.Country
-import coraythan.keyswap.userdeck.DeckCondition
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
@@ -26,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.LocalTime
 import java.util.*
-import kotlin.math.roundToInt
-import kotlin.system.measureTimeMillis
 
 private const val fourteenMin = "PT14M"
 
@@ -148,43 +143,6 @@ class DeckListingService(
         }
         userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate))
         forSaleNotificationsService.sendNotifications(listingInfo)
-    }
-
-    fun convertAllDeckSalesToListings() {
-        log.info("Begin convert all deck sales to listings")
-        var skippedCount = 0
-        var savedCount = 0
-        val ms = measureTimeMillis {
-            val toConvert = userDeckRepo.findAllByForSaleTrue()
-            log.info("Converting ${toConvert.size} decks to listings")
-            toConvert.forEach {
-                val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatus(it.user.id, it.deck.id, DeckListingStatus.BUY_IT_NOW_ONLY)
-                if (preexistingListing.isNotEmpty()) {
-                    if (skippedCount % 1000 == 0) log.info("Skipped $skippedCount updated listings so far.")
-                    skippedCount++
-                } else {
-                    if (savedCount % 1000 == 0) log.info("Saved $savedCount updated listings so far.")
-                    savedCount++
-                    deckListingRepo.save(DeckListing(
-                            durationDays = 7,
-                            endDateTime = it.expiresAt ?: now().plusDays(7),
-                            buyItNow = it.askingPrice?.roundToInt(),
-                            status = DeckListingStatus.BUY_IT_NOW_ONLY,
-                            deck = it.deck,
-                            seller = it.user,
-                            currencySymbol = it.user.currencySymbol,
-                            forSaleInCountry = it.user.country ?: Country.UnitedStates,
-                            language = it.language ?: DeckLanguage.ENGLISH,
-                            condition = it.condition ?: DeckCondition.NEAR_MINT,
-                            redeemed = it.redeemed,
-                            externalLink = it.externalLink,
-                            listingInfo = it.listingInfo,
-                            dateListed = it.dateListed ?: now()
-                    ))
-                }
-            }
-        }
-        log.info("Done converting all deck sales to listings time taken $ms saved: $savedCount skipped: $skippedCount")
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {

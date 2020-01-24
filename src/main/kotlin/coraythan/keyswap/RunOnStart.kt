@@ -38,7 +38,7 @@ class RunOnStart(
 
         // this.downloadAllCardImages()
 
-        deckListingService.convertAllDeckSalesToListings()
+//        deckListingService.convertAllDeckSalesToListings()
         startupComplete = true
     }
 

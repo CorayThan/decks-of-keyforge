@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.9"
+export const latestVersion = "4.11"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -28,6 +28,32 @@ export class ReleaseNotes extends React.Component {
     render() {
         return (
             <AboutGridItem>
+                <ReleaseNote
+                    releaseNumber={"4.11"}
+                    date={"1/24/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Dark Mode for Patrons: Celebrate DoK's 1 year anniversary by saving your eyes at night!",
+                            note: "I've updated AERC values for about 40 cards. This fine tunes some decks' scores, but won't have a large effect " +
+                                "on most decks."
+                        },
+                        {note: <RrLink to={Routes.myProfile}>Switch on your Profile</RrLink>},
+                        {note: <RrLink to={AboutSubPaths.patreon}>Patron Benefits</RrLink>},
+                        {
+                            highlight: "Improvements to deck search panel",
+                            note: "Not for sale checkbox. Toggle open or closed the slew of checkboxes. (Most important ones always displayed.) \"For Sale\" searches everything for sale, including auctions. Don't click three checkboxes just to see what's available!"
+                        },
+                        {
+                            highlight: "For Trade is now a profile-level selection",
+                            note: "You no longer select \"For Trade\" on a per-listing basis. This is an account-wide setting that toggles for trade on for all decks you have listed for sale from your profile."
+                        },
+                        {
+                            highlight: "Improved deck notes",
+                            note: "View deck notes easier! Select to view them from the deck search pane, edit from that page too."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.10"}
                     date={"1/3/2020"}
@@ -53,7 +79,7 @@ export class ReleaseNotes extends React.Component {
                         {
                             highlight: "Better AERC History",
                             note: `When viewing "Past AERC" on the card search page you can now select specific dates! Should make it much easier to ` +
-                            "review changes to AERC."
+                                "review changes to AERC."
                         },
                         {
                             highlight: "Extra Weak Traits for AERC",

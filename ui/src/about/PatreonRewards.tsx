@@ -44,6 +44,8 @@ export class PatreonRewards extends React.Component {
                                     Profile
                                 </LinkButton>
                             </div>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Dark Mode – $1+</Typography>,
+                            `Go to your profile to toggle on dark mode.`,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck for sale notifications – $5+</Typography>,
                             `On the deck search page if you select "For Sale", "For Trade", or "Auctions" you will see a "Notify" button appear next to ` +
                             ` the "Search" button. Use that to save a search and get notified when someone lists a match.`,
@@ -64,6 +66,7 @@ export class PatreonRewards extends React.Component {
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "That warm and fuzzy feeling that comes from supporting something cool.",
                             "List decks for sale or trade for up to 1 year.",
+                            "Dark mode",
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
