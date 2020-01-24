@@ -1,8 +1,7 @@
-import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { landingPageDrawerWidth } from "../landing/LandingPage"
+import { landingPageDrawerWidth, LandingPageTitle } from "../landing/LandingPage"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
 import { SellerCard } from "./SellerCard"
@@ -29,13 +28,11 @@ export class FeaturedSellersView extends React.Component<{}> {
 
         return (
             <>
-                <Typography
-                    variant={"h4"}
-                    color={"primary"}
-                    style={{margin: spacing(4), marginBottom: spacing(2)}}
-                >
-                    Featured Sellers
-                </Typography>
+                <div style={{marginLeft: spacing(4)}}>
+                    <LandingPageTitle>
+                        Featured Sellers
+                    </LandingPageTitle>
+                </div>
                 <div style={{display: "flex", overflowX: "auto", maxWidth: availableWidth}}>
                     <div style={{marginLeft: spacing(2)}}/>
                     {sellers.map(seller => <SellerCard sellerDetails={seller} style={{flex: "0 0 auto"}} key={seller.username}/>)}

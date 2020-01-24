@@ -12,7 +12,7 @@ import { RouteComponentProps, withRouter } from "react-router"
 import { CardFilters } from "../../cards/CardFilters"
 import { cardStore } from "../../cards/CardStore"
 import { FancyCardMenuItem } from "../../cards/FancyCardMenuItem"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
 import { LinkMenuItem } from "../../mui-restyled/LinkMenuItem"
@@ -92,7 +92,7 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
                 style={{
                     display: "flex",
                     borderRadius: 4,
-                    backgroundColor: blue[400],
+                    backgroundColor: themeStore.darkMode ? blue[700] : blue[400],
                     marginLeft: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     marginRight: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     alignItems: "center",

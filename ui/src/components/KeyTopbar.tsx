@@ -1,6 +1,7 @@
 import { Divider, IconButton, List, ListItem, ListItemText } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Collapse from "@material-ui/core/Collapse"
+import { blue } from "@material-ui/core/colors"
 import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
@@ -11,7 +12,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
@@ -137,7 +138,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
         return (
             <div>
-                <AppBar position={"fixed"} style={{zIndex: screenStore.zindexes.keyTopBar}}>
+                <AppBar
+                    position={"fixed"}
+                    style={{zIndex: screenStore.zindexes.keyTopBar, background: themeStore.darkMode ? blue["800"] : undefined}}
+                >
                     <Toolbar
                         style={{
                             paddingLeft: screenStore.smallDeckView() ? spacing(2) : undefined,

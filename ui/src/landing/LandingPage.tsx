@@ -2,7 +2,7 @@ import { Divider, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer } from "../components/KeyDrawer"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
@@ -118,44 +118,36 @@ export class LandingPage extends React.Component<{}> {
                             </div>
                         ) : null}
                         <FeaturedSellersView/>
-                        <div style={{margin: spacing(4)}}>
-                            {/*<LastTwoArticles/>*/}
-                            <UnstyledLink to={StatsSubPaths.winRates}>
-                                <Typography
-                                    variant={"h4"}
-                                    color={"primary"}
-                                    style={{marginBottom: spacing(4), marginTop: spacing(4)}}
-                                >
-                                    Stats
-                                </Typography>
-                            </UnstyledLink>
+                        <div style={{marginLeft: spacing(2)}}>
+                            <div style={{marginLeft: spacing(2)}}>
+                                {/*<LastTwoArticles/>*/}
+                                <UnstyledLink to={StatsSubPaths.winRates}>
+                                    <LandingPageTitle>
+                                        Stats
+                                    </LandingPageTitle>
+                                </UnstyledLink>
+                            </div>
                             {stats == null ? <Loader/> : (
                                 <div style={{display: "flex", flexWrap: "wrap"}}>
                                     <WinRateBar name={"SAS Win Rate"} data={stats.sasWinRate}/>
                                     <WinRateBar name={"AERC Win Rate"} data={stats.aercWinRate} secondary={true}/>
                                 </div>
                             )}
+                        </div>
+                        <div style={{margin: spacing(4)}}>
                             <UnstyledLink to={AboutSubPaths.contact}>
-                                <Typography
-                                    variant={"h4"}
-                                    color={"primary"}
-                                    style={{marginBottom: spacing(4), marginTop: spacing(4)}}
-                                >
+                                <LandingPageTitle>
                                     Join in!
-                                </Typography>
+                                </LandingPageTitle>
                             </UnstyledLink>
                             <div>
                                 <PatronButton size={"large"}/>
                                 <DiscordButton style={{marginLeft: spacing(2)}}/>
                                 <TwitterButton style={{marginLeft: spacing(2)}}/>
                             </div>
-                            <Typography
-                                variant={"h4"}
-                                color={"primary"}
-                                style={{marginBottom: spacing(4), marginTop: spacing(4)}}
-                            >
+                            <LandingPageTitle>
                                 Disclaimers
-                            </Typography>
+                            </LandingPageTitle>
                             <Typography>
                                 Decks of KeyForge is not associated with or endorsed by Fantasy Flight games, the producers of KeyForge, in any way.
                             </Typography>
@@ -170,6 +162,18 @@ export class LandingPage extends React.Component<{}> {
         )
     }
 }
+
+export const LandingPageTitle = observer((props: { children: string }) => {
+    return (
+        <Typography
+            variant={"h4"}
+            color={themeStore.darkMode ? "textPrimary" : "primary"}
+            style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+        >
+            {props.children}
+        </Typography>
+    )
+})
 
 
 // const LastTwoArticles = () => {
