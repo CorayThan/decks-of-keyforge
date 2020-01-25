@@ -1,11 +1,11 @@
-import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, ListItem, Typography } from "@material-ui/core"
+import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, ListItem, Paper, Typography } from "@material-ui/core"
 import Link from "@material-ui/core/Link"
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Link as RrLink } from "react-router-dom"
 import { ArticleInternalLink } from "../articles/ArticleView"
 import { CardFilters } from "../cards/CardFilters"
+import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { BarData, StatsBar } from "../graphs/StatsBar"
@@ -22,12 +22,28 @@ const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
 decFirstUpdateCards.aercHistoryDate = "2019-12-01"
 
+const NotesLink = (props: { to: string, children: string, style?: React.CSSProperties }) => {
+    return <LinkButton style={props.style} to={props.to} variant={"outlined"} color={"primary"}>{props.children}</LinkButton>
+}
+
 @observer
 export class ReleaseNotes extends React.Component {
     /* eslint react/jsx-key: 0 */
     render() {
+
+        let cardsUpdateLink = null
+        const lastUpdate = cardStore.mostRecentAercUpdateDate
+        if (lastUpdate != null) {
+            cardsUpdateLink = <NotesLink style={{marginTop: spacing(2)}} to={Routes.cardsUpdate(lastUpdate)}>Most Recent Cards Update</NotesLink>
+        }
+
         return (
             <AboutGridItem>
+                <Paper style={{padding: spacing(2)}}>
+                    <Typography variant={"h5"} style={{marginBottom: spacing(2)}}>Ratings Updates</Typography>
+                    <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
+                    {cardsUpdateLink}
+                </Paper>
                 <ReleaseNote
                     releaseNumber={"4.11"}
                     date={"1/24/2020"}
@@ -35,9 +51,13 @@ export class ReleaseNotes extends React.Component {
                     releaseNotesWithHighlights={[
                         {
                             highlight: "Dark Mode for Patrons: Celebrate DoK's 1 year anniversary by supporting the site and saving your eyes at night!",
-                            note: <RrLink to={Routes.myProfile}>Switch on your Profile</RrLink>
                         },
-                        {note: <RrLink to={AboutSubPaths.patreon}>Patron Benefits</RrLink>},
+                        {
+                            note: <NotesLink to={Routes.myProfile}>Switch on your Profile</NotesLink>
+                        },
+                        {
+                            note: <NotesLink to={AboutSubPaths.patreon}>Patron Benefits</NotesLink>
+                        },
                         {
                             highlight: "Improvements to deck search panel",
                             note: "Not for sale checkbox. Toggle open or closed the slew of checkboxes. (Most important ones always displayed.) \"For Sale\" searches everything for sale, including auctions. Don't click three checkboxes just to see what's available!"
@@ -96,7 +116,7 @@ export class ReleaseNotes extends React.Component {
                                 "for most house leaders, and made many other minor changes. Take a look in the link below!"
                         },
                         {
-                            note: <RrLink to={Routes.cardSearch(decFirstUpdateCards)}>Updated Cards</RrLink>
+                            note: <NotesLink to={Routes.cardSearch(decFirstUpdateCards)}>Updated Cards</NotesLink>
                         },
                     ]}
                 />
@@ -145,11 +165,11 @@ export class ReleaseNotes extends React.Component {
                         {
                             note: (
                                 <div style={{display: "flex"}}>
-                                    <RrLink to={Routes.cardPage("Drummernaut")} style={{marginRight: spacing(2)}}>Drummernaut</RrLink>
-                                    <RrLink to={Routes.cardPage("Sic Semper Tyrannosaurus")} style={{marginRight: spacing(2)}}>
+                                    <NotesLink to={Routes.cardPage("Drummernaut")} style={{marginRight: spacing(2)}}>Drummernaut</NotesLink>
+                                    <NotesLink to={Routes.cardPage("Sic Semper Tyrannosaurus")} style={{marginRight: spacing(2)}}>
                                         Sic Semper Tyrannosaurus
-                                    </RrLink>
-                                    <RrLink to={Routes.cardPage("Cincinnatus Rex")}>Cincinnatus Rex</RrLink>
+                                    </NotesLink>
+                                    <NotesLink to={Routes.cardPage("Cincinnatus Rex")}>Cincinnatus Rex</NotesLink>
                                 </div>
                             )
                         },
@@ -206,7 +226,7 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             note: (
-                                <LinkButton variant={"contained"} color={"primary"} to={StatsSubPaths.aercStats}>AERC Stats</LinkButton>
+                                <NotesLink to={StatsSubPaths.aercStats}>AERC Stats</NotesLink>
                             )
                         },
                     ]}
@@ -305,7 +325,7 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             note: (
-                                <LinkButton variant={"contained"} color={"primary"} to={AboutSubPaths.sas}>SAS and AERC</LinkButton>
+                                <NotesLink to={AboutSubPaths.sas}>SAS and AERC</NotesLink>
                             )
                         },
                         {
@@ -354,7 +374,7 @@ export class ReleaseNotes extends React.Component {
                         {
                             note: (
                                 <div style={{display: "flex"}}>
-                                    <LinkButton variant={"contained"} color={"primary"} to={Routes.spoilers}>Worlds Collide</LinkButton>
+                                    <NotesLink to={Routes.spoilers}>Worlds Collide</NotesLink>
                                     <DiscordNamedButton name={"Sanctumonius"} link={"https://discord.gg/3dSVb6v"} style={{marginLeft: spacing(2)}}/>
                                 </div>
                             )
@@ -375,7 +395,7 @@ export class ReleaseNotes extends React.Component {
                         {
                             note: (
                                 <div style={{display: "flex"}}>
-                                    <LinkButton variant={"contained"} color={"primary"} to={Routes.myProfile}>Profile</LinkButton>
+                                    <NotesLink to={Routes.myProfile}>Profile</NotesLink>
                                 </div>
                             )
                         }
@@ -475,7 +495,7 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"3.21"} date={"8/20/2019"} expanded={true} releaseNotes={[
                     "Introducing SAStars! These stars are a quick way to know the percentile ranking of a deck by SAS. Check out the new About page section " +
                     "for more info on what they mean. (Scroll down for the SAStars section.)",
-                    <LinkButton style={{margin: spacing(1)}} size={"small"} to={AboutSubPaths.sas}>About SAStars</LinkButton>,
+                    <NotesLink style={{margin: spacing(1)}} to={AboutSubPaths.sas}>About SAStars</NotesLink>,
                     "And some special preview news! I've begun the process of the biggest revision to SAS since its release. Plan is to have this complete " +
                     "before the release of Set 3.",
                     "In short, I'm planning on adding more traits to AERC (Aember Protection, splitting Deck Manipulation into Efficiency and Disruption , " +
@@ -794,7 +814,7 @@ export class ReleaseNotes extends React.Component {
                     "Improved the simple deck API to v2, see below.",
                     <div style={{display: "flex", alignItems: "center"}}>
                         <Typography>Added a</Typography>
-                        <LinkButton style={{marginLeft: spacing(1)}} size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
+                        <NotesLink style={{marginLeft: spacing(1)}} to={Routes.privacyPolicy}>Privacy Policy</NotesLink>
                     </div>
                 ]}/>
                 <ReleaseNote releaseNumber={"2.1"} date={"1/29/2019"} releaseNotes={[
@@ -852,7 +872,7 @@ export class ReleaseNotes extends React.Component {
 export const ReleaseNote = (props: {
     releaseNumber: string,
     releaseNotes?: React.ReactNode[],
-    releaseNotesWithHighlights?: { note: React.ReactNode, highlight?: string }[],
+    releaseNotesWithHighlights?: { note?: React.ReactNode, highlight?: string }[],
     expanded?: boolean,
     date: string
 }) => (

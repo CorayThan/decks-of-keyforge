@@ -34,7 +34,13 @@ export class DeckListingStore {
     listForSale = (deckName: string, listingInfo: ListingInfo) => {
         axios.post(`${DeckListingStore.SECURE_CONTEXT}/list`, listingInfo)
             .then(() => {
-                messageStore.setSuccessMessage(`Created an auction for ${deckName}.`)
+                let message = `You've listed ${deckName} for sale.`
+                if (listingInfo.startingBid != null) {
+                    message = `Created an auction for ${deckName}.`
+                } else if (listingInfo.editAuctionId != null) {
+                    message = `You've updated the listing for ${deckName}.`
+                }
+                messageStore.setSuccessMessage(message)
                 auctionStore.findListingsForUser(true)
                 userDeckStore.refreshDeckInfo()
             })

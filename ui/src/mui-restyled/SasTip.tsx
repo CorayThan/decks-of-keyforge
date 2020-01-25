@@ -1,6 +1,9 @@
-import { Divider, Tooltip, Typography, withStyles } from "@material-ui/core"
+import { ClickAwayListener, Divider, Tooltip, Typography, withStyles } from "@material-ui/core"
+import { observable } from "mobx"
+import { observer } from "mobx-react"
 import React from "react"
 import { spacing } from "../config/MuiConfig"
+import { screenStore } from "../ui/ScreenStore"
 
 export interface SasTipProps {
     title: React.ReactNode
@@ -18,36 +21,78 @@ const SasTipInner = withStyles(() => ({
     },
 }))(Tooltip)
 
+@observer
 export class SasTip extends React.Component<SasTipProps> {
+
+    @observable
+    open = false
+
+    handleTooltipOpen = () => {
+        this.open = true
+    }
+
+    handleTooltipClose = () => {
+        this.open = false
+    }
+
     render() {
         const {title, contents, children, items} = this.props
-        return (
-            <SasTipInner
-                enterTouchDelay={1000}
-                leaveTouchDelay={20000}
-                title={
-                    <React.Fragment>
-                        {title}
-                        {(contents || items) && (
-                            <Divider style={{marginBottom: spacing(1)}}/>
-                        )}
-                        {contents}
-                        {items && items.map(item => (
-                            <Typography
-                                key={item}
-                            >
-                                {item}
-                            </Typography>
-                        ))}
-                    </React.Fragment>
-                }
-            >
-                <div
-                    style={{userSelect: "none"}}
+        const smallVersion = screenStore.screenSizeXs()
+
+        const titleComponent = (
+            <React.Fragment>
+                {title}
+                {(contents || items) && (
+                    <Divider style={{marginBottom: spacing(1)}}/>
+                )}
+                {contents}
+                {items && items.map(item => (
+                    <Typography
+                        key={item}
+                    >
+                        {item}
+                    </Typography>
+                ))}
+            </React.Fragment>
+        )
+
+        if (!smallVersion) {
+            return (
+                <SasTipInner
+                    enterTouchDelay={1000}
+                    leaveTouchDelay={20000}
+                    title={titleComponent}
                 >
-                    {children}
-                </div>
-            </SasTipInner>
+                    <div
+                        style={{userSelect: "none"}}
+                    >
+                        {children}
+                    </div>
+                </SasTipInner>
+            )
+        }
+
+        return (
+            <ClickAwayListener onClickAway={this.handleTooltipClose}>
+                <SasTipInner
+                    PopperProps={{
+                        disablePortal: true,
+                    }}
+                    onClose={this.handleTooltipClose}
+                    open={this.open}
+                    disableFocusListener
+                    disableHoverListener
+                    disableTouchListener
+                    title={titleComponent}
+                >
+                    <div
+                        style={{userSelect: "none"}}
+                        onClick={this.handleTooltipOpen}
+                    >
+                        {children}
+                    </div>
+                </SasTipInner>
+            </ClickAwayListener>
         )
     }
 }

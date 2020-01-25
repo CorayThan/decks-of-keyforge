@@ -89,6 +89,13 @@ class Routes {
         return `${Routes.cards}?${QueryString.stringify(cleaned)}`
     }
 
+    static cardsUpdate = (aercHistoryDate: string) => {
+        const filters = new CardFilters()
+        filters.aercHistory = true
+        filters.aercHistoryDate = aercHistoryDate
+        return Routes.cardSearch(filters)
+    }
+
     static deckSearchForSaleQuery = (filters: ForSaleQuery) => {
         const cleaned = prepareForSaleQueryForQueryString(filters)
         return `${Routes.decks}?${QueryString.stringify(cleaned)}`

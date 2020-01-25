@@ -218,6 +218,15 @@ export class CardStore {
         return []
     }
 
+    @computed
+    get mostRecentAercUpdateDate(): string | undefined {
+        const dates = this.aercUpdateDates
+        if (dates.length > 0) {
+            return dates[0]
+        }
+        return undefined
+    }
+
     private cardSearchTokenized = (searchValue: string) => searchValue
         .trim()
         .toLowerCase()
