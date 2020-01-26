@@ -6,10 +6,11 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../aerc/AercViews"
-import { spacing, themeStore } from "../config/MuiConfig"
+import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { Deck } from "../decks/Deck"
+import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { GraySidebar } from "../generic/GraySidebar"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
@@ -101,12 +102,13 @@ export const CardView = observer((props: { card: KCard, simple?: boolean, noLink
                             <Typography color={"textPrimary"} variant={"h6"}>{cardTitle}</Typography>
                         </UnstyledLink>
                     )}
+                    <div style={{flexGrow: 1}}/>
                     <CardSetsFromCard card={card}/>
                 </div>
                 <div style={{display: "flex"}}>
-                    <Typography color={"textPrimary"} variant={"subtitle1"}>{cardType}</Typography>
+                    <Typography color={"textPrimary"} variant={"subtitle2"}>{cardType}</Typography>
                     <div style={{flexGrow: 1}}/>
-                    {amber > 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>{amber} aember</Typography> : null}
+                    {amber > 0 ? <Typography color={"textPrimary"} variant={"subtitle2"}>{amber} aember</Typography> : null}
                 </div>
                 <Typography color={"textPrimary"}>{cardText}</Typography>
                 {card.winRate != null ? (
@@ -326,29 +328,16 @@ const CardLine = (props: CardAsLineProps) => {
     )
 }
 
-export const CardSetsFromCard = observer((props: { card: KCard, noDot?: boolean }) => {
-    const sets = props.card.extraCardInfo.cardNumbers.map(cardNumber => expansionInfoMap.get(cardNumber.expansion)!.abbreviation)
+export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
+    const sets = props.card.extraCardInfo.cardNumbers.map(cardNumber => expansionInfoMap.get(cardNumber.expansion)!.backendEnum)
     return (
-        <div>
-            {sets.map((abbreviation, idx) => (
-                <div style={{display: "flex", alignItems: "center"}} key={idx}>
-                    {idx !== 0 && !props.noDot ? (
-                        <div style={{
-                            height: 4,
-                            width: 4,
-                            borderRadius: "50%",
-                            backgroundColor: themeStore.darkMode ? "#DFDFDF" : "#555",
-                            marginLeft: spacing(1),
-                            marginRight: spacing(1)
-                        }}/>
-                    ) : null}
-
-                    <Typography color={"textPrimary"}>{abbreviation}</Typography>
-                </div>
+        <div style={{display: "flex"}}>
+            {sets.map((backendExpansion) => (
+                <ExpansionIcon size={16} expansion={backendExpansion} key={backendExpansion} style={{marginLeft: spacing(1)}}/>
             ))}
         </div>
     )
-})
+}
 
 export const CardTraits = (props: { card: KCard }) => (
     <div style={{display: "flex", flexWrap: "wrap"}}>

@@ -82,6 +82,7 @@ class DeckListingService(
 
         val deck = deckRepo.findByIdOrNull(listingInfo.deckId) ?: throw IllegalStateException("No deck with id ${listingInfo.deckId}")
 
+        if (!deck.registered) throw BadRequestException("Unregistered decks cannot be listed for sale.")
         if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
 
         val listingDate = now()
@@ -137,7 +138,7 @@ class DeckListingService(
         deckListingRepo.save(auction)
         if (listingInfo.auction) {
             // for auction
-            deckRepo.save(deck.copy(forAuction = true, auctionEnd = realEnd, listedOn = listingDate, forSale = listingInfo.buyItNow != null))
+            deckRepo.save(deck.copy(forAuction = true, auctionEnd = realEnd, listedOn = listingDate, forSale = true))
         } else {
             deckRepo.save(deck.copy(forSale = true, forTrade = currentUser.allowsTrades))
         }

@@ -18,9 +18,9 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
     anchorElement?: HTMLDivElement
 
     @observable
-    email = Utils.isDev() ? "coraythan@gmail.com" : ""
+    email = Utils.isDev() ? "test@test.com" : ""
     @observable
-    password = Utils.isDev() ? "stuffstuff" : ""
+    password = Utils.isDev() ? "testtest" : ""
 
     componentDidMount() {
         userStore.loginInProgress = false

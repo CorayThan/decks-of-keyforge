@@ -5,7 +5,7 @@ import { deckStore } from "../decks/DeckStore"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { LinkButton } from "../mui-restyled/LinkButton"
 
-export const DeckSearchLink = (props: { name: string, filters: DeckFilters, color?: "secondary", dontSearch?: boolean, style?: React.CSSProperties }) => {
+export const DeckSearchLink = (props: { name: React.ReactNode, filters: DeckFilters, color?: "secondary", dontSearch?: boolean, style?: React.CSSProperties }) => {
     const {name, filters, color, dontSearch, style} = props
 
     return (
@@ -29,7 +29,7 @@ export const DeckSearchLink = (props: { name: string, filters: DeckFilters, colo
     )
 }
 
-export const CardSearchLink = (props: { name: string, to?: string, color?: "secondary", style?: React.CSSProperties }) => {
+export const CardSearchLink = (props: { name: React.ReactNode, to?: string, color?: "secondary", style?: React.CSSProperties }) => {
     const {name, color, style, to} = props
 
     return (

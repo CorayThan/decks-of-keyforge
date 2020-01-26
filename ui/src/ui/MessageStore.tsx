@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core"
 import { amber } from "@material-ui/core/colors"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Snackbar from "@material-ui/core/Snackbar/Snackbar"
@@ -5,7 +6,7 @@ import CloseIcon from "@material-ui/icons/Close"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { theme } from "../config/MuiConfig"
+import { theme, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 
@@ -94,7 +95,7 @@ export class SnackMessage extends React.Component {
             <IconButton
                 key="close"
                 aria-label="Close"
-                color="inherit"
+                color={themeStore.darkMode ? "default" : "inherit"}
                 style={{padding: theme.spacing(1) / 2}}
                 onClick={this.handleClose}
             >
@@ -115,7 +116,7 @@ export class SnackMessage extends React.Component {
                     "aria-describedby": "message-id",
                     "style": {backgroundColor: this.colorFromMessageType(messageStore.messageType)}
                 }}
-                message={<span id="message-id">{message}</span>}
+                message={<span id="message-id"><Typography color={themeStore.darkMode ? "textPrimary" : "inherit"}>{message}</Typography></span>}
                 action={actions}
             />
         )

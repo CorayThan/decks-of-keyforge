@@ -43,7 +43,6 @@ data class ForSaleQuery(
         override val forTrade: Boolean = false,
         override val forAuction: Boolean = false,
         override val forSaleInCountry: Country? = null,
-        override val registered: Boolean = false,
         override val expansions: List<Int> = listOf(),
 
         override val constraints: List<Constraint> = listOf(),
@@ -67,4 +66,6 @@ data class ForSaleQuery(
                 get() = false
         override val withOwners: Boolean
                 get() = false
+        override val registered: Boolean
+                get() = true
 }

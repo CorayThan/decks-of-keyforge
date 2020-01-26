@@ -49,7 +49,9 @@ class ForSaleNotificationsService(
                         .values.toList()
                         .map { it.first() }
 
+                log.info("Checking for sending")
                 toSend.forEach {
+                    log.info("Sending for sale email ${it.name} to ${it.user?.username}")
                     emailService.sendDeckListedNotification(
                             it.user!!,
                             listingInfo,
@@ -95,6 +97,9 @@ class ForSaleNotificationsService(
     private fun queryMatchesDeck(queryEntity: ForSaleQueryEntity, deckId: Long): Boolean {
         val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
         val userHolder = DeckService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
+        if (queryEntity.name.contains("Mentor")) {
+            log.info("Query is $query")
+        }
         val predicate = deckService.deckFilterPredicate(query, userHolder)
                 .and(QDeck.deck.id.eq(deckId))
         return deckRepo.exists(predicate)

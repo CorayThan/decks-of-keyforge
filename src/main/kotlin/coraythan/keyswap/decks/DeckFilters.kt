@@ -69,6 +69,7 @@ enum class DeckSortOptions {
     ADDED_DATE,
     SAS_RATING,
     AERC_SCORE,
+    POWER_LEVEL,
     CHAINS,
     FUNNIEST,
     MOST_WISHLISTED,

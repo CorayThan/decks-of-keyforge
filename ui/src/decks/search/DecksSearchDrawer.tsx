@@ -177,13 +177,14 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "powerLevel",
             "chains",
             "maverickCount",
+            "anomalyCount",
         ]
         const hideMinMaxConstraintOptions = [
             "listedWithinDays"
         ]
 
         if (forSale) {
-            constraintOptions.unshift("askingPrice")
+            constraintOptions.unshift("buyItNow")
         }
         if (forSale || forTrade) {
             constraintOptions.unshift("listedWithinDays")
@@ -335,33 +336,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    checked={this.props.filters.registered === false}
-                                                    onChange={(event) => this.props.filters.registered = event.target.checked ? false : undefined}
-                                                />
-                                            }
-                                            label={(
-                                                <div style={{display: "flex", alignItems: "center"}}>
-                                                    <UnregisteredDeckIcon/>
-                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Unregistered</Typography>
-                                                </div>
-                                            )}
-                                            style={{width: 144}}
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.props.filters.registered === true}
-                                                    onChange={(event) => this.props.filters.registered = event.target.checked ? true : undefined}
-                                                />
-                                            }
-                                            label={<Typography variant={"body2"}>Registered</Typography>}
-                                            style={{width: 144}}
-                                        />
-                                    </div>
-                                    <div style={{display: "flex"}}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
                                                     checked={myFavorites}
                                                     onChange={handleMyFavoritesUpdate}
                                                     disabled={!showMyDecks}
@@ -381,6 +355,23 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 />
                                             }
                                             label={<Typography variant={"body2"}>Past Auctions</Typography>}
+                                            style={{width: 144}}
+                                        />
+                                    </div>
+                                    <div style={{display: "flex"}}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.registered === false}
+                                                    onChange={(event) => this.props.filters.registered = event.target.checked ? false : undefined}
+                                                />
+                                            }
+                                            label={(
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <UnregisteredDeckIcon/>
+                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Unregistered</Typography>
+                                                </div>
+                                            )}
                                             style={{width: 144}}
                                         />
                                     </div>

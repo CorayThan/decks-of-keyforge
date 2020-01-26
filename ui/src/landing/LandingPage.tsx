@@ -6,7 +6,8 @@ import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
-import { Expansion } from "../expansions/Expansions"
+import { ExpansionIcon } from "../expansions/ExpansionIcon"
+import { BackendExpansion, Expansion } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
@@ -30,6 +31,8 @@ const topAerc = new DeckFilters()
 topAerc.sort = DeckSorts.aerc
 const topChains = new DeckFilters()
 topChains.sort = DeckSorts.chains
+const topPowerLevel = new DeckFilters()
+topPowerLevel.sort = DeckSorts.powerLevel
 const topFunny = new DeckFilters()
 topFunny.sort = DeckSorts.funniest
 const topWishlisted = new DeckFilters()
@@ -73,20 +76,34 @@ export class LandingPage extends React.Component<{}> {
                     <KeyDrawer width={landingPageDrawerWidth} hamburgerMenu={true}>
                         <List>
                             <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
-                            <div style={{display: "flex", flexWrap: "wrap"}}>
-                                <DeckSearchLink name={"COTA"} filters={cota} style={{marginTop: spacing(2)}}/>
-                                <DeckSearchLink name={"AOA"} filters={aoa} style={{marginTop: spacing(2)}}/>
+                            <div style={{paddingRight: spacing(2)}}>
+                                <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2)}}>
+                                    <DeckSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.CALL_OF_THE_ARCHONS} white={true}/>} filters={cota}
+                                        style={{marginBottom: spacing(2)}}
+                                    />
+                                    <DeckSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.AGE_OF_ASCENSION} white={true}/>} filters={aoa}
+                                        style={{marginBottom: spacing(2)}}
+                                    />
+                                    <DeckSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.WORLDS_COLLIDE} white={true}/>} filters={wc}
+                                        style={{marginBottom: spacing(2)}}
+                                    />
+                                </div>
                             </div>
-                            <DeckSearchLink name={"WC"} filters={wc} style={{marginTop: spacing(2)}}/>
-                            <Divider style={{marginTop: spacing(2)}}/>
+                            <Divider/>
                             <ListSubheader>
                                 Top Decks
                             </ListSubheader>
-                            <div style={{display: "flex", flexWrap: "wrap"}}>
-                                <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"}/>
-                                <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"}/>
+                            <div style={{paddingRight: spacing(2)}}>
+                                <div style={{display: "flex", flexWrap: "wrap"}}>
+                                    <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                    <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                    <DeckSearchLink name={"Power Level"} filters={topPowerLevel} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                </div>
                             </div>
-                            <Divider style={{marginTop: spacing(2)}}/>
+                            <Divider/>
                             <ListSubheader>
                                 Decks for Sale
                             </ListSubheader>
@@ -98,15 +115,29 @@ export class LandingPage extends React.Component<{}> {
                             <ListSubheader>
                                 Cards
                             </ListSubheader>
-                            <CardSearchLink name={"Worlds Collide"} color={"secondary"} to={Routes.wcCards}/>
-                            <CardSearchLink name={"Cards"} color={"secondary"} style={{marginTop: spacing(2)}}/>
-                            <Divider style={{marginTop: spacing(2)}}/>
+                            <div style={{paddingRight: spacing(2)}}>
+                                <CardSearchLink name={"Search Cards"} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                <div style={{display: "flex", flexWrap: "wrap"}}>
+                                    <CardSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
+                                        to={Routes.cotaCards} style={{marginBottom: spacing(2)}}
+                                    />
+                                    <CardSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.AGE_OF_ASCENSION} white={false}/>} color={"secondary"}
+                                        to={Routes.aoaCards} style={{marginBottom: spacing(2)}}
+                                    />
+                                    <CardSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.WORLDS_COLLIDE} white={false}/>} color={"secondary"}
+                                        to={Routes.wcCards} style={{marginBottom: spacing(2)}}
+                                    />
+                                </div>
+                            </div>
+                            <Divider/>
                             <ListSubheader>
                                 Fun Searches
                             </ListSubheader>
                             <DeckSearchLink name={"Reversal"} filters={worstSas}/>
                             <DeckSearchLink name={"Funniest"} filters={topFunny} style={{marginTop: spacing(2)}}/>
-                            <DeckSearchLink name={"Favorites"} filters={topWishlisted} style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>

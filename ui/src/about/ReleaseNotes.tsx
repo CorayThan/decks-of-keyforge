@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.11"
+export const latestVersion = "4.12"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,21 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.12"}
+                    date={"1/25/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "More sorts and constraints!",
+                            note: "Sort by power level, search decks by anomaly count."
+                        },
+                        {
+                            highlight: "Deck Header shows expansion",
+                            note: "Also switched card displays to use icons for expansions."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.11"}
                     date={"1/24/2020"}

@@ -214,6 +214,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         if (userDeck == null) {
             return null
         }
+        if (!deck.registered) {
+            return null
+        }
         const auctionInfo = auctionStore.listingInfoForDeck(deck.id)
         let saleButton
         if (auctionInfo && auctionInfo.status === DeckListingStatus.ACTIVE && auctionInfo.bids.length === 0) {

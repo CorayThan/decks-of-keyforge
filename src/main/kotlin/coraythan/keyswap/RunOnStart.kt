@@ -3,10 +3,14 @@ package coraythan.keyswap
 import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckImporterService
+import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
+import coraythan.keyswap.decks.salenotifications.ForSaleQueryRepo
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.*
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
@@ -21,6 +25,8 @@ class RunOnStart(
         private val deckImporterService: DeckImporterService,
         private val statsService: StatsService,
         private val deckListingService: DeckListingService,
+        private val forSaleQueryRepo: ForSaleQueryRepo,
+        private val userRepo: KeyUserRepo,
         private val restTemplate: RestTemplate
 ) : CommandLineRunner {
 
@@ -39,6 +45,23 @@ class RunOnStart(
         // this.downloadAllCardImages()
 
 //        deckListingService.convertAllDeckSalesToListings()
+
+        log.info("Cleaning up queries")
+        val allQueries = forSaleQueryRepo.findAll()
+        allQueries.forEach {
+            if (it.json.contains("\"askingPrice\"")) {
+                log.info("Replacing query ${it.name}")
+                val toSave = ForSaleQueryEntity(
+                        name = it.name,
+                        json = it.json.replace("askingPrice", "buyItNow"),
+                        user = userRepo.findByIdOrNull(it.user?.id)!!
+                )
+                forSaleQueryRepo.save(toSave)
+                forSaleQueryRepo.deleteById(it.id)
+            }
+        }
+        log.info("Done cleaning up queries")
+
         startupComplete = true
     }
 

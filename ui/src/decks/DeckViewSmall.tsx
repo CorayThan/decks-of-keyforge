@@ -18,7 +18,8 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
+import { ExpansionIcon } from "../expansions/ExpansionIcon"
+import { activeExpansions, BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
@@ -186,7 +187,12 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
             }}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <HouseBanner houses={houses} size={48} vertical={true}/>
-                    <DeckScoreView deck={{...deck, ...deck.synergies!}} style={{marginLeft: spacing(6)}}/>
+                    <Tooltip title={expansionInfoMap.get(deck.expansion)!.name}>
+                        <div style={{marginLeft: spacing(2)}}>
+                            <ExpansionIcon expansion={deck.expansion} size={32} white={true}/>
+                        </div>
+                    </Tooltip>
+                    <DeckScoreView deck={{...deck, ...deck.synergies!}} style={{marginLeft: spacing(4)}}/>
                 </div>
                 <OrganizedPlayStats deck={deck} style={{marginTop: spacing(2)}}/>
             </div>
@@ -201,7 +207,7 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                 paddingRight: spacing(2),
             }}>
                 <div style={{flexGrow: 1}}>
-                    <HouseBanner houses={houses} size={72}/>
+                    <HouseBanner houses={houses} size={72} expansion={deck.expansion}/>
                     <OrganizedPlayStats deck={deck}/>
                 </div>
                 <DeckScoreView deck={{...deck, ...deck.synergies!}}/>
@@ -293,13 +299,15 @@ export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
                 <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose}/>
                 <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
-                <MenuItem
-                    component={"a"}
-                    href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
-                >
-                    Master Vault
-                </MenuItem>
-                {userStore.loggedIn() && (
+                {deck.registered && (
+                    <MenuItem
+                        component={"a"}
+                        href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
+                    >
+                        Master Vault
+                    </MenuItem>
+                )}
+                {userStore.loggedIn() && deck.registered && (
                     <DeckActionClickable
                         onClick={() => {
                             handleClose()

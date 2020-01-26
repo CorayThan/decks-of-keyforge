@@ -48,14 +48,15 @@ class DeckService(
 
         val count: Long
         val preExistingCount = deckCount
-        if (preExistingCount != null && filtersAreEqualForCount(filters)) {
+        if (preExistingCount != null && filtersAreEqualForCount(filters)
+                && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL) {
             count = preExistingCount
         } else {
 
             val userHolder = UserHolder(null, currentUserService, userService)
-            val predicate = deckFilterPredicate(filters, userHolder)
+            val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
 
-            if (filtersAreEqualForCount(filters)) {
+            if (filtersAreEqualForCount(filters) && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL) {
 
                 count = deckRepo.countByRegisteredTrue()
                 deckCount = count
@@ -67,7 +68,9 @@ class DeckService(
                         .select(deckQ.id)
                         .from(deckQ)
                         .where(predicate)
-                        .limit(if (filters.forSale == true || filters.forTrade || filters.forAuction) 10000 else 1000)
+                        .limit(if (
+                                filters.forSale == true || filters.forTrade || filters.forAuction
+                        ) 10000 else 1000)
                         .fetch()
                         .count()
                         .toLong()
@@ -83,11 +86,12 @@ class DeckService(
     fun filterDecks(filters: DeckFilters, timezoneOffsetMinutes: Int): DecksPage {
 
         val userHolder = UserHolder(null, currentUserService, userService)
-        val predicate = deckFilterPredicate(filters, userHolder)
+        val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.AERC_SCORE -> deckQ.aercScore
+            DeckSortOptions.POWER_LEVEL -> deckQ.powerLevel
             DeckSortOptions.CHAINS -> deckQ.chains
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
             DeckSortOptions.FUNNIEST -> deckQ.funnyCount
@@ -98,7 +102,9 @@ class DeckService(
             DeckSortOptions.COMPLETED_RECENTLY -> deckQ.auctionEndedOn
         }
 
-        val sort = if (filters.sort == DeckSortOptions.ENDING_SOONEST) {
+        val sort = if (
+                filters.sort == DeckSortOptions.ENDING_SOONEST
+        ) {
             if (filters.sortDirection == SortDirection.ASC) {
                 (sortProperty as ComparableExpressionBase<*>).desc()
             } else {
@@ -108,7 +114,6 @@ class DeckService(
                 filters.sortDirection == SortDirection.DESC
                 || filters.sort == DeckSortOptions.FUNNIEST
                 || filters.sort == DeckSortOptions.MOST_WISHLISTED
-                || filters.sort == DeckSortOptions.CHAINS
                 || filters.sort == DeckSortOptions.RECENTLY_LISTED
         ) {
             (sortProperty as ComparableExpressionBase<*>).desc()
@@ -173,14 +178,21 @@ class DeckService(
         }
     }
 
-    fun deckFilterPredicate(filters: DeckQuery, userHolder: UserHolder): BooleanBuilder {
+    fun deckFilterPredicate(filters: DeckQuery, userHolder: UserHolder, sortOptions: DeckSortOptions? = null): BooleanBuilder {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
 
-        if (filters.registered == true) {
-            predicate.and(deckQ.registered.isTrue)
-        } else if (filters.registered == false) {
+        if (sortOptions == DeckSortOptions.POWER_LEVEL) {
+            predicate.and(deckQ.powerLevel.gt(0))
+        }
+        if (sortOptions == DeckSortOptions.CHAINS) {
+            predicate.and(deckQ.chains.gt(0))
+        }
+
+        if (filters.registered == false) {
             predicate.and(deckQ.registered.isFalse)
+        } else {
+            predicate.and(deckQ.registered.isTrue)
         }
 
         if (filters.expansions.isNotEmpty()) {
@@ -300,13 +312,11 @@ class DeckService(
                 if (it.property == "listedWithinDays") {
                     predicate.and(deckQ.auctions.any().dateListed.gt(now().minusDays(it.value.toLong())))
                 } else {
-                    val entityRef = if (it.property == "askingPrice") {
-                        predicate.and(deckQ.auctions.any().buyItNow.isNotNull)
-                        deckQ.userDecks.any()
+                    val pathToVal = if (it.property == "buyItNow") {
+                        Expressions.path(Double::class.java, deckQ.auctions.any(), it.property)
                     } else {
-                        deckQ
+                        Expressions.path(Double::class.java, deckQ, it.property)
                     }
-                    val pathToVal = Expressions.path(Double::class.java, entityRef, it.property)
                     predicate.and(Expressions.predicate(if (it.cap == Cap.MIN) Ops.GOE else Ops.LOE, pathToVal, Expressions.constant(it.value)))
                 }
             }

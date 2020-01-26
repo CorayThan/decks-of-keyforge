@@ -47,6 +47,11 @@ export class ThemeStore {
     get defaultTextColor() {
         return this.darkMode ? "rgba(255, 255, 255)" : "rgba(0, 0, 0, 0.87)"
     }
+
+    @computed
+    get iconColor() {
+        return this.darkMode ? "#FFFFFF" : undefined
+    }
 }
 
 export const themeStore = new ThemeStore()

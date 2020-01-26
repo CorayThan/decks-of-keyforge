@@ -82,9 +82,12 @@ export class DeckImportView extends React.Component {
                                         </Button>
                                     </label>
                                 </div>
+                                <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>
+                                    Unregistered decks cannot be listed for sale. Please register your deck on Master Vault to sell it.
+                                </Typography>
                                 <Typography variant={"body2"}>
-                                    Use a picture taken straight on with low glare and clear text. 1mb or less in size is best, but it must be less than
-                                    3mb.
+                                    Use a picture taken straight on with low glare and clear text. 500kb or less in size is best. The larger the image the less
+                                    likely it will successfully scan. Images above 3mb will not be accepted.
                                     Setting your phone camera to the lowest quality setting is often best. Leave about 1/4 inch around the edges after
                                     cropping it.
                                 </Typography>
