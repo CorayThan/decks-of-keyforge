@@ -8,6 +8,7 @@ data class UserRegistration(
         val password: String,
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
+        val acceptsTrades: Boolean,
         val country: Country?,
         val lastVersionSeen: String
 )

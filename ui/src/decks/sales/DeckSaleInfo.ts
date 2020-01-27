@@ -23,6 +23,7 @@ export interface DeckSaleInfo {
     boughtBy?: string
     boughtWithBuyItNow?: boolean
     boughtNowOn?: string
+    shippingCost?: string
 
     listingInfo?: string
     externalLink?: string
@@ -34,42 +35,3 @@ export interface DeckSaleInfo {
     publicContactInfo?: string
     discord?: string
 }
-
-// export const deckSaleInfoFromAuctionDto = (deckListingDto: DeckListingDto): DeckSaleInfo | undefined => {
-//
-//     const {
-//         buyItNow, forTrade, id, listingInfo, externalLink, condition, dateListedLocalDate, expiresAtLocalDate, currencySymbol, language, startingBid, status,
-//         bidIncrement
-//     } = deckListingDto
-//     const forAuction = status === DeckListingStatus.ACTIVE
-//
-//     const user = userStore.user
-//
-//     if (user == null) {
-//         return undefined
-//     }
-//     return {
-//         forTrade,
-//         forAuction,
-//
-//         forSaleInCountry: user.country,
-//         currencySymbol,
-//         language,
-//
-//         auctionId: id,
-//
-//         startingBid,
-//         bidIncrement,
-//         listingInfo,
-//         externalLink,
-//         buyItNow,
-//
-//         dateListed: dateListedLocalDate!,
-//         expiresAt: expiresAtLocalDate,
-//
-//         condition: condition == null ? DeckCondition.NEW_IN_PLASTIC : condition,
-//         username: user.username,
-//         publicContactInfo: user.publicContactInfo,
-//         discord: user.discord
-//     }
-// }

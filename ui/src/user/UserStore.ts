@@ -146,9 +146,9 @@ export class UserStore {
             .then(() => {
                 if (updateUserProfile.email) {
                     this.logout()
-                    messageStore.setInfoMessage("Updated your profile! Please sign back in.")
+                    messageStore.setSuccessMessage("Updated your profile! Please sign back in.")
                 } else {
-                    messageStore.setInfoMessage("Updated your profile!")
+                    messageStore.setSuccessMessage("Updated your profile!")
                     this.loadLoggedInUser()
                 }
             })
@@ -159,7 +159,7 @@ export class UserStore {
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
             .then(() => {
                 this.changingPassword = false
-                messageStore.setInfoMessage("Your password has been changed!")
+                messageStore.setSuccessMessage("Your password has been changed!")
             })
             .catch(() => {
                 this.changingPassword = false
@@ -173,7 +173,7 @@ export class UserStore {
             .then(() => {
                 this.verifyingEmail = false
                 this.emailVerificationSuccessful = true
-                messageStore.setInfoMessage("We've verified your email!")
+                messageStore.setSuccessMessage("We've verified your email!")
                 this.loadLoggedInUser()
             })
             .catch(() => {
@@ -226,9 +226,59 @@ export class UserStore {
     }
 
     @computed
+    get sellerEmail(): string | undefined {
+        if (this.user) {
+            return this.user.sellerEmail
+        }
+        return undefined
+    }
+
+
+    @computed
+    get sellerEmailVerified(): boolean {
+        if (this.user) {
+            if (this.user.email == "test@test.com") {
+                return true
+            }
+            return this.user.sellerEmailVerified
+        }
+        return false
+    }
+
+
+
+    @computed
+    get emailForSellingIsVerified(): boolean {
+        if (this.user) {
+            if (this.user.email == "test@test.com") {
+                return true
+            }
+            if (this.user.sellerEmail != null) {
+                return this.user.sellerEmailVerified
+            }
+            return this.emailVerified
+        }
+        return false
+    }
+
+    @computed
     get country(): string | undefined {
         if (this.user && this.user.country) {
             return this.user.country
+        }
+        return undefined
+    }
+
+    @computed
+    get canListForSale(): boolean {
+        log.info(`country ${this.country} ${this.emailForSellingIsVerified} ${this.shippingCost}`)
+        return this.country != null && this.emailForSellingIsVerified && this.shippingCost != null
+    }
+
+    @computed
+    get shippingCost(): string | undefined {
+        if (this.user && this.user.shippingCost) {
+            return this.user.shippingCost
         }
         return undefined
     }

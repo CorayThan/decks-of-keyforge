@@ -257,6 +257,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
 
         const forSaleInCountry = userStore.country
+        const shippingCost = userStore.shippingCost
 
         const marginTopRight: React.CSSProperties = {
             marginTop: spacing(2), marginRight: spacing(2)
@@ -278,11 +279,20 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DialogTitle>
                     <DialogContent>
                         <SendEmailVerification message={"Please verify your email to list decks for sale or trade."}/>
-                        {forSaleInCountry ? null : (
+                        {forSaleInCountry == null || shippingCost == null && (
                             <div style={{display: "flex", alignItems: "center"}}>
-                                <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
-                                    Please choose your country on your profile to list decks.
-                                </Typography>
+                                <div>
+                                    {forSaleInCountry == null && (
+                                        <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
+                                            Please choose your country on your profile to list decks.
+                                        </Typography>
+                                    )}
+                                    {shippingCost == null && (
+                                        <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
+                                            Fill out shipping costs on your profile to list decks.
+                                        </Typography>
+                                    )}
+                                </div>
                                 <LinkButton
                                     to={Routes.myProfile}
                                 >
@@ -502,7 +512,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             style={{marginRight: spacing(1)}}
                             color={"primary"}
                             onClick={() => this.list()}
-                            disabled={!userStore.emailVerified || !forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}
+                            disabled={!userStore.canListForSale || (this.auction && !userStore.canListMoreAuctions)}
                         >
                             {this.editAuctionId != null ? "Update Listing" : "List"}
                         </KeyButton>

@@ -34,6 +34,8 @@ export class RegistrationPage extends React.Component {
     @observable
     allowUsersToSeeDeckOwnership = false
     @observable
+    acceptsTrades = false
+    @observable
     country = ""
 
     signUp = (submitEvent: React.FormEvent) => {
@@ -67,6 +69,7 @@ export class RegistrationPage extends React.Component {
             username,
             publicContactInfo: this.publicContactInfo,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
+            acceptsTrades: this.acceptsTrades,
             country,
             lastVersionSeen: latestVersion
         })
@@ -189,6 +192,8 @@ export class RegistrationPage extends React.Component {
                                     </TextField>
                                 </Grid>
                                 <Grid item={true} xs={6}>
+                                </Grid>
+                                <Grid item={true} xs={6}>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
@@ -198,6 +203,18 @@ export class RegistrationPage extends React.Component {
                                             />
                                         }
                                         label={"Let anyone see my decks"}
+                                    />
+                                </Grid>
+                                <Grid item={true} xs={6}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.acceptsTrades}
+                                                onChange={(event) => this.acceptsTrades = event.target.checked}
+                                                tabIndex={7}
+                                            />
+                                        }
+                                        label={"Accept trades on decks for sale"}
                                     />
                                 </Grid>
                             </Grid>

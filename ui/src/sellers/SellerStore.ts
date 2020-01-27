@@ -17,7 +17,7 @@ export class SellerStore {
     updatePrices = (prices: UpdatePrice[]) => {
         axios.post(`${SellerStore.SECURE_CONTEXT}/update-prices`, prices)
             .then(() => {
-                messageStore.setInfoMessage(`Updated prices for ${prices.length} decks.`)
+                messageStore.setSuccessMessage(`Updated prices for ${prices.length} decks.`)
                 auctionStore.findListingsForUser(true)
             })
     }

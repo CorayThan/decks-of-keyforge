@@ -24,7 +24,7 @@ export class UserDeckStore {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)
             .then(() => {
-                messageStore.setInfoMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
+                messageStore.setSuccessMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
                 this.findAllForUser()
             })
     }
@@ -33,7 +33,7 @@ export class UserDeckStore {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${funny ? "" : "un"}funny`)
             .then(() => {
-                messageStore.setInfoMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
+                messageStore.setSuccessMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
                 this.findAllForUser()
             })
     }
@@ -41,7 +41,7 @@ export class UserDeckStore {
     owned = (deckName: string, deckId: number, owned: boolean) => {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${owned ? "" : "un"}owned`)
             .then(() => {
-                messageStore.setInfoMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
+                messageStore.setSuccessMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
                 this.findAllForUser()
             })
     }
@@ -49,7 +49,7 @@ export class UserDeckStore {
     updateNotes = (notes: string, deckId: number, deckName?: string) => {
         return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
             .then(() => {
-                messageStore.setInfoMessage(deckName == null ? "Notes saved." : `Updated notes for ${deckName}.`, 2000)
+                messageStore.setSuccessMessage(deckName == null ? "Notes saved." : `Updated notes for ${deckName}.`, 2000)
 
                 this.findAllForUser()
             })

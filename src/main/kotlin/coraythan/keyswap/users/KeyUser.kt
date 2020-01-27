@@ -74,6 +74,7 @@ data class KeyUser(
         val mostRecentDeckListing: ZonedDateTime? = null,
 
         val sellerEmail: String? = null,
+        val sellerEmailVerified: Boolean = false,
         val discord: String? = null,
         val storeName: String? = null,
         val shippingCost: String? = null,
@@ -113,6 +114,7 @@ data class KeyUser(
             username = username,
             email = email,
             emailVerified = emailVerified,
+            sellerEmailVerified = sellerEmailVerified,
             type = type,
             publicContactInfo = publicContactInfo,
             allowsTrades = allowsTrades,
@@ -127,7 +129,8 @@ data class KeyUser(
             discord = discord,
             storeName = storeName,
             displayCrucibleTrackerWins = displayCrucibleTrackerWins == true,
-            auctionCount = auctions.filter { it.status == DeckListingStatus.ACTIVE }.count()
+            auctionCount = auctions.filter { it.status == DeckListingStatus.ACTIVE }.count(),
+            shippingCost = shippingCost
     )
 
     fun realPatreonTier(): PatreonRewardsTier? {
@@ -150,6 +153,7 @@ data class KeyUserDto(
         val email: String,
 
         val emailVerified: Boolean,
+        val sellerEmailVerified: Boolean,
 
         val type: UserType,
 
@@ -173,5 +177,7 @@ data class KeyUserDto(
 
         val auctionCount: Int,
 
-        val displayCrucibleTrackerWins: Boolean
+        val displayCrucibleTrackerWins: Boolean,
+
+        val shippingCost: String? = null
 )

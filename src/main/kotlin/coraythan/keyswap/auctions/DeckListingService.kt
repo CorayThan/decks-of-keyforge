@@ -8,7 +8,6 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
-import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -32,7 +31,6 @@ class DeckListingService(
         private val deckListingRepo: DeckListingRepo,
         private val currentUserService: CurrentUserService,
         private val deckRepo: DeckRepo,
-        private val userDeckRepo: UserDeckRepo,
         private val emailService: EmailService,
         private val forSaleNotificationsService: ForSaleNotificationsService,
         private val userRepo: KeyUserRepo
@@ -113,7 +111,8 @@ class DeckListingService(
                     forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
                     currencySymbol = currentUser.currencySymbol,
                     status = status,
-                    forTrade = currentUser.allowsTrades
+                    forTrade = currentUser.allowsTrades,
+                    shippingCost = currentUser.shippingCost
             )
         } else {
             deckListingRepo.findByIdOrNull(listingInfo.editAuctionId)!!
@@ -132,7 +131,8 @@ class DeckListingService(
                             forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
                             currencySymbol = currentUser.currencySymbol,
                             status = status,
-                            forTrade = currentUser.allowsTrades
+                            forTrade = currentUser.allowsTrades,
+                            shippingCost = currentUser.shippingCost
                     )
         }
         deckListingRepo.save(auction)

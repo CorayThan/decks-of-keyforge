@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.12"
+export const latestVersion = "4.13"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,21 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.13"}
+                    date={"1/27/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Seller Email Verification",
+                            note: "The system will now attempt to verify your public seller's email if you list decks for sale and it is unverified."
+                        },
+                        {
+                            highlight: "Shipping Cost Field",
+                            note: "You are now required to detail your shipping costs when listing decks for sale."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.12"}
                     date={"1/25/2020"}

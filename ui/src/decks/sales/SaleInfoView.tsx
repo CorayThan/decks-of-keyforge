@@ -70,7 +70,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const {
             forTrade, forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
-            startingBid
+            startingBid, shippingCost
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
@@ -195,6 +195,13 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Seller Details</Typography>
                             <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{publicContactInfo}</Typography>
+                            <Divider style={{marginTop: spacing(2)}}/>
+                        </div>
+                    )}
+                    {!shippingCost ? null : (
+                        <div style={{margin: spacing(2), marginBottom: 0}}>
+                            <Typography variant={"subtitle2"}>Shipping Cost</Typography>
+                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{shippingCost}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}

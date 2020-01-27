@@ -22,7 +22,7 @@ export class PatreonStore {
     unlinkAccount = () => {
         axios.post(`${PatreonStore.SECURE_CONTEXT}/unlink`)
             .then(() => {
-                messageStore.setInfoMessage("You've removed your Patreon account.")
+                messageStore.setSuccessMessage("You've removed your Patreon account.")
                 userStore.loadLoggedInUser()
             })
     }

@@ -3,22 +3,22 @@ package coraythan.keyswap
 import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckImporterService
-import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryRepo
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.*
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
 import java.nio.file.Files
 import java.nio.file.Paths
 
 var startupComplete = false
 
+@Transactional
 @Component
 class RunOnStart(
         private val cardService: CardService,
@@ -46,21 +46,19 @@ class RunOnStart(
 
 //        deckListingService.convertAllDeckSalesToListings()
 
-        log.info("Cleaning up queries")
-        val allQueries = forSaleQueryRepo.findAll()
-        allQueries.forEach {
-            if (it.json.contains("\"askingPrice\"")) {
-                log.info("Replacing query ${it.name}")
-                val toSave = ForSaleQueryEntity(
-                        name = it.name,
-                        json = it.json.replace("askingPrice", "buyItNow"),
-                        user = userRepo.findByIdOrNull(it.user?.id)!!
-                )
-                forSaleQueryRepo.save(toSave)
-                forSaleQueryRepo.deleteById(it.id)
-            }
-        }
-        log.info("Done cleaning up queries")
+        val toClean = userRepo.findAllBySellerEmailNotNull()
+                .mapNotNull {
+                    if (it.email.toLowerCase() == it.sellerEmail?.toLowerCase() && it.emailVerified && !it.sellerEmailVerified) {
+                        it.id
+                    } else {
+                        null
+                    }
+                }
+
+        log.info("To verify count: ${toClean.size}")
+
+        toClean.forEach { userRepo.updateSellerEmailVerified(it) }
+        log.info("Done adding verifications")
 
         startupComplete = true
     }

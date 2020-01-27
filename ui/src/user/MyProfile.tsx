@@ -27,11 +27,10 @@ import * as React from "react"
 import ReactDOM from "react-dom"
 import { RouteComponentProps } from "react-router"
 import { spacing, themeStore } from "../config/MuiConfig"
-import { AboutSubPaths, Routes } from "../config/Routes"
+import { AboutSubPaths } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
-import { DeckFilters } from "../decks/search/DeckFilters"
 import { countries, countryToLabel } from "../generic/Country"
 import { EventValue } from "../generic/EventValue"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
@@ -108,6 +107,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     displayCrucibleTrackerWins: boolean
 
+    @observable
+    shippingCost: string
+
     update?: UserProfileUpdate
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,11 +118,12 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     constructor(props: MyProfileInnerProps) {
         super(props)
         const {
-            publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email,
+            publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
             sellerEmail, discord, storeName, currencySymbol, displayCrucibleTrackerWins, allowsTrades
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
+        this.shippingCost = shippingCost ? shippingCost : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
         this.allowsTrades = allowsTrades
         this.country = country ? country : ""
@@ -153,8 +156,13 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             event.preventDefault()
         }
         const publicContactInfo = this.contactInfo.trim().length === 0 ? undefined : this.contactInfo.trim()
-        if (publicContactInfo && publicContactInfo.length > 2000) {
-            messageStore.setWarningMessage("Please make your public contact info 2000 or fewer characters long.")
+        if (publicContactInfo && publicContactInfo.length > 1500) {
+            messageStore.setWarningMessage(`Please make your public contact info 1500 or fewer characters long. It is currently ${publicContactInfo.length} characters.`)
+            return
+        }
+        const shippingCost = this.shippingCost.trim().length === 0 ? undefined : this.shippingCost.trim()
+        if (shippingCost && shippingCost.length > 250) {
+            messageStore.setWarningMessage(`Please make your shipping info 250 or fewer characters long. It is currently ${shippingCost.length} characters.`)
             return
         }
         const email = this.email.trim() === this.props.profile.email ? undefined : this.email.trim()
@@ -190,13 +198,13 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             messageStore.setWarningMessage(`Currency symbol be at least one character.`)
             return
         }
-
         const toUpdate: UserProfileUpdate = {
             email,
             publicContactInfo,
             sellerEmail,
             discord,
             storeName,
+            shippingCost,
             currencySymbol: currencySymbolTrimmed,
             allowsTrades: this.allowsTrades,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
@@ -220,12 +228,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     render() {
         const profile = this.props.profile
-        const filters = new DeckFilters()
-        filters.owner = profile.username
-        const decksLink = Routes.deckSearch(filters)
-
-        const decksForSaleLink = Routes.userDecksForSale(profile.username)
-
         const forSaleQueries = forSaleNotificationsStore.queries
 
         return (
@@ -263,191 +265,214 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                         <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
                                     </div>
                                 )}
-                                style={{maxWidth: 440, margin: 0}}
+                                style={{maxWidth: 880, margin: 0}}
                             >
                                 <div style={{padding: spacing(2)}}>
                                     <Grid container={true} spacing={2}>
-                                        <PatreonSupporter profile={profile}/>
-                                        <Grid item={true} xs={12}>
-                                            <TextField
-                                                label={"email"}
-                                                value={this.email}
-                                                onChange={(event: EventValue) => this.email = event.target.value}
-                                                fullWidth={true}
-                                                variant={"outlined"}
-                                            />
-                                        </Grid>
-                                        {userStore.featuredSeller ? (
-                                            <Grid item={true} xs={12}>
-                                                <TextField
-                                                    label={"store name"}
-                                                    value={this.storeName}
-                                                    onChange={(event: EventValue) => this.storeName = event.target.value}
-                                                    fullWidth={true}
-                                                    variant={"outlined"}
-                                                />
+                                        <Grid item={true} sm={12} md={6}>
+                                            <Grid container={true} spacing={2}>
+                                                <Grid item={true} xs={12}>
+                                                    <Typography variant={"h6"}>User Settings</Typography>
+                                                </Grid>
+                                                {profile.patreonTier != null && (
+                                                    <Grid item={true} xs={12}>
+                                                        <PatreonSupporter profile={profile}/>
+                                                    </Grid>
+                                                )}
+                                                <Grid item={true} xs={12}>
+                                                    <TextField
+                                                        label={"email"}
+                                                        value={this.email}
+                                                        onChange={(event: EventValue) => this.email = event.target.value}
+                                                        fullWidth={true}
+                                                        variant={"outlined"}
+                                                    />
+                                                </Grid>
+                                                <Grid item={true} xs={12} sm={6}>
+                                                    <TextField
+                                                        select
+                                                        label="Country"
+                                                        value={this.country}
+                                                        onChange={(event: EventValue) => this.country = event.target.value}
+                                                        variant="outlined"
+                                                        fullWidth={true}
+                                                    >
+                                                        {countries.map(country => (
+                                                            <MenuItem key={country} value={country}>
+                                                                {countryToLabel(country)}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </TextField>
+                                                </Grid>
+                                                <Grid item={true} xs={12} sm={6}>
+                                                    <FormControl fullWidth={true} variant={"outlined"}>
+                                                        <InputLabel
+                                                            htmlFor={"buying-countries-input-id"}
+                                                            ref={ref => this.buyingCountriesInputLabelRef = ref}
+                                                        >
+                                                            Buying Countries
+                                                        </InputLabel>
+                                                        <Select
+                                                            multiple={true}
+                                                            value={this.preferredCountries}
+                                                            onChange={
+                                                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                                (event: any) => this.preferredCountries = event.target.value
+                                                            }
+                                                            input={
+                                                                <OutlinedInput
+                                                                    labelWidth={this.preferredCountriesLabelWidth}
+                                                                    id={"buying-countries-input-id"}
+                                                                    fullWidth={true}
+                                                                />
+                                                            }
+                                                            renderValue={
+                                                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                                (selected: any) => selected.join(", ")
+                                                            }
+                                                            variant={"outlined"}
+                                                        >
+                                                            {countries.map(country => (
+                                                                <MenuItem key={country} value={country}>
+                                                                    <Checkbox checked={this.preferredCountries.indexOf(country) > -1}/>
+                                                                    <ListItemText primary={countryToLabel(country)}/>
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormHelperText style={{marginTop: spacing(1)}}>
+                                                        Decks for sale search countries
+                                                    </FormHelperText>
+                                                </Grid>
+                                                <Grid item={true}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={this.allowUsersToSeeDeckOwnership}
+                                                                onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
+                                                                tabIndex={6}
+                                                            />
+                                                        }
+                                                        label={"Allow anyone to see which decks I own"}
+                                                    />
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={this.displayCrucibleTrackerWins}
+                                                                onChange={(event) => this.displayCrucibleTrackerWins = event.target.checked}
+                                                                tabIndex={6}
+                                                            />
+                                                        }
+                                                        label={"Display crucible tracker wins and losses"}
+                                                    />
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={themeStore.darkMode}
+                                                                onChange={themeStore.toggleMode}
+                                                                tabIndex={7}
+                                                                disabled={!userStore.patron}
+                                                            />
+                                                        }
+                                                        label={"Dark mode (Patron only)"}
+                                                    />
+                                                </Grid>
                                             </Grid>
-                                        ) : null}
-                                        <Grid item={true} xs={12} sm={6}>
-                                            <TextField
-                                                label={"public sellers email"}
-                                                value={this.sellerEmail}
-                                                onChange={(event: EventValue) => this.sellerEmail = event.target.value}
-                                                fullWidth={true}
-                                                variant={"outlined"}
-                                            />
                                         </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
-                                            <TextField
-                                                label={"discord"}
-                                                value={this.discord}
-                                                onChange={(event: EventValue) => this.discord = event.target.value}
-                                                fullWidth={true}
-                                                variant={"outlined"}
-                                            />
-                                        </Grid>
-                                        <Grid item={true} xs={12}>
-                                            <TextField
-                                                label={"Public contact and trade info"}
-                                                value={this.contactInfo}
-                                                multiline={true}
-                                                rows={4}
-                                                onChange={(event: EventValue) => this.contactInfo = event.target.value}
-                                                fullWidth={true}
-                                                variant={"outlined"}
-                                            />
-                                        </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
-                                            <TextField
-                                                select
-                                                label="Country"
-                                                value={this.country}
-                                                onChange={(event: EventValue) => this.country = event.target.value}
-                                                variant="outlined"
-                                                fullWidth={true}
-                                            >
-                                                {countries.map(country => (
-                                                    <MenuItem key={country} value={country}>
-                                                        {countryToLabel(country)}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
-                                            <TextField
-                                                label={"Currency Symbol"}
-                                                value={this.currencySymbol}
-                                                onChange={(event: EventValue) => this.currencySymbol = event.target.value}
-                                                fullWidth={true}
-                                                variant={"outlined"}
-                                                helperText={"For selling decks. e.g. $, €"}
-                                            />
-                                        </Grid>
-                                        <Grid item={true} xs={12}>
-                                            <FormControl fullWidth={true} variant={"outlined"}>
-                                                <InputLabel
-                                                    htmlFor={"buying-countries-input-id"}
-                                                    ref={ref => this.buyingCountriesInputLabelRef = ref}
-                                                >
-                                                    Buying Countries
-                                                </InputLabel>
-                                                <Select
-                                                    multiple={true}
-                                                    value={this.preferredCountries}
-                                                    onChange={
-                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                        (event: any) => this.preferredCountries = event.target.value
-                                                    }
-                                                    input={
-                                                        <OutlinedInput
-                                                            labelWidth={this.preferredCountriesLabelWidth}
-                                                            id={"buying-countries-input-id"}
+                                        <Grid item={true} sm={12} md={6}>
+                                            <Grid container={true} spacing={2}>
+                                                <Grid item={true} xs={12}>
+                                                    <Typography variant={"h6"}>Seller Settings</Typography>
+                                                </Grid>
+                                                {userStore.featuredSeller ? (
+                                                    <Grid item={true} xs={12}>
+                                                        <TextField
+                                                            label={"store name"}
+                                                            value={this.storeName}
+                                                            onChange={(event: EventValue) => this.storeName = event.target.value}
                                                             fullWidth={true}
+                                                            variant={"outlined"}
                                                         />
-                                                    }
-                                                    renderValue={
-                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                        (selected: any) => selected.join(", ")
-                                                    }
-                                                    variant={"outlined"}
-                                                >
-                                                    {countries.map(country => (
-                                                        <MenuItem key={country} value={country}>
-                                                            <Checkbox checked={this.preferredCountries.indexOf(country) > -1}/>
-                                                            <ListItemText primary={countryToLabel(country)}/>
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                            <FormHelperText style={{marginTop: spacing(1)}}>
-                                                Countries to be used when searching decks for sale. Defaults to your country.
-                                            </FormHelperText>
-                                        </Grid>
-                                        <Grid item={true} xs={12}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.allowsTrades}
-                                                        onChange={(event) => this.allowsTrades = event.target.checked}
-                                                        tabIndex={6}
-                                                    />
-                                                }
-                                                label={"Open to trading decks for sale"}
-                                            />
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.allowUsersToSeeDeckOwnership}
-                                                        onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
-                                                        tabIndex={6}
-                                                    />
-                                                }
-                                                label={"Allow anyone to see which decks I own"}
-                                            />
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.displayCrucibleTrackerWins}
-                                                        onChange={(event) => this.displayCrucibleTrackerWins = event.target.checked}
-                                                        tabIndex={6}
-                                                    />
-                                                }
-                                                label={"Display crucible tracker wins and losses"}
-                                            />
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={themeStore.darkMode}
-                                                        onChange={themeStore.toggleMode}
-                                                        tabIndex={7}
-                                                        disabled={!userStore.patron}
-                                                    />
-                                                }
-                                                label={"Dark mode (Patron only)"}
-                                            />
-                                            <Typography style={{marginBottom: spacing(2)}}>
-                                                Use the links below to share your decks with other users. You can also share the URL of any search you make.
-                                            </Typography>
-                                            <div style={{display: "flex", marginBottom: spacing(2)}}>
-                                                {this.allowUsersToSeeDeckOwnership ? (
-                                                    <LinkButton color={"primary"} to={decksLink} style={{marginRight: spacing(2)}}>
-                                                        My Decks
-                                                    </LinkButton>
+                                                    </Grid>
                                                 ) : null}
-                                                <LinkButton color={"primary"} to={decksForSaleLink}>
-                                                    For Sale and Trade
-                                                </LinkButton>
-                                            </div>
+                                                <Grid item={true} xs={12} sm={6}>
+                                                    <TextField
+                                                        label={"public sellers email"}
+                                                        value={this.sellerEmail}
+                                                        onChange={(event: EventValue) => this.sellerEmail = event.target.value}
+                                                        fullWidth={true}
+                                                        variant={"outlined"}
+                                                    />
+                                                </Grid>
+                                                <Grid item={true} xs={12} sm={6}>
+                                                    <TextField
+                                                        label={"discord"}
+                                                        value={this.discord}
+                                                        onChange={(event: EventValue) => this.discord = event.target.value}
+                                                        fullWidth={true}
+                                                        variant={"outlined"}
+                                                    />
+                                                </Grid>
+                                                <Grid item={true} xs={12}>
+                                                    <TextField
+                                                        label={"Public contact and trade info"}
+                                                        value={this.contactInfo}
+                                                        multiline={true}
+                                                        rows={3}
+                                                        onChange={(event: EventValue) => this.contactInfo = event.target.value}
+                                                        fullWidth={true}
+                                                        variant={"outlined"}
+                                                    />
+                                                </Grid>
+                                                <Grid item={true} xs={12}>
+                                                    <TextField
+                                                        label={"Shipping cost"}
+                                                        value={this.shippingCost}
+                                                        multiline={true}
+                                                        rows={2}
+                                                        onChange={(event: EventValue) => this.shippingCost = event.target.value}
+                                                        fullWidth={true}
+                                                        variant={"outlined"}
+                                                        helperText={
+                                                            "Include cost to ship in your country, whether you ship internationally, and approximate cost " +
+                                                            "to ship internationally"
+                                                        }
+                                                    />
+                                                </Grid>
+                                                <Grid item={true} xs={12} sm={6}>
+                                                    <TextField
+                                                        label={"Currency Symbol"}
+                                                        value={this.currencySymbol}
+                                                        onChange={(event: EventValue) => this.currencySymbol = event.target.value}
+                                                        fullWidth={true}
+                                                        variant={"outlined"}
+                                                        helperText={"For selling decks. e.g. $, €"}
+                                                    />
+                                                </Grid>
+                                                <Grid item={true} xs={12} sm={6}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={this.allowsTrades}
+                                                                onChange={(event) => this.allowsTrades = event.target.checked}
+                                                                tabIndex={6}
+                                                            />
+                                                        }
+                                                        label={"Open to trading decks for sale"}
+                                                    />
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                     <CardActions
-                                        style={{paddingLeft: 0}}
+                                        style={{paddingLeft: 0, marginTop: spacing(2)}}
                                     >
-                                        <LinkPatreon/>
                                         <div style={{flexGrow: 1}}/>
+                                        <LinkPatreon/>
                                         <Button
                                             variant={"contained"}
                                             type={"submit"}
+                                            style={{marginLeft: spacing(2)}}
                                         >
                                             Save
                                         </Button>
@@ -475,7 +500,7 @@ const PatreonSupporter = (props: { profile: KeyUserDto }) => {
     return (
         <Grid item={true}>
             <div>
-                <Typography style={{marginBottom: spacing(2)}}>Your patreon support tier is: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
+                <Typography style={{marginBottom: spacing(2)}}>Patreon tier: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
                 <LinkButton
                     to={AboutSubPaths.patreon}
                     variant={"contained"}

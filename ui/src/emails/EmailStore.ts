@@ -34,12 +34,15 @@ class EmailStore {
         axios.post(`${EmailStore.CONTEXT}/send-reset`, {email})
             .then(() => {
                 this.sendingReset = false
-                messageStore.setInfoMessage(`A reset email has been sent to ${email}`)
+                messageStore.setSuccessMessage(`A reset email has been sent to ${email}`)
             })
     }
 
     sendEmailVerification = () => {
-        const email = userStore.email
+        let email = userStore.sellerEmail
+        if (email == null) {
+            email = userStore.email
+        }
         if (email == null) {
             messageStore.setWarningMessage("Please login to send an email verification.")
         } else {
@@ -47,7 +50,7 @@ class EmailStore {
             axios.post(`${EmailStore.CONTEXT}/send-email-verification`, {email})
                 .then(() => {
                     this.sendingEmailVerification = false
-                    messageStore.setInfoMessage(`An email verification message has been sent to ${email}`)
+                    messageStore.setSuccessMessage(`An email verification message has been sent to ${email}`)
                 })
         }
     }

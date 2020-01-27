@@ -25,8 +25,8 @@ export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInf
     render() {
         const {
             forAuction, forSaleInCountry, condition, dateListed, listingInfo, username, publicContactInfo, externalLink,
-            discord, language, currencySymbol, highestBid, buyItNow, auctionEndDateTime, auctionId,  youAreHighestBidder,
-            startingBid, boughtBy, boughtNowOn
+            discord, language, currencySymbol, highestBid, buyItNow, auctionEndDateTime, auctionId, youAreHighestBidder,
+            startingBid, boughtBy, boughtNowOn, shippingCost
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
@@ -124,6 +124,13 @@ export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInf
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>Seller Details</Typography>
                             <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{publicContactInfo}</Typography>
+                            <Divider style={{marginTop: spacing(2)}}/>
+                        </div>
+                    )}
+                    {!shippingCost ? null : (
+                        <div style={{margin: spacing(2), marginBottom: 0}}>
+                            <Typography variant={"subtitle2"}>Shipping Cost</Typography>
+                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{shippingCost}</Typography>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}

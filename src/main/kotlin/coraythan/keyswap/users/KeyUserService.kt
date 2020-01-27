@@ -49,11 +49,12 @@ class KeyUserService(
         return userRepo.save(KeyUser(
                 id = UUID.randomUUID(),
                 username = userRegInfo.username,
-                email = userRegInfo.email,
+                email = userRegInfo.email.toLowerCase(),
                 password = bCryptPasswordEncoder.encode(userRegInfo.password),
                 type = UserType.USER,
                 publicContactInfo = if (userRegInfo.publicContactInfo.isNullOrBlank()) null else userRegInfo.publicContactInfo,
                 allowUsersToSeeDeckOwnership = userRegInfo.allowUsersToSeeDeckOwnership,
+                allowsTrades = userRegInfo.acceptsTrades,
                 lastVersionSeen = userRegInfo.lastVersionSeen,
                 currencySymbol = "$",
                 country = userRegInfo.country
@@ -87,9 +88,22 @@ class KeyUserService(
 
         if (update.email != null) validateEmail(update.email)
 
+        val email = update.email?.toLowerCase() ?: user.email
+        val sellerEmail = update.sellerEmail?.toLowerCase() ?: user.sellerEmail
+        val alreadyVerifiedEmail = if (user.emailVerified) user.email.toLowerCase() else null
+        val alreadyVerifiedEmail2 = if (user.sellerEmailVerified) user.sellerEmail?.toLowerCase() else null
+        val emailVerified = if (email == alreadyVerifiedEmail || email == alreadyVerifiedEmail2) true else if (update.email == null) user.emailVerified else false
+        val sellerEmailVerified = if (sellerEmail != null && (sellerEmail == alreadyVerifiedEmail || sellerEmail == alreadyVerifiedEmail2)) {
+            true
+        } else if (update.sellerEmail == null) {
+            user.sellerEmailVerified
+        } else {
+            false
+        }
+
         userRepo.save(user.copy(
-                email = update.email ?: user.email,
-                emailVerified = if (update.email == null) user.emailVerified else false,
+                email = email,
+                emailVerified = emailVerified,
                 publicContactInfo = update.publicContactInfo,
                 allowsTrades = update.allowsTrades,
                 allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
@@ -98,13 +112,15 @@ class KeyUserService(
                 preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
                 decks = user.decks,
                 auctions = auctions,
-                sellerEmail = update.sellerEmail,
+                sellerEmail = sellerEmail,
+                sellerEmailVerified = sellerEmailVerified,
                 discord = update.discord,
                 storeName = update.storeName,
+                shippingCost = update.shippingCost,
                 displayCrucibleTrackerWins = update.displayCrucibleTrackerWins
         ))
 
-       if (userAllowsTrades != update.allowsTrades) {
+        if (userAllowsTrades != update.allowsTrades) {
             val activeListings = deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.BUY_IT_NOW_ONLY)
             activeListings.forEach {
                 deckListingRepo.save(it.copy(forTrade = update.allowsTrades))
@@ -139,9 +155,9 @@ class KeyUserService(
     }
 
     fun verifyEmail(code: String) {
-        val email = passwordResetCodeService.emailForVerification(code) ?: throw BadRequestException("No email for verification code $code")
-        val user = userRepo.findByEmailIgnoreCase(email) ?: throw BadRequestException("No user for email $email")
-        userRepo.save(user.copy(emailVerified = true))
+        val email = passwordResetCodeService.emailForVerification(code)?.toLowerCase() ?: throw BadRequestException("No email for verification code $code")
+        val user = userRepo.findByEmailIgnoreCase(email) ?: userRepo.findBySellerEmailIgnoreCase(email) ?: throw BadRequestException("No user for email $email")
+        userRepo.save(user.copy(emailVerified = email == user.email.toLowerCase(), sellerEmailVerified = email == user.sellerEmail?.toLowerCase()))
     }
 
     private fun validateEmail(email: String) {

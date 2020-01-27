@@ -13,7 +13,7 @@ export class ServerStatusStore {
     checkIfUpdating = () => axios.get(`${ServerStatusStore.CONTEXT}`)
         .then((response: AxiosResponse<ServerStatus>) => {
             if (response.data.updatingDecks) {
-                messageStore.setInfoMessage("SAS / AERC indexes and sorting updating", 3000)
+                messageStore.setSuccessMessage("SAS / AERC indexes and sorting updating", 3000)
             }
             this.siteUpdating = response.data.siteUpdating
         })

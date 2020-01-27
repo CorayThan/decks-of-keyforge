@@ -10,7 +10,7 @@ import { theme, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 
-export type MessageType = "Error" | "Warn" | "Info" | "Success"
+export type MessageType = "Error" | "Warn" | "Success"
 
 export class MessageStore {
 
@@ -34,7 +34,6 @@ export class MessageStore {
     setErrorMessage = (message: string) => this.setMessage(message, "Error")
     setWarningMessage = (message: string, durationMs?: number) => this.setMessage(message, "Warn", undefined, durationMs)
     setSuccessMessage = (message: string, durationMs?: number) => this.setMessage(message, "Success", undefined, durationMs)
-    setInfoMessage = (message: string, durationMs?: number) => this.setMessage(message, "Info", undefined, durationMs)
 
     setReleaseMessage = (version: string) => {
         messageStore.setMessage(`Version ${version} has been released!`, "Success", (

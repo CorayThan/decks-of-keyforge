@@ -31,6 +31,7 @@ data class DeckSaleInfo(
         val boughtBy: String? = null,
         val boughtWithBuyItNow: Boolean? = null,
         val boughtNowOn: String? = null,
+        val shippingCost: String? = null,
 
         val listingInfo: String?,
         val externalLink: String?,
@@ -61,6 +62,7 @@ data class DeckSaleInfo(
                     username = auction.seller.username,
                     publicContactInfo = auction.seller.publicContactInfo,
                     discord = auction.seller.discord,
+                    shippingCost = auction.shippingCost,
 
                     highestBid = auction.highestBid,
                     buyItNow = auction.buyItNow,

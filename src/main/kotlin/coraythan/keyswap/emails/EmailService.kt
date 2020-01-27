@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import javax.mail.internet.InternetAddress
 
 @Service
-class  EmailService(
+class EmailService(
         private val emailSender: JavaMailSender,
         private val keyUserService: KeyUserService,
         private val passwordResetCodeService: PasswordResetCodeService,
@@ -208,12 +208,29 @@ class  EmailService(
         val senderUsername = sellerMessage.senderUsername
         val deckKeyforgeId = sellerMessage.deckKeyforgeId
         val deckName = sellerMessage.deckName
+        val ccSender = seller.sellerEmail != null
         val senderEmail = sellerMessage.senderEmail
         val message = sellerMessage.message
-        val ccEmail = if (seller.sellerEmail == null) null else senderEmail
 
-        sendEmail(email, "$deckName has a message on Decks of KeyForge",
-                """
+        val emailContents = deckMessageEmailContent(senderUsername, deckKeyforgeId, deckName, ccSender, senderEmail, message)
+        sendEmail(
+                email,
+                "$deckName has a message on Decks of KeyForge",
+                emailContents,
+                senderEmail,
+                ccEmail = if (ccSender) senderEmail else null
+        )
+        if (!ccSender) {
+            sendEmail(
+                    senderEmail,
+                    "We sent this email to the seller of $deckName",
+                    emailContents
+            )
+        }
+    }
+
+    private fun deckMessageEmailContent(senderUsername: String, deckKeyforgeId: String, deckName: String, ccSender: Boolean, senderEmail: String, message: String) =
+            """
                 <div>
                     <div>
                         $senderUsername has sent you a message about
@@ -222,11 +239,11 @@ class  EmailService(
                     </div>
                     <br>
                     <div>
-                        ${if (ccEmail == null) {
-                            "We have not given $senderUsername your email address, but you "
-                        } else {
-                            "We have included $senderUsername on this email since you have a public sellers email. You "
-                        }}
+                        ${if (ccSender) {
+        "We have included $senderUsername on this email since you have a public sellers email. You "
+    } else {
+        "We have not given $senderUsername your email address, but you "
+    }}
                         can reply to their message at
                         <a href="mailto:$senderEmail">$senderEmail</a>
                     </div>
@@ -238,17 +255,12 @@ class  EmailService(
                     <br>
                     <i>
                         To ensure it's possible to contact sellers about decks they've listed for sale or trade, we allow users to send you
-                        an email through our service if the listing doesn't have an external link listed. We do not give them your email address.
-                        If you would like to stop receiving emails like this, please provide an external link for your deck listings (like ebay,
-                        your store, etc). If you have any concerns or comments please contact us at
+                        an email through our service if the listing doesn't have an external link listed. We do not give them your email address without permission.
+                        If you have any concerns or comments please contact us at
                         <a href="mailto:decksofkeyforge@gmail.com">decksofkeyforge@gmail.com</a>
                     </i>
                 </div>
-            """.trimIndent(),
-                senderEmail,
-                ccEmail = ccEmail
-        )
-    }
+            """.trimIndent()
 
     private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path\">$name</a>"
 

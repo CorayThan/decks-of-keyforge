@@ -9,7 +9,7 @@ import { emailStore } from "./EmailStore"
 @observer
 export class SendEmailVerification extends React.Component<{ message: string }> {
     render() {
-        if (userStore.emailVerified) {
+        if (userStore.emailForSellingIsVerified) {
             return null
         }
         return (
@@ -21,6 +21,15 @@ export class SendEmailVerification extends React.Component<{ message: string }> 
                     If you do not receive a verification email, try whitelisting the Decks of KeyForge email address by adding "noreply@decksofkeyforge.com" to
                     your email contacts.
                 </Typography>
+                {userStore.sellerEmail != null ? (
+                    <Typography color={"textSecondary"} style={{marginBottom: spacing(1)}}>
+                        Since you have a seller email specified, we will be verifying that email: {userStore.sellerEmail}
+                    </Typography>
+                ) : (
+                    <Typography color={"textSecondary"} style={{marginBottom: spacing(1)}}>
+                        We will be verifying your email: {userStore.email}
+                    </Typography>
+                )}
                 <KeyButton color={"primary"} onClick={emailStore.sendEmailVerification} loading={emailStore.sendingEmailVerification}>
                     Send Verification Email
                 </KeyButton>

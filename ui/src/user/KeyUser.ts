@@ -32,6 +32,7 @@ export interface UserRegistration {
     password: string
     publicContactInfo?: string
     allowUsersToSeeDeckOwnership: boolean
+    acceptsTrades: boolean
     country?: string
     lastVersionSeen: string
 }
@@ -47,6 +48,7 @@ export interface KeyUserDto {
     username: string
     email: string
     emailVerified: boolean
+    sellerEmailVerified: boolean
     type: UserType
     publicContactInfo?: string
     allowsTrades: boolean
@@ -62,4 +64,5 @@ export interface KeyUserDto {
     storeName?: string
     auctionCount: number
     displayCrucibleTrackerWins: boolean
+    shippingCost?: string
 }

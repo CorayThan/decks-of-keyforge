@@ -56,8 +56,13 @@ export class DeckFilters {
             }
             queryObject.constraints = queryObject.constraints.map((forQuery: string) => {
                 const split = forQuery.split("-")
+                let property = split[0]
+                if (property === "askingPrice") {
+                    // temp to fix these urls
+                    property = "buyItNow"
+                }
                 return {
-                    property: split[0],
+                    property,
                     cap: split[1],
                     value: Number(split[2])
                 }
