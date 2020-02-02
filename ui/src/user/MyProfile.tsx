@@ -353,7 +353,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                                 tabIndex={6}
                                                             />
                                                         }
-                                                        label={"Allow anyone to see which decks I own"}
+                                                        label={"Let anyone see my decks and user stats"}
                                                     />
                                                     <FormControlLabel
                                                         control={
