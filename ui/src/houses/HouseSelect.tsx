@@ -7,16 +7,17 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { House, HouseLabel, houseValuesArray } from "./House"
+import { House, HouseLabel, HouseValue, houseValuesArray } from "./House"
 
 interface HouseSelectProps {
     selectedHouses: SelectedHouses
+    options?: HouseValue[]
 }
 
 @observer
 export class HouseSelect extends React.Component<HouseSelectProps> {
     render() {
-        const {selectedHouses} = this.props
+        const {selectedHouses, options} = this.props
         const selectedHousesGotten = selectedHouses.getSelectedHouses()
         return (
             <FormControl>
@@ -24,7 +25,7 @@ export class HouseSelect extends React.Component<HouseSelectProps> {
                 <FormGroup
                     row={true}
                 >
-                    {houseValuesArray.map((houseValue) => {
+                    {(options == null ? houseValuesArray : options).map((houseValue) => {
                         const select = selectedHousesGotten.filter((selectedHouse) => selectedHouse.house === houseValue.house)
                         return (<HouseCheckbox key={houseValue.house} selectedHouse={select[0]}/>)
                     })}

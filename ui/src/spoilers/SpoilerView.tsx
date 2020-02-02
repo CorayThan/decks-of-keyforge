@@ -1,4 +1,4 @@
-import { Button, Divider } from "@material-ui/core"
+import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -12,7 +12,6 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
-import { spoilerStore } from "./SpoilerStore"
 
 export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
     let url = props.url
@@ -82,14 +81,6 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                                 >
                                     Edit
                                 </LinkButton>
-                                <Button
-                                    onClick={() => {
-                                        spoiler.amber++
-                                        spoilerStore.saveSpoiler(spoiler, true)
-                                    }}
-                                >
-                                    Add Aember
-                                </Button>
                             </div>
                         </>
                     )}

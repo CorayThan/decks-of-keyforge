@@ -96,7 +96,7 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
                     marginLeft: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     marginRight: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     alignItems: "center",
-                    width: screenStore.screenSizeXs() ? 124 : 240
+                    width: screenStore.screenSizeXs() ? 124 : 224
                 }}
             >
                 <Search style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}/>

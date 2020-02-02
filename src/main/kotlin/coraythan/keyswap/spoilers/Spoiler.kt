@@ -3,6 +3,7 @@ package coraythan.keyswap.spoilers
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
+import java.util.*
 import javax.persistence.*
 import kotlin.math.roundToInt
 
@@ -25,6 +26,9 @@ data class Spoiler(
         val expansion: Int,
         val anomaly: Boolean = false,
         val reprint: Boolean = false,
+        val doubleCard: Boolean = false,
+
+        val createdById: UUID,
 
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,

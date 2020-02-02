@@ -40,41 +40,25 @@ export class SpoilerKudos extends React.Component {
                         </Typography>
                         <BulletList
                             items={[
-                                "The Sanctumonius Discord",
-                                "C.Æ.N.D.L.E. Bot",
                                 (
-                                    <div key={"brad"}>
+                                    <div key={"example"}>
                                         <Typography variant={"body2"}>
                                             <Link
                                                 target={"_blank"}
-                                                href={"http://amazingspidertank.blogspot.com/"}
+                                                href={"https://google.com"}
                                             >
-                                                Brad Minnigh
+                                                Example contributor
                                             </Link>
-                                            {" & the Reddit spoilers"}
+                                            {" & stuff"}
                                         </Typography>
                                     </div>
                                 ),
-                                (
-                                    <Typography variant={"body2"} key={"reapout"}>
-                                        <Link
-                                            target={"_blank"}
-                                            href={"https://reapout.com"}
-                                        >
-                                            Team Reapout
-                                        </Link>
-                                    </Typography>
-                                ),
-                                "Arkonos",
-                                "The Target disaster of 2019"
                             ]}
                         />
                         <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                         <Typography variant={"body2"}>
-                            To contribute, please share cards on the Sanctumonius or Decks of KeyForge
-                            discord
+                            To contribute and get your name in the kudos please contact Coraythan on the DoK discord:
                         </Typography>
-                        <DiscordNamedButton name={"Sanctumonius"} link={"https://discord.gg/3dSVb6v"} style={{marginTop: spacing(1)}}/>
                         <DiscordNamedButton name={"DoK"} link={decksOfKeyForgeDiscord} style={{marginTop: spacing(1)}}/>
                     </div>) : (
                     <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosTwo: false})}>

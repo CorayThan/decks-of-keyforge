@@ -1,6 +1,15 @@
 import {
+    Button,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    InputLabel,
+    MenuItem,
     Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -27,9 +36,11 @@ import { Routes } from "../../config/Routes"
 import { SortOrder } from "../../config/Utils"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
-import { patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
+import { PatreonRewardsTier, patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
+import { UserType } from "../KeyUser"
+import { userStore } from "../UserStore"
 import { UserFilters } from "./UserFilters"
 import { UserSearchResult } from "./UserSearchResult"
 import { userSearchStore } from "./UserSearchStore"
@@ -59,6 +70,12 @@ class Store {
 
     @observable
     username = ""
+
+    @observable
+    role?: UserType | "" = ""
+
+    @observable
+    manualPatreonTier?: PatreonRewardsTier | "" = ""
 
     @observable
     patrons = false
@@ -103,7 +120,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         updatedMessage = "Updated 1 minute ago"
     }
 
-    const {order, orderBy, page, username, patrons, createSortHandler} = store
+    const {order, orderBy, page, username, role, manualPatreonTier, patrons, createSortHandler} = store
 
     let filteredUsers = users
 
@@ -113,6 +130,12 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
     if (patrons) {
         filteredUsers = filteredUsers.filter(user => user.patreonTier != null)
     }
+    if (role !== "") {
+        filteredUsers = filteredUsers.filter(user => user.role === role)
+    }
+    if (manualPatreonTier !== "") {
+        filteredUsers = filteredUsers.filter(user => user.manualPatreonTier === manualPatreonTier)
+    }
 
     const sortedUsers = sortUsers(filteredUsers, orderBy, order)
 
@@ -120,8 +143,13 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         <div
             style={{padding: spacing(4), display: "flex", justifyContent: "center"}}
         >
-            <Paper style={{width: "100%"}}>
-                <Toolbar style={{paddingTop: spacing(2), paddingBottom: spacing(2)}}>
+            <Paper style={{width: "100%", maxWidth: 1600}}>
+                <Toolbar
+                    style={{
+                        paddingTop: spacing(2),
+                        paddingBottom: spacing(2),
+                    }}
+                >
                     {!screenStore.screenSizeXs() && (
                         <Typography variant={"h6"}>
                             Users
@@ -135,6 +163,35 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         variant={"outlined"}
                         style={{marginRight: spacing(2)}}
                     />
+                    {userStore.isAdmin && (
+                        <>
+                            <FormControl style={{width: 120, marginRight: spacing(2)}}>
+                                <InputLabel>Role</InputLabel>
+                                <Select
+                                    value={role}
+                                    onChange={event => store.role = event.target.value as (UserType | "")}
+                                >
+                                    <MenuItem value={""}/>
+                                    <MenuItem value={UserType.USER}>User</MenuItem>
+                                    <MenuItem value={UserType.CONTENT_CREATOR}>Content Creator</MenuItem>
+                                    <MenuItem value={UserType.ADMIN}>Admin</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl style={{width: 120, marginRight: spacing(2)}}>
+                                <InputLabel>Manual Patreon</InputLabel>
+                                <Select
+                                    value={role}
+                                    onChange={event => store.manualPatreonTier = event.target.value as (PatreonRewardsTier | "")}
+                                >
+                                    <MenuItem value={""}/>
+                                    <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains</MenuItem>
+                                    <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>Purchases the Paradigm</MenuItem>
+                                    <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>Merchant Aembermaker</MenuItem>
+                                    <MenuItem value={PatreonRewardsTier.ALWAYS_GENEROUS}>Always Generous</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </>
+                    )}
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -168,6 +225,11 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                         </TableSortLabel>
                                     </TableCell>
                                 ))}
+                                {userStore.isAdmin && (
+                                    <TableCell>
+                                        Role
+                                    </TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -215,6 +277,22 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                         <TableCell align={"right"}>
                                             {user.anomalies}
                                         </TableCell>
+                                        {userStore.isAdmin && (
+                                            <TableCell>
+                                                <FormControl>
+                                                    <InputLabel>Role</InputLabel>
+                                                    <Select
+                                                        value={user.role}
+                                                        onChange={event => userStore.setUserRole(user.username, event.target.value as UserType)}
+                                                    >
+                                                        <MenuItem value={UserType.USER}>User</MenuItem>
+                                                        <MenuItem value={UserType.CONTENT_CREATOR}>Content Creator</MenuItem>
+                                                        <MenuItem value={UserType.ADMIN}>Admin</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                                <AddPatreon username={user.username}/>
+                                            </TableCell>
+                                        )}
                                     </TableRow>
                                 ))}
                         </TableBody>
@@ -294,3 +372,69 @@ const headCells: HeadCell[] = [
 
 const headCellsWithPatrons = [...headCells]
 headCellsWithPatrons.splice(1, 0, {id: "patreonTier", label: "Patreon Tier"})
+
+class AddPatreonStore {
+
+    @observable
+    open = false
+
+    @observable
+    tier: PatreonRewardsTier = PatreonRewardsTier.SUPPORT_SOPHISTICATION
+
+    @observable
+    expiresInDays: string = "90"
+
+}
+
+const AddPatreon = observer((props: { username: string }) => {
+    const [store] = React.useState(new AddPatreonStore());
+
+    return (
+        <div>
+            <Button
+                onClick={() => store.open = true}
+            >
+                Add Patron
+            </Button>
+            <Dialog open={store.open} onClose={() => store.open = false}>
+                <DialogTitle>Make Manual Patron</DialogTitle>
+                <DialogContent>
+                    <FormControl style={{width: 240, marginRight: spacing(2)}}>
+                        <InputLabel>Tier</InputLabel>
+                        <Select
+                            value={store.tier}
+                            onChange={event => store.tier = event.target.value as PatreonRewardsTier}
+                        >
+                            <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains $1</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>Purchases the Paradigm $5</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>Merchant Aembermaker $10</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.ALWAYS_GENEROUS}>Always Generous $25</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        label="Expire in days"
+                        type="number"
+                        value={store.expiresInDays}
+                        onChange={event => store.expiresInDays = event.target.value}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => store.open = false} color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            const expiresAsNumber = Number(store.expiresInDays)
+                            const realExpires = expiresAsNumber < 1 ? undefined : expiresAsNumber
+                            userStore.setManualPatreonTier(props.username, store.tier, realExpires)
+                            store.open = false
+                        }}
+                        color="primary"
+                    >
+                        Add
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    )
+})

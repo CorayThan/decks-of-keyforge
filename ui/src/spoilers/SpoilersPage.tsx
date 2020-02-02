@@ -16,7 +16,7 @@ export class SpoilersPage extends React.Component {
 
     constructor(props: {}) {
         super(props)
-        uiStore.setTopbarValues("Worlds Collide", "Spoilers", "A peek into the future")
+        uiStore.setTopbarValues("Mass Mutation", "Spoilers", "A peek into the future")
     }
 
     componentDidMount(): void {

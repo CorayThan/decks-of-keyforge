@@ -18,9 +18,12 @@ export interface Spoiler extends HasAerc {
     cardNumber: string
     expansion: Expansion
 
-    reprint: boolean
+    createdById: string
 
+    reprint: boolean
     anomaly: boolean
+    doubleCard: boolean
+
     active: boolean
     id?: number
 }

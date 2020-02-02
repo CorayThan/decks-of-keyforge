@@ -36,13 +36,14 @@ class SpoilerService(
     }
 
     fun saveSpoiler(spoiler: Spoiler): Long {
-        currentUserService.contentCreatorOrUnauthorized()
+        val user = currentUserService.loggedInUserOrUnauthorized()
         val improvedCardNumber = spoiler.cardNumber.trim().padStart(3, '0')
         if (spoiler.id == -1L) {
             val exists = spoilerRepo.findByCardNumberAndExpansion(improvedCardNumber, spoiler.expansion)
             if (exists.isNotEmpty()) throw IllegalStateException("A spoiler with id $improvedCardNumber and expansion ${spoiler.efficiency} already exists.")
         }
         val saved = spoilerRepo.save(spoiler.copy(
+                createdById = user.id,
                 cardNumber = improvedCardNumber,
                 cardTitle = spoiler.cardTitle.trim(),
                 armorString = spoiler.armorString.trim(),

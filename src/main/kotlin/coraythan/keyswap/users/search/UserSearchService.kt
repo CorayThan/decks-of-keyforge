@@ -21,7 +21,7 @@ import java.time.Instant
 import javax.persistence.EntityManager
 import kotlin.system.measureTimeMillis
 
-const val lockUpdateUserSearchStatsFor = "PT1M"
+const val lockUpdateUserSearchStatsFor = "PT5M"
 
 @Service
 @Transactional
@@ -112,19 +112,11 @@ class UserSearchService(
                 userQ.username.asc()
         }
 
-//        val count = query
-//                .select(userQ.id)
-//                .from(userQ)
-//                .where(predicate)
-//                .fetch()
-//                .count()
-//                .toLong()
-
         return query
                 .select(
                         Projections.constructor(UserSearchResult::class.java,
-                                userQ.username, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas,
-                                userQ.lowSas, userQ.totalPower, userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.patreonTier
+                                userQ.username, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas, userQ.lowSas, userQ.totalPower,
+                                userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier
                         )
                 )
                 .from(userQ)

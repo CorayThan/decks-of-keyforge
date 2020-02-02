@@ -101,11 +101,11 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
         }
 
         if (userStore.username != null && owner === userStore.username) {
-            uiStore.setTopbarValues("My Decks", "My Decks", "Search, evaluate, sell and trade")
+            uiStore.setTopbarValues("My Decks", "My Decks", "Search, evaluate, buy and sell")
         } else if (sellerDetails && (filters.forSale || filters.forTrade)) {
             uiStore.setTopbarValues(sellerDetails.storeName, sellerDetails.storeName, "")
         } else {
-            uiStore.setTopbarValues("Decks of KeyForge", "Decks", "Search, evaluate, sell and trade")
+            uiStore.setTopbarValues("Decks of KeyForge", "Decks", "Search, evaluate, buy and sell")
         }
     }
 

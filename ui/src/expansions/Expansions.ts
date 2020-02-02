@@ -9,7 +9,8 @@ export enum Expansion {
     COTA = 341,
     AOA = 435,
     WC = 452,
-    ANOM = 453
+    ANOM = 453,
+    MM = 512,
 }
 
 export enum BackendExpansion {

@@ -148,7 +148,8 @@ data class KeyUser(
     )
 
     fun toSearchResult() = UserSearchResult(
-            username, deckCount, forSaleCount, topSasAverage, highSas, lowSas, totalPower, totalChains, mavericks, anomalies, patreonTier
+            username, deckCount, forSaleCount, topSasAverage, highSas, lowSas,
+            totalPower, totalChains, mavericks, anomalies, type, patreonTier, manualPatreonTier
     )
 
     fun generateSearchResult(): UserSearchResult {
@@ -165,7 +166,9 @@ data class KeyUser(
                 owned.map { deck -> deck.chains }.sum(),
                 owned.map { deck -> deck.maverickCount }.sum(),
                 owned.map { deck -> deck.anomalyCount ?: 0 }.sum(),
-                this.patreonTier
+                this.type,
+                this.patreonTier,
+                this.manualPatreonTier
         )
     }
 

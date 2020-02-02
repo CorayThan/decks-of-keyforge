@@ -22,6 +22,7 @@ interface GenericStorage {
     wcOnly?: boolean
     showMoreDeckSearchOptions?: boolean
     userRows?: number
+    agreedToSpoilerCreatureRules?: boolean
 }
 
 class KeyLocalStorage {

@@ -1,6 +1,8 @@
 import {
     Button,
     Card,
+    CardActions,
+    CardContent,
     Checkbox,
     Dialog,
     DialogActions,
@@ -20,6 +22,7 @@ import React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import { CardType } from "../cards/CardType"
 import { Rarity } from "../cards/rarity/Rarity"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, Utils } from "../config/Utils"
@@ -139,6 +142,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     reprint = false
     @observable
     anomaly = false
+    @observable
+    doubleCard = false
 
     spoilerId?: number
 
@@ -167,6 +172,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.frontImage = spoiler.frontImage
             this.reprint = spoiler.reprint
             this.anomaly = spoiler.anomaly
+            this.doubleCard = spoiler.doubleCard
             this.spoilerId = spoiler.id
 
             this.amberControl = spoiler.amberControl.toString()
@@ -194,6 +200,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.frontImage = ""
             this.reprint = false
             this.anomaly = false
+            this.doubleCard = false
             this.spoilerId = undefined
 
             this.amberControl = "0"
@@ -249,7 +256,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             cardTitle,
             rarity,
             house,
-            expansion: Expansion.WC,
+            expansion: Expansion.MM,
             amber: this.amber === "" ? 0 : Number(this.amber),
             powerString: this.power,
             armorString: this.armor,
@@ -272,7 +279,10 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
 
             aercScore: 0,
             anomaly: this.anomaly,
-            reprint: this.reprint
+            reprint: this.reprint,
+            doubleCard: this.doubleCard,
+
+            createdById: userStore.userId!
         }
         await spoilerStore.saveSpoiler(spoiler)
         if (this.spoilerId != null) {
@@ -603,6 +613,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 color={"primary"}
                                 loading={spoilerStore.savingSpoiler}
                                 onClick={this.save}
+                                disabled={!keyLocalStorage.genericStorage.agreedToSpoilerCreatureRules}
                             >
                                 Save
                             </KeyButton>
@@ -646,6 +657,52 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                     {/*        Add all the sanctumonius cards*/}
                     {/*    </Button>*/}
                     {/*)}*/}
+                </div>
+                <div>
+                    <Card style={{maxWidth: 400}}>
+                        <CardContent>
+                            <Typography variant={"h5"} style={{marginBottom: spacing(2)}}>Spoiler Creation Instructions and Requirements</Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"subtitle1"}>
+                                Instructions
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                Enter double-cards only once, using the bottom, or top and bottom, cards for the image.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                After saving the text of the card, you can edit that card to add the card image.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"subtitle1"}>
+                                Requirements
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                The information I enter is a faithful representation of the text of the KeyForge card.
+                                If you cannot read the text of the card, then do not create a spoiler for it.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                I have the right to share this card text and image. By sharing it publicly, I am not violating any legally binding agreements.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                I give Decks of KeyForge the license in perpetuity to freely use and display the contents I have created in any way.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                I will receive no compensation.
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <div style={{flexGrow: 1}}/>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={keyLocalStorage.genericStorage.agreedToSpoilerCreatureRules}
+                                        onChange={() => keyLocalStorage.updateGenericStorage({agreedToSpoilerCreatureRules: !keyLocalStorage.genericStorage.agreedToSpoilerCreatureRules})}
+                                        color="primary"
+                                    />
+                                }
+                                label="I agree to the requirements"
+                                disabled={keyLocalStorage.genericStorage.agreedToSpoilerCreatureRules}
+                            />
+                        </CardActions>
+                    </Card>
                 </div>
             </div>
         )

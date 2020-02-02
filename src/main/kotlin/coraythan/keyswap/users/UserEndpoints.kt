@@ -33,6 +33,17 @@ class UserEndpoints(
     @PostMapping("/secured/version/{version}")
     fun updateLatestVersion(@PathVariable version: String) = userService.updateLatestUserVersion(version)
 
+    @PostMapping("/secured/set-user-role/{username}/{role}")
+    fun setUserRole(@PathVariable username: String, @PathVariable role: UserType) = userService.setUserRole(username, role)
+
+    @PostMapping("/secured/set-patron/{username}/{tier}/{expiresInDays}")
+    fun setManualPatronTier(@PathVariable username: String, @PathVariable tier: PatreonRewardsTier, @PathVariable expiresInDays: Long?)
+            = userService.makeManualPatron(username, tier, expiresInDays)
+
+    @PostMapping("/secured/set-patron/{username}/{tier}")
+    fun setManualPatronTier(@PathVariable username: String, @PathVariable tier: PatreonRewardsTier)
+            = userService.makeManualPatron(username, tier)
+
     @PostMapping("/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
 

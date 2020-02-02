@@ -6,7 +6,7 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
-import { findPatronRewardLevel, patronAuctionLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
+import { findPatronRewardLevel, PatreonRewardsTier, patronAuctionLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration, UserType } from "./KeyUser"
@@ -154,6 +154,20 @@ export class UserStore {
             })
     }
 
+    setUserRole = (username: string, role: UserType) => {
+        axios.post(`${UserStore.SECURE_CONTEXT}/set-user-role/${username}/${role}`)
+            .then(() => {
+                messageStore.setSuccessMessage(`Set ${username} to ${role}`)
+            })
+    }
+
+    setManualPatreonTier = (username: string, tier: PatreonRewardsTier, expiresInDays?: number) => {
+        axios.post(`${UserStore.SECURE_CONTEXT}/set-patron/${username}/${tier}/${expiresInDays == null ? '' : expiresInDays}`)
+            .then(() => {
+                messageStore.setSuccessMessage(`Set ${username} to ${tier} expires in ${expiresInDays}`)
+            })
+    }
+
     changePassword = (resetCode: string, newPassword: string) => {
         this.changingPassword = true
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
@@ -196,6 +210,14 @@ export class UserStore {
 
     setUser = (user?: KeyUserDto) => {
         this.user = user
+    }
+
+    @computed
+    get userId(): string | undefined {
+        if (this.user) {
+            return this.user.id
+        }
+        return undefined
     }
 
     @computed

@@ -24,7 +24,7 @@ export class ThemeStore {
         if (this.darkMode) {
             return "#5F5F5F"
         } else {
-            return "#DFDFDF"
+            return "#DDDDDD"
         }
     }
 
@@ -35,12 +35,12 @@ export class ThemeStore {
 
     @computed
     get backgroundColor() {
-        return this.darkMode ? "#888888" : "#FFFFFF"
+        return this.darkMode ? "#888888" : "#F5F5F5"
     }
 
     @computed
     get lightBackgroundColor() {
-        return this.darkMode ? "#999999" : "#F9F9F9"
+        return this.darkMode ? "#999999" : "#EEEEEE"
     }
 
     @computed

@@ -14,6 +14,7 @@ import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
+import { mmHouses } from "../houses/House"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
@@ -90,7 +91,7 @@ export class SpoilerSearchDrawer extends React.Component {
                             />
                         </ListItem>
                         <ListItem>
-                            <HouseSelect selectedHouses={this.selectedHouses}/>
+                            <HouseSelect selectedHouses={this.selectedHouses} options={mmHouses}/>
                         </ListItem>
                         <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
                             <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>

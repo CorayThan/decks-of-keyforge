@@ -1,6 +1,7 @@
 package coraythan.keyswap.users.search
 
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.users.UserType
 
 data class UserSearchResult(
         val username: String,
@@ -13,5 +14,7 @@ data class UserSearchResult(
         val totalChains: Int,
         val mavericks: Int,
         val anomalies: Int,
-        val patreonTier: PatreonRewardsTier?
+        val role: UserType,
+        val patreonTier: PatreonRewardsTier?,
+        val manualPatreonTier: PatreonRewardsTier?
 )

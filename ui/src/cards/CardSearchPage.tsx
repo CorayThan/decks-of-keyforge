@@ -150,7 +150,6 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
 
     constructor(props: CardsContainerWithScrollProps) {
         super(props)
-        log.debug(`constructor All cards length: ${props.allCards!.length}`)
         this.resetCardsToDisplay(props)
     }
 
@@ -163,7 +162,6 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
     }
 
     UNSAFE_componentWillReceiveProps(nextProps: Readonly<CardsContainerWithScrollProps>) {
-        log.debug(`receive props All cards length: ${nextProps.allCards!.length}`)
         this.resetCardsToDisplay(nextProps)
     }
 

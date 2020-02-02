@@ -3,15 +3,21 @@ package coraythan.keyswap.users
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.generic.Country
+import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+
+const val lockRemoveManualPatrons = "PT24H"
 
 @Service
 @Transactional
@@ -26,6 +32,18 @@ class KeyUserService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
+
+    @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatrons)
+    @SchedulerLock(name = "removeManualPatrons", lockAtLeastForString = lockRemoveManualPatrons, lockAtMostForString = lockRemoveManualPatrons)
+    fun removeManualPatrons() {
+        userRepo.findByRemoveManualPatreonTierNotNull()
+                .forEach {
+                    if (it.removeManualPatreonTier?.isBefore(now()) == true) {
+                        log.info("Removing manual patron tier ${it.manualPatreonTier} from ${it.username}")
+                        userRepo.makeManualPatronExpiring(null, null, it.username)
+                    }
+                }
+    }
 
     fun register(userRegInfo: UserRegistration): KeyUser {
 
@@ -146,6 +164,21 @@ class KeyUserService(
         val user = currentUserService.loggedInUser()
         if (user != null) {
             userRepo.save(user.copy(lastVersionSeen = version))
+        }
+    }
+
+    fun setUserRole(username: String, role: UserType) {
+        currentUserService.adminOrUnauthorized()
+        if (role == UserType.ADMIN) throw IllegalArgumentException("No making admins!")
+        userRepo.setUserType(role, username)
+    }
+
+    fun makeManualPatron(username: String, tier: PatreonRewardsTier, expiresInDays: Long? = null) {
+        currentUserService.adminOrUnauthorized()
+        if (expiresInDays == null) {
+            userRepo.makeManualPatron(tier, username)
+        } else {
+            userRepo.makeManualPatronExpiring(tier, now().plusDays(expiresInDays), username)
         }
     }
 

@@ -77,6 +77,10 @@ export const houseValuesArray: HouseValue[] = [
         return value
     })
 
+export const mmHouses = [...houseValuesArray]
+mmHouses.splice(0, 1)
+mmHouses.splice(2, 1)
+
 export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(houseValue => (
     [houseValue.house, houseValue] as [House, HouseValue]
 )))

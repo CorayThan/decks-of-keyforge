@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.querydsl.QuerydslPredicateExecutor
 import org.springframework.data.repository.query.Param
+import java.time.ZonedDateTime
 import java.util.*
 
 interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<KeyUser> {
@@ -17,6 +18,7 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun findByPatreonId(patreonId: String): KeyUser?
     fun findByPatreonTier(tier: PatreonRewardsTier): List<KeyUser>
     fun findByManualPatreonTier(tier: PatreonRewardsTier): List<KeyUser>
+    fun findByRemoveManualPatreonTierNotNull(): List<KeyUser>
 
     fun findAllBySellerEmailNotNull(): List<KeyUser>
 
@@ -25,6 +27,18 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     @Modifying
     @Query("UPDATE KeyUser keyUser SET keyUser.sellerEmailVerified = true WHERE keyUser.id = ?1")
     fun updateSellerEmailVerified(id: UUID)
+
+    @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.type = ?1 WHERE keyUser.username = ?2")
+    fun setUserType(role: UserType, username: String)
+
+    @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.manualPatreonTier = ?1 WHERE keyUser.username = ?2")
+    fun makeManualPatron(tier: PatreonRewardsTier?, username: String)
+
+    @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.manualPatreonTier = ?1, keyUser.removeManualPatreonTier = ?2 WHERE keyUser.username = ?3")
+    fun makeManualPatronExpiring(tier: PatreonRewardsTier?, expires: ZonedDateTime?, username: String)
 
     @Modifying
     @Query("""

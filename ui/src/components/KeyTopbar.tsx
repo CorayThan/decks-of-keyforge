@@ -236,6 +236,7 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.cards, text: "Cards", mobileActive: true},
+                {to: Routes.spoilers, text: "Mass Mutation Cards", contentCreatorOnly: true, mobileActive: true},
                 {to: Routes.cotaCards, text: "CotA Cards", mobileActive: false},
                 {to: Routes.aoaCards, text: "AoA Cards", mobileActive: false},
                 {to: Routes.wcCards, text: "WC Cards", mobileActive: false},
@@ -247,7 +248,13 @@ const AppLinks = observer(() => (
         {screenStore.smallScreenTopBar() ? (
             <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
         ) : (
-            <LinkButton to={Routes.users}>Users</LinkButton>
+            <LinkButton
+                to={Routes.users}
+                color={"inherit"}
+                style={{marginLeft: spacing(1)}}
+            >
+                Users
+            </LinkButton>
         )}
         <LinkMenu
             genericOnClick={rightMenuStore.close}
