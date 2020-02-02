@@ -14,7 +14,7 @@ import kotlin.system.measureTimeMillis
 @RestController
 @RequestMapping("${Api.base}/decks")
 class DeckEndpoints(
-        private val deckService: DeckService,
+        private val deckSearchService: DeckSearchService,
         private val deckImporterService: DeckImporterService,
         private val azureOcr: AzureOcr,
         private val userDeckService: UserDeckService,
@@ -24,7 +24,7 @@ class DeckEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping("/by-name/{name}")
-    fun findDecksByName(@PathVariable name: String) = deckService.findDecksByName(name)
+    fun findDecksByName(@PathVariable name: String) = deckSearchService.findDecksByName(name)
 
     @PostMapping("/filter")
     fun decks(@RequestBody deckFilters: DeckFilters, @RequestHeader(value = "Timezone") offsetMinutes: Int): DecksPage {
@@ -32,7 +32,7 @@ class DeckEndpoints(
             val cleanFilters = deckFilters.clean()
             var decks: DecksPage? = null
             val decksFilterTime = measureTimeMillis {
-                decks = deckService.filterDecks(cleanFilters, offsetMinutes)
+                decks = deckSearchService.filterDecks(cleanFilters, offsetMinutes)
             }
 
             if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $cleanFilters")
@@ -49,7 +49,7 @@ class DeckEndpoints(
             var decks: DeckCount? = null
             val cleanFilters = deckFilters.clean()
             val decksFilterTime = measureTimeMillis {
-                decks = deckService.countFilters(cleanFilters)
+                decks = deckSearchService.countFilters(cleanFilters)
             }
 
             if (decksFilterTime > 500) log.warn("Decks counting took $decksFilterTime ms with filters $cleanFilters")
@@ -60,7 +60,7 @@ class DeckEndpoints(
     }
 
     @GetMapping("/random")
-    fun randomDeckId() = deckService.randomDeckId()
+    fun randomDeckId() = deckSearchService.randomDeckId()
 
     @GetMapping("/{id}/simple")
     fun findDeckSimple(@PathVariable id: String) = "Please update to the new version."
@@ -69,10 +69,10 @@ class DeckEndpoints(
     fun findDeckSimple2(@PathVariable id: String) = "Please update to the new version."
 
     @GetMapping("/with-synergies/{id}")
-    fun findDeck(@PathVariable id: String) = deckService.findDeckWithSynergies(id)
+    fun findDeck(@PathVariable id: String) = deckSearchService.findDeckWithSynergies(id)
 
     @GetMapping("/search-result-with-cards/{id}")
-    fun findDeckSearchResultWithCards(@PathVariable id: String) = deckService.findDeckSearchResultWithCards(id)
+    fun findDeckSearchResultWithCards(@PathVariable id: String) = deckSearchService.findDeckSearchResultWithCards(id)
 
     @PostMapping("/{id}/import")
     fun importDeck(@PathVariable id: String) = deckImporterService.importDeck(id) != null
@@ -86,7 +86,7 @@ class DeckEndpoints(
 
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String, @RequestHeader(value = "Timezone") offsetMinutes: Int): List<DeckSaleInfo> {
-        return deckService.saleInfoForDeck(id, offsetMinutes)
+        return deckSearchService.saleInfoForDeck(id, offsetMinutes)
     }
 
     @PostMapping("/secured/read-deck-image/{expansion}")

@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
-import { ThemeStyle } from "@material-ui/core/styles/createTypography"
 import Tooltip from "@material-ui/core/Tooltip"
 import HistoryIcon from "@material-ui/icons/History"
 import { range } from "lodash"
@@ -250,10 +249,12 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     )
 }
 
+type MuiTextTypes = "body1" | "body2" | "h3" | "h4" | "h5"
+
 const RatingRow = (props: { value: number, name: string, operator?: string, size?: DeckScoreSize, tooltip?: string }) => {
     const {size} = props
-    let largeText: ThemeStyle = "body1"
-    let smallText: ThemeStyle = "body2"
+    let largeText: MuiTextTypes = "body1"
+    let smallText: MuiTextTypes = "body2"
     let smallFontSize: number | undefined = 12
     let smallTextMarginBottom: number | undefined = 2
     let width = 88

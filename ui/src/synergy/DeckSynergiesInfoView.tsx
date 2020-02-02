@@ -11,7 +11,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { log, roundToHundreds } from "../config/Utils"
+import { log, roundToHundreds, SortOrder } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
@@ -204,7 +204,7 @@ class SynergiesTableViewStore {
     @observable
     activeTableSort = ""
     @observable
-    tableSortDir: "desc" | "asc" = "desc"
+    tableSortDir: SortOrder = "desc"
 
     @observable
     synergyCombos?: IObservableArray<SynergyCombo>
@@ -218,7 +218,6 @@ class SynergiesTableViewStore {
             }
         }
     }
-
 }
 
 export const synergiesTableViewStore = new SynergiesTableViewStore()

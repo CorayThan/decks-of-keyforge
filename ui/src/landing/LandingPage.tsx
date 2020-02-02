@@ -63,7 +63,7 @@ export const landingPageDrawerWidth = 280
 export class LandingPage extends React.Component<{}> {
 
     componentDidMount(): void {
-        uiStore.setTopbarValues("Decks of KeyForge", "DoK", "Search, evaluate, sell and trade")
+        uiStore.setTopbarValues("DoK", "DoK", "Search, evaluate and buy KeyForge decks")
     }
 
     render() {

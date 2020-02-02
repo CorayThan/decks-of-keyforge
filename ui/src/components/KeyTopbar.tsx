@@ -244,6 +244,11 @@ const AppLinks = observer(() => (
             style={{margin: spacing(1)}}
             linkMenuStore={new LinkMenuStore()}
         />
+        {screenStore.smallScreenTopBar() ? (
+            <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
+        ) : (
+            <LinkButton to={Routes.users}>Users</LinkButton>
+        )}
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[

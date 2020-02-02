@@ -86,8 +86,9 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
                     </DialogTitle>
                     <DialogContent>
                         <Typography style={{marginBottom: spacing(2)}}>
-                            Whenever a new deck is listed that matches your search selection on the left we will send you an email. You can view and delete
-                            your notifications from your
+                            Whenever a new deck is listed that matches your search selection on the left we will send you an email.
+                            Favorites and notes will not be used currently.
+                            You can view and delete your notifications from your
                         </Typography>
                         <LinkButton
                             to={Routes.myProfile}

@@ -10,7 +10,7 @@ import { auctionStore } from "../auctions/DeckListingStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log, roundToTens } from "../config/Utils"
+import { log, roundToTens, SortOrder } from "../config/Utils"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { HouseBanner } from "../houses/HouseBanner"
@@ -40,7 +40,7 @@ class DeckTableViewStore {
     @observable
     activeTableSort = ""
     @observable
-    tableSortDir: "desc" | "asc" = "desc"
+    tableSortDir: SortOrder = "desc"
     @observable
     priceChanges: UpdatePrice[] = []
 

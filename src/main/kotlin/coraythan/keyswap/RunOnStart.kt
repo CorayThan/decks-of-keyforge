@@ -7,6 +7,7 @@ import coraythan.keyswap.decks.salenotifications.ForSaleQueryRepo
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.users.KeyUserRepo
+import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.http.*
@@ -27,6 +28,7 @@ class RunOnStart(
         private val deckListingService: DeckListingService,
         private val forSaleQueryRepo: ForSaleQueryRepo,
         private val userRepo: KeyUserRepo,
+        private val userSearchService: UserSearchService,
         private val restTemplate: RestTemplate
 ) : CommandLineRunner {
 
@@ -59,6 +61,8 @@ class RunOnStart(
 
         toClean.forEach { userRepo.updateSellerEmailVerified(it) }
         log.info("Done adding verifications")
+
+        userSearchService.updateSearchResults()
 
         startupComplete = true
     }

@@ -3,7 +3,7 @@ package coraythan.keyswap.decks.salenotifications
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import coraythan.keyswap.decks.DeckRepo
-import coraythan.keyswap.decks.DeckService
+import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
@@ -24,7 +24,7 @@ class ForSaleNotificationsService(
         private val forSaleQueryRepo: ForSaleQueryRepo,
         private val currentUserService: CurrentUserService,
         private val userService: KeyUserService,
-        private val deckService: DeckService,
+        private val deckSearchService: DeckSearchService,
         private val deckRepo: DeckRepo,
         private val emailService: EmailService,
         private val objectMapper: ObjectMapper
@@ -96,11 +96,11 @@ class ForSaleNotificationsService(
 
     private fun queryMatchesDeck(queryEntity: ForSaleQueryEntity, deckId: Long): Boolean {
         val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
-        val userHolder = DeckService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
+        val userHolder = DeckSearchService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
         if (queryEntity.name.contains("Mentor")) {
             log.info("Query is $query")
         }
-        val predicate = deckService.deckFilterPredicate(query, userHolder)
+        val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
                 .and(QDeck.deck.id.eq(deckId))
         return deckRepo.exists(predicate)
     }

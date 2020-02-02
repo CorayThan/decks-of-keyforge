@@ -9,9 +9,11 @@ import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.userdeck.UserDeck
+import coraythan.keyswap.users.search.UserSearchResult
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
+import kotlin.math.roundToInt
 
 @Entity
 data class KeyUser(
@@ -92,8 +94,20 @@ data class KeyUser(
 
         @JsonIgnoreProperties("seller")
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-        val sales: List<Purchase> = listOf()
+        val sales: List<Purchase> = listOf(),
 
+        val updateStats: Boolean = false,
+
+        // Stats values
+        val deckCount: Int = 0,
+        val forSaleCount: Int = 0,
+        val topSasAverage: Int = 0,
+        val highSas: Int = 0,
+        val lowSas: Int = 0,
+        val totalPower: Int = 0,
+        val totalChains: Int = 0,
+        val mavericks: Int = 0,
+        val anomalies: Int = 0
 ) {
     val primaryEmail: String
         get() = sellerEmail ?: email
@@ -133,14 +147,36 @@ data class KeyUser(
             shippingCost = shippingCost
     )
 
+    fun toSearchResult() = UserSearchResult(
+            username, deckCount, forSaleCount, topSasAverage, highSas, lowSas, totalPower, totalChains, mavericks, anomalies, patreonTier
+    )
+
+    fun generateSearchResult(): UserSearchResult {
+        val owned = this.decks.filter { userDeck -> userDeck.ownedBy != null }.map { it.deck }
+        val sasRatings = owned.map { deck -> deck.sasRating }.sortedDescending()
+        return UserSearchResult(
+                this.username,
+                owned.count(),
+                this.auctions.count { listing -> listing.isActive },
+                if (owned.size < 10) 0 else sasRatings.take(10).average().roundToInt(),
+                sasRatings.firstOrNull() ?: 0,
+                sasRatings.lastOrNull() ?: 0,
+                owned.map { deck -> deck.powerLevel }.sum(),
+                owned.map { deck -> deck.chains }.sum(),
+                owned.map { deck -> deck.maverickCount }.sum(),
+                owned.map { deck -> deck.anomalyCount ?: 0 }.sum(),
+                this.patreonTier
+        )
+    }
+
     fun realPatreonTier(): PatreonRewardsTier? {
         if (patreonTier == null && manualPatreonTier == null) return null
         if (patreonTier != null && manualPatreonTier == null) return patreonTier
         if (patreonTier == null && manualPatreonTier != null) return manualPatreonTier
-        if (patreonTier!!.ordinal > manualPatreonTier!!.ordinal) {
-            return patreonTier
+        return if (patreonTier!!.ordinal > manualPatreonTier!!.ordinal) {
+            patreonTier
         } else {
-            return manualPatreonTier
+            manualPatreonTier
         }
     }
 }

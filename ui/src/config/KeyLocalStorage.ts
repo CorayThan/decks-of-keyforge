@@ -21,6 +21,7 @@ interface GenericStorage {
     hideSpoilerKudosTwo?: boolean
     wcOnly?: boolean
     showMoreDeckSearchOptions?: boolean
+    userRows?: number
 }
 
 class KeyLocalStorage {
@@ -60,6 +61,14 @@ class KeyLocalStorage {
         this.loadCardListViewType()
         this.loadSaleDefaults()
         this.loadGenericStorage()
+    }
+
+    userRows = () => {
+        const rows: number | undefined = this.genericStorage.userRows
+        if (rows == null) {
+            return 10
+        }
+        return rows
     }
 
     saveAuthKey = (token: string) => this.localStorage.setItem(Keys.AUTH, token)

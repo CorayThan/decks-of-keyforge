@@ -11,6 +11,7 @@ import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
+import coraythan.keyswap.users.search.UserSearchService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.javacrumbs.shedlock.core.SchedulerLock
@@ -33,7 +34,8 @@ class DeckListingService(
         private val deckRepo: DeckRepo,
         private val emailService: EmailService,
         private val forSaleNotificationsService: ForSaleNotificationsService,
-        private val userRepo: KeyUserRepo
+        private val userRepo: KeyUserRepo,
+        private val userSearchService: UserSearchService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -142,7 +144,7 @@ class DeckListingService(
         } else {
             deckRepo.save(deck.copy(forSale = true, forTrade = currentUser.allowsTrades))
         }
-        userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate))
+        userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate, updateStats = true))
         forSaleNotificationsService.sendNotifications(listingInfo)
     }
 
@@ -322,6 +324,7 @@ class DeckListingService(
                 forTrade = stillForTrade,
                 completedAuction = sold || listing.deck.completedAuction
         ))
+        userSearchService.scheduleUserForUpdate(listing.seller)
     }
 
 }

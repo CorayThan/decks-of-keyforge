@@ -5,9 +5,9 @@
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@craco/craco": "^5.6.1",
-    "@material-ui/core": "^4.7.0",
+    "@material-ui/core": "^4.9.0",
     "@material-ui/icons": "^4.5.1",
-    "@material-ui/lab": "^4.0.0-alpha.33",
+    "@material-ui/lab": "^4.0.0-alpha.40",
     "@nivo/bar": "^0.59.2",
     "@nivo/pie": "^0.59.1",
     "@nivo/radar": "^0.59.1",
@@ -27,7 +27,7 @@
     "react-scripts": "3.2.0",
     "react-select": "^3.0.4",
     "recharts": "^1.8.5",
-    "victory": "^32.3.0",
+    "victory": "^34.0.1",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -59,7 +59,7 @@
     "@types/react-router-hash-link": "^1.2.1",
     "@types/react-select": "^2.0.19",
     "@types/recharts": "^1.8.2",
-    "@types/victory": "^31.0.19",
+    "@types/victory": "^33.1.4",
     "@types/webfontloader": "^1.6.29",
     "@typescript-eslint/eslint-plugin": "^2.6.1",
     "@typescript-eslint/parser": "^2.6.1",

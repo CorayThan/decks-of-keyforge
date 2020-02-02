@@ -8,6 +8,7 @@ import coraythan.keyswap.cards.CardIds
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledStart
@@ -47,7 +48,7 @@ var deckImportingUpToDate = false
 class DeckImporterService(
         private val keyforgeApi: KeyforgeApi,
         private val cardService: CardService,
-        private val deckService: DeckService,
+        private val deckSearchService: DeckSearchService,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
         private val currentUserService: CurrentUserService,
@@ -64,7 +65,7 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = "PT30S")
+    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecks)
     @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
@@ -116,11 +117,11 @@ class DeckImporterService(
         val deckCountNow = deckRepo.count()
         log.info("$scheduledStop Added $decksAdded decks. Total decks: $deckCountNow. Decks added by counts ${deckCountNow - deckCountBeforeImport} " +
                 "Pages requested $pagesRequested It took ${importDecksDuration / 1000} seconds.")
-        deckService.countFilters(DeckFilters())
+        deckSearchService.countFilters(DeckFilters())
     }
 
     @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = lockUpdateCleanUnregistered)
+    @Scheduled(fixedDelayString = lockUpdateCleanUnregistered, initialDelayString = SchedulingConfig.cleanUnregisteredDecks)
     @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
         log.info("$scheduledStart clean out unregistered decks.")
@@ -139,7 +140,7 @@ class DeckImporterService(
                             deckRepo.deleteById(unreg.id)
                             cleanedOut++
                         }
-                        deckService.countFilters(DeckFilters(
+                        deckSearchService.countFilters(DeckFilters(
                                 cards = cardService.cardsForDeck(unreg)
                                         .groupBy { it.cardTitle }
                                         .map {
@@ -170,7 +171,7 @@ class DeckImporterService(
     }
 
     // Rev publishAercVersion to rerate decks
-    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = "PT30S")
+    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksDelay)
     fun rateDecks() {
 
 
@@ -312,7 +313,7 @@ class DeckImporterService(
         val cardsAsList = unregisteredDeck.cards.values.flatten()
 
         log.info("Checking dups of unregistered deck.")
-        val dup = deckService.findByNameIgnoreCase(unregisteredDeck.name.toLowerCase())
+        val dup = deckSearchService.findByNameIgnoreCase(unregisteredDeck.name.toLowerCase())
         if (dup.isNotEmpty()) {
             // This string is used in the front end, so don't change it!
             throw BadRequestException("Duplicate deck name ${unregisteredDeck.name}")

@@ -18,7 +18,7 @@ export class DeckFilters {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static rehydrateFromQuery = (queryObject: any): DeckFilters => {
-        log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
+        log.debug(`Rehydrating deck filters from : ${prettyJson(queryObject)}`)
         if (typeof queryObject.houses === "string") {
             queryObject.houses = [queryObject.houses]
         }
@@ -142,7 +142,6 @@ export class DeckFilters {
     pageSize = 20
 
     reset = () => {
-        log.debug("Reseting deck filters.")
         this.title = ""
         this.notes = ""
         this.notesUser = ""

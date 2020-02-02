@@ -46,9 +46,14 @@ export class ReleaseNotes extends React.Component {
                 </Paper>
                 <ReleaseNote
                     releaseNumber={"4.13"}
-                    date={"1/27/2020"}
+                    date={"2/1/2020"}
                     expanded={true}
                     releaseNotesWithHighlights={[
+                        {
+                            highlight: "User Search",
+                            note: "You can now search users of the site whose deck lists are publicly available! Users whose deck lists are " +
+                                "private are hidden from this search."
+                        },
                         {
                             highlight: "Seller Email Verification",
                             note: "The system will now attempt to verify your public seller's email if you list decks for sale and it is unverified."

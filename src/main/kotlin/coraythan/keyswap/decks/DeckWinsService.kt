@@ -9,6 +9,8 @@ import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.CrucibleTrackerApi
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
+import coraythan.keyswap.userdeck.UserDeckRepo
+import coraythan.keyswap.users.search.UserSearchService
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -30,6 +32,8 @@ class DeckWinsService(
         private val cardRepo: CardRepo,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
+        private val userDeckRepo: UserDeckRepo,
+        private val userSearchService: UserSearchService,
         private val crucibleTrackerApi: CrucibleTrackerApi
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -178,6 +182,10 @@ class DeckWinsService(
 
             if (updated != null) {
                 deckRepo.save(updated)
+                if (preexisting.powerLevel != updated.powerLevel || preexisting.chains != updated.chains) {
+                    userDeckRepo.findByDeckIdAndOwnedByNotNull(updated.id)
+                            .forEach { userSearchService.scheduleUserForUpdate(it.user) }
+                }
             }
         }
     }

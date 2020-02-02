@@ -35,6 +35,21 @@ export const patronRewardLevelName =  (tier?: PatreonRewardsTier) => {
     }
 }
 
+export const patronRewardLevelDescription =  (tier?: PatreonRewardsTier) => {
+    switch (tier) {
+        case PatreonRewardsTier.NOTICE_BARGAINS:
+            return "Notices Bargains – $1"
+        case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
+            return "Purchases the Paradigm – $5"
+        case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
+            return "Merchant Æmbermaker – $10"
+        case PatreonRewardsTier.ALWAYS_GENEROUS:
+            return "Always Generous – $25+"
+        default:
+            return ""
+    }
+}
+
 export const patronAuctionLimit =  (tier?: PatreonRewardsTier) => {
     switch (tier) {
         case PatreonRewardsTier.SUPPORT_SOPHISTICATION:

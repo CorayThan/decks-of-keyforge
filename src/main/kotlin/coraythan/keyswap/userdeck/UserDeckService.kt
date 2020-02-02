@@ -1,6 +1,5 @@
 package coraythan.keyswap.userdeck
 
-import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.scheduledStart
@@ -8,6 +7,7 @@ import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
+import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -19,8 +19,8 @@ class UserDeckService(
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
-        private val userDeckRepo: UserDeckRepo,
-        private val deckListingRepo: DeckListingRepo
+        private val userSearchService: UserSearchService,
+        private val userDeckRepo: UserDeckRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -74,12 +74,7 @@ class UserDeckService(
         modOrCreateUserDeck(deckId, user, null) {
             it.copy(ownedBy = if (mark) user.username else null)
         }
-    }
-
-    fun unmarkAsOwnedForSeller(deckId: Long, owner: KeyUser) {
-        modOrCreateUserDeck(deckId, owner, null) {
-            it.copy(ownedBy = null)
-        }
+        userSearchService.scheduleUserForUpdate(user)
     }
 
     private fun modOrCreateUserDeck(

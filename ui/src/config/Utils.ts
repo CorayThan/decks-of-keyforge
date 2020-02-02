@@ -119,3 +119,5 @@ export class Utils {
 }
 
 type EnumType = string | number
+
+export type SortOrder = "desc" | "asc"

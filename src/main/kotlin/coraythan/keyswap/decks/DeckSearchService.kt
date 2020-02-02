@@ -15,6 +15,7 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.tokenize
 import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
@@ -28,7 +29,7 @@ import javax.persistence.EntityManager
 
 @Transactional
 @Service
-class DeckService(
+class DeckSearchService(
         private val cardService: CardService,
         private val deckRepo: DeckRepo,
         private val userService: KeyUserService,
@@ -209,15 +210,7 @@ class DeckService(
         }
 
         if (filters.title.isNotBlank()) {
-            val trimmed = filters.title
-                    .toLowerCase()
-                    .trim()
-            val tokenized = trimmed
-                    .split("\\W+".toRegex())
-                    .filter { it.length > 2 }
-
-            val toUse = if (tokenized.isEmpty()) listOf(trimmed) else tokenized
-            toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
+            filters.title.tokenize().forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
         }
         if (filters.notes.isNotBlank()) {
             val username = if (filters.notesUser.isNotBlank()) {
