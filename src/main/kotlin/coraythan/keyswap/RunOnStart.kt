@@ -48,20 +48,6 @@ class RunOnStart(
 
 //        deckListingService.convertAllDeckSalesToListings()
 
-        val toClean = userRepo.findAllBySellerEmailNotNull()
-                .mapNotNull {
-                    if (it.email.toLowerCase() == it.sellerEmail?.toLowerCase() && it.emailVerified && !it.sellerEmailVerified) {
-                        it.id
-                    } else {
-                        null
-                    }
-                }
-
-        log.info("To verify count: ${toClean.size}")
-
-        toClean.forEach { userRepo.updateSellerEmailVerified(it) }
-        log.info("Done adding verifications")
-
         userSearchService.updateSearchResults()
 
         startupComplete = true

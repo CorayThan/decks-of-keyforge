@@ -115,6 +115,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     cardNumber = ""
     @observable
     frontImage = ""
+    @observable
+    traits = ""
 
     @observable
     amberControl = "0"
@@ -167,13 +169,14 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.amber = spoiler.amber.toString()
             this.power = spoiler.powerString
             this.armor = spoiler.armorString
-            this.rarity = spoiler.rarity
+            this.rarity = spoiler.rarity == null ? "" : spoiler.rarity
             this.cardNumber = spoiler.cardNumber
             this.frontImage = spoiler.frontImage
             this.reprint = spoiler.reprint
             this.anomaly = spoiler.anomaly
             this.doubleCard = spoiler.doubleCard
             this.spoilerId = spoiler.id
+            this.traits = spoiler.traits
 
             this.amberControl = spoiler.amberControl.toString()
             this.expectedAmber = spoiler.expectedAmber.toString()
@@ -233,14 +236,12 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             messageStore.setWarningMessage("Please include card type.")
             return
         }
-        const rarity = this.rarity as Rarity
-        if (rarity.length < 1) {
-            messageStore.setWarningMessage("Please include rarity.")
-            return
-        }
+        const rarity = this.rarity === "" ? undefined : this.rarity
         defaultHouse = house
         defaultCardType = cardType
-        defaultCardRarity = rarity
+        if (rarity != null) {
+            defaultCardRarity = rarity
+        }
 
         let effectivePower = Number(this.effectivePower)
         if (effectivePower === 0) {
@@ -250,12 +251,18 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         if (expectedAmber === 0) {
             expectedAmber = Number(this.amber)
         }
+        const traits = this.traits.trim().toUpperCase()
+        if (!traits.match(/^(\w|,)*$/)) {
+            messageStore.setWarningMessage(`Please ensure traits are a comma separated list, for example "GIANT,KNIGHT"`)
+            return
+        }
 
         const spoiler: Spoiler = {
             cardType,
             cardTitle,
             rarity,
             house,
+            traits,
             expansion: Expansion.MM,
             amber: this.amber === "" ? 0 : Number(this.amber),
             powerString: this.power,
@@ -397,10 +404,13 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     select={true}
                                     label={"rarity"}
                                     value={this.rarity}
-                                    onChange={(event: EventValue) => this.rarity = event.target.value as Rarity}
+                                    onChange={(event: EventValue) => this.rarity = event.target.value as (Rarity | "")}
                                     variant={"outlined"}
                                     fullWidth={true}
                                 >
+                                    <MenuItem value={""}>
+                                        Unknown
+                                    </MenuItem>
                                     {Utils.enumValues(Rarity).map(option => (
                                         <MenuItem key={option} value={option}>
                                             {option}
@@ -438,7 +448,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     type={"number"}
                                 />
                             </Grid>
-                            <Grid item={true} xs={6} sm={3}>
+                            <Grid item={true} xs={4} sm={2}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -450,7 +460,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     label="Reprint"
                                 />
                             </Grid>
-                            <Grid item={true} xs={6} sm={3}>
+                            <Grid item={true} xs={4} sm={2}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -460,6 +470,28 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                         />
                                     }
                                     label="Anomaly"
+                                />
+                            </Grid>
+                            <Grid item={true} xs={4} sm={2}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.doubleCard}
+                                            onChange={() => this.doubleCard = !this.doubleCard}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Double Card"
+                                />
+                            </Grid>
+                            <Grid item={true} xs={6}>
+                                <TextField
+                                    label={"traits"}
+                                    value={this.traits}
+                                    onChange={(event: EventValue) => this.traits = event.target.value}
+                                    fullWidth={true}
+                                    variant={"outlined"}
+                                    multiline={true}
                                 />
                             </Grid>
                             <Grid item={true} xs={12}>
@@ -666,6 +698,10 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 Instructions
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
+                                Aember values should be entered as "A", for example: "1 A". When a card's text is incomplete, enter "???"
+                                where text is partially unknown.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
                                 Enter double-cards only once, using the bottom, or top and bottom, cards for the image.
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
@@ -676,7 +712,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
                                 The information I enter is a faithful representation of the text of the KeyForge card.
-                                If you cannot read the text of the card, then do not create a spoiler for it.
+                                If you are not sure what the text reads, only enter as much of the text as can be read.
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
                                 I have the right to share this card text and image. By sharing it publicly, I am not violating any legally binding agreements.

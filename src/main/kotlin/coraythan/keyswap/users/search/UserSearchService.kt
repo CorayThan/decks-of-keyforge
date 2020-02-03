@@ -8,6 +8,7 @@ import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.tokenize
+import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.QKeyUser
@@ -27,6 +28,7 @@ const val lockUpdateUserSearchStatsFor = "PT5M"
 @Transactional
 class UserSearchService(
         private val userRepo: KeyUserRepo,
+        private val currentUserService: CurrentUserService,
         private val entityManager: EntityManager
 ) {
 
@@ -87,9 +89,9 @@ class UserSearchService(
         userRepo.setUpdateUserTrue(user.id)
     }
 
-    fun searchUsers(filters: UserFilters): List<UserSearchResult> {
+    fun searchUsers(filters: UserFilters, withHidden: Boolean = false): List<UserSearchResult> {
         val userQ = QKeyUser.keyUser
-        val predicate = userFilterPredicate(filters)
+        val predicate = userFilterPredicate(filters, withHidden)
 
         val sort = when (filters.sort) {
             UserSort.DECK_COUNT ->
@@ -125,11 +127,15 @@ class UserSearchService(
                 .fetch()
     }
 
-    private fun userFilterPredicate(filters: UserFilters): Predicate {
+    private fun userFilterPredicate(filters: UserFilters, withHidden: Boolean = false): Predicate {
         val userQ = QKeyUser.keyUser
         val predicate = BooleanBuilder()
 
-        predicate.and(userQ.allowUsersToSeeDeckOwnership.isTrue)
+        if (withHidden) {
+            currentUserService.adminOrUnauthorized()
+        } else {
+            predicate.and(userQ.allowUsersToSeeDeckOwnership.isTrue)
+        }
 
         when (filters.sort) {
             UserSort.DECK_COUNT ->

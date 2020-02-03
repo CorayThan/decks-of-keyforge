@@ -22,6 +22,15 @@ export class UserSearchStore {
             })
     }
 
+    searchAllUsers = () => {
+        this.searching = true
+        axios.get(`${UserSearchStore.CONTEXT}/with-hidden`)
+            .then((response: AxiosResponse<UserSearchResults>) => {
+                this.searching = false
+                this.results = response.data
+            })
+    }
+
 }
 
 export const userSearchStore = new UserSearchStore()

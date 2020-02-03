@@ -14,9 +14,11 @@ export interface Spoiler extends HasAerc {
     amber: number
     powerString: string
     armorString: string
-    rarity: Rarity
+    rarity?: Rarity
     cardNumber: string
     expansion: Expansion
+
+    traits: string
 
     createdById: string
 
@@ -37,6 +39,8 @@ export class SpoilerUtils {
                 card.cardTitle,
                 card.house,
                 card.cardNumber,
+                card.cardType,
+                card.rarity,
 
                 card.amber,
                 card.powerString,
@@ -45,25 +49,16 @@ export class SpoilerUtils {
                 card.anomaly,
                 card.reprint,
 
+                card.traits,
                 card.cardText.replace(/"/g, "\"\""),
-
-                card.aercScore,
-                card.amberControl,
-                card.expectedAmber,
-                card.amberProtection,
-                card.artifactControl,
-                card.creatureControl,
-                card.effectivePower,
-                card.efficiency,
-                card.disruption,
-                card.houseCheating,
-                card.other,
             ]
         })
         data.unshift([
             "Name",
             "House",
             "Card Number",
+            "Type",
+            "Rarity",
 
             "Raw Amber",
             "Power",
@@ -72,19 +67,8 @@ export class SpoilerUtils {
             "Anomaly",
             "Reprint",
 
+            "Traits",
             "Text",
-
-            "Aerc Score",
-            "Amber Control",
-            "Expected Amber",
-            "Aember Protection",
-            "Artifact Control",
-            "Creature Control",
-            "Effective Power",
-            "Efficiency",
-            "Disruption",
-            "House Cheating",
-            "Other",
         ])
         return data
     }

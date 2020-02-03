@@ -21,12 +21,14 @@ data class Spoiler(
         val powerString: String,
         val armorString: String,
         @Enumerated(EnumType.STRING)
-        val rarity: Rarity,
+        val rarity: Rarity?,
         val cardNumber: String,
         val expansion: Int,
         val anomaly: Boolean = false,
         val reprint: Boolean = false,
         val doubleCard: Boolean = false,
+
+        val traits: String,
 
         val createdById: UUID,
 

@@ -156,6 +156,14 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         </Typography>
                     )}
                     <div style={{flexGrow: 1}}/>
+                    {userStore.isAdmin && (
+                        <Button
+                            style={{marginRight: spacing(2)}}
+                            onClick={userSearchStore.searchAllUsers}
+                        >
+                            Search All
+                        </Button>
+                    )}
                     <TextField
                         label={"Username"}
                         value={username}

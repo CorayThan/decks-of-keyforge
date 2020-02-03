@@ -1,0 +1,5 @@
+ALTER TABLE spoiler
+    ALTER COLUMN rarity DROP NOT NULL;
+
+ALTER TABLE spoiler
+    ADD COLUMN traits VARCHAR(500);

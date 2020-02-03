@@ -34,7 +34,9 @@ export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
 
 export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler
-    const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house} = spoiler
+    const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house, traits} = spoiler
+
+    const traitsArray = traits.split(",")
 
     return (
         <div style={{display: "flex", flexDirection: screenStore.screenSizeXs() || frontImage === "" ? "column" : undefined}}>
@@ -69,6 +71,25 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                         ) : null}
                     </div>
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                    {traitsArray.length > 0 && (
+                        <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
+                            {traitsArray.map((trait, idx) => (
+                                <>
+                                <Typography variant={"body2"}>{trait}</Typography>
+                                    {idx !== traitsArray.length - 1 && (
+                                        <div style={{
+                                            height: 4,
+                                            width: 4,
+                                            borderRadius: "50%",
+                                            backgroundColor: "#555",
+                                            marginLeft: spacing(1),
+                                            marginRight: spacing(1)
+                                        }}/>
+                                    )}
+                                </>
+                            ))}
+                        </div>
+                    )}
                     <Typography>{cardText}</Typography>
 
                     {userStore.contentCreator && (

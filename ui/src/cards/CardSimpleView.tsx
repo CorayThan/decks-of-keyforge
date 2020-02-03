@@ -134,7 +134,7 @@ export const CardView = observer((props: { card: KCard, simple?: boolean, noLink
                 {previousCard && (
                     <AercAndSynergies card={previousCard} title={"Previous AERC"}/>
                 )}
-                {userStore.contentCreator && (
+                {userStore.isAdmin && (
                     <>
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                         <LinkButton

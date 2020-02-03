@@ -18,7 +18,7 @@ type CardViewType = "image" | "full" | "table"
 type DeckViewType = "graphs" | "grid" | "table"
 
 interface GenericStorage {
-    hideSpoilerKudosTwo?: boolean
+    hideSpoilerKudosThree?: boolean
     wcOnly?: boolean
     showMoreDeckSearchOptions?: boolean
     userRows?: number

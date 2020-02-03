@@ -129,7 +129,7 @@ export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card
         &&
         (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
         &&
-        (filters.rarities.length === 0 || filters.rarities.indexOf(card.rarity) !== -1)
+        (filters.rarities.length === 0 || (card.rarity != null && filters.rarities.indexOf(card.rarity) !== -1))
         &&
         (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
 }

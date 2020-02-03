@@ -11,7 +11,7 @@ import { decksOfKeyForgeDiscord, DiscordNamedButton } from "../thirdpartysites/d
 export class SpoilerKudos extends React.Component {
 
     render() {
-        const open = !keyLocalStorage.genericStorage.hideSpoilerKudosTwo
+        const open = !keyLocalStorage.genericStorage.hideSpoilerKudosThree
         return (
             <Paper
                 style={{
@@ -30,7 +30,7 @@ export class SpoilerKudos extends React.Component {
                             <Typography variant={"h5"} style={{flexGrow: 1}}>
                                 Kudos and Contributing
                             </Typography>
-                            <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosTwo: true})}>
+                            <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosThree: true})}>
                                 {open ? <ChevronRight/> : <ChevronLeft/>}
                             </IconButton>
                         </div>
@@ -61,7 +61,7 @@ export class SpoilerKudos extends React.Component {
                         </Typography>
                         <DiscordNamedButton name={"DoK"} link={decksOfKeyForgeDiscord} style={{marginTop: spacing(1)}}/>
                     </div>) : (
-                    <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosTwo: false})}>
+                    <IconButton size={"small"} onClick={() => keyLocalStorage.updateGenericStorage({hideSpoilerKudosThree: false})}>
                         {open ? <ChevronRight/> : <ChevronLeft/>}
                     </IconButton>
                 )}
