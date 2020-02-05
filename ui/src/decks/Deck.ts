@@ -7,6 +7,7 @@ import { House } from "../houses/House"
 import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
 import { userStore } from "../user/UserStore"
 import { UserDeck } from "../userdeck/UserDeck"
+import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 
 export interface DeckWithSynergyInfo {
@@ -202,7 +203,9 @@ export class DeckUtils {
                 deck.funnyCount,
                 `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,
                 `https://www.keyforgegame.com/deck-details/${deck.keyforgeId}`,
-                deck.lastSasUpdate
+                deck.lastSasUpdate,
+
+                userDeckStore.notesForDeck(deck.id) ?? ""
             ]
         })
         data.unshift([
@@ -252,7 +255,9 @@ export class DeckUtils {
             "Funny",
             "DoK Link",
             "Master Vault Link",
-            "Last SAS Update"
+            "Last SAS Update",
+
+            "My Notes"
         ])
         return data
     }

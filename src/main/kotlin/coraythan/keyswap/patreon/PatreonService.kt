@@ -1,6 +1,7 @@
 package coraythan.keyswap.patreon
 
 import com.patreon.PatreonOAuth
+import coraythan.keyswap.config.Env
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
@@ -22,7 +23,7 @@ class PatreonService(
         @Value("\${patreon-client-id}")
         private val patreonClientId: String,
         @Value("\${env}")
-        private val env: String,
+        private val env: Env,
         private val restTemplate: RestTemplate,
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
@@ -33,11 +34,7 @@ class PatreonService(
     private val patreonClient = PatreonOAuth(
             patreonClientId,
             patreonSecretKey,
-            when (env) {
-                "dev" -> "http://localhost:3000/my-profile"
-                "qa" -> "http://decks-of-keyforge-qa.us-west-2.elasticbeanstalk.com/my-profile"
-                else -> "https://decksofkeyforge.com/my-profile"
-            }
+            "${env.baseUrl}/my-profile"
     )
     private var topPatrons = listOf<String>()
 

@@ -1,6 +1,7 @@
 package coraythan.keyswap.emails
 
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.Env
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.*
@@ -18,7 +19,7 @@ class EmailService(
         private val passwordResetCodeService: PasswordResetCodeService,
         private val currentUserService: CurrentUserService,
         @Value("\${env}")
-        private val env: String
+        private val env: Env
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -261,7 +262,7 @@ class EmailService(
                 </div>
             """.trimIndent()
 
-    private fun makeLink(path: String, name: String) = "<a href=\"https://decksofkeyforge.com$path\">$name</a>"
+    private fun makeLink(path: String, name: String) = "<a href=\"${env.baseUrl}$path\">$name</a>"
 
     private fun sendEmail(email: String, subject: String, content: String, replyTo: String? = null, ccEmail: String? = null) {
         val mimeMessage = emailSender.createMimeMessage()
@@ -273,8 +274,8 @@ class EmailService(
         helper.setFrom(fromAddress)
         if (replyTo != null) helper.setReplyTo(replyTo)
         mimeMessage.addFrom(listOf(fromAddress).toTypedArray())
-        helper.setTo(if (env == "dev") "decksofkeyforge@gmail.com" else email)
-        if (ccEmail != null) helper.setCc(if (env == "dev") "decksofkeyforge@gmail.com" else ccEmail)
+        helper.setTo(if (env == Env.dev) "decksofkeyforge@gmail.com" else email)
+        if (ccEmail != null) helper.setCc(if (env == Env.dev) "decksofkeyforge@gmail.com" else ccEmail)
         helper.setSubject(subject)
         emailSender.send(mimeMessage)
     }

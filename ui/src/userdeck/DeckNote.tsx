@@ -124,9 +124,7 @@ export class InlineDeckNote extends React.Component<InlineDeckNoteProps> {
         if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.userDecks == null) {
             return null
         }
-        const deck = userDeckStore.userDeckByDeckId(id)
-
-        return <InlineDeckNoteLoaded id={id} notes={deck?.notes}/>
+        return <InlineDeckNoteLoaded id={id} notes={userDeckStore.notesForDeck(id)}/>
     }
 }
 

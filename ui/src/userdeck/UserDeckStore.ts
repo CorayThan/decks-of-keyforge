@@ -83,6 +83,10 @@ export class UserDeckStore {
             deckStore.findDeckSaleInfo(keyforgeId)
         }
     }
+
+    notesForDeck = (deckId: number): string | undefined => {
+        return this.userDeckByDeckId(deckId)?.notes
+    }
 }
 
 export const userDeckStore = new UserDeckStore()

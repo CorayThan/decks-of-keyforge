@@ -8,6 +8,7 @@ import coraythan.keyswap.cards.CardIds
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.activeExpansions
@@ -57,7 +58,7 @@ class DeckImporterService(
         private val statsService: StatsService,
         private val objectMapper: ObjectMapper,
         @Value("\${env}")
-        private val env: String,
+        private val env: Env,
         val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -182,7 +183,7 @@ class DeckImporterService(
 
         log.info("$scheduledStart rate decks.")
 
-        val maxToRate = DeckPageType.RATING.quantity * (if (env == "dev") 10 else 1)
+        val maxToRate = DeckPageType.RATING.quantity * (if (env == Env.dev) 10 else 1)
 
         val millisTaken = measureTimeMillis {
 
