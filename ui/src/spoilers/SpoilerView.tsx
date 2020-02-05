@@ -2,6 +2,8 @@ import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { CardType } from "../cards/CardType"
+import { rarityValues } from "../cards/rarity/Rarity"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { GraySidebar } from "../generic/GraySidebar"
@@ -34,13 +36,13 @@ export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
 
 export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler
-    const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house, traits} = spoiler
+    const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house, traits, powerString, armorString, rarity} = spoiler
 
-    const traitsArray = traits.split(",")
+    const traitsArray = traits == null ? [] : traits.split(",")
 
     return (
         <div style={{display: "flex", flexDirection: screenStore.screenSizeXs() || frontImage === "" ? "column" : undefined}}>
-            <SpoilerImage cardTitle={cardTitle} url={frontImage}/>
+            {frontImage != null && frontImage.length > 0 && (<SpoilerImage cardTitle={cardTitle} url={frontImage}/>)}
             <GraySidebar width={300} style={{padding: spacing(2)}}>
                 <div style={{width: 300 - spacing(4)}}>
                     <div style={{display: "flex", alignItems: "center"}}>
@@ -58,7 +60,12 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                             </UnstyledLink>
                         )}
                         <div style={{flexGrow: 1}}/>
-                        <Typography style={{marginLeft: spacing(2)}}>#{cardNumber}</Typography>
+                        <Typography >{cardNumber == null || cardNumber.length === 0 ? "" : cardNumber}</Typography>
+                        {rarity != null && (
+                            <>
+                                {rarityValues.get(rarity)!.icon}
+                            </>
+                        )}
                     </div>
                     <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
                         <Typography variant={"subtitle1"}>{cardType}</Typography>
@@ -70,12 +77,26 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                             </>
                         ) : null}
                     </div>
+                    {cardType === CardType.Creature && (
+                        <>
+                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                            <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
+                                <Typography variant={"subtitle1"}>Power: {powerString}</Typography>
+                                <div style={{flexGrow: 1}}/>
+                                {armorString.length > 0 ? (
+                                    <>
+                                        <Typography variant={"subtitle1"}>Armor: {armorString}</Typography>
+                                    </>
+                                ) : null}
+                            </div>
+                        </>
+                    )}
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                     {traitsArray.length > 0 && (
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
                             {traitsArray.map((trait, idx) => (
                                 <>
-                                <Typography variant={"body2"}>{trait}</Typography>
+                                    <Typography variant={"body2"}>{trait}</Typography>
                                     {idx !== traitsArray.length - 1 && (
                                         <div style={{
                                             height: 4,

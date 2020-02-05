@@ -163,20 +163,20 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         const spoiler = resetTo == null ? this.props.spoiler : resetTo
         if (spoiler != null) {
             this.cardTitle = spoiler.cardTitle
-            this.house = spoiler.house == null ? "" : spoiler.house
+            this.house = spoiler.house ?? ""
             this.cardType = spoiler.cardType
             this.cardText = spoiler.cardText
             this.amber = spoiler.amber.toString()
             this.power = spoiler.powerString
             this.armor = spoiler.armorString
-            this.rarity = spoiler.rarity == null ? "" : spoiler.rarity
-            this.cardNumber = spoiler.cardNumber
-            this.frontImage = spoiler.frontImage
+            this.rarity = spoiler.rarity ?? ""
+            this.cardNumber = spoiler.cardNumber ?? ""
+            this.frontImage = spoiler.frontImage ?? ""
             this.reprint = spoiler.reprint
             this.anomaly = spoiler.anomaly
             this.doubleCard = spoiler.doubleCard
             this.spoilerId = spoiler.id
-            this.traits = spoiler.traits
+            this.traits = spoiler.traits ?? ""
 
             this.amberControl = spoiler.amberControl.toString()
             this.expectedAmber = spoiler.expectedAmber.toString()
@@ -256,6 +256,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             messageStore.setWarningMessage(`Please ensure traits are a comma separated list, for example "GIANT,KNIGHT"`)
             return
         }
+        const cardNumber = this.cardNumber.trim().length === 0 ? undefined : this.cardNumber.trim()
 
         const spoiler: Spoiler = {
             cardType,
@@ -268,7 +269,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             powerString: this.power,
             armorString: this.armor,
             cardText: this.cardText.trim(),
-            cardNumber: this.cardNumber.trim(),
+            cardNumber,
             active: true,
             frontImage: this.frontImage,
             id: this.spoilerId,

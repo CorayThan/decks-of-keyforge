@@ -160,22 +160,6 @@ export class RegistrationPage extends React.Component {
                                 </Grid>
                                 <Grid item={true} xs={12}>
                                     <TextField
-                                        variant={"outlined"}
-                                        label={"Contact Info"}
-                                        helperText={"Optional public info for users to contact you for sales and trades."}
-                                        value={this.publicContactInfo}
-                                        onChange={(event) => this.publicContactInfo = event.target.value}
-                                        fullWidth={true}
-                                        multiline={true}
-                                        rows={2}
-                                        rowsMax={5}
-                                        style={{marginBottom: spacing(2)}}
-                                        required={false}
-                                        InputProps={{inputProps: {tabIndex: 5}}}
-                                    />
-                                </Grid>
-                                <Grid item={true} xs={6}>
-                                    <TextField
                                         select
                                         label="Country"
                                         value={this.country}
@@ -190,8 +174,6 @@ export class RegistrationPage extends React.Component {
                                             </MenuItem>
                                         ))}
                                     </TextField>
-                                </Grid>
-                                <Grid item={true} xs={6}>
                                 </Grid>
                                 <Grid item={true} xs={6}>
                                     <FormControlLabel

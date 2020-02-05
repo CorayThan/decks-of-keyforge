@@ -90,7 +90,7 @@ export class UserStore {
             .post(UserStore.CONTEXT + "/register", user)
             .then(() => {
                 log.info("Registered!")
-                messageStore.setSuccessMessage("Welcome to decks of keyforge! You are now being logged in.")
+                messageStore.setSuccessMessage("Welcome to DoK! You are now being logged in.")
                 this.login({...user})
             })
             .catch((error: AxiosError) => {

@@ -89,6 +89,8 @@ class KeyUserService(
 
     fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
+    fun findByAnyEmail(email: String) = userRepo.findByEmailIgnoreCase(email) ?: userRepo.findBySellerEmailIgnoreCase(email)
+
     fun updateUserProfile(update: UserProfileUpdate) {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val userAllowsTrades = user.allowsTrades
@@ -188,9 +190,20 @@ class KeyUserService(
     }
 
     fun verifyEmail(code: String) {
-        val email = passwordResetCodeService.emailForVerification(code)?.toLowerCase() ?: throw BadRequestException("No email for verification code $code")
-        val user = userRepo.findByEmailIgnoreCase(email) ?: userRepo.findBySellerEmailIgnoreCase(email) ?: throw BadRequestException("No user for email $email")
-        userRepo.save(user.copy(emailVerified = email == user.email.toLowerCase(), sellerEmailVerified = email == user.sellerEmail?.toLowerCase()))
+        val codeInfo = passwordResetCodeService.passwordResetCodeByCode(code) ?: throw BadRequestException("We couldn't find the given code.")
+        if (codeInfo.userId == null) {
+            throw BadRequestException("Please use a fresh code.")
+        }
+        val user = userRepo.findByIdOrNull(codeInfo.userId) ?: throw BadRequestException("No user exists for the given code.")
+        val email = codeInfo.email.toLowerCase()
+        val userEmail = user.email.toLowerCase()
+        val sellerEmail = user.sellerEmail?.toLowerCase()
+        val verifyEmail = email == userEmail
+        val verifySellerEmail = email == sellerEmail
+        if (!verifyEmail && !verifySellerEmail) {
+            throw BadRequestException("Your user does not have the email ${codeInfo.email}")
+        }
+        userRepo.save(user.copy(emailVerified = verifyEmail, sellerEmailVerified = verifySellerEmail))
     }
 
     private fun validateEmail(email: String) {

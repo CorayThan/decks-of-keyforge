@@ -50,7 +50,7 @@ class EmailStore {
             axios.post(`${EmailStore.CONTEXT}/send-email-verification`, {email})
                 .then(() => {
                     this.sendingEmailVerification = false
-                    messageStore.setSuccessMessage(`An email verification message has been sent to ${email}`)
+                    messageStore.setSuccessMessage(`A verification email has been sent to ${email}`)
                 })
         }
     }

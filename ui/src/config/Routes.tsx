@@ -30,7 +30,6 @@ import { SnackMessage } from "../ui/MessageStore"
 import { MyProfile } from "../user/MyProfile"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
-import { prepareUserFiltersForQueryString, UserFilters } from "../user/search/UserFilters"
 import { UserSearchPage } from "../user/search/UserSearchPage"
 import { userStore } from "../user/UserStore"
 import { LoggedInRoute } from "./LoggedInRoute"
@@ -85,7 +84,7 @@ class Routes {
     static decksForUser = (username: string) => {
         const filters = new DeckFilters()
         filters.owner = username
-        return `${Routes.decks}?${QueryString.stringify(filters)}`
+        return Routes.deckSearch(filters)
     }
 
     /**
@@ -95,11 +94,6 @@ class Routes {
     static cardSearch = (filters: CardFilters) => {
         const cleaned = prepareCardFiltersForQueryString(filters)
         return `${Routes.cards}?${QueryString.stringify(cleaned)}`
-    }
-
-    static userSearch = (filters: UserFilters) => {
-        const cleaned = prepareUserFiltersForQueryString(filters)
-        return `${Routes.users}?${QueryString.stringify(cleaned)}`
     }
 
     static cardsUpdate = (aercHistoryDate: string) => {

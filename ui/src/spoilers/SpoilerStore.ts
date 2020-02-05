@@ -115,7 +115,7 @@ export class SpoilerStore {
     }
 
     containsCardNumberIgnoreCase = (cardNumber: string) => {
-        return !!this.allSpoilers.find(spoiler => spoiler.cardNumber.toLowerCase().trim() === cardNumber.toLowerCase().trim())
+        return !!this.allSpoilers.find(spoiler => spoiler.cardNumber != null && spoiler.cardNumber.toLowerCase().trim() === cardNumber.toLowerCase().trim())
     }
 }
 

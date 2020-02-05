@@ -32,7 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '257'
+version = '261'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]

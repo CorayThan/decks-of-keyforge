@@ -9,16 +9,16 @@ export interface Spoiler extends HasAerc {
     cardTitle: string
     house?: House // anomalies have no house
     cardType: CardType
-    frontImage: string
+    frontImage?: string
     cardText: string
     amber: number
     powerString: string
     armorString: string
     rarity?: Rarity
-    cardNumber: string
+    cardNumber?: string
     expansion: Expansion
 
-    traits: string
+    traits?: string
 
     createdById: string
 

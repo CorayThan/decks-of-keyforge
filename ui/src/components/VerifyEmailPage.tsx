@@ -43,14 +43,14 @@ export class VerifyEmailView extends React.Component<{ verificationCode: string 
                                 Email verification in progress ...
                             </Typography>
                         ) : null}
-                        {userStore.emailVerificationSuccessful ? null : (
-                            <div>
+                        {!userStore.emailVerificationSuccessful && userStore.loggedIn() && (
+                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <Typography variant={"subtitle1"} style={{marginBottom: spacing(2)}}>
                                     Sorry, we couldn't verify your email. Please try again.
                                 </Typography>
                                 <img
                                     style={{width: 232}}
-                                    src={"https://cdn.keyforgegame.com/media/card_front/en/341_67_GJXV3PCXVPMW_en.png"}
+                                    src={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/mind-barb.png"}
                                     alt={"Card."}
                                 />
 
@@ -68,12 +68,17 @@ export class VerifyEmailView extends React.Component<{ verificationCode: string 
                                 </div>
                                 <img
                                     style={{width: 232}}
-                                    src={"https://cdn.keyforgegame.com/media/card_front/en/435_128_VRVG453C35R5_en.png"}
+                                    src={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/eureka.png"}
                                     alt={"Card."}
                                 />
                             </div>
                         ) : null}
                         {userStore.verifyingEmail ? <Loader/> : null}
+                        {!userStore.loggedIn() && (
+                            <Typography>
+                                Please login
+                            </Typography>
+                        )}
                     </Paper>
                 </div>
             </div>

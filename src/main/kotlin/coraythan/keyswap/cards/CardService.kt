@@ -110,6 +110,7 @@ class CardService(
 
     fun convertSpoilers() {
         val spoilers = spoilerRepo.findAll()
+                .filter { it.cardNumber != null }
 
         spoilers.forEach { spoiler ->
             log.info("Converting spoiler ${spoiler.cardTitle} to extra info")
@@ -118,7 +119,7 @@ class CardService(
                 check(existingInfos.isNotEmpty()) { "No info for ${spoiler.cardTitle}" }
                 existingInfos.forEach {
                     val cardId = CardIdentifier(
-                            cardNumber = spoiler.cardNumber,
+                            cardNumber = spoiler.cardNumber!!,
                             expansion = Expansion.WORLDS_COLLIDE,
                             info = it
                     )
@@ -143,7 +144,7 @@ class CardService(
                 val saved = extraCardInfoRepo.save(info)
                 log.info("Saved info for ${spoiler.cardTitle}")
                 cardIdentifierRepo.save(CardIdentifier(
-                        cardNumber = spoiler.cardNumber,
+                        cardNumber = spoiler.cardNumber!!,
                         expansion = Expansion.WORLDS_COLLIDE,
                         info = saved
                 ))

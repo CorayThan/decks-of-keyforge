@@ -62,7 +62,7 @@ data class DeckSaleInfo(
                     username = auction.seller.username,
                     publicContactInfo = auction.seller.publicContactInfo,
                     discord = auction.seller.discord,
-                    shippingCost = auction.shippingCost,
+                    shippingCost = if (auction.shippingCost.isNullOrBlank()) auction.seller.shippingCost else auction.shippingCost,
 
                     highestBid = auction.highestBid,
                     buyItNow = auction.buyItNow,

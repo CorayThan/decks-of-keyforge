@@ -387,10 +387,10 @@ class AddPatreonStore {
     open = false
 
     @observable
-    tier: PatreonRewardsTier = PatreonRewardsTier.SUPPORT_SOPHISTICATION
+    tier = PatreonRewardsTier.SUPPORT_SOPHISTICATION
 
     @observable
-    expiresInDays: string = "90"
+    expiresInDays = "90"
 
 }
 

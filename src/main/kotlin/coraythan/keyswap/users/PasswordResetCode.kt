@@ -2,9 +2,11 @@ package coraythan.keyswap.users
 
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.security.SecureRandom
 import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
 
@@ -15,6 +17,7 @@ data class PasswordResetCode(
 
         val email: String,
 
+        val userId: UUID? = null,
         val sentAt: LocalDateTime = LocalDateTime.now()
 )
 
@@ -28,9 +31,9 @@ class PasswordResetCodeService(
     private val codeCharacters = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray()
     private val secureRandom = SecureRandom()
 
-    fun createCode(email: String): String {
+    fun createCode(email: String, userId: UUID? = null): String {
         val resetCode = RandomStringUtils.random(48, 0, codeCharacters.size - 1, false, false, codeCharacters, secureRandom)
-        passwordResetCodeRepo.save(PasswordResetCode(resetCode, email))
+        passwordResetCodeRepo.save(PasswordResetCode(resetCode, email, userId))
         return resetCode
     }
 
@@ -44,6 +47,8 @@ class PasswordResetCodeService(
         }
         return null
     }
+
+    fun passwordResetCodeByCode(code: String) = passwordResetCodeRepo.findByIdOrNull(code)
 
     fun emailForVerification(code: String): String? {
         val dbCode = passwordResetCodeRepo.findById(code)

@@ -3,10 +3,7 @@ package coraythan.keyswap.emails
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.userdeck.ListingInfo
-import coraythan.keyswap.users.KeyUser
-import coraythan.keyswap.users.KeyUserService
-import coraythan.keyswap.users.PasswordResetCodeService
-import coraythan.keyswap.users.ResetEmail
+import coraythan.keyswap.users.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
@@ -19,6 +16,7 @@ class EmailService(
         private val emailSender: JavaMailSender,
         private val keyUserService: KeyUserService,
         private val passwordResetCodeService: PasswordResetCodeService,
+        private val currentUserService: CurrentUserService,
         @Value("\${env}")
         private val env: String
 ) {
@@ -144,18 +142,19 @@ class EmailService(
     }
 
     fun sendVerifyEmail(verify: ResetEmail) {
-        val userInSystem = keyUserService.findByEmail(verify.email)
-        if (userInSystem != null) {
-            val resetCode = passwordResetCodeService.createCode(verify.email)
-            sendEmail(verify.email, "Verify your decksofkeyforge.com email",
-                    """
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        if (currentUser.email != verify.email && currentUser.sellerEmail != verify.email) {
+            throw BadRequestException("You don't have the email ${verify.email}")
+        }
+        val resetCode = passwordResetCodeService.createCode(verify.email, currentUser.id)
+        sendEmail(verify.email, "Verify your decksofkeyforge.com email",
+                """
                 <div>
                     Use this link to verify your email:
                     ${makeLink("/verify-email/$resetCode", "Verify Email")}
                 </div>
             """.trimIndent()
-            )
-        }
+        )
     }
 
     fun sendDeckListedNotification(recipient: KeyUser, listingInfo: ListingInfo, deck: Deck, queryName: String) {
@@ -240,10 +239,10 @@ class EmailService(
                     <br>
                     <div>
                         ${if (ccSender) {
-        "We have included $senderUsername on this email since you have a public sellers email. You "
-    } else {
-        "We have not given $senderUsername your email address, but you "
-    }}
+                "We have included $senderUsername on this email since you have a public sellers email. You "
+            } else {
+                "We have not given $senderUsername your email address, but you "
+            }}
                         can reply to their message at
                         <a href="mailto:$senderEmail">$senderEmail</a>
                     </div>

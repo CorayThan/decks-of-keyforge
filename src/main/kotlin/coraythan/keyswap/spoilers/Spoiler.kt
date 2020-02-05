@@ -22,13 +22,13 @@ data class Spoiler(
         val armorString: String,
         @Enumerated(EnumType.STRING)
         val rarity: Rarity?,
-        val cardNumber: String,
+        val cardNumber: String?,
         val expansion: Int,
         val anomaly: Boolean = false,
         val reprint: Boolean = false,
         val doubleCard: Boolean = false,
 
-        val traits: String,
+        val traits: String?,
 
         val createdById: UUID,
 
@@ -44,9 +44,6 @@ data class Spoiler(
         val other: Double = 0.0,
 
         val active: Boolean = true,
-//
-//        @OneToOne
-//        val info: ExtraCardInfo? = null,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
