@@ -153,7 +153,7 @@ data class KeyforgeCard(
         return Card(id, card_title, House.fromMasterVaultValue(house)!!, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick, is_anomaly,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
-                traits = traits?.split(" • ")?.toSet() ?: setOf())
+                traits = traits?.toUpperCase()?.split(" • ")?.toSet() ?: setOf())
     }
 }
 

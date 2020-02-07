@@ -239,9 +239,6 @@ export class UserStore {
     @computed
     get emailVerified(): boolean {
         if (this.user) {
-            if (this.user.email == "test@test.com") {
-                return true
-            }
             return this.user.emailVerified
         }
         return false
@@ -255,26 +252,17 @@ export class UserStore {
         return undefined
     }
 
-
     @computed
     get sellerEmailVerified(): boolean {
         if (this.user) {
-            if (this.user.email == "test@test.com") {
-                return true
-            }
             return this.user.sellerEmailVerified
         }
         return false
     }
 
-
-
     @computed
     get emailForSellingIsVerified(): boolean {
         if (this.user) {
-            if (this.user.email == "test@test.com") {
-                return true
-            }
             if (this.user.sellerEmail != null) {
                 return this.user.sellerEmailVerified
             }

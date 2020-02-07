@@ -157,6 +157,11 @@ const KeyRouter = observer(() => {
                         component={CardPage}
                     />
                     <Route
+                        exact={true}
+                        path={Routes.userProfilePage()}
+                        component={ProfilePage}
+                    />
+                    <Route
                         path={Routes.about}
                         component={AboutPage}
                     />
@@ -211,11 +216,6 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.verifyEmailPage()}
                         component={VerifyEmailPage}
-                    />
-                    <Route
-                        exact={true}
-                        path={Routes.userProfilePage()}
-                        component={ProfilePage}
                     />
                     <LoggedInRoute
                         exact={true}

@@ -28,7 +28,7 @@ data class Spoiler(
         val reprint: Boolean = false,
         val doubleCard: Boolean = false,
 
-        val traits: String?,
+        val traitsString: String?,
 
         val createdById: UUID,
 
@@ -49,6 +49,12 @@ data class Spoiler(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
 ) {
+
+    val traits: List<String>
+            get() {
+                return traitsString?.split(",") ?: listOf()
+            }
+
     val aercScore: Double
         get() {
             return (

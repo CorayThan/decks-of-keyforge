@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { CardFilters } from "../cards/CardFilters"
+import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
@@ -37,8 +38,13 @@ export class SpoilerStore {
     }
 
     searchSpoilers = (filters: SpoilerFilters) => {
-        const toSeach = this.allSpoilers
-        const filtered = toSeach.slice().filter(card => {
+        const toSearch = this.allSpoilers
+        const filtered = toSearch.slice().filter(spoiler => {
+            const preexisting = cardStore.fullCardFromCardName(spoiler.cardTitle)
+            if (spoiler.reprint && (preexisting == null || preexisting.extraCardInfo == null)) {
+                return false
+            }
+            const card = spoiler.reprint ? preexisting as KCard : spoiler
             return (
                 includeCardOrSpoiler(filters, card)
                 &&
@@ -46,7 +52,7 @@ export class SpoilerStore {
                 &&
                 (!filters.anomaly || card.anomaly)
                 &&
-                (!filters.excludeReprints || !card.reprint)
+                (!filters.excludeReprints || !spoiler.reprint)
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(Number(card.powerString)) !== -1)
                 &&

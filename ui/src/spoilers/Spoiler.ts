@@ -18,7 +18,10 @@ export interface Spoiler extends HasAerc {
     cardNumber?: string
     expansion: Expansion
 
-    traits?: string
+    traitsString?: string
+
+    // Received from server only, should not be sent
+    traits?: string[]
 
     createdById: string
 

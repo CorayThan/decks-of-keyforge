@@ -4,7 +4,7 @@ import { observable } from "mobx"
 import { deckMenuStore, rightMenuStore } from "../components/KeyTopbar"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { log, prettyJson } from "../config/Utils"
+import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
@@ -168,7 +168,7 @@ export class DeckStore {
         this.searchingForDecks = true
         filters.pageSize = keyLocalStorage.deckPageSize
         this.currentFilters = clone(filters)
-        log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
+        // log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
         this.nextDeckPage = undefined
         const decksPromise = this.findDecks(filters)
         const countPromise = this.findDecksCount(filters)

@@ -180,10 +180,6 @@ export class DeckFilters {
     }
     handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.myFavorites = event.target.checked
-        if (this.myFavorites) {
-            const username = userStore.username
-            this.owner = username ? username : ""
-        }
     }
 
     handleCompletedAuctionsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {

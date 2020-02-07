@@ -2,10 +2,13 @@ import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardType } from "../cards/CardType"
+import { CardSetsFromCard } from "../cards/CardSimpleView"
+import { cardStore } from "../cards/CardStore"
+import { KCard } from "../cards/KCard"
 import { rarityValues } from "../cards/rarity/Rarity"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { log } from "../config/Utils"
 import { GraySidebar } from "../generic/GraySidebar"
 import { AmberIcon } from "../generic/icons/AmberIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -36,9 +39,20 @@ export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
 
 export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler
-    const {cardTitle, cardType, cardText, amber, frontImage, id, cardNumber, house, traits, powerString, armorString, rarity} = spoiler
+    let cardData: Spoiler | KCard
+    const {reprint, cardTitle} = spoiler
+    if (reprint) {
+        const preexisting = cardStore.fullCardFromCardName(cardTitle)
+        if (preexisting == null || preexisting.extraCardInfo == null) {
+            return <div>Loading card for ${cardTitle}</div>
+        }
+        cardData = preexisting as KCard
+    } else {
+        cardData = spoiler
+    }
+    const {cardText, cardType, amber, frontImage, id, cardNumber, house, powerString, armorString, traits, rarity} = cardData
 
-    const traitsArray = traits == null ? [] : traits.split(",")
+    log.debug(`For ${cardTitle} ${reprint} traits: ${traits}`)
 
     return (
         <div style={{display: "flex", flexDirection: screenStore.screenSizeXs() || frontImage === "" ? "column" : undefined}}>
@@ -60,7 +74,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                             </UnstyledLink>
                         )}
                         <div style={{flexGrow: 1}}/>
-                        <Typography >{cardNumber == null || cardNumber.length === 0 ? "" : cardNumber}</Typography>
+                        <Typography>{cardNumber == null || cardNumber.length === 0 ? "" : cardNumber}</Typography>
                         {rarity != null && (
                             <>
                                 {rarityValues.get(rarity)!.icon}
@@ -70,34 +84,36 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                     <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
                         <Typography variant={"subtitle1"}>{cardType}</Typography>
                         <div style={{flexGrow: 1}}/>
-                        {amber > 0 ? (
+                        {reprint && (
+                            <div style={{display: "flex", marginTop: spacing(1), marginBottom: spacing(2)}}>
+                                <div style={{flexGrow: 1}}/>
+                                <Typography variant={"subtitle2"}>Reprint</Typography>
+                                <CardSetsFromCard card={cardData as KCard}/>
+                            </div>
+                        )}
+                    </div>
+                    <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                    <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
+                        {amber > 0 && (
                             <>
                                 <Typography variant={"subtitle1"}>{amber}</Typography>
-                                <AmberIcon style={{marginLeft: spacing(1)}}/>
+                                <AmberIcon style={{marginLeft: spacing(1), marginRight: spacing(2)}}/>
                             </>
-                        ) : null}
+                        )}
+                        {powerString.length > 0 && (
+                            <Typography variant={"subtitle1"} style={{marginRight: spacing(2)}}>Power: {powerString}</Typography>
+                        )}
+                        {armorString.length > 0 && (
+                            <Typography variant={"subtitle1"}>Armor: {armorString}</Typography>
+                        )}
                     </div>
-                    {cardType === CardType.Creature && (
-                        <>
-                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                            <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
-                                <Typography variant={"subtitle1"}>Power: {powerString}</Typography>
-                                <div style={{flexGrow: 1}}/>
-                                {armorString.length > 0 ? (
-                                    <>
-                                        <Typography variant={"subtitle1"}>Armor: {armorString}</Typography>
-                                    </>
-                                ) : null}
-                            </div>
-                        </>
-                    )}
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                    {traitsArray.length > 0 && (
+                    {traits != null && traits.length > 0 && (
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
-                            {traitsArray.map((trait, idx) => (
-                                <>
+                            {traits.map((trait, idx) => (
+                                <React.Fragment key={idx}>
                                     <Typography variant={"body2"}>{trait}</Typography>
-                                    {idx !== traitsArray.length - 1 && (
+                                    {idx !== traits.length - 1 && (
                                         <div style={{
                                             height: 4,
                                             width: 4,
@@ -107,11 +123,11 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                                             marginRight: spacing(1)
                                         }}/>
                                     )}
-                                </>
+                                </React.Fragment>
                             ))}
                         </div>
                     )}
-                    <Typography>{cardText}</Typography>
+                    <Typography style={{whiteSpace: "pre-line"}}>{cardText}</Typography>
 
                     {userStore.contentCreator && (
                         <>

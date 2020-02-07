@@ -17,16 +17,17 @@ export class DeckListingStore {
     listingInfo?: DeckListingDto
 
     @observable
-    decksForSale?: Map<number, DeckListingDto>
+    decksForSale?: { [key: number]: DeckListingDto }
 
     findListingsForUser = (refresh?: boolean) => {
         if (keyLocalStorage.hasAuthKey() && (refresh || this.decksForSale == null)) {
             axios.get(`${DeckListingStore.SECURE_CONTEXT}/listings-for-user`)
                 .then((response: AxiosResponse<DeckListingDto[]>) => {
-                    this.decksForSale = new Map()
+                    const decksToSell: { [key: number]: DeckListingDto } = {}
                     response.data.forEach(auctionDto => {
-                        this.decksForSale?.set(auctionDto.deckId, auctionDto)
+                        decksToSell[auctionDto.deckId] = auctionDto
                     })
+                    this.decksForSale = decksToSell
                 })
         }
     }
@@ -91,7 +92,7 @@ export class DeckListingStore {
 
     listingInfoForDeck = (deckId: number): DeckListingDto | undefined => {
         if (this.decksForSale != null) {
-            return this.decksForSale.get(deckId)
+            return this.decksForSale[deckId]
         }
         return undefined
     }

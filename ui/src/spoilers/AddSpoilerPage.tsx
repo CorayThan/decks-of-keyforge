@@ -176,7 +176,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.anomaly = spoiler.anomaly
             this.doubleCard = spoiler.doubleCard
             this.spoilerId = spoiler.id
-            this.traits = spoiler.traits ?? ""
+            this.traits = spoiler.traitsString ?? ""
 
             this.amberControl = spoiler.amberControl.toString()
             this.expectedAmber = spoiler.expectedAmber.toString()
@@ -252,7 +252,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             expectedAmber = Number(this.amber)
         }
         const traits = this.traits.trim().toUpperCase()
-        if (!traits.match(/^(\w|,)*$/)) {
+        if (!traits.match(/^(\w|,|\?)*$/)) {
             messageStore.setWarningMessage(`Please ensure traits are a comma separated list, for example "GIANT,KNIGHT"`)
             return
         }
@@ -263,7 +263,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             cardTitle,
             rarity,
             house,
-            traits,
+            traitsString: traits,
             expansion: Expansion.MM,
             amber: this.amber === "" ? 0 : Number(this.amber),
             powerString: this.power,
@@ -699,8 +699,8 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 Instructions
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
-                                Aember values should be entered as "A", for example: "1 A". When a card's text is incomplete, enter "???"
-                                where text is partially unknown.
+                                Aember values should be entered as "A", for example: "1A". Use "D" for damage values.
+                                When a card's text is incomplete, enter "???" where text is partially unknown.
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
                                 Enter double-cards only once, using the bottom, or top and bottom, cards for the image.
@@ -755,6 +755,7 @@ class AddImage extends React.Component<{ spoilerId: number }> {
     addSpoilerImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
         await spoilerStore.addImageToSpoiler(event.target.files![0], this.props.spoilerId)
         this.open = false
+        spoilerStore.findSpoiler(Number(this.props.spoilerId))
     }
 
     render() {

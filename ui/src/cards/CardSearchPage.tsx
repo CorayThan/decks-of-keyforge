@@ -211,26 +211,25 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
         const cardsDisplayedLength = allCards == null ? this.spoilersToDisplay.length : this.cardsToDisplay.length
         return (
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}} onScroll={this.handleScroll}>
-                <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                    {allCards == null ? (
-                        <>
-                            {this.spoilersToDisplay.map(spoiler => (
-                                <SpoilerView spoiler={spoiler} key={spoiler.id}/>
-                            ))}
-                        </>
-                    ) : (
-                        <>
-                            {this.cardsToDisplay.map(card => (
-                                <CardView
-                                    card={card}
-                                    key={card.id}
-                                    simple={keyLocalStorage.cardListViewType === "image"}
-                                    displayHistory={showHistory}
-                                />
-                            ))}
-                        </>
-                    )}
-                </div>
+                {allCards != null && (
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                        {this.cardsToDisplay.map(card => (
+                            <CardView
+                                card={card}
+                                key={card.id}
+                                simple={keyLocalStorage.cardListViewType === "image"}
+                                displayHistory={showHistory}
+                            />
+                        ))}
+                    </div>
+                )}
+                {allCards == null && (
+                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                        {this.spoilersToDisplay.map(spoiler => (
+                            <SpoilerView spoiler={spoiler} key={spoiler.id}/>
+                        ))}
+                    </div>
+                )}
                 {cardsDisplayedLength !== allCardsLength ? (
                     <div ref={this.loadMoreRef}>
                         <Loader/>

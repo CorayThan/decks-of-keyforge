@@ -41,11 +41,11 @@ export const ComparisonBar = (props: ComparisonBarProps) => (
                 data={props.data}
                 style={{
                     data: {
-                        fill: (d: { x: number }) => {
+                        fill: ({datum}) => {
                             if (themeStore.darkMode) {
-                                return d.x === props.comparison ? amber.A100 : blue.A100
+                                return datum.x === props.comparison ? amber.A100 : blue.A100
                             }
-                            return d.x === props.comparison ? amber["500"] : blue["500"]
+                            return datum.x === props.comparison ? amber["500"] : blue["500"]
                         }
                     }
                 }}

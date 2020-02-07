@@ -63,7 +63,15 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
     )
 }
 
-export const CardView = observer((props: { card: KCard, simple?: boolean, noLink?: boolean, combo?: SynergyCombo, displayHistory?: boolean }) => {
+interface CardViewProps {
+    card: KCard
+    simple?: boolean
+    noLink?: boolean
+    combo?: SynergyCombo
+    displayHistory?: boolean
+}
+
+export const CardView = observer((props: CardViewProps) => {
     const {card, simple, noLink, combo, displayHistory} = props
     if (simple) {
         return <CardSimpleView card={card}/>

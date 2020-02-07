@@ -14,10 +14,12 @@ export interface KCard {
     frontImage: string
     cardType: CardType
     cardText: string
-    traits: string[]
+    traits?: string[]
     amber: number
     power: number
     armor: number
+    powerString: string
+    armorString: string
     rarity: Rarity
     flavorText?: string
     cardNumber: string
@@ -145,8 +147,8 @@ export class CardUtils {
                 card.extraCardInfo.otherMax,
 
                 card.amber,
-                card.power,
-                card.armor,
+                card.powerString,
+                card.armorString,
                 card.wins,
                 card.losses,
 
