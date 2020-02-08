@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.13"
+export const latestVersion = "4.14"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,29 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.14"}
+                    date={"2/8/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Mass Mutation Spoilers!",
+                            note: "Check out the spoilers for Mass Mutation! This is a community driven project to help everyone have spoilers " +
+                                "to see and search."
+                        },
+                        {
+                            note: (<NotesLink style={{marginRight: spacing(2)}} to={Routes.spoilers}>Mass Mutation Spoilers</NotesLink>)
+                        },
+                        {
+                            highlight: "Help create spoilers",
+                            note: "If you help add spoilers you can get kudos on the spoilers page, as well as a temporary free " +
+                                "$5 site subscription! Join the Discord server and message CorayThan in the Spoilers channel to help out."
+                        },
+                        {
+                            note: (<DiscordButton/>)
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.13"}
                     date={"2/1/2020"}

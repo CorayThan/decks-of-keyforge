@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.LocalTime
@@ -42,55 +43,72 @@ class DeckListingService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = "PT1000H")
-    @SchedulerLock(name = "clearUnownedForSale", lockAtMostForString = "PT1000H", lockAtLeastForString = "PT1000H")
+    @SchedulerLock(name = "clearUnownedForSale2", lockAtMostForString = "PT1000H", lockAtLeastForString = "PT1000H")
     fun clearUnownedForSaleDecks() {
-        val toClear = deckListingRepo.findByStatusEquals(DeckListingStatus.BUY_IT_NOW_ONLY)
-        log.info("Start clearing out unowned for sale decks to clear: ${toClear.size}")
-        var count = 0
-        var cleared = 0
-        toClear.forEach {
-            count++
-            if (count % 1000 == 0) log.info("Checking deck $count")
-            val owned = userDeckRepo.existsByDeckIdAndOwnedBy(it.deck.id, it.seller.username)
-            if (!owned) {
-                log.info("Listing with deck id ${it.deck.keyforgeId} is not owned by ${it.seller.username}")
-                cleared++
-                updateDeckListingStatus(it)
-                deckListingRepo.delete(it)
+        try {
+            val toClear = deckListingRepo.findByStatusEquals(DeckListingStatus.BUY_IT_NOW_ONLY)
+            log.info("Start clearing out unowned for sale decks to clear: ${toClear.size}")
+            var count = 0
+            var cleared = 0
+            toClear.forEach {
+                count++
+                if (count % 1000 == 0) log.info("Checking deck $count")
+                val owned = userDeckRepo.existsByDeckIdAndOwnedBy(it.deck.id, it.seller.username)
+                if (!owned) {
+                    try {
+                        log.info("Listing with deck id ${it.deck.keyforgeId} is not owned by ${it.seller.username}")
+                        cleared++
+                        updateDeckListingStatus(it)
+                        deckListingRepo.delete(it)
+                    } catch (e: Exception) {
+                        log.error("Exception unlisting deck ${it.deck.keyforgeId}", e)
+                    }
+                }
             }
+            log.info("Done clearing out unowned for sale decks, cleared $cleared")
+        } catch (e: Exception) {
+            log.error("Couldn't clear unowned for sale decks", e)
         }
-        log.info("Done clearing out unowned for sale decks, cleared $cleared")
     }
 
     @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
     fun unlistExpiredDecks() {
-        log.info("$scheduledStart unlisting expired for sale decks.")
+        try {
+            log.info("$scheduledStart unlisting expired for sale decks.")
 
-        val buyItNowsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.BUY_IT_NOW_ONLY, now())
+            val buyItNowsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.BUY_IT_NOW_ONLY, now())
 
-        buyItNowsToComplete.forEach {
-            updateDeckListingStatus(it)
-            deckListingRepo.delete(it)
+            buyItNowsToComplete.forEach {
+                updateDeckListingStatus(it)
+                deckListingRepo.delete(it)
+            }
+
+            log.info("$scheduledStop unlisting expired for sale decks.")
+        } catch (e: Exception) {
+            log.error("Couldn't unlist expired decks", e)
         }
-
-        log.info("$scheduledStop unlisting expired for sale decks.")
     }
 
     @Scheduled(cron = "0 */15 * * * *")
     @SchedulerLock(name = "completeAuctions", lockAtMostForString = fourteenMin, lockAtLeastForString = fourteenMin)
     fun completeAuctions() {
-        log.info("$scheduledStart complete auctions.")
+        try {
+            log.info("$scheduledStart complete auctions.")
 
-        val auctionsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.ACTIVE, now())
+            val auctionsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.ACTIVE, now())
 
-        auctionsToComplete.forEach {
-            val buyer = it.highestBidder()
-            log.info("Auction to complete: ${it.endDateTime}")
-            endAuction(buyer != null, it)
+            auctionsToComplete.forEach {
+                val buyer = it.highestBidder()
+                log.info("Auction to complete: ${it.endDateTime}")
+                endAuction(buyer != null, it)
+            }
+
+            log.info("$scheduledStop complete auctions.")
+        }catch (e: Exception) {
+            log.error("Couldn't complete auctions", e)
         }
-
-        log.info("$scheduledStop complete auctions.")
     }
 
     fun list(listingInfo: ListingInfo, offsetMinutes: Int) {

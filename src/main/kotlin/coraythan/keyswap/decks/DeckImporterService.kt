@@ -175,7 +175,6 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksDelay)
     fun rateDecks() {
 
-
         // If next page is null, we know we are done
         var nextDeckPage = deckRatingProgressService.nextPage() ?: return
         var quantFound = 0

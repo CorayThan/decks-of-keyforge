@@ -123,7 +123,6 @@ export class SpoilerSearchDrawer extends React.Component {
                                                 this.filters.reprints = true
                                             }
                                         }}
-                                        color="primary"
                                     />
                                 }
                                 label="New Cards"
@@ -138,7 +137,6 @@ export class SpoilerSearchDrawer extends React.Component {
                                                 this.filters.newCards = true
                                             }
                                         }}
-                                        color="primary"
                                     />
                                 }
                                 label="Reprints"

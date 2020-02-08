@@ -1,4 +1,4 @@
-import { Divider, IconButton, Link, Paper, Typography } from "@material-ui/core"
+import { Divider, IconButton, Paper, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import React from "react"
@@ -43,13 +43,7 @@ export class SpoilerKudos extends React.Component {
                                 (
                                     <div key={"example"}>
                                         <Typography variant={"body2"}>
-                                            <Link
-                                                target={"_blank"}
-                                                href={"https://google.com"}
-                                            >
-                                                Example contributor
-                                            </Link>
-                                            {" & stuff"}
+                                            Contact me to help out and get your name / link in this list!
                                         </Typography>
                                     </div>
                                 ),
@@ -57,7 +51,7 @@ export class SpoilerKudos extends React.Component {
                         />
                         <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                         <Typography variant={"body2"}>
-                            To contribute and get your name in the kudos please contact Coraythan on the DoK discord:
+                            To contribute and get your name in the kudos please contact CorayThan on the DoK discord:
                         </Typography>
                         <DiscordNamedButton name={"DoK"} link={decksOfKeyForgeDiscord} style={{marginTop: spacing(1)}}/>
                     </div>) : (

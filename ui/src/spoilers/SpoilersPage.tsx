@@ -2,6 +2,7 @@ import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { CardsContainerWithScroll } from "../cards/CardSearchPage"
+import { cardStore } from "../cards/CardStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
@@ -29,8 +30,9 @@ export class SpoilersPage extends React.Component {
     render() {
 
         const {spoilers, searchingForSpoilers} = spoilerStore
+        const {allCards} = cardStore
 
-        if (spoilers == null) {
+        if (spoilers == null || allCards.length === 0) {
             return <Loader/>
         }
 
