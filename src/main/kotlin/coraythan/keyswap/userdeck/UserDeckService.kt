@@ -1,5 +1,8 @@
 package coraythan.keyswap.userdeck
 
+import coraythan.keyswap.auctions.DeckListingRepo
+import coraythan.keyswap.auctions.DeckListingStatus
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.scheduledStart
@@ -20,7 +23,8 @@ class UserDeckService(
         private val userRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val userSearchService: UserSearchService,
-        private val userDeckRepo: UserDeckRepo
+        private val userDeckRepo: UserDeckRepo,
+        private val deckListingRepo: DeckListingRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -71,6 +75,9 @@ class UserDeckService(
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
         val user = currentUserService.loggedInUserOrUnauthorized()
+        if (deckListingRepo.existsBySellerIdAndDeckIdAndStatusNot(user.id, deckId, DeckListingStatus.COMPLETE)) {
+            throw BadRequestException("Please unlist the deck for sale before removing it from your decks.")
+        }
         modOrCreateUserDeck(deckId, user, null) {
             it.copy(ownedBy = if (mark) user.username else null)
         }

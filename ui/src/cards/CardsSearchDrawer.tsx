@@ -13,11 +13,13 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
+import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { cardStore } from "./CardStore"
+import { CardUtils } from "./KCard"
 import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
 import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
@@ -148,10 +150,14 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                             </div>
                         </ListItem>
                         <ListItem>
+                            <CsvDownloadButton
+                                data={CardUtils.arrayToCSV(cardStore.cards ?? [])}
+                                name={"cards"}
+                            />
                             <KeyButton
                                 variant={"outlined"}
                                 onClick={this.clearSearch}
-                                style={{marginRight: spacing(2)}}
+                                style={{marginRight: spacing(2), marginLeft: spacing(2)}}
                             >
                                 Clear
                             </KeyButton>

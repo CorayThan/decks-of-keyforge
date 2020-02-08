@@ -20,6 +20,7 @@ export const CsvDownloadButton = observer((props: { name: string, data?: any[] }
             data={data}
             target={"_blank"}
             filename={`dok-${name}-${Utils.nowDateString()}.csv`}
+
         >
             <IconButton>
                 <GetApp/>

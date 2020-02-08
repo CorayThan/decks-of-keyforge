@@ -53,7 +53,9 @@ export class SpoilerUtils {
                 card.reprint,
 
                 card.traits,
-                card.cardText.replace(/"/g, "\"\""),
+                card.cardText
+                    .replace(/[\r\n]+/gm, "\r")
+                    .replace(/"/g, "\"\""),
             ]
         })
         data.unshift([

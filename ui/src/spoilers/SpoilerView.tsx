@@ -40,7 +40,7 @@ export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
 export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler
     let cardData: Spoiler | KCard
-    const {reprint, cardTitle} = spoiler
+    const {reprint, cardTitle, cardNumber, id} = spoiler
     if (reprint) {
         const preexisting = cardStore.fullCardFromCardName(cardTitle)
         if (preexisting == null || preexisting.extraCardInfo == null) {
@@ -50,7 +50,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
     } else {
         cardData = spoiler
     }
-    const {cardText, cardType, amber, frontImage, id, cardNumber, house, powerString, armorString, traits, rarity} = cardData
+    const {cardText, cardType, amber, frontImage, house, powerString, armorString, traits, rarity} = cardData
 
     log.debug(`For ${cardTitle} ${reprint} traits: ${traits}`)
 
@@ -100,10 +100,10 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                                 <AmberIcon style={{marginLeft: spacing(1), marginRight: spacing(2)}}/>
                             </>
                         )}
-                        {powerString.length > 0 && (
+                        {powerString.length > 0 && powerString !== "0" && (
                             <Typography variant={"subtitle1"} style={{marginRight: spacing(2)}}>Power: {powerString}</Typography>
                         )}
-                        {armorString.length > 0 && (
+                        {armorString.length > 0 && armorString !== "0" && (
                             <Typography variant={"subtitle1"}>Armor: {armorString}</Typography>
                         )}
                     </div>

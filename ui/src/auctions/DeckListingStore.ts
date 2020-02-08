@@ -1,12 +1,13 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { ListingInfo } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { BidPlacementResult } from "./BidPlacementResult"
-import { DeckListingDto } from "./DeckListingDto"
+import { DeckListingDto, UserDeckListingInfo } from "./DeckListingDto"
 
 export class DeckListingStore {
 
@@ -17,18 +18,20 @@ export class DeckListingStore {
     listingInfo?: DeckListingDto
 
     @observable
-    decksForSale?: { [key: number]: DeckListingDto }
+    decksForSale?: { [key: number]: UserDeckListingInfo }
 
     findListingsForUser = (refresh?: boolean) => {
         if (keyLocalStorage.hasAuthKey() && (refresh || this.decksForSale == null)) {
             axios.get(`${DeckListingStore.SECURE_CONTEXT}/listings-for-user`)
-                .then((response: AxiosResponse<DeckListingDto[]>) => {
-                    const decksToSell: { [key: number]: DeckListingDto } = {}
+                .then((response: AxiosResponse<UserDeckListingInfo[]>) => {
+                    const decksToSell: { [key: number]: UserDeckListingInfo } = {}
                     response.data.forEach(auctionDto => {
                         decksToSell[auctionDto.deckId] = auctionDto
                     })
                     this.decksForSale = decksToSell
                 })
+        } else {
+            log.debug(`Skip listings for user request due to ${keyLocalStorage.hasAuthKey()} ${refresh} ${this.decksForSale == null}`)
         }
     }
 
@@ -72,7 +75,8 @@ export class DeckListingStore {
     }
 
     findDeckListingInfo = (auctionId: string) => {
-        axios.get(`${DeckListingStore.CONTEXT}/${auctionId}`)
+        this.listingInfo = undefined
+        return axios.get(`${DeckListingStore.CONTEXT}/${auctionId}`)
             .then((response: AxiosResponse<DeckListingDto>) => {
                 this.listingInfo = response.data
             })
@@ -90,11 +94,16 @@ export class DeckListingStore {
             })
     }
 
-    listingInfoForDeck = (deckId: number): DeckListingDto | undefined => {
+    listingInfoForDeck = (deckId: number): UserDeckListingInfo | undefined => {
         if (this.decksForSale != null) {
             return this.decksForSale[deckId]
         }
         return undefined
+    }
+
+    @computed
+    get decksForSaleLoaded(): boolean {
+        return this.decksForSale != null
     }
 }
 

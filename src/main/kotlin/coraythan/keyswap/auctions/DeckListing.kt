@@ -111,6 +111,16 @@ data class DeckListing(
             }
         }
 
+    fun toUserDeckListingInfo(): UserDeckListingInfo {
+        return UserDeckListingInfo(
+                status = status,
+                forTrade = forTrade,
+                bidsExist = bids.isNotEmpty(),
+                deckId = deck.id,
+                id = id
+        )
+    }
+
     fun toDto(offsetMinutes: Int = 0): DeckListingDto {
         val highestBid = highestBid
         return DeckListingDto(
@@ -134,7 +144,7 @@ data class DeckListing(
                 deckId = deck.id,
                 currencySymbol = currencySymbol,
                 language = language,
-                condtion = condition,
+                condition = condition,
                 listingInfo = listingInfo,
                 externalLink = externalLink,
                 forTrade = forTrade,
@@ -157,7 +167,7 @@ data class DeckListingDto(
         val currencySymbol: String,
         val highestOffer: Int? = null,
         val language: DeckLanguage,
-        val condtion: DeckCondition,
+        val condition: DeckCondition,
         val listingInfo: String?,
         val externalLink: String?,
         val forTrade: Boolean,
@@ -169,6 +179,14 @@ data class DeckListingDto(
     val expiresAtLocalDate: LocalDate
         get() = this.endDateTime.toLocalDate()
 }
+
+data class UserDeckListingInfo(
+        val status: DeckListingStatus,
+        val forTrade: Boolean,
+        val deckId: Long,
+        val bidsExist: Boolean,
+        val id: UUID
+)
 
 enum class DeckListingStatus {
     BUY_IT_NOW_ONLY,

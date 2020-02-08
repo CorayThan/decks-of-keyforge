@@ -96,10 +96,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
     }
 
-    handleOpenForEdit = () => {
+    handleOpenForEdit = async () => {
         const saleInfo = auctionStore.listingInfoForDeck(this.props.deck.id)
         if (saleInfo != null) {
-            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status} = saleInfo
+            await auctionStore.findDeckListingInfo(saleInfo.id)
+            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status} = auctionStore.listingInfo!
             this.open = true
             this.editAuctionId = saleInfo.id
             this.language = language ?? DeckLanguage.ENGLISH
@@ -219,7 +220,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
         const auctionInfo = auctionStore.listingInfoForDeck(deck.id)
         let saleButton
-        if (auctionInfo && auctionInfo.status === DeckListingStatus.ACTIVE && auctionInfo.bids.length === 0) {
+        if (auctionInfo && auctionInfo.status === DeckListingStatus.ACTIVE && !auctionInfo.bidsExist) {
             saleButton = (
                 <DeckActionClickable
                     menuItem={menuItem}

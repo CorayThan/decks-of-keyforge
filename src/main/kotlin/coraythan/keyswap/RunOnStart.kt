@@ -46,8 +46,6 @@ class RunOnStart(
 
         // this.downloadAllCardImages()
 
-//        deckListingService.convertAllDeckSalesToListings()
-
         userSearchService.updateSearchResults()
 
         startupComplete = true

@@ -116,21 +116,24 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         <Typography variant={"h5"}>{name}</Typography>
                                     </KeyLink>
                                 </div>
-                                {!forAuction && (forSale || userDeckForSale) ? (
-                                    <Tooltip title={"For sale"}>
-                                        <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
-                                    </Tooltip>
-                                ) : null}
-                                {!forAuction && (forTrade || userDeckForTrade) ? (
-                                    <Tooltip title={"For trade"}>
-                                        <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
-                                    </Tooltip>
-                                ) : null}
                                 {forAuction || userDeckForAuction ? (
                                     <Tooltip title={"On auction"}>
                                         <div style={{marginLeft: spacing(1)}}><AuctionDeckIcon/></div>
                                     </Tooltip>
-                                ) : null}
+                                ) : (
+                                    <>
+                                        {forSale || userDeckForSale && (
+                                            <Tooltip title={"For sale"}>
+                                                <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
+                                            </Tooltip>
+                                        )}
+                                        {forTrade || userDeckForTrade && (
+                                            <Tooltip title={"For trade"}>
+                                                <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                                            </Tooltip>
+                                        )}
+                                    </>
+                                )}
                             </div>
                             <DisplayAllCardsByHouse deck={deck}/>
                             <Collapse in={userDeckStore.viewNotes}>

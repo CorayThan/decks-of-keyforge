@@ -8,6 +8,7 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
+import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -35,10 +36,32 @@ class DeckListingService(
         private val emailService: EmailService,
         private val forSaleNotificationsService: ForSaleNotificationsService,
         private val userRepo: KeyUserRepo,
-        private val userSearchService: UserSearchService
+        private val userSearchService: UserSearchService,
+        private val userDeckRepo: UserDeckRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    @Scheduled(fixedDelayString = "PT1000H")
+    @SchedulerLock(name = "clearUnownedForSale", lockAtMostForString = "PT1000H", lockAtLeastForString = "PT1000H")
+    fun clearUnownedForSaleDecks() {
+        val toClear = deckListingRepo.findByStatusEquals(DeckListingStatus.BUY_IT_NOW_ONLY)
+        log.info("Start clearing out unowned for sale decks to clear: ${toClear.size}")
+        var count = 0
+        var cleared = 0
+        toClear.forEach {
+            count++
+            if (count % 1000 == 0) log.info("Checking deck $count")
+            val owned = userDeckRepo.existsByDeckIdAndOwnedBy(it.deck.id, it.seller.username)
+            if (!owned) {
+                log.info("Listing with deck id ${it.deck.keyforgeId} is not owned by ${it.seller.username}")
+                cleared++
+                updateDeckListingStatus(it)
+                deckListingRepo.delete(it)
+            }
+        }
+        log.info("Done clearing out unowned for sale decks, cleared $cleared")
+    }
 
     @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
     fun unlistExpiredDecks() {
@@ -302,10 +325,10 @@ class DeckListingService(
         return true
     }
 
-    fun findActiveListingsForUser(offsetMinutes: Int): List<DeckListingDto> {
+    fun findActiveListingsForUser(): List<UserDeckListingInfo> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return deckListingRepo.findAllBySellerIdAndStatusNot(currentUser.id, DeckListingStatus.COMPLETE)
-                .map { it.toDto(offsetMinutes) }
+                .map { it.toUserDeckListingInfo() }
     }
 
     private fun updateDeckListingStatus(listing: DeckListing, sold: Boolean = false) {

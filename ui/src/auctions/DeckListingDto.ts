@@ -24,6 +24,14 @@ export interface DeckListingDto {
     id: string
 }
 
+export interface UserDeckListingInfo {
+    status: DeckListingStatus
+    forTrade: boolean
+    bidsExist: boolean
+    deckId: number
+    id: string
+}
+
 export enum DeckListingStatus {
     BUY_IT_NOW_ONLY = "BUY_IT_NOW_ONLY",
     ACTIVE = "ACTIVE",

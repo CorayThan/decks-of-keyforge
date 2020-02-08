@@ -699,7 +699,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                 Instructions
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
-                                Aember values should be entered as "A", for example: "1A". Use "D" for damage values.
+                                Aember values should be entered as "A", e.g. "1A". Use "D" for damage values.
                                 When a card's text is incomplete, enter "???" where text is partially unknown.
                             </Typography>
                             <Typography style={{marginBottom: spacing(2)}} variant={"body2"}>
