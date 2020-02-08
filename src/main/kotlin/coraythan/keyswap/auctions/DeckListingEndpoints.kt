@@ -5,7 +5,6 @@ import coraythan.keyswap.userdeck.ListingInfo
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 @RestController
 @RequestMapping("${Api.base}/deck-listings")
@@ -31,14 +30,6 @@ class DeckListingEndpoints(
     fun auctionInfo(@PathVariable deckListingId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int) = deckListingService.deckListingInfo(deckListingId, offsetMinutes)
 
     @GetMapping("/secured/listings-for-user")
-    fun activeListingsForUser(): List<UserDeckListingInfo> {
-        var listings: List<UserDeckListingInfo> = listOf()
-        val msTaken = measureTimeMillis {
-            listings = deckListingService.findActiveListingsForUser()
-
-        }
-        log.info("Took $msTaken to load listings for user")
-        return listings
-    }
+    fun activeListingsForUser() = deckListingService.findActiveListingsForUser()
 
 }

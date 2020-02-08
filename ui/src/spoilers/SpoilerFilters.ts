@@ -21,13 +21,17 @@ export class SpoilerFilters {
     anomaly = false
 
     @observable
-    excludeReprints = false
+    reprints = true
+
+    @observable
+    newCards = true
 
     reset = () => {
         this.title = ""
         this.description = ""
         this.anomaly = false
-        this.excludeReprints = false
+        this.reprints = true
+        this.newCards = true
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

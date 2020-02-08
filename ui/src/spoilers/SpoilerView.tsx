@@ -52,6 +52,10 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
     }
     const {cardText, cardType, amber, frontImage, house, powerString, armorString, traits, rarity} = cardData
 
+    const displayAember = amber > 0
+    const displayCreaturePower = powerString.length > 0 && powerString !== "0"
+    const displayCreatureArmor = armorString.length > 0 && armorString !== "0"
+
     log.debug(`For ${cardTitle} ${reprint} traits: ${traits}`)
 
     return (
@@ -94,20 +98,20 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                     </div>
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                     <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>
-                        {amber > 0 && (
+                        {displayAember && (
                             <>
                                 <Typography variant={"subtitle1"}>{amber}</Typography>
                                 <AmberIcon style={{marginLeft: spacing(1), marginRight: spacing(2)}}/>
                             </>
                         )}
-                        {powerString.length > 0 && powerString !== "0" && (
+                        {displayCreaturePower && (
                             <Typography variant={"subtitle1"} style={{marginRight: spacing(2)}}>Power: {powerString}</Typography>
                         )}
-                        {armorString.length > 0 && armorString !== "0" && (
+                        {displayCreatureArmor && (
                             <Typography variant={"subtitle1"}>Armor: {armorString}</Typography>
                         )}
                     </div>
-                    <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                    {displayAember || displayCreaturePower || displayCreatureArmor && <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>}
                     {traits != null && traits.length > 0 && (
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
                             {traits.map((trait, idx) => (

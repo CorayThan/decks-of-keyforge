@@ -52,7 +52,7 @@ export class SpoilerStore {
                 &&
                 (!filters.anomaly || card.anomaly)
                 &&
-                (!filters.excludeReprints || !spoiler.reprint)
+                ((filters.reprints && spoiler.reprint) || (filters.newCards && !spoiler.reprint))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(Number(card.powerString)) !== -1)
                 &&

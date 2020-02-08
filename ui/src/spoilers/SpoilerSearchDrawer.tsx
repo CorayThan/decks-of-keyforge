@@ -116,12 +116,32 @@ export class SpoilerSearchDrawer extends React.Component {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.filters.excludeReprints}
-                                        onChange={() => this.filters.excludeReprints = !this.filters.excludeReprints}
+                                        checked={this.filters.newCards}
+                                        onChange={() => {
+                                            this.filters.newCards = !this.filters.newCards
+                                            if (!this.filters.newCards) {
+                                                this.filters.reprints = true
+                                            }
+                                        }}
                                         color="primary"
                                     />
                                 }
-                                label="Exclude Reprints"
+                                label="New Cards"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.filters.reprints}
+                                        onChange={() => {
+                                            this.filters.reprints = !this.filters.reprints
+                                            if (!this.filters.reprints) {
+                                                this.filters.newCards = true
+                                            }
+                                        }}
+                                        color="primary"
+                                    />
+                                }
+                                label="Reprints"
                             />
                         </ListItem>
                         <ListItem>

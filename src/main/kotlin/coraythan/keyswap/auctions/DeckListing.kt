@@ -115,7 +115,7 @@ data class DeckListing(
         return UserDeckListingInfo(
                 status = status,
                 forTrade = forTrade,
-                bidsExist = bids.isNotEmpty(),
+                bidsExist = status == DeckListingStatus.ACTIVE && bids.isNotEmpty(),
                 deckId = deck.id,
                 id = id
         )
