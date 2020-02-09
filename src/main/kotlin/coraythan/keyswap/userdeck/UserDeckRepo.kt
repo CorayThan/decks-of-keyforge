@@ -9,6 +9,4 @@ interface UserDeckRepo : JpaRepository<UserDeck, UUID>, QuerydslPredicateExecuto
 
     fun findByUserId(userId: UUID): List<UserDeck>
 
-    fun existsByDeckIdAndOwnedBy(deckId: Long, ownedBy: String): Boolean
-
 }

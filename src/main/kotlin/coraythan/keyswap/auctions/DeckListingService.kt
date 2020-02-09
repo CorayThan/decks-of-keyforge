@@ -8,7 +8,6 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
-import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -20,7 +19,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.LocalTime
@@ -37,55 +35,10 @@ class DeckListingService(
         private val emailService: EmailService,
         private val forSaleNotificationsService: ForSaleNotificationsService,
         private val userRepo: KeyUserRepo,
-        private val userSearchService: UserSearchService,
-        private val userDeckRepo: UserDeckRepo
+        private val userSearchService: UserSearchService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    private var cleanListings = mutableListOf<UUID>()
-
-    @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = "PT1000H")
-    @SchedulerLock(name = "clearUnownedForSale2", lockAtMostForString = "PT1000H", lockAtLeastForString = "PT1000H")
-    fun clearUnownedForSaleDecks() {
-        try {
-            val toClear = deckListingRepo.findByStatusEquals(DeckListingStatus.BUY_IT_NOW_ONLY)
-            log.info("Start clearing out unowned for sale decks to clear: ${toClear.size}")
-            var count = 0
-            var cleared = 0
-            toClear.forEach {
-                count++
-                if (count % 1000 == 0) log.info("Checking deck to clear out $count")
-                val owned = userDeckRepo.existsByDeckIdAndOwnedBy(it.deck.id, it.seller.username)
-                if (!owned) {
-                    try {
-                        log.info("Listing with deck id ${it.deck.keyforgeId} is not owned by ${it.seller.username}")
-                        cleared++
-                        cleanListings.add(it.id)
-                    } catch (e: Throwable) {
-                        log.error("$scheduledException Exception unlisting deck ${it.deck.keyforgeId}", e)
-                    }
-                }
-            }
-            log.info("Done clearing out unowned for sale decks, cleared $cleared")
-        } catch (e: Throwable) {
-            log.error("$scheduledException Couldn't clear unowned for sale decks", e)
-        }
-    }
-
-    @Scheduled(fixedDelayString = "PT10M", initialDelayString = "PT2M")
-    fun cleanOutDecks() {
-        val toClean = cleanListings.toMutableList()
-        cleanListings = mutableListOf()
-        log.info("Clean out $toClean")
-        toClean.forEach {
-            val listing = deckListingRepo.findByIdOrNull(it) ?: throw IllegalStateException("No deck listing for id $it")
-            updateDeckListingStatus(listing)
-            deckListingRepo.delete(listing)
-        }
-        log.info("Done cleaning")
-    }
 
     @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
     fun unlistExpiredDecks() {
