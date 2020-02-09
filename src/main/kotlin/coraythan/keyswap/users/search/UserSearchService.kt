@@ -5,6 +5,7 @@ import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.tokenize
@@ -41,38 +42,42 @@ class UserSearchService(
     @Scheduled(fixedDelayString = lockUpdateUserSearchStatsFor, initialDelayString = SchedulingConfig.updateUserStats)
     @SchedulerLock(name = "updateUserStats", lockAtLeastForString = lockUpdateUserSearchStatsFor, lockAtMostForString = lockUpdateUserSearchStatsFor)
     fun updateUserStats() {
-        log.info("$scheduledStart update user stats.")
-        var count = 0
-        var generationTime: Long = 0
-        val userUpdateTime = measureTimeMillis {
-            val users = userRepo.findTop100ByUpdateStatsTrue()
-            count = users.size
-            users
-                    .forEach {
-                        var dataNullable: UserSearchResult? = null
-                        val singleGenTime = measureTimeMillis {
-                            dataNullable = it.generateSearchResult()
+        try {
+            log.info("$scheduledStart update user stats.")
+            var count = 0
+            var generationTime: Long = 0
+            val userUpdateTime = measureTimeMillis {
+                val users = userRepo.findTop100ByUpdateStatsTrue()
+                count = users.size
+                users
+                        .forEach {
+                            var dataNullable: UserSearchResult? = null
+                            val singleGenTime = measureTimeMillis {
+                                dataNullable = it.generateSearchResult()
+                            }
+                            val data = dataNullable!!
+                            generationTime += singleGenTime
+                            userRepo.updateUserStats(
+                                    it.id,
+                                    data.deckCount,
+                                    data.forSaleCount,
+                                    data.topSasAverage,
+                                    data.highSas,
+                                    data.lowSas,
+                                    data.totalPower,
+                                    data.totalChains,
+                                    data.mavericks,
+                                    data.anomalies
+                            )
                         }
-                        val data = dataNullable!!
-                        generationTime += singleGenTime
-                        userRepo.updateUserStats(
-                                it.id,
-                                data.deckCount,
-                                data.forSaleCount,
-                                data.topSasAverage,
-                                data.highSas,
-                                data.lowSas,
-                                data.totalPower,
-                                data.totalChains,
-                                data.mavericks,
-                                data.anomalies
-                        )
-                    }
+            }
+
+            this.updateSearchResults()
+
+            log.info("$scheduledStop Updated $count users in $userUpdateTime ms gen time $generationTime ms")
+        } catch (e: Throwable) {
+            log.error("$scheduledException updating stats for users")
         }
-
-        this.updateSearchResults()
-
-        log.info("$scheduledStop Updated $count users in $userUpdateTime ms gen time $generationTime ms")
     }
 
     fun currentSearchResults() = UserSearchResults(

@@ -43,6 +43,8 @@ class DeckListingService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    private var cleanListings = mutableListOf<UUID>()
+
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = "PT1000H")
     @SchedulerLock(name = "clearUnownedForSale2", lockAtMostForString = "PT1000H", lockAtLeastForString = "PT1000H")
@@ -54,23 +56,35 @@ class DeckListingService(
             var cleared = 0
             toClear.forEach {
                 count++
-                if (count % 1000 == 0) log.info("Checking deck $count")
+                if (count % 1000 == 0) log.info("Checking deck to clear out $count")
                 val owned = userDeckRepo.existsByDeckIdAndOwnedBy(it.deck.id, it.seller.username)
                 if (!owned) {
                     try {
                         log.info("Listing with deck id ${it.deck.keyforgeId} is not owned by ${it.seller.username}")
                         cleared++
-                        updateDeckListingStatus(it)
-                        deckListingRepo.delete(it)
-                    } catch (e: Exception) {
-                        log.error("Exception unlisting deck ${it.deck.keyforgeId}", e)
+                        cleanListings.add(it.id)
+                    } catch (e: Throwable) {
+                        log.error("$scheduledException Exception unlisting deck ${it.deck.keyforgeId}", e)
                     }
                 }
             }
             log.info("Done clearing out unowned for sale decks, cleared $cleared")
-        } catch (e: Exception) {
-            log.error("Couldn't clear unowned for sale decks", e)
+        } catch (e: Throwable) {
+            log.error("$scheduledException Couldn't clear unowned for sale decks", e)
         }
+    }
+
+    @Scheduled(fixedDelayString = "PT10M", initialDelayString = "PT2M")
+    fun cleanOutDecks() {
+        val toClean = cleanListings.toMutableList()
+        cleanListings = mutableListOf()
+        log.info("Clean out $toClean")
+        toClean.forEach {
+            val listing = deckListingRepo.findByIdOrNull(it) ?: throw IllegalStateException("No deck listing for id $it")
+            updateDeckListingStatus(listing)
+            deckListingRepo.delete(listing)
+        }
+        log.info("Done cleaning")
     }
 
     @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
@@ -86,8 +100,8 @@ class DeckListingService(
             }
 
             log.info("$scheduledStop unlisting expired for sale decks.")
-        } catch (e: Exception) {
-            log.error("Couldn't unlist expired decks", e)
+        } catch (e: Throwable) {
+            log.error("$scheduledException Couldn't unlist expired decks", e)
         }
     }
 
@@ -106,8 +120,8 @@ class DeckListingService(
             }
 
             log.info("$scheduledStop complete auctions.")
-        }catch (e: Exception) {
-            log.error("Couldn't complete auctions", e)
+        } catch (e: Throwable) {
+            log.error("$scheduledException Couldn't complete auctions", e)
         }
     }
 

@@ -12,6 +12,7 @@ import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.activeExpansions
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
@@ -125,109 +126,118 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockUpdateCleanUnregistered, initialDelayString = SchedulingConfig.cleanUnregisteredDecks)
     @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
-        log.info("$scheduledStart clean out unregistered decks.")
-        var unregDeckCount = 0
-        var cleanedOut = 0
-        val msToCleanUnreg = measureTimeMillis {
-            val allUnregDecks = deckRepo.findAllByRegisteredFalse()
-            unregDeckCount = allUnregDecks.size
-            allUnregDecks.forEach { unreg ->
-                try {
-                    val decksLike = deckRepo.findByNameIgnoreCase(unreg.name.trim().dropLastWhile { it == '\\' })
-                            .filter { it.id != unreg.id }
-                    when {
-                        decksLike.isNotEmpty() -> {
-                            log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
-                            deckRepo.deleteById(unreg.id)
-                            cleanedOut++
-                        }
-                        deckSearchService.countFilters(DeckFilters(
-                                cards = cardService.cardsForDeck(unreg)
-                                        .groupBy { it.cardTitle }
-                                        .map {
-                                            DeckCardQuantity(listOf(it.key), it.value.size)
-                                        }
-                        )).count > 0
-                        -> {
-                            // Eventually use this:
-                            // val identicalRegistered = deckRepo.findByRegisteredTrueAndCardNames(unreg.cardNames)
+        try {
+            log.info("$scheduledStart clean out unregistered decks.")
+            var unregDeckCount = 0
+            var cleanedOut = 0
+            val msToCleanUnreg = measureTimeMillis {
+                val allUnregDecks = deckRepo.findAllByRegisteredFalse()
+                unregDeckCount = allUnregDecks.size
+                allUnregDecks.forEach { unreg ->
+                    try {
+                        val decksLike = deckRepo.findByNameIgnoreCase(unreg.name.trim().dropLastWhile { it == '\\' })
+                                .filter { it.id != unreg.id }
+                        when {
+                            decksLike.isNotEmpty() -> {
+                                log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
+                                deckRepo.deleteById(unreg.id)
+                                cleanedOut++
+                            }
+                            deckSearchService.countFilters(DeckFilters(
+                                    cards = cardService.cardsForDeck(unreg)
+                                            .groupBy { it.cardTitle }
+                                            .map {
+                                                DeckCardQuantity(listOf(it.key), it.value.size)
+                                            }
+                            )).count > 0
+                            -> {
+                                // Eventually use this:
+                                // val identicalRegistered = deckRepo.findByRegisteredTrueAndCardNames(unreg.cardNames)
 
-                            log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it has a duplicate")
-                            deckRepo.deleteById(unreg.id)
-                            cleanedOut++
+                                log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it has a duplicate")
+                                deckRepo.deleteById(unreg.id)
+                                cleanedOut++
+                            }
+                            userDeckRepo.findByDeckIdAndOwnedByNotNull(unreg.id).isEmpty() -> {
+                                log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it is unowned")
+                                deckRepo.deleteById(unreg.id)
+                                cleanedOut++
+                            }
                         }
-                        userDeckRepo.findByDeckIdAndOwnedByNotNull(unreg.id).isEmpty() -> {
-                            log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it is unowned")
-                            deckRepo.deleteById(unreg.id)
-                            cleanedOut++
-                        }
+                    } catch (e: Exception) {
+                        log.warn("Exception trying to clean unreg deck: ${unreg.name} with id ${unreg.keyforgeId}", e)
                     }
-                } catch (e: Exception) {
-                    log.warn("Exception trying to clean unreg deck: ${unreg.name} with id ${unreg.keyforgeId}", e)
                 }
             }
-        }
 
-        log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
+            log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
+        } catch (e: Throwable) {
+            log.error("$scheduledException Cleaning out unregistered decks")
+        }
     }
 
     // Rev publishAercVersion to rerate decks
     @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksDelay)
     fun rateDecks() {
 
-        // If next page is null, we know we are done
-        var nextDeckPage = deckRatingProgressService.nextPage() ?: return
-        var quantFound = 0
-        var quantRerated = 0
+        try {
 
-        log.info("$scheduledStart rate decks.")
+            // If next page is null, we know we are done
+            var nextDeckPage = deckRatingProgressService.nextPage() ?: return
+            var quantFound = 0
+            var quantRerated = 0
 
-        val maxToRate = DeckPageType.RATING.quantity * (if (env == Env.dev) 10 else 1)
+            log.info("$scheduledStart rate decks.")
 
-        val millisTaken = measureTimeMillis {
+            val maxToRate = DeckPageType.RATING.quantity * (if (env == Env.dev) 10 else 1)
 
-            while (quantRerated < maxToRate && quantFound < 100000) {
+            val millisTaken = measureTimeMillis {
 
-                // If next page is null, we know we are done
-                nextDeckPage = deckRatingProgressService.nextPage() ?: break
+                while (quantRerated < maxToRate && quantFound < 100000) {
 
-                val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
-                quantFound += deckResults.size
+                    // If next page is null, we know we are done
+                    nextDeckPage = deckRatingProgressService.nextPage() ?: break
 
-                val deckQ = QDeck.deck
-                val mostRecentDeck = query.selectFrom(deckQ)
-                        .orderBy(deckQ.id.desc())
-                        .limit(1)
-                        .fetch()
-                        .first()
+                    val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
+                    quantFound += deckResults.size
 
-                val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
+                    val deckQ = QDeck.deck
+                    val mostRecentDeck = query.selectFrom(deckQ)
+                            .orderBy(deckQ.id.desc())
+                            .limit(1)
+                            .fetch()
+                            .first()
 
-                val rated = deckResults.mapNotNull {
-                    val rated = rateDeck(it)
-                    if (rated == it) {
-                        null
-                    } else {
-                        rated.copy(lastUpdate = ZonedDateTime.now())
+                    val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
+
+                    val rated = deckResults.mapNotNull {
+                        val rated = rateDeck(it)
+                        if (rated == it) {
+                            null
+                        } else {
+                            rated.copy(lastUpdate = ZonedDateTime.now())
+                        }
                     }
-                }
-                quantRerated += rated.size
-                if (rated.isNotEmpty()) {
-                    deckRepo.saveAll(rated)
-                }
-                deckRatingProgressService.revPage()
+                    quantRerated += rated.size
+                    if (rated.isNotEmpty()) {
+                        deckRepo.saveAll(rated)
+                    }
+                    deckRatingProgressService.revPage()
 
-                if (mostRecentDeck.id < idEndForPage) {
-                    deckRatingProgressService.complete()
-                    statsService.startNewDeckStats()
-                    log.info("Done rating decks!")
-                    break
+                    if (mostRecentDeck.id < idEndForPage) {
+                        deckRatingProgressService.complete()
+                        statsService.startNewDeckStats()
+                        log.info("Done rating decks!")
+                        break
+                    }
+                    log.info("Got next page, quant rerated $quantRerated found $quantFound max $maxToRate")
                 }
-                log.info("Got next page, quant rerated $quantRerated found $quantFound max $maxToRate")
             }
-        }
 
-        log.info("$scheduledStop Took $millisTaken ms to rate decks. Page: $nextDeckPage Found: $quantFound Rerated: $quantRerated.")
+            log.info("$scheduledStop Took $millisTaken ms to rate decks. Page: $nextDeckPage Found: $quantFound Rerated: $quantRerated.")
+        } catch (e: Throwable) {
+            log.error("$scheduledException rating decks")
+        }
     }
 
     // Non repeatable functions

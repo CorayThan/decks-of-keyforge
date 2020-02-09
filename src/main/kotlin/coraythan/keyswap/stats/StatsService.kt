@@ -12,6 +12,7 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import net.javacrumbs.shedlock.core.SchedulerLock
@@ -29,7 +30,7 @@ private const val statsUpdateQuantity = 10000L
 
 @Transactional
 @Service
-class  StatsService(
+class StatsService(
         private val cardService: CardService,
         private val deckStatisticsRepo: DeckStatisticsRepo,
         private val deckPageService: DeckPageService,
@@ -76,78 +77,89 @@ class  StatsService(
         }
     }
 
-//    @Scheduled(fixedDelayString = lockStatsVersionUpdate, initialDelayString = "PT1M")
+    //    @Scheduled(fixedDelayString = lockStatsVersionUpdate, initialDelayString = "PT1M")
     @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastForString = lockStatsVersionUpdate, lockAtMostForString = lockStatsVersionUpdate)
     fun startNewDeckStats() {
-        log.info("$scheduledStart start new deck stats.")
-        if (!doneRatingDecks) {
-            log.info("Skipping stats update as decks are being rated.")
-            return
-        }
-        val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
-        if (mostRecentVersion == null) {
-            log.info("No stats existed")
-            deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
-            deckPageService.setCurrentPage(0, DeckPageType.STATS)
-            updateStats = true
-        } else if (mostRecentVersion.completeDateTime != null) {
-            log.info("Creating deck stats with new version.")
-            deckStatisticsRepo.save(
-                    DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
-                            .copy(version = mostRecentVersion.version + 1)
-            )
-            Expansion.values().forEach {
+
+        try {
+
+            log.info("$scheduledStart start new deck stats.")
+            if (!doneRatingDecks) {
+                log.info("Skipping stats update as decks are being rated.")
+                return
+            }
+            val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
+            if (mostRecentVersion == null) {
+                log.info("No stats existed")
+                deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
+                deckPageService.setCurrentPage(0, DeckPageType.STATS)
+                updateStats = true
+            } else if (mostRecentVersion.completeDateTime != null) {
+                log.info("Creating deck stats with new version.")
                 deckStatisticsRepo.save(
                         DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
-                                .copy(version = mostRecentVersion.version + 1, expansion = it)
+                                .copy(version = mostRecentVersion.version + 1)
                 )
+                Expansion.values().forEach {
+                    deckStatisticsRepo.save(
+                            DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
+                                    .copy(version = mostRecentVersion.version + 1, expansion = it)
+                    )
+                }
+                deckPageService.setCurrentPage(0, DeckPageType.STATS)
+                updateStats = true
             }
-            deckPageService.setCurrentPage(0, DeckPageType.STATS)
-            updateStats = true
+            log.info("$scheduledStop starting new deck stats.")
+        } catch (e: Exception) {
+            log.error("$scheduledException starting new deck stats")
         }
-        log.info("$scheduledStop starting new deck stats.")
+
     }
 
     @Scheduled(fixedDelayString = lockUpdateStats)
     @SchedulerLock(name = "updateStatistics", lockAtLeastForString = lockUpdateStats, lockAtMostForString = lockUpdateStats)
     fun updateStatsForDecks() {
+        try {
 
-        if (!updateStats) return
+            if (!updateStats) return
 
-        log.info("$scheduledStart update stats for decks.")
+            log.info("$scheduledStart update stats for decks.")
 
-        val millisTaken = measureTimeMillis {
+            val millisTaken = measureTimeMillis {
 
-            val stats = deckStatisticsRepo.findFirstByOrderByVersionDesc()
-            val statsWithVersion = if (stats == null) null else deckStatisticsRepo.findAllByVersion(stats.version)
+                val stats = deckStatisticsRepo.findFirstByOrderByVersionDesc()
+                val statsWithVersion = if (stats == null) null else deckStatisticsRepo.findAllByVersion(stats.version)
 
-            when {
-                stats == null -> log.warn("There was no stats version for updating deck stats.")
-                statsWithVersion?.isEmpty() == true -> log.warn("How can stats with version be empty or null?")
-                stats.completeDateTime != null -> {
-                    updateStats = false
-                    log.info("Deck Stats were already completed updating for version ${stats.version}.")
-                }
-                else -> {
-                    val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
-                    val deckResults = deckPageService.decksForPage(currentPage, DeckPageType.STATS)
-
-                    if (deckResults.isEmpty()) {
+                when {
+                    stats == null -> log.warn("There was no stats version for updating deck stats.")
+                    statsWithVersion?.isEmpty() == true -> log.warn("How can stats with version be empty or null?")
+                    stats.completeDateTime != null -> {
                         updateStats = false
-                        statsWithVersion!!.forEach {
-                            deckStatisticsRepo.save(it.copy(completeDateTime = now()))
-                        }
-                        updateCachedStats()
-                        log.info("Done updating deck stats! Final stats are: \n\n$stats\n\n")
+                        log.info("Deck Stats were already completed updating for version ${stats.version}.")
                     }
+                    else -> {
+                        val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
+                        val deckResults = deckPageService.decksForPage(currentPage, DeckPageType.STATS)
 
-                    updateStats(statsWithVersion!!, deckResults)
-                    deckPageService.setCurrentPage(currentPage + 1, DeckPageType.STATS)
+                        if (deckResults.isEmpty()) {
+                            updateStats = false
+                            statsWithVersion!!.forEach {
+                                deckStatisticsRepo.save(it.copy(completeDateTime = now()))
+                            }
+                            updateCachedStats()
+                            log.info("Done updating deck stats! Final stats are: \n\n$stats\n\n")
+                        }
+
+                        updateStats(statsWithVersion!!, deckResults)
+                        deckPageService.setCurrentPage(currentPage + 1, DeckPageType.STATS)
+                    }
                 }
             }
+            if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with $statsUpdateQuantity decks.")
+        } catch (e: Throwable) {
+            log.error("$scheduledException To update stats")
         }
-        if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with $statsUpdateQuantity decks.")
     }
 
     private fun updateStats(statsEntities: List<DeckStatisticsEntity>, decks: List<Deck>) {

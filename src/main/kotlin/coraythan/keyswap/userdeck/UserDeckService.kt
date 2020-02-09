@@ -5,6 +5,7 @@ import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
@@ -45,8 +46,8 @@ class UserDeckService(
                     .groupBy { it.deck.id }
                     .map { it.value.first().deck to it.value.size }
                     .forEach { if (it.first.funnyCount != it.second) deckRepo.save(it.first.copy(funnyCount = it.second)) }
-        } catch (exception: Exception) {
-            log.error("Couldn't correct wishlist counts", exception)
+        } catch (exception: Throwable) {
+            log.error("$scheduledException Couldn't correct wishlist counts", exception)
         }
         log.info("$scheduledStop correcting counts.")
     }

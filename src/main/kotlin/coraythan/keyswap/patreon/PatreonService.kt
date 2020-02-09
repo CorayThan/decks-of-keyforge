@@ -2,6 +2,7 @@ package coraythan.keyswap.patreon
 
 import com.patreon.PatreonOAuth
 import coraythan.keyswap.config.Env
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.users.CurrentUserService
@@ -55,8 +56,8 @@ class PatreonService(
 
             topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
                     .map { it.username }
-        } catch (e: Exception) {
-            log.error("Couldn't refresh creator account due to exception.", e)
+        } catch (e: Throwable) {
+            log.error("$scheduledException Couldn't refresh creator account due to exception.", e)
         }
         log.info("$scheduledStop Done refreshing patreon creator account.")
     }
@@ -136,8 +137,6 @@ class PatreonService(
 
         val patreonCampaign = patreonCampaignResponse.body ?: throw RuntimeException("No body in patreon campaigns")
 
-//        log.info("campaign info: $patreonCampaign")
-
         patreonCampaign.data.forEach { member ->
 
             val patreonId = member.relationships.user.data.id
@@ -156,16 +155,12 @@ class PatreonService(
             val user = userRepo.findByPatreonId(patreonId)
             if (user != null && user.patreonTier != bestTier) {
                 log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier.")
-                userRepo.save(user.copy(patreonTier = bestTier))
+                userRepo.updatePatronTier(bestTier, user.id)
             }
         }
         if (patreonCampaign.meta.pagination.cursors != null) {
             log.info("Next page of patreon campaign members.")
             this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
-        }
-        val me = userRepo.findByEmail("coraythan@gmail.com")
-        if (me != null && me.patreonTier != PatreonRewardsTier.MERCHANT_AEMBERMAKER) {
-            userRepo.save(me.copy(patreonTier = PatreonRewardsTier.MERCHANT_AEMBERMAKER))
         }
     }
 }

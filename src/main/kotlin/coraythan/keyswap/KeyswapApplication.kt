@@ -109,3 +109,4 @@ object Api {
 
 val scheduledStart = "Starting scheduled task:"
 val scheduledStop = "Scheduled task complete:"
+val scheduledException = "Exception in scheduled task:"

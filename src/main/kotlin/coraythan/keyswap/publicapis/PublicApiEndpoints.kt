@@ -4,6 +4,7 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.RateExceededException
 import coraythan.keyswap.decks.Nothing
 import coraythan.keyswap.decks.SimpleDeckResponse
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
 import org.slf4j.LoggerFactory
@@ -19,8 +20,12 @@ class PublicApiEndpoints(
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
-    fun importNewDecks() {
-        this.rateLimiters.clear()
+    fun clearPublicRateLimiters() {
+        try {
+            this.rateLimiters.clear()
+        } catch (e: Throwable) {
+            log.error("$scheduledException clearing rate limiters")
+        }
     }
 
     private val rateLimiters = ConcurrentHashMap<String, Int>()

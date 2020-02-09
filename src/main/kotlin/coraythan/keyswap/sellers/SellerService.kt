@@ -4,6 +4,7 @@ import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
@@ -35,35 +36,40 @@ class SellerService(
 
     @Scheduled(fixedDelayString = "PT5M")
     fun refreshFeaturedSellers() {
-        log.info("$scheduledStart refresh featured sellers.")
-        val millisTaken = measureTimeMillis {
-            featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
-                    .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
-                    .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER))
-                    .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
-                    .toSet()
-                    .toList()
-                    .sortedByDescending { it.mostRecentDeckListing }
-                    .filter { user ->
-                        user.auctions.filter { it.status != DeckListingStatus.COMPLETE }.size > 9
-                    }
-                    .map { user ->
-                        SellerDetailsWithFullDate(
-                                user.mostRecentDeckListing,
-                                SellerDetails(
-                                        storeName = user.storeName ?: "${user.username}'s Store",
-                                        username = user.username,
-                                        decksAvailable = user.auctions.filter { it.isActive}.size,
-                                        country = user.country ?: Country.UnitedStates,
-                                        mostRecentListing = placeholderDate,
-                                        storeDescription = user.publicContactInfo,
-                                        discord = user.discord,
-                                        email = user.sellerEmail
-                                )
-                        )
-                    }
+        try {
+
+            log.info("$scheduledStart refresh featured sellers.")
+            val millisTaken = measureTimeMillis {
+                featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
+                        .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
+                        .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER))
+                        .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
+                        .toSet()
+                        .toList()
+                        .sortedByDescending { it.mostRecentDeckListing }
+                        .filter { user ->
+                            user.auctions.filter { it.status != DeckListingStatus.COMPLETE }.size > 9
+                        }
+                        .map { user ->
+                            SellerDetailsWithFullDate(
+                                    user.mostRecentDeckListing,
+                                    SellerDetails(
+                                            storeName = user.storeName ?: "${user.username}'s Store",
+                                            username = user.username,
+                                            decksAvailable = user.auctions.filter { it.isActive }.size,
+                                            country = user.country ?: Country.UnitedStates,
+                                            mostRecentListing = placeholderDate,
+                                            storeDescription = user.publicContactInfo,
+                                            discord = user.discord,
+                                            email = user.sellerEmail
+                                    )
+                            )
+                        }
+            }
+            log.info("$scheduledStop refreshing featured sellers. It took millis: $millisTaken")
+        } catch (e: Throwable) {
+            log.error("$scheduledException refreshing featured sellers")
         }
-        log.info("$scheduledStop refreshing featured sellers. It took millis: $millisTaken")
     }
 
     fun featuredSellers(offsetMinutes: Int): List<SellerDetails> {

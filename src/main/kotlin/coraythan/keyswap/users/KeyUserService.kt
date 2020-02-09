@@ -8,6 +8,7 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.scheduledException
 import net.javacrumbs.shedlock.core.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -36,13 +37,17 @@ class KeyUserService(
     @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatrons)
     @SchedulerLock(name = "removeManualPatrons", lockAtLeastForString = lockRemoveManualPatrons, lockAtMostForString = lockRemoveManualPatrons)
     fun removeManualPatrons() {
-        userRepo.findByRemoveManualPatreonTierNotNull()
-                .forEach {
-                    if (it.removeManualPatreonTier?.isBefore(now()) == true) {
-                        log.info("Removing manual patron tier ${it.manualPatreonTier} from ${it.username}")
-                        userRepo.makeManualPatronExpiring(null, null, it.username)
+        try {
+            userRepo.findByRemoveManualPatreonTierNotNull()
+                    .forEach {
+                        if (it.removeManualPatreonTier?.isBefore(now()) == true) {
+                            log.info("Removing manual patron tier ${it.manualPatreonTier} from ${it.username}")
+                            userRepo.makeManualPatronExpiring(null, null, it.username)
+                        }
                     }
-                }
+        } catch (e: Throwable) {
+            log.error("$scheduledException removing manual patrons")
+        }
     }
 
     fun register(userRegInfo: UserRegistration): KeyUser {
