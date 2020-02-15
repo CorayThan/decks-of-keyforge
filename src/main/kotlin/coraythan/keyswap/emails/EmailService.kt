@@ -186,6 +186,8 @@ class EmailService(
                             ${if (listingInfo.buyItNow == null) "" else "Its price is ${listingInfo.buyItNow}."}
                         </div>
                         <br>
+                        ${this.makeDeckStats(deck)}
+                        <br>
                         <div>
                             To turn off these notifications login to Decks of KeyForge and go to your ${makeLink("/my-profile", "profile")}.
                         </div>
@@ -278,5 +280,30 @@ class EmailService(
         if (ccEmail != null) helper.setCc(if (env == Env.dev) "decksofkeyforge@gmail.com" else ccEmail)
         helper.setSubject(subject)
         emailSender.send(mimeMessage)
+    }
+
+    private fun makeDeckStats(deck: Deck): String {
+        return """
+            <table width="600" style="border:1px solid #333">
+              <tr>
+                <td align="center">${deck.name}</td>
+              </tr>
+              <tr>
+                <td align="center">
+                  body 
+                  <table align="center" width="300" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #ccc;">
+                    <tr>
+                      <td>SAS</td>
+                      <td>${deck.sasRating}</td>
+                    </tr>
+                    <tr>
+                      <td>Aember Control (A)</td>
+                      <td>${deck.amberControl}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+        """.trimIndent()
     }
 }
