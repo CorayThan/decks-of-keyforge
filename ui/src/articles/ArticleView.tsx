@@ -274,7 +274,6 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
     const nodes: React.ReactNode[] = []
     let textToParse = text
     while (textToParse.length > 0) {
-        // log.debug(`Text to parse is ` + textToParse)
         const nextHouseIdx = textToParse.indexOf("{{house: ")
         const nextCardIdx = textToParse.indexOf(("{{cardName: "))
         let pushText
@@ -283,20 +282,18 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
             pushText = textToParse
             textToParse = ""
         } else {
-            // log.debug(`House idx: ${nextHouseIdx} card idx: ${nextCardIdx}`)
             const endIdx = textToParse.indexOf("}}")
             if (nextHouseIdx !== -1 && (nextHouseIdx < nextCardIdx || nextCardIdx === -1)) {
                 pushText = textToParse.substring(0, nextHouseIdx)
                 const houseName = textToParse.substring(nextHouseIdx + 9, endIdx)
-                // log.debug(`House name is "${houseName}"`)
                 pushNode = <HouseImage key={houseName} house={houseName as House} size={36} style={{marginRight: spacing(1)}}/>
             } else {
                 pushText = textToParse.substring(0, nextCardIdx)
                 const cardName = textToParse.substring(nextCardIdx + 12, endIdx)
-                // log.debug(`Card name is "${cardName}"`)
+                const card = cardStore.fullCardFromCardName(cardName)!
                 pushNode = (
                     <div key={cardName}>
-                        <CardAsLine card={cardStore.fullCardFromCardName(cardName)!} marginTop={1} hideRarity={true}/>
+                        <CardAsLine card={card} cardActualHouse={card.house!} marginTop={1} hideRarity={true}/>
                     </div>
                 )
             }

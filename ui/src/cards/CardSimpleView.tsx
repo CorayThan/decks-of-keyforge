@@ -159,8 +159,8 @@ export const CardView = observer((props: CardViewProps) => {
 
 interface CardAsLineProps {
     card: Partial<KCard>
+    cardActualHouse: House
     deckExpansion?: BackendExpansion
-    cardActualHouse?: House
     width?: number
     marginTop?: number
     hideRarity?: boolean

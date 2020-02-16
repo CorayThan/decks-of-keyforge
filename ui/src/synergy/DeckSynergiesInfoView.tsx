@@ -135,7 +135,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
             return (
                 <>
                     <TableCell>
-                        <CardAsLine card={{cardTitle: combo.cardName}}/>
+                        <CardAsLine card={{cardTitle: combo.cardName}} cardActualHouse={combo.house}/>
                         {combo.copies === 1 ? "" : ` x ${combo.copies}`}
                     </TableCell>
                     <TableCell>{roundToHundreds(combo.aercScore)} / {roundToHundreds(combo.netSynergy)}</TableCell>
@@ -144,7 +144,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
         } else {
             return (
                 <>
-                    <TableCell><CardAsLine card={{cardTitle: combo.cardName}}/></TableCell>
+                    <TableCell><CardAsLine card={{cardTitle: combo.cardName}} cardActualHouse={combo.house}/></TableCell>
                     <TableCell>{combo.copies}</TableCell>
                     <TableCellRounded>{combo.aercScore - combo.netSynergy}</TableCellRounded>
                     <TableCellRounded>{combo.netSynergy}</TableCellRounded>
