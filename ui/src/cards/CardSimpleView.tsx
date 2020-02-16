@@ -160,7 +160,7 @@ export const CardView = observer((props: CardViewProps) => {
 interface CardAsLineProps {
     card: Partial<KCard>
     deckExpansion?: BackendExpansion
-    cardExpansions?: BackendExpansion[]
+    cardActualHouse?: House
     width?: number
     marginTop?: number
     hideRarity?: boolean
@@ -282,13 +282,6 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
             )
         }
 
-        // log.debug(`card name: ${this.props.card.cardTitle} Deck expansion = ${this.props.deckExpansion} card expansion = ${this.props.card.expansion}`)
-
-        let expansions
-        if (fullCard != null && fullCard.extraCardInfo != null) {
-            expansions = fullCard.extraCardInfo.cardNumbers.map(cardNumbers => cardNumbers.expansion)
-        }
-
         return (
             <div
                 onWheel={this.handlePopoverClose}
@@ -296,7 +289,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine  {...this.props} card={this.props.card} cardExpansions={expansions}/>
+                <CardLine  {...this.props} card={this.props.card}/>
                 {pop}
             </div>
         )
@@ -311,30 +304,40 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
     return deck.synergies.synergyCombos.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
-const CardLine = (props: CardAsLineProps) => {
+const CardLine = observer((props: CardAsLineProps) => {
 
-    const isAnomaly = props.card.anomaly
-    const isLegacy = !isAnomaly && props.deckExpansion != null && props.cardExpansions != null && !props.cardExpansions.includes(props.deckExpansion)
-    const isMaverick = props.card.maverick && !isAnomaly
+    const {card, deckExpansion, width, marginTop, hideRarity, cardActualHouse} = props
+
+    const fullCard = cardStore.fullCardFromCardWithName(card)
+    if (fullCard == null) return null
+
+    let cardExpansions
+    if (fullCard.extraCardInfo != null) {
+        cardExpansions = fullCard.extraCardInfo.cardNumbers.map(cardNumbers => cardNumbers.expansion)
+    }
+
+    const isAnomaly = fullCard.anomaly
+    const isLegacy = !isAnomaly && deckExpansion != null && cardExpansions != null && !cardExpansions.includes(deckExpansion)
+    const isMaverick = fullCard.house !== cardActualHouse && !isAnomaly
 
     return (
         <div
-            style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
+            style={{display: "flex", alignItems: "center", marginTop, width}}
         >
-            {!props.hideRarity && props.card.rarity ? rarityValues.get(props.card.rarity)!.icon! : null}
+            {!hideRarity && fullCard.rarity ? rarityValues.get(fullCard.rarity)!.icon! : null}
             <Typography
                 variant={"body2"}
                 style={{marginLeft: spacing(1)}}
                 noWrap={true}
             >
-                {props.card.cardTitle}
+                {fullCard.cardTitle}
             </Typography>
             {isMaverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
             {isLegacy ? <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div> : null}
             {isAnomaly ? <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div> : null}
         </div>
     )
-}
+})
 
 export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
     const sets = props.card.extraCardInfo.cardNumbers.map(cardNumber => expansionInfoMap.get(cardNumber.expansion)!.backendEnum)

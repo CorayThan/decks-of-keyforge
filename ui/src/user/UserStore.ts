@@ -162,7 +162,7 @@ export class UserStore {
     }
 
     setManualPatreonTier = (username: string, tier: PatreonRewardsTier, expiresInDays?: number) => {
-        axios.post(`${UserStore.SECURE_CONTEXT}/set-patron/${username}/${tier}/${expiresInDays == null ? '' : expiresInDays}`)
+        axios.post(`${UserStore.SECURE_CONTEXT}/set-patron/${username}/${tier}/${expiresInDays == null ? "" : expiresInDays}`)
             .then(() => {
                 messageStore.setSuccessMessage(`Set ${username} to ${tier} expires in ${expiresInDays}`)
             })
@@ -281,7 +281,6 @@ export class UserStore {
 
     @computed
     get canListForSale(): boolean {
-        log.info(`country ${this.country} ${this.emailForSellingIsVerified} ${this.shippingCost}`)
         return this.country != null && this.emailForSellingIsVerified && this.shippingCost != null
     }
 

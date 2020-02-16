@@ -60,14 +60,25 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             id, keyforgeId, name, wishlistCount, funnyCount,
             forSale, forTrade, forAuction, registered, owners
         } = deck
-        const saleInfo = auctionStore.listingInfoForDeck(id)
-        let userDeckForSale = false
-        let userDeckForTrade = false
-        let userDeckForAuction = false
-        if (saleInfo) {
-            userDeckForSale = true
-            userDeckForTrade = saleInfo.forTrade
-            userDeckForAuction = saleInfo.status === DeckListingStatus.ACTIVE
+        let displayForAuction = false
+        let displayForSale = false
+        let displayForTrade = false
+
+        if (userDeckStore.ownedByMe(id)) {
+            const saleInfo = auctionStore.listingInfoForDeck(id)
+            if (saleInfo != null) {
+                displayForAuction = saleInfo.status === DeckListingStatus.ACTIVE
+                if (!displayForAuction) {
+                    displayForSale = true
+                    displayForTrade = saleInfo.forTrade
+                }
+            }
+        } else {
+            displayForAuction = forAuction
+            if (!displayForAuction) {
+                displayForSale = forSale
+                displayForTrade = forTrade
+            }
         }
 
         const compact = screenStore.smallDeckView()
@@ -116,23 +127,20 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         <Typography variant={"h5"}>{name}</Typography>
                                     </KeyLink>
                                 </div>
-                                {forAuction || userDeckForAuction ? (
+                                {displayForAuction && (
                                     <Tooltip title={"On auction"}>
                                         <div style={{marginLeft: spacing(1)}}><AuctionDeckIcon/></div>
                                     </Tooltip>
-                                ) : (
-                                    <>
-                                        {forSale || userDeckForSale && (
-                                            <Tooltip title={"For sale"}>
-                                                <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
-                                            </Tooltip>
-                                        )}
-                                        {forTrade || userDeckForTrade && (
-                                            <Tooltip title={"For trade"}>
-                                                <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
-                                            </Tooltip>
-                                        )}
-                                    </>
+                                )}
+                                {displayForSale && (
+                                    <Tooltip title={"For sale"}>
+                                        <div style={{marginLeft: spacing(1)}}><SellDeckIcon/></div>
+                                    </Tooltip>
+                                )}
+                                {displayForTrade && (
+                                    <Tooltip title={"For trade"}>
+                                        <div style={{marginLeft: spacing(1)}}><TradeDeckIcon/></div>
+                                    </Tooltip>
                                 )}
                             </div>
                             <DisplayAllCardsByHouse deck={deck}/>
@@ -246,6 +254,8 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
     )
 }
 
+const smallDeckViewCardLineWidth = 144
+
 const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, compact?: boolean, deck: Deck }) => {
     const {house, deck, cards, deckExpansion, compact} = props
     return (
@@ -259,16 +269,19 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
                     <div style={{display: "flex"}}>
                         <div style={{marginRight: spacing(1)}}>
                             {cards.slice(0, 6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))}
+                                <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={smallDeckViewCardLineWidth} marginTop={4}
+                                            deckExpansion={deckExpansion} deck={deck}/>))}
                         </div>
                         <div>
                             {cards.slice(6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} width={144} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))}
+                                <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={smallDeckViewCardLineWidth} marginTop={4}
+                                            deckExpansion={deckExpansion} deck={deck}/>))}
                         </div>
                     </div>
                 )
                 :
-                cards.map((card, idx) => (<CardAsLine key={idx} card={card} width={160} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))
+                cards.map((card, idx) => (
+                    <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={160} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))
             }
         </List>
     )

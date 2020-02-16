@@ -3,6 +3,8 @@ package coraythan.keyswap.emails
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.*
 import org.slf4j.LoggerFactory
@@ -278,32 +280,74 @@ class EmailService(
         mimeMessage.addFrom(listOf(fromAddress).toTypedArray())
         helper.setTo(if (env == Env.dev) "decksofkeyforge@gmail.com" else email)
         if (ccEmail != null) helper.setCc(if (env == Env.dev) "decksofkeyforge@gmail.com" else ccEmail)
-        helper.setSubject(subject)
+        helper.setSubject(if (env == Env.dev) "Dok Dev Email: $subject" else subject)
         emailSender.send(mimeMessage)
     }
 
     private fun makeDeckStats(deck: Deck): String {
         return """
-            <table width="600" style="border:1px solid #333">
-              <tr>
-                <td align="center">${deck.name}</td>
-              </tr>
-              <tr>
-                <td align="center">
-                  body 
-                  <table align="center" width="300" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #ccc;">
-                    <tr>
-                      <td>SAS</td>
-                      <td>${deck.sasRating}</td>
-                    </tr>
-                    <tr>
-                      <td>Aember Control (A)</td>
-                      <td>${deck.amberControl}</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
+<table>
+    <tr>
+        <td>${deck.name}</td>
+    </tr>
+    <tr>
+        <td>${deck.sasRating} SAS     ${Expansion.forExpansionNumber(deck.expansion).readable}     ${deck.houseNamesString.replace("|", " - ")}</td>
+    </tr>
+    <tr>
+        <td>
+            <table border="0" cellspacing="8" cellpadding="0">
+                <tr>
+                    <td>Aember Control (A)</td>
+                    <td>${deck.amberControl.roundToOneSigDig()}</td>
+                    <td>Actions</td>
+                    <td>${deck.actionCount}</td>
+                </tr>
+                <tr>
+                    <td>Expected Aember (E)</td>
+                    <td>${deck.expectedAmber.roundToOneSigDig()}</td>
+                    <td>Creatures</td>
+                    <td>${deck.creatureCount}</td>                    
+                </tr>
+                <tr>
+                    <td>Aember Protection</td>
+                    <td>${deck.amberProtection.roundToOneSigDig()}</td>
+                    <td>Artifacts</td>
+                    <td>${deck.artifactCount}</td>                    
+                </tr>
+                <tr>
+                    <td>Artifact Control (R)</td>
+                    <td>${deck.artifactControl.roundToOneSigDig()}</td>
+                    <td>Upgrades</td>
+                    <td>${deck.upgradeCount}</td>                    
+                </tr>
+                <tr>
+                    <td>Creature Control (C)</td>
+                    <td>${deck.creatureControl.roundToOneSigDig()}</td>
+                </tr>
+                <tr>
+                    <td>Effective Power (P)</td>
+                    <td>${deck.effectivePower}</td>
+                </tr>
+                <tr>
+                    <td>Efficiency (F)</td>
+                    <td>${deck.efficiency.roundToOneSigDig()}</td>
+                </tr>
+                <tr>
+                    <td>Disruption (D)</td>
+                    <td>${deck.disruption.roundToOneSigDig()}</td>
+                </tr>
+                <tr>
+                    <td>House Cheating (H)</td>
+                    <td>${deck.houseCheating.roundToOneSigDig()}</td>
+                </tr>
+                <tr>
+                    <td>Other (O)</td>
+                    <td>${deck.other.roundToOneSigDig()}</td>
+                </tr>
             </table>
+        </td>
+    </tr>
+</table>
         """.trimIndent()
     }
 }

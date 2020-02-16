@@ -1,10 +1,10 @@
 package coraythan.keyswap.expansions
 
-enum class Expansion(val expansionNumber: Int) {
-    CALL_OF_THE_ARCHONS(341),
-    AGE_OF_ASCENSION(435),
-    WORLDS_COLLIDE(452),
-    ANOMALY_EXPANSION(453);
+enum class Expansion(val expansionNumber: Int, val readable: String) {
+    CALL_OF_THE_ARCHONS(341, "CotA"),
+    AGE_OF_ASCENSION(435, "AoA"),
+    WORLDS_COLLIDE(452, "WC"),
+    ANOMALY_EXPANSION(453, "AE");
 
     companion object {
         fun forExpansionNumber(expansionNumber: Int) = values().find { it.expansionNumber == expansionNumber }
