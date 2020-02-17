@@ -1,4 +1,4 @@
-import { clone, isEqual } from "lodash"
+import { isEqual } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
 import { log, prettyJson, Utils } from "../config/Utils"
@@ -35,7 +35,7 @@ export class CardFilters {
         if (typeof queryObject.armors === "string") {
             queryObject.armors = [Number(queryObject.armors)]
         } else if (queryObject.armors != null) {
-            queryObject.armors = queryObject.armors .map((val: string) => Number(val))
+            queryObject.armors = queryObject.armors.map((val: string) => Number(val))
         }
         if (queryObject.expansions != null) {
             if (queryObject.expansions.constructor === Array) {
@@ -47,6 +47,9 @@ export class CardFilters {
         }
         if (queryObject.aercHistory) {
             queryObject.aercHistory = queryObject.aercHistory === "true"
+        }
+        if (queryObject.thisExpansionOnly) {
+            queryObject.thisExpansionOnly = queryObject.thisExpansionOnly === "true"
         }
         if (queryObject.aercHistoryDate === "") {
             queryObject.aercHistoryDate = undefined
@@ -70,6 +73,7 @@ export class CardFilters {
     ambers: number[] = []
     armors: number[] = []
     expansion?: BackendExpansion
+    thisExpansionOnly?: boolean
 
     @observable
     aercHistory?: boolean
@@ -90,6 +94,7 @@ export class CardFilters {
         this.ambers = []
         this.armors = []
         this.expansion = undefined
+        this.thisExpansionOnly = undefined
         this.sort = undefined
         this.aercHistory = undefined
         this.aercHistoryDate = undefined
@@ -97,10 +102,6 @@ export class CardFilters {
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value
-
-    cleaned = () => {
-        return clone(this)
-    }
 }
 
 export const prepareCardFiltersForQueryString = (filters: CardFilters): CardFilters => {

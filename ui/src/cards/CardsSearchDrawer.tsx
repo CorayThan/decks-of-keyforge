@@ -59,6 +59,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.armors = this.selectedArmors.toArray()
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
         filters.expansion = this.selectedExpansion.expansionNumber()
+        filters.thisExpansionOnly = this.selectedExpansion.onlyThisExpansion
         filters.aercHistoryDate = this.selectedPublishDate.date
         cardStore.searchCards(filters)
         keyDrawerStore.closeIfSmall()
@@ -142,6 +143,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 small={false}
                                 displayNoneOption={true}
                                 displayAnomaly={true}
+                                includeOnlys={true}
                                 style={{marginRight: spacing(2)}}
                             />
                             <CardSortSelect store={this.selectedSortStore}/>

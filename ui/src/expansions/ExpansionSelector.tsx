@@ -8,6 +8,9 @@ export class SelectedExpansion {
     @observable
     expansion: "" | BackendExpansion = ""
 
+    @observable
+    onlyThisExpansion = false
+
     constructor(expansions?: BackendExpansion[]) {
         if (expansions && expansions.length > 0) {
             this.expansion = expansions[0]
@@ -15,7 +18,17 @@ export class SelectedExpansion {
     }
 
     handleExpansionSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.expansion = event.target.value as "" | BackendExpansion
+        const expansionAndOnly = event.target.value
+        let expansion
+        if (expansionAndOnly.startsWith("only")) {
+            this.onlyThisExpansion = true
+            expansion = expansionAndOnly.substring(4)
+        } else {
+            this.onlyThisExpansion = false
+            expansion = expansionAndOnly
+        }
+
+        this.expansion = expansion as "" | BackendExpansion
     }
 
     expansionNumber = () => {
@@ -23,14 +36,6 @@ export class SelectedExpansion {
             return this.expansion
         }
         return undefined
-    }
-
-    expansionsAsArray = (): BackendExpansion[] => {
-        const expansionNumber = this.expansionNumber()
-        if (expansionNumber == null) {
-            return []
-        }
-        return [expansionNumber]
     }
 
     expansionsAsNumberArray = (): number[] => {
@@ -50,12 +55,13 @@ interface ExpansionSelectorProps {
     small?: boolean
     style?: React.CSSProperties
     displayAnomaly?: boolean
+    includeOnlys?: boolean
 }
 
 @observer
 export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
     render() {
-        const {store, displayNoneOption, small, style, displayAnomaly} = this.props
+        const {store, displayNoneOption, small, style, displayAnomaly, includeOnlys} = this.props
         return (
             <TextField
                 select={true}
@@ -74,6 +80,13 @@ export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
                     .map(info => (
                         <MenuItem key={info.backendEnum} value={info.backendEnum}>
                             {small ? info.abbreviation : info.name}
+                        </MenuItem>
+                    ))}
+                {includeOnlys && expansionInfos
+                    .filter(info => info.backendEnum !== BackendExpansion.ANOMALY_EXPANSION)
+                    .map(info => (
+                        <MenuItem key={"only" + info.backendEnum} value={"only" + info.backendEnum}>
+                            {small ? info.abbreviation : info.name} Only
                         </MenuItem>
                     ))}
             </TextField>

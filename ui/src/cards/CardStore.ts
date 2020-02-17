@@ -75,6 +75,8 @@ export class CardStore {
                 &&
                 (filters.armors.length === 0 || filters.armors.indexOf(card.armor) !== -1)
                 &&
+                (!filters.thisExpansionOnly || card.extraCardInfo.cardNumbers.length === 1)
+                &&
                 (filters.expansion == null || card.extraCardInfo.cardNumbers.map((cardNumberSetPair: CardIdentifier) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
             )
         })
