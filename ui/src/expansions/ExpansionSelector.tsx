@@ -31,15 +31,19 @@ export class SelectedExpansion {
         this.expansion = expansion as "" | BackendExpansion
     }
 
-    expansionNumber = () => {
+    currentExpansion = () => {
         if (this.expansion) {
             return this.expansion
         }
         return undefined
     }
 
+    currentExpansionOrDefault = () => {
+        return this.currentExpansion() ?? BackendExpansion.CALL_OF_THE_ARCHONS
+    }
+
     expansionsAsNumberArray = (): number[] => {
-        const expansionNumber = this.expansionNumber()
+        const expansionNumber = this.currentExpansion()
         if (expansionNumber == null) {
             return []
         }

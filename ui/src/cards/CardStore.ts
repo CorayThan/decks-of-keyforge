@@ -3,6 +3,7 @@ import { clone, sortBy } from "lodash"
 import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
+import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -25,6 +26,12 @@ export class CardStore {
     // Format is ExpansionEnum-cardNumber
     @observable
     expansionNumberToCard?: Map<string, KCard>
+
+    @observable
+    cardNamesForExpansion?: {
+        expansion: BackendExpansion,
+        names: string[]
+    }[]
 
     @observable
     cardNameLowercaseToCard?: Map<string, KCard>
@@ -137,6 +144,7 @@ export class CardStore {
                 this.cardNameLowercaseToCard = new Map()
                 this.cardNameHyphenDelimitedLowercaseToCard = new Map()
                 this.expansionNumberToCard = new Map()
+                this.cardNamesForExpansion = expansionInfos.map(info => ({expansion: info.backendEnum, names: []}))
                 this.cardFlavors = []
                 this.cardNames = basisForCards.map(card => {
                     this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
@@ -146,6 +154,11 @@ export class CardStore {
                     }
                     card.extraCardInfo.cardNumbers.forEach((cardIdentifier: CardIdentifier) => {
                         this.expansionNumberToCard!.set(`${cardIdentifier.expansion}-${cardIdentifier.cardNumber}`, card)
+                    })
+                    this.cardNamesForExpansion!.forEach(cardNamesForExpansion => {
+                        if (card.extraCardInfo.cardNumbers.map(cardNum => cardNum.expansion).includes(cardNamesForExpansion.expansion)) {
+                            cardNamesForExpansion.names.push(card.cardTitle)
+                        }
                     })
                     return {label: card.cardTitle, value: card.cardTitle}
                 })

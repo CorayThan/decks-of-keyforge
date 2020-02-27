@@ -320,8 +320,6 @@ class DeckImporterService(
 
         val user = currentUser ?: currentUserService.loggedInUserOrUnauthorized()
 
-        val cardsAsList = unregisteredDeck.cards.values.flatten()
-
         log.info("Checking dups of unregistered deck.")
         val dup = deckSearchService.findByNameIgnoreCase(unregisteredDeck.name.toLowerCase())
         if (dup.isNotEmpty()) {
@@ -333,25 +331,31 @@ class DeckImporterService(
             throw BadRequestException("Unregistered deck names should not contain \\.")
         }
 
-        val cards = cardsAsList.map {
-            val cards = cardService.findByExpansionCardNumberHouse(it.expansion, it.cardNumber, it.house)
-            if (cards.isEmpty()) {
-                throw BadRequestException("There is no card with expansion ${it.expansion} number ${it.cardNumber} and house ${it.house}")
-            }
-            cards[0]
-        }
-        val deck = Deck(
-                keyforgeId = UUID.randomUUID().toString(),
-                name = unregisteredDeck.name,
-                expansion = unregisteredDeck.expansion.expansionNumber,
-                registered = false
-        )
+        val deckAndCards = makeBasicDeckFromUnregisteredDeck(unregisteredDeck)
 
-        val savedDeck = saveDeck(deck, unregisteredDeck.cards.keys.toList(), cards)
+        val savedDeck = saveDeck(deckAndCards.first, unregisteredDeck.cards.keys.toList(), deckAndCards.second)
         val userDeck = UserDeck(user, savedDeck, creator = true)
         userDeckRepo.save(userDeck)
         log.info("Added unregistered deck with name ${savedDeck.name} fake id ${savedDeck.keyforgeId}")
         return savedDeck.keyforgeId
+    }
+
+    private fun makeBasicDeckFromUnregisteredDeck(unregisteredDeck: SaveUnregisteredDeck): Pair<Deck, List<Card>> {
+        val cards = unregisteredDeck.cards.flatMap { entry ->
+            entry.value.map {
+                val cards = cardService.findByExpansionCardNameHouse(unregisteredDeck.expansion.expansionNumber, it, entry.key)
+                if (cards.isEmpty()) {
+                    throw BadRequestException("There is no card with expansion ${unregisteredDeck.expansion.expansionNumber} name $it and house ${entry.key}")
+                }
+                cards[0]
+            }
+        }
+        return Deck(
+                keyforgeId = UUID.randomUUID().toString(),
+                name = unregisteredDeck.name,
+                expansion = unregisteredDeck.expansion.expansionNumber,
+                registered = false
+        ) to cards
     }
 
     /**
@@ -392,7 +396,18 @@ class DeckImporterService(
         return savedCount
     }
 
+    fun viewTheoreticalDeck(deck: SaveUnregisteredDeck): DeckWithSynergyInfo {
+        val deckAndCards = makeBasicDeckFromUnregisteredDeck(deck)
+        val rated = validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second)
+        return deckSearchService.deckToDeckWithSynergies(rated)
+    }
+
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
+        val ratedDeck = validateAndRateDeck(deck, houses, cardsList)
+        return deckRepo.save(ratedDeck)
+    }
+
+    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
         check(houses.size == 3) { "Deck doesn't have 3 houses! $deck" }
         check(cardsList.size == 36) { "Can't have a deck without 36 cards deck: $deck" }
 
@@ -407,7 +422,7 @@ class DeckImporterService(
 
         check(!ratedDeck.cardIds.isBlank()) { "Can't save a deck without its card ids: $deck" }
 
-        return deckRepo.save(ratedDeck)
+        return ratedDeck
     }
 
     private fun rateDeck(deck: Deck): Deck {
@@ -438,5 +453,4 @@ class DeckImporterService(
                 antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
         )
     }
-
 }

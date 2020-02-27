@@ -102,7 +102,7 @@ class AzureOcr(
 
         return SaveUnregisteredDeck(
                 name = if (deckName == "DECK LIST") "Unrecognized Deck Name" else deckName,
-                cards = cards
+                cards = cards.map { it.key to it.value.map { it.cardTitle } }.toMap()
         )
     }
 

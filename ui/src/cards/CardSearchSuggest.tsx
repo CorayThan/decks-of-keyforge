@@ -282,7 +282,6 @@ const MultiCardSearchSuggestInner = observer((props: MultiCardSearchSuggestProps
                 <Select
                     classes={classes}
                     styles={{...selectStyles, ...style}}
-                    inputId="react-select-multiple"
                     options={cards}
                     components={components}
                     value={card.cardNames ? card.cardNames.map(cardName => ({label: cardName, value: cardName})) : null}
@@ -303,12 +302,13 @@ interface SingleCardSearchSuggestProps {
     style?: React.CSSProperties
     card: SingleCardName
     placeholder: string
+    names?: string[]
 }
 
 @observer
 export class SingleCardSearchSuggest extends React.Component<SingleCardSearchSuggestProps> {
     render() {
-        const names = cardStore.cardNames
+        const names = this.props.names?.map(name => ({label: name, value: name})) ?? cardStore.cardNames
         log.debug(`Card names length: ${names.length}`)
         return <SingleCardSearchSuggestInner {...this.props} cards={names}/>
     }
@@ -344,7 +344,6 @@ const SingleCardSearchSuggestInner = observer((props: SingleCardSearchSuggestPro
             <Select
                 classes={classes}
                 styles={{...selectStyles, ...style}}
-                inputId="react-select-multiple"
                 options={cards}
                 components={components}
                 value={card.cardName ? {label: card.cardName, value: card.cardName} : null}

@@ -21,6 +21,8 @@ import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { DeckImportView } from "../importdeck/DeckImportView"
+import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
+import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { LandingPage } from "../landing/LandingPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
 import { SpoilerPage } from "../spoilers/SpoilerPage"
@@ -52,12 +54,15 @@ class Routes {
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
+    static theoreticalDecks = "/theoretical-decks"
+    static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static stats = "/stats"
     static articles = "/articles"
     static importUnregisteredDeck = `${Routes.decks}/import`
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
     static privacyPolicy = "/privacy-policy"
+    static theoreticalDeckPage = (uriEncodedDeck?: string) => `${Routes.theoreticalDecks}/${uriEncodedDeck == null ? ":uriEncodedDeck" : uriEncodedDeck}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
     static spoilerPage = (spoilerId?: string | number) => `${Routes.spoilers}/${spoilerId == null ? ":spoilerId" : spoilerId}`
@@ -145,6 +150,16 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.importUnregisteredDeck}
                         component={DeckImportView}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.createTheoreticalDeck}
+                        component={CreateTheoreticalDeck}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.theoreticalDeckPage()}
+                        component={ViewTheoreticalDeck}
                     />
                     <Route
                         exact={true}

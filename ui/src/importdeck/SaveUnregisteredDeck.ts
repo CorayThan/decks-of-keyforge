@@ -1,4 +1,3 @@
-import { KCard } from "../cards/KCard"
 import { BackendExpansion } from "../expansions/Expansions"
 
 export interface SaveUnregisteredDeck {
@@ -7,6 +6,9 @@ export interface SaveUnregisteredDeck {
     expansion: BackendExpansion
 }
 
-interface CardsInHouses {
-    [key: string]: KCard[]
+export interface CardsInHouses {
+    /**
+     * House to card name
+     */
+    [key: string]: string[]
 }

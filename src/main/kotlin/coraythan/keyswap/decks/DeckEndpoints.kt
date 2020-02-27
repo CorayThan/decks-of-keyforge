@@ -110,6 +110,11 @@ class DeckEndpoints(
 
 //    @PostMapping("/add-cards-for-expansion/{expansionId}/{cardsInExpansion}")
 //    fun addCardsForExpansion(@PathVariable expansionId: Int, @PathVariable cardsInExpansion: Int) = deckImporterService.addCardsForExpansion(expansionId, cardsInExpansion)
+
+    @PostMapping("/view-theoretical")
+    fun viewTheoretical(@RequestBody deck: SaveUnregisteredDeck): DeckWithSynergyInfo {
+        return deckImporterService.viewTheoreticalDeck(deck)
+    }
 }
 
 data class SimpleDeckResponse(

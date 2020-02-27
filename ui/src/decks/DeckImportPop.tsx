@@ -102,9 +102,9 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     }}
                     style={{zIndex: screenStore.zindexes.menuPops}}
                 >
-                    <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
-                        <Typography color={"error"} noWrap={false} style={{marginBottom: spacing(2)}}>
-                            Due to Master Vault blocking Decks of KeyForge requests, this feature will not always work.
+                    <div style={{padding: spacing(2), display: "flex", flexDirection: "column", maxWidth: 600}}>
+                        <Typography variant={"body2"} color={"textSecondary"} noWrap={false} style={{marginBottom: spacing(2)}}>
+                            If this feature doesn't work, please try again later.
                         </Typography>
                         <TextField
                             variant={"outlined"}
@@ -119,10 +119,17 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                         <div
                             style={{marginBottom: spacing(2), display: "flex"}}
                         >
+                            <LinkButton
+                                to={Routes.createTheoreticalDeck}
+                                color={"primary"}
+                                onClick={() => deckImportPopStore.popOpen = false}
+                                style={{marginRight: spacing(2)}}
+                            >
+                                Create Theoretical Deck
+                            </LinkButton>
                             {userStore.loggedIn() ? (
                                 <LinkButton
                                     to={Routes.importUnregisteredDeck}
-                                    color={"primary"}
                                     onClick={() => deckImportPopStore.popOpen = false}
                                 >
                                     Import Unregistered Deck

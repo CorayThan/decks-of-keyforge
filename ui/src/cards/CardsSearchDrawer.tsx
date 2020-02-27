@@ -58,7 +58,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.ambers = this.selectedAmbers.toArray()
         filters.armors = this.selectedArmors.toArray()
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
-        filters.expansion = this.selectedExpansion.expansionNumber()
+        filters.expansion = this.selectedExpansion.currentExpansion()
         filters.thisExpansionOnly = this.selectedExpansion.onlyThisExpansion
         filters.aercHistoryDate = this.selectedPublishDate.date
         cardStore.searchCards(filters)

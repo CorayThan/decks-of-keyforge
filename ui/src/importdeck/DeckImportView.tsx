@@ -50,7 +50,7 @@ export class DeckImportView extends React.Component {
     }
 
     postDeckImage = () => {
-        const expansionNumber = this.expansionStore.expansionNumber()
+        const expansionNumber = this.expansionStore.currentExpansion()
         if (deckImportViewStore.deckImage && expansionNumber) {
             deckImportStore.readImageIntoDeck(deckImportViewStore.deckImage, expansionNumber)
         }
@@ -97,7 +97,7 @@ export class DeckImportView extends React.Component {
                                         || deckImportStore.readingDeckImage
                                         || !cardStore.cardNameLowercaseToCard
                                         || !!saveUnregisteredDeckStore.currentDeck
-                                        || this.expansionStore.expansionNumber() == null
+                                        || this.expansionStore.currentExpansion() == null
                                     }
                                     variant={"contained"}
                                     color={"primary"}
@@ -125,7 +125,7 @@ export class DeckImportView extends React.Component {
                         ) : null}
                     </Paper>
                 </div>
-                {deckImportStore.readDeck ? <CreateUnregisteredDeck initialDeck={deckImportStore.readDeck} expansionNumber={this.expansionStore.expansionNumber()!}/> : null}
+                {deckImportStore.readDeck ? <CreateUnregisteredDeck initialDeck={deckImportStore.readDeck} expansion={this.expansionStore.currentExpansion()!}/> : null}
             </div>
         )
     }

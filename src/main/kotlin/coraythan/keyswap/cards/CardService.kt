@@ -175,7 +175,7 @@ class CardService(
             }
             .toMap()
 
-    fun findByExpansionCardNumberHouse(expansion: Int, cardNumber: String, house: House) = cardRepo.findByExpansionAndCardNumberAndHouse(expansion, cardNumber, house)
+    fun findByExpansionCardNameHouse(expansion: Int, cardName: String, house: House) = cardRepo.findByExpansionAndCardTitleAndHouse(expansion, cardName, house)
 
     fun previousInfo(): Map<String, Card> {
         if (previousInfoWithNames == null) {

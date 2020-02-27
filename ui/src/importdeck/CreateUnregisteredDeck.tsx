@@ -22,7 +22,7 @@ import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
 
 interface CreateUnregisteredDeckProps {
     initialDeck: SaveUnregisteredDeck
-    expansionNumber: BackendExpansion
+    expansion: BackendExpansion
 }
 
 class SaveUnregisteredDeckStore {
@@ -44,7 +44,7 @@ class SaveUnregisteredDeckStore {
         }
         const entries = Object.entries(this.currentDeck!.cards)
         let valid = true
-        entries.forEach((value: [string, KCard[]]) => {
+        entries.forEach((value: [string, string[]]) => {
             if (value[1].length !== 12) {
                 valid = false
             }
@@ -53,9 +53,9 @@ class SaveUnregisteredDeckStore {
     }
 
     removeCard = (card: KCard) => {
-        Object.entries(this.currentDeck!.cards).forEach((value: [string, KCard[]]) => {
+        Object.entries(this.currentDeck!.cards).forEach((value: [string, string[]]) => {
             const cards = value[1]
-            const firstIdx = cards.indexOf(card)
+            const firstIdx = cards.indexOf(card.cardTitle)
             if (firstIdx !== -1) {
                 cards.splice(firstIdx, 1)
             }
@@ -77,8 +77,8 @@ class SaveUnregisteredDeckStore {
                 }
                 log.debug(`Pushing ${copiedCard.cardTitle} to house ${house}`)
                 const houseCards = this.currentDeck!.cards[house]
-                houseCards.push(copiedCard)
-                this.currentDeck!.cards[house] = sortBy(houseCards, (card: KCard) => card.cardNumber)
+                houseCards.push(copiedCard.cardTitle)
+                this.currentDeck!.cards[house] = sortBy(houseCards, (card: string) => cardStore.fullCardFromCardName(card)?.cardNumber)
                 cardHolder.cardName = ""
             }
         })
@@ -103,7 +103,7 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
     }
 
     setInfoFromProps = (props: CreateUnregisteredDeckProps) => {
-        const expansion = expansionInfoMap.get(props.expansionNumber)!
+        const expansion = expansionInfoMap.get(props.expansion)!
         saveUnregisteredDeckStore.currentDeck = cloneDeep(props.initialDeck)
         saveUnregisteredDeckStore.currentDeck.expansion = expansion.backendEnum
     }
@@ -141,13 +141,13 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
                         />
                     }
                     light={true}
-                    style={{overflow: "visible", marginLeft: spacing(4)}}
+                    style={{overflow: "visible", marginLeft: spacing(4), width: 784}}
                 >
                     <div style={{display: "flex", flexWrap: "wrap", margin: spacing(2), paddingBottom: spacing(2)}}>
-                        {Object.entries(cards).map((value: [string, KCard[]], index: number) => {
+                        {Object.entries(cards).map((value: [string, string[]], index: number) => {
                             return (
                                 <div key={value[0]} style={{marginRight: index !== 2 ? spacing(2) : 0}}>
-                                    <DisplayCardsInHouseEditable house={value[0] as House} cards={value[1]}/>
+                                    <DisplayCardsInHouseEditable house={value[0] as House} cards={value[1]} expansion={this.props.expansion}/>
                                 </div>
                             )
                         })}
@@ -187,13 +187,14 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
 }
 
 @observer
-class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: KCard[] }> {
+export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: string[], expansion: BackendExpansion }> {
     render() {
+        const cards = this.props.cards.map(cardName => cardStore.fullCardFromCardName(cardName) as KCard)
         return (
-            <div style={{display: "flex", flexDirection: "column"}}>
+            <div style={{display: "flex", flexDirection: "column", width: 240}}>
                 <HouseLabel title={true} house={this.props.house}/>
                 <Divider style={{marginTop: 4}}/>
-                {this.props.cards.map((card, idx) => (
+                {cards.map((card, idx) => (
                     <div key={idx} style={{display: "flex", alignItems: "center"}}>
                         <CardAsLine card={card} width={160} marginTop={4} cardActualHouse={this.props.house}/>
                         <div style={{flexGrow: 1}}/>
@@ -212,6 +213,7 @@ class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards:
                         card={saveUnregisteredDeckStore.addCardHandler(this.props.house)}
                         style={{marginTop: spacing(2)}}
                         placeholder={"Add Card"}
+                        names={cardStore.cardNamesForExpansion!.find(forExp => forExp.expansion === this.props.expansion)!.names}
                     />
                 ) : null}
             </div>

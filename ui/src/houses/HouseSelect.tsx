@@ -12,22 +12,23 @@ import { House, HouseLabel, HouseValue, houseValuesArray } from "./House"
 interface HouseSelectProps {
     selectedHouses: SelectedHouses
     options?: HouseValue[]
+    style?: React.CSSProperties
 }
 
 @observer
 export class HouseSelect extends React.Component<HouseSelectProps> {
     render() {
-        const {selectedHouses, options} = this.props
+        const {selectedHouses, options, style} = this.props
         const selectedHousesGotten = selectedHouses.getSelectedHouses()
         return (
-            <FormControl>
+            <FormControl style={style}>
                 <FormLabel style={{marginBottom: spacing(1)}}>Houses</FormLabel>
                 <FormGroup
                     row={true}
                 >
                     {(options == null ? houseValuesArray : options).map((houseValue) => {
                         const select = selectedHousesGotten.filter((selectedHouse) => selectedHouse.house === houseValue.house)
-                        return (<HouseCheckbox key={houseValue.house} selectedHouse={select[0]}/>)
+                        return (<HouseCheckbox key={houseValue.house} selectedHouse={select[0]} selectedHouses={selectedHouses}/>)
                     })}
                 </FormGroup>
             </FormControl>
@@ -37,13 +38,14 @@ export class HouseSelect extends React.Component<HouseSelectProps> {
 
 interface HouseCheckboxProps {
     selectedHouse: SelectedHouse
+    selectedHouses: SelectedHouses
 }
 
 @observer
 export class HouseCheckbox extends React.Component<HouseCheckboxProps> {
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectedHouse.selected = event.target.checked
+        this.props.selectedHouses.onHouseSelected(this.props.selectedHouse.house, event.target.checked)
     }
 
     render() {
@@ -68,18 +70,46 @@ export interface SelectedHouse {
 }
 
 export class SelectedHouses {
-    @observable
-    selectedHouses: SelectedHouse[] = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))
 
-    constructor(initialHouses?: House[]) {
+    maxSelected?: number
+    selectionOrder: House[] = []
+
+    @observable
+    private selectedHouses: SelectedHouse[] = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))
+
+    constructor(initialHouses?: House[], maxSelected?: number) {
+        this.maxSelected = maxSelected
         this.selectedHouses = houseValuesArray.map(houseValue => {
             return {house: houseValue.house, selected: initialHouses ? initialHouses.indexOf(houseValue.house) !== -1 : false}
         })
+        if (initialHouses != null) {
+            this.selectionOrder = initialHouses.slice()
+        }
+    }
+
+    onHouseSelected = (house: House, selected: boolean) => {
+        const toUpdate = this.selectedHouses.find(selectedHouse => selectedHouse.house === house)!
+        toUpdate.selected = selected
+        if (this.maxSelected != null) {
+            if (selected) {
+                this.selectionOrder.push(house)
+            } else {
+                const idx = this.selectionOrder.indexOf(house)
+                if (idx !== -1) {
+                    this.selectionOrder.splice(idx, 1)
+                }
+            }
+            if (this.selectionOrder.length > this.maxSelected) {
+                this.onHouseSelected(this.selectionOrder[0], false)
+            }
+        }
     }
 
     reset = () => this.selectedHouses = houseValuesArray.map(houseValue => ({house: houseValue.house, selected: false}))
 
     getSelectedHouses = () => this.selectedHouses.slice()
+
+    getHousesSelectedTrue = () => this.selectedHouses.filter(house => house.selected).map(house => house.house)
 
     toArray = () => this.getSelectedHouses()
         .filter(selectedHouse => selectedHouse.selected)

@@ -42,7 +42,3 @@ export const expansionInfoMap: Map<BackendExpansion, ExpansionInfo> = new Map(ex
 export const expansionInfoMapNumbers: Map<number, ExpansionInfo> = new Map(expansionInfos.map(info => (
     [info.expansionNumber, info] as [number, ExpansionInfo]
 )))
-
-export const sortBackendEnums = () => {
-
-}

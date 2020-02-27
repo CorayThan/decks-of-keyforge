@@ -4,8 +4,8 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../config/MuiConfig"
 
-export const KeyCard = observer((props: { topContents: React.ReactNode, topContentsStyle?: React.CSSProperties, light?: boolean } & CardProps) => {
-    const {topContents, topContentsStyle, children, style, light, ...rest} = props
+export const KeyCard = observer((props: { topContents: React.ReactNode, topContentsStyle?: React.CSSProperties, light?: boolean, margin?: number } & CardProps) => {
+    const {topContents, topContentsStyle, children, style, light, margin, ...rest} = props
     let backgroundColor
     if (light) {
         backgroundColor = themeStore.darkMode ? blue["500"] :  blue["200"]
@@ -13,7 +13,7 @@ export const KeyCard = observer((props: { topContents: React.ReactNode, topConte
         backgroundColor = themeStore.darkMode ? blue["800"] : blue["500"]
     }
     return (
-        <Card style={{margin: spacing(2), ...style}} {...rest}>
+        <Card style={{margin: margin ?? spacing(2), ...style}} {...rest}>
             <div style={{backgroundColor, padding: spacing(2), ...topContentsStyle}}>
                 {topContents}
             </div>

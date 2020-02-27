@@ -368,13 +368,17 @@ class DeckSearchService(
             throw BadRequestException("Request for deck with synergies with bad id: $keyforgeId")
         }
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: return null
+        return deckToDeckWithSynergies(deck)
+    }
+
+    fun deckToDeckWithSynergies(deck: Deck): DeckWithSynergyInfo {
         val stats = statsService.findCurrentStats()
         val cards = cardService.cardsForDeck(deck)
         return DeckWithSynergyInfo(
                 deck = deck.toDeckSearchResult(
                         cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
                         cards,
-                        stats = statsService.findCurrentStats(),
+                        stats = stats,
                         crucibleWins = deckWinsService.crucibleWins,
                         synergies = DeckSynergyService.fromDeckWithCards(deck, cards)
                 ),

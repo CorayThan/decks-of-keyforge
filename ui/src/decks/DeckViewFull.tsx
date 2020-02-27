@@ -75,7 +75,7 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
 }
 
 @observer
-class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
+export class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
 
     constructor(props: { deck: DeckWithSynergyInfo }) {
         super(props)
