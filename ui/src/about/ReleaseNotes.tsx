@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.14"
+export const latestVersion = "4.15"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,31 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.15"}
+                    date={"2/27/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Theoretical Decks",
+                            note: "You can now create and view the SAS score and traits for any combination of cards. " +
+                                "This will not save a deck that can be searched, however you can share the link."
+                        },
+                        {
+                            note: (<NotesLink style={{marginRight: spacing(2)}} to={Routes.createTheoreticalDeck}>Make a deck</NotesLink>)
+                        },
+                        {
+                            highlight: "Trait system fixes",
+                            note: "I fixed a bug with cards that synergize with themselves having synergy for only one copy, and made the 'good creature' " +
+                                "trait actually work."
+                        },
+                        {
+                            highlight: "Updated WC SAS / AERC Ratings",
+                            note: "I've updated Worlds Collide SAS / AERC Ratings based on increased experience with the set, and more data in terms of " +
+                                "win rates per cards. "
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.14"}
                     date={"2/8/2020"}

@@ -182,13 +182,7 @@ object DeckSynergyService {
                                     } else {
                                         TraitMatchInfo(matches = cards.count { it.cardTitle == cardName })
                                     }
-                                    if (matchInfo != null) {
-                                        cardNames.addAll(matchInfo.cardNames)
-                                        val matches = matchInfo.matches
-                                        if (matches > 0 && cardAllTraits.containsTrait(synergyValues.trait)) matches - 1 else matches
-                                    } else {
-                                        0
-                                    }
+                                    calculateValueFromMatchInfo(matchInfo, cardAllTraits, synergyValues, card, cardNames)
                                 }
                                 synergyValues.type == SynTraitType.house -> {
 
@@ -202,13 +196,7 @@ object DeckSynergyService {
                                         TraitMatchInfo(matches = cards.count { it.cardTitle == cardName && it.house == card.house })
                                     }
 
-                                    if (matchInfo != null) {
-                                        cardNames.addAll(matchInfo.cardNames)
-                                        val matches = matchInfo.matches
-                                        if (matches > 0 && cardAllTraits.containsTrait(synergyValues.trait)) matches - 1 else matches
-                                    } else {
-                                        0
-                                    }
+                                    calculateValueFromMatchInfo(matchInfo, cardAllTraits, synergyValues, card, cardNames)
                                 }
                                 else -> {
 
@@ -342,6 +330,19 @@ object DeckSynergyService {
 
         return info
 
+    }
+
+    private fun calculateValueFromMatchInfo(matchInfo: TraitMatchInfo?, cardAllTraits: List<SynTraitValue>, synergyValues: SynTraitValue, card: Card, cardNames: MutableSet<String>): Int {
+        return if (matchInfo != null) {
+            val matches = matchInfo.matches
+            val matchAmount = if (matches > 0 && (cardAllTraits.containsTrait(synergyValues.trait) || synergyValues.cardName == card.cardTitle)) matches - 1 else matches
+            if (matchAmount > 0) {
+                cardNames.addAll(matchInfo.cardNames)
+            }
+            matchAmount
+        } else {
+            0
+        }
     }
 
     private fun addOutOfHouseTraits(cards: List<Card>, counts: Map<House, MutableMap<SynergyTrait, TraitMatchInfo>>) {

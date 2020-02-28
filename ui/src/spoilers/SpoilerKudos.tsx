@@ -1,4 +1,4 @@
-import { Divider, IconButton, Paper, Typography } from "@material-ui/core"
+import { Divider, IconButton, Link, Paper, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import React from "react"
@@ -41,9 +41,15 @@ export class SpoilerKudos extends React.Component {
                         <BulletList
                             items={[
                                 (
-                                    <div key={"example"}>
+                                    <div key={"mlvanbie"}>
                                         <Typography variant={"body2"}>
-                                            Contact me to help out and get your name / link in this list!
+                                            {"Mlvanbie & "}
+                                            <Link
+                                                target={"_blank"}
+                                                href={"https://discord.gg/zTKkzp3"}
+                                            >
+                                                C.Æ.N.D.L.E. bot
+                                            </Link>
                                         </Typography>
                                     </div>
                                 ),

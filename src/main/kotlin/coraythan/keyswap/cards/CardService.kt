@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 10
+val publishedAercVersion = 11
 
 @Transactional
 @Service
@@ -323,27 +323,29 @@ class CardService(
                         SynergyTrait.fromTrait(trait)
                     }
                     .map { trait -> SynTraitValue(trait = trait) }
-                    .let { traitsToAdd ->
-                        if (it.cardType == CardType.Creature && it.aercScoreAverage >= 2.5) {
-                            traitsToAdd.plus(SynTraitValue(
-                                    trait = SynergyTrait.goodCreature,
-                                    type = SynTraitType.anyHouse,
-                                    rating = when {
-                                        it.aercScoreAverage >= 3.5 -> TraitStrength.STRONG.value
-                                        it.aercScoreAverage >= 3 -> TraitStrength.NORMAL.value
-                                        else -> TraitStrength.WEAK.value
-                                    }
-                            ))
-                        } else {
-                            traitsToAdd
-                        }
-                    }
-            CardNumberSetPair(it.expansionEnum, it.cardNumber) to
-                    if (extraTraits.isEmpty()) it else it.copy(extraCardInfo = it.extraCardInfo!!.copy(
-                            traits = it.extraCardInfo!!.traits.plus(extraTraits)
+                    .plus(
+                            if (it.cardType == CardType.Creature && it.aercScoreAverage >= 2.5) {
+                                listOf((SynTraitValue(
+                                        trait = SynergyTrait.goodCreature,
+                                        type = SynTraitType.anyHouse,
+                                        rating = when {
+                                            it.aercScoreAverage >= 3.5 -> TraitStrength.STRONG.value
+                                            it.aercScoreAverage >= 3 -> TraitStrength.NORMAL.value
+                                            else -> TraitStrength.WEAK.value
+                                        }
+                                )))
+                            } else {
+                                listOf()
+                            }
+                    )
+            val numberSetPair = CardNumberSetPair(it.expansionEnum, it.cardNumber)
+            val realExtraInfo = extraInfo[numberSetPair]
+            numberSetPair to
+                    it.copy(extraCardInfo = realExtraInfo!!.copy(
+                            traits = realExtraInfo.traits.plus(extraTraits)
                     ))
         }.toMap()
-        nonMaverickCachedCards = cards.map { it.key to it.value.copy(extraCardInfo = extraInfo[it.key]) }.toMap()
+        nonMaverickCachedCards = cards
         nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
                 ?.map { it.cardTitle to it }

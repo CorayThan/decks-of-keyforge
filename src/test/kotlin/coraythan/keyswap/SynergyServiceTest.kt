@@ -257,6 +257,23 @@ class SynergyServiceTest {
                     )
             )
 
+    val selfSynergy = listOf<Card>()
+            .plus(
+                    basicCard().copy(
+                            id = "kirby",
+                            house = House.Brobnar,
+                            cardTitle = "kirby",
+                            power = 10,
+                            extraCardInfo = ExtraCardInfo(
+                                    efficiency = 0.0,
+                                    efficiencyMax = 4.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.card, 3, cardName = "kirby")
+                                    )
+                            )
+                    )
+            )
+
     @Test
     fun testDecks() {
 
@@ -302,5 +319,16 @@ class SynergyServiceTest {
         val jammerpack = DeckSynergyService.fromDeckWithCards(boringDeck.copy(totalPower = 75), jammerPack)
         assertEquals(2, jammerpack.synergyRating)
         assertEquals(2.0, jammerpack.amberControl, 0.001)
+    }
+
+    @Test
+    fun testSelfSynergy() {
+        val kirby = DeckSynergyService.fromDeckWithCards(boringDeck, selfSynergy)
+        assertEquals(0, kirby.synergyRating)
+        assertEquals(0.0, kirby.efficiency, 0.001)
+
+        val twoKirby = DeckSynergyService.fromDeckWithCards(boringDeck, selfSynergy.plus(selfSynergy))
+        assertEquals(2, twoKirby.synergyRating)
+        assertEquals(2.0, twoKirby.efficiency, 0.001)
     }
 }

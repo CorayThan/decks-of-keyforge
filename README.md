@@ -105,4 +105,11 @@ Change `ddl-auto` in `application.yml` to `update`. `show-sql` to true. Run. Cop
 
 ## copy db and reload it
 
-In pg admin do custom. no owner, tablespace, priviledge or unlogged table data
+```
+set PGPASSWORD=password
+pg_dump --host keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com --username coraythan --format c --no-unlogged-table-data --file .\restore-cards\full-db.dump keyswap
+
+set PGPASSWORD=postgres
+pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\restore-cards\full-db.dump
+```
+
