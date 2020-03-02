@@ -151,13 +151,6 @@ export class SellersAndDevs extends React.Component {
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
-                    <InfoListCard title={"Deck Selling API"} infos={[
-                        "If you sell decks on a website, or have the technical know-how, you can list and unlist decks " +
-                        "for sale on Decks of KeyForge via an API.",
-                        "Generate an API key, and then contact me to get the API details."
-                    ]}/>
-                </AboutGridItem>
-                <AboutGridItem>
                     <InfoListCard title={"File with all SAS and AERC"} infos={[
                         "Please use this instead of the API if it fits your needs to help conserve DoK's server resources.",
                         "I've created csv files (spreadsheets) with the deck info for all decks up to the time they were generated.",
@@ -197,6 +190,21 @@ export class SellersAndDevs extends React.Component {
                         "4. You'll need to use the API key associated with your account.",
                         "The url to request stats is:",
                         "https://decksofkeyforge.com/public-api/v1/stats",
+                        `You'll need to include the header "Api-Key: {your-api-key}`
+                    ]}/>
+                </AboutGridItem>
+                <AboutGridItem>
+                    <InfoListCard title={"Cards API"} infos={[
+                        "With this API you can get a list of all the cards that exist in KeyForge. It does not contain special variants of those cards, " +
+                        "like mavericks or legacies.",
+                        "Again, please read the following rules for using this API:",
+                        "1. These are only updated after a new set releases. Please do not repeatedly call this endpoint. You can call it a few times after " +
+                        "a new set releases as it gradually fills in all the cards.",
+                        "2. Please provide a link to decksofkeyforge.com on your site. " +
+                        "3. Please attribute decksofkeyforge.com as a source of data for your site.",
+                        "4. You'll need to use the API key associated with your account.",
+                        "The url to request cards is:",
+                        "https://decksofkeyforge.com/public-api/v1/cards",
                         `You'll need to include the header "Api-Key: {your-api-key}`
                     ]}/>
                 </AboutGridItem>

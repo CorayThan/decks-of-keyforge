@@ -1,5 +1,7 @@
 package coraythan.keyswap.publicapis
 
+import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.RateExceededException
 import coraythan.keyswap.decks.Nothing
@@ -16,7 +18,8 @@ import java.util.concurrent.ConcurrentHashMap
 @RequestMapping("/public-api")
 class PublicApiEndpoints(
         private val publicApiService: PublicApiService,
-        private val statsService: StatsService
+        private val statsService: StatsService,
+        private val cardService: CardService
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
@@ -87,5 +90,13 @@ class PublicApiEndpoints(
         val user = publicApiService.userForApiKey(apiKey)
         log.info("Deck stats request from user ${user.email}")
         return statsService.findCurrentStats() ?: throw BadRequestException("Sorry, deck statistics are not available at this time.")
+    }
+
+    @CrossOrigin
+    @GetMapping("/v1/cards")
+    fun findCards1(@RequestHeader("Api-Key") apiKey: String): List<Card> {
+        val user = publicApiService.userForApiKey(apiKey)
+        log.info("Cards request from user ${user.email}")
+        return cardService.allFullCardsNonMaverickNoDups()
     }
 }

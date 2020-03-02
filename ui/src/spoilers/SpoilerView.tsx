@@ -19,16 +19,9 @@ import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
 
 export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
-    let url = props.url
+    const url = makeFullSpoilerUrl(props.url)
     if (url == null) {
         return null
-    }
-    if (url.includes("googleusercontent")) {
-        url = url + "=w300-h420"
-    } else if (url.includes("http")) {
-
-    } else {
-        url = `https://keyforge-card-images.s3-us-west-2.amazonaws.com/${url}`
     }
     return (
         <div style={{width: 300}}>
@@ -36,6 +29,8 @@ export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
         </div>
     )
 }
+
+export const makeFullSpoilerUrl = (url?: string) => url == null || url.length === 0 ? undefined : `https://keyforge-card-images.s3-us-west-2.amazonaws.com/${url}`
 
 export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler

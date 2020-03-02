@@ -51,7 +51,6 @@ export interface Deck extends HasAerc {
 
     aercScore: number
     previousSasRating: number
-    sasV3?: number
     sasRating: number
     synergyRating: number
     antisynergyRating: number

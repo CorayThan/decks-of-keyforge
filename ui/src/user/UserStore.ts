@@ -62,6 +62,7 @@ export class UserStore {
                     log.info("Logging user out and displaying warning message to log back in.")
                     messageStore.setWarningMessage("Please log back in to the DoK.")
                 } else {
+                    logout = false
                     log.error(`Error loading logged in user ${error}`)
                     messageStore.setRequestErrorMessage()
                 }

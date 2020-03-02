@@ -32,8 +32,6 @@ data class Deck(
         val chains: Int = 0,
         val wins: Int = 0,
         val losses: Int = 0,
-        val crucibleTrackerWins: Int? = null,
-        val crucibleTrackerLosses: Int? = null,
 
         val registered: Boolean = true,
 
@@ -63,7 +61,6 @@ data class Deck(
         val other: Double = 0.0,
         val aercScore: Double = 0.0,
         val previousSasRating: Int? = 0,
-        val sasV3: Int? = 0,
         val sasRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,
@@ -159,7 +156,6 @@ data class Deck(
                 other = other,
                 aercScore = aercScore,
                 previousSasRating = previousSasRating ?: sasRating,
-                sasV3 = sasV3,
                 sasRating = sasRating,
                 synergyRating = synergyRating,
                 antisynergyRating = antisynergyRating,

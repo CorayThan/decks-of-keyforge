@@ -39,7 +39,6 @@ data class DeckSearchResult(
         val other: Double = 0.0,
         val aercScore: Double = 0.0,
         val previousSasRating: Int = 0,
-        val sasV3: Int? = null,
         val sasRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,

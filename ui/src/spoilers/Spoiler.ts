@@ -3,6 +3,7 @@ import { CardType } from "../cards/CardType"
 import { Rarity } from "../cards/rarity/Rarity"
 import { Expansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
+import { makeFullSpoilerUrl } from "./SpoilerView"
 
 export interface Spoiler extends HasAerc {
 
@@ -56,6 +57,7 @@ export class SpoilerUtils {
                 card.cardText
                     .replace(/[\r\n]+/gm, "\r")
                     .replace(/"/g, "\"\""),
+                makeFullSpoilerUrl(card.frontImage)
             ]
         })
         data.unshift([
@@ -74,6 +76,7 @@ export class SpoilerUtils {
 
             "Traits",
             "Text",
+            "Image Link"
         ])
         return data
     }
