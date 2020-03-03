@@ -20,8 +20,6 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun findByManualPatreonTier(tier: PatreonRewardsTier): List<KeyUser>
     fun findByRemoveManualPatreonTierNotNull(): List<KeyUser>
 
-    fun findAllBySellerEmailNotNull(): List<KeyUser>
-
     fun findTop100ByUpdateStatsTrue(): List<KeyUser>
 
     @Modifying

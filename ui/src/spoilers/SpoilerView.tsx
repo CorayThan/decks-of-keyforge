@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardSetsFromCard } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
-import { KCard } from "../cards/KCard"
+import { findCardImageUrl, KCard } from "../cards/KCard"
 import { rarityValues } from "../cards/rarity/Rarity"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -18,8 +18,9 @@ import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
 
-export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
-    const url = makeFullSpoilerUrl(props.url)
+export const SpoilerImage = observer((props: { cardTitle: string, url?: string }) => {
+    log.info(`Spoiler img from ${props.url} ${props.cardTitle}`)
+    const url = makeFullSpoilerUrl(props.url, props.cardTitle)
     if (url == null) {
         return null
     }
@@ -28,9 +29,19 @@ export const SpoilerImage = (props: { cardTitle: string, url?: string }) => {
             <img alt={props.cardTitle} src={url} style={{width: 300}}/>
         </div>
     )
-}
+})
 
-export const makeFullSpoilerUrl = (url?: string) => url == null || url.length === 0 ? undefined : `https://keyforge-card-images.s3-us-west-2.amazonaws.com/${url}`
+export const makeFullSpoilerUrl = (url?: string, cardTitle?: string) => {
+    if (url == null || url.length === 0 || url.includes("keyforgegame.com")) {
+        const card = cardTitle == null ? null : cardStore.fullCardFromCardName(cardTitle)
+        if (card != null) {
+            return findCardImageUrl(card as KCard)
+        }
+    } else {
+        return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/${url}`
+    }
+    return undefined
+}
 
 export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean }) => {
     const spoiler = props.spoiler
