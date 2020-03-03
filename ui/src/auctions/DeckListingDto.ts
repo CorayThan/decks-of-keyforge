@@ -10,6 +10,7 @@ export interface DeckListingDto {
     bidIncrement?: number
     startingBid?: number
     buyItNow?: number
+    acceptingOffers?: boolean
     status: DeckListingStatus
     bids: AuctionBidDto[]
     highestBid?: number
@@ -33,7 +34,7 @@ export interface UserDeckListingInfo {
 }
 
 export enum DeckListingStatus {
-    BUY_IT_NOW_ONLY = "BUY_IT_NOW_ONLY",
-    ACTIVE = "ACTIVE",
+    SALE = "SALE",
+    AUCTION = "AUCTION",
     COMPLETE = "COMPLETE"
 }

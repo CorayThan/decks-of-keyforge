@@ -82,7 +82,10 @@ class ForSaleNotificationsService(
 
     fun addForSaleQuery(query: ForSaleQuery) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        check(user.realPatreonTier()?.canSaveNotifications == true) { "You must be a patron to save for sale queries." }
+        val maxNotifs = user.realPatreonTier()?.maxNotifications ?: 0
+        check(maxNotifs > 0) { "You must be a $5 patron to save for sale queries." }
+        val currentNotificationCount = forSaleQueryRepo.countByUserId(user.id)
+        check(maxNotifs > currentNotificationCount) { "You have too many for sale notifications created. Please delete one to add one." }
 
         val toSave = ForSaleQueryEntity(
                 name = query.queryName,
@@ -112,5 +115,10 @@ class ForSaleNotificationsService(
     fun findAllForUser(): List<ForSaleQuery> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return forSaleQueryRepo.findByUserId(currentUser.id).map { objectMapper.readValue<ForSaleQuery>(it.json).copy(id = it.id) }
+    }
+
+    fun findCountForUser(): Long {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        return forSaleQueryRepo.countByUserId(currentUser.id)
     }
 }

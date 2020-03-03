@@ -13,12 +13,14 @@ import java.util.*
 data class DeckSaleInfo(
         val forTrade: Boolean,
         val forAuction: Boolean,
+        val acceptingOffers: Boolean,
 
         val forSaleInCountry: Country?,
         val currencySymbol: String,
         val language: DeckLanguage? = null,
 
         val highestBid: Int? = null,
+        val highestOffer: Int? = null,
         val buyItNow: Int? = null,
         val startingBid: Int? = null,
         val auctionEndDateTime: String? = null,
@@ -45,12 +47,13 @@ data class DeckSaleInfo(
 ) {
     companion object {
         
-        fun fromAuction(offsetMinutes: Int, auction: DeckListing, currentUser: KeyUser?): DeckSaleInfo {
+        fun fromDeckListing(offsetMinutes: Int, auction: DeckListing, currentUser: KeyUser?): DeckSaleInfo {
             val youAreHighest = auction.highestBidderUsername == currentUser?.username && currentUser != null
 
             return DeckSaleInfo(
                     forTrade = auction.forTrade,
-                    forAuction = auction.status == DeckListingStatus.ACTIVE,
+                    forAuction = auction.status == DeckListingStatus.AUCTION,
+                    acceptingOffers = auction.acceptingOffers,
                     forSaleInCountry = auction.forSaleInCountry,
                     language = auction.language,
                     currencySymbol = auction.currencySymbol,
@@ -62,9 +65,10 @@ data class DeckSaleInfo(
                     username = auction.seller.username,
                     publicContactInfo = auction.seller.publicContactInfo,
                     discord = auction.seller.discord,
-                    shippingCost = if (auction.shippingCost.isNullOrBlank()) auction.seller.shippingCost else auction.shippingCost,
+                    shippingCost = if (auction.status != DeckListingStatus.AUCTION || auction.shippingCost.isNullOrBlank()) auction.seller.shippingCost else auction.shippingCost,
 
                     highestBid = auction.highestBid,
+                    highestOffer = auction.highestOffer,
                     buyItNow = auction.buyItNow,
                     startingBid = auction.startingBid,
                     auctionEndDateTime = auction.endDateTime.toReadableStringWithOffsetMinutes(offsetMinutes),

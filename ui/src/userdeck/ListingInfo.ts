@@ -3,6 +3,7 @@ import { DeckCondition } from "./UserDeck"
 
 export interface ListingInfo {
     deckId: number
+    acceptingOffers: boolean
     forSaleInCountry: string,
     language: DeckLanguage
     condition: DeckCondition

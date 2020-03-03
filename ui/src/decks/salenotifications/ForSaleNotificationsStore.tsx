@@ -16,6 +16,9 @@ export class ForSaleNotificationsStore {
     @observable
     queries?: ForSaleQuery[]
 
+    @observable
+    queriesCount?: number
+
     addQuery = (query: ForSaleQuery) => {
         query.cards = query.cards.filter((card) => card.cardNames.length > 0)
 
@@ -48,6 +51,13 @@ export class ForSaleNotificationsStore {
         axios.get(`${ForSaleNotificationsStore.SECURE_CONTEXT}`)
             .then((response: AxiosResponse) => {
                 this.queries = response.data
+            })
+    }
+
+    findCountForUser = () => {
+        axios.get(`${ForSaleNotificationsStore.SECURE_CONTEXT}/count`)
+            .then((response: AxiosResponse<number>) => {
+                this.queriesCount = response.data
             })
     }
 }

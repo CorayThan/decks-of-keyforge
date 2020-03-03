@@ -7,6 +7,7 @@ import java.util.*
 
 data class ListingInfo(
         val deckId: Long,
+        val acceptingOffers: Boolean,
         val forSaleInCountry: Country,
         val language: DeckLanguage = DeckLanguage.ENGLISH,
         val condition: DeckCondition,

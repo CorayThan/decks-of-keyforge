@@ -33,7 +33,7 @@ data class DeckListing(
         val boughtNowOn: ZonedDateTime? = null,
 
         @Enumerated(EnumType.STRING)
-        val status: DeckListingStatus = DeckListingStatus.ACTIVE,
+        val status: DeckListingStatus = DeckListingStatus.AUCTION,
 
         @JsonIgnoreProperties("auction")
         @OneToMany(mappedBy = "auction", cascade = [CascadeType.ALL])
@@ -68,6 +68,7 @@ data class DeckListing(
         val dateListed: ZonedDateTime = now(),
 
         val forTrade: Boolean = false,
+        val acceptingOffers: Boolean = false,
 
         @Id
         val id: UUID = UUID.randomUUID()
@@ -115,7 +116,7 @@ data class DeckListing(
         return UserDeckListingInfo(
                 status = status,
                 forTrade = forTrade,
-                bidsExist = status == DeckListingStatus.ACTIVE && bids.isNotEmpty(),
+                bidsExist = status == DeckListingStatus.AUCTION && bids.isNotEmpty(),
                 deckId = deck.id,
                 id = id
         )
@@ -148,6 +149,7 @@ data class DeckListing(
                 listingInfo = listingInfo,
                 externalLink = externalLink,
                 forTrade = forTrade,
+                acceptingOffers = acceptingOffers,
                 id = id
         )
     }
@@ -160,7 +162,7 @@ data class DeckListingDto(
         val bidIncrement: Int? = 5,
         val startingBid: Int? = null,
         val buyItNow: Int? = null,
-        val status: DeckListingStatus = DeckListingStatus.ACTIVE,
+        val status: DeckListingStatus = DeckListingStatus.AUCTION,
         val highestBid: Int? = null,
         val bids: List<AuctionBidDto> = listOf(),
         val deckId: Long,
@@ -171,6 +173,7 @@ data class DeckListingDto(
         val listingInfo: String?,
         val externalLink: String?,
         val forTrade: Boolean,
+        val acceptingOffers: Boolean = false,
         val id: UUID
 ) {
     val dateListedLocalDate: LocalDate
@@ -189,7 +192,7 @@ data class UserDeckListingInfo(
 )
 
 enum class DeckListingStatus {
-    BUY_IT_NOW_ONLY,
-    ACTIVE,
+    SALE,
+    AUCTION,
     COMPLETE
 }

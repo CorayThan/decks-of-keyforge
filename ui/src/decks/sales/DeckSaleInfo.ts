@@ -5,12 +5,14 @@ import { DeckLanguage } from "../DeckLanguage"
 export interface DeckSaleInfo {
     forTrade: boolean
     forAuction: boolean
+    acceptingOffers: boolean
 
     forSaleInCountry?: string
     currencySymbol: string
     language?: DeckLanguage
 
     highestBid?: number
+    highestOffer?: number
     buyItNow?: number
     startingBid?: number
     auctionEndDateTime?: string

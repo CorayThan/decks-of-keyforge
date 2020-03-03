@@ -12,6 +12,7 @@ import { Utils } from "../../config/Utils"
 import { SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
+import { Loader } from "../../mui-restyled/Loader"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { FiltersConstraintsStore } from "../search/ConstraintDropdowns"
@@ -34,10 +35,14 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
     @observable
     name = ""
 
-    handleClose = () => this.open = false
+    handleClose = () => {
+        this.open = false
+        forSaleNotificationsStore.queriesCount = undefined
+    }
     handleOpen = () => {
         this.open = true
         this.name = ""
+        forSaleNotificationsStore.findCountForUser()
     }
 
     addQuery = () => {
@@ -68,6 +73,10 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
 
         const forSaleInCountry = userStore.country
 
+        const currentNotifsCount = forSaleNotificationsStore.queriesCount
+
+        const maxNotifsExceeded = (currentNotifsCount ?? 0) >= userStore.maxNotifications
+
         return (
             <div>
                 <KeyButton
@@ -84,35 +93,58 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
                     <DialogTitle>
                         Notify me
                     </DialogTitle>
-                    <DialogContent>
-                        <Typography style={{marginBottom: spacing(2)}}>
-                            Whenever a new deck is listed that matches your search selection on the left we will send you an email.
-                            Favorites and notes will not be used currently.
-                            You can view and delete your notifications from your
-                        </Typography>
-                        <LinkButton
-                            to={Routes.myProfile}
-                            style={{marginBottom: spacing(2)}}
-                        >
-                            Profile
-                        </LinkButton>
-                        <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
-                            Please ensure the search parameters are not too broad! You will be sent an email for all newly listed decks that match this search.
-                        </Typography>
-                        <TextField
-                            label={"Notification Name"}
-                            value={this.name}
-                            onChange={(event) => this.name = event.target.value}
-                            fullWidth={true}
-                            helperText={"Distinguish between your notifications"}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                        <KeyButton color={"primary"} onClick={this.addQuery} disabled={!forSaleInCountry}>
-                            Create
-                        </KeyButton>
-                    </DialogActions>
+                    {currentNotifsCount == null ? (
+                        <DialogContent>
+                            <Loader/>
+                        </DialogContent>
+                    ) : (
+                        <>
+                            <DialogContent>
+                                <div style={{display: "grid", gridTemplateColumns: "178px 1fr", marginBottom: spacing(2)}}>
+                                    <Typography color={maxNotifsExceeded ? "error" : undefined}>
+                                        Current notifications:
+                                    </Typography>
+                                    <Typography color={maxNotifsExceeded ? "error" : undefined}>
+                                        {currentNotifsCount}
+                                    </Typography>
+                                    <Typography>
+                                        Max notifications:
+                                    </Typography>
+                                    <Typography>
+                                        {userStore.maxNotifications}
+                                    </Typography>
+                                </div>
+                                <Typography variant={"body2"} color={"textSecondary"} style={{marginBottom: spacing(2)}}>
+                                    Whenever a new deck is listed that matches your search selection on the left we will send you an email.
+                                    Favorites and notes will not be used.
+                                    You can view and delete your notifications from your
+                                </Typography>
+                                <LinkButton
+                                    to={Routes.myProfile}
+                                    style={{marginBottom: spacing(2)}}
+                                >
+                                    Profile
+                                </LinkButton>
+                                <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
+                                    Please ensure the search parameters are not too broad! You will be sent an email for all newly listed decks that match this
+                                    search.
+                                </Typography>
+                                <TextField
+                                    label={"Notification Name"}
+                                    value={this.name}
+                                    onChange={(event) => this.name = event.target.value}
+                                    fullWidth={true}
+                                    helperText={"Distinguish between your notifications"}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
+                                <KeyButton color={"primary"} onClick={this.addQuery} disabled={!forSaleInCountry || maxNotifsExceeded}>
+                                    Create
+                                </KeyButton>
+                            </DialogActions>
+                        </>
+                    )}
                 </Dialog>
             </div>
         )

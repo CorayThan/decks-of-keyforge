@@ -77,7 +77,7 @@ export class PatreonRewards extends React.Component {
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
+                            "Up to 25 deck sale notifications: Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
                             "List up to five simultaneous auctions. (By default you are only allowed one.)"
                         ]}
                     />
@@ -106,6 +106,7 @@ export class PatreonRewards extends React.Component {
                             "Join a special major contributor-only channel in the discord.",
                             "Credit on the contact me about page as a major contributor to the site.",
                             "Help influence future features of the site.",
+                            "Up to 50 deck sale notifications.",
                             "List any number of simultaneous auctions."
                         ]}
                     />

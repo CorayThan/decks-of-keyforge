@@ -1,10 +1,8 @@
-import { Dialog, Typography } from "@material-ui/core"
-import Checkbox from "@material-ui/core/Checkbox"
+import { Dialog, FormControl, FormLabel, Radio, RadioGroup, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import FormGroup from "@material-ui/core/FormGroup"
 import MenuItem from "@material-ui/core/MenuItem"
 import TextField from "@material-ui/core/TextField"
 import { differenceInDays, format } from "date-fns"
@@ -36,6 +34,12 @@ interface ListForSaleViewProps {
     menuItem?: boolean
 }
 
+enum SaleType {
+    STANDARD,
+    AUCTION,
+    ACCEPTING_OFFERS
+}
+
 @observer
 export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
@@ -43,7 +47,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     open = false
 
     @observable
-    auction = false
+    saleType = SaleType.STANDARD
     @observable
     condition = DeckCondition.NEAR_MINT
     @observable
@@ -79,6 +83,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.open = true
 
         const defaults = keyLocalStorage.saleDefaults == null ? {} : keyLocalStorage.saleDefaults
+        if (defaults.bidIncrement != null) {
+            this.saleType = SaleType.AUCTION
+        } else if (defaults.acceptingOffers) {
+            this.saleType = SaleType.ACCEPTING_OFFERS
+        }
         this.language = defaults.language == null ? DeckLanguage.ENGLISH : defaults.language
         this.condition = defaults.condition == null ? DeckCondition.NEW_IN_PLASTIC : defaults.condition
         this.listingInfo = defaults.listingInfo == null ? "" : defaults.listingInfo
@@ -100,7 +109,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         const saleInfo = auctionStore.listingInfoForDeck(this.props.deck.id)
         if (saleInfo != null) {
             await auctionStore.findDeckListingInfo(saleInfo.id)
-            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status} = auctionStore.listingInfo!
+            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status, acceptingOffers} = auctionStore.listingInfo!
             this.open = true
             this.editAuctionId = saleInfo.id
             this.language = language ?? DeckLanguage.ENGLISH
@@ -108,7 +117,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             this.listingInfo = listingInfo ?? ""
             this.externalLink = externalLink ?? ""
             this.buyItNow = buyItNow?.toString() ?? ""
-            if (status !== DeckListingStatus.BUY_IT_NOW_ONLY) {
+            if (acceptingOffers) {
+                this.saleType = SaleType.ACCEPTING_OFFERS
+            }
+            if (status !== DeckListingStatus.SALE) {
                 throw new Error("Can't edit auctions.")
             }
 
@@ -128,9 +140,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
     list = (saveAsDefault?: boolean) => {
         const {
-            auction, condition, listingInfo, externalLink, expireInDays, language, bidIncrement,
+            saleType, condition, listingInfo, externalLink, expireInDays, language, bidIncrement,
             startingBid, buyItNow
         } = this
+        const auction = saleType === SaleType.AUCTION
         if (listingInfo.length > 2000) {
             messageStore.setWarningMessage("The listing info must be less than 2000 characters long.")
             return
@@ -185,6 +198,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
         const listingInfoDto: ListingInfo = {
             deckId: this.props.deck.id,
+            acceptingOffers: this.saleType === SaleType.ACCEPTING_OFFERS,
             forSaleInCountry,
             language,
             condition,
@@ -220,7 +234,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
         const auctionInfo = auctionStore.listingInfoForDeck(deck.id)
         let saleButton
-        if (auctionInfo && auctionInfo.status === DeckListingStatus.ACTIVE && !auctionInfo.bidsExist) {
+        if (auctionInfo && auctionInfo.status === DeckListingStatus.AUCTION && !auctionInfo.bidsExist) {
             saleButton = (
                 <DeckActionClickable
                     menuItem={menuItem}
@@ -264,6 +278,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             marginTop: spacing(2), marginRight: spacing(2)
         }
 
+        const auction = this.saleType === SaleType.AUCTION
+
         return (
             <>
                 {saleButton}
@@ -301,12 +317,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </LinkButton>
                             </div>
                         )}
-                        {this.auction ? (
-                            <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
-                                Auctions cannot be cancelled or modified after a bid has been placed.
-                            </Typography>
+                        {auction ? (
+                            <div style={{marginBottom: spacing(2)}}>
+                                <Typography variant={"subtitle2"} color={"error"}>
+                                    Auctions cannot be cancelled or modified after a bid has been placed.
+                                </Typography>
+                            </div>
                         ) : null}
-                        {!this.auction || userStore.canListMoreAuctions ? null : (
+                        {!auction || userStore.canListMoreAuctions ? null : (
                             <div style={{marginBottom: spacing(2)}}>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
                                     Upgrade your patron level to list more auctions. You can have {userStore.auctionsAllowed} simultaneous auctions.
@@ -314,36 +332,50 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 <PatronButton/>
                             </div>
                         )}
-                        <FormGroup row={true}>
-                            {!this.editAuctionId && (
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.auction}
-                                            onChange={(event) => {
-                                                const auction = event.target.checked
-                                                this.auction = auction
-                                                if (auction) {
-                                                    this.expireInDays = "3"
-                                                    this.bidIncrement = "1"
-                                                    this.startingBid = "1"
-                                                } else {
-                                                    this.expireInDays = "7"
-                                                    this.bidIncrement = ""
-                                                    this.startingBid = ""
-                                                }
-                                                this.auctionEndTime = ""
-                                            }}
-                                            color={"primary"}
-                                        />
+                        <FormControl fullWidth={true}>
+                            <FormLabel>Sale Type</FormLabel>
+                            <RadioGroup
+
+                                name="sale type"
+                                value={this.saleType}
+                                onChange={(event) => {
+                                    const previousSaleType = this.saleType
+                                    this.saleType = Number(event.target.value)
+                                    if (this.saleType === SaleType.AUCTION) {
+                                        this.expireInDays = "3"
+                                        this.bidIncrement = "1"
+                                        this.startingBid = "1"
+                                    } else if (previousSaleType === SaleType.AUCTION) {
+                                        this.expireInDays = "7"
+                                        this.bidIncrement = ""
+                                        this.startingBid = ""
                                     }
-                                    label={"Auction"}
-                                />
-                            )}
-                        </FormGroup>
+                                    this.auctionEndTime = ""
+                                }}
+                            >
+                                <div style={{display: "flex"}}>
+                                    <FormControlLabel
+                                        value={SaleType.STANDARD}
+                                        control={<Radio/>}
+                                        label="Standard"
+                                    />
+                                    <FormControlLabel
+                                        value={SaleType.ACCEPTING_OFFERS}
+                                        control={<Radio/>}
+                                        label="Accepting Offers"
+                                    />
+                                    <FormControlLabel
+                                        value={SaleType.AUCTION}
+                                        control={<Radio/>}
+                                        label="Auction"
+                                        disabled={!!this.editAuctionId}
+                                    />
+                                </div>
+                            </RadioGroup>
+                        </FormControl>
                         <TextField
                             select={true}
-                            label={this.auction ? "Duration" : "Expires In"}
+                            label={auction ? "Duration" : "Expires In"}
                             value={this.expireInDays}
                             onChange={this.handleChangeDays}
                             style={marginTopRight}
@@ -360,7 +392,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             <MenuItem value={"7"}>
                                 7 days
                             </MenuItem>
-                            {this.auction ? null : (
+                            {auction ? null : (
                                 [
                                     <MenuItem value={"10"} key={"10"}>
                                         10 days
@@ -370,18 +402,18 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                     </MenuItem>,
                                 ]
                             )}
-                            {this.auction || !userStore.patron ? null : (
+                            {auction || !userStore.patron ? null : (
                                 <MenuItem value={"365"}>
                                     One year
                                 </MenuItem>
                             )}
-                            {this.auction || !this.preExistingDays ? null : (
+                            {auction || !this.preExistingDays ? null : (
                                 <MenuItem value={this.preExistingDays}>
                                     {this.preExistingDays} days
                                 </MenuItem>
                             )}
                         </TextField>
-                        {this.auction ? (
+                        {auction ? (
                             <TextField
                                 label={"End Time"}
                                 type={"time"}
@@ -423,7 +455,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 )
                             })}
                         </TextField>
-                        {this.auction ? (
+                        {auction ? (
                             <TextField
                                 label={"Starting bid"}
                                 type={"number"}
@@ -434,7 +466,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 style={{width: 120, ...marginTopRight}}
                             />
                         ) : null}
-                        {this.auction ? (
+                        {auction ? (
                             <>
                                 <TextField
                                     label={"Min Increment"}
@@ -446,7 +478,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             </>
                         ) : null}
                         <TextField
-                            label={this.auction ? "Buy it now" : "Price"}
+                            label={auction ? "Buy it now" : "Price"}
                             type={"number"}
                             value={this.buyItNow}
                             onChange={(event) => this.buyItNow = event.target.value}
@@ -480,30 +512,25 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 Profile
                             </LinkButton>
                         </div>
-                        {this.auction ? (
+                        {auction ? (
                             <>
                                 <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
-                                    Server instability or slowness can prevent users from bidding on an auction. If this significantly impacts the ability of
-                                    users
-                                    to bid on an auction, you are permitted to relist the auction, with a note in the auction description explaining why it was
-                                    relisted.
+                                    Server instability can prevent users from bidding on an auction. If this significantly impacts the
+                                    auction results you may relist the auction with a note in the description explaining why
+                                    it was relisted.
                                 </Typography>
                                 <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
-                                    Auctions are automatically extended by 15 minutes if a bid comes in in their last 15 minutes. You and the winner will
-                                    receive
-                                    an email when the auction is complete.
+                                    Auctions are automatically extended 15 minutes when bid upon in the last 15 minutes. You and the winner
+                                    will be receive an email when the auction is complete.
                                 </Typography>
                             </>
                         ) : null}
-                        <Typography color={"textSecondary"} style={{fontStyle: "italic"}}>
-                            Please add noreply@decksofkeyforge.com to your email contacts, or check your spam filter if you have decks listed for sale.
-                        </Typography>
                     </DialogContent>
                     <DialogActions>
                         <KeyButton
                             style={{marginLeft: spacing(1)}}
                             onClick={() => this.list(true)}
-                            disabled={!userStore.emailVerified || !forSaleInCountry || (this.auction && !userStore.canListMoreAuctions)}
+                            disabled={!userStore.emailVerified || !forSaleInCountry || (auction && !userStore.canListMoreAuctions)}
                         >
                             {"Save Default"}
                         </KeyButton>
@@ -513,7 +540,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             style={{marginRight: spacing(1)}}
                             color={"primary"}
                             onClick={() => this.list()}
-                            disabled={!userStore.canListForSale || (this.auction && !userStore.canListMoreAuctions)}
+                            disabled={!userStore.canListForSale || (auction && !userStore.canListMoreAuctions)}
                         >
                             {this.editAuctionId != null ? "Update Listing" : "List"}
                         </KeyButton>

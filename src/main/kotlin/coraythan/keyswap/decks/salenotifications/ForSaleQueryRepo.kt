@@ -6,4 +6,5 @@ import java.util.*
 
 interface ForSaleQueryRepo: JpaRepository<ForSaleQueryEntity, UUID>, QuerydslPredicateExecutor<ForSaleQueryEntity> {
     fun findByUserId(userId: UUID): List<ForSaleQueryEntity>
+    fun countByUserId(userId: UUID): Long
 }

@@ -47,6 +47,7 @@ interface DeckViewSmallProps {
     deck: Deck
     fullVersion?: boolean
     hideActions?: boolean
+    forceNarrow?: boolean
     style?: React.CSSProperties
 }
 
@@ -55,7 +56,7 @@ export const standardDeckViewWidth = 704
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
-        const {deck, fullVersion, hideActions, style} = this.props
+        const {deck, fullVersion, hideActions, forceNarrow, style} = this.props
         const {
             id, keyforgeId, name, wishlistCount, funnyCount,
             forSale, forTrade, forAuction, registered, owners
@@ -67,7 +68,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         if (userDeckStore.ownedByMe(id)) {
             const saleInfo = auctionStore.listingInfoForDeck(id)
             if (saleInfo != null) {
-                displayForAuction = saleInfo.status === DeckListingStatus.ACTIVE
+                displayForAuction = saleInfo.status === DeckListingStatus.AUCTION
                 if (!displayForAuction) {
                     displayForSale = true
                     displayForTrade = saleInfo.forTrade
@@ -81,7 +82,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             }
         }
 
-        const compact = screenStore.smallDeckView()
+        const compact = forceNarrow || screenStore.smallDeckView()
 
         let width
         if (compact) {
@@ -143,7 +144,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     </Tooltip>
                                 )}
                             </div>
-                            <DisplayAllCardsByHouse deck={deck}/>
+                            <DisplayAllCardsByHouse deck={deck} compact={compact}/>
                             <Collapse in={userDeckStore.viewNotes}>
                                 <InlineDeckNote id={deck.id}/>
                             </Collapse>
@@ -227,10 +228,10 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
     }
 }
 
-const DisplayAllCardsByHouse = (props: { deck: Deck }) => {
+const DisplayAllCardsByHouse = (props: { deck: Deck, compact: boolean }) => {
     const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
 
-    if (screenStore.smallDeckView()) {
+    if (props.compact) {
         return <DisplayAllCardsByHouseCompact {...props}/>
     }
 

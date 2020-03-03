@@ -22,4 +22,7 @@ class ForSaleNotificationsEndpoints(
 
     @GetMapping("/secured")
     fun findAllForUser() = forSaleNotificationsService.findAllForUser()
+
+    @GetMapping("/secured/count")
+    fun findCountForUser() = forSaleNotificationsService.findCountForUser()
 }

@@ -393,10 +393,10 @@ class DeckSearchService(
 
         val mapped = if (completedAuctionsOnly) {
             deck.auctions.filter { it.status == DeckListingStatus.COMPLETE }
-                    .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
+                    .map { DeckSaleInfo.fromDeckListing(offsetMinutes, it, currentUser) }
         } else {
             deck.auctions.filter { it.status != DeckListingStatus.COMPLETE }
-                    .map { DeckSaleInfo.fromAuction(offsetMinutes, it, currentUser) }
+                    .map { DeckSaleInfo.fromDeckListing(offsetMinutes, it, currentUser) }
         }
 
         return mapped

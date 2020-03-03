@@ -62,3 +62,16 @@ export const patronAuctionLimit =  (tier?: PatreonRewardsTier) => {
             return 1
     }
 }
+
+export const patronNotificationLimit =  (tier?: PatreonRewardsTier) => {
+    switch (tier) {
+        case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
+            return 25
+        case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
+            return 25
+        case PatreonRewardsTier.ALWAYS_GENEROUS:
+            return 50
+        default:
+            return 0
+    }
+}

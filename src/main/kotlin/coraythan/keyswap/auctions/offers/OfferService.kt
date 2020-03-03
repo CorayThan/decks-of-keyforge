@@ -30,7 +30,7 @@ class OfferService(
         if (auction.status == DeckListingStatus.COMPLETE) {
             return OfferPlacementResult(false, "This deck is not for sale, so you cannot make an offer.")
         }
-        if (auction.status == DeckListingStatus.ACTIVE) throw BadRequestException("Can't make an offer on an auction.")
+        if (auction.status == DeckListingStatus.AUCTION) throw BadRequestException("Can't make an offer on an auction.")
         if (user.id == auction.seller.id) {
             throw UnauthorizedException("You can't buy your own deck.")
         }

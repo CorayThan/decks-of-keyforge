@@ -6,7 +6,7 @@ import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../con
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
-import { findPatronRewardLevel, PatreonRewardsTier, patronAuctionLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
+import { findPatronRewardLevel, PatreonRewardsTier, patronAuctionLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration, UserType } from "./KeyUser"
@@ -316,6 +316,14 @@ export class UserStore {
             return findPatronRewardLevel(this.user.patreonTier) > 0
         }
         return false
+    }
+
+    @computed
+    get maxNotifications(): number {
+        if (this.user) {
+            return patronNotificationLimit(this.user.patreonTier)
+        }
+        return 0
     }
 
     @computed

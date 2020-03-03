@@ -101,7 +101,7 @@ class KeyUserService(
         val userAllowsTrades = user.allowsTrades
         var auctions = user.auctions
 
-        if (update.currencySymbol != user.currencySymbol && deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.ACTIVE).isNotEmpty()) {
+        if (update.currencySymbol != user.currencySymbol && deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.AUCTION).isNotEmpty()) {
             throw BadRequestException("You cannot update your currency symbol while you have active auctions.")
         }
 
@@ -146,7 +146,7 @@ class KeyUserService(
         ))
 
         if (userAllowsTrades != update.allowsTrades) {
-            val activeListings = deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.BUY_IT_NOW_ONLY)
+            val activeListings = deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.SALE)
             activeListings.forEach {
                 deckListingRepo.save(it.copy(forTrade = update.allowsTrades))
                 deckRepo.save(it.deck.copy(forTrade = update.allowsTrades))

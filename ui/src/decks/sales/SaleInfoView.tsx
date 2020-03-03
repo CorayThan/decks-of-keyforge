@@ -9,6 +9,7 @@ import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { DeckListingStatus } from "../../auctions/DeckListingDto"
+import { OfferButton } from "../../auctions/OfferButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -70,7 +71,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const {
             forTrade, forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
-            startingBid, shippingCost
+            startingBid, shippingCost, acceptingOffers, highestOffer
         } = this.props.saleInfo
 
         const yourUsername = userStore.username
@@ -79,60 +80,112 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const allowEmail = yourEmail && yourUsername
 
         const sellerDetails = sellerStore.findSellerWithUsername(username)
+        const saleIconHeight = 40
 
         return (
             <KeyCard
                 style={{width: 328}}
                 topContents={
                     (
-                        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
-                            <div style={{display: "flex"}}>
-                                {forAuction ? (
-                                    <Tooltip title={"Auction"}>
-                                        <div><AuctionDeckIcon height={48}/></div>
-                                    </Tooltip>
-                                ) : (
-                                    <Tooltip title={"For sale"}>
-                                        <div><SellDeckIcon height={48}/></div>
-                                    </Tooltip>
-                                )}
-                                {forTrade ? (
-                                    <>
-                                        <div style={{marginRight: spacing(1)}}/>
-                                        <Tooltip title={"For trade"}>
-                                            <div><TradeDeckIcon height={48}/></div>
-                                        </Tooltip>
-                                    </>
-                                ) : null}
-                            </div>
-                            {!forAuction && buyItNow != null && (
-                                <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                    {currencySymbol}{buyItNow}
-                                </Typography>
-                            )}
-                            {forAuction && (
-                                <div>
-                                    <Typography
-                                        variant={"h5"}
-                                        style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                                    >
-                                        Bid: {currencySymbol}{highestBid ? highestBid : startingBid}
+                        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                            <div style={{display: "grid", gridTemplateColumns: "80px 1fr"}}>
+                                {!acceptingOffers && !forAuction && buyItNow != null && (
+                                    <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                        {currencySymbol}{buyItNow}
                                     </Typography>
-                                    {buyItNow == null ? null : (
-                                        <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                            BIN: {currencySymbol}{buyItNow}
+                                )}
+                                {acceptingOffers && (
+                                    <>
+                                        <Typography
+                                            variant={"h5"}
+                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+                                        >
+                                            Offer:
                                         </Typography>
+                                        <Typography
+                                            variant={"h5"}
+                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+                                        >
+                                            {highestOffer == null || highestOffer < 1 ? "" : `${currencySymbol}${highestOffer}`}
+                                        </Typography>
+                                        {buyItNow == null ? null : (
+                                            <>
+                                                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                                    BIN:
+                                                </Typography>
+                                                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                                    {currencySymbol}{buyItNow}
+                                                </Typography>
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                                {forAuction && (
+                                    <>
+                                        <Typography
+                                            variant={"h5"}
+                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+                                        >
+                                            Bid: {currencySymbol}{highestBid ? highestBid : startingBid}
+                                        </Typography>
+                                        {buyItNow == null ? null : (
+                                            <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                                BIN: {currencySymbol}{buyItNow}
+                                            </Typography>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            <div>
+                                <div style={{display: "flex"}}>
+                                    <div style={{flexGrow: 1}}/>
+                                    {forAuction ? (
+                                        <Tooltip title={"Auction"}>
+                                            <div><AuctionDeckIcon height={saleIconHeight}/></div>
+                                        </Tooltip>
+                                    ) : (
+                                        <Tooltip title={"For sale"}>
+                                            <div><SellDeckIcon height={saleIconHeight}/></div>
+                                        </Tooltip>
                                     )}
+                                    {forTrade ? (
+                                        <>
+                                            <div style={{marginRight: spacing(1)}}/>
+                                            <Tooltip title={"For trade"}>
+                                                <div><TradeDeckIcon height={saleIconHeight}/></div>
+                                            </Tooltip>
+                                        </>
+                                    ) : null}
                                 </div>
-                            )}
-                            <Typography variant={"subtitle1"} style={{color: "#FFFFFF"}}>
-                                {deckConditionReadableValue(condition)}
-                            </Typography>
+                                <Typography variant={"subtitle2"} style={{color: "#FFFFFF", marginTop: spacing(1), textAlign: "right"}}>
+                                    {deckConditionReadableValue(condition)}
+                                </Typography>
+                            </div>
                         </div>
                     )
                 }
             >
                 <div>
+                    {acceptingOffers && (
+                        <div style={{margin: spacing(2)}}>
+                            <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
+                                <OfferButton
+                                    currentBid={highestBid}
+                                    bidIncrement={bidIncrement!}
+                                    currencySymbol={currencySymbol}
+                                    auctionId={auctionId!}
+                                    nextValidBid={nextBid!}
+                                    sellerUsername={username}
+                                    youAreHighestBidder={!!youAreHighestBidder}
+                                    style={{marginRight: spacing(2)}}
+                                />
+                                {buyItNow == null ? null : (
+                                    <BuyItNowButton currencySymbol={currencySymbol} auctionId={auctionId!} sellerUsername={username} buyItNow={buyItNow}/>
+                                )}
+                            </div>
+                            <Divider style={{marginTop: spacing(2)}}/>
+                        </div>
+                    )}
                     {forAuction && (
                         <div style={{margin: spacing(2)}}>
                             <div style={{display: "flex"}}>
@@ -253,6 +306,12 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         )
     }
 }
+
+export const TopContent = (props: { acceptingOffers: boolean, highOffer?: number, }) => (
+    <>
+
+    </>
+)
 
 export const BuyingDisclaimer = (props: { style?: React.CSSProperties }) => (
     <Typography color={"textSecondary"} style={{fontStyle: "italic", ...props.style}}>

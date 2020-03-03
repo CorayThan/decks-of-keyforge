@@ -143,7 +143,7 @@ data class KeyUser(
             discord = discord,
             storeName = storeName,
             displayCrucibleTrackerWins = displayCrucibleTrackerWins == true,
-            auctionCount = auctions.filter { it.status == DeckListingStatus.ACTIVE }.count(),
+            auctionCount = auctions.filter { it.status == DeckListingStatus.AUCTION }.count(),
             shippingCost = shippingCost
     )
 
