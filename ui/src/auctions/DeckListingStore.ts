@@ -45,7 +45,7 @@ export class DeckListingStore {
                     message = `You've updated the listing for ${deckName}.`
                 }
                 messageStore.setSuccessMessage(message)
-                auctionStore.findListingsForUser(true)
+                deckListingStore.findListingsForUser(true)
                 userDeckStore.refreshDeckInfo()
             })
     }
@@ -107,4 +107,4 @@ export class DeckListingStore {
     }
 }
 
-export const auctionStore = new DeckListingStore()
+export const deckListingStore = new DeckListingStore()

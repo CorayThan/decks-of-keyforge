@@ -1,6 +1,6 @@
 
 export interface OfferDto {
-    auctionId: string
+    deckListingId: string
     deckId: string
     amount: number
     message: string
@@ -14,9 +14,10 @@ export interface OfferDto {
 }
 
 export interface MakeOffer {
-    auctionId: string
+    deckListingId: string
     amount: number
     message: string
+    expireInDays: number
 }
 
 export enum OfferStatus {

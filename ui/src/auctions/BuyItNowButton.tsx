@@ -8,7 +8,7 @@ import { BuyingDisclaimer } from "../decks/sales/SaleInfoView"
 import { SendEmailVerification } from "../emails/SendEmailVerification"
 import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { auctionStore } from "./DeckListingStore"
+import { deckListingStore } from "./DeckListingStore"
 
 interface BuyItNowButtonProps {
     currencySymbol: string
@@ -26,7 +26,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
     buyItNow = () => {
         const {auctionId} = this.props
         this.open = false
-        auctionStore.buyItNow(auctionId)
+        deckListingStore.buyItNow(auctionId)
             .then(() => {
                 userDeckStore.refreshDeckInfo()
                 deckStore.refreshDeckSearch()

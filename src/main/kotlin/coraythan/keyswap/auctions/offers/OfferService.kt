@@ -62,4 +62,8 @@ class OfferService(
                 offersIMade = offerRepo.findBySenderIdAndStatusIn(user.id, statuses).map { it.toDto(offsetMinutes) }
         )
     }
+
+    fun offersForDeckListing(offsetMinutes: Int, deckListingId: UUID): List<OfferDto> {
+        return offerRepo.findByAuctionIdAndStatusNot(deckListingId, OfferStatus.CANCELED).map { it.toDto(offsetMinutes) }
+    }
 }

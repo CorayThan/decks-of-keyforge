@@ -9,7 +9,7 @@ import { SendEmailVerification } from "../emails/SendEmailVerification"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { auctionStore } from "./DeckListingStore"
+import { deckListingStore } from "./DeckListingStore"
 
 interface BidButtonProps {
     nextValidBid: number
@@ -52,7 +52,7 @@ export class BidButton extends React.Component<BidButtonProps> {
             }
         }
 
-        auctionStore.bid(auctionId, currentBidNumber as number)
+        deckListingStore.bid(auctionId, currentBidNumber as number)
             .then(() => {
                 userDeckStore.refreshDeckInfo()
                 deckStore.refreshDeckSearch()

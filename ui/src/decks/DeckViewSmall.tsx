@@ -12,7 +12,7 @@ import * as React from "react"
 import { AercForCombos } from "../aerc/AercForCombos"
 import { AercView } from "../aerc/AercViews"
 import { DeckListingStatus } from "../auctions/DeckListingDto"
-import { auctionStore } from "../auctions/DeckListingStore"
+import { deckListingStore } from "../auctions/DeckListingStore"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
@@ -66,7 +66,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         let displayForTrade = false
 
         if (userDeckStore.ownedByMe(id)) {
-            const saleInfo = auctionStore.listingInfoForDeck(id)
+            const saleInfo = deckListingStore.listingInfoForDeck(id)
             if (saleInfo != null) {
                 displayForAuction = saleInfo.status === DeckListingStatus.AUCTION
                 if (!displayForAuction) {

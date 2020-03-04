@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { App } from "./App"
-import { auctionStore } from "./auctions/DeckListingStore"
+import { deckListingStore } from "./auctions/DeckListingStore"
 import { cardStore } from "./cards/CardStore"
 import { HttpConfig } from "./config/HttpConfig"
 import { serverStatusStore } from "./config/ServerStatusStore"
@@ -16,7 +16,7 @@ HttpConfig.setupAxios()
 serverStatusStore.checkIfUpdating()
 userStore.loadLoggedInUser()
 userDeckStore.findAllForUser()
-auctionStore.findListingsForUser()
+deckListingStore.findListingsForUser()
 cardStore.loadAllCards()
 statsStore.findGlobalStats()
 sellerStore.findFeaturedSellers()

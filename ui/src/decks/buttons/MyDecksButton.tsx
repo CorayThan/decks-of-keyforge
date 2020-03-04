@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import * as React from "react"
-import { auctionStore } from "../../auctions/DeckListingStore"
+import { deckListingStore } from "../../auctions/DeckListingStore"
 import { Loader, LoaderSize } from "../../mui-restyled/Loader"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
@@ -22,11 +22,11 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
         if (!userStore.loggedIn()) {
             return null
         }
-        if (!auctionStore.decksForSaleLoaded) {
+        if (!deckListingStore.decksForSaleLoaded) {
             return <Loader size={LoaderSize.SMALL}/>
         }
         const userDeck = userDeckStore.userDeckByDeckId(id)
-        const saleInfo = auctionStore.listingInfoForDeck(id)
+        const saleInfo = deckListingStore.listingInfoForDeck(id)
         const owned = userDeck ? !!userDeck.ownedBy : false
         const forSale = saleInfo != null
 

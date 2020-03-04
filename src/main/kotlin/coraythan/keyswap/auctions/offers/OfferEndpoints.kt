@@ -14,7 +14,7 @@ class OfferEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/make-offer")
-    fun makeOffer(@RequestBody makeOffer: MakeOffer) = offerService.makeOffer(makeOffer.auctionId, makeOffer.amount, makeOffer.message)
+    fun makeOffer(@RequestBody makeOffer: MakeOffer) = offerService.makeOffer(makeOffer.deckListingId, makeOffer.amount, makeOffer.message)
 
     @PostMapping("/cancel/{id}")
     fun cancel(@PathVariable id: UUID) = offerService.cancelOffer(id)
@@ -25,5 +25,9 @@ class OfferEndpoints(
     @PostMapping("/my-offers")
     fun myOffers(@RequestBody statuses: Set<OfferStatus>, @RequestHeader(value = "Timezone") offsetMinutes: Int)
             = offerService.findMyOffers(offsetMinutes, statuses)
+
+    @PostMapping("/for-deck/{deckListingId}")
+    fun offersForDeckListing(@PathVariable deckListingId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int)
+            = offerService.offersForDeckListing(offsetMinutes, deckListingId)
 
 }

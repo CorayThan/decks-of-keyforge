@@ -20,7 +20,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Loader } from "../mui-restyled/Loader"
 import { AuctionBidDto } from "./AuctionBidDto"
-import { auctionStore } from "./DeckListingStore"
+import { deckListingStore } from "./DeckListingStore"
 
 interface BidHistoryButtonProps {
     auctionId: string
@@ -34,14 +34,14 @@ export class BidHistoryButton extends React.Component<BidHistoryButtonProps> {
     open = false
 
     handleOpen = () => {
-        auctionStore.listingInfo = undefined
-        auctionStore.findDeckListingInfo(this.props.auctionId)
+        deckListingStore.listingInfo = undefined
+        deckListingStore.findDeckListingInfo(this.props.auctionId)
         this.open = true
     }
 
     render() {
         const {style} = this.props
-        const auctionInfo = auctionStore.listingInfo
+        const auctionInfo = deckListingStore.listingInfo
         return (
             <div style={style}>
                 <IconButton onClick={this.handleOpen}>

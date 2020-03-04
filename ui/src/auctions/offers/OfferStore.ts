@@ -4,7 +4,7 @@ import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
 import { DeckListingDto } from "../DeckListingDto"
 import { MyOffers } from "./MyOffers"
-import { MakeOffer, OfferStatus } from "./Offer"
+import { MakeOffer, OfferDto, OfferStatus } from "./Offer"
 
 export class OfferStore {
 
@@ -22,10 +22,20 @@ export class OfferStore {
     @observable
     hasOffersToView = false
 
+    @observable
+    offersForDeck?: OfferDto[]
+
     makeOffer = (deckName: string, makeOffer: MakeOffer) => {
         axios.post(`${OfferStore.SECURE_CONTEXT}/make-offer`, makeOffer)
             .then(() => {
                 messageStore.setSuccessMessage(`Offer sent for ${deckName}.`)
+            })
+    }
+
+    loadOffersForDeckListing = (listingId: string) => {
+        axios.post(`${OfferStore.SECURE_CONTEXT}/for-deck/${listingId}`)
+            .then((response: AxiosResponse<OfferDto[]>) => {
+                this.offersForDeck = response.data
             })
     }
 

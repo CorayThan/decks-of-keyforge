@@ -33,6 +33,7 @@ data class Offer(
         val status: OfferStatus = OfferStatus.SENT,
 
         val sentTime: LocalDateTime = nowLocal(),
+        val expiresOn: LocalDateTime = nowLocal().plusDays(3),
         val viewedTime: LocalDateTime? = null,
         val resolvedTime: LocalDateTime? = null,
 
@@ -40,7 +41,7 @@ data class Offer(
         val id: UUID = UUID.randomUUID()
 ) {
     fun toDto(offsetMinutes: Int) = OfferDto(
-            auctionId = this.auction.id,
+            deckListingId = this.auction.id,
             deckId = this.auction.deck.keyforgeId,
             amount = this.amount,
             message = this.message,
@@ -60,13 +61,14 @@ enum class OfferStatus {
 }
 
 data class MakeOffer(
-        val auctionId: UUID,
+        val deckListingId: UUID,
         val amount: Int,
-        val message: String
+        val message: String,
+        val expireInDays: Int
 )
 
 data class OfferDto(
-        val auctionId: UUID,
+        val deckListingId: UUID,
         val deckId: String,
         val amount: Int,
         val message: String,

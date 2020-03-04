@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
-import { auctionStore } from "../auctions/DeckListingStore"
+import { deckListingStore } from "../auctions/DeckListingStore"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { UpdatePrice } from "../userdeck/ListingInfo"
@@ -18,7 +18,7 @@ export class SellerStore {
         axios.post(`${SellerStore.SECURE_CONTEXT}/update-prices`, prices)
             .then(() => {
                 messageStore.setSuccessMessage(`Updated prices for ${prices.length} decks.`)
-                auctionStore.findListingsForUser(true)
+                deckListingStore.findListingsForUser(true)
             })
     }
 

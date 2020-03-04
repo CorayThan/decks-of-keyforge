@@ -9,7 +9,7 @@ import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { DeckListingStatus } from "../../auctions/DeckListingDto"
-import { OfferButton } from "../../auctions/OfferButton"
+import { OfferButton } from "../../auctions/offers/OfferButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
@@ -68,11 +68,12 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
             return <SingleSaleInfoViewCompleteAuction {...this.props} />
         }
 
+        const {deckName, saleInfo} = this.props
         const {
             forTrade, forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
             startingBid, shippingCost, acceptingOffers, highestOffer
-        } = this.props.saleInfo
+        } = saleInfo
 
         const yourUsername = userStore.username
         const yourEmail = userStore.email
@@ -170,13 +171,10 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         <div style={{margin: spacing(2)}}>
                             <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
                                 <OfferButton
-                                    currentBid={highestBid}
-                                    bidIncrement={bidIncrement!}
+                                    deckName={deckName}
                                     currencySymbol={currencySymbol}
-                                    auctionId={auctionId!}
-                                    nextValidBid={nextBid!}
+                                    deckListingId={auctionId!}
                                     sellerUsername={username}
-                                    youAreHighestBidder={!!youAreHighestBidder}
                                     style={{marginRight: spacing(2)}}
                                 />
                                 {buyItNow == null ? null : (
@@ -269,7 +267,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                 ) : null}
                                 {allowEmail ? (
                                     <SendSellerEmailDialog
-                                        deckName={this.props.deckName}
+                                        deckName={deckName}
                                         senderUsername={yourUsername!}
                                         senderEmail={yourEmail!}
                                         username={username}

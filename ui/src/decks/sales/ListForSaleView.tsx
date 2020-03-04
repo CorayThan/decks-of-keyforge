@@ -11,7 +11,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { DeckListingStatus } from "../../auctions/DeckListingDto"
-import { auctionStore } from "../../auctions/DeckListingStore"
+import { deckListingStore } from "../../auctions/DeckListingStore"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
@@ -106,10 +106,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     handleOpenForEdit = async () => {
-        const saleInfo = auctionStore.listingInfoForDeck(this.props.deck.id)
+        const saleInfo = deckListingStore.listingInfoForDeck(this.props.deck.id)
         if (saleInfo != null) {
-            await auctionStore.findDeckListingInfo(saleInfo.id)
-            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status, acceptingOffers} = auctionStore.listingInfo!
+            await deckListingStore.findDeckListingInfo(saleInfo.id)
+            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status, acceptingOffers} = deckListingStore.listingInfo!
             this.open = true
             this.editAuctionId = saleInfo.id
             this.language = language ?? DeckLanguage.ENGLISH
@@ -218,7 +218,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             delete listingInfoDto.deckId
             keyLocalStorage.setSaleDefaults(listingInfoDto)
         } else {
-            auctionStore.listForSale(this.props.deck.name, listingInfoDto)
+            deckListingStore.listForSale(this.props.deck.name, listingInfoDto)
             this.handleClose()
         }
     }
@@ -232,13 +232,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         if (!deck.registered) {
             return null
         }
-        const auctionInfo = auctionStore.listingInfoForDeck(deck.id)
+        const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
         let saleButton
         if (auctionInfo && auctionInfo.status === DeckListingStatus.AUCTION && !auctionInfo.bidsExist) {
             saleButton = (
                 <DeckActionClickable
                     menuItem={menuItem}
-                    onClick={() => auctionStore.cancel(deck.name, deck.id)}
+                    onClick={() => deckListingStore.cancel(deck.name, deck.id)}
                 >
                     Cancel Auction
                 </DeckActionClickable>
@@ -254,7 +254,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     </DeckActionClickable>
                     <DeckActionClickable
                         menuItem={menuItem}
-                        onClick={() => auctionStore.cancel(deck.name, deck.id)}
+                        onClick={() => deckListingStore.cancel(deck.name, deck.id)}
                     >
                         Unlist
                     </DeckActionClickable>
