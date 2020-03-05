@@ -58,12 +58,12 @@ class OfferService(
     fun findMyOffers(offsetMinutes: Int, statuses: Set<OfferStatus>): MyOffers {
         val user = currentUserService.loggedInUserOrUnauthorized()
         return MyOffers(
-                offersToMe = offerRepo.findByRecipientIdAndStatusIn(user.id, statuses).map { it.toDto(offsetMinutes) },
-                offersIMade = offerRepo.findBySenderIdAndStatusIn(user.id, statuses).map { it.toDto(offsetMinutes) }
+                offersToMe = offerRepo.findByRecipientIdAndStatusIn(user.id, statuses).sorted().map { it.toDto(offsetMinutes) },
+                offersIMade = offerRepo.findBySenderIdAndStatusIn(user.id, statuses).sorted().map { it.toDto(offsetMinutes) }
         )
     }
 
     fun offersForDeckListing(offsetMinutes: Int, deckListingId: UUID): List<OfferDto> {
-        return offerRepo.findByAuctionIdAndStatusNot(deckListingId, OfferStatus.CANCELED).map { it.toDto(offsetMinutes) }
+        return offerRepo.findByAuctionId(deckListingId).sorted().map { it.toDto(offsetMinutes) }
     }
 }

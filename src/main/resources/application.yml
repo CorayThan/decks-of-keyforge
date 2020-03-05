@@ -12,7 +12,7 @@ spring:
       ddl-auto: validate
     properties:
        hibernate:
-        show_sql: fals2
+        show_sql: false
         format_sql: false
         temp:
           use_jdbc_metadata_defaults: false

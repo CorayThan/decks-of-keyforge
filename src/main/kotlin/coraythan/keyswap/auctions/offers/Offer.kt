@@ -39,7 +39,7 @@ data class Offer(
 
         @Id
         val id: UUID = UUID.randomUUID()
-) {
+) : Comparable<Offer> {
     fun toDto(offsetMinutes: Int) = OfferDto(
             deckListingId = this.auction.id,
             deckId = this.auction.deck.keyforgeId,
@@ -51,6 +51,14 @@ data class Offer(
             resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
             id = id
     )
+
+    override fun compareTo(other: Offer): Int {
+        return if (this.sentTime == other.sentTime) {
+            this.id.compareTo(other.id)
+         } else {
+            return this.sentTime.compareTo(other.sentTime)
+        }
+    }
 }
 
 enum class OfferStatus {
