@@ -305,12 +305,6 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
     }
 }
 
-export const TopContent = (props: { acceptingOffers: boolean, highOffer?: number, }) => (
-    <>
-
-    </>
-)
-
 export const BuyingDisclaimer = (props: { style?: React.CSSProperties }) => (
     <Typography color={"textSecondary"} style={{fontStyle: "italic", ...props.style}}>
         Decks of KeyForge does not verify the authenticity or trustworthiness of any deck sales. Purchase and trade decks at your own risk.

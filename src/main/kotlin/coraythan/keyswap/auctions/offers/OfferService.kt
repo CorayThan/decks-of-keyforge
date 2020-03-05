@@ -19,8 +19,9 @@ class OfferService(
         private val currentUserService: CurrentUserService
 ) {
 
-    fun makeOffer(auctionId: UUID, amount: Int, message: String): OfferPlacementResult {
+    fun makeOffer(auctionId: UUID, amount: Int, message: String, expiresInDays: Int): OfferPlacementResult {
         if (amount < 1) throw BadRequestException("Offers must be positive.")
+        if (expiresInDays < 1) throw BadRequestException("Expires in days must be positive.")
         val user = currentUserService.loggedInUserOrUnauthorized()
         if (user.country == null) {
             return OfferPlacementResult(false, "Please select a country on your profile before making an offer.")
@@ -34,7 +35,7 @@ class OfferService(
         if (user.id == auction.seller.id) {
             throw UnauthorizedException("You can't buy your own deck.")
         }
-        val offer = Offer(amount, auction, auction.seller, user, message, user.country)
+        val offer = Offer(amount, auction, auction.seller, user, message, user.country, expiresInDays = expiresInDays)
         offerRepo.save(offer)
         return OfferPlacementResult(true, "Your offer has been placed.")
     }
@@ -64,6 +65,6 @@ class OfferService(
     }
 
     fun offersForDeckListing(offsetMinutes: Int, deckListingId: UUID): List<OfferDto> {
-        return offerRepo.findByAuctionId(deckListingId).sorted().map { it.toDto(offsetMinutes) }
+        return offerRepo.findByAuctionId(deckListingId).sorted().map { it.copy(message = "").toDto(offsetMinutes) }
     }
 }

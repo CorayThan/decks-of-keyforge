@@ -33,7 +33,7 @@ data class Offer(
         val status: OfferStatus = OfferStatus.SENT,
 
         val sentTime: LocalDateTime = nowLocal(),
-        val expiresOn: LocalDateTime = nowLocal().plusDays(3),
+        val expiresInDays: Int = 3,
         val viewedTime: LocalDateTime? = null,
         val resolvedTime: LocalDateTime? = null,
 
@@ -47,8 +47,10 @@ data class Offer(
             message = this.message,
             status = this.status,
             sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes),
+            expiresOn = this.sentTime.plusDays(this.expiresInDays.toLong()).toReadableStringWithOffsetMinutes(offsetMinutes),
             viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
             resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+            country = offerFrom,
             id = id
     )
 
@@ -81,7 +83,9 @@ data class OfferDto(
         val amount: Int,
         val message: String,
         val status: OfferStatus,
+        val country: Country,
         val sentTime: String,
+        val expiresOn: String,
         val viewedTime: String?,
         val resolvedTime: String?,
         val id: UUID

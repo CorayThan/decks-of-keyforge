@@ -44,6 +44,11 @@ export class ThemeStore {
     }
 
     @computed
+    get tableBackgroundColor() {
+        return this.darkMode ? "#666666" : "#FBFBFB"
+    }
+
+    @computed
     get defaultTextColor() {
         return this.darkMode ? "rgba(255, 255, 255)" : "rgba(0, 0, 0, 0.87)"
     }

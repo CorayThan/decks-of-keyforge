@@ -7,8 +7,11 @@ export interface OfferDto {
     status: OfferStatus
 
     sentTime: string
+    expiresOn: string
     viewedTime?: string
     resolvedTime?: string
+
+    country: string
 
     id: string
 }

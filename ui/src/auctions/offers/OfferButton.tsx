@@ -5,10 +5,12 @@ import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { BuyingDisclaimer } from "../../decks/sales/SaleInfoView"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
+import { Loader } from "../../mui-restyled/Loader"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { MakeOffer } from "./Offer"
 import { offerStore } from "./OfferStore"
+import { ViewOffersForDeck } from "./ViewOffersForDeck"
 
 interface OfferButtonProps {
     deckName: string
@@ -89,6 +91,13 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                 >
                     <DialogTitle>Make Offer</DialogTitle>
                     <DialogContent>
+                        <div style={{marginBottom: spacing(2)}}>
+                            {offerStore.offersForDeck == null ? (
+                                <Loader/>
+                            ) : (
+                                <ViewOffersForDeck offers={offerStore.offersForDeck} currency={currencySymbol}/>
+                            )}
+                        </div>
                         <SendEmailVerification message={"Please verify your email to make offers on decks."}/>
                         <TextField
                             label={"Offer"}
@@ -135,7 +144,7 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                             color="primary"
                             disabled={!userStore.emailVerified || disabled}
                         >
-                            Make Offer
+                            Send
                         </Button>
                     </DialogActions>
                 </Dialog>

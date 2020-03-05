@@ -14,7 +14,8 @@ class OfferEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/make-offer")
-    fun makeOffer(@RequestBody makeOffer: MakeOffer) = offerService.makeOffer(makeOffer.deckListingId, makeOffer.amount, makeOffer.message)
+    fun makeOffer(@RequestBody makeOffer: MakeOffer)
+            = offerService.makeOffer(makeOffer.deckListingId, makeOffer.amount, makeOffer.message, makeOffer.expireInDays)
 
     @PostMapping("/cancel/{id}")
     fun cancel(@PathVariable id: UUID) = offerService.cancelOffer(id)
