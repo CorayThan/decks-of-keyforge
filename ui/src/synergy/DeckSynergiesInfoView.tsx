@@ -11,10 +11,11 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { log, roundToHundreds, SortOrder } from "../config/Utils"
+import { roundToHundreds, SortOrder } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
+import { TableSortStore } from "../generic/SortableTable"
 import { screenStore } from "../ui/ScreenStore"
 import { SynergyCombo } from "./DeckSynergyInfo"
 import { TraitBubble } from "./TraitBubble"
@@ -200,50 +201,62 @@ const TableCellRounded = (props: TableCellProps) => {
     )
 }
 
-class SynergiesTableViewStore {
+class SynergiesTableViewStore implements TableSortStore<SynergyCombo>{
     @observable
     activeTableSort = ""
     @observable
     tableSortDir: SortOrder = "desc"
 
     @observable
-    synergyCombos?: IObservableArray<SynergyCombo>
+    sortedItems?: IObservableArray<SynergyCombo>
 
     resort = () => {
         const sortWithField = this.activeTableSort.length > 0 ? this.activeTableSort : "aercScore"
-        if (this.synergyCombos) {
-            this.synergyCombos.replace(sortBy(this.synergyCombos.slice(), sortWithField))
+        if (this.sortedItems) {
+            this.sortedItems.replace(sortBy(this.sortedItems.slice(), sortWithField))
             if (this.tableSortDir === "desc") {
-                this.synergyCombos.replace(this.synergyCombos.slice().reverse())
+                this.sortedItems.replace(this.sortedItems.slice().reverse())
             }
+        }
+    }
+
+    changeSortHandler = (property: string) => {
+        return () => {
+            if (this.activeTableSort === property) {
+                this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
+            } else {
+                this.activeTableSort = property
+            }
+            this.resort()
         }
     }
 }
 
 export const synergiesTableViewStore = new SynergiesTableViewStore()
 
-const changeSortHandler = (property: string) => {
-    return () => {
-        if (synergiesTableViewStore.activeTableSort === property) {
-            synergiesTableViewStore.tableSortDir = synergiesTableViewStore.tableSortDir === "desc" ? "asc" : "desc"
-        } else {
-            synergiesTableViewStore.activeTableSort = property
-        }
-        synergiesTableViewStore.resort()
+
+interface SynergiesHeaderProps<T> {
+    title: string
+    property: string
+    store: TableSortStore<T>
+    minWidth?: number
+}
+
+@observer
+class SynergiesHeader<T> extends React.Component<SynergiesHeaderProps<T>>{
+    render() {
+        const {minWidth, title, property, store} = this.props
+        return (
+            <TableCell style={{minWidth: minWidth ? minWidth : undefined, maxWidth: 72}}>
+                <TableSortLabel
+                    active={store.activeTableSort === property}
+                    direction={store.tableSortDir}
+                    onClick={changeSortHandler(property)}
+                >
+                    {title}
+                </TableSortLabel>
+            </TableCell>
+        )
     }
 }
 
-const SynergiesHeader = observer((props: { title: string, property: string, minWidth?: number }) => {
-    log.debug(`For header ${props.title} prop is ${props.property} active sort ${synergiesTableViewStore.activeTableSort} dir ${synergiesTableViewStore.tableSortDir}`)
-    return (
-        <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined, maxWidth: 72}}>
-            <TableSortLabel
-                active={synergiesTableViewStore.activeTableSort === props.property}
-                direction={synergiesTableViewStore.tableSortDir}
-                onClick={changeSortHandler(props.property)}
-            >
-                {props.title}
-            </TableSortLabel>
-        </TableCell>
-    )
-})
