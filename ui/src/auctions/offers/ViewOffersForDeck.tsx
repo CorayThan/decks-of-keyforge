@@ -16,9 +16,17 @@ export const ViewOffersForDeck = observer((props: { offers: OfferDto[], currency
             <Typography variant={"h6"} style={{marginLeft: spacing(2), paddingTop: spacing(2)}}>
                 Existing Offers
             </Typography>
+            <OffersForDeckTable offers={offers} currency={currency} />
+        </Paper>
+    )
+})
+
+export const OffersForDeckTable = observer((props: { offers: OfferDto[], currency: string }) => {
+    const {offers, currency} = props
+    return (
             <SortableTable
                 defaultSort={"sentTime"}
-                data={props.offers}
+                data={offers}
                 headers={[
                     {property: "amount", title: "Amount", sortable: true, transform: (data) => `${currency}${data.amount}`},
                     {property: "status", title: "Status", sortable: true},
@@ -27,6 +35,5 @@ export const ViewOffersForDeck = observer((props: { offers: OfferDto[], currency
                     {property: "expiresOn", title: "Expires", sortable: true},
                 ]}
             />
-        </Paper>
     )
 })

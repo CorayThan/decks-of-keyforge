@@ -2,7 +2,6 @@ package coraythan.keyswap.auctions.offers
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.auctions.DeckListing
-import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
@@ -41,6 +40,7 @@ data class Offer(
         @Id
         val id: UUID = UUID.randomUUID()
 ) : Comparable<Offer> {
+
     fun toDto(offsetMinutes: Int) = OfferDto(
             deckListingId = this.auction.id,
             deckId = this.auction.deck.keyforgeId,
@@ -62,6 +62,21 @@ data class Offer(
             return this.sentTime.compareTo(other.sentTime)
         }
     }
+}
+
+fun List<Offer>.toOffersForDeck(offsetMinutes: Int): OffersForDeck {
+    val firstOffer = this.first()
+    val auction = firstOffer.auction
+    val deck = auction.deck
+    return OffersForDeck(
+            OfferDeckData(
+                    deck.keyforgeId,
+                    deck.name,
+                    auction.currencySymbol,
+                    deck.sasRating
+            ),
+            this.sortedDescending().map { it.toDto(offsetMinutes) }
+    )
 }
 
 enum class OfferStatus {
@@ -93,8 +108,15 @@ data class OfferDto(
 )
 
 data class OffersForDeck(
-        val deck: DeckSearchResult,
+        val deck: OfferDeckData,
         val offers: List<OfferDto>
+)
+
+data class OfferDeckData(
+        val id: String,
+        val name: String,
+        val currency: String,
+        val sas: Int
 )
 
 data class MyOffers(

@@ -1,9 +1,12 @@
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { PatreonRewards } from "../about/PatreonRewards"
+import { spacing } from "../config/MuiConfig"
+import { AboutSubPaths } from "../config/Routes"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
+import { PatreonIcon } from "../generic/icons/PatreonIcon"
+import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../user/UserStore"
@@ -26,10 +29,19 @@ export class MyNotifications extends React.Component {
 
         if (!notifsAllowed) {
             return (
-                <div>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Typography>Become a $5 a month patron to create notifications when decks you want are listed for sale!</Typography>
-                    <PatronButton/>
-                    <PatreonRewards/>
+                    <div style={{marginTop: spacing(2), display: "flex"}}>
+                        <PatronButton/>
+                        <LinkButton
+                            color={"inherit"}
+                            to={AboutSubPaths.patreon}
+                            style={{marginLeft: spacing(2)}}
+                        >
+                            <PatreonIcon style={{marginRight: spacing(1)}} primary={true}/>
+                            Patron Rewards
+                        </LinkButton>
+                    </div>
                 </div>
             )
         }

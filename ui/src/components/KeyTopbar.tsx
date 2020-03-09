@@ -128,7 +128,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                         color={"inherit"}>
                         {screenStore.screenWidth < 1480 ? topbarShortName : topbarName}
                     </Typography>
-                    {screenStore.screenWidth < 1860 ? null : subheaderNode}
+                    {screenStore.screenWidth < 2000 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
                     <DeckOrCardSearchSuggest placement={"bottom-start"}/>
                     <RightMenu/>
@@ -346,7 +346,7 @@ class UserLinks extends React.Component {
                     <ListItemLink
                         to={Routes.myProfile}
                         onClick={rightMenuStore.close}
-                        primary={"Profile"}
+                        primary={"My DoK"}
                     />
                     <ListItemLink
                         to={AboutSubPaths.patreon}
@@ -410,7 +410,7 @@ class UserLinksDesktop extends React.Component {
                         style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >
-                        Profile
+                        My DoK
                     </LinkButton>
                     <LinkButton
                         color={"inherit"}

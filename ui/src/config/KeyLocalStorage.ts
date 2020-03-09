@@ -23,6 +23,11 @@ interface GenericStorage {
     showMoreDeckSearchOptions?: boolean
     userRows?: number
     agreedToSpoilerCreatureRules?: boolean
+
+    offersSent?: boolean
+    offersAccepted?: boolean
+    offersRejected?: boolean
+    offersCanceled?: boolean
 }
 
 class KeyLocalStorage {

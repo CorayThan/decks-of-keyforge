@@ -23,7 +23,7 @@ export class UiStore {
     }
 
     setDocTitleAndDescription = (name: string) => {
-        document.title = name + (name === "Decks of KeyForge" || name === "Cards of KeyForge" ? "" : " – Decks of KeyForge")
+        document.title = name + (name.includes("DoK") ? "" : " – DoK")
         const description = document.getElementsByTagName("meta").namedItem("description")
         if (description) {
             description.content =

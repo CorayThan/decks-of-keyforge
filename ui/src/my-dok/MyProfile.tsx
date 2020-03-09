@@ -132,7 +132,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.storeName = storeName ? storeName : ""
         this.currencySymbol = currencySymbol
         this.displayCrucibleTrackerWins = displayCrucibleTrackerWins
-        uiStore.setTopbarValues(`My Profile`, "My Profile", "")
+        uiStore.setTopbarValues(`My DoK`, "My DoK", "")
 
         forSaleNotificationsStore.queries = undefined
     }

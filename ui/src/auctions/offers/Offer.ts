@@ -1,5 +1,3 @@
-import { Deck } from "../../decks/Deck"
-
 export interface OfferDto {
     deckListingId: string
     deckId: string
@@ -32,12 +30,18 @@ export enum OfferStatus {
 }
 
 export interface OffersForDeck {
-    deck: Deck
+    deck: OfferDeckData
     offers: OfferDto[]
+}
+
+interface OfferDeckData {
+    id: string
+    name: string
+    currency: string
+    sas: number
 }
 
 export interface MyOffers {
     offersToMe: OffersForDeck[]
     offersIMade: OffersForDeck[]
 }
-

@@ -59,8 +59,8 @@ class OfferService(
     fun findMyOffers(offsetMinutes: Int): MyOffers {
         val user = currentUserService.loggedInUserOrUnauthorized()
         return MyOffers(
-                offersToMe = offerRepo.findByRecipientId(user.id).sorted().map { it.toDto(offsetMinutes) },
-                offersIMade = offerRepo.findBySenderId(user.id).sorted().map { it.toDto(offsetMinutes) }
+                offersToMe = offerRepo.findByRecipientId(user.id).sortedDescending().groupBy { it.auction.id }.values.map { it.toOffersForDeck(offsetMinutes) },
+                offersIMade = offerRepo.findBySenderId(user.id).sortedDescending().groupBy { it.auction.id }.values.map { it.toOffersForDeck(offsetMinutes) }
         )
     }
 
