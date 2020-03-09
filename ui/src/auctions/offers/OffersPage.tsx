@@ -1,13 +1,12 @@
 import { Typography } from "@material-ui/core"
 import React, { useEffect } from "react"
 import { Loader } from "../../mui-restyled/Loader"
-import { OfferStatus } from "./Offer"
 import { offerStore } from "./OfferStore"
 
 export const OffersPage = () => {
 
     useEffect(() => {
-        offerStore.loadMyOffers([OfferStatus.SENT])
+        offerStore.loadMyOffers()
     }, [])
 
     const myOffers = offerStore.myOffers

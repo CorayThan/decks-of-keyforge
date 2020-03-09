@@ -128,7 +128,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                         color={"inherit"}>
                         {screenStore.screenWidth < 1480 ? topbarShortName : topbarName}
                     </Typography>
-                    {screenStore.screenWidth < 1820 ? null : subheaderNode}
+                    {screenStore.screenWidth < 1860 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
                     <DeckOrCardSearchSuggest placement={"bottom-start"}/>
                     <RightMenu/>

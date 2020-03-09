@@ -42,7 +42,7 @@ coraythan
 ## Export deck data to CSV
 
 ```
-cd 'C:\Program Files\PostgreSQL\10\scripts\'
+cd 'C:\Program Files\PostgreSQL\11\scripts\'
 .\runpsql.bat
 // server click enter
 // database enter: keyswap

@@ -23,9 +23,8 @@ class OfferEndpoints(
     @GetMapping("/has-offers-to-view")
     fun hasOffersToView() = offerService.hasOffersToView()
 
-    @PostMapping("/my-offers")
-    fun myOffers(@RequestBody statuses: Set<OfferStatus>, @RequestHeader(value = "Timezone") offsetMinutes: Int)
-            = offerService.findMyOffers(offsetMinutes, statuses)
+    @GetMapping("/my-offers")
+    fun myOffers(@RequestHeader(value = "Timezone") offsetMinutes: Int) = offerService.findMyOffers(offsetMinutes)
 
     @PostMapping("/for-deck/{deckListingId}")
     fun offersForDeckListing(@PathVariable deckListingId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int)

@@ -56,11 +56,11 @@ class OfferService(
     fun hasOffersToView() =
             offerRepo.existsByRecipientIdAndViewedTimeIsNull(currentUserService.loggedInUserOrUnauthorized().id)
 
-    fun findMyOffers(offsetMinutes: Int, statuses: Set<OfferStatus>): MyOffers {
+    fun findMyOffers(offsetMinutes: Int): MyOffers {
         val user = currentUserService.loggedInUserOrUnauthorized()
         return MyOffers(
-                offersToMe = offerRepo.findByRecipientIdAndStatusIn(user.id, statuses).sorted().map { it.toDto(offsetMinutes) },
-                offersIMade = offerRepo.findBySenderIdAndStatusIn(user.id, statuses).sorted().map { it.toDto(offsetMinutes) }
+                offersToMe = offerRepo.findByRecipientId(user.id).sorted().map { it.toDto(offsetMinutes) },
+                offersIMade = offerRepo.findBySenderId(user.id).sorted().map { it.toDto(offsetMinutes) }
         )
     }
 

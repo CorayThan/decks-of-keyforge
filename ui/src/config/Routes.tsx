@@ -24,12 +24,12 @@ import { DeckImportView } from "../importdeck/DeckImportView"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { LandingPage } from "../landing/LandingPage"
+import { MyDokPage } from "../my-dok/MyDokPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
 import { SpoilerPage } from "../spoilers/SpoilerPage"
 import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
-import { MyProfile } from "../user/MyProfile"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserSearchPage } from "../user/search/UserSearchPage"
@@ -38,11 +38,18 @@ import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 import { serverStatusStore } from "./ServerStatusStore"
 
+export class MyDokSubPaths {
+    static base = "/my-dok"
+    static profile = MyDokSubPaths.base + "/my-profile"
+    static notifications = MyDokSubPaths.base + "/notifications"
+    static offers = MyDokSubPaths.base + "/offers"
+}
+
 class Routes {
 
     static landing = ""
     static users = "/users"
-    static myProfile = "/my-profile"
+    static myProfile = MyDokSubPaths.profile
     static cards = "/cards"
     static cotaCards = "/cards?expansion=CALL_OF_THE_ARCHONS"
     static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
@@ -181,6 +188,10 @@ const KeyRouter = observer(() => {
                         component={AboutPage}
                     />
                     <Route
+                        path={MyDokSubPaths.base}
+                        component={MyDokPage}
+                    />
+                    <Route
                         exact={true}
                         path={Routes.cards}
                         component={CardSearchPage}
@@ -231,11 +242,6 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.verifyEmailPage()}
                         component={VerifyEmailPage}
-                    />
-                    <LoggedInRoute
-                        exact={true}
-                        path={Routes.myProfile}
-                        component={MyProfile}
                     />
                     <LoggedInRoute
                         exact={true}

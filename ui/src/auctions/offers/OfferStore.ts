@@ -2,9 +2,10 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
+import { userStore } from "../../user/UserStore"
 import { DeckListingDto } from "../DeckListingDto"
 import { MyOffers } from "./MyOffers"
-import { MakeOffer, OfferDto, OfferStatus } from "./Offer"
+import { MakeOffer, OfferDto } from "./Offer"
 
 export class OfferStore {
 
@@ -39,9 +40,12 @@ export class OfferStore {
             })
     }
 
-    loadMyOffers = (statuses: OfferStatus[]) => {
+    loadMyOffers = () => {
+        if (!userStore.loggedIn()) {
+            return
+        }
         this.loadingMyOffers = true
-        axios.post(`${OfferStore.SECURE_CONTEXT}/my-offers`, statuses)
+        axios.get(`${OfferStore.SECURE_CONTEXT}/my-offers`)
             .then((response: AxiosResponse<MyOffers>) => {
                 this.loadingMyOffers = false
                 this.myOffers = response.data

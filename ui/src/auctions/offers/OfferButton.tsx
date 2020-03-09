@@ -37,6 +37,9 @@ export class OfferButton extends React.Component<OfferButtonProps> {
 
     open = () => {
         offerStore.loadOffersForDeckListing(this.props.deckListingId)
+        if (offerStore.myOffers == null) {
+            offerStore.loadMyOffers()
+        }
         this.isOpen = true
     }
 

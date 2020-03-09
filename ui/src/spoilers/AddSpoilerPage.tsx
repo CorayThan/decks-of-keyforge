@@ -652,44 +652,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                             </KeyButton>
                         </div>
                     </Card>
-
-                    {/*{userStore.isAdmin && (*/}
-                    {/*    <Button*/}
-                    {/*        onClick={async () => {*/}
-                    {/*            const preexisting = spoilerStore.allSpoilers*/}
-                    {/*            if (preexisting.length !== 0) {*/}
-                    {/*                const sanctumonius = makeSpoilers(preexisting)*/}
-                    {/*                for (let x = 0; x < sanctumonius.length; x++) {*/}
-                    {/*                    const spoiler = sanctumonius[x]*/}
-                    {/*                    await spoilerStore.saveSpoiler(spoiler as Spoiler)*/}
-                    {/*                    log.debug("Saved " + spoiler.cardTitle)*/}
-                    {/*                }*/}
-                    {/*                log.debug(`Saved ${sanctumonius.length} new spoilers.`)*/}
-                    {/*                const withUrls = addUrlsToCards(preexisting)*/}
-                    {/*                for (let x = 0; x < withUrls.length; x++) {*/}
-                    {/*                    const spoiler = withUrls[x]*/}
-                    {/*                    await spoilerStore.saveSpoiler(spoiler)*/}
-                    {/*                    log.debug("Added url to " + spoiler.cardTitle)*/}
-                    {/*                }*/}
-                    {/*                log.debug(`Added urls to ${withUrls.length} spoilers.`)*/}
-
-                    {/*                const oldCards = makeOldCards(preexisting)*/}
-                    {/*                for (let x = 0; x < oldCards.length; x++) {*/}
-                    {/*                    const spoiler = oldCards[x]*/}
-                    {/*                    await spoilerStore.saveSpoiler(spoiler as Spoiler)*/}
-                    {/*                    log.debug("Added reprint " + spoiler.cardTitle)*/}
-                    {/*                }*/}
-                    {/*                log.debug(`Added ${oldCards.length} reprints.`)*/}
-
-                    {/*                await addRealSpaces()*/}
-                    {/*            } else {*/}
-                    {/*                log.debug("Did nothing")*/}
-                    {/*            }*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        Add all the sanctumonius cards*/}
-                    {/*    </Button>*/}
-                    {/*)}*/}
                 </div>
                 <div>
                     <Card style={{maxWidth: 400}}>
@@ -755,7 +717,7 @@ class AddImage extends React.Component<{ spoilerId: number }> {
     addSpoilerImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
         await spoilerStore.addImageToSpoiler(event.target.files![0], this.props.spoilerId)
         this.open = false
-        spoilerStore.findSpoiler(Number(this.props.spoilerId))
+        messageStore.setSuccessMessage("Image added! Reload the page to see it.")
     }
 
     render() {
