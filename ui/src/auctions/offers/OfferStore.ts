@@ -4,8 +4,7 @@ import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { DeckListingDto } from "../DeckListingDto"
-import { MyOffers } from "./MyOffers"
-import { MakeOffer, OfferDto } from "./Offer"
+import { MakeOffer, MyOffers, OfferDto } from "./Offer"
 
 export class OfferStore {
 

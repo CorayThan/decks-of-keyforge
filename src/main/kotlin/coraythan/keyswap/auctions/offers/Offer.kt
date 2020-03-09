@@ -2,6 +2,7 @@ package coraythan.keyswap.auctions.offers
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.auctions.DeckListing
+import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
@@ -91,7 +92,12 @@ data class OfferDto(
         val id: UUID
 )
 
+data class OffersForDeck(
+        val deck: DeckSearchResult,
+        val offers: List<OfferDto>
+)
+
 data class MyOffers(
-        val offersToMe: List<OfferDto>,
-        val offersIMade: List<OfferDto>
+        val offersToMe: List<OffersForDeck>,
+        val offersIMade: List<OffersForDeck>
 )

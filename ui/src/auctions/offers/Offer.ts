@@ -1,3 +1,4 @@
+import { Deck } from "../../decks/Deck"
 
 export interface OfferDto {
     deckListingId: string
@@ -29,3 +30,14 @@ export enum OfferStatus {
     REJECTED = "REJECTED",
     CANCELED = "CANCELED"
 }
+
+export interface OffersForDeck {
+    deck: Deck
+    offers: OfferDto[]
+}
+
+export interface MyOffers {
+    offersToMe: OffersForDeck[]
+    offersIMade: OffersForDeck[]
+}
+

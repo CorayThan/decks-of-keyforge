@@ -187,7 +187,7 @@ const KeyRouter = observer(() => {
                         path={Routes.about}
                         component={AboutPage}
                     />
-                    <Route
+                    <LoggedInRoute
                         path={MyDokSubPaths.base}
                         component={MyDokPage}
                     />
