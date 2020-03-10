@@ -30,7 +30,7 @@ export class MyOffersView extends React.Component {
             return <Typography>Please login to see your offers.</Typography>
         }
 
-        const {offersSent, offersAccepted, offersRejected, offersCanceled} = keyLocalStorage.genericStorage
+        const {offersSent, offersAccepted, offersRejected, offersCanceled, offersExpired} = keyLocalStorage.genericStorage
 
         return (
             <Grid container={true} spacing={2}>
@@ -71,6 +71,15 @@ export class MyOffersView extends React.Component {
                         }
                         label={"Canceled"}
                     />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={offersExpired ?? true}
+                                onChange={(event) => keyLocalStorage.updateGenericStorage({offersExpired: event.target.checked})}
+                            />
+                        }
+                        label={"Include Expired"}
+                    />
                 </Grid>
                 <Grid item={true} md={12} lg={6}>
                     <OffersList
@@ -93,7 +102,7 @@ export class MyOffersView extends React.Component {
 
 const OffersList = (props: { name: string, noneMessage: string, offers: OffersForDeck[] }) => {
     const {name, noneMessage, offers} = props
-    const {offersSent, offersAccepted, offersRejected, offersCanceled} = keyLocalStorage.genericStorage
+    const {offersSent, offersAccepted, offersRejected, offersCanceled, offersExpired} = keyLocalStorage.genericStorage
     return (
         <div style={{maxWidth: 1200}}>
             <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>
@@ -104,8 +113,13 @@ const OffersList = (props: { name: string, noneMessage: string, offers: OffersFo
             ) : (
                 offers
                     .filter(offersForDeck => (
-                        (offersSent && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.SENT))
-                        || (offersAccepted && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.ACCEPTED))
+                        (
+                            (offersSent && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.SENT))
+                            || (offersAccepted && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.ACCEPTED))
+                            || (offersRejected && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.REJECTED))
+                            || (offersCanceled && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.CANCELED))
+                        )
+                        && (!offersExpired && offersForDeck.offers.find(offer => !offer.expired) != null)
                     ))
                     .map(offersForDeck => (
                         <Paper key={offersForDeck.deck.id} style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>

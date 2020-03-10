@@ -4,6 +4,7 @@ export interface OfferDto {
     amount: number
     message: string
     status: OfferStatus
+    expired: boolean
 
     sentTime: string
     expiresOn: string

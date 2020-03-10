@@ -13,7 +13,7 @@ import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
-import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
+import { AboutSubPaths, MyDokSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
 import { DeckFilters } from "../decks/search/DeckFilters"
@@ -404,14 +404,17 @@ class UserLinksDesktop extends React.Component {
                         style={{margin: spacing(1)}}
                         linkMenuStore={new LinkMenuStore()}
                     />
-                    <LinkButton
-                        color={"inherit"}
-                        to={Routes.myProfile}
+                    <LinkMenu
+                        genericOnClick={rightMenuStore.close}
+                        links={[
+                            {to: Routes.myProfile, text: "My DoK", mobileActive: true},
+                            {to: Routes.myProfile, text: "Profile", mobileActive: false},
+                            {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
+                            {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
+                        ]}
                         style={{margin: spacing(1)}}
-                        onClick={rightMenuStore.close}
-                    >
-                        My DoK
-                    </LinkButton>
+                        linkMenuStore={new LinkMenuStore()}
+                    />
                     <LinkButton
                         color={"inherit"}
                         to={AboutSubPaths.patreon}

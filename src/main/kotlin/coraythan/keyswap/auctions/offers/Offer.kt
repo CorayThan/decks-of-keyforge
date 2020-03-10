@@ -41,20 +41,23 @@ data class Offer(
         val id: UUID = UUID.randomUUID()
 ) : Comparable<Offer> {
 
-    fun toDto(offsetMinutes: Int) = OfferDto(
-            deckListingId = this.auction.id,
-            deckId = this.auction.deck.keyforgeId,
-            amount = this.amount,
-            message = this.message,
-            status = this.status,
-            sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes),
-            expiresOn = this.sentTime.plusDays(this.expiresInDays.toLong()).toReadableStringWithOffsetMinutes(offsetMinutes),
-            viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
-            resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
-            country = offerFrom,
-            id = id
-    )
-
+    fun toDto(offsetMinutes: Int): OfferDto {
+        val expires = this.sentTime.plusDays(this.expiresInDays.toLong())
+        return OfferDto(
+                deckListingId = this.auction.id,
+                deckId = this.auction.deck.keyforgeId,
+                amount = this.amount,
+                message = this.message,
+                status = this.status,
+                expired = expires.isAfter(LocalDateTime.now()),
+                sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes),
+                expiresOn = expires.toReadableStringWithOffsetMinutes(offsetMinutes),
+                viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+                resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+                country = offerFrom,
+                id = id
+        )
+    }
     override fun compareTo(other: Offer): Int {
         return if (this.sentTime == other.sentTime) {
             this.id.compareTo(other.id)
@@ -99,6 +102,7 @@ data class OfferDto(
         val amount: Int,
         val message: String,
         val status: OfferStatus,
+        val expired: Boolean,
         val country: Country,
         val sentTime: String,
         val expiresOn: String,
