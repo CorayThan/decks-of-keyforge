@@ -1,6 +1,7 @@
 import { Divider, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { Link } from "react-router-dom"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
@@ -179,8 +180,11 @@ export class LandingPage extends React.Component<{}> {
                             <LandingPageTitle>
                                 Disclaimers
                             </LandingPageTitle>
-                            <Typography>
+                            <Typography style={{marginBottom: spacing(1)}}>
                                 Decks of KeyForge is not associated with or endorsed by Fantasy Flight games, the producers of KeyForge, in any way.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(1)}}>
+                                Decks of KeyForge is owned and operated by Graylake LLC. For questions or comments check out the <Link to={AboutSubPaths.contact}>contact me page</Link>!
                             </Typography>
                             <Typography>
                                 Decks of KeyForge is owned and operated by Graylake LLC. Please send any questions or comments to decksofkeyforge@gmail.com
@@ -202,7 +206,7 @@ export const LandingPageTitle = observer((props: { children: string }) => {
         <Typography
             variant={"h4"}
             color={themeStore.darkMode ? "textPrimary" : "primary"}
-            style={{marginBottom: spacing(4), marginTop: spacing(4)}}
+            style={{marginBottom: spacing(2), marginTop: spacing(4)}}
         >
             {props.children}
         </Typography>
