@@ -1,6 +1,7 @@
 package coraythan.keyswap.auctions.offers
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.TimeUtils.localDateTimeFormatterWithYear
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
@@ -49,11 +50,11 @@ data class Offer(
                 amount = this.amount,
                 message = this.message,
                 status = this.status,
-                expired = expires.isAfter(LocalDateTime.now()),
-                sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes),
-                expiresOn = expires.toReadableStringWithOffsetMinutes(offsetMinutes),
-                viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
-                resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes),
+                expired = expires.isBefore(LocalDateTime.now()),
+                sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
+                expiresOn = expires.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
+                viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
+                resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
                 country = offerFrom,
                 id = id
         )

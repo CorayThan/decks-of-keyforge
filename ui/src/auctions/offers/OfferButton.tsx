@@ -145,7 +145,7 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                         <Button
                             onClick={this.offer}
                             color="primary"
-                            disabled={!userStore.emailVerified || disabled}
+                            disabled={!userStore.emailForSellingIsVerified || disabled}
                         >
                             Send
                         </Button>

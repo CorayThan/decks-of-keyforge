@@ -28,7 +28,7 @@ interface GenericStorage {
     offersAccepted?: boolean
     offersRejected?: boolean
     offersCanceled?: boolean
-    offersExpired?: boolean
+    includeExpiredOffers?: boolean
 }
 
 class KeyLocalStorage {

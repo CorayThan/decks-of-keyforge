@@ -9,6 +9,7 @@ object TimeUtils {
     val zoneId: ZoneId
 
     val localDateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, h:mm a")
+    val localDateTimeFormatterWithYear = DateTimeFormatter.ofPattern("MMM d, YYYY, h:mm a")
     val localDateTimeFormatterWithSeconds = DateTimeFormatter.ofPattern("MMM d, h:mm:ss a")
 
     init {

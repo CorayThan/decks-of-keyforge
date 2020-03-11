@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { OffersForDeck, OfferStatus } from "../auctions/offers/Offer"
 import { offerStore } from "../auctions/offers/OfferStore"
-import { OffersForDeckTable } from "../auctions/offers/ViewOffersForDeck"
+import { OffersForDeckTableFull } from "../auctions/offers/ViewOffersForDeck"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -30,7 +30,7 @@ export class MyOffersView extends React.Component {
             return <Typography>Please login to see your offers.</Typography>
         }
 
-        const {offersSent, offersAccepted, offersRejected, offersCanceled, offersExpired} = keyLocalStorage.genericStorage
+        const {offersSent, offersAccepted, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
 
         return (
             <Grid container={true} spacing={2}>
@@ -74,8 +74,8 @@ export class MyOffersView extends React.Component {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={offersExpired ?? true}
-                                onChange={(event) => keyLocalStorage.updateGenericStorage({offersExpired: event.target.checked})}
+                                checked={includeExpiredOffers ?? true}
+                                onChange={(event) => keyLocalStorage.updateGenericStorage({includeExpiredOffers: event.target.checked})}
                             />
                         }
                         label={"Include Expired"}
@@ -102,7 +102,7 @@ export class MyOffersView extends React.Component {
 
 const OffersList = (props: { name: string, noneMessage: string, offers: OffersForDeck[] }) => {
     const {name, noneMessage, offers} = props
-    const {offersSent, offersAccepted, offersRejected, offersCanceled, offersExpired} = keyLocalStorage.genericStorage
+    const {offersSent, offersAccepted, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
     return (
         <div style={{maxWidth: 1200}}>
             <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>
@@ -119,7 +119,7 @@ const OffersList = (props: { name: string, noneMessage: string, offers: OffersFo
                             || (offersRejected && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.REJECTED))
                             || (offersCanceled && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.CANCELED))
                         )
-                        && (!offersExpired && offersForDeck.offers.find(offer => !offer.expired) != null)
+                        && (includeExpiredOffers || offersForDeck.offers.find(offer => !offer.expired) != null)
                     ))
                     .map(offersForDeck => (
                         <Paper key={offersForDeck.deck.id} style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>
@@ -145,7 +145,7 @@ const OffersList = (props: { name: string, noneMessage: string, offers: OffersFo
                                     SAS
                                 </Typography>
                             </div>
-                            <OffersForDeckTable offers={offersForDeck.offers} currency={offersForDeck.deck.currency}/>
+                            <OffersForDeckTableFull offers={offersForDeck.offers} currency={offersForDeck.deck.currency}/>
                         </Paper>
                     ))
             )}

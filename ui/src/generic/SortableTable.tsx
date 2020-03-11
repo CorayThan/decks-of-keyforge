@@ -10,8 +10,11 @@ import { observer } from "mobx-react"
 import React from "react"
 import { SortOrder } from "../config/Utils"
 
-interface SortableTableHeaderInfo<T> {
-    property: keyof T
+export interface SortableTableHeaderInfo<T> {
+    /**
+     * Either property or transform must be included.
+     */
+    property?: keyof T
     title: string
     sortable?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +47,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                     <TableRow>
                         {headers.map(header => (
                             <TableCell key={header.title}>
-                                {header.sortable ? (
+                                {header.property != null && header.sortable ? (
                                     <TableSortLabel
                                         active={store.activeTableSort === header.property}
                                         direction={store.tableSortDir}
@@ -64,7 +67,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                         <TableRow key={idx}>
                             {headers.map(header => (
                                 <TableCell key={header.title}>
-                                    {header.transform == null ? datum[header.property] : header.transform(datum)}
+                                    {header.transform == null ? datum[header.property!] : header.transform(datum)}
                                 </TableCell>
                             ))}
                         </TableRow>

@@ -66,7 +66,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                         <Button
                             onClick={this.buyItNow}
                             color="primary"
-                            disabled={!userStore.emailVerified}
+                            disabled={!userStore.emailForSellingIsVerified}
                         >
                             Buy
                         </Button>

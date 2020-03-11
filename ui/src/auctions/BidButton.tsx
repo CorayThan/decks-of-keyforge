@@ -118,7 +118,7 @@ export class BidButton extends React.Component<BidButtonProps> {
                         <Button
                             onClick={this.bid}
                             color="primary"
-                            disabled={!userStore.emailVerified}
+                            disabled={!userStore.emailForSellingIsVerified}
                         >
                             Bid
                         </Button>
