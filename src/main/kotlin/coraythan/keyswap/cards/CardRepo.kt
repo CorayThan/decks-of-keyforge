@@ -7,6 +7,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor
 interface CardRepo : JpaRepository<Card, String>, QuerydslPredicateExecutor<Card> {
     fun findByMaverickFalse(): List<Card>
 
-    fun findByExpansionAndCardNumberAndHouse(expansion: Int, cardNumber: String, house: House): List<Card>
     fun findByExpansionAndCardTitleAndHouse(expansion: Int, cardTitle: String, house: House): List<Card>
 }

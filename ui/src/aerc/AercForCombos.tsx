@@ -2,6 +2,7 @@ import { Typography } from "@material-ui/core"
 import React from "react"
 import { spacing } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
+import { DeckUtils } from "../decks/Deck"
 import { SasTip } from "../mui-restyled/SasTip"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 
@@ -19,9 +20,7 @@ export class AercForCombos extends React.Component<AercForCombosProps> {
         if (combos == null) {
             return children
         }
-        const totalHouseAerc = combos.length === 0 ? 0 : combos
-            .map(combo => (accessor == null ? combo.aercScore : accessor(combo)) * combo.copies)
-            .reduce((prev, next) => prev + next)
+        const totalHouseAerc = DeckUtils.sasForHouse(combos, accessor)
 
         return (
             <SasTip

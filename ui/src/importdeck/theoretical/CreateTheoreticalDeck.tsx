@@ -2,28 +2,38 @@ import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
+import { Redirect } from "react-router-dom"
 import { cardStore } from "../../cards/CardStore"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { log, Utils } from "../../config/Utils"
+import { Utils } from "../../config/Utils"
 import { activeExpansions, BackendExpansion } from "../../expansions/Expansions"
 import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
 import { KeyCard } from "../../generic/KeyCard"
 import { House } from "../../houses/House"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
-import { LinkButton } from "../../mui-restyled/LinkButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { DisplayCardsInHouseEditable, saveUnregisteredDeckStore } from "../CreateUnregisteredDeck"
 import { CardsInHouses } from "../SaveUnregisteredDeck"
+import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 
 export const CreateTheoreticalDeck = observer(() => {
 
     const [expansionStore] = useState(new SelectedExpansion(activeExpansions))
     const [housesStore] = useState(new SelectedHouses([House.Dis, House.Logos, House.Shadows], 3))
 
+    useEffect(() => {
+        theoreticalDeckStore.savedDeckId = undefined
+    }, [])
+
     if (cardStore.allCards.length === 0) {
         return <Loader/>
+    }
+
+    const savedDeckId = theoreticalDeckStore.savedDeckId
+    if (savedDeckId) {
+        return <Redirect to={Routes.theoreticalDeckPage(savedDeckId)} />
     }
 
     return (
@@ -36,19 +46,18 @@ export const CreateTheoreticalDeck = observer(() => {
                     <HouseSelect style={{marginBottom: spacing(4)}} selectedHouses={housesStore}/>
                 </div>
                 <CreateTheoreticalDeckBuilder expansion={expansionStore.currentExpansionOrDefault()} houses={housesStore.getHousesSelectedTrue()}/>
-                <LinkButton
+                <KeyButton
                     variant={"contained"}
                     color={"primary"}
                     style={{marginRight: spacing(2)}}
                     disabled={!saveUnregisteredDeckStore.deckIsValid}
+                    loading={theoreticalDeckStore.savingDeck}
                     onClick={() => {
-                        const linkTo = Routes.theoreticalDeckPage(encodeURIComponent(JSON.stringify(saveUnregisteredDeckStore.currentDeck)))
-                        log.debug(linkTo)
+                        theoreticalDeckStore.saveTheoreticalDeck(saveUnregisteredDeckStore.currentDeck!)
                     }}
-                    to={Routes.theoreticalDeckPage(encodeURIComponent(JSON.stringify(saveUnregisteredDeckStore.currentDeck)))}
                 >
                     View
-                </LinkButton>
+                </KeyButton>
                 {Utils.isDev() && (
                     <KeyButton
                         onClick={() => {
@@ -70,7 +79,6 @@ const CreateTheoreticalDeckBuilder = observer((props: { expansion: BackendExpans
     const {expansion, houses} = props
 
     useEffect(() => {
-        log.debug(`In use effect create theor deck builder expansion ${expansion} houses ${houses}`)
         const cards: CardsInHouses = {}
         houses.forEach(house => cards[house] = [])
         saveUnregisteredDeckStore.currentDeck = {

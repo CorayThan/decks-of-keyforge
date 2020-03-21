@@ -4,21 +4,18 @@ import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { DeckViewFullView } from "../../decks/DeckViewFull"
 import { Loader } from "../../mui-restyled/Loader"
-import { deckImportStore } from "../DeckImportStore"
-import { SaveUnregisteredDeck } from "../SaveUnregisteredDeck"
+import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 
 export const ViewTheoreticalDeck = observer(() => {
-    const {uriEncodedDeck} = useParams()
-
-    const deck: SaveUnregisteredDeck = JSON.parse(decodeURIComponent(uriEncodedDeck))
+    const {id} = useParams()
 
     useEffect(() => {
-        deckImportStore.viewTheoreticalDeck(deck)
-    }, [uriEncodedDeck])
+        theoreticalDeckStore.findDeck(id)
+    }, [id])
 
-    if (deckImportStore.theoreticalDeck == null) {
+    if (theoreticalDeckStore.deck == null) {
         return <Loader/>
     }
 
-    return <DeckViewFullView deck={deckImportStore.theoreticalDeck}/>
+    return <DeckViewFullView deck={theoreticalDeckStore.deck}/>
 })

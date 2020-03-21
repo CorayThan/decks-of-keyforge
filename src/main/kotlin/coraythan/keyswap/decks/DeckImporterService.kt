@@ -396,10 +396,9 @@ class DeckImporterService(
         return savedCount
     }
 
-    fun viewTheoreticalDeck(deck: SaveUnregisteredDeck): DeckWithSynergyInfo {
+    fun viewTheoreticalDeck(deck: SaveUnregisteredDeck): Deck {
         val deckAndCards = makeBasicDeckFromUnregisteredDeck(deck)
-        val rated = validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second)
-        return deckSearchService.deckToDeckWithSynergies(rated)
+        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second)
     }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {

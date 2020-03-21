@@ -1,10 +1,9 @@
-import axios, { AxiosResponse } from "axios"
+import axios from "axios"
 import { sample } from "lodash"
 import { observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
 import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
-import { DeckWithSynergyInfo } from "../decks/Deck"
 import { BackendExpansion } from "../expansions/Expansions"
 import { messageStore } from "../ui/MessageStore"
 import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
@@ -30,19 +29,6 @@ class DeckImportStore {
 
     @observable
     addingNewDeck = false
-
-    @observable
-    theoreticalDeck?: DeckWithSynergyInfo
-
-    viewTheoreticalDeck = (deck: SaveUnregisteredDeck) => {
-        this.theoreticalDeck = undefined
-        axiosWithoutErrors.post(DeckImportStore.CONTEXT + "/view-theoretical", deck)
-            .then((response: AxiosResponse<DeckWithSynergyInfo>) => {
-                const deck = response.data
-                deck.deck.houses.sort()
-                this.theoreticalDeck = deck
-            })
-    }
 
     addUnregisteredDeck = async (deck: SaveUnregisteredDeck) => {
         try {

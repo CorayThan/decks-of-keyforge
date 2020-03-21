@@ -4,7 +4,7 @@ import { KCard } from "../cards/KCard"
 import { log, roundToHundreds } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
-import { DeckSynergyInfo } from "../synergy/DeckSynergyInfo"
+import { DeckSynergyInfo, SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { userStore } from "../user/UserStore"
 import { UserDeck } from "../userdeck/UserDeck"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -114,6 +114,16 @@ export class DeckUtils {
         }
     }
 
+    static sasForHouse = (combos: SynergyCombo[], accessor?: (combo: SynergyCombo) => number, house?: House): number => {
+        let filteredCombos = combos
+        if (house != null) {
+            filteredCombos = combos.filter(combo => combo.house === house)
+        }
+        return filteredCombos.length === 0 ? 0 : filteredCombos
+            .map(combo => (accessor == null ? combo.aercScore : accessor(combo)) * combo.copies)
+            .reduce((prev, next) => prev + next)
+    }
+
     static cardsInHouses = (deck: Deck) => {
         const cardsByHouse: { house: House, cards: KCard[] }[] = []
         deck.houses
@@ -176,6 +186,10 @@ export class DeckUtils {
                 synergies.houseCheating,
                 synergies.other,
 
+                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[0]),
+                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[1]),
+                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[2]),
+
                 deck.creatureCount,
                 deck.actionCount,
                 deck.artifactCount,
@@ -226,6 +240,10 @@ export class DeckUtils {
             "Disruption",
             "House Cheating",
             "Other",
+
+            "House 1 SAS",
+            "House 2 SAS",
+            "House 3 SAS",
 
             "Creature Count",
             "Action Count",

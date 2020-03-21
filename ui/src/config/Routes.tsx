@@ -69,7 +69,7 @@ class Routes {
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
     static privacyPolicy = "/privacy-policy"
-    static theoreticalDeckPage = (uriEncodedDeck?: string) => `${Routes.theoreticalDecks}/${uriEncodedDeck == null ? ":uriEncodedDeck" : uriEncodedDeck}`
+    static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
     static spoilerPage = (spoilerId?: string | number) => `${Routes.spoilers}/${spoilerId == null ? ":spoilerId" : spoilerId}`
