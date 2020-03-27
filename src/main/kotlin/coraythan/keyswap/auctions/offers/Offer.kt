@@ -25,7 +25,7 @@ data class Offer(
         @ManyToOne
         val sender: KeyUser,
 
-        val message: String,
+        val message: String, 
 
         @Enumerated(EnumType.STRING)
         val offerFrom: Country,
@@ -33,8 +33,12 @@ data class Offer(
         @Enumerated(EnumType.STRING)
         val status: OfferStatus = OfferStatus.SENT,
 
+        val senderArchived: Boolean = false,
+        val recipientArchived: Boolean = false,
+
+        val expiresTime: LocalDateTime,
+
         val sentTime: LocalDateTime = nowLocal(),
-        val expiresInDays: Int = 3,
         val viewedTime: LocalDateTime? = null,
         val resolvedTime: LocalDateTime? = null,
 
@@ -42,17 +46,20 @@ data class Offer(
         val id: UUID = UUID.randomUUID()
 ) : Comparable<Offer> {
 
+    fun offerDetailsReadable() = "${auction.currencySymbol}${amount}"
+
     fun toDto(offsetMinutes: Int): OfferDto {
-        val expires = this.sentTime.plusDays(this.expiresInDays.toLong())
         return OfferDto(
                 deckListingId = this.auction.id,
                 deckId = this.auction.deck.keyforgeId,
                 amount = this.amount,
                 message = this.message,
                 status = this.status,
-                expired = expires.isBefore(LocalDateTime.now()),
+                recipientArchived = recipientArchived,
+                senderArchived = senderArchived,
+                expired = this.expiresTime.isBefore(LocalDateTime.now()),
                 sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
-                expiresOn = expires.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
+                expiresOn = this.expiresTime.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
                 viewedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
                 resolvedTime = this.viewedTime?.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
                 country = offerFrom,
@@ -87,7 +94,8 @@ enum class OfferStatus {
     SENT,
     ACCEPTED,
     REJECTED,
-    CANCELED
+    CANCELED,
+    EXPIRED
 }
 
 data class MakeOffer(
@@ -103,6 +111,8 @@ data class OfferDto(
         val amount: Int,
         val message: String,
         val status: OfferStatus,
+        val senderArchived: Boolean,
+        val recipientArchived: Boolean,
         val expired: Boolean,
         val country: Country,
         val sentTime: String,

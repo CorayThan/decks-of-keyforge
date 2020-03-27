@@ -1,13 +1,11 @@
 package coraythan.keyswap.publicapis
 
-import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.DeckWinsService
 import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.stats.StatsService
-import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -19,12 +17,10 @@ import java.util.*
 class PublicApiService(
         private val currentUserService: CurrentUserService,
         private val keyUserRepo: KeyUserRepo,
-        private val userDeckService: UserDeckService,
         private val deckRepo: DeckRepo,
-        private val deckImporterService: DeckImporterService,
-        private val cardRepo: CardRepo,
         private val cardService: CardService,
-        private val statsService: StatsService
+        private val statsService: StatsService,
+        private val deckWinsService: DeckWinsService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -41,7 +37,8 @@ class PublicApiService(
         }
         return deck.toDeckSearchResult(
                 cards = cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats()
+                stats = statsService.findCurrentStats(),
+                crucibleWins = deckWinsService.crucibleWins
         )
     }
 

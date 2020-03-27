@@ -13,7 +13,7 @@ import { OfferButton } from "../../auctions/offers/OfferButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
-import { SendSellerEmailDialog } from "../../emails/SendSellerEmailDialog"
+import { SendEmailDialog } from "../../emails/SendEmailDialog"
 import { countryToLabel } from "../../generic/Country"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
@@ -266,14 +266,15 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                     </>
                                 ) : null}
                                 {allowEmail ? (
-                                    <SendSellerEmailDialog
-                                        deckName={deckName}
-                                        senderUsername={yourUsername!}
-                                        senderEmail={yourEmail!}
-                                        username={username}
-                                        keyforgeId={this.props.keyforgeId}
+                                    <div
                                         style={{marginTop: spacing(2)}}
-                                    />
+                                    >
+                                        <SendEmailDialog
+                                            deckName={deckName}
+                                            recipientUsername={username}
+                                            keyforgeId={this.props.keyforgeId}
+                                        />
+                                    </div>
                                 ) : null}
                             </div>
                             <Divider style={{marginTop: spacing(2)}}/>

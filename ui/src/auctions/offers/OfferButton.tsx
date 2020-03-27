@@ -36,9 +36,11 @@ export class OfferButton extends React.Component<OfferButtonProps> {
     expireInDays = "3"
 
     open = () => {
+        this.amount = ""
+        this.message = ""
         offerStore.loadOffersForDeckListing(this.props.deckListingId)
         if (offerStore.myOffers == null) {
-            offerStore.loadMyOffers()
+            offerStore.loadMyOffers(false, false)
         }
         this.isOpen = true
     }
@@ -81,18 +83,21 @@ export class OfferButton extends React.Component<OfferButtonProps> {
     }
 
     render() {
-        const {currencySymbol, sellerUsername, style} = this.props
-        const disabled = !userStore.loggedIn() || sellerUsername === userStore.username
+        const {currencySymbol, sellerUsername, deckName, style} = this.props
+        const soldByMe = sellerUsername === userStore.username
+        const disabled = !userStore.loggedIn() || soldByMe
+        const title = (soldByMe ? "View Offers" : "Make Offer")
         return (
             <div style={style}>
                 <Button variant={"outlined"} color={"primary"} onClick={this.open}>
-                    Make Offer
+                    {title}
                 </Button>
                 <Dialog
                     open={this.isOpen}
                     onClose={this.close}
+                    maxWidth={"md"}
                 >
-                    <DialogTitle>Make Offer</DialogTitle>
+                    <DialogTitle>{title + ` on ${deckName}`}</DialogTitle>
                     <DialogContent>
                         <div style={{marginBottom: spacing(2)}}>
                             {offerStore.offersForDeck == null ? (
@@ -101,54 +106,62 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                                 <ViewOffersForDeck offers={offerStore.offersForDeck} currency={currencySymbol}/>
                             )}
                         </div>
-                        <SendEmailVerification message={"Please verify your email to make offers on decks."}/>
-                        <TextField
-                            label={"Offer"}
-                            value={this.amount}
-                            type={"number"}
-                            variant={"outlined"}
-                            onChange={event => this.amount = event.target.value}
-                            InputProps={{
-                                startAdornment: <InputAdornment position="start">{currencySymbol}</InputAdornment>,
-                            }}
-                            style={{maxWidth: 120, marginRight: spacing(2), marginBottom: spacing(2)}}
-                        />
-                        <TextField
-                            label={"Expire in Days"}
-                            value={this.expireInDays}
-                            type={"number"}
-                            variant={"outlined"}
-                            onChange={event => this.expireInDays = event.target.value}
-                            style={{maxWidth: 120, marginRight: spacing(2), marginBottom: spacing(2)}}
-                        />
-                        <TextField
-                            label={"Message"}
-                            value={this.message}
-                            multiline={true}
-                            rows={4}
-                            fullWidth={true}
-                            variant={"outlined"}
-                            onChange={event => this.message = event.target.value}
-                            style={{marginBottom: spacing(2)}}
-                        />
-                        <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
-                            By making an offer on this deck you agree to pay the seller the that amount + the listed shipping amount if they accept your offer.
-                            You can cancel your offer at any time. We will provide the seller with your email.
-                        </Typography>
-                        <BuyingDisclaimer/>
+                        {!soldByMe && (
+                            <>
+                                <SendEmailVerification message={"Please verify your email to make offers on decks."}/>
+                                <TextField
+                                    label={"Offer"}
+                                    value={this.amount}
+                                    type={"number"}
+                                    variant={"outlined"}
+                                    onChange={event => this.amount = event.target.value}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">{currencySymbol}</InputAdornment>,
+                                    }}
+                                    style={{maxWidth: 120, marginRight: spacing(2), marginBottom: spacing(2)}}
+                                />
+                                <TextField
+                                    label={"Expire in Days"}
+                                    value={this.expireInDays}
+                                    type={"number"}
+                                    variant={"outlined"}
+                                    onChange={event => this.expireInDays = event.target.value}
+                                    style={{maxWidth: 120, marginRight: spacing(2), marginBottom: spacing(2)}}
+                                />
+                                <TextField
+                                    label={"Message"}
+                                    value={this.message}
+                                    multiline={true}
+                                    rows={4}
+                                    fullWidth={true}
+                                    variant={"outlined"}
+                                    onChange={event => this.message = event.target.value}
+                                    style={{marginBottom: spacing(2)}}
+                                />
+                                <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
+                                    By making an offer on this deck you agree to pay the seller the that amount + the listed shipping amount if they accept your
+                                    offer.
+                                    You can cancel your offer at any time. We will provide the seller with your email.
+                                </Typography>
+                                <BuyingDisclaimer/>
+                            </>
+                        )}
                     </DialogContent>
                     <DialogActions>
                         <div style={{flexGrow: 1}}/>
-                        <Button onClick={this.close} style={{marginRight: spacing(2)}}>
-                            Cancel
+                        <Button onClick={this.close}>
+                            Close
                         </Button>
-                        <Button
-                            onClick={this.offer}
-                            color="primary"
-                            disabled={!userStore.emailForSellingIsVerified || disabled}
-                        >
-                            Send
-                        </Button>
+                        {!soldByMe && (
+                            <Button
+                                onClick={this.offer}
+                                color="primary"
+                                disabled={!userStore.emailForSellingIsVerified || disabled}
+                                style={{marginLeft: spacing(2)}}
+                            >
+                                Send
+                            </Button>
+                        )}
                     </DialogActions>
                 </Dialog>
             </div>

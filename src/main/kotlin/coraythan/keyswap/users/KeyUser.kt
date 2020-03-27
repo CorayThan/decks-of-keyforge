@@ -147,11 +147,6 @@ data class KeyUser(
             shippingCost = shippingCost
     )
 
-    fun toSearchResult() = UserSearchResult(
-            username, deckCount, forSaleCount, topSasAverage, highSas, lowSas,
-            totalPower, totalChains, mavericks, anomalies, type, patreonTier, manualPatreonTier
-    )
-
     fun generateSearchResult(): UserSearchResult {
         val owned = this.decks.filter { userDeck -> userDeck.ownedBy != null }.map { it.deck }
         val sasRatings = owned.map { deck -> deck.sasRating }.sortedDescending()

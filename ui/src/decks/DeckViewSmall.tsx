@@ -170,10 +170,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 {compact ? null : (<MyDecksButton deck={deck}/>)}
                                 <OwnersButton owners={owners}/>
                                 <div style={{flexGrow: 1}}/>
-                                <div style={{marginRight: spacing(1)}}>
+                                <div>
                                     <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
                                 </div>
-                                <div style={{marginRight: spacing(1)}}>
+                                <div>
                                     <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
                                 </div>
                                 <MoreDeckActions deck={deck} compact={compact}/>

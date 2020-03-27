@@ -99,13 +99,16 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                 linkMenuStore={new LinkMenuStore()}
                             />
                             {userStore.loggedIn() && (
-                                <LinkMenu
-                                    genericOnClick={rightMenuStore.close}
-                                    links={myDeckLinks()}
-                                    style={{margin: spacing(1)}}
-                                    dropdownOnly={true}
-                                    linkMenuStore={new LinkMenuStore()}
-                                />
+                                <>
+                                    <LinkMenu
+                                        genericOnClick={rightMenuStore.close}
+                                        links={myDeckLinks()}
+                                        style={{margin: spacing(1)}}
+                                        dropdownOnly={true}
+                                        linkMenuStore={new LinkMenuStore()}
+                                    />
+                                    <MyDokDropdown/>
+                                </>
                             )}
                         </>
                     )}
@@ -404,17 +407,7 @@ class UserLinksDesktop extends React.Component {
                         style={{margin: spacing(1)}}
                         linkMenuStore={new LinkMenuStore()}
                     />
-                    <LinkMenu
-                        genericOnClick={rightMenuStore.close}
-                        links={[
-                            {to: Routes.myProfile, text: "My DoK", mobileActive: true},
-                            {to: Routes.myProfile, text: "Profile", mobileActive: false},
-                            {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
-                            {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
-                        ]}
-                        style={{margin: spacing(1)}}
-                        linkMenuStore={new LinkMenuStore()}
-                    />
+                    <MyDokDropdown/>
                     <LinkButton
                         color={"inherit"}
                         to={AboutSubPaths.patreon}
@@ -454,5 +447,20 @@ class UserLinksDesktop extends React.Component {
         }
     }
 }
+
+const MyDokDropdown = () => (
+    <LinkMenu
+        genericOnClick={rightMenuStore.close}
+        links={[
+            {to: Routes.myProfile, text: "My DoK", mobileActive: true},
+            {to: Routes.myProfile, text: "Profile", mobileActive: false},
+            {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
+            {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
+        ]}
+        style={{margin: spacing(1)}}
+        dropdownOnly={true}
+        linkMenuStore={new LinkMenuStore()}
+    />
+)
 
 export const KeyTopbar = withRouter(KeyTopbarPlain)

@@ -9,7 +9,7 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledException
-import net.javacrumbs.shedlock.core.SchedulerLock
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
@@ -35,7 +35,7 @@ class KeyUserService(
     private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
 
     @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatrons)
-    @SchedulerLock(name = "removeManualPatrons", lockAtLeastForString = lockRemoveManualPatrons, lockAtMostForString = lockRemoveManualPatrons)
+    @SchedulerLock(name = "removeManualPatrons", lockAtLeastFor = lockRemoveManualPatrons, lockAtMostFor = lockRemoveManualPatrons)
     fun removeManualPatrons() {
         try {
             userRepo.findByRemoveManualPatreonTierNotNull()

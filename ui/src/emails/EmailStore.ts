@@ -8,12 +8,16 @@ import { SellerMessage } from "./SellerMessage"
 class EmailStore {
 
     static readonly CONTEXT = HttpConfig.API + "/emails"
+    static readonly SECURE_CONTEXT = HttpConfig.API + "/emails/secured"
 
     @observable
     sendingSellerMessage = false
 
     @observable
     sentSellerMessage = false
+
+    @observable
+    sendingOfferMessage = false
 
     @observable
     sendingReset = false
@@ -23,10 +27,17 @@ class EmailStore {
 
     sendSellerMessage = async (message: SellerMessage) => {
         this.sendingSellerMessage = true
-        await axios.post(`${EmailStore.CONTEXT}/seller-message`, message)
+        await axios.post(`${EmailStore.SECURE_CONTEXT}/seller-message`, message)
         this.sendingSellerMessage = false
         this.sentSellerMessage = true
         messageStore.setSuccessMessage(`We've sent your message to the user who listed this deck.`)
+    }
+
+    sendOfferMessage = async (offerId: string, message: string) => {
+        this.sendingOfferMessage = true
+        await axios.post(`${EmailStore.SECURE_CONTEXT}/offer-message/${offerId}`, {message})
+        this.sendingOfferMessage = false
+        messageStore.setSuccessMessage(`We've sent your message about the offer to buy this deck.`)
     }
 
     sendReset = (email: string) => {
@@ -47,7 +58,7 @@ class EmailStore {
             messageStore.setWarningMessage("Please login to send an email verification.")
         } else {
             this.sendingEmailVerification = true
-            axios.post(`${EmailStore.CONTEXT}/send-email-verification`, {email})
+            axios.post(`${EmailStore.SECURE_CONTEXT}/send-email-verification`, {email})
                 .then(() => {
                     this.sendingEmailVerification = false
                     messageStore.setSuccessMessage(`A verification email has been sent to ${email}`)

@@ -27,6 +27,11 @@ class JwtAuthService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    private val jwtParser = Jwts.parserBuilder()
+            .setSigningKey(jwtSecret.toByteArray())
+            .build()
+    private val jwtSigningKey = Keys.hmacShaKeyFor(jwtSecret.toByteArray())
+
     companion object {
         private val EXPIRE_AFTER: Duration = Duration.ofDays(7)
         private val REFRESH_AFTER: Duration = Duration.ofHours(1)
@@ -57,7 +62,7 @@ class JwtAuthService(
         val date = expiration(EXPIRE_AFTER)
 
         tokenBuilder.setExpiration(date)
-                .signWith(Keys.hmacShaKeyFor(jwtSecret.toByteArray()))
+                .signWith(jwtSigningKey)
                 .claim(ROLE, role)
 
         val token = tokenBuilder.compact()
@@ -72,8 +77,7 @@ class JwtAuthService(
         val token = req.getHeader(HEADER_STRING)
         if (token != null) {
             try {
-                val body: Claims = Jwts.parser()
-                        .setSigningKey(jwtSecret.toByteArray())
+                val body: Claims = jwtParser
                         .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                         .body
 

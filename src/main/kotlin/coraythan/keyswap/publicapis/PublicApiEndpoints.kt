@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.ConcurrentHashMap
 
+val maxApiRequests = 25
+
 @RestController
 @RequestMapping("/public-api")
 class PublicApiEndpoints(
@@ -68,15 +70,19 @@ class PublicApiEndpoints(
         val requests = this.rateLimiters.getOrPut(apiKey, { 0 }) + 1
         this.rateLimiters[apiKey] = requests
 
-        if (requests > 25) {
-            val userEmail = publicApiService.userForApiKey(apiKey).email
-            if (requests in 26..27) log.warn("The user $userEmail sent too many requests.")
-            if (!dontRateLimitEmails.contains(userEmail)) {
-                throw RateExceededException(
-                        "You've sent too many requests in the last minute. You've sent $requests in the last minute. Decks of KeyForge has been taken down " +
-                                "by this type of activity in the past. If you need to know the SAS for all decks, I provide a CSV file you should use for " +
-                                "that purpose. Otherwise, please contact me on discord, or at decksofkeyforge@gmail.com"
-                )
+        if (requests > maxApiRequests) {
+            val user = publicApiService.userForApiKey(apiKey)
+            val realMaxRequests = user.realPatreonTier()?.maxApiRequests ?: maxApiRequests
+            if (requests > realMaxRequests) {
+                val userEmail = user.email
+                if (realMaxRequests + 1 == requests) log.warn("The user $userEmail sent too many requests.")
+                if (!dontRateLimitEmails.contains(userEmail)) {
+                    throw RateExceededException(
+                            "You've sent too many requests in the last minute. You've sent $requests in the last minute. Decks of KeyForge has been taken down " +
+                                    "by this type of activity in the past. If you need to know the SAS for all decks, I provide a CSV file you should use for " +
+                                    "that purpose. Otherwise, please contact me on discord, or at decksofkeyforge@gmail.com"
+                    )
+                }
             }
         }
 

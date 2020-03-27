@@ -3,6 +3,5 @@ export interface SellerMessage {
     deckName: string
     deckKeyforgeId: string
     senderUsername: string
-    senderEmail: string
     message: string
 }

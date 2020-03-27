@@ -3,7 +3,6 @@ package coraythan.keyswap
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
@@ -19,7 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Primary
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
@@ -40,28 +39,27 @@ class KeyswapApplication() {
 
     companion object {
 
-        val objectMapper = ObjectMapper()
-                .apply {
+        val objectMapper = configureJackson(Jackson2ObjectMapperBuilder.json())
 
-                    findAndRegisterModules()
-
-                    val dateSer = object : StdSerializer<LocalDate>(LocalDate::class.java) {
-                        override fun serialize(value: LocalDate, gen: JsonGenerator, provider: SerializerProvider) {
-                            gen.writeString(value.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                        }
-                    }
-                    val dateDeser = object : StdDeserializer<LocalDate>(LocalDate::class.java) {
-                        override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): LocalDate =
-                                LocalDate.parse(jp.readValueAs(String::class.java))
-                    }
-
-                    registerModule(JavaTimeModule()
-                            .addSerializer(dateSer)
-                            .addDeserializer(LocalDate::class.java, dateDeser)
-                    )
-
-                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        private fun configureJackson(builder: Jackson2ObjectMapperBuilder): ObjectMapper {
+            val dateSer = object : StdSerializer<LocalDate>(LocalDate::class.java) {
+                override fun serialize(value: LocalDate, gen: JsonGenerator, provider: SerializerProvider) {
+                    gen.writeString(value.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 }
+            }
+            val dateDeser = object : StdDeserializer<LocalDate>(LocalDate::class.java) {
+                override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): LocalDate =
+                        LocalDate.parse(jp.readValueAs(String::class.java))
+            }
+
+            return builder
+                    .modulesToInstall(
+                            JavaTimeModule()
+                                    .addSerializer(dateSer)
+                                    .addDeserializer(LocalDate::class.java, dateDeser)
+                    )
+                    .build()
+        }
     }
 
     @Bean
@@ -70,9 +68,8 @@ class KeyswapApplication() {
     @Bean
     fun bCryptPasswordEncoder() = BCryptPasswordEncoder()
 
-    @Primary
     @Bean
-    fun objectMapper() = KeyswapApplication.objectMapper
+    fun objectMapper(builder: Jackson2ObjectMapperBuilder) = configureJackson(builder)
 
     @Bean
     fun yamlMapper(): YAMLMapper {

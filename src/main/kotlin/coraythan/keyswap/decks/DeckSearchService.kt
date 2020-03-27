@@ -135,7 +135,7 @@ class DeckSearchService(
                 }
                 .fetch()
 
-        val decks = deckResults.map {
+        val decks = deckResults.mapNotNull {
             val cards = cardService.cardsForDeck(it)
             val searchResult = it.toDeckSearchResult(
                     cardService.deckSearchResultCardsFromCardIds(it.cardIds),
@@ -153,10 +153,28 @@ class DeckSearchService(
                         filters.completedAuctions
                 ))
             } else if (filters.withOwners) {
-                if (userHolder.user?.email != "coraythan@gmail.com") throw BadRequestException("You do not have permission to see owners.")
-                searchResult.copy(owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
-                    userDeck.ownedBy
-                })
+                if (!setOf(
+                                "coraythan@gmail.com",
+                                "randomjoe@gmail.com"
+                        ).contains(userHolder.user?.email?.toLowerCase())) {
+                    throw BadRequestException("You do not have permission to see owners.")
+                }
+                val owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
+                    if (userDeck.ownedBy == null) {
+                        null
+                    } else {
+                        if (userDeck.user.allowUsersToSeeDeckOwnership) {
+                            userDeck.ownedBy
+                        } else {
+                            null
+                        }
+                    }
+                }
+                if (owners.isEmpty()) {
+                    null
+                } else {
+                    searchResult.copy(owners = owners)
+                }
             } else {
                 searchResult
             }

@@ -13,7 +13,7 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.QKeyUser
-import net.javacrumbs.shedlock.core.SchedulerLock
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -40,7 +40,7 @@ class UserSearchService(
     var lastUserSearchUpdate: Instant = Instant.now()
 
     @Scheduled(fixedDelayString = lockUpdateUserSearchStatsFor, initialDelayString = SchedulingConfig.updateUserStats)
-    @SchedulerLock(name = "updateUserStats", lockAtLeastForString = lockUpdateUserSearchStatsFor, lockAtMostForString = lockUpdateUserSearchStatsFor)
+    @SchedulerLock(name = "updateUserStats", lockAtLeastFor = lockUpdateUserSearchStatsFor, lockAtMostFor = lockUpdateUserSearchStatsFor)
     fun updateUserStats() {
         try {
             log.info("$scheduledStart update user stats.")

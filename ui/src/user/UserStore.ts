@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { computed, observable } from "mobx"
 import { latestVersion } from "../about/ReleaseNotes"
+import { deckListingStore } from "../auctions/DeckListingStore"
 import { etagResponseErrorInterceptor } from "../config/EtagCache"
 import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -117,6 +118,7 @@ export class UserStore {
                 keyLocalStorage.saveAuthKey(response.headers.authorization)
                 this.loadLoggedInUser()
                 userDeckStore.findAllForUser()
+                deckListingStore.findListingsForUser(false)
             })
             .catch((error: AxiosError) => {
                 this.loginInProgress = false
@@ -211,6 +213,11 @@ export class UserStore {
 
     setUser = (user?: KeyUserDto) => {
         this.user = user
+    }
+
+    @computed
+    get loggedInOrLoading(): boolean {
+        return this.loginInProgress || this.loggedIn()
     }
 
     @computed

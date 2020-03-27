@@ -3,6 +3,7 @@ package coraythan.keyswap.decks
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
+import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardIds
 import coraythan.keyswap.cards.CardService
@@ -23,7 +24,7 @@ import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
-import net.javacrumbs.shedlock.core.SchedulerLock
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -58,6 +59,7 @@ class DeckImporterService(
         private val deckRatingProgressService: DeckRatingProgressService,
         private val statsService: StatsService,
         private val objectMapper: ObjectMapper,
+        private val deckListingRepo: DeckListingRepo,
         @Value("\${env}")
         private val env: Env,
         val entityManager: EntityManager
@@ -68,7 +70,7 @@ class DeckImporterService(
 
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecks)
-    @SchedulerLock(name = "importNewDecks", lockAtLeastForString = lockImportNewDecksFor, lockAtMostForString = lockImportNewDecksFor)
+    @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
@@ -122,9 +124,8 @@ class DeckImporterService(
         deckSearchService.countFilters(DeckFilters())
     }
 
-    @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockUpdateCleanUnregistered, initialDelayString = SchedulingConfig.cleanUnregisteredDecks)
-    @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastForString = lockUpdateCleanUnregistered, lockAtMostForString = lockUpdateCleanUnregistered)
+    @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastFor = lockUpdateCleanUnregistered, lockAtMostFor = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
         try {
             log.info("$scheduledStart clean out unregistered decks.")
@@ -140,7 +141,7 @@ class DeckImporterService(
                         when {
                             decksLike.isNotEmpty() -> {
                                 log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
-                                deckRepo.deleteById(unreg.id)
+                                deleteUnreg(unreg)
                                 cleanedOut++
                             }
                             deckSearchService.countFilters(DeckFilters(
@@ -155,12 +156,12 @@ class DeckImporterService(
                                 // val identicalRegistered = deckRepo.findByRegisteredTrueAndCardNames(unreg.cardNames)
 
                                 log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it has a duplicate")
-                                deckRepo.deleteById(unreg.id)
+                                deleteUnreg(unreg)
                                 cleanedOut++
                             }
                             userDeckRepo.findByDeckIdAndOwnedByNotNull(unreg.id).isEmpty() -> {
                                 log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it is unowned")
-                                deckRepo.deleteById(unreg.id)
+                                deleteUnreg(unreg)
                                 cleanedOut++
                             }
                         }
@@ -338,6 +339,12 @@ class DeckImporterService(
         userDeckRepo.save(userDeck)
         log.info("Added unregistered deck with name ${savedDeck.name} fake id ${savedDeck.keyforgeId}")
         return savedDeck.keyforgeId
+    }
+
+    private fun deleteUnreg(deck: Deck) {
+        if (deck.registered) throw IllegalArgumentException("Can't delete registered deck.")
+        deck.auctions.forEach { deckListingRepo.deleteById(it.id) }
+        deckRepo.deleteById(deck.id)
     }
 
     private fun makeBasicDeckFromUnregisteredDeck(unregisteredDeck: SaveUnregisteredDeck): Pair<Deck, List<Card>> {

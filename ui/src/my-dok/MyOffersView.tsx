@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Grid, Paper } from "@material-ui/core"
+import { Button, Checkbox, FormControlLabel, Grid, Paper } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -10,30 +10,31 @@ import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { Loader } from "../mui-restyled/Loader"
+import { userStore } from "../user/UserStore"
 
 @observer
 export class MyOffersView extends React.Component {
 
     componentDidMount(): void {
-        offerStore.loadMyOffers()
+        offerStore.loadMyOffers(false, false)
     }
 
     render() {
 
-        if (offerStore.loadingMyOffers) {
-            return <Loader/>
-        }
-
         const myOffers = offerStore.myOffers
 
-        if (myOffers == null) {
+        if (!userStore.loggedInOrLoading && myOffers == null) {
             return <Typography>Please login to see your offers.</Typography>
         }
 
-        const {offersSent, offersAccepted, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
+        if (myOffers == null) {
+            return <Loader/>
+        }
+
+        const {offersSent, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
 
         return (
-            <Grid container={true} spacing={2}>
+            <Grid container={true} spacing={2} justify={"center"}>
                 <Grid item={true} xs={12}>
                     <FormControlLabel
                         control={
@@ -47,16 +48,7 @@ export class MyOffersView extends React.Component {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={offersAccepted ?? true}
-                                onChange={(event) => keyLocalStorage.updateGenericStorage({offersAccepted: event.target.checked})}
-                            />
-                        }
-                        label={"Accepted"}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={offersRejected ?? true}
+                                checked={offersRejected ?? false}
                                 onChange={(event) => keyLocalStorage.updateGenericStorage({offersRejected: event.target.checked})}
                             />
                         }
@@ -65,7 +57,7 @@ export class MyOffersView extends React.Component {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={offersCanceled ?? true}
+                                checked={offersCanceled ?? false}
                                 onChange={(event) => keyLocalStorage.updateGenericStorage({offersCanceled: event.target.checked})}
                             />
                         }
@@ -74,26 +66,45 @@ export class MyOffersView extends React.Component {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={includeExpiredOffers ?? true}
+                                checked={includeExpiredOffers ?? false}
                                 onChange={(event) => keyLocalStorage.updateGenericStorage({includeExpiredOffers: event.target.checked})}
                             />
                         }
                         label={"Include Expired"}
                     />
+                    <Button
+                        onClick={() => {
+                            offerStore.loadMyOffers(true, true)
+                        }}
+                    >
+                        Load Archived Offers
+                    </Button>
                 </Grid>
-                <Grid item={true} md={12} lg={6}>
+                <Grid item={true} lg={12}>
                     <OffersList
                         name={"Offers from me"}
                         noneMessage={"To see offers you've made, make an offer to an Archon with discriminating tastes"}
                         offers={myOffers.offersIMade}
                     />
                 </Grid>
-                <Grid item={true} md={12} lg={6}>
+                <Grid item={true} lg={12}>
                     <OffersList
                         name={"Offers to me"}
                         noneMessage={"To see some offers with numbers in accordance with psychological impulse, list some decks with 'Accepting Offers' checked"}
                         offers={myOffers.offersToMe}
                     />
+                </Grid>
+                <Grid item={true} lg={12}>
+                    <div style={{marginTop: spacing(2)}}>
+                        <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic"}}>
+                            We will send you an email when you receive an offer, or when an offer you've made has been accepted or rejected.
+                            You will not receive an email when your offers expire, or an offer made to you is cancelled.
+                        </Typography>
+                        <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic", marginTop: spacing(1)}}>
+                            When a deck is no longer listed for sale its
+                            offers will be removed from this view, for example when you unlist a deck, or accept an offer on it.
+                        </Typography>
+                    </div>
                 </Grid>
             </Grid>
         )
@@ -102,9 +113,9 @@ export class MyOffersView extends React.Component {
 
 const OffersList = (props: { name: string, noneMessage: string, offers: OffersForDeck[] }) => {
     const {name, noneMessage, offers} = props
-    const {offersSent, offersAccepted, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
+    const {offersSent, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
     return (
-        <div style={{maxWidth: 1200}}>
+        <div style={{maxWidth: 1200, overflowX: "auto"}}>
             <Typography variant={"h4"} style={{marginBottom: spacing(2)}}>
                 {name}
             </Typography>
@@ -113,13 +124,10 @@ const OffersList = (props: { name: string, noneMessage: string, offers: OffersFo
             ) : (
                 offers
                     .filter(offersForDeck => (
-                        (
-                            (offersSent && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.SENT))
-                            || (offersAccepted && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.ACCEPTED))
-                            || (offersRejected && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.REJECTED))
-                            || (offersCanceled && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.CANCELED))
-                        )
-                        && (includeExpiredOffers || offersForDeck.offers.find(offer => !offer.expired) != null)
+                        (offersSent && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.SENT))
+                        || (offersRejected && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.REJECTED))
+                        || (offersCanceled && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.CANCELED))
+                        || (includeExpiredOffers || offersForDeck.offers.find(offer => !offer.expired) != null)
                     ))
                     .map(offersForDeck => (
                         <Paper key={offersForDeck.deck.id} style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>

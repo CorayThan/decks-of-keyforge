@@ -4,7 +4,10 @@ export interface OfferDto {
     amount: number
     message: string
     status: OfferStatus
+    senderArchived: boolean
+    recipientArchived: boolean
     expired: boolean
+
 
     sentTime: string
     expiresOn: string
@@ -27,7 +30,8 @@ export enum OfferStatus {
     SENT = "SENT",
     ACCEPTED = "ACCEPTED",
     REJECTED = "REJECTED",
-    CANCELED = "CANCELED"
+    CANCELED = "CANCELED",
+    EXPIRED = "EXPIRED"
 }
 
 export interface OffersForDeck {
@@ -46,3 +50,5 @@ export interface MyOffers {
     offersToMe: OffersForDeck[]
     offersIMade: OffersForDeck[]
 }
+
+

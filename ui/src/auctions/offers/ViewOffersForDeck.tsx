@@ -4,7 +4,9 @@ import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { countryToLabel } from "../../generic/Country"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
+import { screenStore } from "../../ui/ScreenStore"
 import { OfferDto } from "./Offer"
+import { OfferActions } from "./OfferActions"
 
 export const ViewOffersForDeck = observer((props: { offers: OfferDto[], currency: string }) => {
     const {offers, currency} = props
@@ -16,25 +18,42 @@ export const ViewOffersForDeck = observer((props: { offers: OfferDto[], currency
             <Typography variant={"h6"} style={{marginLeft: spacing(2), paddingTop: spacing(2)}}>
                 Existing Offers
             </Typography>
-            <OffersForDeckTable offers={offers} currency={currency} />
+            <OffersForDeckTable offers={offers} currency={currency}/>
         </Paper>
     )
 })
 
-const baseOfferTableHeaders = (currency: string): SortableTableHeaderInfo<OfferDto>[] => ([
-    {property: "amount", title: "Amount", sortable: true, transform: (data) => `${currency}${data.amount}`},
-    {property: "status", title: "Status", sortable: true},
-    {property: "country", title: "Country", sortable: true, transform: (data) => countryToLabel(data.country)},
-    {property: "sentTime", title: "Sent", sortable: true},
-    {property: "expiresOn", title: "Expires", sortable: true},
-    {property: "viewedTime", title: "Viewed", sortable: true, transform: (data) => data.viewedTime == null ? "" : "Yes"},
-    {title: "Actions", transform: (data) => data.viewedTime == null ? "" : "Yes"},
-])
+const baseOfferTableHeaders = (currency: string, large?: boolean): SortableTableHeaderInfo<OfferDto>[] => {
+    if (large) {
+        return [
+            {property: "amount", title: "Amount", sortable: true, transform: (data) => `${currency}${data.amount}`},
+            {property: "status", title: "Status", sortable: true},
+            {property: "sentTime", title: "Sent", sortable: true},
+            {property: "expiresOn", title: "Expires", sortable: true},
+            {property: "country", title: "Country", sortable: true, transform: (data) => countryToLabel(data.country)},
+            // {property: "viewedTime", title: "Viewed", sortable: true, transform: (data) => data.viewedTime == null ? "" : "Yes"},
+            {title: "Actions", transform: (data) => <OfferActions offer={data}/>},
+        ]
+    }
+    return [
+        {property: "amount", title: "Amount", sortable: true, transform: (data) => `${currency}${data.amount}`},
+        {property: "status", title: "Status", sortable: true},
+        {property: "sentTime", title: "Sent", sortable: true},
+        {title: "Actions", transform: (data) => <OfferActions offer={data}/>},
+    ]
+}
 
-const fullOfferTableHeaders = (currency: string): SortableTableHeaderInfo<OfferDto>[] => {
-    const combined = baseOfferTableHeaders(currency)
+const fullOfferTableHeaders = (currency: string, large?: boolean): SortableTableHeaderInfo<OfferDto>[] => {
+    const combined = baseOfferTableHeaders(currency, large)
     const full: SortableTableHeaderInfo<OfferDto>[] = [
-        {property: "message", title: "Message"},
+        {
+            property: "message",
+            title: "Message",
+            width: 240,
+            transform: (data) => (
+                <Typography variant={"body2"} style={{whiteSpace: "pre-wrap"}}>{data.message}</Typography>
+            )
+        },
     ]
     combined.push(...full)
     return combined
@@ -43,11 +62,11 @@ const fullOfferTableHeaders = (currency: string): SortableTableHeaderInfo<OfferD
 export const OffersForDeckTable = observer((props: { offers: OfferDto[], currency: string, fullVersion?: boolean }) => {
     const {offers, currency} = props
     return (
-            <SortableTable
-                defaultSort={"sentTime"}
-                data={offers}
-                headers={baseOfferTableHeaders(currency)}
-            />
+        <SortableTable
+            defaultSort={"sentTime"}
+            data={offers}
+            headers={baseOfferTableHeaders(currency, screenStore.screenSizeMdPlus())}
+        />
     )
 })
 
@@ -57,7 +76,7 @@ export const OffersForDeckTableFull = observer((props: { offers: OfferDto[], cur
         <SortableTable
             defaultSort={"sentTime"}
             data={offers}
-            headers={fullOfferTableHeaders(currency)}
+            headers={fullOfferTableHeaders(currency, screenStore.screenSizeMdPlus())}
         />
     )
 })

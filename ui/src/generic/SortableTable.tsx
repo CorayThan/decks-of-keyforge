@@ -19,6 +19,7 @@ export interface SortableTableHeaderInfo<T> {
     sortable?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transform?: (data: T) => any
+    width?: number
 }
 
 interface SortableTableProps<T> {
@@ -42,38 +43,40 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
         const {headers} = this.props
 
         return (
-            <Table size={"small"}>
-                <TableHead>
-                    <TableRow>
-                        {headers.map(header => (
-                            <TableCell key={header.title}>
-                                {header.property != null && header.sortable ? (
-                                    <TableSortLabel
-                                        active={store.activeTableSort === header.property}
-                                        direction={store.tableSortDir}
-                                        onClick={store.changeSortHandler(header.property)}
-                                    >
-                                        {header.title}
-                                    </TableSortLabel>
-                                ) : (
-                                    <>{header.title}</>
-                                )}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {store.sortedItems.map((datum, idx) => (
-                        <TableRow key={idx}>
+            <div style={{overflowX: "auto"}}>
+                <Table size={"small"}>
+                    <TableHead>
+                        <TableRow>
                             {headers.map(header => (
-                                <TableCell key={header.title}>
-                                    {header.transform == null ? datum[header.property!] : header.transform(datum)}
+                                <TableCell key={header.title} style={{width: header.width}}>
+                                    {header.property != null && header.sortable ? (
+                                        <TableSortLabel
+                                            active={store.activeTableSort === header.property}
+                                            direction={store.tableSortDir}
+                                            onClick={store.changeSortHandler(header.property)}
+                                        >
+                                            {header.title}
+                                        </TableSortLabel>
+                                    ) : (
+                                        <>{header.title}</>
+                                    )}
                                 </TableCell>
                             ))}
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHead>
+                    <TableBody>
+                        {store.sortedItems.map((datum, idx) => (
+                            <TableRow key={idx}>
+                                {headers.map(header => (
+                                    <TableCell key={header.title}>
+                                        {header.transform == null ? datum[header.property!] : header.transform(datum)}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         )
     }
 }

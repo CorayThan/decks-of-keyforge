@@ -33,12 +33,12 @@ export class MyDokPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Notifications" to={MyDokSubPaths.notifications} value={MyDokSubPaths.notifications}/>
                     </Tabs>
                 </AppBar>
-                <div style={{padding: spacing(4), display: "flex", justifyContent: "center"}}>
-                        <Switch>
-                            <Route path={MyDokSubPaths.profile} component={MyProfile}/>
-                            <Route path={MyDokSubPaths.offers} component={MyOffersView}/>
-                            <Route path={MyDokSubPaths.notifications} component={MyNotifications}/>
-                        </Switch>
+                <div style={{padding: spacing(4)}}>
+                    <Switch>
+                        <Route path={MyDokSubPaths.profile} component={MyProfile}/>
+                        <Route path={MyDokSubPaths.offers} component={MyOffersView}/>
+                        <Route path={MyDokSubPaths.notifications} component={MyNotifications}/>
+                    </Switch>
                 </div>
             </div>
         )

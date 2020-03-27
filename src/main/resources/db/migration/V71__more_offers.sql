@@ -2,7 +2,9 @@ ALTER TABLE deck_listing
     ADD COLUMN accepting_offers BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE offer
-    ADD COLUMN expires_in_days INT4 NOT NULL DEFAULT 3;
+    ADD COLUMN expires_time TIMESTAMP;
+
+CREATE INDEX offer_expires_idx ON offer(expires_time);
 
 UPDATE deck_listing
 SET accepting_offers = FALSE;

@@ -6,28 +6,40 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("${Api.base}/offers/secured")
+@RequestMapping("${Api.base}/offers")
 class OfferEndpoints(
         val offerService: OfferService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/make-offer")
+    @PostMapping("/secured/make-offer")
     fun makeOffer(@RequestBody makeOffer: MakeOffer)
             = offerService.makeOffer(makeOffer.deckListingId, makeOffer.amount, makeOffer.message, makeOffer.expireInDays)
 
-    @PostMapping("/cancel/{id}")
+    @PostMapping("/secured/cancel/{id}")
     fun cancel(@PathVariable id: UUID) = offerService.cancelOffer(id)
 
-    @GetMapping("/has-offers-to-view")
+    @PostMapping("/secured/accept/{id}")
+    fun accept(@PathVariable id: UUID) = offerService.acceptOffer(id)
+
+    @PostMapping("/secured/reject/{id}")
+    fun reject(@PathVariable id: UUID) = offerService.rejectOffer(id)
+
+    @PostMapping("/secured/archive/{id}/{archive}")
+    fun archive(@PathVariable id: UUID, @PathVariable archive: Boolean) = offerService.archiveOffer(id, archive)
+
+    @GetMapping("/secured/has-offers-to-view")
     fun hasOffersToView() = offerService.hasOffersToView()
 
-    @GetMapping("/my-offers")
-    fun myOffers(@RequestHeader(value = "Timezone") offsetMinutes: Int) = offerService.findMyOffers(offsetMinutes)
+    @GetMapping("/secured/{id}")
+    fun findOffer(@RequestHeader(value = "Timezone") offsetMinutes: Int, @PathVariable id: UUID) = offerService.findOffer(offsetMinutes, id)
+
+    @GetMapping("/secured/my-offers")
+    fun myOffers(@RequestHeader(value = "Timezone") offsetMinutes: Int, @RequestParam("include-archived") includeArchived: Boolean)
+            = offerService.findMyOffers(offsetMinutes, includeArchived)
 
     @PostMapping("/for-deck/{deckListingId}")
     fun offersForDeckListing(@PathVariable deckListingId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int)
             = offerService.offersForDeckListing(offsetMinutes, deckListingId)
-
 }

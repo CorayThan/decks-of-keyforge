@@ -12,7 +12,7 @@ import coraythan.keyswap.thirdpartyservices.CrucibleTrackerApi
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
-import net.javacrumbs.shedlock.core.SchedulerLock
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -59,7 +59,7 @@ class DeckWinsService(
     }
 
     @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
-    @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastForString = lockUpdateWinsLosses, lockAtMostForString = lockUpdateWinsLosses)
+    @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastFor = lockUpdateWinsLosses, lockAtMostFor = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 
         try {
@@ -87,7 +87,7 @@ class DeckWinsService(
     }
 
     @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses)
-    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastForString = lockUpdatePageOfWinLosses, lockAtMostForString = lockUpdatePageOfWinLosses)
+    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastFor = lockUpdatePageOfWinLosses, lockAtMostFor = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 
         try {

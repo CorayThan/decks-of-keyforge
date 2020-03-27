@@ -17,6 +17,7 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
     open-in-view: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     platform: POSTGRESQL
     url: jdbc:postgresql://${RDS_HOSTNAME:127.0.0.1}:5432/${RDS_DB_NAME:keyswap}

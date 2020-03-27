@@ -1,7 +1,10 @@
 package coraythan.keyswap.emails
 
+import coraythan.keyswap.auctions.offers.OfferRepo
+import coraythan.keyswap.config.AppLinks
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
+import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.roundToOneSigDig
@@ -9,9 +12,11 @@ import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.mail.internet.InternetAddress
 
 @Service
@@ -20,6 +25,8 @@ class EmailService(
         private val keyUserService: KeyUserService,
         private val passwordResetCodeService: PasswordResetCodeService,
         private val currentUserService: CurrentUserService,
+        private val offerRepo: OfferRepo,
+        private val links: AppLinks,
         @Value("\${env}")
         private val env: Env
 ) {
@@ -37,7 +44,7 @@ class EmailService(
                     "You've been outbid in the auction for ${deck.name}!",
                     """
                     <div>
-                        You've been outbid in the auction for ${makeLink("/decks/${deck.keyforgeId}", deck.name)}.
+                        You've been outbid in the auction for ${links.deckLink(deck)}.
                     </div>
                     <br>
                     <br>
@@ -63,7 +70,7 @@ class EmailService(
                     "Some chose Buy It Now for ${deck.name}!",
                     """
                     <div>
-                        Someone else has purchased the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)}, for which you were the highest bidder.
+                        Someone else has purchased the deck ${links.deckLink(deck)}, for which you were the highest bidder.
                     </div>
                 """.trimIndent()
             )
@@ -72,15 +79,21 @@ class EmailService(
         }
     }
 
-    fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int, currencySymbol: String) {
-        try {
+    fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int) {
+        val currencySymbol = seller.currencySymbol
+        val shippingCost = seller.shippingCost
+    try {
             sendEmail(
                     seller.primaryEmail,
                     "${deck.name} has sold on auction!",
                     """
                     <div>
-                        ${buyer.username} has won the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} for $currencySymbol$price plus any shipping
-                        listed in the auction description.
+                        ${buyer.username} has won the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
                     </div>
                     <br>
                     <br>
@@ -99,15 +112,71 @@ class EmailService(
                     "You have won the auction for ${deck.name}!",
                     """
                     <div>
-                        You have won the deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} for $currencySymbol$price plus any shipping listed in
-                        the auction description.
+                        You have won the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
                     </div>
                     <br>
                     <br>
                     <div>
                         You can reply to this email to contact the seller, or use any listed seller contact information on the
-                        ${makeLink("/decks?completedAuctions=true&forAuction=true&title=${deck.name}", "auction")}
+                        ${links.deckCompletedAuctions(deck.name)}
+                    </div>
+                """.trimIndent(),
+                    seller.primaryEmail
+            )
+        } catch (e: Exception) {
+            log.warn("Couldn't send deck sold email to buyer for ${seller.primaryEmail}", e)
+        }
+    }
 
+    fun sendBoughtNowEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int) {
+        val currencySymbol = seller.currencySymbol
+        val shippingCost = seller.shippingCost
+        try {
+            sendEmail(
+                    seller.primaryEmail,
+                    "${deck.name} has sold!",
+                    """
+                    <div>
+                        ${buyer.username} has purchased the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        You can reply to this email to contact the buyer.
+                    </div>
+                """.trimIndent(),
+                    buyer.primaryEmail
+            )
+        } catch (e: Exception) {
+            log.warn("Couldn't send deck sold email to seller for ${seller.primaryEmail}", e)
+        }
+        try {
+            sendEmail(
+                    buyer.primaryEmail,
+                    "You have purchased ${deck.name}!",
+                    """
+                    <div>
+                        You have purchased the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        You can reply to this email to contact the seller.
                     </div>
                 """.trimIndent(),
                     seller.primaryEmail
@@ -123,7 +192,7 @@ class EmailService(
                 "Your deck for auction ${deck.name} did not sell",
                 """
                     <div>
-                        The minimum bid for ${makeLink("/decks/${deck.keyforgeId}", deck.name)} was not met before the end of the auction.
+                        The minimum bid for ${links.deckLink(deck)} was not met before the end of the auction.
                     </div>
                 """.trimIndent()
         )
@@ -137,7 +206,7 @@ class EmailService(
                     """
                 <div>
                     Use this link to reset your password. It will expire in 24 hours.
-                    ${makeLink("/reset-password/$resetCode", "Reset Password")}
+                    ${links.resetPassword(resetCode)}
                 </div>
             """.trimIndent()
             )
@@ -154,7 +223,7 @@ class EmailService(
                 """
                 <div>
                     Use this link to verify your email:
-                    ${makeLink("/verify-email/$resetCode", "Verify Email")}
+                    ${links.verifyEmail(resetCode)}
                 </div>
             """.trimIndent()
         )
@@ -171,12 +240,12 @@ class EmailService(
 
             log.info("Sending deck listed notification.")
             sendEmail(
-                    recipient.email,
+                    recipient.primaryEmail,
                     "\"$queryName\" matches a deck listed on Decks of KeyForge",
                     """
                     <div>
                         <div>
-                            The deck ${makeLink("/decks/${deck.keyforgeId}", deck.name)} matches the query "$queryName" you've set up to
+                            The deck ${links.deckLink(deck)} matches the query "$queryName" you've set up to
                             email you whenever a deck is listed for sale.
                         </div>
                         <br>
@@ -191,7 +260,7 @@ class EmailService(
                         ${this.makeDeckStats(deck)}
                         <br>
                         <div>
-                            To turn off these notifications login to Decks of KeyForge and go to your ${makeLink("/my-profile", "profile")}.
+                            To turn off these notifications login to Decks of KeyForge and go to your ${links.myProfile()}.
                         </div>
                     </div>
                 """.trimIndent()
@@ -204,19 +273,27 @@ class EmailService(
 
     fun sendMessageToSeller(sellerMessage: SellerMessage) {
 
+        val emailSender = currentUserService.loggedInUserOrUnauthorized()
+
         val seller = keyUserService.findUserByUsername(sellerMessage.username)
                 ?: throw BadRequestException("Couldn't find user with username ${sellerMessage.username}")
-        val email = seller.sellerEmail ?: seller.email
+        val email = seller.primaryEmail
 
 
-        val senderUsername = sellerMessage.senderUsername
+        val senderUsername = emailSender.username
         val deckKeyforgeId = sellerMessage.deckKeyforgeId
         val deckName = sellerMessage.deckName
         val ccSender = seller.sellerEmail != null
-        val senderEmail = sellerMessage.senderEmail
+        val senderEmail = emailSender.primaryEmail
         val message = sellerMessage.message
 
-        val emailContents = deckMessageEmailContent(senderUsername, deckKeyforgeId, deckName, ccSender, senderEmail, message)
+        val messageStart = """
+                        $senderUsername has sent you a message about
+                        ${links.deckLink(deckKeyforgeId, deckName)}, which you have listed for sale or trade on
+                        ${links.homePage()}
+        """.trimIndent()
+
+        val emailContents = userToUserEmailContent(messageStart, senderUsername, ccSender, senderEmail, message)
         sendEmail(
                 email,
                 "$deckName has a message on Decks of KeyForge",
@@ -233,18 +310,141 @@ class EmailService(
         }
     }
 
-    private fun deckMessageEmailContent(senderUsername: String, deckKeyforgeId: String, deckName: String, ccSender: Boolean, senderEmail: String, message: String) =
+    fun sendOfferReceivedEmail(deck: Deck, amount: Int, seller: KeyUser) {
+        val currencySymbol = seller.currencySymbol
+        val message = """
+                    <div>
+                        <div>
+                            You've received an offer of ${currencySymbol}${amount} for ${links.deckLink(deck)}! 
+                            View your ${links.offersLink()} on DoK to accept or reject this offer.
+                        </div>
+                        <br>
+                        <br>
+                        <div>
+                            You can stop future offer notifications for this deck by canceling its sale ${links.deckLink(deck)}
+                        </div>
+                    </div>
+                """.trimIndent()
+
+        sendEmail(
+                seller.primaryEmail,
+                "You've received an offer of ${currencySymbol}${amount} for ${deck.name}",
+                message
+        )
+    }
+
+    fun sendOfferMessage(offerId: UUID, message: String) {
+
+        val emailSender = currentUserService.loggedInUserOrUnauthorized()
+        val offer = offerRepo.findByIdOrNull(offerId) ?: throw IllegalStateException("No offer for ${offerId}")
+
+        val isOfferRecipient = offer.recipient.id == emailSender.id
+        val isOfferSender = offer.sender.id == emailSender.id
+
+        val emailRecipient = when {
+            isOfferRecipient -> offer.sender
+            isOfferSender -> offer.recipient
+            else -> throw UnauthorizedException("You must be the sender or recipient of an offer to send an email about it.")
+        }
+
+        val ccSender = emailRecipient.sellerEmail != null
+        val deckKeyforgeId = offer.auction.deck.keyforgeId
+        val deckName = offer.auction.deck.name
+        val senderUsername = emailSender.username
+        val senderEmail = emailSender.primaryEmail
+
+        log.info("message: ${message}")
+
+        val messageStart = """
+            $senderUsername has sent you a message about ${if (isOfferSender) "their" else "your"} offer of ${offer.offerDetailsReadable()} 
+            to buy ${links.deckLink(deckKeyforgeId, deckName)}.
+            <br>
+            <br>
+            ${if (offer.message.isBlank()) "" else "The message that came with the offer is: \"${offer.message}\""}
+            <br>
+            <br>
+            View offers to and from you on your ${links.offersLink()}.
+        """.trimMargin()
+
+        val emailContents = userToUserEmailContent(messageStart, senderUsername, ccSender, senderEmail, message)
+        sendEmail(
+                emailRecipient.primaryEmail,
+                "$deckName has a message about an offer on DoK",
+                emailContents,
+                senderEmail,
+                ccEmail = if (ccSender) senderEmail else null
+        )
+        if (!ccSender) {
+            sendEmail(
+                    senderEmail,
+                    "We sent this email about an offer for $deckName",
+                    emailContents
+            )
+        }
+    }
+
+    fun sendOfferAcceptedEmail(deck: Deck, offerSender: KeyUser, seller: KeyUser, amount: Int) {
+        val currencySymbol = seller.currencySymbol
+        val shippingCost = seller.shippingCost
+        val message = """
+                    <div>
+                        <div>
+                            Your offer for ${links.deckLink(deck)} has been accepted! 
+                            You have agreed to pay ${currencySymbol}${amount} plus shipping.
+                            Reply to this email to arrange payment and shipment of your deck.
+                        </div>
+                        <br>
+                        <br>
+                        <div>
+                            The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
+                        </div>
+                        <br>
+                        <br>
+                        <div>
+                            You can stop future offer notifications by canceling offers you've made on your ${links.offersLink()}
+                        </div>
+                    </div>
+                """.trimIndent()
+
+        sendEmail(
+                offerSender.primaryEmail,
+                "Your offer for ${deck.name} has been accepted!",
+                message,
+                seller.primaryEmail,
+                seller.primaryEmail
+        )
+    }
+
+    fun sendOfferRejectedEmail(deck: Deck, recipient: KeyUser, acceptedDifferent: Boolean = false, seller: KeyUser, amount: Int) {
+        val currencySymbol = seller.currencySymbol
+        sendEmail(
+                recipient.primaryEmail,
+                "Your offer for ${deck.name} has been turned down",
+                """
+                    <div>
+                        <div>
+                            Your offer of $currencySymbol${amount} for ${links.deckLink(deck)} has been turned down. ${if (acceptedDifferent) "The seller accepted a different offer." else ""}
+                        </div>
+                        <br>
+                        <br>
+                        <div>
+                            You can stop future offer rejected notifications by canceling offers you've made on your ${links.offersLink()}
+                        </div>
+                    </div>
+                """.trimIndent()
+        )
+    }
+
+    private fun userToUserEmailContent(messageStart: String, senderUsername: String, ccSender: Boolean, senderEmail: String, message: String) =
             """
                 <div>
                     <div>
-                        $senderUsername has sent you a message about
-                        ${makeLink("/decks/$deckKeyforgeId", deckName)}, which you have listed for sale or trade on
-                        ${makeLink("", "decksofkeyforge.com")}
+                        $messageStart
                     </div>
                     <br>
                     <div>
                         ${if (ccSender) {
-                "We have included $senderUsername on this email since you have a public sellers email. You "
+                "We have included $senderUsername on this email since you have a public contact email. You "
             } else {
                 "We have not given $senderUsername your email address, but you "
             }}
@@ -259,14 +459,12 @@ class EmailService(
                     <br>
                     <i>
                         To ensure it's possible to contact sellers about decks they've listed for sale or trade, we allow users to send you
-                        an email through our service if the listing doesn't have an external link listed. We do not give them your email address without permission.
+                        an email through our service. We do not give them your email address without permission.
                         If you have any concerns or comments please contact us at
                         <a href="mailto:decksofkeyforge@gmail.com">decksofkeyforge@gmail.com</a>
                     </i>
                 </div>
             """.trimIndent()
-
-    private fun makeLink(path: String, name: String) = "<a href=\"${env.baseUrl}$path\">$name</a>"
 
     private fun sendEmail(email: String, subject: String, content: String, replyTo: String? = null, ccEmail: String? = null) {
         val mimeMessage = emailSender.createMimeMessage()

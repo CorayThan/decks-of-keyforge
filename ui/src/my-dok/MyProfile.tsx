@@ -392,7 +392,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                         ) : null}
                                         <Grid item={true} xs={12} sm={6}>
                                             <TextField
-                                                label={"public sellers email"}
+                                                label={"public contact email"}
                                                 value={this.sellerEmail}
                                                 onChange={(event: EventValue) => this.sellerEmail = event.target.value}
                                                 fullWidth={true}

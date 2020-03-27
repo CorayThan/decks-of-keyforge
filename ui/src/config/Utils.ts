@@ -48,7 +48,14 @@ export class Utils {
 
     static epochSecondsToDate = (epochSeconds: number) => format(fromUnixTime(epochSeconds), "MMM d, yyyy")
 
-    static formatDate = (date: string) => format(Utils.parseLocalDate(date), "MMM d, yyyy")
+    static formatDate = (date: string) => {
+        try {
+            return format(Utils.parseLocalDate(date), "MMM d, yyyy")
+        } catch (e) {
+            log.warn("Couldn't parse date from " + date)
+            return "bad date"
+        }
+    }
 
     static parseLocalDate = (date: string) => parse(date, Utils.localDateFormat, new Date())
 
