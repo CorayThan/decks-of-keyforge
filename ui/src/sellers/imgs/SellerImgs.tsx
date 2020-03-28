@@ -28,7 +28,7 @@ sellerImgs.set("abtabdn".toLowerCase(), abtabdn)
 sellerImgs.set("JusticeBlinded".toLowerCase(), justiceBlinded)
 sellerImgs.set("musicgal", musicgal)
 sellerImgs.set("robotrob3", robotrob3)
-sellerImgs.set("Septumus", septumus)
+sellerImgs.set("septumus", septumus)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())
