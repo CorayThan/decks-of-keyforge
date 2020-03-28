@@ -17,5 +17,5 @@ export const ViewTheoreticalDeck = observer(() => {
         return <Loader/>
     }
 
-    return <DeckViewFullView deck={theoreticalDeckStore.deck}/>
+    return <DeckViewFullView deck={theoreticalDeckStore.deck} fake={true}/>
 })

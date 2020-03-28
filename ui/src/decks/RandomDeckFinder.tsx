@@ -2,6 +2,7 @@ import { ListItem, ListItemText } from "@material-ui/core"
 import { MenuItemProps } from "@material-ui/core/MenuItem"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { closeAllMenuStoresExcept } from "../components/KeyTopbar"
 import { LinkInfo } from "../generic/LinkMenu"
 import { deckStore } from "./DeckStore"
 
@@ -23,6 +24,7 @@ export class RandomDeckMenuItem extends React.Component<MenuItemProps> {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         this.props.onClick({} as any)
                     }
+                    closeAllMenuStoresExcept()
                 }}
             >
                 <ListItemText primary={"I Feel Lucky"}/>

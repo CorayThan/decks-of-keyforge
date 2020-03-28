@@ -262,7 +262,7 @@ const RatingRow = (props: { value: number, name: string, operator?: string, size
         largeText = "h3"
         smallText = "h5"
         smallFontSize = undefined
-        smallTextMarginBottom = undefined
+        smallTextMarginBottom = 4
         width = 52
     } else if (size === DeckScoreSize.SMALL) {
         largeText = "body2"

@@ -13,6 +13,13 @@ export enum Expansion {
     MM = 512,
 }
 
+export const possibleCardExpansionsForExpansion = (exp: Expansion): Expansion[] => {
+   return [Expansion.COTA, Expansion.AOA, Expansion.WC, Expansion.ANOM]
+       .filter(possibleExpansion => (
+           possibleExpansion <= exp || (exp === Expansion.WC && possibleExpansion === Expansion.ANOM)
+       ))
+}
+
 export enum BackendExpansion {
     CALL_OF_THE_ARCHONS = "CALL_OF_THE_ARCHONS",
     AGE_OF_ASCENSION = "AGE_OF_ASCENSION",

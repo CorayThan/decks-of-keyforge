@@ -26,6 +26,7 @@ export class ScreenStore {
         rightMenu: 11000,
         menuPops: 12000,
         cardsDisplay: 13000,
+        tooltip: 14000
     }
 
     constructor() {

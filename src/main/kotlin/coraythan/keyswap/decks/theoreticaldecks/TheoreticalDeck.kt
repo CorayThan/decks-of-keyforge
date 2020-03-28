@@ -13,6 +13,8 @@ data class TheoreticalDeck(
         @Type(type = "org.hibernate.type.TextType")
         val cardIds: String = "",
 
+        val houseNamesString: String = "",
+
         @Id
         val id: UUID = UUID.randomUUID()
 )

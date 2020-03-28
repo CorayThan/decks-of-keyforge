@@ -11,9 +11,9 @@ export class SelectedExpansion {
     @observable
     onlyThisExpansion = false
 
-    constructor(expansions?: BackendExpansion[]) {
+    constructor(expansions?: BackendExpansion[], selectFinal?: boolean) {
         if (expansions && expansions.length > 0) {
-            this.expansion = expansions[0]
+            this.expansion = expansions[selectFinal ? (expansions.length - 1) : 0]
         }
     }
 

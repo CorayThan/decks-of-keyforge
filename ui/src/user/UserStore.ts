@@ -164,6 +164,13 @@ export class UserStore {
             })
     }
 
+    removeManualPatreonTier = (username: string) => {
+        axios.post(`${UserStore.SECURE_CONTEXT}/remove-patron/${username}`)
+            .then(() => {
+                messageStore.setSuccessMessage(`Removed manual patron from ${username}`)
+            })
+    }
+
     setManualPatreonTier = (username: string, tier: PatreonRewardsTier, expiresInDays?: number) => {
         axios.post(`${UserStore.SECURE_CONTEXT}/set-patron/${username}/${tier}/${expiresInDays == null ? "" : expiresInDays}`)
             .then(() => {
@@ -318,9 +325,18 @@ export class UserStore {
     }
 
     @computed
+    get theoreticalDecksAllowed(): boolean {
+        if (this.user) {
+            log.debug("patron level: " + findPatronRewardLevel(this.user.patreonTier))
+            return findPatronRewardLevel(this.user.patreonTier) > 0
+        }
+        return false
+    }
+
+    @computed
     get deckNotificationsAllowed(): boolean {
         if (this.user) {
-            return findPatronRewardLevel(this.user.patreonTier) > 0
+            return findPatronRewardLevel(this.user.patreonTier) > 1
         }
         return false
     }

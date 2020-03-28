@@ -85,6 +85,9 @@ const makeTheme = () => createMuiTheme({
             fontFamily: TextConfig.TITLE
         },
     },
+    zIndex: {
+        tooltip: screenStore.zindexes.tooltip
+    }
 })
 
 export let theme = makeTheme()

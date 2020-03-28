@@ -18,6 +18,7 @@ import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { log } from "../config/Utils"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
@@ -49,6 +50,7 @@ interface DeckViewSmallProps {
     hideActions?: boolean
     forceNarrow?: boolean
     style?: React.CSSProperties
+    fake?: boolean
 }
 
 export const standardDeckViewWidth = 704
@@ -57,6 +59,7 @@ export const standardDeckViewWidth = 704
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
         const {deck, fullVersion, hideActions, forceNarrow, style} = this.props
+        log.info("fake: " + hideActions)
         const {
             id, keyforgeId, name, wishlistCount, funnyCount,
             forSale, forTrade, forAuction, registered, owners

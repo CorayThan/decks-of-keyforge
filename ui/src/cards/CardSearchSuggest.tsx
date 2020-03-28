@@ -350,6 +350,7 @@ const SingleCardSearchSuggestInner = observer((props: SingleCardSearchSuggestPro
                 onChange={handleSingleChange}
                 isMulti={false}
                 placeholder={placeholder}
+                autoFocus={true}
             />
         </div>
     )

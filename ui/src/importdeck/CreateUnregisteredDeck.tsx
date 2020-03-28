@@ -12,7 +12,7 @@ import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
-import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
+import { BackendExpansion, expansionInfoMap, possibleCardExpansionsForExpansion } from "../expansions/Expansions"
 import { KeyCard } from "../generic/KeyCard"
 import { House, HouseLabel } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -43,6 +43,9 @@ class SaveUnregisteredDeckStore {
             return false
         }
         const entries = Object.entries(this.currentDeck!.cards)
+        if (entries.length !== 3) {
+            return false
+        }
         let valid = true
         entries.forEach((value: [string, string[]]) => {
             if (value[1].length !== 12) {
@@ -190,6 +193,14 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
 export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: string[], expansion: BackendExpansion }> {
     render() {
         const cards = this.props.cards.map(cardName => cardStore.fullCardFromCardName(cardName) as KCard)
+        const searchSuggestCardNames = Array.from(new Set(cardStore.cardNamesForExpansion!.flatMap(forExp => {
+            const validExpansions = possibleCardExpansionsForExpansion(expansionInfoMap.get(this.props.expansion)!.expansionNumber)
+            if (validExpansions.includes(expansionInfoMap.get(forExp.expansion)!.expansionNumber)) {
+                return forExp.names
+            } else {
+                return []
+            }
+        })))
         return (
             <div style={{display: "flex", flexDirection: "column", width: 240}}>
                 <HouseLabel title={true} house={this.props.house}/>
@@ -213,7 +224,7 @@ export class DisplayCardsInHouseEditable extends React.Component<{ house: House,
                         card={saveUnregisteredDeckStore.addCardHandler(this.props.house)}
                         style={{marginTop: spacing(2)}}
                         placeholder={"Add Card"}
-                        names={cardStore.cardNamesForExpansion!.find(forExp => forExp.expansion === this.props.expansion)!.names}
+                        names={searchSuggestCardNames}
                     />
                 ) : null}
             </div>

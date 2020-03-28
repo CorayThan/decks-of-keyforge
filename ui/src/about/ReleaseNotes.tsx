@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.15"
+export const latestVersion = "4.16"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,26 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.16"}
+                    date={"3/27/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Offers on decks for sale!",
+                            note: "You can now choose to receive offers on decks you've listed for sale. After doing so, users can send you offers " +
+                                "through the DoK system. They will be able to see previously made offer amounts, so they know when it isn't " +
+                                "worth sending an offer that is less than what you've already passed on. You can accept and reject offers " +
+                                "from your offers page, under the new \"My DoK\" menu."
+                        },
+                        {
+                            highlight: "Theoretically better decks",
+                            note: "Theoretical decks have been improved so their new, shorter urls can actually be saved and shared. It's also easier " +
+                                "to make them, and not lose your work while doing so. Additionally, you can create them with legacy cards. " +
+                                "I've also switched these to be a $1 a month patron feature."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.15"}
                     date={"2/27/2020"}

@@ -3,7 +3,6 @@ package coraythan.keyswap.cards
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
-import coraythan.keyswap.House
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.expansions.Expansion
@@ -175,7 +174,8 @@ class CardService(
             }
             .toMap()
 
-    fun findByExpansionCardNameHouse(expansion: Int, cardName: String, house: House) = cardRepo.findByExpansionAndCardTitleAndHouse(expansion, cardName, house)
+    fun findByExpansionCardName(expansion: Int, cardName: String) = cardRepo.findByExpansionAndCardTitle(expansion, cardName).firstOrNull()
+    fun findByCardName(cardName: String) = cardRepo.findByCardTitleAndMaverickFalse(cardName).firstOrNull()
 
     fun previousInfo(): Map<String, Card> {
         if (previousInfoWithNames == null) {

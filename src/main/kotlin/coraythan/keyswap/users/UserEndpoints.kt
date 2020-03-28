@@ -44,6 +44,9 @@ class UserEndpoints(
     fun setManualPatronTier(@PathVariable username: String, @PathVariable tier: PatreonRewardsTier)
             = userService.makeManualPatron(username, tier)
 
+    @PostMapping("/secured/remove-patron/{username}")
+    fun setManualPatronTier(@PathVariable username: String) = userService.makeManualPatron(username, null)
+
     @PostMapping("/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
 

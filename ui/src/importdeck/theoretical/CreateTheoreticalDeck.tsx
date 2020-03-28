@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Button, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
@@ -9,31 +9,70 @@ import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { activeExpansions, BackendExpansion } from "../../expansions/Expansions"
 import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
+import { HelperText } from "../../generic/CustomTypographies"
 import { KeyCard } from "../../generic/KeyCard"
 import { House } from "../../houses/House"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
+import { userStore } from "../../user/UserStore"
 import { DisplayCardsInHouseEditable, saveUnregisteredDeckStore } from "../CreateUnregisteredDeck"
 import { CardsInHouses } from "../SaveUnregisteredDeck"
 import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 
 export const CreateTheoreticalDeck = observer(() => {
 
-    const [expansionStore] = useState(new SelectedExpansion(activeExpansions))
-    const [housesStore] = useState(new SelectedHouses([House.Dis, House.Logos, House.Shadows], 3))
+    const [expansionStore] = useState(new SelectedExpansion(activeExpansions, true))
+    const [housesStore] = useState(new SelectedHouses([House.Dis, House.Logos, House.Shadows]))
+
+    const resetDeck = () => {
+        const cards: CardsInHouses = {}
+        housesStore.getHousesSelectedTrue().forEach(house => cards[house] = [])
+        saveUnregisteredDeckStore.currentDeck = {
+            name: "The One that Theoretically Exists",
+            cards,
+            expansion: expansionStore.currentExpansionOrDefault()
+        }
+    }
 
     useEffect(() => {
         theoreticalDeckStore.savedDeckId = undefined
+        resetDeck()
     }, [])
+
+    useEffect(() => {
+        resetDeck()
+    }, [expansionStore.currentExpansionOrDefault()])
+
+    useEffect(() => {
+        const oldCards: CardsInHouses = saveUnregisteredDeckStore.currentDeck?.cards!
+        const cards: CardsInHouses = {}
+        const houses = housesStore.getHousesSelectedTrue()
+        houses.forEach(house => {
+            if (oldCards[house] == null) {
+                cards[house] = []
+            } else if (houses.includes(house)) {
+                cards[house] = oldCards[house]
+            }
+        })
+        saveUnregisteredDeckStore.currentDeck = {
+            name: "The One that Theoretically Exists",
+            cards,
+            expansion: expansionStore.currentExpansionOrDefault()
+        }
+    }, [housesStore.getHousesSelectedTrue()])
 
     if (cardStore.allCards.length === 0) {
         return <Loader/>
     }
 
+    if (!userStore.loginInProgress && !userStore.theoreticalDecksAllowed) {
+        return <Typography>Please become a $1 a month or more patron to create theoretical decks!</Typography>
+    }
+
     const savedDeckId = theoreticalDeckStore.savedDeckId
     if (savedDeckId) {
-        return <Redirect to={Routes.theoreticalDeckPage(savedDeckId)} />
+        return <Redirect to={Routes.theoreticalDeckPage(savedDeckId)}/>
     }
 
     return (
@@ -46,6 +85,9 @@ export const CreateTheoreticalDeck = observer(() => {
                     <HouseSelect style={{marginBottom: spacing(4)}} selectedHouses={housesStore}/>
                 </div>
                 <CreateTheoreticalDeckBuilder expansion={expansionStore.currentExpansionOrDefault()} houses={housesStore.getHousesSelectedTrue()}/>
+                <Button onClick={resetDeck} style={{marginRight: spacing(2)}}>
+                    Reset
+                </Button>
                 <KeyButton
                     variant={"contained"}
                     color={"primary"}
@@ -69,6 +111,10 @@ export const CreateTheoreticalDeck = observer(() => {
                         Add test cards
                     </KeyButton>
                 )}
+                <HelperText style={{marginTop: spacing(2)}}>Changing the expansion will reset your cards.</HelperText>
+                <HelperText style={{marginTop: spacing(1)}}>
+                    After clicking view you can use the URL to share or save the theoretical deck. It will not be searchable.
+                </HelperText>
             </div>
         </div>
     )
@@ -76,21 +122,7 @@ export const CreateTheoreticalDeck = observer(() => {
 
 const CreateTheoreticalDeckBuilder = observer((props: { expansion: BackendExpansion, houses: House[] }) => {
 
-    const {expansion, houses} = props
-
-    useEffect(() => {
-        const cards: CardsInHouses = {}
-        houses.forEach(house => cards[house] = [])
-        saveUnregisteredDeckStore.currentDeck = {
-            name: "The One that Theoretically Exists",
-            cards,
-            expansion
-        }
-
-        return () => {
-            saveUnregisteredDeckStore.currentDeck = undefined
-        }
-    }, [expansion, houses.toString()])
+    const {expansion} = props
 
     if (saveUnregisteredDeckStore.currentDeck == null) {
         return null

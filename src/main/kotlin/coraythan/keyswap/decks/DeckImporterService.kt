@@ -350,11 +350,11 @@ class DeckImporterService(
     private fun makeBasicDeckFromUnregisteredDeck(unregisteredDeck: SaveUnregisteredDeck): Pair<Deck, List<Card>> {
         val cards = unregisteredDeck.cards.flatMap { entry ->
             entry.value.map {
-                val cards = cardService.findByExpansionCardNameHouse(unregisteredDeck.expansion.expansionNumber, it, entry.key)
-                if (cards.isEmpty()) {
-                    throw BadRequestException("There is no card with expansion ${unregisteredDeck.expansion.expansionNumber} name $it and house ${entry.key}")
-                }
-                cards[0]
+                val card: Card = cardService.findByExpansionCardName(unregisteredDeck.expansion.expansionNumber, it)
+                        ?: cardService.findByCardName(it)
+                        ?: throw BadRequestException("Couldn't find card with expansion ${unregisteredDeck.expansion.expansionNumber} name $it and house ${entry.key}")
+
+                card.copy(house = entry.key)
             }
         }
         return Deck(
@@ -431,7 +431,7 @@ class DeckImporterService(
         return ratedDeck
     }
 
-    private fun rateDeck(deck: Deck): Deck {
+    fun rateDeck(deck: Deck): Deck {
         val cards = cardService.cardsForDeck(deck)
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards)
 

@@ -5,6 +5,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
+import { closeAllMenuStoresExcept, MenuStoreName } from "../components/KeyTopbar"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { deckStore } from "../decks/DeckStore"
@@ -41,9 +42,13 @@ export class LinkMenuStore {
 
     anchorElRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
 
+    constructor(private name: MenuStoreName) {
+    }
+
     handleOpen = () => {
         this.buttonIsHovered = true
         this.open = true
+        closeAllMenuStoresExcept(this.name)
     }
     handleClose = () => {
         this.buttonIsHovered = false

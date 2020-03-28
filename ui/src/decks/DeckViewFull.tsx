@@ -74,10 +74,15 @@ class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
     }
 }
 
-@observer
-export class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInfo }> {
+interface DeckViewFullViewProps {
+    deck: DeckWithSynergyInfo
+    fake?: boolean
+}
 
-    constructor(props: { deck: DeckWithSynergyInfo }) {
+@observer
+export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
+
+    constructor(props: DeckViewFullViewProps) {
         super(props)
         const deck = props.deck.deck
         uiStore.setTopbarValues("Deck", "Deck", "")
@@ -96,12 +101,13 @@ export class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInf
     setTopBarValues = () => uiStore.setTopbarValues(this.props.deck.deck.name, "Deck", "")
 
     render() {
-        const deck = this.props.deck
+        const {deck, fake} = this.props
+
         const {saleInfo} = deckStore
         let saleInfoComponent = null
         if (saleInfo) {
             saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
-        } else {
+        } else if (!fake) {
             saleInfoComponent = <Loader/>
         }
 
@@ -111,7 +117,7 @@ export class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInf
             inner = (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                     <ExtraDeckStatsView deck={deck.deck}/>
-                    <DeckViewSmall deck={deck.deck} fullVersion={true}/>
+                    <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake}/>
                     <DeckStatsView deck={deck.deck}/>
                     {saleInfoComponent}
                     <DeckSynergiesInfoView
@@ -126,7 +132,7 @@ export class DeckViewFullView extends React.Component<{ deck: DeckWithSynergyInf
                 <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
                     <ExtraDeckStatsView deck={deck.deck}/>
                     <div style={wrapperStyle}>
-                        <DeckViewSmall deck={deck.deck} fullVersion={true} style={{marginTop: 0}}/>
+                        <DeckViewSmall deck={deck.deck} fullVersion={true} style={{marginTop: 0}} hideActions={fake}/>
                         <DeckStatsView deck={deck.deck}/>
                     </div>
                     <div style={wrapperStyle}>

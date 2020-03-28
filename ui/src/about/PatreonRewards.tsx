@@ -67,6 +67,7 @@ export class PatreonRewards extends React.Component {
                             "That warm and fuzzy feeling that comes from supporting something cool.",
                             "List decks for sale or trade for up to 1 year.",
                             "Dark mode",
+                            "Create Theoretical Decks"
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>

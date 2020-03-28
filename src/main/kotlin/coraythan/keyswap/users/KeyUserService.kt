@@ -94,8 +94,6 @@ class KeyUserService(
 
     fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
-    fun findByAnyEmail(email: String) = userRepo.findByEmailIgnoreCase(email) ?: userRepo.findBySellerEmailIgnoreCase(email)
-
     fun updateUserProfile(update: UserProfileUpdate) {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val userAllowsTrades = user.allowsTrades
@@ -180,7 +178,7 @@ class KeyUserService(
         userRepo.setUserType(role, username)
     }
 
-    fun makeManualPatron(username: String, tier: PatreonRewardsTier, expiresInDays: Long? = null) {
+    fun makeManualPatron(username: String, tier: PatreonRewardsTier?, expiresInDays: Long? = null) {
         currentUserService.adminOrUnauthorized()
         if (expiresInDays == null) {
             userRepo.makeManualPatron(tier, username)

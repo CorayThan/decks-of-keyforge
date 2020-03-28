@@ -1,8 +1,9 @@
-import { Button, ListItem, ListItemText, Popover, TextField, Typography } from "@material-ui/core"
+import { Button, ListItem, ListItemText, Popover, TextField, Tooltip, Typography } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
+import { closeAllMenuStoresExcept } from "../components/KeyTopbar"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -68,6 +69,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
 
     handlePopoverClose = () => {
         deckImportPopStore.popOpen = false
+        closeAllMenuStoresExcept()
     }
 
     render() {
@@ -119,18 +121,32 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                         <div
                             style={{marginBottom: spacing(2), display: "flex"}}
                         >
-                            <LinkButton
-                                to={Routes.createTheoreticalDeck}
-                                color={"primary"}
-                                onClick={() => deckImportPopStore.popOpen = false}
-                                style={{marginRight: spacing(2)}}
+                            <Tooltip
+                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $1 a month patron to create theoretical decks!"}
+                                style={{zIndex: screenStore.zindexes.tooltip}}
                             >
-                                Create Theoretical Deck
-                            </LinkButton>
+                                <div>
+                                    <LinkButton
+                                        to={Routes.createTheoreticalDeck}
+                                        color={"primary"}
+                                        onClick={() => {
+                                            closeAllMenuStoresExcept()
+                                            deckImportPopStore.popOpen = false
+                                        }}
+                                        style={{marginRight: spacing(2)}}
+                                        disabled={!userStore.theoreticalDecksAllowed}
+                                    >
+                                        Create Theoretical Deck
+                                    </LinkButton>
+                                </div>
+                            </Tooltip>
                             {userStore.loggedIn() ? (
                                 <LinkButton
                                     to={Routes.importUnregisteredDeck}
-                                    onClick={() => deckImportPopStore.popOpen = false}
+                                    onClick={() => {
+                                        closeAllMenuStoresExcept()
+                                        deckImportPopStore.popOpen = false
+                                    }}
                                 >
                                     Import Unregistered Deck
                                 </LinkButton>

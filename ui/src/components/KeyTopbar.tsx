@@ -53,6 +53,45 @@ const myDeckLinks = () => [
     {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
 ]
 
+export enum MenuStoreName {
+    DECKS,
+    MY_DECKS,
+    CARDS,
+    STATS,
+    ABOUT,
+    MY_DOK
+}
+
+const decksMenuStore = new LinkMenuStore(MenuStoreName.DECKS)
+const myDecksMenuStore = new LinkMenuStore(MenuStoreName.MY_DECKS)
+const cardsMenuStore = new LinkMenuStore(MenuStoreName.CARDS)
+const statsMenuStore = new LinkMenuStore(MenuStoreName.STATS)
+const aboutMenuStore = new LinkMenuStore(MenuStoreName.ABOUT)
+const myDokMenuStore = new LinkMenuStore(MenuStoreName.MY_DOK)
+
+export const closeAllMenuStoresExcept = (except?: MenuStoreName) => {
+    const closeThese: LinkMenuStore[] = []
+    if (except !== MenuStoreName.DECKS) {
+        closeThese.push(decksMenuStore)
+    }
+    if (except !== MenuStoreName.MY_DECKS) {
+        closeThese.push(myDecksMenuStore)
+    }
+    if (except !== MenuStoreName.CARDS) {
+        closeThese.push(cardsMenuStore)
+    }
+    if (except !== MenuStoreName.STATS) {
+        closeThese.push(statsMenuStore)
+    }
+    if (except !== MenuStoreName.ABOUT) {
+        closeThese.push(aboutMenuStore)
+    }
+    if (except !== MenuStoreName.MY_DOK) {
+        closeThese.push(myDokMenuStore)
+    }
+    closeThese.forEach(toClose => toClose.handleClose())
+}
+
 @observer
 class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
 
@@ -96,7 +135,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                 ]}
                                 style={{margin: spacing(1)}}
                                 dropdownOnly={true}
-                                linkMenuStore={new LinkMenuStore()}
+                                linkMenuStore={decksMenuStore}
                             />
                             {userStore.loggedIn() && (
                                 <>
@@ -105,7 +144,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                         links={myDeckLinks()}
                                         style={{margin: spacing(1)}}
                                         dropdownOnly={true}
-                                        linkMenuStore={new LinkMenuStore()}
+                                        linkMenuStore={myDecksMenuStore}
                                     />
                                     <MyDokDropdown/>
                                 </>
@@ -219,8 +258,6 @@ class RightMenu extends React.Component {
     }
 }
 
-export const deckMenuStore = new LinkMenuStore()
-
 const AppLinks = observer(() => (
     <>
         <LinkMenu
@@ -231,7 +268,7 @@ const AppLinks = observer(() => (
                 randomDeckMenuItem,
             ]}
             style={{margin: spacing(1)}}
-            linkMenuStore={deckMenuStore}
+            linkMenuStore={decksMenuStore}
         >
             <DeckImportPop/>
         </LinkMenu>
@@ -246,7 +283,7 @@ const AppLinks = observer(() => (
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
             ]}
             style={{margin: spacing(1)}}
-            linkMenuStore={new LinkMenuStore()}
+            linkMenuStore={cardsMenuStore}
         />
         {screenStore.smallScreenTopBar() ? (
             <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
@@ -268,7 +305,7 @@ const AppLinks = observer(() => (
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
             style={{margin: spacing(1)}}
-            linkMenuStore={new LinkMenuStore()}
+            linkMenuStore={statsMenuStore}
         />
         {screenStore.smallScreenTopBar() ? (
             <>
@@ -322,7 +359,7 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
                 ]}
                 style={{margin: spacing(1)}}
-                linkMenuStore={new LinkMenuStore()}
+                linkMenuStore={aboutMenuStore}
             />
         )}
     </>
@@ -344,7 +381,7 @@ class UserLinks extends React.Component {
                         genericOnClick={rightMenuStore.close}
                         links={myDeckLinks()}
                         style={{margin: spacing(1)}}
-                        linkMenuStore={new LinkMenuStore()}
+                        linkMenuStore={myDecksMenuStore}
                     />
                     <ListItemLink
                         to={Routes.myProfile}
@@ -405,7 +442,7 @@ class UserLinksDesktop extends React.Component {
                         genericOnClick={rightMenuStore.close}
                         links={myDeckLinks()}
                         style={{margin: spacing(1)}}
-                        linkMenuStore={new LinkMenuStore()}
+                        linkMenuStore={myDecksMenuStore}
                     />
                     <MyDokDropdown/>
                     <LinkButton
@@ -459,7 +496,7 @@ const MyDokDropdown = () => (
         ]}
         style={{margin: spacing(1)}}
         dropdownOnly={true}
-        linkMenuStore={new LinkMenuStore()}
+        linkMenuStore={myDokMenuStore}
     />
 )
 

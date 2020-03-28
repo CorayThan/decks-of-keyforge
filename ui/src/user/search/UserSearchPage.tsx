@@ -33,7 +33,7 @@ import { useLocation } from "react-router-dom"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { SortOrder } from "../../config/Utils"
+import { log, SortOrder } from "../../config/Utils"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
 import { PatreonRewardsTier, patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
@@ -174,10 +174,13 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                     {userStore.isAdmin && (
                         <>
                             <FormControl style={{width: 120, marginRight: spacing(2)}}>
-                                <InputLabel>Role</InputLabel>
+                                <InputLabel id={"user-role-label"}>Role</InputLabel>
                                 <Select
+                                    labelId={"user-role-label"}
                                     value={role}
-                                    onChange={event => store.role = event.target.value as (UserType | "")}
+                                    onChange={event => {
+                                        store.role = event.target.value as (UserType | "")
+                                    }}
                                 >
                                     <MenuItem value={""}/>
                                     <MenuItem value={UserType.USER}>User</MenuItem>
@@ -186,10 +189,14 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                 </Select>
                             </FormControl>
                             <FormControl style={{width: 120, marginRight: spacing(2)}}>
-                                <InputLabel>Manual Patreon</InputLabel>
+                                <InputLabel id={"manual-patron-label"}>Manual Patreon</InputLabel>
                                 <Select
-                                    value={role}
-                                    onChange={event => store.manualPatreonTier = event.target.value as (PatreonRewardsTier | "")}
+                                    labelId={"manual-patron-label"}
+                                    value={manualPatreonTier}
+                                    onChange={event => {
+                                        log.info("Set manual patron tier to " + event.target.value)
+                                        store.manualPatreonTier = event.target.value as (PatreonRewardsTier | "")
+                                    }}
                                 >
                                     <MenuItem value={""}/>
                                     <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains</MenuItem>
@@ -387,7 +394,7 @@ class AddPatreonStore {
     open = false
 
     @observable
-    tier = PatreonRewardsTier.SUPPORT_SOPHISTICATION
+    tier: PatreonRewardsTier | "" = PatreonRewardsTier.SUPPORT_SOPHISTICATION
 
     @observable
     expiresInDays = "90"
@@ -395,7 +402,7 @@ class AddPatreonStore {
 }
 
 const AddPatreon = observer((props: { username: string }) => {
-    const [store] = React.useState(new AddPatreonStore());
+    const [store] = React.useState(new AddPatreonStore())
 
     return (
         <div>
@@ -413,6 +420,7 @@ const AddPatreon = observer((props: { username: string }) => {
                             value={store.tier}
                             onChange={event => store.tier = event.target.value as PatreonRewardsTier}
                         >
+                            <MenuItem value={""}>Remove</MenuItem>
                             <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains $1</MenuItem>
                             <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>Purchases the Paradigm $5</MenuItem>
                             <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>Merchant Aembermaker $10</MenuItem>
@@ -434,7 +442,11 @@ const AddPatreon = observer((props: { username: string }) => {
                         onClick={() => {
                             const expiresAsNumber = Number(store.expiresInDays)
                             const realExpires = expiresAsNumber < 1 ? undefined : expiresAsNumber
-                            userStore.setManualPatreonTier(props.username, store.tier, realExpires)
+                            if (store.tier === "") {
+                                userStore.removeManualPatreonTier(props.username)
+                            } else {
+                                userStore.setManualPatreonTier(props.username, store.tier, realExpires)
+                            }
                             store.open = false
                         }}
                         color="primary"
