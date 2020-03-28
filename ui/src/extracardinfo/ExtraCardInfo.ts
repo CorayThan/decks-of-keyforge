@@ -26,9 +26,9 @@ export interface ExtraCardInfo {
     otherMax?: number
 
     /**
-     * In seconds since epoch
+     * In Zoned Date Time format
      */
-    published: number
+    published: string
     publishedDate: string
 
     traits: SynTraitValue[]

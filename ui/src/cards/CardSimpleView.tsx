@@ -383,14 +383,14 @@ export const CardSynergies = (props: { card: KCard }) => (
 const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string }) => {
     const {card, combo, title} = props
     const {extraCardInfo} = card
-    const {traits, synergies, published} = extraCardInfo
+    const {traits, synergies, publishedDate} = extraCardInfo
     return (
         <>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             <div style={{display: "flex", alignItems: "flex-end"}}>
                 <Typography color={"textPrimary"} variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
-                {title && published && (
-                    <Typography color={"textPrimary"} variant={"subtitle2"}>{Utils.epochSecondsToDate(published)}</Typography>
+                {title && publishedDate && (
+                    <Typography color={"textPrimary"} variant={"subtitle2"}>{Utils.formatDate(publishedDate)}</Typography>
                 )}
             </div>
             <AercForCard card={card} realValue={combo}/>

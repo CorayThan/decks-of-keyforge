@@ -11,6 +11,7 @@ import neverOutGamed from "./never-out-gamed.png"
 import tiggerClone from "./protoman.jpg"
 import reapout from "./reapout.jpg"
 import robotrob3 from "./robotrob3.png"
+import septumus from "./septumuslogo.png"
 import ttc from "./ttc.jpg"
 
 export const sellerImgs: Map<string, string> = new Map()
@@ -27,6 +28,7 @@ sellerImgs.set("abtabdn".toLowerCase(), abtabdn)
 sellerImgs.set("JusticeBlinded".toLowerCase(), justiceBlinded)
 sellerImgs.set("musicgal", musicgal)
 sellerImgs.set("robotrob3", robotrob3)
+sellerImgs.set("Septumus", septumus)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

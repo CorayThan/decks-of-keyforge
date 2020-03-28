@@ -1,5 +1,5 @@
 import * as Bowser from "bowser"
-import { fromUnixTime, getMinutes, setMinutes, startOfMinute } from "date-fns"
+import { getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
 import * as loglevel from "loglevel"
@@ -29,7 +29,9 @@ try {
 
 export class Utils {
 
+    private static readonly readableDateFormat = "MMM d, yyyy"
     static readonly localDateFormat = "yyyy-MM-dd"
+    static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
     @observable
@@ -46,11 +48,13 @@ export class Utils {
         return re.test(String(email).toLowerCase())
     }
 
-    static epochSecondsToDate = (epochSeconds: number) => format(fromUnixTime(epochSeconds), "MMM d, yyyy")
+    static formatZonedDateTimeToDate = (date: string) => {
+        return format(Utils.parseZonedDateTime(date), Utils.readableDateFormat)
+    }
 
     static formatDate = (date: string) => {
         try {
-            return format(Utils.parseLocalDate(date), "MMM d, yyyy")
+            return format(Utils.parseLocalDate(date), Utils.readableDateFormat)
         } catch (e) {
             log.warn("Couldn't parse date from " + date)
             return "bad date"
@@ -58,6 +62,7 @@ export class Utils {
     }
 
     static parseLocalDate = (date: string) => parse(date, Utils.localDateFormat, new Date())
+    static parseZonedDateTime = (date: string) => parse(date, Utils.zonedDateTimeFormat, new Date())
 
     static nowDateString = () => format(new Date(), Utils.localDateFormat)
 

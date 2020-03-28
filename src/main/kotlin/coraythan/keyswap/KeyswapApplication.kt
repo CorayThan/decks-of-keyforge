@@ -26,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.filter.ShallowEtagHeaderFilter
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.sql.DataSource
 
@@ -42,6 +43,11 @@ class KeyswapApplication() {
         val objectMapper = configureJackson(Jackson2ObjectMapperBuilder.json())
 
         private fun configureJackson(builder: Jackson2ObjectMapperBuilder): ObjectMapper {
+            val zonedDateTimeSer = object : StdSerializer<ZonedDateTime>(ZonedDateTime::class.java) {
+                override fun serialize(value: ZonedDateTime, gen: JsonGenerator, provider: SerializerProvider) {
+                    gen.writeString(value.format(TimeUtils.zonedDateTimeFormatter))
+                }
+            }
             val dateSer = object : StdSerializer<LocalDate>(LocalDate::class.java) {
                 override fun serialize(value: LocalDate, gen: JsonGenerator, provider: SerializerProvider) {
                     gen.writeString(value.format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -55,6 +61,7 @@ class KeyswapApplication() {
             return builder
                     .modulesToInstall(
                             JavaTimeModule()
+                                    .addSerializer(zonedDateTimeSer)
                                     .addSerializer(dateSer)
                                     .addDeserializer(LocalDate::class.java, dateDeser)
                     )

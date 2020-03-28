@@ -85,6 +85,7 @@ data class ExtraCardInfo(
         get() = published?.toLocalDate()
 
     fun readyForCreate(version: Int): ExtraCardInfo {
+        now().toString()
         return this.copy(
                 created = now(),
                 updated = now(),
