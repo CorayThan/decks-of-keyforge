@@ -35,6 +35,10 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun updatePatronTier(tier: PatreonRewardsTier?, userId: UUID)
 
     @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.patreonTier = null, keyUser.patreonId = null WHERE keyUser.id = ?1")
+    fun removePatreon(userId: UUID)
+
+    @Modifying
     @Query("UPDATE KeyUser keyUser SET keyUser.manualPatreonTier = ?1 WHERE keyUser.username = ?2")
     fun makeManualPatron(tier: PatreonRewardsTier?, username: String)
 

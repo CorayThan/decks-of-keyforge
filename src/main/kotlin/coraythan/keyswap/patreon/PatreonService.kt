@@ -98,7 +98,15 @@ class PatreonService(
         )
 
         val patreonUser = patreonUserResponse.body ?: throw RuntimeException("Didn't get a body from patreon request.")
-        userRepo.save(user.copy(patreonId = patreonUser.data.id))
+        val patreonId = patreonUser.data.id
+        val preExistingPatreonUser = userRepo.findByPatreonId(patreonId)
+
+        if (preExistingPatreonUser != null) {
+            log.info("Removing patreon from ${user.email} due to another user using it.")
+            userRepo.removePatreon(preExistingPatreonUser.id)
+        }
+
+        userRepo.save(user.copy(patreonId = patreonId))
     }
 
     fun saveCreatorAccount(account: PatreonAccount): PatreonAccount {

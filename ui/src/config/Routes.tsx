@@ -196,7 +196,7 @@ const KeyRouter = observer(() => {
                         path={Routes.cards}
                         component={CardSearchPage}
                     />
-                     <Route
+                    <Route
                         path={Routes.decks}
                         component={DeckSearchPage}
                     />
