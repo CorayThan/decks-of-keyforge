@@ -1,6 +1,7 @@
 package coraythan.keyswap.patreon
 
 import com.patreon.PatreonOAuth
+import coraythan.keyswap.config.AppLinks
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
@@ -30,14 +31,15 @@ class PatreonService(
         private val restTemplate: RestTemplate,
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
-        private val patreonAccountRepo: PatreonAccountRepo
+        private val patreonAccountRepo: PatreonAccountRepo,
+        private val appLinks: AppLinks
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val patreonClient = PatreonOAuth(
             patreonClientId,
             patreonSecretKey,
-            "${env.baseUrl}/my-profile"
+            appLinks.myProfileUrl
     )
     private var topPatrons = listOf<String>()
 

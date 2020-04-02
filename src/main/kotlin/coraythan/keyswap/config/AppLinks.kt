@@ -10,8 +10,11 @@ class AppLinks(
         private val env: Env
 ) {
 
+    private val myProfilePath = "/my-dok/my-profile"
+    val myProfileUrl = makeUrlPath(myProfilePath)
+
     fun homePage() = makeLink("", "decksofkeyforge.com")
-    fun myProfile() = makeLink("/my-dok/my-profile", "profile")
+    fun myProfile() = makeLink(myProfilePath, "profile")
     fun verifyEmail(resetCode: String) = makeLink("/verify-email/$resetCode", "Verify Email")
     fun resetPassword(resetCode: String) = makeLink("/reset-password/$resetCode", "Reset Password")
     fun deckCompletedAuctions(name: String) = makeLink("/decks?completedAuctions=true&forAuction=true&title=${name}", "auction")
@@ -19,5 +22,6 @@ class AppLinks(
     fun deckLink(keyforgeId: String, name: String) = makeLink("/decks/$keyforgeId", name)
     fun offersLink() = makeLink("/my-dok/offers", "Offers Page")
 
-    private fun makeLink(path: String, name: String) = "<a href=\"${env.baseUrl}$path\">$name</a>"
+    private final fun makeUrlPath(path: String) = "${env.baseUrl}$path"
+    private fun makeLink(path: String, name: String) = "<a href=\"${makeUrlPath(path)}\">$name</a>"
 }

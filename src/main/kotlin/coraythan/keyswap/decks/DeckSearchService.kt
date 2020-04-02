@@ -42,6 +42,7 @@ class DeckSearchService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
     private val query = JPAQueryFactory(entityManager)
+    private val specialUsers = setOf("coraythan", "randomjoe", "dzky", "zarathustra05").map { it.toLowerCase() }
 
     var deckCount: Long? = null
 
@@ -153,10 +154,7 @@ class DeckSearchService(
                         filters.completedAuctions
                 ))
             } else if (filters.withOwners) {
-                if (!setOf(
-                                "coraythan@gmail.com",
-                                "randomjoe@gmail.com"
-                        ).contains(userHolder.user?.email?.toLowerCase())) {
+                if (!specialUsers.contains(userHolder.user?.username?.toLowerCase())) {
                     throw BadRequestException("You do not have permission to see owners.")
                 }
                 val owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->

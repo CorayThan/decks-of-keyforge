@@ -375,7 +375,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             style={{width: 144}}
                                         />
                                     </div>
-                                    {userStore.username === "Coraythan" ? (
+                                    {userStore.username != null && ["Coraythan", "randomjoe", "dzky", "Zarathustra05"].includes(userStore.username) && (
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -386,7 +386,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             label={<Typography variant={"body2"}>With Owners</Typography>}
                                             style={{width: 144}}
                                         />
-                                    ) : null}
+                                    )}
                                 </Collapse>
                                 <IconButton
                                     onClick={() => keyLocalStorage.updateGenericStorage({showMoreDeckSearchOptions: !keyLocalStorage.genericStorage.showMoreDeckSearchOptions})}>
