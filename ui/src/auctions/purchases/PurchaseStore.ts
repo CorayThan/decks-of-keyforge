@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
+import { deckListingStore } from "../DeckListingStore"
 import { CreatePurchase } from "./CreatePurchase"
 import { Purchases } from "./Purchases"
 
@@ -16,6 +17,7 @@ export class PurchaseStore {
     reportPurchase = (deckName: string, createPurchase: CreatePurchase) => {
         axios.post(`${PurchaseStore.SECURE_CONTEXT}`, createPurchase)
             .then((response: AxiosResponse<CreatePurchaseResult>) => {
+                deckListingStore.findListingsForUser(true)
                 if (response.data.createdOrUpdated) {
                     messageStore.setSuccessMessage(response.data.message)
                 } else {

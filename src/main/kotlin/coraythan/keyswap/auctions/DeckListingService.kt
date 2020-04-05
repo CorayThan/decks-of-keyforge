@@ -399,7 +399,7 @@ class DeckListingService(
                 purchaseRepo.save(preexisting.copy(seller = seller, sellerCountry = seller.country, currencySymbol = seller.currencySymbol))
                 return CreatePurchaseResult(
                         createdOrUpdated = true,
-                        message = "Added you as the seller of ${deck.name}."
+                        message = "Created sale record and removed ${deck.name} from your decks."
                 )
             }
         }

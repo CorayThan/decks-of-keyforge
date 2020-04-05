@@ -267,21 +267,16 @@ export class UserStore {
         return undefined
     }
 
+    /**
+     * Checks seller email first, then normal
+     */
     @computed
-    get sellerEmailVerified(): boolean {
-        if (this.user) {
-            return this.user.sellerEmailVerified
-        }
-        return false
-    }
-
-    @computed
-    get emailForSellingIsVerified(): boolean {
+    get emailIsVerified(): boolean {
         if (this.user) {
             if (this.user.sellerEmail != null) {
                 return this.user.sellerEmailVerified
             }
-            return this.emailVerified
+            return this.user.emailVerified
         }
         return false
     }
@@ -296,7 +291,7 @@ export class UserStore {
 
     @computed
     get canListForSale(): boolean {
-        return this.country != null && this.emailForSellingIsVerified && this.shippingCost != null
+        return this.country != null && this.emailIsVerified && this.shippingCost != null
     }
 
     @computed
@@ -324,10 +319,16 @@ export class UserStore {
         return false
     }
 
+    patronLevelEqualToOrHigher = (tier: PatreonRewardsTier): boolean => {
+        if (this.user) {
+            return findPatronRewardLevel(this.user.patreonTier) >= findPatronRewardLevel(tier)
+        }
+        return false
+    }
+
     @computed
     get theoreticalDecksAllowed(): boolean {
         if (this.user) {
-            log.debug("patron level: " + findPatronRewardLevel(this.user.patreonTier))
             return findPatronRewardLevel(this.user.patreonTier) > 0
         }
         return false

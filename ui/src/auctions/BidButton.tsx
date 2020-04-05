@@ -80,7 +80,7 @@ export class BidButton extends React.Component<BidButtonProps> {
                             type={"number"}
                             onChange={event => this.currentBid = event.target.value}
                             style={{marginBottom: spacing(2)}}
-                            disabled={!userStore.emailVerified}
+                            disabled={!userStore.emailIsVerified}
                         />
                         <Typography variant={"subtitle1"} style={{marginBottom: spacing(2)}}>
                             {currentBid ? (
@@ -118,7 +118,7 @@ export class BidButton extends React.Component<BidButtonProps> {
                         <Button
                             onClick={this.bid}
                             color="primary"
-                            disabled={!userStore.emailForSellingIsVerified}
+                            disabled={!userStore.emailIsVerified}
                         >
                             Bid
                         </Button>

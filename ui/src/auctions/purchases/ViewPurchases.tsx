@@ -10,6 +10,8 @@ import { HelperText } from "../../generic/CustomTypographies"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
+import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
+import { userStore } from "../../user/UserStore"
 import { PurchaseSearchResult, PurchaseUtils } from "./PurchaseSearchResult"
 import { purchaseStore } from "./PurchaseStore"
 
@@ -27,6 +29,14 @@ export const ViewPurchases = observer(() => {
 
     return (
         <div>
+            {!userStore.patron && (
+                <div style={{marginBottom: spacing(4)}}>
+                    <Typography style={{marginBottom: spacing(1)}}>
+                        Become a patron to see more than your 10 most recent purchases or sales!
+                     </Typography>
+                    <PatronButton/>
+                </div>
+            )}
             <PurchasesList
                 name={"My Purchases"}
                 noneMessage={"Buy some decks to see your purchases!"}

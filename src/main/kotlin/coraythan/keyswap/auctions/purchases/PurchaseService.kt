@@ -1,6 +1,7 @@
 package coraythan.keyswap.auctions.purchases
 
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import org.springframework.stereotype.Service
@@ -27,10 +28,14 @@ class PurchaseService(
 
     fun findPurchases(offsetMinutes: Int): Purchases {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
+        val patTier = loggedInUser.realPatreonTier()
+        val limit = patTier == null || patTier.ordinal < PatreonRewardsTier.SUPPORT_SOPHISTICATION.ordinal
         return Purchases(
-                myPurchases = purchaseRepo.findByBuyerId(loggedInUser.id).map { it.toSearchResult(offsetMinutes) },
-                mySales = purchaseRepo.findBySellerId(loggedInUser.id).map { it.toSearchResult(offsetMinutes) }
+                myPurchases = purchaseRepo.findByBuyerId(loggedInUser.id).sortConvertLimit(offsetMinutes, limit),
+                mySales = purchaseRepo.findBySellerId(loggedInUser.id).sortConvertLimit(offsetMinutes, limit)
         )
     }
 
+    private fun List<Purchase>.sortConvertLimit(offsetMinutes: Int, limit: Boolean)
+            = this.sortedByDescending { it.purchasedOn }.map { it.toSearchResult(offsetMinutes) }.take(if (limit) 10 else this.size)
 }

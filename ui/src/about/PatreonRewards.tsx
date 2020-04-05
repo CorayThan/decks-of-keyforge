@@ -64,10 +64,10 @@ export class PatreonRewards extends React.Component {
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "That warm and fuzzy feeling that comes from supporting something cool.",
                             "List decks for sale or trade for up to 1 year.",
                             "Dark mode",
-                            "Create Theoretical Decks"
+                            "Create Theoretical Decks",
+                            "That warm and fuzzy feeling that comes from supporting something cool.",
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
@@ -78,8 +78,9 @@ export class PatreonRewards extends React.Component {
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "Up to 25 deck sale notifications: Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
-                            "List up to five simultaneous auctions. (By default you are only allowed one.)"
+                            "Up to 25 deck sale notifications: Set up to be notified whe never decks that match certain search criteria are listed for sale or trade.",
+                            "List up to five simultaneous auctions. (By default you are only allowed one.)",
+                            "See your full purchase and sale history."
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
@@ -102,13 +103,12 @@ export class PatreonRewards extends React.Component {
                         subtitle={"$25 or more per month"}
                         noDivider={true}
                         infos={[
-                            "This is a limited quantity tier with all the rewards of the $50 a month tier.",
+                            "This is a limited quantity tier.",
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "Join a special major contributor-only channel in the discord.",
-                            "Credit on the contact me about page as a major contributor to the site.",
-                            "Help influence future features of the site.",
+                            "Unlimited simultaneous auctions.",
                             "Up to 50 deck sale notifications.",
-                            "List any number of simultaneous auctions."
+                            "Credit on the contact me about page as a major contributor to the site.",
+                            "Join a special major contributor channel on the discord."
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
@@ -119,7 +119,7 @@ export class PatreonRewards extends React.Component {
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "All lower tier rewards."
+                            "Request a feature to be added or moved up in my TODO list!",
                         ]}
                     />
                 </AboutGridItem>

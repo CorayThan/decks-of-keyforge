@@ -527,7 +527,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         <KeyButton
                             style={{marginLeft: spacing(1)}}
                             onClick={() => this.list(true)}
-                            disabled={!userStore.emailVerified || !forSaleInCountry || (auction && !userStore.canListMoreAuctions)}
+                            disabled={!userStore.emailIsVerified || !forSaleInCountry || (auction && !userStore.canListMoreAuctions)}
                         >
                             {"Save Default"}
                         </KeyButton>

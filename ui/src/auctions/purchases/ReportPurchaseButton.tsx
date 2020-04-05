@@ -12,6 +12,7 @@ import { HelperText } from "../../generic/CustomTypographies"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { purchaseStore } from "./PurchaseStore"
 import { SaleType } from "./SaleType"
 
@@ -47,6 +48,9 @@ export class ReportPurchaseButton extends React.Component<ReportPurchaseButtonPr
 
     render() {
         const {deckId, deckName} = this.props
+        if (!userDeckStore.ownedByMe(deckId)) {
+            return null
+        }
         return (
             <>
                 <MenuItem

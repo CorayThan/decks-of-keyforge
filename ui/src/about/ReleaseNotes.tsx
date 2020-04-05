@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.16"
+export const latestVersion = "4.17"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,26 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.17"}
+                    date={"4/5/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Track sales and purchases",
+                            note: "The site now tracks sales and purchases of decks! Whenever a deck is purchased through auction, buy it now, or accepted " +
+                                "offer, the site will automatically track it for the buyer and seller. If the seller marks a deck as sold in a standard " +
+                                "sale the buyer can report the deck as purchased from the three vertical dots menu on a deck, and the purchase / sale " +
+                                "records will link up as long as the sale amount is listed the same."
+                        },
+                        {
+                            highlight: "Your historical sales and purchases, new $5 a month Patron Feature!",
+                            note: "Anyone can see their most recent 10 sales and purchases. Seeing " +
+                                "all historical sales and purchases is a $5 a month patron feature. Please become a patron for all the awesome (and growing) " +
+                                "exclusive features! "
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.16"}
                     date={"3/27/2020"}

@@ -9,7 +9,7 @@ import { emailStore } from "./EmailStore"
 @observer
 export class SendEmailVerification extends React.Component<{ message: string }> {
     render() {
-        if (userStore.emailForSellingIsVerified) {
+        if (userStore.emailIsVerified) {
             return null
         }
         return (

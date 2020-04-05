@@ -23,11 +23,12 @@ import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { InlineDeckNote } from "../userdeck/DeckNote"
 import { UpdatePrice } from "../userdeck/ListingInfo"
+import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck, DeckUtils } from "./Deck"
 import { SaStars } from "./DeckScoreView"
 import { deckStore } from "./DeckStore"
-import { DeckViewSmall, MoreDeckActions } from "./DeckViewSmall"
+import { DeckViewSmall } from "./DeckViewSmall"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
 interface DeckListViewProps {

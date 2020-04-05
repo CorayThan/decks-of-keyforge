@@ -22,7 +22,7 @@ export class VerifyEmailView extends React.Component<{ verificationCode: string 
     }
 
     componentDidMount(): void {
-        if (!userStore.emailVerified) {
+        if (!userStore.emailIsVerified) {
             userStore.verifyEmail(this.props.verificationCode)
         }
     }
@@ -56,7 +56,7 @@ export class VerifyEmailView extends React.Component<{ verificationCode: string 
 
                             </div>
                         )}
-                        {userStore.emailVerified ? (
+                        {userStore.emailIsVerified ? (
                             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <div>
                                     <Typography variant={"h6"}>

@@ -1,19 +1,15 @@
-import { Collapse, IconButton, Tooltip } from "@material-ui/core"
+import { Collapse, Tooltip } from "@material-ui/core"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
 import List from "@material-ui/core/List/List"
-import Menu from "@material-ui/core/Menu"
-import MenuItem from "@material-ui/core/MenuItem"
 import Typography from "@material-ui/core/Typography/Typography"
-import { MoreVert } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCombos } from "../aerc/AercForCombos"
 import { AercView } from "../aerc/AercViews"
 import { DeckListingStatus } from "../auctions/DeckListingDto"
 import { deckListingStore } from "../auctions/DeckListingStore"
-import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -31,17 +27,15 @@ import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { screenStore } from "../ui/ScreenStore"
-import { userStore } from "../user/UserStore"
-import { DeckNote, InlineDeckNote } from "../userdeck/DeckNote"
+import { InlineDeckNote } from "../userdeck/DeckNote"
 import { OwnersButton } from "../userdeck/OwnersButton"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { DeckActionClickable } from "./buttons/DeckActionClickable"
 import { FunnyDeck } from "./buttons/FunnyDeck"
+import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
 import { Deck, DeckUtils } from "./Deck"
 import { DeckScoreView } from "./DeckScoreView"
-import { deckStore } from "./DeckStore"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 
 interface DeckViewSmallProps {
@@ -287,57 +281,5 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
                     <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={160} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))
             }
         </List>
-    )
-}
-
-export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
-    const {deck, compact} = props
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
-
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    return (
-        <>
-            <IconButton aria-controls="more-deck-actions-menu" aria-haspopup="true" onClick={handleClick}>
-                <MoreVert/>
-            </IconButton>
-            <Menu
-                id={"more-deck-actions-menu"}
-                anchorEl={anchorEl}
-                keepMounted={true}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
-                <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose}/>
-                <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
-                {deck.registered && (
-                    <MenuItem
-                        component={"a"}
-                        href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
-                    >
-                        Master Vault
-                    </MenuItem>
-                )}
-                {userStore.loggedIn() && deck.registered && (
-                    <DeckActionClickable
-                        onClick={() => {
-                            handleClose()
-                            deckStore.refreshDeckScores(deck.keyforgeId)
-                        }}
-                        menuItem={true}
-                    >
-                        Refresh MV Wins
-                    </DeckActionClickable>
-                )}
-            </Menu>
-        </>
     )
 }

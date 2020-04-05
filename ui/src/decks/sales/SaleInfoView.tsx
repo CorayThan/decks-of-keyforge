@@ -96,45 +96,22 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                     </Typography>
                                 )}
                                 {acceptingOffers && (
-                                    <>
-                                        <Typography
-                                            variant={"h5"}
-                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                                        >
-                                            Offer:
-                                        </Typography>
-                                        <Typography
-                                            variant={"h5"}
-                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                                        >
-                                            {highestOffer == null || highestOffer < 1 ? "" : `${currencySymbol}${highestOffer}`}
-                                        </Typography>
-                                        {buyItNow == null ? null : (
-                                            <>
-                                                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                                    BIN:
-                                                </Typography>
-                                                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                                    {currencySymbol}{buyItNow}
-                                                </Typography>
-                                            </>
-                                        )}
-                                    </>
+                                    <TwoPricesDisplay
+                                        currencySymbol={currencySymbol}
+                                        priceOneName={"Offer:"}
+                                        priceOneValue={highestOffer}
+                                        priceTwoName={"BIN:"}
+                                        priceTwoValue={buyItNow}
+                                    />
                                 )}
                                 {forAuction && (
-                                    <>
-                                        <Typography
-                                            variant={"h5"}
-                                            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
-                                        >
-                                            Bid: {currencySymbol}{highestBid ? highestBid : startingBid}
-                                        </Typography>
-                                        {buyItNow == null ? null : (
-                                            <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
-                                                BIN: {currencySymbol}{buyItNow}
-                                            </Typography>
-                                        )}
-                                    </>
+                                    <TwoPricesDisplay
+                                        currencySymbol={currencySymbol}
+                                        priceOneName={"Bid:"}
+                                        priceOneValue={highestBid ? highestBid : startingBid}
+                                        priceTwoName={"BIN:"}
+                                        priceTwoValue={buyItNow}
+                                    />
                                 )}
                             </div>
                             <div>
@@ -310,4 +287,37 @@ export const BuyingDisclaimer = (props: { style?: React.CSSProperties }) => (
     <Typography color={"textSecondary"} style={{fontStyle: "italic", ...props.style}}>
         Decks of KeyForge does not verify the authenticity or trustworthiness of any deck sales. Purchase and trade decks at your own risk.
     </Typography>
+)
+
+const TwoPricesDisplay = (props: {
+    currencySymbol: string,
+    priceOneName: string,
+    priceOneValue?: string | number,
+    priceTwoName: string,
+    priceTwoValue?: string | number
+}) => (
+    <>
+        <Typography
+            variant={"h5"}
+            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+        >
+            {props.priceOneName}
+        </Typography>
+        <Typography
+            variant={"h5"}
+            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+        >
+            {props.priceOneValue == null ? "" : `${props.currencySymbol}${props.priceOneValue}`}
+        </Typography>
+        {props.priceTwoValue != null && (
+            <>
+                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                    {props.priceTwoName}
+                </Typography>
+                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                    {props.priceTwoValue == null ? "" : `${props.currencySymbol}${props.priceTwoValue}`}
+                </Typography>
+            </>
+        )}
+    </>
 )
