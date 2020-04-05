@@ -59,7 +59,7 @@ export class ReportPurchaseButton extends React.Component<ReportPurchaseButtonPr
                     onClose={this.handleClose}
                 >
                     <DialogTitle>
-                        Complete Deck Sale
+                        Report Purchase
                     </DialogTitle>
                     <DialogContent>
                         <TextField

@@ -15,11 +15,11 @@ export class PurchaseStore {
 
     reportPurchase = (deckName: string, createPurchase: CreatePurchase) => {
         axios.post(`${PurchaseStore.SECURE_CONTEXT}`, createPurchase)
-            .then(() => {
-                if (createPurchase.buyerId == null) {
-                    messageStore.setSuccessMessage(`Created sale record and removed ${deckName} from your decks.`)
+            .then((response: AxiosResponse<CreatePurchaseResult>) => {
+                if (response.data.createdOrUpdated) {
+                    messageStore.setSuccessMessage(response.data.message)
                 } else {
-                    messageStore.setSuccessMessage(`Created purchase record for ${deckName}.`)
+                    messageStore.setWarningMessage(response.data.message)
                 }
             })
     }
@@ -34,3 +34,8 @@ export class PurchaseStore {
 }
 
 export const purchaseStore = new PurchaseStore()
+
+interface CreatePurchaseResult {
+    createdOrUpdated: boolean
+    message: string
+}

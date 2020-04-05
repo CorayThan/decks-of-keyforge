@@ -361,13 +361,20 @@ class DeckListingService(
     }
 
     // This being in Purchase Service creates a dependency cycle
-    fun createPurchase(createPurchase: CreatePurchase): CreatePurchaseResult {
+    fun createPurchase(createPurchase: CreatePurchase, verifyNoMatchingPurchases: Boolean = false): CreatePurchaseResult {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
         val deck = deckRepo.findByIdOrNull(createPurchase.deckId) ?: throw BadRequestException("No deck for id ${createPurchase.deckId}")
         val seller = if (createPurchase.sellerId == null) null else userRepo.findByIdOrNull(createPurchase.sellerId)
         val buyer = if (createPurchase.buyerId == null) null else userRepo.findByIdOrNull(createPurchase.buyerId)
         if (seller == null && buyer == null) throw BadRequestException("One of buyer or seller must exist. Seller id: ${createPurchase.sellerId} buyer id: ${createPurchase.buyerId}")
         if (seller?.id != loggedInUser.id && buyer?.id != loggedInUser.id) throw BadRequestException("You must be the buyer or seller! Seller id: ${createPurchase.sellerId} buyer id: ${createPurchase.buyerId}")
+
+        if (verifyNoMatchingPurchases && buyer != null && purchaseRepo.existsByDeckIdAndBuyerId(createPurchase.deckId, buyer.id)) {
+            return  CreatePurchaseResult(
+                    createdOrUpdated = false,
+                    message = "You already have a purchase recorded for ${deck.name}."
+            )
+        }
 
         if (seller == null) {
             // reporting a purchase

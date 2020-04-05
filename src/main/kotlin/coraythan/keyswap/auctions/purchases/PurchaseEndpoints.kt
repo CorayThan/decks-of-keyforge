@@ -15,7 +15,7 @@ class PurchaseEndpoints(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/secured")
-    fun createPurchase(@RequestBody createPurchase: CreatePurchase) = deckListingService.createPurchase(createPurchase)
+    fun createPurchase(@RequestBody createPurchase: CreatePurchase) = deckListingService.createPurchase(createPurchase, createPurchase.sellerId == null)
 
     @GetMapping("/secured")
     fun findPurchases(@RequestHeader(value = "Timezone") offsetMinutes: Int) = purchaseService.findPurchases(offsetMinutes)

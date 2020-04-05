@@ -7,4 +7,5 @@ interface PurchaseRepo : CrudRepository<Purchase, UUID> {
     fun findBySellerId(sellerId: UUID): List<Purchase>
     fun findByBuyerId(buyerId: UUID): List<Purchase>
     fun findByDeckId(deckId: Long): List<Purchase>
+    fun existsByDeckIdAndBuyerId(deckId: Long, buyerId: UUID): Boolean
 }
