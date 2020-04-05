@@ -302,21 +302,20 @@ export class UserStore {
         return undefined
     }
 
-    // TODO delete this when $1 tier works
-    @computed
-    get hasPatronId(): boolean {
-        if (this.user) {
-            return !!this.user.patreonId
-        }
-        return false
-    }
-
     @computed
     get patron(): boolean {
         if (this.user) {
             return !!this.user.patreonTier
         }
         return false
+    }
+
+    @computed
+    get patronTier(): PatreonRewardsTier | undefined {
+        if (this.user) {
+            return this.user.patreonTier
+        }
+        return undefined
     }
 
     patronLevelEqualToOrHigher = (tier: PatreonRewardsTier): boolean => {

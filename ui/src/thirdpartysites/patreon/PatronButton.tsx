@@ -3,6 +3,7 @@ import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { PatreonIcon } from "../../generic/icons/PatreonIcon"
 import { LinkButton } from "../../mui-restyled/LinkButton"
+import { userStore } from "../../user/UserStore"
 
 @observer
 export class PatronButton extends React.Component<{ size?: "small" | "medium" | "large" }> {
@@ -18,7 +19,7 @@ export class PatronButton extends React.Component<{ size?: "small" | "medium" | 
             >
                 <PatreonIcon primary={false}/>
                 <div style={{marginRight: spacing(1)}}/>
-                Become a Patron
+                {userStore.patron ? "Patreon" : "Become a Patron"}
             </LinkButton>
         )
     }

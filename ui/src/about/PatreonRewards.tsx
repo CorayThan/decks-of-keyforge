@@ -5,8 +5,10 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
+import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
 @observer
@@ -21,16 +23,29 @@ export class PatreonRewards extends React.Component {
         return (
             <>
                 <AboutGridItem>
-                    <InfoListCard
-                        title={"Become a Patron"}
-                        infos={[
-                            "Become a patron with Patreon to support the site and gain rewards!",
-                            "All tiers have the benefits of all lower tiers.",
-                            <div style={{paddingTop: spacing(1), display: "flex", justifyContent: "center"}}>
-                                <PatronButton/>
-                            </div>
-                        ]}
-                    />
+                    {userStore.patron ? (
+                        <InfoListCard
+                            title={"Thanks for being a Patron!"}
+                            infos={[
+                                <Typography style={{marginBottom: spacing(2)}}>Patreon tier: {patronRewardLevelName(userStore.patronTier)}</Typography>,
+                                "All tiers have the benefits of all lower tiers.",
+                                <div style={{paddingTop: spacing(1), display: "flex", justifyContent: "center"}}>
+                                    <PatronButton/>
+                                </div>
+                            ]}
+                        />
+                    ) : (
+                        <InfoListCard
+                            title={"Become a Patron"}
+                            infos={[
+                                "Become a patron with Patreon to support the site and gain rewards!",
+                                "All tiers have the benefits of all lower tiers.",
+                                <div style={{paddingTop: spacing(1), display: "flex", justifyContent: "center"}}>
+                                    <PatronButton/>
+                                </div>
+                            ]}
+                        />
+                    )}
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard
                         title={"Accessing your rewards"}

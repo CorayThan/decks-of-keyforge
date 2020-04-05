@@ -10,6 +10,7 @@ import { HelperText } from "../../generic/CustomTypographies"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
+import { PatreonRewardsTier } from "../../thirdpartysites/patreon/PatreonRewardsTier"
 import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../../user/UserStore"
 import { PurchaseSearchResult, PurchaseUtils } from "./PurchaseSearchResult"
@@ -29,10 +30,10 @@ export const ViewPurchases = observer(() => {
 
     return (
         <div>
-            {!userStore.patron && (
+            {!userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
                 <div style={{marginBottom: spacing(4)}}>
                     <Typography style={{marginBottom: spacing(1)}}>
-                        Become a patron to see more than your 10 most recent purchases or sales!
+                        Become a $5+ patron to see more than your 10 most recent purchases or sales!
                      </Typography>
                     <PatronButton/>
                 </div>
