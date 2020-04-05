@@ -43,6 +43,7 @@ export class MyDokSubPaths {
     static profile = MyDokSubPaths.base + "/my-profile"
     static notifications = MyDokSubPaths.base + "/notifications"
     static offers = MyDokSubPaths.base + "/offers"
+    static purchases = MyDokSubPaths.base + "/bought-and-sold"
 }
 
 class Routes {

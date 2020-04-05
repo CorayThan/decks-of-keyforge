@@ -1,6 +1,7 @@
 package coraythan.keyswap.auctions
 
 import coraythan.keyswap.*
+import coraythan.keyswap.auctions.purchases.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
@@ -8,6 +9,7 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
+import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -21,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 
@@ -35,7 +38,10 @@ class DeckListingService(
         private val emailService: EmailService,
         private val forSaleNotificationsService: ForSaleNotificationsService,
         private val userRepo: KeyUserRepo,
-        private val userSearchService: UserSearchService
+        private val userSearchService: UserSearchService,
+        private val purchaseService: PurchaseService,
+        private val purchaseRepo: PurchaseRepo,
+        private val userDeckService: UserDeckService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -48,7 +54,7 @@ class DeckListingService(
             val buyItNowsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.SALE, now())
 
             buyItNowsToComplete.forEach {
-                updateDeckListingStatus(it)
+                removeDeckListingStatus(it)
                 deckListingRepo.delete(it)
             }
 
@@ -228,19 +234,30 @@ class DeckListingService(
 
     fun buyItNow(auctionId: UUID): BidPlacementResult {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val auction = deckListingRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No auction for id $auctionId")
+        val auction = deckListingRepo.findByIdOrNull(auctionId) ?: throw BadRequestException("No sale listing for id $auctionId")
         if (auction.buyItNow == null) throw BadRequestException("Can't buy it now when the auction doesn't have buy it now.")
         if (user.id == auction.seller.id) throw UnauthorizedException("You can't buy your own deck.")
         if (auction.status == DeckListingStatus.COMPLETE) throw BadRequestException("Can't buy it now because it has already sold.")
 
         if (auction.status != DeckListingStatus.AUCTION) {
             // non auction
-            cancelListing(auction.deck.id)
+
+            removeDeckListingStatus(auction)
+
+            deckListingRepo.delete(auction)
+
             emailService.sendBoughtNowEmail(
                     user,
                     auction.seller,
                     auction.deck,
                     auction.buyItNow
+            )
+            purchaseService.savePurchase(
+                    saleType = auction.saleType,
+                    saleAmount = auction.buyItNow,
+                    deck = auction.deck,
+                    seller = auction.seller,
+                    buyer = user
             )
         } else {
             // Auction
@@ -292,16 +309,25 @@ class DeckListingService(
                 boughtNowOn = if (buyItNowUser == null) null else end
         ))
 
-        updateDeckListingStatus(auction, sold)
+        removeDeckListingStatus(auction, sold)
 
         GlobalScope.launch {
             try {
                 if (sold) {
+                    val saleAmount = if (buyItNowUser != null) auction.buyItNow!! else auction.highestBid!!
+                    val buyer = buyItNowUser ?: auction.highestBidder()!!
+                    purchaseService.savePurchase(
+                            saleType = SaleType.AUCTION,
+                            saleAmount = saleAmount,
+                            deck = auction.deck,
+                            seller = auction.seller,
+                            buyer = buyer
+                    )
                     emailService.sendAuctionPurchaseEmail(
-                            buyItNowUser ?: auction.highestBidder()!!,
+                            buyer,
                             auction.seller,
                             auction.deck,
-                            if (buyItNowUser != null) auction.buyItNow!! else auction.highestBid!!
+                            saleAmount
                     )
                 } else {
                     emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck)
@@ -323,7 +349,7 @@ class DeckListingService(
         if (auction.status == DeckListingStatus.AUCTION) {
             if (auction.bids.isNotEmpty()) return false
         }
-        updateDeckListingStatus(auction)
+        removeDeckListingStatus(auction)
         deckListingRepo.delete(auction)
         return true
     }
@@ -334,7 +360,55 @@ class DeckListingService(
                 .map { it.toUserDeckListingInfo() }
     }
 
-    private fun updateDeckListingStatus(listing: DeckListing, sold: Boolean = false) {
+    // This being in Purchase Service creates a dependency cycle
+    fun createPurchase(createPurchase: CreatePurchase): CreatePurchaseResult {
+        val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
+        val deck = deckRepo.findByIdOrNull(createPurchase.deckId) ?: throw BadRequestException("No deck for id ${createPurchase.deckId}")
+        val seller = if (createPurchase.sellerId == null) null else userRepo.findByIdOrNull(createPurchase.sellerId)
+        val buyer = if (createPurchase.buyerId == null) null else userRepo.findByIdOrNull(createPurchase.buyerId)
+        if (seller == null && buyer == null) throw BadRequestException("One of buyer or seller must exist. Seller id: ${createPurchase.sellerId} buyer id: ${createPurchase.buyerId}")
+        if (seller?.id != loggedInUser.id && buyer?.id != loggedInUser.id) throw BadRequestException("You must be the buyer or seller! Seller id: ${createPurchase.sellerId} buyer id: ${createPurchase.buyerId}")
+
+        if (seller == null) {
+            // reporting a purchase
+            val preexisting = purchaseRepo.findByDeckId(createPurchase.deckId)
+                    .filter { it.buyer == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
+                    .minBy { it.purchasedOn }
+            if (preexisting != null) {
+                purchaseRepo.save(preexisting.copy(buyer = buyer, buyerCountry = buyer?.country))
+                return CreatePurchaseResult(
+                        createdOrUpdated = true,
+                        message = "Added you as the buyer of ${deck.name}."
+                )
+            }
+        } else if (buyer == null) {
+            // reporting a sale
+            this.cancelListing(deck.id)
+            userDeckService.markAsOwned(deck.id, false)
+            val preexisting = purchaseRepo.findByDeckId(createPurchase.deckId)
+                    .filter { it.seller == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
+                    .minBy { it.purchasedOn }
+            if (preexisting != null) {
+                purchaseRepo.save(preexisting.copy(seller = seller, sellerCountry = seller.country, currencySymbol = seller.currencySymbol))
+                return CreatePurchaseResult(
+                        createdOrUpdated = true,
+                        message = "Added you as the seller of ${deck.name}."
+                )
+            }
+        }
+
+        purchaseService.savePurchase(createPurchase.saleType, createPurchase.amount, deck, seller, buyer)
+        return CreatePurchaseResult(
+                createdOrUpdated = true,
+                message = if (buyer == null) {
+                    "Created sale record and removed ${deck.name} from your decks."
+                } else {
+                    "Created purchase record for ${deck.name}."
+                }
+        )
+    }
+
+    private fun removeDeckListingStatus(listing: DeckListing, soldOnAuction: Boolean = false) {
         val auctionsForDeck = listing.deck.auctions
         val otherListingsForDeck = auctionsForDeck
                 .filter { it.isActive && it.id != listing.id }
@@ -348,7 +422,7 @@ class DeckListingService(
                 listedOn = if (stillForAuction) listing.deck.listedOn else null,
                 forSale = otherListingsForDeck.isNotEmpty(),
                 forTrade = stillForTrade,
-                completedAuction = sold || listing.deck.completedAuction
+                completedAuction = soldOnAuction || listing.deck.completedAuction
         ))
         userSearchService.scheduleUserForUpdate(listing.seller)
     }

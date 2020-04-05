@@ -17,9 +17,6 @@ export class UserDeckStore {
     @observable
     loadingDecks = false
 
-    @observable
-    viewNotes = false
-
     wishlist = (deckName: string, deckId: number, wishlist: boolean) => {
         this.loadingDecks = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)

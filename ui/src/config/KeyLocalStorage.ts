@@ -23,6 +23,7 @@ interface GenericStorage {
     showMoreDeckSearchOptions?: boolean
     userRows?: number
     agreedToSpoilerCreatureRules?: boolean
+    viewNotes?: boolean
 
     offersSent?: boolean
     offersAccepted?: boolean

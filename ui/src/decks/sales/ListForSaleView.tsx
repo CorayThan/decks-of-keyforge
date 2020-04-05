@@ -17,6 +17,7 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
+import { HelperText } from "../../generic/CustomTypographies"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
@@ -28,6 +29,7 @@ import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { Deck } from "../Deck"
 import { DeckLanguage } from "../DeckLanguage"
+import { SoldButton } from "./SoldButton"
 
 interface ListForSaleViewProps {
     deck: Deck
@@ -252,12 +254,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     >
                         Edit Listing
                     </DeckActionClickable>
-                    <DeckActionClickable
-                        menuItem={menuItem}
-                        onClick={() => deckListingStore.cancel(deck.name, deck.id)}
-                    >
-                        Unlist
-                    </DeckActionClickable>
+                    <SoldButton deck={deck} menuItem={menuItem}/>
                 </>
             )
         } else {
@@ -514,15 +511,15 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         </div>
                         {auction ? (
                             <>
-                                <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
+                                <HelperText style={{marginBottom: spacing(1)}}>
                                     Server instability can prevent users from bidding on an auction. If this significantly impacts the
                                     auction results you may relist the auction with a note in the description explaining why
                                     it was relisted.
-                                </Typography>
-                                <Typography color={"textSecondary"} style={{fontStyle: "italic", marginBottom: spacing(1)}}>
+                                </HelperText>
+                                <HelperText style={{marginBottom: spacing(1)}}>
                                     Auctions are automatically extended 15 minutes when bid upon in the last 15 minutes. You and the winner
                                     will be receive an email when the auction is complete.
-                                </Typography>
+                                </HelperText>
                             </>
                         ) : null}
                     </DialogContent>

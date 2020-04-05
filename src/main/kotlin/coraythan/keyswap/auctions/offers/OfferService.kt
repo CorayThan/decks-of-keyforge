@@ -4,6 +4,8 @@ import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.OfferPlacementResult
+import coraythan.keyswap.auctions.purchases.PurchaseService
+import coraythan.keyswap.auctions.purchases.SaleType
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
@@ -25,7 +27,8 @@ class OfferService(
         private val deckListingService: DeckListingService,
         private val deckListingRepo: DeckListingRepo,
         private val currentUserService: CurrentUserService,
-        private val emailService: EmailService
+        private val emailService: EmailService,
+        private val purchaseService: PurchaseService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -99,6 +102,14 @@ class OfferService(
         offerRepo.save(offer.copy(status = OfferStatus.ACCEPTED))
 
         deckListingService.offerAccepted(offer.auction.deck.id)
+
+        purchaseService.savePurchase(
+                saleType = SaleType.OFFER,
+                saleAmount = offer.amount,
+                deck = offer.auction.deck,
+                buyer = offer.sender,
+                seller = offer.recipient
+        )
 
         emailService.sendOfferAcceptedEmail(offer.auction.deck, offer.sender, offer.recipient, offer.amount)
 

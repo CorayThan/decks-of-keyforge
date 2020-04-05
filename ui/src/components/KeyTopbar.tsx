@@ -492,6 +492,7 @@ const MyDokDropdown = () => (
             {to: Routes.myProfile, text: "My DoK", mobileActive: true},
             {to: Routes.myProfile, text: "Profile", mobileActive: false},
             {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
+            {to: MyDokSubPaths.purchases, text: "Bought / Sold", mobileActive: false},
             {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
         ]}
         style={{margin: spacing(1)}}

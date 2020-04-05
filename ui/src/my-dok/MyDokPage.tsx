@@ -2,6 +2,7 @@ import { AppBar, Tabs } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Route, RouteComponentProps, Switch } from "react-router"
+import { ViewPurchases } from "../auctions/purchases/ViewPurchases"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { MyDokSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
@@ -30,6 +31,7 @@ export class MyDokPage extends React.Component<RouteComponentProps<{}>> {
                     >
                         <LinkTab label="Profile" to={MyDokSubPaths.profile} value={MyDokSubPaths.profile}/>
                         <LinkTab label="Offers" to={MyDokSubPaths.offers} value={MyDokSubPaths.offers}/>
+                        <LinkTab label="Bought / Sold" to={MyDokSubPaths.purchases} value={MyDokSubPaths.purchases}/>
                         <LinkTab label="Notifications" to={MyDokSubPaths.notifications} value={MyDokSubPaths.notifications}/>
                     </Tabs>
                 </AppBar>
@@ -37,6 +39,7 @@ export class MyDokPage extends React.Component<RouteComponentProps<{}>> {
                     <Switch>
                         <Route path={MyDokSubPaths.profile} component={MyProfile}/>
                         <Route path={MyDokSubPaths.offers} component={MyOffersView}/>
+                        <Route path={MyDokSubPaths.purchases} component={ViewPurchases}/>
                         <Route path={MyDokSubPaths.notifications} component={MyNotifications}/>
                     </Switch>
                 </div>

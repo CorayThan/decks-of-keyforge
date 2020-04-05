@@ -2,6 +2,7 @@ package coraythan.keyswap.auctions
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.auctions.offers.Offer
+import coraythan.keyswap.auctions.purchases.SaleType
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckLanguage
 import coraythan.keyswap.generic.Country
@@ -76,6 +77,15 @@ data class DeckListing(
     private fun realMaxBidObject() = bids.sorted().firstOrNull()
     fun realMaxBid() = realMaxBidObject()?.bid
     fun highestBidder() = realMaxBidObject()?.bidder
+
+    val saleType: SaleType
+        get() {
+            return when {
+                acceptingOffers -> SaleType.OFFER
+                bidIncrement != null -> SaleType.AUCTION
+                else -> SaleType.STANDARD
+            }
+        }
 
     val isActive: Boolean
         get() {

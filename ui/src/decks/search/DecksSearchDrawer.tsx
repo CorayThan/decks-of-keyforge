@@ -33,7 +33,6 @@ import { KeyLink } from "../../mui-restyled/KeyLink"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
-import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { deckTableViewStore } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
@@ -221,8 +220,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    checked={userDeckStore.viewNotes}
-                                                    onChange={() => userDeckStore.viewNotes = !userDeckStore.viewNotes}
+                                                    checked={!!keyLocalStorage.genericStorage.viewNotes}
+                                                    onChange={() => {
+                                                        keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
+                                                    }}
                                                     disabled={!showMyDecks}
                                                 />
                                             }

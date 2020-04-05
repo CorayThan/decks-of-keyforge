@@ -16,9 +16,9 @@ import { deckListingStore } from "../auctions/DeckListingStore"
 import { CardsForDeck } from "../cards/CardsForDeck"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log } from "../config/Utils"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
@@ -59,7 +59,6 @@ export const standardDeckViewWidth = 704
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
         const {deck, fullVersion, hideActions, forceNarrow, style} = this.props
-        log.info("fake: " + hideActions)
         const {
             id, keyforgeId, name, wishlistCount, funnyCount,
             forSale, forTrade, forAuction, registered, owners
@@ -148,7 +147,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 )}
                             </div>
                             <DisplayAllCardsByHouse deck={deck} compact={compact}/>
-                            <Collapse in={userDeckStore.viewNotes}>
+                            <Collapse in={keyLocalStorage.genericStorage.viewNotes}>
                                 <InlineDeckNote id={deck.id}/>
                             </Collapse>
                         </CardContent>

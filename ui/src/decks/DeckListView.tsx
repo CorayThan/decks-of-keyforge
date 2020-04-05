@@ -23,7 +23,6 @@ import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { InlineDeckNote } from "../userdeck/DeckNote"
 import { UpdatePrice } from "../userdeck/ListingInfo"
-import { userDeckStore } from "../userdeck/UserDeckStore"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck, DeckUtils } from "./Deck"
 import { SaStars } from "./DeckScoreView"
@@ -123,7 +122,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                 <DeckHeader title={"Synergy"} property={"synergyRating"}/>
                                 <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
                                 <DeckHeader title={"Raw AERC"} property={"aercScore"}/>
-                                {userDeckStore.viewNotes && (
+                                {keyLocalStorage.genericStorage.viewNotes && (
                                     <TableCell>Notes</TableCell>
                                 )}
                                 <DeckHeader title={"A"} property={"amberControl"} tooltip={"Aember Control"}/>
@@ -207,7 +206,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                                         <TableCell>{synergies.synergyRating}</TableCell>
                                         <TableCell>{synergies.antisynergyRating}</TableCell>
                                         <TableCell>{synergies.rawAerc}</TableCell>
-                                        {userDeckStore.viewNotes && (
+                                        {keyLocalStorage.genericStorage.viewNotes && (
                                             <TableCell>
                                                 <div style={{width: 280}}>
                                                     <InlineDeckNote id={deck.id}/>
