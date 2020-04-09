@@ -95,6 +95,9 @@ export class DeckFilters {
         if (queryObject.withOwners != null) {
             queryObject.withOwners = queryObject.withOwners === "true"
         }
+        if (queryObject.teamDecks != null) {
+            queryObject.teamDecks = queryObject.teamDecks === "true"
+        }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const filters = new DeckFilters() as any
@@ -123,6 +126,8 @@ export class DeckFilters {
     forAuction = false
     @observable
     withOwners = false
+    @observable
+    teamDecks = false
     @observable
     completedAuctions = false
     @observable
@@ -159,6 +164,7 @@ export class DeckFilters {
         this.sortDirection = "DESC"
         this.owner = ""
         this.withOwners = false
+        this.teamDecks = false
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

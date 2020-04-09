@@ -1,8 +1,7 @@
-import { Paper } from "@material-ui/core"
+import { Link, Paper } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import React, { useEffect } from "react"
-import { Link } from "react-router-dom"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
@@ -74,7 +73,7 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             title: "Seller",
             sortable: true,
             transform: (purchase) => (
-                <Link to={Routes.userProfilePage(purchase.sellerUsername)}>{purchase.sellerUsername}</Link>
+                <Link href={Routes.userProfilePage(purchase.sellerUsername)}>{purchase.sellerUsername}</Link>
             )
         }
     } else {
@@ -83,7 +82,7 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             title: "Buyer",
             sortable: true,
             transform: (purchase) => (
-                <Link to={Routes.userProfilePage(purchase.buyerUsername)}>{purchase.buyerUsername}</Link>
+                <Link href={Routes.userProfilePage(purchase.buyerUsername)}>{purchase.buyerUsername}</Link>
             )
         }
     }

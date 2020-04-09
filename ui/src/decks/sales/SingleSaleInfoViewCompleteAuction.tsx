@@ -1,10 +1,9 @@
-import { Tooltip } from "@material-ui/core"
+import { Link, Tooltip } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Link } from "react-router-dom"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
@@ -151,7 +150,7 @@ export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInf
                         Deck language: {startCase(language!.toString().toLowerCase())}
                     </Typography>
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                        Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
+                        Listed on {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
                 </div>
             </KeyCard>

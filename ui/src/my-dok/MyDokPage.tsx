@@ -6,6 +6,7 @@ import { ViewPurchases } from "../auctions/purchases/ViewPurchases"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { MyDokSubPaths } from "../config/Routes"
 import { LinkTab } from "../generic/LinkTab"
+import { TeamPage } from "../teams/TeamPage"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { MyNotifications } from "./MyNotifications"
@@ -33,6 +34,7 @@ export class MyDokPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Offers" to={MyDokSubPaths.offers} value={MyDokSubPaths.offers}/>
                         <LinkTab label="Bought / Sold" to={MyDokSubPaths.purchases} value={MyDokSubPaths.purchases}/>
                         <LinkTab label="Notifications" to={MyDokSubPaths.notifications} value={MyDokSubPaths.notifications}/>
+                        <LinkTab label="My Team" to={MyDokSubPaths.team} value={MyDokSubPaths.team}/>
                     </Tabs>
                 </AppBar>
                 <div style={{padding: spacing(4)}}>
@@ -41,6 +43,7 @@ export class MyDokPage extends React.Component<RouteComponentProps<{}>> {
                         <Route path={MyDokSubPaths.offers} component={MyOffersView}/>
                         <Route path={MyDokSubPaths.purchases} component={ViewPurchases}/>
                         <Route path={MyDokSubPaths.notifications} component={MyNotifications}/>
+                        <Route path={MyDokSubPaths.team} component={TeamPage}/>
                     </Switch>
                 </div>
             </div>

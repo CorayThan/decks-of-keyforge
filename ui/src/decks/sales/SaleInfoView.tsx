@@ -1,10 +1,9 @@
-import { Tooltip } from "@material-ui/core"
+import { Link, Tooltip } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Link } from "react-router-dom"
 import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
@@ -268,7 +267,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         </Typography>
                     ) : null}
                     <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                        Listed on {Utils.formatDate(dateListed)} by <Link to={Routes.userProfilePage(username)}>{username}</Link>
+                        Listed on {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
                     {expiresAt != null && !forAuction ? (
                         <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>

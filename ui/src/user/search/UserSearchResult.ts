@@ -15,4 +15,5 @@ export interface UserSearchResult {
     mavericks: number
     anomalies: number
     role: UserType
+    teamName?: string
 }

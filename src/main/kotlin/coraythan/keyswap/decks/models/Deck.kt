@@ -17,6 +17,7 @@ import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import javax.persistence.*
 
@@ -108,6 +109,9 @@ data class Deck(
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
+    val dateAdded: LocalDate?
+        get() = this.importDateTime?.toLocalDate()
+
     fun toDeckSearchResult(
             searchResultCards: List<DeckSearchResultCard>? = null,
             cards: List<Card>? = null,
@@ -173,7 +177,8 @@ data class Deck(
                 sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
                         ?: if (sasRating < 75) 0.0 else 100.0,
 
-                synergies = synergies
+                synergies = synergies,
+                dateAdded = dateAdded
         )
     }
 

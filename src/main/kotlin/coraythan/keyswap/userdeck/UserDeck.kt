@@ -24,6 +24,8 @@ data class UserDeck(
         val funny: Boolean = false,
         val ownedBy: String? = null,
 
+        val teamId: UUID? = null,
+
         /**
          * Only for unregistered decks
          */

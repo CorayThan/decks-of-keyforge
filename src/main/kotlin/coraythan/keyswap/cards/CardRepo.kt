@@ -7,4 +7,5 @@ interface CardRepo : JpaRepository<Card, String>, QuerydslPredicateExecutor<Card
     fun findByMaverickFalse(): List<Card>
     fun findByExpansionAndCardTitle(expansion: Int, cardTitle: String): List<Card>
     fun findByCardTitleAndMaverickFalse(cardTitle: String): List<Card>
+    fun findByCardTitle(cardTitle: String): Boolean
 }

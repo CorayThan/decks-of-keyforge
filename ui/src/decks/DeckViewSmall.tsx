@@ -28,7 +28,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { screenStore } from "../ui/ScreenStore"
 import { InlineDeckNote } from "../userdeck/DeckNote"
-import { OwnersButton } from "../userdeck/OwnersButton"
+import { OwnersList } from "../userdeck/OwnersList"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
@@ -141,6 +141,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 )}
                             </div>
                             <DisplayAllCardsByHouse deck={deck} compact={compact}/>
+                            <OwnersList owners={owners}/>
                             <Collapse in={keyLocalStorage.genericStorage.viewNotes}>
                                 <InlineDeckNote id={deck.id}/>
                             </Collapse>
@@ -164,7 +165,6 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     </KeyLink>
                                 ) : null}
                                 {compact ? null : (<MyDecksButton deck={deck}/>)}
-                                <OwnersButton owners={owners}/>
                                 <div style={{flexGrow: 1}}/>
                                 <div>
                                     <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>

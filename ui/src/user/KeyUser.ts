@@ -65,4 +65,5 @@ export interface KeyUserDto {
     auctionCount: number
     displayCrucibleTrackerWins: boolean
     shippingCost?: string
+    teamName?: string
 }

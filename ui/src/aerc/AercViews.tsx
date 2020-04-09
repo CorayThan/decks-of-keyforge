@@ -1,9 +1,9 @@
-import { Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardType } from "../cards/CardType"
 import { hasAercFromCard, KCard } from "../cards/KCard"
 import { spacing, theme, themeStore } from "../config/MuiConfig"
-import { roundToHundreds, roundToTens } from "../config/Utils"
+import { roundToHundreds, roundToTens, Utils } from "../config/Utils"
 import { Deck, DeckUtils } from "../decks/Deck"
 import { SynergyTrait } from "../extracardinfo/SynergyTrait"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
@@ -259,6 +259,15 @@ export const AercView = (props: {
                     />
                 )}
             </div>
+            {deck.dateAdded != null && (
+                <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>
+                    <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
+                        <Typography variant={"body2"} color={"textSecondary"}>
+                            {Utils.formatDateShort(deck.dateAdded)}
+                        </Typography>
+                    </div>
+                </Tooltip>
+            )}
         </div>
     )
 }

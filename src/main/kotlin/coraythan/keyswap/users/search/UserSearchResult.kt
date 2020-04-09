@@ -1,6 +1,8 @@
 package coraythan.keyswap.users.search
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.teams.Team
 import coraythan.keyswap.users.UserType
 
 data class UserSearchResult(
@@ -16,5 +18,10 @@ data class UserSearchResult(
         val anomalies: Int,
         val role: UserType,
         val patreonTier: PatreonRewardsTier?,
-        val manualPatreonTier: PatreonRewardsTier?
-)
+        val manualPatreonTier: PatreonRewardsTier?,
+
+        @JsonIgnore
+        val team: Team?
+) {
+    val teamName = team?.name
+}

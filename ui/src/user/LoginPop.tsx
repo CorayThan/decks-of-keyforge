@@ -15,7 +15,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
 
     @observable
     popOpen = false
-    anchorElement?: HTMLDivElement
+    anchorElement?: HTMLButtonElement
 
     @observable
     email = Utils.isDev() ? "coraythan@gmail.com" : ""
@@ -44,18 +44,16 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
             return null
         }
         return (
-            <div style={this.props.style}>
-                <div
-                    ref={(ref: HTMLDivElement) => this.anchorElement = ref}
+            <>
+                <Button
+                    ref={(ref: HTMLButtonElement) => this.anchorElement = ref}
+                    variant={"outlined"}
+                    color={"inherit"}
+                    onClick={this.handlePopoverOpen}
+                    style={this.props.style}
                 >
-                    <KeyButton
-                        outlinedWhite={true}
-                        color={"inherit"}
-                        onClick={this.handlePopoverOpen}
-                    >
-                        Sign In
-                    </KeyButton>
-                </div>
+                    Sign In
+                </Button>
                 <Popover
                     open={this.popOpen}
                     onClose={this.handlePopoverClose}
@@ -117,7 +115,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                         </div>
                     </div>
                 </Popover>
-            </div>
+            </>
         )
     }
 }

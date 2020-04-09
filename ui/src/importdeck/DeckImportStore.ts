@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosResponse } from "axios"
 import { sample } from "lodash"
 import { observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
@@ -36,7 +36,8 @@ class DeckImportStore {
             const response = await axiosWithoutErrors.post(DeckImportStore.SECURE_CONTEXT + "/add-unregistered", deck)
             this.newDeckId = response.data
         } catch (error) {
-            const responseData = error.response.data
+            const response: AxiosResponse = error.response
+            const responseData = response.data
             log.debug(`Axios error: ${prettyJson(responseData)}`)
             if (responseData.message.includes("Duplicate deck name")) {
                 messageStore.setWarningMessage("There is already a deck with this name.")

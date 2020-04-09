@@ -138,22 +138,24 @@ class DeckSearchService(
 
         val decks = deckResults.mapNotNull {
             val cards = cardService.cardsForDeck(it)
-            val searchResult = it.toDeckSearchResult(
+            var searchResult = it.toDeckSearchResult(
                     cardService.deckSearchResultCardsFromCardIds(it.cardIds),
                     cards,
                     stats = statsService.findCurrentStats(),
                     crucibleWins = deckWinsService.crucibleWins,
                     synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
+
             if (filters.forSale == true || filters.forTrade || filters.forAuction) {
-                searchResult.copy(deckSaleInfo = saleInfoForDeck(
+                searchResult = searchResult.copy(deckSaleInfo = saleInfoForDeck(
                         searchResult.keyforgeId,
                         timezoneOffsetMinutes,
                         it,
                         userHolder.user,
                         filters.completedAuctions
                 ))
-            } else if (filters.withOwners) {
+            }
+            if (filters.withOwners) {
                 if (!specialUsers.contains(userHolder.user?.username?.toLowerCase())) {
                     throw BadRequestException("You do not have permission to see owners.")
                 }
@@ -168,14 +170,22 @@ class DeckSearchService(
                         }
                     }
                 }
-                if (owners.isEmpty()) {
-                    null
-                } else {
-                    searchResult.copy(owners = owners)
+                if (owners.isNotEmpty()) {
+                    searchResult = searchResult.copy(owners = owners)
                 }
-            } else {
-                searchResult
             }
+            if (filters.teamDecks) {
+                val user = userHolder.user
+                val teamId = user?.team?.id ?: throw BadRequestException("You aren't on a team.")
+                if (user.realPatreonTier() == null) throw BadRequestException("You do not have permission to view team decks.")
+                val owners = userDeckRepo.findByDeckIdAndTeamId(it.id, teamId).mapNotNull { userDeck ->
+                    userDeck.ownedBy
+                }
+                if (owners.isNotEmpty()) {
+                    searchResult = searchResult.copy(owners = owners)
+                }
+            }
+            searchResult
         }
 
         return DecksPage(
@@ -228,6 +238,14 @@ class DeckSearchService(
         if (filters.title.isNotBlank()) {
             filters.title.tokenize().forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
         }
+
+        if (filters.teamDecks) {
+            val teamId = userHolder.user?.team?.id
+            if (teamId != null) {
+                predicate.and(deckQ.userDecks.any().teamId.eq(teamId))
+            }
+        }
+
         if (filters.notes.isNotBlank()) {
             val username = if (filters.notesUser.isNotBlank()) {
                 filters.notesUser

@@ -1,5 +1,7 @@
 package coraythan.keyswap.spoilers
 
+import coraythan.keyswap.cards.CardRepo
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.S3Service
 import coraythan.keyswap.toUrlFriendlyCardTitle
 import coraythan.keyswap.users.CurrentUserService
@@ -13,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile
 class SpoilerService(
         private val spoilerRepo: SpoilerRepo,
         private val s3Service: S3Service,
-        private val currentUserService: CurrentUserService
+        private val currentUserService: CurrentUserService,
+        private val cardRepo: CardRepo
 
 ) {
 
@@ -38,6 +41,10 @@ class SpoilerService(
     fun saveSpoiler(spoiler: Spoiler): Long {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val improvedCardNumber = spoiler.cardNumber?.trim()?.padStart(3, '0')
+        val preexisting = cardRepo.findByCardTitleAndMaverickFalse(spoiler.cardTitle.trim())
+        if (spoiler.reprint && preexisting.isEmpty()) {
+            throw BadRequestException("No card with name ${spoiler.cardTitle}")
+        }
         if (spoiler.id == -1L && improvedCardNumber != null) {
             val exists = spoilerRepo.findByCardNumberAndExpansion(improvedCardNumber, spoiler.expansion)
             if (exists.isNotEmpty()) throw IllegalStateException("A spoiler with id $improvedCardNumber and expansion ${spoiler.expansion} already exists.")
@@ -45,11 +52,12 @@ class SpoilerService(
         val saved = spoilerRepo.save(spoiler.copy(
                 createdById = user.id,
                 cardNumber = improvedCardNumber,
-                cardTitle = spoiler.cardTitle.trim(),
-                armorString = spoiler.armorString.trim(),
-                powerString = spoiler.powerString.trim(),
-                cardText = spoiler.cardText.trim(),
-                frontImage = spoiler.frontImage?.trim()
+                frontImage = spoiler.frontImage?.trim(),
+                cardText = if (preexisting.isEmpty()) spoiler.cardText.trim() else preexisting.first().cardText,
+                powerString = if (preexisting.isEmpty()) spoiler.powerString.trim() else preexisting.first().powerString,
+                armorString = if (preexisting.isEmpty()) spoiler.armorString.trim() else preexisting.first().armorString,
+                cardTitle = if (preexisting.isEmpty()) spoiler.cardTitle.trim() else preexisting.first().cardTitle,
+                cardType = if (preexisting.isEmpty()) spoiler.cardType else preexisting.first().cardType
         ))
         this.cachedSpoilers = null
         return saved.id

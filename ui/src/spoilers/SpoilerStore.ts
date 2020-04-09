@@ -3,6 +3,7 @@ import { observable } from "mobx"
 import { CardFilters } from "../cards/CardFilters"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
+import { BadRequestException } from "../config/Exceptions"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { Spoiler } from "./Spoiler"
@@ -87,13 +88,19 @@ export class SpoilerStore {
 
     saveSpoiler = async (spoiler: Spoiler, noReload?: boolean) => {
         this.savingSpoiler = true
-        const spoilerId: AxiosResponse<number> = await axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
-        this.savingSpoiler = false
-        if (!noReload) {
-            await this.loadAllSpoilers()
+
+        try {
+            const spoilerId: AxiosResponse<number> = await axios.post(`${SpoilerStore.SECURE_CONTEXT}`, spoiler)
+            this.savingSpoiler = false
+            if (!noReload) {
+                await this.loadAllSpoilers()
+            }
+            messageStore.setSuccessMessage("Saved spoiler!", 1000)
+            return spoilerId.data
+        } catch (e) {
+            const response: AxiosResponse<BadRequestException> = e.response
+            messageStore.setWarningMessage(response.data.message)
         }
-        messageStore.setSuccessMessage("Saved spoiler!", 1000)
-        return spoilerId.data
     }
 
     addImageToSpoiler = async (spoilerImage: File, spoilerId: number) => {

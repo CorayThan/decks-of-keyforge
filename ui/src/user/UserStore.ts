@@ -305,7 +305,15 @@ export class UserStore {
     @computed
     get patron(): boolean {
         if (this.user) {
-            return !!this.user.patreonTier
+            return !!this.user.patreonTier || this.user.username === "Coraythan"
+        }
+        return false
+    }
+
+    @computed
+    get hasTeam(): boolean {
+        if (this.user) {
+            return this.user.teamName != null
         }
         return false
     }
@@ -344,6 +352,9 @@ export class UserStore {
     @computed
     get maxNotifications(): number {
         if (this.user) {
+            if (this.user.username === "SweeperArias" && this.deckNotificationsAllowed) {
+                return 100
+            }
             return patronNotificationLimit(this.user.patreonTier)
         }
         return 0

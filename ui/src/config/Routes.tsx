@@ -34,6 +34,7 @@ import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserSearchPage } from "../user/search/UserSearchPage"
 import { userStore } from "../user/UserStore"
+import { KeyLoaderBar } from "./KeyLoaderBar"
 import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 import { serverStatusStore } from "./ServerStatusStore"
@@ -44,6 +45,7 @@ export class MyDokSubPaths {
     static notifications = MyDokSubPaths.base + "/notifications"
     static offers = MyDokSubPaths.base + "/offers"
     static purchases = MyDokSubPaths.base + "/bought-and-sold"
+    static team = MyDokSubPaths.base + "/my-team"
 }
 
 class Routes {
@@ -274,6 +276,7 @@ const KeyRouter = observer(() => {
                     />
                 </Switch>
                 <SnackMessage/>
+                <KeyLoaderBar/>
             </div>
         </BrowserRouter>
     )

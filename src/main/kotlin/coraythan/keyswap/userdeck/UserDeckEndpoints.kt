@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("${Api.base}/userdeck/secured")
 class UserDeckEndpoints(
-        val userDeckService: UserDeckService
+        private val userDeckService: UserDeckService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)

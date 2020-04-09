@@ -12,7 +12,6 @@ import java.util.*
 interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<KeyUser> {
     fun findByEmail(email: String): KeyUser?
     fun findByEmailIgnoreCase(email: String): KeyUser?
-    fun findBySellerEmailIgnoreCase(email: String): KeyUser?
     fun findByUsernameIgnoreCase(username: String): KeyUser?
     fun findByApiKey(apiKey: String): KeyUser?
     fun findByPatreonId(patreonId: String): KeyUser?
@@ -21,6 +20,10 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun findByRemoveManualPatreonTierNotNull(): List<KeyUser>
 
     fun findTop100ByUpdateStatsTrue(): List<KeyUser>
+
+    @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.team = null WHERE keyUser.id = ?1")
+    fun removeTeam(id: UUID)
 
     @Modifying
     @Query("UPDATE KeyUser keyUser SET keyUser.sellerEmailVerified = true WHERE keyUser.id = ?1")

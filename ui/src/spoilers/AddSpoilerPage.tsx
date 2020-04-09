@@ -19,7 +19,7 @@ import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { RouteComponentProps } from "react-router-dom"
+import { RouteComponentProps, withRouter } from "react-router-dom"
 import { CardType } from "../cards/CardType"
 import { Rarity } from "../cards/rarity/Rarity"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -68,6 +68,7 @@ export class EditSpoilerPage extends React.Component<EditSpoilerPageProps> {
         if (spoiler == null) {
             return <Loader/>
         }
+        // @ts-ignore
         return <AddSpoiler spoiler={spoiler}/>
     }
 }
@@ -80,11 +81,11 @@ export class AddSpoilerPage extends React.Component {
     }
 
     render() {
-        return <AddSpoiler/>
+        return <AddSpoilerWithRouter/>
     }
 }
 
-interface AddSpoilerProps {
+interface AddSpoilerProps extends RouteComponentProps {
     spoiler?: Spoiler
 }
 
@@ -231,10 +232,13 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         if (house != null && house.length < 1) {
             house = undefined
         }
-        const cardType = this.cardType as CardType
-        if (cardType.length < 1) {
+        let cardType = this.cardType as CardType
+        if (!this.reprint && cardType.length < 1) {
             messageStore.setWarningMessage("Please include card type.")
             return
+        } else {
+            // Bogus will be replaced since this is reprint
+            cardType = CardType.Creature
         }
         const rarity = this.rarity === "" ? undefined : this.rarity
         defaultHouse = house
@@ -292,18 +296,20 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
 
             createdById: userStore.userId!
         }
-        await spoilerStore.saveSpoiler(spoiler)
+        const newSpoilerId = await spoilerStore.saveSpoiler(spoiler)
         if (this.spoilerId != null) {
             const saved = await spoilerStore.findSpoiler(this.spoilerId)
             this.reset(saved)
         } else {
-            this.reset()
+            if (newSpoilerId) {
+                this.props.history.push(Routes.editSpoiler(newSpoilerId))
+            }
         }
-        spoilerStore.loadAllSpoilers()
     }
 
     render() {
-        const allSpoilers = spoilerStore.allSpoilers
+        const {allSpoilers} = spoilerStore
+
         let nextId
         let prevId
         if (allSpoilers.length > 0 && this.props.spoiler != null) {
@@ -762,3 +768,5 @@ class AddImage extends React.Component<{ spoilerId: number }> {
         )
     }
 }
+
+const AddSpoilerWithRouter = withRouter(AddSpoiler)

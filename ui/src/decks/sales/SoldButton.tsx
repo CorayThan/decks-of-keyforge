@@ -1,4 +1,4 @@
-import { Dialog } from "@material-ui/core"
+import { Dialog, Link } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -6,7 +6,6 @@ import TextField from "@material-ui/core/TextField"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Link } from "react-router-dom"
 import { deckListingStore } from "../../auctions/DeckListingStore"
 import { purchaseStore } from "../../auctions/purchases/PurchaseStore"
 import { SaleType } from "../../auctions/purchases/SaleType"
@@ -80,7 +79,7 @@ export class SoldButton extends React.Component<SoldButtonProps> {
                             onChange={(event) => this.saleAmount = event.target.value}
                         />
                         <HelperText style={{marginTop: spacing(1)}}>
-                            If you are accepting an offer please accept it from <Link to={MyDokSubPaths.offers}>your offers page</Link>!
+                            If you are accepting an offer please accept it from <Link href={MyDokSubPaths.offers}>your offers page</Link>!
                         </HelperText>
                         <HelperText style={{marginTop: spacing(1)}}>
                             Sale amount should not include shipping and handling. It should be the amount paid by the buyer in the seller's currency.

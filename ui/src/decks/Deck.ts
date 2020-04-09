@@ -75,6 +75,8 @@ export interface Deck extends HasAerc {
 
     synergies?: DeckSynergyInfo
 
+    dateAdded?: string
+
 }
 
 export class DeckUtils {

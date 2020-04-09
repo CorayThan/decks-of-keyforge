@@ -1,4 +1,4 @@
-import { Divider, IconButton, List, ListItem, ListItemText } from "@material-ui/core"
+import { Button, Divider, IconButton, List, ListItem, ListItemText } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Collapse from "@material-ui/core/Collapse"
 import { blue } from "@material-ui/core/colors"
@@ -22,7 +22,6 @@ import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu, LinkMenuStore } from "../generic/LinkMenu"
 import { UnstyledLink } from "../generic/UnstyledLink"
-import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton, ListItemLink } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
@@ -133,7 +132,6 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                     {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
                                     randomDeckMenuItem,
                                 ]}
-                                style={{margin: spacing(1)}}
                                 dropdownOnly={true}
                                 linkMenuStore={decksMenuStore}
                             />
@@ -142,7 +140,6 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                     <LinkMenu
                                         genericOnClick={rightMenuStore.close}
                                         links={myDeckLinks()}
-                                        style={{margin: spacing(1)}}
                                         dropdownOnly={true}
                                         linkMenuStore={myDecksMenuStore}
                                     />
@@ -267,7 +264,6 @@ const AppLinks = observer(() => (
                 {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
                 randomDeckMenuItem,
             ]}
-            style={{margin: spacing(1)}}
             linkMenuStore={decksMenuStore}
         >
             <DeckImportPop/>
@@ -282,7 +278,6 @@ const AppLinks = observer(() => (
                 {to: Routes.wcCards, text: "WC Cards", mobileActive: false},
                 {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
             ]}
-            style={{margin: spacing(1)}}
             linkMenuStore={cardsMenuStore}
         />
         {screenStore.smallScreenTopBar() ? (
@@ -291,7 +286,6 @@ const AppLinks = observer(() => (
             <LinkButton
                 to={Routes.users}
                 color={"inherit"}
-                style={{marginLeft: spacing(1)}}
             >
                 Users
             </LinkButton>
@@ -304,7 +298,6 @@ const AppLinks = observer(() => (
                 {to: StatsSubPaths.aercStats, text: "AERC Stats", mobileActive: false},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
-            style={{margin: spacing(1)}}
             linkMenuStore={statsMenuStore}
         />
         {screenStore.smallScreenTopBar() ? (
@@ -358,7 +351,6 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
                     {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
                 ]}
-                style={{margin: spacing(1)}}
                 linkMenuStore={aboutMenuStore}
             />
         )}
@@ -380,7 +372,6 @@ class UserLinks extends React.Component {
                     <LinkMenu
                         genericOnClick={rightMenuStore.close}
                         links={myDeckLinks()}
-                        style={{margin: spacing(1)}}
                         linkMenuStore={myDecksMenuStore}
                     />
                     <ListItemLink
@@ -409,7 +400,7 @@ class UserLinks extends React.Component {
             return (
                 <>
                     <LoginPop
-                        style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+                        style={{margin: spacing(1)}}
                     />
                     <LinkButton
                         color={"secondary"}
@@ -441,41 +432,39 @@ class UserLinksDesktop extends React.Component {
                     <LinkMenu
                         genericOnClick={rightMenuStore.close}
                         links={myDeckLinks()}
-                        style={{margin: spacing(1)}}
                         linkMenuStore={myDecksMenuStore}
                     />
                     <MyDokDropdown/>
                     <LinkButton
                         color={"inherit"}
                         to={AboutSubPaths.patreon}
-                        style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >
                         <PatreonIcon style={{marginRight: spacing(1)}} primary={screenStore.smallScreenTopBar()}/>
                         Patron Rewards
                     </LinkButton>
-                    <KeyButton
-                        outlinedWhite={true}
+                    <Button
+                        variant={"outlined"}
                         color={"inherit"}
                         onClick={userStore.logout}
-                        style={{margin: spacing(1)}}
+                        style={{marginLeft: spacing(1)}}
                     >
                         Logout
-                    </KeyButton>
+                    </Button>
                 </>
             )
         } else {
             return (
                 <>
                     <LoginPop
-                        style={{margin: spacing(1), display: "flex", justifyContent: "center"}}
+                        style={{display: "flex", justifyContent: "center"}}
                     />
                     <LinkButton
                         color={"secondary"}
                         variant={"contained"}
                         to={Routes.registration}
-                        style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
+                        style={{marginLeft: spacing(2)}}
                     >
                         Sign Up
                     </LinkButton>
@@ -494,8 +483,8 @@ const MyDokDropdown = () => (
             {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
             {to: MyDokSubPaths.purchases, text: "Bought / Sold", mobileActive: false},
             {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
+            {to: MyDokSubPaths.team, text: "My Team", mobileActive: false},
         ]}
-        style={{margin: spacing(1)}}
         dropdownOnly={true}
         linkMenuStore={myDokMenuStore}
     />

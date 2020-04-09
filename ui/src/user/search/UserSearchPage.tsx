@@ -58,7 +58,7 @@ export const UserSearchPage = observer(() => {
     return <UserSearchContainer filters={filters}/>
 })
 
-class Store {
+export class UserSearchSortStore {
     @observable
     page = 0
 
@@ -76,6 +76,9 @@ class Store {
 
     @observable
     manualPatreonTier?: PatreonRewardsTier | "" = ""
+
+    @observable
+    withTeams = false
 
     @observable
     patrons = false
@@ -102,7 +105,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         userSearchStore.searchUsers()
     }, [])
 
-    const [store] = useState(new Store(filters))
+    const [store] = useState(new UserSearchSortStore(filters))
 
     const {results} = userSearchStore
 
@@ -120,12 +123,15 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         updatedMessage = "Updated 1 minute ago"
     }
 
-    const {order, orderBy, page, username, role, manualPatreonTier, patrons, createSortHandler} = store
+    const {order, orderBy, page, username, role, manualPatreonTier, withTeams, patrons, createSortHandler} = store
 
     let filteredUsers = users
 
     if (username.trim().length > 0) {
         filteredUsers = filteredUsers.filter(user => user.username.toLowerCase().includes(username.trim().toLowerCase()))
+    }
+    if (withTeams) {
+        filteredUsers = filteredUsers.filter(user => user.teamName != null)
     }
     if (patrons) {
         filteredUsers = filteredUsers.filter(user => user.patreonTier != null)
@@ -210,6 +216,15 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                     <FormControlLabel
                         control={
                             <Checkbox
+                                checked={withTeams}
+                                onChange={event => store.withTeams = event.target.checked}
+                            />
+                        }
+                        label={"Teams Only"}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
                                 checked={patrons}
                                 onChange={event => store.patrons = event.target.checked}
                             />
@@ -265,6 +280,9 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                                 {patronRewardLevelDescription(user.patreonTier)}
                                             </TableCell>
                                         )}
+                                        <TableCell>
+                                            {user.teamName}
+                                        </TableCell>
                                         <TableCell align={"right"}>
                                             {user.deckCount}
                                         </TableCell>
@@ -374,6 +392,7 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
     {id: "username", label: "Username"},
+    {id: "teamName", label: "Team Name"},
     {id: "deckCount", label: "Decks Owned", numeric: true},
     {id: "forSaleCount", label: "For Sale", numeric: true},
     {id: "topSasAverage", label: "Top 10 SAS", numeric: true},

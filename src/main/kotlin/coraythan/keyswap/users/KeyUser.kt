@@ -8,6 +8,7 @@ import coraythan.keyswap.auctions.purchases.Purchase
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.teams.Team
 import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.users.search.UserSearchResult
 import java.time.ZonedDateTime
@@ -96,6 +97,10 @@ data class KeyUser(
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
         val sales: List<Purchase> = listOf(),
 
+        @JsonIgnoreProperties("members")
+        @ManyToOne(fetch = FetchType.LAZY)
+        val team: Team? = null,
+
         val updateStats: Boolean = false,
 
         // Stats values
@@ -144,7 +149,8 @@ data class KeyUser(
             storeName = storeName,
             displayCrucibleTrackerWins = displayCrucibleTrackerWins == true,
             auctionCount = auctions.filter { it.status == DeckListingStatus.AUCTION }.count(),
-            shippingCost = shippingCost
+            shippingCost = shippingCost,
+            teamName = team?.name
     )
 
     fun generateSearchResult(): UserSearchResult {
@@ -163,11 +169,13 @@ data class KeyUser(
                 owned.map { deck -> deck.anomalyCount ?: 0 }.sum(),
                 this.type,
                 this.patreonTier,
-                this.manualPatreonTier
+                this.manualPatreonTier,
+                this.team
         )
     }
 
     fun realPatreonTier(): PatreonRewardsTier? {
+        if (username == "Coraythan") return PatreonRewardsTier.ALWAYS_GENEROUS
         if (patreonTier == null && manualPatreonTier == null) return null
         if (patreonTier != null && manualPatreonTier == null) return patreonTier
         if (patreonTier == null && manualPatreonTier != null) return manualPatreonTier
@@ -213,5 +221,7 @@ data class KeyUserDto(
 
         val displayCrucibleTrackerWins: Boolean,
 
-        val shippingCost: String? = null
+        val shippingCost: String? = null,
+
+        val teamName: String? = null
 )

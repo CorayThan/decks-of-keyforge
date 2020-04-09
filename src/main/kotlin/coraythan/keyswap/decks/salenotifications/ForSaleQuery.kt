@@ -66,6 +66,8 @@ data class ForSaleQuery(
                 get() = false
         override val withOwners: Boolean
                 get() = false
+        override val teamDecks: Boolean
+                get() = false
         override val registered: Boolean
                 get() = true
 }

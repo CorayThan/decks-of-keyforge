@@ -360,6 +360,20 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         />
                                     </div>
                                     <div style={{display: "flex"}}>
+                                        {userStore.patron && userStore.hasTeam && (
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.props.filters.teamDecks}
+                                                        onChange={(event) => {
+                                                            this.props.filters.teamDecks = event.target.checked
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography variant={"body2"}>Team Decks</Typography>}
+                                                style={{width: 144}}
+                                            />
+                                        )}
                                         <FormControlLabel
                                             control={
                                                 <Checkbox

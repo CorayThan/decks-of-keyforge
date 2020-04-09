@@ -8,6 +8,7 @@ import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.teams.QTeam
 import coraythan.keyswap.tokenize
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -123,10 +124,11 @@ class UserSearchService(
                 .select(
                         Projections.constructor(UserSearchResult::class.java,
                                 userQ.username, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas, userQ.lowSas, userQ.totalPower,
-                                userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier
+                                userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier, userQ.team
                         )
                 )
                 .from(userQ)
+                .leftJoin(userQ.team, QTeam.team)
                 .where(predicate)
                 .orderBy(sort)
                 .fetch()

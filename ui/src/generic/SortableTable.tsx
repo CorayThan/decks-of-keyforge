@@ -4,18 +4,19 @@ import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
-import { sortBy } from "lodash"
+import { sortBy, startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { SortOrder } from "../config/Utils"
+
 
 export interface SortableTableHeaderInfo<T> {
     /**
      * Either property or transform must be included.
      */
     property?: keyof T
-    title: string
+    title?: string
     sortable?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transform?: (data: T) => any
@@ -55,7 +56,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                                             direction={store.tableSortDir}
                                             onClick={store.changeSortHandler(header.property)}
                                         >
-                                            {header.title}
+                                            {header.title ?? startCase(header.property as string)}
                                         </TableSortLabel>
                                     ) : (
                                         <>{header.title}</>

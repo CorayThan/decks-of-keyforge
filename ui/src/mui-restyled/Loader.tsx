@@ -17,6 +17,6 @@ export const Loader = (props: { show?: boolean, size?: LoaderSize }) => {
         return null
     }
     return (
-        <div style={{display: "flex", justifyContent: "center"}}><CircularProgress size={sizePx} /></div>
+        <div style={{display: "flex", justifyContent: "center"}}><CircularProgress size={sizePx}/></div>
     )
 }
