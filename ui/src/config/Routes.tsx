@@ -102,6 +102,13 @@ class Routes {
         return Routes.deckSearch(filters)
     }
 
+    static decksForUserOnMyTeam = (username: string) => {
+        const filters = new DeckFilters()
+        filters.owner = username
+        filters.teamDecks = true
+        return Routes.deckSearch(filters)
+    }
+
     /**
      * Card filters should be cleaned.
      * @param filters

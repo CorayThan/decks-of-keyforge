@@ -11,6 +11,7 @@ import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.QDeckListing
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
@@ -270,6 +271,13 @@ class DeckSearchService(
             if (username == filters.owner) {
                 // it's me
                 predicate.and(deckQ.userDecks.any().ownedBy.eq(username))
+            } else if (filters.teamDecks) {
+                val searchedUserTeamId = userService.findUserByUsername(filters.owner)?.team?.id
+                val myTeamId = userHolder.user?.team?.id
+                if (myTeamId == null || myTeamId != searchedUserTeamId) {
+                    throw UnauthorizedException("You must be logged in and share teams with the searched user to see their decks.")
+                }
+                predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
             } else {
                 val allowToSeeAllDecks = userService.findUserByUsername(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
 

@@ -28,10 +28,13 @@ export const TeamPage = observer(() => {
             ) : (
                 <MyTeamPage team={team}/>
             )}
-            <Typography style={{marginTop: spacing(4)}}>
+            <Typography variant={"body2"} style={{marginTop: spacing(4)}}>
                 Being part of a team allows you to search decks owned by your team if you are a $1+ a
                 month <Link href={AboutSubPaths.patreon}>Patron</Link>,
                 and shows your team on the <Link href={Routes.users}>user search page</Link>.
+            </Typography>
+            <Typography variant={"body2"} style={{marginTop: spacing(1)}}>
+                If your deck list is private, team members will be able to view it, but other site users will not.
             </Typography>
         </div>
     )

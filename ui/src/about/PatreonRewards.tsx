@@ -1,8 +1,8 @@
-import { Typography } from "@material-ui/core"
+import { Link, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { MyDokSubPaths, Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
@@ -80,8 +80,9 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "List decks for sale or trade for up to 1 year.",
-                            "Dark mode",
-                            "Create Theoretical Decks",
+                            <Link variant={"body1"} href={Routes.myProfile}>Enable dark mode</Link>,
+                            "Search team decks",
+                            <Link variant={"body1"} href={Routes.createTheoreticalDeck}>Create Theoretical Decks</Link>,
                             "That warm and fuzzy feeling that comes from supporting something cool.",
                         ]}
                     />
@@ -94,6 +95,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Up to 25 deck sale notifications: Set up to be notified whe never decks that match certain search criteria are listed for sale or trade.",
+                            <Typography><Link href={MyDokSubPaths.team}>Form a team</Link> and manage members</Typography>,
                             "List up to five simultaneous auctions. (By default you are only allowed one.)",
                             "See your full purchase and sale history."
                         ]}

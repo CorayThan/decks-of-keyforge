@@ -18,8 +18,9 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useEffect, useState } from "react"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { MyDokSubPaths, Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
+import { HelperText } from "../generic/CustomTypographies"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { UserSearchResult } from "../user/search/UserSearchResult"
@@ -54,7 +55,7 @@ const memberTableHeaders = (isLeader: boolean, leaderUsername: string, store: Te
         {
             property: "username",
             sortable: true,
-            transform: (user) => <Link href={Routes.decksForUser(user.username)}>{user.username}</Link>
+            transform: (user) => <Link href={Routes.decksForUserOnMyTeam(user.username)}>{user.username}</Link>
         },
         {property: "deckCount", sortable: true},
         {property: "topSasAverage", sortable: true},
@@ -171,6 +172,10 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                                     </Button>
                                 </div>
                             </div>
+                            <HelperText style={{marginTop: spacing(2)}}>
+                                After sending an invite, users can join your team
+                                from <Link href={MyDokSubPaths.team}>this link</Link>.
+                            </HelperText>
                         </Paper>
                     </Grid>
                     <Grid item={true} sm={12} md={6}>

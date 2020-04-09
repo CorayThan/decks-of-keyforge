@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.17"
+export const latestVersion = "4.18"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,26 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.18"}
+                    date={"4/9/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Team Decks!",
+                            note: "You can now form teams and invite other users to your team! This allows you to search for all " +
+                                "decks belonging to anyone on your team, see a table of your teammates, and anyone to see the team of users " +
+                                "with public deck lists on the user search. Forming a team is a $5+ a month Patreon benefit, and searching team decks " +
+                                "is a $1+ a month benefit. Anyone can join a team."
+                        },
+                        {
+                            highlight: "Date added to DoK",
+                            note: "The bottom right corner of the deck view shows the date a deck was added to DoK. This was not recorded prior to " +
+                                "June 1st, 2019. If anyone has data for the dates decks were added to Master Vault they'd be willing to share, " +
+                                "let me know and I'll backfill some dates!"
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.17"}
                     date={"4/5/2020"}
