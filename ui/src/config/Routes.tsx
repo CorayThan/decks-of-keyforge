@@ -109,6 +109,12 @@ class Routes {
         return Routes.deckSearch(filters)
     }
 
+    static decksForSale = () => {
+        const filters = new DeckFilters()
+        filters.forSale = true
+        return Routes.deckSearch(filters)
+    }
+
     /**
      * Card filters should be cleaned.
      * @param filters

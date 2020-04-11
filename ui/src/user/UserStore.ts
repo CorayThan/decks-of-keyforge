@@ -289,9 +289,15 @@ export class UserStore {
         return undefined
     }
 
+
+    @computed
+    get hasCountryAndShippingCost(): boolean {
+        return this.country != null && this.shippingCost != null
+    }
+
     @computed
     get canListForSale(): boolean {
-        return this.country != null && this.emailIsVerified && this.shippingCost != null
+        return this.emailIsVerified && this.hasCountryAndShippingCost
     }
 
     @computed

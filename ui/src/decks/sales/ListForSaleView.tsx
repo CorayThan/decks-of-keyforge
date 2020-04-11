@@ -1,4 +1,4 @@
-import { Dialog, FormControl, FormLabel, Radio, RadioGroup, Typography } from "@material-ui/core"
+import { Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -19,7 +19,6 @@ import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyButton } from "../../mui-restyled/KeyButton"
-import { LinkButton } from "../../mui-restyled/LinkButton"
 import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
@@ -288,31 +287,15 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         {this.editAuctionId != null ? (
                             `Update listing for "${deck.name}"`
                         ) : (
-                            `Sell or trade "${deck.name}"`
+                            `Sell "${deck.name}"`
                         )}
                     </DialogTitle>
                     <DialogContent>
                         <SendEmailVerification message={"Please verify your email to list decks for sale or trade."}/>
-                        {forSaleInCountry == null || shippingCost == null && (
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <div>
-                                    {forSaleInCountry == null && (
-                                        <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
-                                            Please choose your country on your profile to list decks.
-                                        </Typography>
-                                    )}
-                                    {shippingCost == null && (
-                                        <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2)}}>
-                                            Fill out shipping costs on your profile to list decks.
-                                        </Typography>
-                                    )}
-                                </div>
-                                <LinkButton
-                                    to={Routes.myProfile}
-                                >
-                                    Profile
-                                </LinkButton>
-                            </div>
+                        {!userStore.hasCountryAndShippingCost && (
+                            <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}>
+                                Please add a country and shipping costs to your <Link href={Routes.myProfile}>profile</Link>.
+                            </Typography>
                         )}
                         {auction ? (
                             <div style={{marginBottom: spacing(2)}}>
@@ -498,17 +481,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             helperText={"Ebay link, store link, etc."}
                             style={{marginTop: spacing(2)}}
                         />
-                        <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
-                            <Typography>
-                                Add generic info and toggle trades on your
-                            </Typography>
-                            <LinkButton
-                                to={Routes.myProfile}
-                                style={{margin: spacing(1)}}
-                            >
-                                Profile
-                            </LinkButton>
-                        </div>
+                        <HelperText style={{marginTop: spacing(2)}}>
+                            Add seller info and toggle trades on your <Link href={Routes.myProfile}>profile</Link>.
+                        </HelperText>
                         {auction ? (
                             <>
                                 <HelperText style={{marginBottom: spacing(1)}}>

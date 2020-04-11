@@ -166,7 +166,7 @@ class UserSearchService(
             }
         }
 
-        if (!filters.username.isNullOrBlank()) {
+        if (!filters.username.isBlank()) {
             filters.username.tokenize().forEach { predicate.and(userQ.username.likeIgnoreCase("%$it%")) }
         }
 

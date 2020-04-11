@@ -1,3 +1,4 @@
+import { UserSearchResult } from "../user/search/UserSearchResult"
 
 export interface TeamOrInvites {
     team?: TeamInfo
@@ -5,7 +6,7 @@ export interface TeamOrInvites {
 }
 
 export interface TeamInfo {
-    members: string[]
+    members: UserSearchResult[]
     invites: string[]
     leader: string
     name: string

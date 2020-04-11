@@ -86,7 +86,7 @@ class TeamService(
             TeamOrInvites(team = TeamInfo(
                     name = team.name,
                     leader = team.teamLeader.username,
-                    members = team.members.map { it.username },
+                    members = team.members.map { it.generateSearchResult() }.sortedBy { it.username },
                     invites = team.invites.map { userRepo.findByIdOrNull(it)!!.username }
             ), invites = listOf())
         }

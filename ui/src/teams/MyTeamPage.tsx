@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { spacing } from "../config/MuiConfig"
 import { MyDokSubPaths, Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
@@ -24,7 +24,6 @@ import { HelperText } from "../generic/CustomTypographies"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { UserSearchResult } from "../user/search/UserSearchResult"
-import { userSearchStore } from "../user/search/UserSearchStore"
 import { userStore } from "../user/UserStore"
 import { TeamInfo } from "./TeamOrInvites"
 import { teamStore } from "./TeamStore"
@@ -92,20 +91,7 @@ const memberTableHeaders = (isLeader: boolean, leaderUsername: string, store: Te
 export const MyTeamPage = observer((props: { team: TeamInfo }) => {
     const {name, leader, invites, members} = props.team
 
-    useEffect(() => {
-        userSearchStore.searchUsers()
-        return () => {
-            userSearchStore.results = undefined
-        }
-    }, [])
-
     const [teamManagementStore] = useState(new TeamManagementStore())
-
-    const {results} = userSearchStore
-
-    const membersSet = new Set(members)
-
-    const membersTableData = results?.users.filter(user => membersSet.has(user.username))
 
     const isLeader = leader === userStore.username
 
@@ -186,9 +172,13 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                                 <List>
                                     {invites.map(invite => (
                                         <ListItem>
-                                            <Typography style={{marginRight: spacing(1), width: 160}}>
+                                            <Link
+                                                href={Routes.decksForUser(invite)}
+                                                variant={"body1"}
+                                                style={{marginRight: spacing(1), width: 160}}
+                                            >
                                                 {invite}
-                                            </Typography>
+                                            </Link>
                                             <Button
                                                 onClick={() => teamStore.removeInvite(invite)}
                                             >
@@ -204,30 +194,28 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                     </Grid>
                 </Grid>
             )}
-            {membersTableData != null && (
-                <Paper style={{marginTop: spacing(4)}}>
-                    <div style={{display: "flex", padding: spacing(2)}}>
-                        <Typography variant={"h6"}>Members</Typography>
-                        <div style={{flexGrow: 1}}/>
-                        {isLeader && (
-                            <FormControlLabel
-                                label={"Manage Members"}
-                                control={(
-                                    <Checkbox
-                                        value={teamManagementStore.manageTeam}
-                                        onChange={event => teamManagementStore.manageTeam = event.target.checked}
-                                    />
-                                )}
-                            />
-                        )}
-                    </div>
-                    <SortableTable
-                        headers={memberTableHeaders(isLeader, leader, teamManagementStore)}
-                        data={membersTableData}
-                        defaultSort={"username"}
-                    />
-                </Paper>
-            )}
+            <Paper style={{marginTop: spacing(4)}}>
+                <div style={{display: "flex", padding: spacing(2)}}>
+                    <Typography variant={"h6"}>Members</Typography>
+                    <div style={{flexGrow: 1}}/>
+                    {isLeader && (
+                        <FormControlLabel
+                            label={"Manage Members"}
+                            control={(
+                                <Checkbox
+                                    value={teamManagementStore.manageTeam}
+                                    onChange={event => teamManagementStore.manageTeam = event.target.checked}
+                                />
+                            )}
+                        />
+                    )}
+                </div>
+                <SortableTable
+                    headers={memberTableHeaders(isLeader, leader, teamManagementStore)}
+                    data={members}
+                    defaultSort={"username"}
+                />
+            </Paper>
 
             <Dialog
                 open={teamManagementStore.leaveTeamOpen}
