@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.18"
+export const latestVersion = "4.19"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,18 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.19"}
+                    date={"4/13/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Include or exclude houses from deck search",
+                            note: "You can now include or exclude houses from your deck searches! Click it twice to exclude a house from the " +
+                                "search results. Click it again to return it to neutral."
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.18"}
                     date={"4/9/2020"}

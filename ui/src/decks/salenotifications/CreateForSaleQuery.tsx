@@ -9,7 +9,7 @@ import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
-import { SelectedHouses } from "../../houses/HouseSelect"
+import { SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { Loader } from "../../mui-restyled/Loader"
@@ -22,7 +22,7 @@ import { ForSaleQuery } from "./ForSaleQuery"
 
 interface CreateForSaleQueryProps {
     filters: DeckFilters
-    houses: SelectedHouses
+    houses: SelectedOrExcludedHouses
     constraints: FiltersConstraintsStore
 }
 
@@ -52,7 +52,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
             return
         }
         const forSaleQuery: ForSaleQuery = Utils.jsonCopy(this.props.filters)
-        forSaleQuery.houses = this.props.houses.toArray()
+        forSaleQuery.houses = this.props.houses.getHousesSelectedTrue()
         forSaleQuery.constraints = this.props.constraints.cleanConstraints()
         forSaleQuery.queryName = name
         forSaleNotificationsStore.addQuery(forSaleQuery)

@@ -27,7 +27,7 @@ import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
 import { House, houseValuesArray } from "../../houses/House"
-import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
+import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { messageStore } from "../../ui/MessageStore"
@@ -49,7 +49,7 @@ interface DecksSearchDrawerProps {
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     selectedExpansion = new SelectedExpansion(this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
-    selectedHouses = new SelectedHouses(this.props.filters.houses)
+    selectedHouses = new SelectedOrExcludedHouses(this.props.filters.houses, this.props.filters.excludeHouses)
     selectedSortStore = new DeckSortSelectStore(
         this.props.filters.forTrade || (this.props.filters.forSale === true),
         this.props.filters.forAuction && !(this.props.filters.forTrade || this.props.filters.forSale),
@@ -64,7 +64,14 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         }
         const filters = this.props.filters
         filters.expansions = this.selectedExpansion.expansionsAsNumberArray()
-        filters.houses = this.selectedHouses.toArray()
+        filters.houses = this.selectedHouses.getHousesSelectedTrue()
+        filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
+
+        if (!this.selectedHouses.validHouseSelection()) {
+            messageStore.setWarningMessage("You may select up to 3 houses and exclude all but 3.")
+            return
+        }
+
         filters.sort = this.selectedSortStore.toEnumValue()
         filters.constraints = this.constraintsStore.cleanConstraints()
 
@@ -248,7 +255,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             </ListItem>
                         ) : null}
                         <ListItem style={{marginTop: spacing(2)}}>
-                            <HouseSelect selectedHouses={this.selectedHouses}/>
+                            <HouseSelectOrExclude selectedHouses={this.selectedHouses}/>
                         </ListItem>
                         <ListItem>
                             <FormGroup row={true}>

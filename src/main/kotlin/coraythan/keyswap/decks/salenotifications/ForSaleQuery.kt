@@ -36,6 +36,7 @@ data class ForSaleQuery(
         val queryName: String,
 
         override val houses: Set<House> = setOf(),
+        override val excludeHouses: Set<House>? = setOf(),
 
         override val title: String = "",
 

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort
 
 interface DeckQuery {
     val houses: Set<House>
+    val excludeHouses: Set<House>?
     val title: String
     val notes: String
     val notesUser: String
@@ -30,6 +31,7 @@ interface DeckQuery {
 
 data class DeckFilters(
         override val houses: Set<House> = setOf(),
+        override val excludeHouses: Set<House> = setOf(),
         override val title: String = "",
         override val notes: String = "",
         override val notesUser: String = "",

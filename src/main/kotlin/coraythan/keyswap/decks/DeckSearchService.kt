@@ -236,6 +236,11 @@ class DeckSearchService(
             }
         }
 
+        val excludeHouses = filters.excludeHouses
+        if (!excludeHouses.isNullOrEmpty()) {
+            excludeHouses.forEach { predicate.and(deckQ.houseNamesString.notLike("%$it%")) }
+        }
+
         if (filters.title.isNotBlank()) {
             filters.title.tokenize().forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
         }

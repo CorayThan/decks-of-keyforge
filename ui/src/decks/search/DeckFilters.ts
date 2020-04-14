@@ -22,7 +22,9 @@ export class DeckFilters {
         if (typeof queryObject.houses === "string") {
             queryObject.houses = [queryObject.houses]
         }
-        log.debug(`Expansions is: ${queryObject.expansions}`)
+        if (typeof queryObject.excludeHouses === "string") {
+            queryObject.excludeHouses = [queryObject.excludeHouses]
+        }
         if (queryObject.expansions != null) {
             if (queryObject.expansions.constructor === Array) {
                 queryObject.expansions = queryObject.expansions.map((expansion: string) => Number(expansion))
@@ -102,11 +104,12 @@ export class DeckFilters {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const filters = new DeckFilters() as any
         Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
-        // log.debug(`Rehydrated to: ${prettyJson(filters)}`)
+        log.debug(`Rehydrated to: ${prettyJson(filters)}`)
         return filters
     }
 
     houses: House[] = []
+    excludeHouses: House[] = []
     @observable
     title = ""
     @observable
@@ -161,6 +164,8 @@ export class DeckFilters {
         this.cards = []
         this.expansions = []
         this.constraints = []
+        this.houses = []
+        this.excludeHouses = []
         this.sortDirection = "DESC"
         this.owner = ""
         this.withOwners = false
