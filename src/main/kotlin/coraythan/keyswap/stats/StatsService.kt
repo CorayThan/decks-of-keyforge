@@ -112,7 +112,7 @@ class StatsService(
             }
             log.info("$scheduledStop starting new deck stats.")
         } catch (e: Exception) {
-            log.error("$scheduledException starting new deck stats")
+            log.error("$scheduledException starting new deck stats", e)
         }
 
     }
@@ -158,7 +158,7 @@ class StatsService(
             }
             if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with $statsUpdateQuantity decks.")
         } catch (e: Throwable) {
-            log.error("$scheduledException To update stats")
+            log.error("$scheduledException To update stats", e)
         }
     }
 

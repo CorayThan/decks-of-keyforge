@@ -171,7 +171,7 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                             {invites.length > 0 ? (
                                 <List>
                                     {invites.map(invite => (
-                                        <ListItem>
+                                        <ListItem key={invite}>
                                             <Link
                                                 href={Routes.decksForUser(invite)}
                                                 variant={"body1"}

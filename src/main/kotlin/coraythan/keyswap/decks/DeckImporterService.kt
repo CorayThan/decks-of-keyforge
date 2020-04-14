@@ -173,7 +173,7 @@ class DeckImporterService(
 
             log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
         } catch (e: Throwable) {
-            log.error("$scheduledException Cleaning out unregistered decks")
+            log.error("$scheduledException Cleaning out unregistered decks", e)
         }
     }
 
@@ -237,7 +237,7 @@ class DeckImporterService(
 
             log.info("$scheduledStop Took $millisTaken ms to rate decks. Page: $nextDeckPage Found: $quantFound Rerated: $quantRerated.")
         } catch (e: Throwable) {
-            log.error("$scheduledException rating decks")
+            log.error("$scheduledException rating decks", e)
         }
     }
 

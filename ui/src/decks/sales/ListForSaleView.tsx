@@ -268,7 +268,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
 
         const forSaleInCountry = userStore.country
-        const shippingCost = userStore.shippingCost
 
         const marginTopRight: React.CSSProperties = {
             marginTop: spacing(2), marginRight: spacing(2)

@@ -75,7 +75,7 @@ class DeckWinsService(
             deckPageService.setCurrentPage(-1, DeckPageType.LOSSES)
             log.info("$scheduledStop done deck win loss update starting")
         } catch (e: Throwable) {
-            log.error("$scheduledException in update wins and losses")
+            log.error("$scheduledException in update wins and losses", e)
         }
     }
 
@@ -134,7 +134,7 @@ class DeckWinsService(
                 log.warn("KeyForge API says we made too many requests in deck win service. Sad day.")
             }
         } catch (e: Throwable) {
-            log.error("$scheduledException in deck win update")
+            log.error("$scheduledException in deck win update", e)
         }
     }
 

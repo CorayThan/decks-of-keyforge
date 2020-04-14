@@ -46,8 +46,8 @@ class UserDeckService(
                     .groupBy { it.deck.id }
                     .map { it.value.first().deck to it.value.size }
                     .forEach { if (it.first.funnyCount != it.second) deckRepo.save(it.first.copy(funnyCount = it.second)) }
-        } catch (exception: Throwable) {
-            log.error("$scheduledException Couldn't correct wishlist counts", exception)
+        } catch (e: Throwable) {
+            log.error("$scheduledException Couldn't correct wishlist counts", e)
         }
         log.info("$scheduledStop correcting counts.")
     }

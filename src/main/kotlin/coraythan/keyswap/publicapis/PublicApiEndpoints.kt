@@ -29,7 +29,7 @@ class PublicApiEndpoints(
         try {
             this.rateLimiters.clear()
         } catch (e: Throwable) {
-            log.error("$scheduledException clearing rate limiters")
+            log.error("$scheduledException clearing rate limiters", e)
         }
     }
 

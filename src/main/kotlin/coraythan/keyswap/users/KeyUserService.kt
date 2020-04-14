@@ -46,7 +46,7 @@ class KeyUserService(
                         }
                     }
         } catch (e: Throwable) {
-            log.error("$scheduledException removing manual patrons")
+            log.error("$scheduledException removing manual patrons", e)
         }
     }
 

@@ -77,7 +77,7 @@ class UserSearchService(
 
             log.info("$scheduledStop Updated $count users in $userUpdateTime ms gen time $generationTime ms")
         } catch (e: Throwable) {
-            log.error("$scheduledException updating stats for users")
+            log.error("$scheduledException updating stats for users", e)
         }
     }
 

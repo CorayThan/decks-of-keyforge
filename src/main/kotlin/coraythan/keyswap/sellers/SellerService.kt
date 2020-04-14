@@ -68,7 +68,7 @@ class SellerService(
             }
             log.info("$scheduledStop refreshing featured sellers. It took millis: $millisTaken")
         } catch (e: Throwable) {
-            log.error("$scheduledException refreshing featured sellers")
+            log.error("$scheduledException refreshing featured sellers", e)
         }
     }
 
