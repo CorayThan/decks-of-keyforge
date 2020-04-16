@@ -129,7 +129,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                 genericOnClick={rightMenuStore.close}
                                 links={[
                                     {to: Routes.decks, text: "Decks", mobileActive: true},
-                                    {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
+                                    {to: Routes.deckSearch(DeckFilters.forSale()), text: "For Sale"},
                                     randomDeckMenuItem,
                                 ]}
                                 dropdownOnly={true}
@@ -261,7 +261,7 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.decks, text: "Decks", mobileActive: true},
-                {to: Routes.deckSearch(DeckFilters.forSaleOrTrade()), text: "For Sale"},
+                {to: Routes.deckSearch(DeckFilters.forSale()), text: "For Sale"},
                 randomDeckMenuItem,
             ]}
             linkMenuStore={decksMenuStore}

@@ -1,7 +1,6 @@
 package coraythan.keyswap.sellers
 
 import coraythan.keyswap.auctions.DeckListingRepo
-import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledException
@@ -41,22 +40,20 @@ class SellerService(
             log.info("$scheduledStart refresh featured sellers.")
             val millisTaken = measureTimeMillis {
                 featuredSellersCache = userRepo.findByPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
+                        .asSequence()
                         .plus(userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
                         .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.MERCHANT_AEMBERMAKER))
                         .plus(userRepo.findByManualPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS))
-                        .toSet()
-                        .toList()
+                        .distinctBy { it.username }
+                        .filter { user -> user.forSaleCount > 9 }
                         .sortedByDescending { it.mostRecentDeckListing }
-                        .filter { user ->
-                            user.auctions.filter { it.status != DeckListingStatus.COMPLETE }.size > 9
-                        }
                         .map { user ->
                             SellerDetailsWithFullDate(
                                     user.mostRecentDeckListing,
                                     SellerDetails(
                                             storeName = user.storeName ?: "${user.username}'s Store",
                                             username = user.username,
-                                            decksAvailable = user.auctions.filter { it.isActive }.size,
+                                            decksAvailable = user.forSaleCount,
                                             country = user.country ?: Country.UnitedStates,
                                             mostRecentListing = placeholderDate,
                                             storeDescription = user.publicContactInfo,
@@ -65,6 +62,7 @@ class SellerService(
                                     )
                             )
                         }
+                        .toList()
             }
             log.info("$scheduledStop refreshing featured sellers. It took millis: $millisTaken")
         } catch (e: Throwable) {

@@ -14,8 +14,7 @@ data class Team(
         @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
         val members: List<KeyUser> = listOf(),
 
-        @OneToOne
-        val teamLeader: KeyUser,
+        val teamLeaderId: UUID,
 
         /**
          * Ids of invited members
@@ -25,4 +24,15 @@ data class Team(
 
         @Id
         val id: UUID = UUID.randomUUID()
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (other is Team) {
+            return id == other.id
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}

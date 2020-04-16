@@ -10,7 +10,7 @@ import { Constraint } from "./ConstraintDropdowns"
 
 export class DeckFilters {
 
-    static forSaleOrTrade = () => {
+    static forSale = () => {
         const filters = new DeckFilters()
         filters.forSale = true
         return filters

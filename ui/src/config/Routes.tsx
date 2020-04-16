@@ -137,13 +137,13 @@ class Routes {
     }
 
     static userDecksForSale = (username: string) => {
-        const filters = DeckFilters.forSaleOrTrade()
+        const filters = DeckFilters.forSale()
         filters.owner = username
         return Routes.deckSearch(filters)
     }
 
     static sellersView = () => {
-        const filters = DeckFilters.forSaleOrTrade()
+        const filters = DeckFilters.forSale()
         filters.owner = userStore.username!
         filters.forSale = true
         return Routes.deckSearch(filters)

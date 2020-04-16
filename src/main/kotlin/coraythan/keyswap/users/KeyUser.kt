@@ -185,6 +185,17 @@ data class KeyUser(
             manualPatreonTier
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is KeyUser) {
+            return id == other.id
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }
 
 data class KeyUserDto(

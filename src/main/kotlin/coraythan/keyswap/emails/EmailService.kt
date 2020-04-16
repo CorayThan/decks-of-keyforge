@@ -238,7 +238,6 @@ class EmailService(
                 else -> "for sale"
             }
 
-            log.info("Sending deck listed notification.")
             sendEmail(
                     recipient.primaryEmail,
                     "\"$queryName\" matches a deck listed on Decks of KeyForge",

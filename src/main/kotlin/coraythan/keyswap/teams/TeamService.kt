@@ -32,7 +32,7 @@ class TeamService(
         val preexisting = teamRepo.findByTeamLeaderId(loggedInUser.id)
         if (preexisting == null) {
             if (loggedInUser.team != null) throw BadRequestException("Can't make a team when you're on a team.")
-            val saved = teamRepo.save(Team(name = name, teamLeader = loggedInUser))
+            val saved = teamRepo.save(Team(name = name, teamLeaderId = loggedInUser.id))
             entityManager.flush()
             addUserToTeam(loggedInUser, saved)
         } else {
@@ -85,7 +85,7 @@ class TeamService(
         } else {
             TeamOrInvites(team = TeamInfo(
                     name = team.name,
-                    leader = team.teamLeader.username,
+                    leader = team.members.find { it.id == team.teamLeaderId }?.username ?: "",
                     members = team.members.map { it.generateSearchResult() }.sortedBy { it.username },
                     invites = team.invites.map { userRepo.findByIdOrNull(it)!!.username }
             ), invites = listOf())

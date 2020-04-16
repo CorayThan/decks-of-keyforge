@@ -39,7 +39,7 @@ topFunny.sort = DeckSorts.funniest
 const topWishlisted = new DeckFilters()
 topWishlisted.sort = DeckSorts.wishlisted
 
-const saleOrTrade = DeckFilters.forSaleOrTrade()
+const forSale = DeckFilters.forSale()
 
 const auctions = new DeckFilters()
 auctions.forAuction = true
@@ -49,11 +49,8 @@ const completedAuctions = new DeckFilters()
 completedAuctions.completedAuctions = true
 completedAuctions.sort = DeckSorts.completedRecently
 
-const saleOrTradeAERC = DeckFilters.forSaleOrTrade()
+const saleOrTradeAERC = DeckFilters.forSale()
 saleOrTradeAERC.sort = DeckSorts.aerc
-
-// const saleOrTradeRecent = DeckFilters.forSaleOrTrade()
-// saleOrTradeRecent.sort = DeckSorts.recentlyListed
 
 const worstSas = new DeckFilters()
 worstSas.sortDirection = "ASC"
@@ -108,7 +105,7 @@ export class LandingPage extends React.Component<{}> {
                             <ListSubheader>
                                 Decks for Sale
                             </ListSubheader>
-                            <DeckSearchLink name={"For Sale or Trade"} filters={saleOrTrade}/>
+                            <DeckSearchLink name={"For Sale"} filters={forSale}/>
                             {/*<DeckSearchLink name={"Recently Listed"} filters={saleOrTradeRecent} style={{marginTop: spacing(2)}}/>*/}
                             <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
 
@@ -145,7 +142,7 @@ export class LandingPage extends React.Component<{}> {
                         {screenStore.screenSizeSm() ? (
                             <div style={{marginTop: spacing(4), display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} dontSearch={true} style={{margin: spacing(2)}}/>
-                                <DeckSearchLink name={"For Sale"} filters={saleOrTrade} style={{margin: spacing(2)}}/>
+                                <DeckSearchLink name={"For Sale"} filters={forSale} style={{margin: spacing(2)}}/>
                                 <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(2)}}/>
                             </div>
                         ) : null}
