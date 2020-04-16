@@ -49,9 +49,6 @@ const completedAuctions = new DeckFilters()
 completedAuctions.completedAuctions = true
 completedAuctions.sort = DeckSorts.completedRecently
 
-const saleOrTradeAERC = DeckFilters.forSale()
-saleOrTradeAERC.sort = DeckSorts.aerc
-
 const worstSas = new DeckFilters()
 worstSas.sortDirection = "ASC"
 

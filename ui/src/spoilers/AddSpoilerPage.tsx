@@ -236,7 +236,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
         if (!this.reprint && cardType.length < 1) {
             messageStore.setWarningMessage("Please include card type.")
             return
-        } else {
+        } else if (this.reprint) {
             // Bogus will be replaced since this is reprint
             cardType = CardType.Creature
         }
@@ -382,6 +382,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     onChange={(event: EventValue) => this.house = event.target.value as House}
                                     variant={"outlined"}
                                     fullWidth={true}
+                                    disabled={this.reprint}
                                 >
                                     {Utils.enumValues(House).map(option => (
                                         <MenuItem key={option} value={option}>
@@ -398,6 +399,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     onChange={(event: EventValue) => this.cardType = event.target.value as CardType}
                                     variant={"outlined"}
                                     fullWidth={true}
+                                    disabled={this.reprint}
                                 >
                                     {Utils.enumValues(CardType).map(option => (
                                         <MenuItem key={option} value={option}>
@@ -414,6 +416,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     onChange={(event: EventValue) => this.rarity = event.target.value as (Rarity | "")}
                                     variant={"outlined"}
                                     fullWidth={true}
+                                    disabled={this.reprint}
                                 >
                                     <MenuItem value={""}>
                                         Unknown
@@ -433,6 +436,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     fullWidth={true}
                                     variant={"outlined"}
                                     type={"number"}
+                                    disabled={this.reprint}
                                 />
                             </Grid>
                             <Grid item={true} xs={4} sm={2}>
@@ -443,6 +447,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     fullWidth={true}
                                     variant={"outlined"}
                                     type={"number"}
+                                    disabled={this.reprint}
                                 />
                             </Grid>
                             <Grid item={true} xs={4} sm={2}>
@@ -453,6 +458,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     fullWidth={true}
                                     variant={"outlined"}
                                     type={"number"}
+                                    disabled={this.reprint}
                                 />
                             </Grid>
                             <Grid item={true} xs={4} sm={2}>
@@ -474,6 +480,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                             checked={this.anomaly}
                                             onChange={() => this.anomaly = !this.anomaly}
                                             color="primary"
+                                            disabled={this.reprint}
                                         />
                                     }
                                     label="Anomaly"
@@ -486,6 +493,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                             checked={this.doubleCard}
                                             onChange={() => this.doubleCard = !this.doubleCard}
                                             color="primary"
+                                            disabled={this.reprint}
                                         />
                                     }
                                     label="Double Card"
@@ -499,6 +507,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     fullWidth={true}
                                     variant={"outlined"}
                                     multiline={true}
+                                    disabled={this.reprint}
                                 />
                             </Grid>
                             <Grid item={true} xs={12}>
@@ -509,6 +518,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     fullWidth={true}
                                     variant={"outlined"}
                                     multiline={true}
+                                    disabled={this.reprint}
                                 />
                             </Grid>
                         </Grid>
