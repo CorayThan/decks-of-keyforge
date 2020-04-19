@@ -48,6 +48,6 @@ data class SynergyMatch(
         val percentSynergized: Int,
         val traitCards: Set<String>,
         val rating: Int,
-        val type: SynTraitType,
+        val house: SynTraitHouse,
         val cardName: String? = null
 )

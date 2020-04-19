@@ -1,60 +1,11 @@
 package coraythan.keyswap.synergy
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.cards.ExtraCardInfo
-import org.springframework.data.repository.CrudRepository
-import java.util.*
-import javax.persistence.*
-
 enum class TraitStrength(val value: Int) {
     STRONG(4),
     NORMAL(3),
     WEAK(2),
     EXTRA_WEAK(1)
 }
-
-@Entity
-data class SynTraitValue(
-        @Enumerated(EnumType.STRING)
-        val trait: SynergyTrait,
-        val rating: Int = 3,
-        @Enumerated(EnumType.STRING)
-        val type: SynTraitType = SynTraitType.anyHouse,
-
-        @JsonIgnoreProperties("traits")
-        @ManyToOne
-        val traitInfo: ExtraCardInfo? = null,
-
-        @JsonIgnoreProperties("synergies")
-        @ManyToOne
-        val synergyInfo: ExtraCardInfo? = null,
-
-        val cardName: String? = null,
-
-        @Id
-        val id: UUID = UUID.randomUUID()
-) : Comparable<SynTraitValue> {
-    override fun compareTo(other: SynTraitValue): Int {
-        return other.rating - this.rating
-    }
-
-    fun strength() = when (rating) {
-        1 -> TraitStrength.EXTRA_WEAK
-        2 -> TraitStrength.WEAK
-        3 -> TraitStrength.NORMAL
-        4 -> TraitStrength.STRONG
-        else -> TraitStrength.NORMAL
-    }
-
-    override fun toString(): String {
-        return "SynTraitValue(trait=$trait, rating=$rating, type=$type, traitInfoId=${traitInfo?.id}, synergyInfoId=${synergyInfo?.id}, id=$id)"
-    }
-
-}
-
-interface SynTraitValueRepo : CrudRepository<SynTraitValue, UUID>
-
-fun Collection<SynTraitValue>.containsTrait(trait: SynergyTrait) = this.find { valueTrait -> valueTrait.trait == trait } != null
 
 fun Set<String>.toSynergies(): List<SynergyTrait> {
     return this.mapNotNull {
@@ -64,6 +15,87 @@ fun Set<String>.toSynergies(): List<SynergyTrait> {
 
 enum class SynergyTrait {
 
+    // combine these:
+
+
+    exalt,
+    exaltFriendly,
+    // exalt,
+
+
+    damagesMultipleEnemies,
+    damagesAllEnemies,
+    damagesFriendlyCreatures,
+    // damagesMultiple,
+
+
+    destroysFriendlyCreatures,
+    destroysEnemyCreatures,
+    destroysEnemyArtifacts,
+    destroysFriendlyArtifacts,
+    // destroys,
+
+
+    movesFriendly,
+    movesEnemy,
+    // moves,
+
+
+    returnsFriendlyCreaturesToHand,
+    returnsEnemyCreaturesToHand,
+    returnsFriendlyArtifactsToHand,
+    returnsEnemyArtifactsToHand,
+    // returnsToHand,
+
+
+    usesCreatures,
+    readiesCreatures,
+    readiesCreaturesOnPlay,
+    usesCreaturesOutOfHouse,
+    // causesUse,
+
+
+    purgesFriendlyCreatures,
+    purges,
+    // purges,
+
+
+    archives,
+    archivesEnemyCards,
+    // archives,
+
+
+    controlsCreatures,
+    // takesControl,
+
+
+    returnsCreaturesFromDiscard,
+    returnsCardsFromDiscard,
+    // returnsFromDiscard,
+
+
+
+
+    discardsFriendlyCards,
+    discardsEnemyCards,
+    // discardsCards,
+
+
+    reducesEnemyDraw,
+    // reducesHandSize,
+
+    /*** Deprecated ***/
+
+    goodReap,
+    goodAction,
+    goodPlay,
+    goodFight,
+    goodDestroyed,
+
+    /*** End Deprecated ***/
+
+
+
     // Amber / keys
     capturesAmberOnEnemies,
     capturesAmber,
@@ -71,72 +103,41 @@ enum class SynergyTrait {
     stealsAmber,
     increasesKeyCost,
     scalingSteal,
-    exalt,
-    exaltFriendly,
     spendsCapturedAmber,
 
     // Damage
-    damagesMultipleEnemies,
-    damagesAllEnemies,
-    damagesFriendlyCreatures,
     distributableDamage, // eg sack of coins, cooperative hunting
     dealsDamage,
     preventsDamage,
 
     // Creatures
-    destroysFriendlyCreatures,
-    destroysEnemyCreatures,
     stuns,
     addsArmor,
     protectsCreatures,
     increasesCreaturePower,
     heals,
-    movesFriendly,
-    movesEnemy,
-    controlsCreatures,
     causesFighting,
     causesReaping,
-    usesCreatures,
-    goodReap,
-    goodAction,
-    goodPlay,
-    goodFight,
-    goodDestroyed,
-    readiesCreatures,
-    readiesCreaturesOnPlay,
     sacrificesCreatures,
+
+    // Keywords
     elusive,
     skirmish,
     poison,
     deploy,
     ward,
 
-    // Purging
-    purgesFriendlyCreatures,
-    purges,
-
     // Archives
-    archives,
     archivesRandom,
-    archivesEnemyCards,
 
     // Discard
-    returnsCreaturesFromDiscard,
-    returnsCardsFromDiscard,
+
 
     // Artifacts
-    destroysEnemyArtifacts,
-    destroysFriendlyArtifacts,
     usableArtifact,
 
     // Hand Manipulation
-    discardsFriendlyCards,
-    discardsEnemyCards,
-    reducesEnemyDraw,
-    returnsFriendlyCreaturesToHand,
-    returnsEnemyCreaturesToHand,
-    returnsFriendlyArtifactsToHand,
-    returnsEnemyArtifactsToHand,
+
     drawsCards,
     increasesHandSize,
     playsCards,
@@ -151,7 +152,7 @@ enum class SynergyTrait {
 
     // Houses
     controlsHouseChoice,
-    usesCreaturesOutOfHouse,
+
 
     // other
     revealsTopDeck,
@@ -173,6 +174,7 @@ enum class SynergyTrait {
     dinosaur,
     demon,
     giant,
+    mutant,
 
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4
     power5OrHigherCreatures, // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
@@ -220,11 +222,4 @@ enum class SynergyTrait {
             }
         }
     }
-}
-
-enum class SynTraitType {
-    anyHouse,
-    // Only synergizes with traits inside its house
-    house,
-    outOfHouse,
 }

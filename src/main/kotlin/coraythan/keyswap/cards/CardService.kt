@@ -157,9 +157,9 @@ class CardService(
             .map {
                 when {
                     it.traits.containsTrait(SynergyTrait.alpha) && !it.synergies.containsTrait(SynergyTrait.alpha) ->
-                        it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.alpha, -3, SynTraitType.house)))
+                        it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.alpha, -3, SynTraitHouse.house)))
                     it.traits.containsTrait(SynergyTrait.omega) && !it.synergies.containsTrait(SynergyTrait.omega) ->
-                        it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.omega, -3, SynTraitType.house)))
+                        it.copy(synergies = it.synergies.plus(SynTraitValue(SynergyTrait.omega, -3, SynTraitHouse.house)))
                     else -> it
                 }.copy(
                         synergies = it.synergies.sorted()
@@ -327,7 +327,7 @@ class CardService(
                             if (it.cardType == CardType.Creature && it.aercScoreAverage >= 2.5) {
                                 listOf((SynTraitValue(
                                         trait = SynergyTrait.goodCreature,
-                                        type = SynTraitType.anyHouse,
+                                        house = SynTraitHouse.anyHouse,
                                         rating = when {
                                             it.aercScoreAverage >= 3.5 -> TraitStrength.STRONG.value
                                             it.aercScoreAverage >= 3 -> TraitStrength.NORMAL.value

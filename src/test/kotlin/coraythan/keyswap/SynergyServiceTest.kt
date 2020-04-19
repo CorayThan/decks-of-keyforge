@@ -7,7 +7,7 @@ import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.synergy.SynTraitType
+import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import org.junit.Assert.assertEquals
@@ -118,10 +118,10 @@ class SynergyServiceTest {
                                     expectedAmber = 1.0,
                                     expectedAmberMax = 4.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.highCreatureCount, 3, SynTraitType.house),
-                                            SynTraitValue(SynergyTrait.lowCreatureCount, -3, SynTraitType.house),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4, SynTraitType.house),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.outOfHouse)
+                                            SynTraitValue(SynergyTrait.highCreatureCount, 3, SynTraitHouse.house),
+                                            SynTraitValue(SynergyTrait.lowCreatureCount, -3, SynTraitHouse.house),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4, SynTraitHouse.house),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitHouse.outOfHouse)
                                     ))
                     )
             )
@@ -208,8 +208,8 @@ class SynergyServiceTest {
                                     amberControl = 0.0,
                                     amberControlMax = 16.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitType.outOfHouse),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitType.house)
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitHouse.outOfHouse),
+                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitHouse.house)
                                     )
                             )
                     )
@@ -233,7 +233,7 @@ class SynergyServiceTest {
                         cardTitle = "key abuduction",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitType.house)
+                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitHouse.house)
                                 )
                         )
                 )
@@ -309,7 +309,7 @@ class SynergyServiceTest {
         log.info("Found combo: $combo")
         assertEquals("shooler", combo.cardName)
         val synergy = combo.synergies.find { it.percentSynergized > 0 }
-        assertEquals(SynTraitType.house, synergy?.type)
+        assertEquals(SynTraitHouse.house, synergy?.house)
         assertEquals("hysteria", synergy?.traitCards?.first())
         assertEquals(5.28, combo.aercScore, 0.001)
     }
