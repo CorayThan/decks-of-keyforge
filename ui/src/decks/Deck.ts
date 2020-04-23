@@ -3,6 +3,7 @@ import { HasAerc } from "../aerc/HasAerc"
 import { KCard } from "../cards/KCard"
 import { log, roundToHundreds } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
+import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
 import { DeckSynergyInfo, SynergyCombo } from "../synergy/DeckSynergyInfo"
 import { userStore } from "../user/UserStore"
@@ -165,11 +166,11 @@ export class DeckUtils {
         }
     }
 
-    static arrayToCSV = (decks: Deck[]) => {
+    static arrayToCSV = (decks: Deck[]): CsvData => {
         const data = decks.map(deck => {
             const synergies = DeckUtils.synergiesRounded(deck.synergies!)
             return [
-                deck.name.replace(/"/g, "\"\""),
+                deck.name,
                 deck.houses,
                 deck.expansion,
                 synergies.sasRating,
@@ -213,7 +214,7 @@ export class DeckUtils {
                 deck.forAuction,
                 deck.forTrade,
                 DeckUtils.findPrice(deck),
-                deck.searchResultCards == null ? "" : `${deck.searchResultCards.map(card => card.cardTitle).join("|")}`,
+                deck.searchResultCards?.map(card => card.cardTitle),
                 deck.wishlistCount,
                 deck.funnyCount,
                 `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,

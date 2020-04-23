@@ -30,7 +30,6 @@ try {
 export class Utils {
 
     private static readonly readableDateFormat = "MMM d, yyyy"
-    private static readonly readableDateFormatShort = "MMM d, yy"
     static readonly localDateFormat = "yyyy-MM-dd"
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
@@ -56,15 +55,6 @@ export class Utils {
     static formatDate = (date: string) => {
         try {
             return format(Utils.parseLocalDate(date), Utils.readableDateFormat)
-        } catch (e) {
-            log.warn("Couldn't parse date from " + date)
-            return "bad date"
-        }
-    }
-
-    static formatDateShort = (date: string) => {
-        try {
-            return format(Utils.parseLocalDate(date), Utils.readableDateFormatShort)
         } catch (e) {
             log.warn("Couldn't parse date from " + date)
             return "bad date"

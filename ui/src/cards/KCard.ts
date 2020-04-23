@@ -1,6 +1,7 @@
 import { HasAerc } from "../aerc/HasAerc"
 import { roundToHundreds } from "../config/Utils"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
+import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
@@ -114,13 +115,13 @@ export class CardUtils {
         return 4
     }
 
-    static arrayToCSV = (cards: KCard[]) => {
+    static arrayToCSV = (cards: KCard[]): CsvData => {
         const data = cards.map(card => {
 
             return [
                 card.cardTitle,
                 card.house,
-                card.extraCardInfo.cardNumbers.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`).join(" | "),
+                card.extraCardInfo.cardNumbers.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`),
                 card.cardType,
                 card.rarity,
                 card.aercScore,
@@ -152,11 +153,11 @@ export class CardUtils {
                 card.wins,
                 card.losses,
 
-                card.extraCardInfo.traits.join(" | "),
-                card.extraCardInfo.synergies.map(value => synTraitValueToString(value)).join(" | "),
+                card.extraCardInfo.traits.map(trait => synTraitValueToString(trait)),
+                card.extraCardInfo.synergies.map(value => synTraitValueToString(value)),
                 card.traits,
-                card.cardText.replace(/"/g, "\"\""),
-                card.flavorText == null ? "" : card.flavorText.replace(/"/g, "\"\"")
+                card.cardText,
+                card.flavorText
             ]
         })
         data.unshift([

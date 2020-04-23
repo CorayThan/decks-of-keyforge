@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.19"
+export const latestVersion = "4.20"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,27 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"4.20"}
+                    date={"4/23/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Minor SAS update",
+                            note: "I've pushed a minor update to SAS. You probably won't notice more than a 1 point SAS difference on some decks. " +
+                                "Only 13 cards were updated."
+                        },
+                        {
+                            highlight: "Get your decks from the public API",
+                            note: "You can now access your deck list from the public API. "
+                        },
+                        {
+                            highlight: "Minor improvements to CSVs",
+                            note: `I've made the CSVs for cards and decks a little more consistent. '"' should be handled properly more consistently, and ` +
+                                `all list data is separated with ' | '.`
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.19"}
                     date={"4/13/2020"}

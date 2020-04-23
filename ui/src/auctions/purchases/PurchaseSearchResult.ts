@@ -1,3 +1,4 @@
+import { CsvData } from "../../generic/CsvDownloadButton"
 import { SaleType } from "./SaleType"
 
 export interface PurchaseSearchResult {
@@ -16,7 +17,7 @@ export interface PurchaseSearchResult {
 
 export class PurchaseUtils {
 
-    static arrayToCSV = (purchases: PurchaseSearchResult[]) => {
+    static arrayToCSV = (purchases: PurchaseSearchResult[]): CsvData => {
         const data = purchases.map(purchase => {
 
             return [

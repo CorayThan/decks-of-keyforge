@@ -71,6 +71,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
                         <TextField
+                            id={"dok-email"}
                             variant={"outlined"}
                             label={"Email"}
                             value={this.email}
@@ -79,6 +80,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                             autoFocus={true}
                         />
                         <TextField
+                            id={"dok-password"}
                             variant={"outlined"}
                             label={"Password"}
                             type={"password"}

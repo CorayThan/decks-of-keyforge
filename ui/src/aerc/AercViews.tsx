@@ -259,11 +259,11 @@ export const AercView = (props: {
                     />
                 )}
             </div>
-            {deck.dateAdded != null && (
+            {!horizontal && deck.dateAdded != null && (
                 <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>
                     <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
                         <Typography variant={"body2"} color={"textSecondary"}>
-                            {Utils.formatDateShort(deck.dateAdded)}
+                            {Utils.formatDate(deck.dateAdded)}
                         </Typography>
                     </div>
                 </Tooltip>

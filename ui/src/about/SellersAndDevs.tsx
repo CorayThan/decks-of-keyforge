@@ -9,84 +9,6 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
-/* tslint:disable:jsdoc-format */
-/* tslint:disable:no-trailing-whitespace */
-/**
- Seller api:
-
- Simple with deck name:
-
- https://decksofkeyforge.com/public-api/sellers/list-deck
- POST
-
- Header: Api-Key = UUID
-
- Registered deck body:
- Body: {
-     	  "keyforgeId": "4624dd19-6bf2-4100-b324-38a9445901e6",
-         "deckName": "Evans, Genio Arancione",
-         "notes": {
-             "forSale": true,
-             "forTrade": false,
-             "condition": "NEW_IN_PLASTIC",
- 
-       	  "askingPrice": 19.99,
- 	          "notes": "Very bad deck, so great for reversal!",
- 		      "externalLink": "https://keyforgeseller.com/keyforge/decks/4624dd19-6bf2-4100-b324-38a9445901e6",
-   		  "expireInDays": 365
-         }
-     }
-
- One of keyforgeId or deckName is required unless it is an unregistered deck. If using deckName it must be an exact match with what's on master vault.
-
- In "notes" all values after "condition" are optional and may be left out, but asking price and external link are highly recommended.
-
- Condition options:
- NEW_IN_PLASTIC,
- NEAR_MINT,
- PLAYED,
- HEAVILY_PLAYED
-
- Unregistered deck body:
- Body: {
-         "notes": {
-             "forSale": true,
-             "forTrade": false,
-             "condition": "NEW_IN_PLASTIC",
-             "askingPrice": 19.99
-         },
-         "deckInfo": {
-		     "name": "Crazy Pants the Frivolously Named",
-		     "expansion": 341,
-		     "cards": [
-			     {"cardNumber": 116, "house": "Logos"},
-			     // 35 more cards
-		     ]
-	     }
-     }
-
- Unregister a deck by keyforge id:
-
- https://decksofkeyforge.com/public-api/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
- DELETE
-
- Header: Api-Key = UUID
-
- Unregister a deck by keyforge id:
-
- https://decksofkeyforge.com/public-api/sellers/unlist-deck/4624dd19-6bf2-4100-b324-38a9445901e6
- DELETE
-
- Header: Api-Key = UUID
-
- Unregister a deck by name:
-
- https://decksofkeyforge.com/public-api/sellers/unlist-deck-by-name/Caedwen%20%22Master%20Bandit%22%20Garc%C3%ADa
- DELETE
-
- Header: Api-Key = UUID
-
- */
 @observer
 export class SellersAndDevs extends React.Component {
 
@@ -105,21 +27,16 @@ export class SellersAndDevs extends React.Component {
             apiKeyOrButton = (
                 <div>
                     <Typography variant={"h4"} style={{marginTop: spacing(2)}}>
-                        Your secret API key:
+                        Your API key:
                     </Typography>
                     <Typography variant={"h5"} color={"primary"} style={{marginTop: spacing(2)}}>
                         {publicApiStore.apiKey}
                     </Typography>
-                    <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2)}}>
-                        <Typography style={{marginRight: spacing(1)}}>
-                            To learn the API contact /u/CorayThan on Reddit, send an email to
-                        </Typography>
-                        <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
-                        <Typography style={{marginLeft: spacing(1), marginRight: spacing(1)}}>
-                            or join us on the Decks of KeyForge discord:
-                        </Typography>
-                        <DiscordButton/>
-                    </div>
+                    <Typography style={{marginTop: spacing(2), marginBottom: spacing(2)}}>
+                        To learn the API send an email to <Link href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</Link>
+                        or join us on the Decks of KeyForge discord:
+                    </Typography>
+                    <DiscordButton/>
                 </div>
             )
         } else {
@@ -143,7 +60,10 @@ export class SellersAndDevs extends React.Component {
                 <AboutGridItem>
                     <InfoListCard title={"Generate your API Key"} infos={[
                         "To use our public APIs to sell decks or get SAS and AERC stats you'll need to generate an API key.",
-                        "Using the button below you can generate your Api Key. You should treat this API key as a secret, like a password. " +
+                        "Using the button below you can generate your Api Key. " +
+                        "This API key can be used to access your private list of decks you own. (If you do not allow anyone to see your decks.) " +
+                        "You may provide this to other sites for them to sync your DoK deck list with their site, but you should only give it " +
+                        "to sites or tools you trust. " +
                         "You can make a new one at any time, but when " +
                         "you do the previous Api Key immediately becomes invalid. You will only be able to see this API key " +
                         "immediately after it is generated.",
@@ -162,33 +82,40 @@ export class SellersAndDevs extends React.Component {
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
+                    <InfoListCard title={"Rules to use the APIs in general"} infos={[
+                        "1. Please do not spam requests. Use the all decks CSV above when appropriate. The site has been brought down " +
+                        "due to improper use of these APIs.",
+                        "2. You can make a maximum of 25 requests per minute. If you need more, please become a patron! Patrons have " +
+                        "increased request limits. $5 a month = 50 per min, $10 a month = 100 per min, and $25+ a month = 250 per min.",
+                        "3. If you use these endpoints for your project or website please give credit and provide a link to " +
+                        "decksofkeyforge.com",
+                        "4. Please only use the APIs specified here from this site. If you have an idea for a cool feature of the site " +
+                        "you'd like to see as a public API, send me a message on discord or via email!"
+                    ]}/>
+                </AboutGridItem>
+                <AboutGridItem>
                     <InfoListCard title={"SAS and AERC API"} infos={[
-                        "I've created a simple API you can use to get SAS and AERC ratings for a deck, but if you use it I would appreciate it " +
-                        "if you could follow a few rules.",
-                        "1. Users have taken down DoK from over using this endpoint, so I have added rate limiting. You are not allowed to send more " +
-                        "than 25 requests per minute. Please try to stay significantly under that cap though! If you need SAS / AERC for all decks " +
-                        "DO NOT USE the endpoint, use the CSV. Patrons can receive extra requests per minute! $5 a month = 50 per min, " +
-                        "$10 a month = 100 per min, and $25+ a month = 250 per min.",
-                        "2. Please don't send requests with deck IDs that don't exist in master vault.",
-                        "3. If you display SAS or AERC values please provide a link to decksofkeyforge.com (or a link to the deck itself " +
-                        "on decksofkeyforge.com) along with the rating. " +
-                        `It doesn't need to be obtrusive, for example making "75 SAS" into a link, or having a small link icon next to it, is fine.`,
-                        "4. Please attribute decksofkeyforge.com on your site.",
-                        "5. You'll need to use the API key associated with your account.",
-                        "6. I've included the version of SAS used. If possible, please cache or persist SAS scores until a new version is released.",
+                        "I've created a simple API you can use to get SAS and AERC ratings for a deck",
+                        "1. First off, if you want all the decks, use the Decks CSV above. Don't request every deck that exists from DoK!",
+                        "2. I've included the version of SAS used. If possible, please cache or persist SAS scores until a new version is released.",
                         "The url to request deck info is:",
                         "https://decksofkeyforge.com/public-api/v3/decks/{deck-id-from-master-vault}",
                         `You'll need to include the header "Api-Key: {your-api-key}`
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
+                    <InfoListCard title={"My Decks API"} infos={[
+                        "With this API you can get a list of all decks you own, or have added to favorites, funny, or notes.",
+                        "Third party sites and tools may request their users' DoK API key. With it you can see the decks that user " +
+                        "has listed as owned on DoK.",
+                        "https://decksofkeyforge.com/public-api/v1/my-decks",
+                        `You'll need to include the header "Api-Key: {your-api-key}`
+                    ]}/>
+                </AboutGridItem>
+                <AboutGridItem>
                     <InfoListCard title={"Deck Statistics API"} infos={[
-                        "In addition to the SAS and AERC API, I've provided an API with the data I use to build the graphs and charts you see on the site.",
-                        "Again, please read the following rules for using this API:",
-                        "1. Statistics are updated once every 3 days. You shouldn't need to request them more often than that.",
-                        "2. Please provide a link to decksofkeyforge.com on your site. " +
-                        "3. Please attribute decksofkeyforge.com as a source of data for your site.",
-                        "4. You'll need to use the API key associated with your account.",
+                        "This API provides the data I use to build the graphs and charts you see on the site.",
+                        "These statistics are updated once every 3 days. You shouldn't need to request them more often than that.",
                         "The url to request stats is:",
                         "https://decksofkeyforge.com/public-api/v1/stats",
                         `You'll need to include the header "Api-Key: {your-api-key}`
@@ -198,12 +125,8 @@ export class SellersAndDevs extends React.Component {
                     <InfoListCard title={"Cards API"} infos={[
                         "With this API you can get a list of all the cards that exist in KeyForge. It does not contain special variants of those cards, " +
                         "like mavericks or legacies.",
-                        "Again, please read the following rules for using this API:",
-                        "1. These are only updated after a new set releases. Please do not repeatedly call this endpoint. You can call it a few times after " +
+                        "These are only updated after a new set releases. Please do not repeatedly call this endpoint. You can call it a few times after " +
                         "a new set releases as it gradually fills in all the cards.",
-                        "2. Please provide a link to decksofkeyforge.com on your site. " +
-                        "3. Please attribute decksofkeyforge.com as a source of data for your site.",
-                        "4. You'll need to use the API key associated with your account.",
                         "The url to request cards is:",
                         "https://decksofkeyforge.com/public-api/v1/cards",
                         `You'll need to include the header "Api-Key: {your-api-key}`

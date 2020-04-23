@@ -113,6 +113,7 @@ export class RegistrationPage extends React.Component {
                             <Grid container={true} spacing={2}>
                                 <Grid item={true} xs={6}>
                                     <TextField
+                                        id={"dok-email"}
                                         variant={"outlined"}
                                         label={"Email"}
                                         type={"email"}
@@ -127,6 +128,7 @@ export class RegistrationPage extends React.Component {
                                         autoFocus={true}
                                     />
                                     <TextField
+                                        id={"dok-password"}
                                         variant={"outlined"}
                                         label={"Password"}
                                         type={"password"}

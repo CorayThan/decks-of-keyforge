@@ -42,31 +42,48 @@ class PublicApiEndpoints(
     @PostMapping("/api-keys/secured")
     fun generateApiKey() = publicApiService.generateApiKey()
 
-    @PostMapping("/sellers/list-deck")
-    fun listDeckForSale(@RequestHeader("Api-Key") apiKey: String, @RequestBody listDeck: ListDeck): String {
-        return "This feature has been turned off. Let me know if you still want to use it!"
-//        val seller = publicApiService.userForApiKey(apiKey)
-//        log.info("List deck request from ${seller.email}")
-//        publicApiService.listDeckForSeller(listDeck, seller)
-    }
-
-//    @DeleteMapping("/sellers/unlist-deck/{id}")
-//    fun unlistDeck(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String) {
-//        val seller = publicApiService.userForApiKey(apiKey)
-//        log.info("Unlist deck request from ${seller.email}")
-//        publicApiService.unlistDeckForSeller(id, seller)
-//    }
-//
-//    @DeleteMapping("/sellers/unlist-deck-by-name/{name}")
-//    fun unlistDeckWithName(@RequestHeader("Api-Key") apiKey: String, @PathVariable name: String) {
-//        val seller = publicApiService.userForApiKey(apiKey)
-//        log.info("Unlist deck with name request from ${seller.email}")
-//        publicApiService.unlistDeckForSellerWithName(name, seller)
-//    }
-
     @CrossOrigin
     @GetMapping("/v3/decks/{id}")
     fun findDeckSimple3(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String): SimpleDeckResponse {
+
+        this.rateLimit(apiKey)
+
+        val deck = publicApiService.findDeckSimple(id)
+        return SimpleDeckResponse(deck ?: Nothing())
+    }
+
+    @CrossOrigin
+    @GetMapping("/v1/stats")
+    fun findStats1(@RequestHeader("Api-Key") apiKey: String): DeckStatistics {
+
+        this.rateLimit(apiKey)
+
+        val user = publicApiService.userForApiKey(apiKey)
+        log.info("Deck stats request from user ${user.email}")
+        return statsService.findCurrentStats() ?: throw BadRequestException("Sorry, deck statistics are not available at this time.")
+    }
+
+    @CrossOrigin
+    @GetMapping("/v1/cards")
+    fun findCards1(@RequestHeader("Api-Key") apiKey: String): List<Card> {
+
+        this.rateLimit(apiKey)
+
+        val user = publicApiService.userForApiKey(apiKey)
+        log.info("Cards request from user ${user.email}")
+        return cardService.allFullCardsNonMaverickNoDups()
+    }
+
+    @CrossOrigin
+    @GetMapping("/v1/my-decks")
+    fun findMyDecks(@RequestHeader("Api-Key") apiKey: String): List<PublicMyDeckInfo> {
+        this.rateLimit(apiKey)
+        val user = publicApiService.userForApiKey(apiKey)
+
+        return publicApiService.findMyDecks(user)
+    }
+
+    private fun rateLimit(apiKey: String) {
         val requests = this.rateLimiters.getOrPut(apiKey, { 0 }) + 1
         this.rateLimiters[apiKey] = requests
 
@@ -85,24 +102,5 @@ class PublicApiEndpoints(
                 }
             }
         }
-
-        val deck = publicApiService.findDeckSimple(id)
-        return SimpleDeckResponse(deck ?: Nothing())
-    }
-
-    @CrossOrigin
-    @GetMapping("/v1/stats")
-    fun findStats1(@RequestHeader("Api-Key") apiKey: String): DeckStatistics {
-        val user = publicApiService.userForApiKey(apiKey)
-        log.info("Deck stats request from user ${user.email}")
-        return statsService.findCurrentStats() ?: throw BadRequestException("Sorry, deck statistics are not available at this time.")
-    }
-
-    @CrossOrigin
-    @GetMapping("/v1/cards")
-    fun findCards1(@RequestHeader("Api-Key") apiKey: String): List<Card> {
-        val user = publicApiService.userForApiKey(apiKey)
-        log.info("Cards request from user ${user.email}")
-        return cardService.allFullCardsNonMaverickNoDups()
     }
 }

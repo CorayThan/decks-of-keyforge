@@ -153,7 +153,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                         </ListItem>
                         <ListItem>
                             <CsvDownloadButton
-                                data={CardUtils.arrayToCSV(cardStore.cards ?? [])}
+                                data={cardStore.cards == null ? undefined : CardUtils.arrayToCSV(cardStore.cards)}
                                 name={"cards"}
                             />
                             <KeyButton

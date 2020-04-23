@@ -61,9 +61,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
     const displayAember = amber > 0
     const displayCreaturePower = powerString.length > 0 && powerString !== "0"
     const displayCreatureArmor = armorString.length > 0 && armorString !== "0"
-
-    log.debug(`For ${cardTitle} ${reprint} traits: ${traits}`)
-
+    
     return (
         <div style={{display: "flex", flexDirection: screenStore.screenSizeXs() || frontImage === "" ? "column" : undefined}}>
             {frontImage != null && frontImage.length > 0 && (<SpoilerImage cardTitle={cardTitle} url={frontImage}/>)}

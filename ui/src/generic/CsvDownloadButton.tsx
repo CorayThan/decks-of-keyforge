@@ -6,7 +6,7 @@ import { CSVLink } from "react-csv"
 import { Utils } from "../config/Utils"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const CsvDownloadButton = observer((props: { name: string, data?: any[], size?: "small" | "medium" }) => {
+export const CsvDownloadButton = observer((props: { name: string, data?: CsvData, size?: "small" | "medium" }) => {
     const {data, name, size} = props
     if (data == null || data.length === 0) {
         return (
@@ -15,9 +15,21 @@ export const CsvDownloadButton = observer((props: { name: string, data?: any[], 
             </IconButton>
         )
     }
+    const dataEncoded = data.map(row => {
+        return row.map(cell => {
+            let cellJoined = cell
+            if (cell instanceof Array) {
+                cellJoined = cell.join(" | ")
+            }
+            if (typeof cellJoined == "string" && cellJoined.includes('"')) {
+                return cellJoined.replace(/"/g, '""')
+            }
+            return cellJoined
+        })
+    })
     return (
         <CSVLink
-            data={data}
+            data={dataEncoded}
             target={"_blank"}
             filename={`dok-${name}-${Utils.nowDateString()}.csv`}
 
@@ -28,3 +40,5 @@ export const CsvDownloadButton = observer((props: { name: string, data?: any[], 
         </CSVLink>
     )
 })
+
+export type CsvData = (string | number | boolean | string[] | number[] | boolean[] | undefined)[][]

@@ -20,7 +20,7 @@
     "mobx-react": "^6.1.4",
     "query-string": "^6.8.3",
     "react": "^16.11.0",
-    "react-csv": "^1.1.2",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
     "react-router-hash-link": "^1.2.2",

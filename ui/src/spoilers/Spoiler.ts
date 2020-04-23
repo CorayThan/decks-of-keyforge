@@ -2,6 +2,7 @@ import { HasAerc } from "../aerc/HasAerc"
 import { CardType } from "../cards/CardType"
 import { Rarity } from "../cards/rarity/Rarity"
 import { Expansion } from "../expansions/Expansions"
+import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
 import { makeFullSpoilerUrl } from "./SpoilerView"
 
@@ -35,7 +36,7 @@ export interface Spoiler extends HasAerc {
 }
 
 export class SpoilerUtils {
-    static arrayToCSV = (cards: Spoiler[] | undefined) => {
+    static arrayToCSV = (cards: Spoiler[] | undefined): CsvData | undefined => {
         if (cards == null) return undefined
         const data = cards.map(card => {
 
@@ -55,8 +56,7 @@ export class SpoilerUtils {
 
                 card.traits,
                 card.cardText
-                    .replace(/[\r\n]+/gm, "\r")
-                    .replace(/"/g, "\"\""),
+                    .replace(/[\r\n]+/gm, "\r"),
                 makeFullSpoilerUrl(card.frontImage)
             ]
         })
