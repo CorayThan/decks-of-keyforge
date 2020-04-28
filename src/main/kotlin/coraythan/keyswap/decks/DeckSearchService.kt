@@ -465,6 +465,7 @@ class DeckSearchService(
 
         return query.selectFrom(deckQ)
                 .where(predicate)
+                .orderBy(deckQ.sasRating.desc())
                 .limit(5)
                 .fetch()
                 .map {
