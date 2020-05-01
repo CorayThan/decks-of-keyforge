@@ -163,7 +163,7 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                                             positive={synergy.rating > 0}
                                             synergyWith={synergy.traitCards}
                                             rating={synergy.rating}
-                                            synTraitType={synergy.type}
+                                            synTraitHouse={synergy.house}
                                             cardName={synergy.cardName}
                                         />
                                     </div>

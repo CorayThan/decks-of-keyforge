@@ -1,6 +1,7 @@
 package coraythan.keyswap.synergy
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
 import java.util.*
 import javax.persistence.*
@@ -15,6 +16,8 @@ data class SynTraitValue(
 
         @Enumerated(EnumType.STRING)
         val player: SynTraitPlayer = SynTraitPlayer.ANY,
+
+        var cardTypesString: String = "",
 
         @JsonIgnoreProperties("traits")
         @ManyToOne
@@ -42,8 +45,16 @@ data class SynTraitValue(
     }
 
     override fun toString(): String {
-        return "SynTraitValue(trait=$trait, rating=$rating, type=$house, traitInfoId=${traitInfo?.id}, synergyInfoId=${synergyInfo?.id}, id=$id)"
+        return "SynTraitValue(trait=$trait, rating=$rating, type=$house, player=$player, cardTypes=$cardTypesString traitInfoId=${traitInfo?.id}, synergyInfoId=${synergyInfo?.id}, id=$id)"
     }
+
+    var cardTypes: List<CardType>
+        get() {
+            return cardTypesString.split("-").mapNotNull { if (it.isBlank()) null else CardType.valueOf(it) }
+        }
+        set(cardTypes) {
+            cardTypesString = cardTypes.joinToString("-")
+        }
 
 }
 

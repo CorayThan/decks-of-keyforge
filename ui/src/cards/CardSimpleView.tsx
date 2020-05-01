@@ -357,7 +357,7 @@ export const CardTraits = (props: { card: KCard }) => (
                 key={synergy.id}
                 name={synergy.trait}
                 positive={synergy.rating > 0}
-                synTraitType={synergy.type}
+                synTraitHouse={synergy.house}
                 rating={synergy.rating}
                 trait={true}
             />
@@ -372,7 +372,7 @@ export const CardSynergies = (props: { card: KCard }) => (
                 key={synergy.id}
                 name={synergy.trait}
                 positive={synergy.rating > 0}
-                synTraitType={synergy.type}
+                synTraitHouse={synergy.house}
                 rating={synergy.rating}
                 cardName={synergy.cardName}
             />

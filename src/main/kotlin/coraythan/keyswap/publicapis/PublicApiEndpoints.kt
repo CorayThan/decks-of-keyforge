@@ -4,11 +4,13 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.RateExceededException
+import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.Nothing
 import coraythan.keyswap.decks.SimpleDeckResponse
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
@@ -21,7 +23,8 @@ val maxApiRequests = 25
 class PublicApiEndpoints(
         private val publicApiService: PublicApiService,
         private val statsService: StatsService,
-        private val cardService: CardService
+        private val cardService: CardService,
+        private val keyUserRepo: KeyUserRepo
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
@@ -84,6 +87,10 @@ class PublicApiEndpoints(
     }
 
     private fun rateLimit(apiKey: String) {
+        if (!this.rateLimiters.containsKey(apiKey) && !keyUserRepo.existsByApiKey(apiKey)) {
+            throw UnauthorizedException("Your API key does not exist.")
+        }
+
         val requests = this.rateLimiters.getOrPut(apiKey, { 0 }) + 1
         this.rateLimiters[apiKey] = requests
 

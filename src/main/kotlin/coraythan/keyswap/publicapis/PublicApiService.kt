@@ -30,9 +30,11 @@ class PublicApiService(
     fun findMyDecks(user: KeyUser): List<PublicMyDeckInfo> {
         return userDeckRepo.findByUserId(user.id)
                 .map {
+                    val cards = cardService.cardsForDeck(it.deck)
                     PublicMyDeckInfo(
                             deck = it.deck.toDeckSearchResult(
-                                    cards = cardService.cardsForDeck(it.deck),
+                                    searchResultCards = cardService.deckSearchResultCardsFromCardIds(it.deck.cardIds),
+                                    cards = cards,
                                     stats = statsService.findCurrentStats(),
                                     crucibleWins = deckWinsService.crucibleWins
                             ),

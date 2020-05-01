@@ -2,6 +2,58 @@ import { Utils } from "../config/Utils"
 
 export enum SynergyTrait {
 
+    exalt = "exalt",
+    exaltFriendly = "exaltFriendly",
+
+    damagesMultipleEnemies = "damagesMultipleEnemies",
+    damagesAllEnemies = "damagesAllEnemies",
+    damagesFriendlyCreatures = "damagesFriendlyCreatures",
+    damagesMultiple = "damagesMultiple",
+
+    destroysFriendlyCreatures = "destroysFriendlyCreatures",
+    destroysEnemyCreatures = "destroysEnemyCreatures",
+    destroysEnemyArtifacts = "destroysEnemyArtifacts",
+    destroysFriendlyArtifacts = "destroysFriendlyArtifacts",
+    destroys = "destroys",
+
+    movesFriendly = "movesFriendly",
+    movesEnemy = "movesEnemy",
+    moves = "moves",
+
+    returnsFriendlyCreaturesToHand = "returnsFriendlyCreaturesToHand",
+    returnsEnemyCreaturesToHand = "returnsEnemyCreaturesToHand",
+    returnsFriendlyArtifactsToHand = "returnsFriendlyArtifactsToHand",
+    returnsEnemyArtifactsToHand = "returnsEnemyArtifactsToHand",
+    returns_R_ToHand = "returns_R_ToHand",
+
+
+    usesCreatures = "usesCreatures",
+    readiesCreatures = "readiesCreatures",
+    readiesCreaturesOnPlay = "readiesCreaturesOnPlay",
+    usesCreaturesOutOfHouse = "usesCreaturesOutOfHouse",
+    uses = "uses",
+
+    purgesFriendlyCreatures = "purgesFriendlyCreatures",
+    purges = "purges",
+
+    archives = "archives",
+    archivesEnemyCards = "archivesEnemyCards",
+
+    controlsCreatures = "controlsCreatures",
+    controls = "controls",
+
+    returnsCreaturesFromDiscard = "returnsCreaturesFromDiscard",
+    returnsCardsFromDiscard = "returnsCardsFromDiscard",
+    returns_R_FromDiscard = "returns_R_FromDiscard",
+
+    discardsFriendlyCards = "discardsFriendlyCards",
+    discardsEnemyCards = "discardsEnemyCards",
+    discardsCards = "discardsCards",
+
+    reducesEnemyDraw = "reducesEnemyDraw",
+    reduces_R_HandSize = "reduces_R_HandSize",
+
+
     // Amber / keys
     capturesAmberOnEnemies = "capturesAmberOnEnemies",
     capturesAmber = "capturesAmber",
@@ -9,39 +61,21 @@ export enum SynergyTrait {
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
     scalingSteal = "scalingSteal",
-    exalt = "exalt",
-    exaltFriendly = "exaltFriendly",
     spendsCapturedAmber = "spendsCapturedAmber",
 
     // Damage
-    damagesMultipleEnemies = "damagesMultipleEnemies",
-    damagesAllEnemies = "damagesAllEnemies",
-    damagesFriendlyCreatures = "damagesFriendlyCreatures",
     dealsDamage = "dealsDamage",
     preventsDamage = "preventsDamage",
     distributableDamage = "distributableDamage",
 
     // Creatures
-    destroysFriendlyCreatures = "destroysFriendlyCreatures",
-    destroysEnemyCreatures = "destroysEnemyCreatures",
     stuns = "stuns",
     addsArmor = "addsArmor",
     protectsCreatures = "protectsCreatures",
     increasesCreaturePower = "increasesCreaturePower",
     heals = "heals",
-    movesFriendly = "movesFriendly",
-    movesEnemy = "movesEnemy",
-    controlsCreatures = "controlsCreatures",
     causesFighting = "causesFighting",
     causesReaping = "causesReaping",
-    usesCreatures = "usesCreatures",
-    goodReap = "goodReap",
-    goodAction = "goodAction",
-    goodPlay = "goodPlay",
-    goodFight = "goodFight",
-    goodDestroyed = "goodDestroyed",
-    readiesCreatures = "readiesCreatures",
-    readiesCreaturesOnPlay = "readiesCreaturesOnPlay",
     sacrificesCreatures = "sacrificesCreatures",
     elusive = "elusive",
     skirmish = "skirmish",
@@ -49,32 +83,13 @@ export enum SynergyTrait {
     deploy = "deploy",
     ward = "ward",
 
-    // Purging
-    purgesFriendlyCreatures = "purgesFriendlyCreatures",
-    purges = "purges",
-
     // Archives
-    archives = "archives",
     archivesRandom = "archivesRandom",
-    archivesEnemyCards = "archivesEnemyCards",
-
-    // Discard
-    returnsCreaturesFromDiscard = "returnsCreaturesFromDiscard",
-    returnsCardsFromDiscard = "returnsCardsFromDiscard",
 
     // Artifacts
-    destroysEnemyArtifacts = "destroysEnemyArtifacts",
-    destroysFriendlyArtifacts = "destroysFriendlyArtifacts",
     usableArtifact = "usableArtifact",
 
     // Hand Manipulation
-    discardsFriendlyCards = "discardsFriendlyCards",
-    discardsEnemyCards = "discardsEnemyCards",
-    reducesEnemyDraw = "reducesEnemyDraw",
-    returnsFriendlyCreaturesToHand = "returnsFriendlyCreaturesToHand",
-    returnsEnemyCreaturesToHand = "returnsEnemyCreaturesToHand",
-    returnsFriendlyArtifactsToHand = "returnsFriendlyArtifactsToHand",
-    returnsEnemyArtifactsToHand = "returnsEnemyArtifactsToHand",
     drawsCards = "drawsCards",
     increasesHandSize = "increasesHandSize",
     playsCards = "playsCards",
@@ -89,7 +104,6 @@ export enum SynergyTrait {
 
     // Houses
     controlsHouseChoice = "controlsHouseChoice",
-    usesCreaturesOutOfHouse = "usesCreaturesOutOfHouse",
 
 
     // other
@@ -101,6 +115,16 @@ export enum SynergyTrait {
     // Special traits, don't use these in manual traits
     alpha = "alpha",
     omega = "omega",
+
+    /*** Deprecated ***/
+
+    goodReap = "goodReap",
+    goodAction = "goodAction",
+    goodPlay = "goodPlay",
+    goodFight = "goodFight",
+    goodDestroyed = "goodDestroyed",
+
+    /*** End Deprecated ***/
 
     // Traits (these don't need to be traits on the extra info)
     knight = "knight",

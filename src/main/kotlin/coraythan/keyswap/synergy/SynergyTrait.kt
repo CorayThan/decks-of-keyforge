@@ -22,78 +22,60 @@ enum class SynergyTrait {
     exaltFriendly,
     // exalt,
 
-
     damagesMultipleEnemies,
     damagesAllEnemies,
     damagesFriendlyCreatures,
-    // damagesMultiple,
-
+    damagesMultiple,
 
     destroysFriendlyCreatures,
     destroysEnemyCreatures,
     destroysEnemyArtifacts,
     destroysFriendlyArtifacts,
-    // destroys,
-
+    destroys,
 
     movesFriendly,
     movesEnemy,
-    // moves,
+    moves,
 
 
     returnsFriendlyCreaturesToHand,
     returnsEnemyCreaturesToHand,
     returnsFriendlyArtifactsToHand,
     returnsEnemyArtifactsToHand,
-    // returnsToHand,
+    returns_R_ToHand,
 
 
     usesCreatures,
     readiesCreatures,
     readiesCreaturesOnPlay,
     usesCreaturesOutOfHouse,
-    // causesUse,
+    uses,
 
 
     purgesFriendlyCreatures,
     purges,
-    // purges,
 
 
-    archives,
     archivesEnemyCards,
-    // archives,
+    archives,
 
 
     controlsCreatures,
-    // takesControl,
+    controls,
 
 
     returnsCreaturesFromDiscard,
     returnsCardsFromDiscard,
-    // returnsFromDiscard,
-
-
+    returns_R_FromDiscard,
 
 
     discardsFriendlyCards,
     discardsEnemyCards,
-    // discardsCards,
+    discardsCards,
 
 
     reducesEnemyDraw,
-    // reducesHandSize,
-
-    /*** Deprecated ***/
-
-    goodReap,
-    goodAction,
-    goodPlay,
-    goodFight,
-    goodDestroyed,
-
-    /*** End Deprecated ***/
-
+    reduces_R_HandSize,
 
 
     // Amber / keys
@@ -158,8 +140,20 @@ enum class SynergyTrait {
     revealsTopDeck,
     chains,
     forgesKeys,
+
+
     alpha,
     omega,
+
+    /*** Deprecated ***/
+
+    goodReap,
+    goodAction,
+    goodPlay,
+    goodFight,
+    goodDestroyed,
+
+    /*** End Deprecated ***/
 
     // Traits (these don't need to be traits on the extra info)
     knight,

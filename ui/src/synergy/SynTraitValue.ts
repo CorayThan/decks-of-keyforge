@@ -1,20 +1,23 @@
+import { CardType } from "../cards/CardType"
 import { SynergyTrait } from "../extracardinfo/SynergyTrait"
+import { SynTraitHouse } from "./SynTraitHouse"
 
 export interface SynTraitValue {
     trait: SynergyTrait
     rating: SynTraitRatingValues
-    type: SynTraitType
+    house: SynTraitHouse
+    player: SynTraitPlayer
+    cardTypes: CardType[]
     cardName?: string
     id?: string
 }
 
-export enum SynTraitType {
-    anyHouse = "anyHouse",
-    // Only synergizes with traits inside its house
-    house = "house",
-    outOfHouse = "outOfHouse",
+export enum SynTraitPlayer {
+    FRIENDLY = "FRIENDLY",
+    ENEMY = "ENEMY",
+    ANY = "ANY"
 }
 
 export type SynTraitRatingValues = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4
 
-export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.type}`
+export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.house}`

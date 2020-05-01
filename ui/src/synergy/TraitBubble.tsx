@@ -3,15 +3,32 @@ import { amber, blue, teal } from "@material-ui/core/colors"
 import Home from "@material-ui/icons/Home"
 import { startCase } from "lodash"
 import * as React from "react"
+import { CardType } from "../cards/CardType"
 import { spacing } from "../config/MuiConfig"
 import { AntiIcon } from "../generic/icons/AntiIcon"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
-import { SynTraitType } from "./SynTraitType"
+import { SynTraitHouse } from "./SynTraitHouse"
+import { SynTraitPlayer, SynTraitValue } from "./SynTraitValue"
+
+export const TraitBubbleFromTrait = (props: {traitValue: SynTraitValue, trait?: boolean}) => (
+    <TraitBubble
+        name={props.traitValue.trait}
+        positive={props.traitValue.rating > 0}
+        synTraitHouse={props.traitValue.house}
+        cardTypes={props.traitValue.cardTypes}
+        player={props.traitValue.player}
+        cardName={props.traitValue.cardName}
+        rating={props.traitValue.rating}
+        trait={props.trait}
+    />
+)
 
 export const TraitBubble = (props: {
     name: string,
     positive: boolean,
-    synTraitType?: SynTraitType,
+    synTraitHouse?: SynTraitHouse,
+    cardTypes?: CardType[],
+    player?: SynTraitPlayer,
     trait?: boolean,
     cardName?: string,
     rating?: number,
@@ -25,6 +42,23 @@ export const TraitBubble = (props: {
         title = "Synergy"
     } else {
         title = "Antisynergy"
+    }
+    let name = props.name
+    let nameEnhancer = ""
+    if (props.player && props.player != SynTraitPlayer.ANY) {
+        nameEnhancer += ` ${startCase(props.player.toLowerCase())}`
+    }
+    if (props.cardTypes && props.cardTypes.length > 0) {
+        if (props.cardTypes.length === 1) {
+            nameEnhancer += ` ${props.cardTypes[0]}s`
+        } else {
+            nameEnhancer += ` ${props.cardTypes.map(type => type + "s").join(" ")}`
+        }
+    }
+    if (name.includes("_R_")) {
+        name = name.replace("_R_", nameEnhancer)
+    } else {
+        name += " " + nameEnhancer
     }
     return (
         <span
@@ -43,12 +77,12 @@ export const TraitBubble = (props: {
             {props.rating ? (
                 <SynergyEffectIcon effect={props.rating}/>
             ) : null}
-            {props.synTraitType === SynTraitType.house ? (
+            {props.synTraitHouse === SynTraitHouse.house ? (
                 <Tooltip title={"Synergizes with house traits only"}>
                     <Home style={{color, marginRight: spacing(1), height: 18}}/>
                 </Tooltip>
             ) : null}
-            {props.synTraitType === SynTraitType.outOfHouse ? (
+            {props.synTraitHouse === SynTraitHouse.outOfHouse ? (
                 <Tooltip title={"Synergizes with out of house traits only"}>
                     <div style={{width: 18, height: 18, marginLeft: spacing(1), marginRight: spacing(1)}}>
                         <div style={{position: "absolute", paddingLeft: 2, paddingTop: 1}}>
@@ -73,7 +107,7 @@ export const TraitBubble = (props: {
                 )}
             >
                 <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
-                    {startCase(props.cardName == null ? props.name : props.cardName)}
+                    {startCase(props.cardName == null ? name : props.cardName)}
                 </Typography>
             </Tooltip>
         </span>

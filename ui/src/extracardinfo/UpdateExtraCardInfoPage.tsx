@@ -1,5 +1,22 @@
-import { Card, CardActions, Checkbox, Grid, IconButton, MenuItem, TextField, Tooltip, Typography } from "@material-ui/core"
-import { ChevronLeft, ChevronRight, Delete, Save } from "@material-ui/icons"
+import {
+    Card,
+    CardActions,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    Grid,
+    IconButton,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    TextField,
+    Tooltip,
+    Typography
+} from "@material-ui/core"
+import { ChevronLeft, ChevronRight, Close, Delete, Save } from "@material-ui/icons"
+import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
@@ -7,6 +24,7 @@ import { RouteComponentProps } from "react-router-dom"
 import { SingleCardSearchSuggest } from "../cards/CardSearchSuggest"
 import { CardView } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
+import { CardType } from "../cards/CardType"
 import { KCard } from "../cards/KCard"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
@@ -18,9 +36,9 @@ import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
-import { SynTraitType } from "../synergy/SynTraitType"
-import { SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
-import { TraitBubble } from "../synergy/TraitBubble"
+import { SynTraitHouse } from "../synergy/SynTraitHouse"
+import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
+import { TraitBubbleFromTrait } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
@@ -374,11 +392,8 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             key={idx}
                                             style={{display: "flex"}}
                                         >
-                                            <TraitBubble
-                                                name={synergy.trait}
-                                                positive={synergy.rating > 0}
-                                                synTraitType={synergy.type}
-                                                rating={synergy.rating}
+                                            <TraitBubbleFromTrait
+                                                traitValue={synergy}
                                                 trait={true}
                                             />
                                             <IconButton
@@ -388,7 +403,6 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             </IconButton>
                                         </div>
                                     ))}
-                                    <AddTrait name={"trait"} addTo={this.traits} trait={true}/>
                                 </div>
                             </Grid>
                             <Grid item={true} xs={12} sm={6}>
@@ -398,12 +412,8 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             key={idx}
                                             style={{display: "flex"}}
                                         >
-                                            <TraitBubble
-                                                name={synergy.trait}
-                                                positive={synergy.rating > 0}
-                                                synTraitType={synergy.type}
-                                                rating={synergy.rating}
-                                                cardName={synergy.cardName}
+                                            <TraitBubbleFromTrait
+                                                traitValue={synergy}
                                             />
                                             <IconButton
                                                 onClick={() => this.synergies.splice(idx, 1)}
@@ -412,8 +422,10 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             </IconButton>
                                         </div>
                                     ))}
-                                    <AddTrait name={"synergy"} addTo={this.synergies} trait={false}/>
                                 </div>
+                            </Grid>
+                            <Grid item={true} xs={12}>
+                                <AddTrait traits={this.traits} synergies={this.synergies}/>
                             </Grid>
                         </Grid>
                         <CardActions>
@@ -457,16 +469,28 @@ const InfoInput = (props: { name: string, value: string, update: (event: EventVa
 }
 
 @observer
-class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], trait?: boolean }> {
+class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: SynTraitValue[] }> {
+
+    @observable
+    isSynergy = false
 
     @observable
     trait: SynergyTrait = SynergyTrait.dealsDamage
 
     @observable
+    traitFilter = ""
+
+    @observable
     rating: SynTraitRatingValues = 3
 
     @observable
-    type: SynTraitType = SynTraitType.anyHouse
+    type: SynTraitHouse = SynTraitHouse.anyHouse
+
+    @observable
+    cardTypes: CardType[] = []
+
+    @observable
+    player: SynTraitPlayer = SynTraitPlayer.ANY
 
     @observable
     holdsCard = {
@@ -474,85 +498,154 @@ class AddTrait extends React.Component<{ name: string, addTo: SynTraitValue[], t
     }
 
     render() {
-        const {trait} = this.props
-        const selectableTraits = Utils.enumValues(SynergyTrait)
-            .filter(traitValue => !(trait ? specialTraits : noSynTraits).includes(traitValue as SynergyTrait))
+        const {traits, synergies} = this.props
+
+        const selectableTraits = (Utils.enumValues(SynergyTrait) as string[])
+            .filter(traitValue => !(!this.isSynergy ? specialTraits : noSynTraits).includes(traitValue as SynergyTrait))
+
         return (
-            <div style={{display: "flex", alignItems: "center", flexWrap: "wrap", marginTop: spacing(1)}}>
-                <TextField
-                    select={true}
-                    label={this.props.name}
-                    value={this.trait}
-                    onChange={(event) => this.trait = event.target.value as SynergyTrait}
-                    style={{marginRight: spacing(2)}}
-                >
-                    {selectableTraits.map(option => (
-                        <MenuItem key={option} value={option}>
-                            {option}
+            <Grid container={true} spacing={2}>
+                <Grid item={true} xs={12} sm={6}>
+                    <Grid container={true}>
+                        <Grid item={true} xs={6}>
+                            <FormControl>
+                                <FormLabel>Type</FormLabel>
+                                <RadioGroup value={this.isSynergy} onChange={event => this.isSynergy = event.target.value as unknown as boolean}>
+                                    <FormControlLabel value={false} control={<Radio/>} label={"Trait"}/>
+                                    <FormControlLabel value={true} control={<Radio/>} label={"Synergy"}/>
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>
+                        <Grid item={true} xs={6}>
+                            <FormControl>
+                                <FormLabel>Card Types</FormLabel>
+                                <FormGroup>
+                                    {(Utils.enumValues(CardType) as CardType[]).map(type => (
+                                        <FormControlLabel
+                                            key={type}
+                                            control={
+                                                <Checkbox
+                                                    checked={this.cardTypes.includes(type)}
+                                                    onChange={() => {
+                                                        if (this.cardTypes.includes(type)) {
+                                                            this.cardTypes = this.cardTypes.filter(toRemove => type !== toRemove)
+                                                        } else {
+                                                            this.cardTypes.push(type)
+                                                        }
+                                                    }}
+                                                />
+                                            }
+                                            label={type}
+                                        />
+                                    ))}
+                                </FormGroup>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <TextField
+                        select={true}
+                        label="rating"
+                        value={this.rating}
+                        onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
+                        style={{minWidth: 80, marginTop: spacing(2), marginRight: spacing(2)}}
+                    >
+                        <MenuItem value={-4}>
+                            -4
                         </MenuItem>
-                    ))}
-                </TextField>
-                {!trait && (
-                    <div style={{width: 120, marginRight: spacing(2)}}>
+                        <MenuItem value={-3}>
+                            -3
+                        </MenuItem>
+                        <MenuItem value={-2}>
+                            -2
+                        </MenuItem>
+                        <MenuItem value={-1}>
+                            -1
+                        </MenuItem>
+                        <MenuItem value={1}>
+                            1
+                        </MenuItem>
+                        <MenuItem value={2}>
+                            2
+                        </MenuItem>
+                        <MenuItem value={3}>
+                            3
+                        </MenuItem>
+                        <MenuItem value={4}>
+                            4
+                        </MenuItem>
+                    </TextField>
+                    <TextField
+                        select={true}
+                        label="house"
+                        value={this.type}
+                        onChange={(event) => this.type = event.target.value as SynTraitHouse}
+                        style={{minWidth: 120, marginTop: spacing(2), marginRight: spacing(2)}}
+                    >
+                        {Utils.enumValues(SynTraitHouse).map(option => (
+                            <MenuItem key={option} value={option}>
+                                {startCase(option as string)}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        select={true}
+                        label="player"
+                        value={this.player}
+                        onChange={(event) => this.player = event.target.value as SynTraitPlayer}
+                        style={{minWidth: 120, marginTop: spacing(2)}}
+                    >
+                        {Utils.enumValues(SynTraitPlayer).map(option => (
+                            <MenuItem key={option} value={option}>
+                                {startCase((option as string).toLowerCase())}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <div style={{marginTop: spacing(2)}}>
                         <SingleCardSearchSuggest card={this.holdsCard} placeholder={"Card"}/>
                     </div>
-                )}
-                <TextField
-                    select={true}
-                    label="rating"
-                    value={this.rating}
-                    onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
-                    style={{marginRight: spacing(2)}}
-                >
-                    <MenuItem value={-4}>
-                        -4
-                    </MenuItem>
-                    <MenuItem value={-3}>
-                        -3
-                    </MenuItem>
-                    <MenuItem value={-2}>
-                        -2
-                    </MenuItem>
-                    <MenuItem value={-1}>
-                        -1
-                    </MenuItem>
-                    <MenuItem value={1}>
-                        1
-                    </MenuItem>
-                    <MenuItem value={2}>
-                        2
-                    </MenuItem>
-                    <MenuItem value={3}>
-                        3
-                    </MenuItem>
-                    <MenuItem value={4}>
-                        4
-                    </MenuItem>
-                </TextField>
-                <TextField
-                    select={true}
-                    label="type"
-                    value={this.type}
-                    onChange={(event) => this.type = event.target.value as SynTraitType}
-                    style={{marginRight: spacing(2)}}
-                >
-                    {Utils.enumValues(SynTraitType).map(option => (
-                        <MenuItem key={option} value={option}>
-                            {option}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <IconButton
-                    onClick={() => this.props.addTo.push({
-                        trait: this.holdsCard.cardName.length > 0 ? SynergyTrait.card : this.trait,
-                        rating: this.rating,
-                        cardName: this.holdsCard.cardName.length > 0 ? this.holdsCard.cardName : undefined,
-                        type: this.type
-                    })}
-                >
-                    <Save/>
-                </IconButton>
-            </div>
+                </Grid>
+                <Grid item={true} xs={12} sm={6} style={{marginBottom: spacing(2)}}>
+                    <div style={{display: "flex", alignItems: "center"}}>
+                        <TextField
+                            label={"filter traits"}
+                            value={this.traitFilter}
+                            onChange={event => this.traitFilter = event.target.value}
+                            style={{marginBottom: spacing(2), marginRight: spacing(2)}}
+                        />
+                        <div>
+                            <IconButton
+                                onClick={() => this.traitFilter = ""}
+                            >
+                                <Close/>
+                            </IconButton>
+                        </div>
+                        <div style={{flexGrow: 1}}/>
+                        <div>
+                            <IconButton
+                                onClick={() => (this.isSynergy ? synergies : traits).push({
+                                    trait: this.holdsCard.cardName.length > 0 ? SynergyTrait.card : this.trait,
+                                    rating: this.rating,
+                                    cardName: this.holdsCard.cardName.length > 0 ? this.holdsCard.cardName : undefined,
+                                    house: this.type,
+                                    player: this.player,
+                                    cardTypes: this.cardTypes
+                                })}
+                            >
+                                <Save/>
+                            </IconButton>
+                        </div>
+                    </div>
+                    <div style={{maxHeight: 240, overflowY: "auto"}}>
+                        <FormControl>
+                            <RadioGroup value={this.trait} onChange={(event) => this.trait = event.target.value as SynergyTrait}>
+                                {(this.traitFilter.length === 0 ? selectableTraits : selectableTraits.filter(trait => trait.toLowerCase().includes(this.traitFilter.toLowerCase()))).map(option => (
+                                    <FormControlLabel value={option} control={<Radio/>} label={startCase(option)} key={option}/>
+                                ))}
+                            </RadioGroup>
+                        </FormControl>
+                    </div>
+                </Grid>
+            </Grid>
         )
     }
 }
