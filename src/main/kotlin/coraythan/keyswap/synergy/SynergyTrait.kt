@@ -15,6 +15,8 @@ fun Set<String>.toSynergies(): List<SynergyTrait> {
 
 enum class SynergyTrait {
 
+    any,
+
     // combine these:
 
 
@@ -153,8 +155,6 @@ enum class SynergyTrait {
     goodFight,
     goodDestroyed,
 
-    /*** End Deprecated ***/
-
     // Traits (these don't need to be traits on the extra info)
     knight,
     human,
@@ -170,20 +170,23 @@ enum class SynergyTrait {
     giant,
     mutant,
 
-    // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4
     power5OrHigherCreatures, // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
     power4OrHigherCreatures, // 9+=1/4, 10+=1/2, 11+=3/4, 13+=1
     power3OrHigherCreatures, // 13+=1/4, 14+=1/2, 15+=3/4, 17+=1
     power3OrLowerCreatures, // 9+=1/4, 10+=1/2, 11+=3/4, 12+=1
-    power2OrLowerCreatures, // 4+=1/4, 5+=1/2, 6+=3/4, 7+=1
+    power2OrLowerCreatures, // 4+=1/4, 5+=1/2, 6+=3/4, 7
     power1Creatures, // 1=1/4, 2=1/2, 3=3/4, 4+=1
+    upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
     highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
     lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
+
+    /*** End Deprecated ***/
+
+    // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4 +=1
     hasMars,
     highTotalArmor, // 4=1/4, 5=1/2, 7=3/4, 9=1
 
     // Deck or House only traits
-    upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
     highTotalCreaturePower, // for house: 22+=1/4, 24+=1/2, 26+=3/4, 28+=1
     // for deck: 68+=1/4, 73+=1/2, 78+=3/4, 84+=1
     lowTotalCreaturePower, // 60-=1/4, 56-=1/2, 51-=3/4, 46-=1

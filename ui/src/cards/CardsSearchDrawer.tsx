@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField/TextField"
 import { Close, Image, ViewList, ViewModule } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
+import { range } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
@@ -12,21 +13,22 @@ import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { Utils } from "../config/Utils"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
+import { synergyOptions, SynergyTrait, traitOptions } from "../extracardinfo/SynergyTrait"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMultiSearchSuggest"
+import { KeyMultiSelect, SelectedValues } from "../mui-restyled/KeyMultiSelect"
 import { screenStore } from "../ui/ScreenStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { cardStore } from "./CardStore"
+import { CardType } from "./CardType"
 import { CardUtils } from "./KCard"
-import { AmberSelect, SelectedAmbers } from "./selects/AmberSelect"
-import { ArmorSelect, SelectedArmors } from "./selects/ArmorSelect"
+import { Rarity } from "./rarity/Rarity"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
-import { CardTypeSelect, SelectedCardTypes } from "./selects/CardTypeSelect"
-import { PowerSelect, SelectedPowers } from "./selects/PowerSelect"
 import { PublishDateSelect, SelectedPublishDate } from "./selects/PublishDateSelect"
-import { RaritySelect, SelectedRarities } from "./selects/RaritySelect"
 
 interface CardsSearchDrawerProps {
     filters: CardFilters
@@ -37,11 +39,12 @@ interface CardsSearchDrawerProps {
 export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
 
     selectedHouses = new SelectedHouses(this.props.filters.houses)
-    selectedCardTypes = new SelectedCardTypes(this.props.filters.types)
-    selectedRarities = new SelectedRarities(this.props.filters.rarities)
-    selectedPowers = new SelectedPowers(this.props.filters.powers)
-    selectedAmbers = new SelectedAmbers(this.props.filters.ambers)
-    selectedArmors = new SelectedArmors(this.props.filters.armors)
+    selectedCardTypes = new SelectedValues<CardType>(this.props.filters.types)
+    selectedRarities = new SelectedValues<Rarity>(this.props.filters.rarities)
+    selectedPowers = new SelectedValues<number>(this.props.filters.powers)
+    selectedAmbers = new SelectedValues<number>(this.props.filters.ambers)
+    selectedTraits = new SelectedOptions(this.props.filters.traits)
+    selectedSynergies = new SelectedOptions(this.props.filters.synergies)
     selectedSortStore = new CardSortSelectStore(this.props.filters.sort)
     selectedExpansion = new SelectedExpansion(this.props.filters.expansion == null ? undefined : [this.props.filters.expansion])
     selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
@@ -53,10 +56,11 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         const {filters} = this.props
         filters.houses = this.selectedHouses.toArray()
         filters.types = this.selectedCardTypes.selectedValues
-        filters.rarities = this.selectedRarities.toArray()
-        filters.powers = this.selectedPowers.toArray()
-        filters.ambers = this.selectedAmbers.toArray()
-        filters.armors = this.selectedArmors.toArray()
+        filters.rarities = this.selectedRarities.selectedValues
+        filters.powers = this.selectedPowers.selectedValues
+        filters.ambers = this.selectedAmbers.selectedValues
+        filters.traits = this.selectedTraits.selectedValues as SynergyTrait[]
+        filters.synergies = this.selectedSynergies.selectedValues as SynergyTrait[]
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
         filters.expansion = this.selectedExpansion.currentExpansion()
         filters.thisExpansionOnly = this.selectedExpansion.onlyThisExpansion
@@ -75,7 +79,6 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         this.selectedRarities.reset()
         this.selectedPowers.reset()
         this.selectedAmbers.reset()
-        this.selectedArmors.reset()
         this.selectedExpansion.reset()
     }
 
@@ -112,11 +115,59 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                             <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
                         <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><RaritySelect selectedRarities={this.selectedRarities}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><AmberSelect selectedAmbers={this.selectedAmbers}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><PowerSelect selectedPowers={this.selectedPowers}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Card Type"}
+                                    selected={this.selectedCardTypes}
+                                    options={Utils.enumValues(CardType) as CardType[]}
+                                />
+                            </div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Rarity"}
+                                    selected={this.selectedRarities}
+                                    options={[
+                                        Rarity.Common,
+                                        Rarity.Uncommon,
+                                        Rarity.Rare,
+                                        "Special",
+                                    ]}
+                                />
+                            </div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Aember"}
+                                    selected={this.selectedAmbers}
+                                    options={range(0, 5)
+                                        .map(amber => amber.toString())}
+                                />
+                            </div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Power"}
+                                    selected={this.selectedPowers}
+                                    options={range(1, 17)
+                                        .map(power => power.toString())}
+                                />
+                            </div>
+                        </ListItem>
+                        <ListItem>
+                            <KeyMultiSearchSuggest
+                                placeholder={"Traits"}
+                                selected={this.selectedTraits}
+                                options={traitOptions}
+                                fullWidth={true}
+                                style={{maxWidth: 311}}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <KeyMultiSearchSuggest
+                                placeholder={"Synergies"}
+                                selected={this.selectedSynergies}
+                                options={synergyOptions}
+                                fullWidth={true}
+                                style={{maxWidth: 311}}
+                            />
                         </ListItem>
                         <ListItem>
                             <FormControlLabel

@@ -44,10 +44,7 @@ data class DeckSynergyInfo(
 )
 
 data class SynergyMatch(
-        val trait: SynergyTrait,
+        val trait: SynTraitValue,
         val percentSynergized: Int,
-        val traitCards: Set<String>,
-        val rating: Int,
-        val house: SynTraitHouse,
-        val cardName: String? = null
+        val traitCards: Set<String>
 )

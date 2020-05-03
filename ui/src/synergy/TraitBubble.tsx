@@ -1,70 +1,36 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import { amber, blue, teal } from "@material-ui/core/colors"
 import Home from "@material-ui/icons/Home"
-import { startCase } from "lodash"
 import * as React from "react"
-import { CardType } from "../cards/CardType"
 import { spacing } from "../config/MuiConfig"
 import { AntiIcon } from "../generic/icons/AntiIcon"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
 import { SynTraitHouse } from "./SynTraitHouse"
-import { SynTraitPlayer, SynTraitValue } from "./SynTraitValue"
-
-export const TraitBubbleFromTrait = (props: {traitValue: SynTraitValue, trait?: boolean}) => (
-    <TraitBubble
-        name={props.traitValue.trait}
-        positive={props.traitValue.rating > 0}
-        synTraitHouse={props.traitValue.house}
-        cardTypes={props.traitValue.cardTypes}
-        player={props.traitValue.player}
-        cardName={props.traitValue.cardName}
-        rating={props.traitValue.rating}
-        trait={props.trait}
-    />
-)
+import { synTraitName, SynTraitValue } from "./SynTraitValue"
 
 export const TraitBubble = (props: {
-    name: string,
-    positive: boolean,
-    synTraitHouse?: SynTraitHouse,
-    cardTypes?: CardType[],
-    player?: SynTraitPlayer,
+    traitValue: SynTraitValue,
     trait?: boolean,
-    cardName?: string,
-    rating?: number,
     synergyWith?: string[]
 }) => {
-    const color = props.positive && !props.trait ? "#FFFFFF" : undefined
+    const {traitValue, trait, synergyWith} = props
+    const {rating, house} = traitValue
+    const positive = rating > 0
+    const color = positive && !props.trait ? "#FFFFFF" : undefined
     let title
-    if (props.trait) {
+    if (trait) {
         title = "Trait"
-    } else if (props.positive) {
+    } else if (positive) {
         title = "Synergy"
     } else {
         title = "Antisynergy"
     }
-    let name = props.name
-    let nameEnhancer = ""
-    if (props.player && props.player != SynTraitPlayer.ANY) {
-        nameEnhancer += ` ${startCase(props.player.toLowerCase())}`
-    }
-    if (props.cardTypes && props.cardTypes.length > 0) {
-        if (props.cardTypes.length === 1) {
-            nameEnhancer += ` ${props.cardTypes[0]}s`
-        } else {
-            nameEnhancer += ` ${props.cardTypes.map(type => type + "s").join(" ")}`
-        }
-    }
-    if (name.includes("_R_")) {
-        name = name.replace("_R_", nameEnhancer)
-    } else {
-        name += " " + nameEnhancer
-    }
+    const name = synTraitName(traitValue)
     return (
         <span
             style={{
                 borderRadius: 20,
-                backgroundColor: props.trait ? teal.A400 : (props.positive ? blue.A400 : amber.A400),
+                backgroundColor: props.trait ? teal.A400 : (positive ? blue.A400 : amber.A400),
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -74,15 +40,15 @@ export const TraitBubble = (props: {
                 margin: 4,
             }}
         >
-            {props.rating ? (
-                <SynergyEffectIcon effect={props.rating}/>
+            {rating ? (
+                <SynergyEffectIcon effect={rating}/>
             ) : null}
-            {props.synTraitHouse === SynTraitHouse.house ? (
+            {house === SynTraitHouse.house ? (
                 <Tooltip title={"Synergizes with house traits only"}>
                     <Home style={{color, marginRight: spacing(1), height: 18}}/>
                 </Tooltip>
             ) : null}
-            {props.synTraitHouse === SynTraitHouse.outOfHouse ? (
+            {house === SynTraitHouse.outOfHouse ? (
                 <Tooltip title={"Synergizes with out of house traits only"}>
                     <div style={{width: 18, height: 18, marginLeft: spacing(1), marginRight: spacing(1)}}>
                         <div style={{position: "absolute", paddingLeft: 2, paddingTop: 1}}>
@@ -96,9 +62,9 @@ export const TraitBubble = (props: {
                 title={(
                     <div style={{display: "flex", flexDirection: "column"}}>
                         <Typography variant={"body2"}>{title}</Typography>
-                        {props.synergyWith != null && (
+                        {synergyWith != null && (
                             <>
-                                {props.synergyWith.map((synergy) => (
+                                {synergyWith.map((synergy) => (
                                     <Typography key={synergy} variant={"body2"}>{synergy}</Typography>
                                 ))}
                             </>
@@ -107,7 +73,7 @@ export const TraitBubble = (props: {
                 )}
             >
                 <Typography variant={"body2"} style={{fontSize: "0.8125rem", color}}>
-                    {startCase(props.cardName == null ? name : props.cardName)}
+                    {name}
                 </Typography>
             </Tooltip>
         </span>

@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
+import { startCase } from "lodash"
 import { Utils } from "../config/Utils"
 
 export enum SynergyTrait {
+
+    any = "any",
 
     exalt = "exalt",
     exaltFriendly = "exaltFriendly",
@@ -126,7 +130,7 @@ export enum SynergyTrait {
 
     /*** End Deprecated ***/
 
-    // Traits (these don't need to be traits on the extra info)
+        // Traits (these don't need to be traits on the extra info)
     knight = "knight",
     human = "human",
     scientist = "scientist",
@@ -176,8 +180,15 @@ export enum SynergyTrait {
     card = "card",
 }
 
-const allSynergyTraits = Utils.enumValues(SynergyTrait)
+const allSynergyTraits = Utils.enumValues(SynergyTrait) as SynergyTrait[]
 const firstSpecialIndex = allSynergyTraits.indexOf(SynergyTrait.alpha)
 export const specialTraits = allSynergyTraits.slice(firstSpecialIndex, allSynergyTraits.length)
 
 export const noSynTraits = [SynergyTrait.card]
+
+export const validSynergies = (Utils.enumValues(SynergyTrait) as string[])
+export const validTraits = (Utils.enumValues(SynergyTrait) as string[])
+    .filter(traitValue => !specialTraits.includes(traitValue as SynergyTrait))
+
+export const traitOptions = validTraits.map(trait => ({label: startCase(trait).replace(" R ", " ??? "), value: trait}))
+export const synergyOptions = validSynergies.map(trait => ({label: startCase(trait).replace(" R ", " ??? "), value: trait}))

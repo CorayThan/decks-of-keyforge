@@ -67,12 +67,12 @@ class SaveUnregisteredDeckStore {
 
     addCardHandler = (house: House) => {
         const cardHolder = observable({
-            cardName: ""
+            option: ""
         })
 
         autorun(() => {
-            if (cardHolder.cardName !== "") {
-                const foundCard = cardStore.cardNameLowercaseToCard!.get(cardHolder.cardName.toLowerCase())!
+            if (cardHolder.option !== "") {
+                const foundCard = cardStore.cardNameLowercaseToCard!.get(cardHolder.option.toLowerCase())!
                 const copiedCard = cloneDeep(foundCard)
                 if (copiedCard.house !== house) {
                     copiedCard.maverick = true
@@ -82,7 +82,7 @@ class SaveUnregisteredDeckStore {
                 const houseCards = this.currentDeck!.cards[house]
                 houseCards.push(copiedCard.cardTitle)
                 this.currentDeck!.cards[house] = sortBy(houseCards, (card: string) => cardStore.fullCardFromCardName(card)?.cardNumber)
-                cardHolder.cardName = ""
+                cardHolder.option = ""
             }
         })
         return cardHolder
@@ -221,7 +221,7 @@ export class DisplayCardsInHouseEditable extends React.Component<{ house: House,
                 <div style={{flexGrow: 1}}/>
                 {this.props.cards.length < 12 ? (
                     <SingleCardSearchSuggest
-                        card={saveUnregisteredDeckStore.addCardHandler(this.props.house)}
+                        selected={saveUnregisteredDeckStore.addCardHandler(this.props.house)}
                         style={{marginTop: spacing(2)}}
                         placeholder={"Add Card"}
                         names={searchSuggestCardNames}

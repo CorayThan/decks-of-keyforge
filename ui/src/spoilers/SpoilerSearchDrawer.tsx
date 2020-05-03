@@ -3,20 +3,20 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import { Close } from "@material-ui/icons"
+import { range } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { AmberSelect, SelectedAmbers } from "../cards/selects/AmberSelect"
-import { ArmorSelect, SelectedArmors } from "../cards/selects/ArmorSelect"
-import { CardTypeSelect, SelectedCardTypes } from "../cards/selects/CardTypeSelect"
-import { PowerSelect, SelectedPowers } from "../cards/selects/PowerSelect"
-import { RaritySelect, SelectedRarities } from "../cards/selects/RaritySelect"
+import { CardType } from "../cards/CardType"
+import { Rarity } from "../cards/rarity/Rarity"
 import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
+import { Utils } from "../config/Utils"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { mmHouses } from "../houses/House"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { KeyMultiSelect, SelectedValues } from "../mui-restyled/KeyMultiSelect"
 import { screenStore } from "../ui/ScreenStore"
 import { SpoilerUtils } from "./Spoiler"
 import { SpoilerFilters } from "./SpoilerFilters"
@@ -27,11 +27,10 @@ export class SpoilerSearchDrawer extends React.Component {
 
     filters = new SpoilerFilters()
     selectedHouses = new SelectedHouses()
-    selectedCardTypes = new SelectedCardTypes()
-    selectedRarities = new SelectedRarities()
-    selectedPowers = new SelectedPowers()
-    selectedAmbers = new SelectedAmbers()
-    selectedArmors = new SelectedArmors()
+    selectedCardTypes = new SelectedValues<CardType>()
+    selectedRarities = new SelectedValues<Rarity>()
+    selectedPowers = new SelectedValues<number>()
+    selectedAmbers = new SelectedValues<number>()
 
     componentDidMount() {
         spoilerStore.reset()
@@ -44,10 +43,9 @@ export class SpoilerSearchDrawer extends React.Component {
         }
         this.filters.houses = this.selectedHouses.toArray()
         this.filters.types = this.selectedCardTypes.selectedValues
-        this.filters.rarities = this.selectedRarities.toArray()
-        this.filters.powers = this.selectedPowers.toArray()
-        this.filters.ambers = this.selectedAmbers.toArray()
-        this.filters.armors = this.selectedArmors.toArray()
+        this.filters.rarities = this.selectedRarities.selectedValues
+        this.filters.powers = this.selectedPowers.selectedValues
+        this.filters.ambers = this.selectedAmbers.selectedValues
         spoilerStore.searchSpoilers(this.filters)
         keyDrawerStore.closeIfSmall()
     }
@@ -59,7 +57,6 @@ export class SpoilerSearchDrawer extends React.Component {
         this.selectedRarities.reset()
         this.selectedPowers.reset()
         this.selectedAmbers.reset()
-        this.selectedArmors.reset()
     }
 
     render() {
@@ -94,11 +91,41 @@ export class SpoilerSearchDrawer extends React.Component {
                             <HouseSelect selectedHouses={this.selectedHouses} options={mmHouses}/>
                         </ListItem>
                         <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><CardTypeSelect selectedCardTypes={this.selectedCardTypes}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><RaritySelect selectedRarities={this.selectedRarities}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><AmberSelect selectedAmbers={this.selectedAmbers}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><PowerSelect selectedPowers={this.selectedPowers}/></div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}><ArmorSelect selectedArmors={this.selectedArmors}/></div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Card Type"}
+                                    selected={this.selectedCardTypes}
+                                    options={Utils.enumValues(CardType) as CardType[]}
+                                />
+                            </div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Rarity"}
+                                    selected={this.selectedRarities}
+                                    options={[
+                                        Rarity.Common,
+                                        Rarity.Uncommon,
+                                        Rarity.Rare,
+                                        "Special",
+                                    ]}
+                                />
+                            </div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Aember"}
+                                    selected={this.selectedAmbers}
+                                    options={range(0, 5)
+                                        .map(amber => amber.toString())}
+                                />
+                            </div>
+                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
+                                <KeyMultiSelect
+                                    name={"Power"}
+                                    selected={this.selectedPowers}
+                                    options={range(1, 17)
+                                        .map(power => power.toString())}
+                                />
+                            </div>
                         </ListItem>
                         <ListItem>
                             <FormControlLabel

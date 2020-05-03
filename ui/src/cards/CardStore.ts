@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from "axios"
-import { clone, sortBy } from "lodash"
+import { clone, sortBy, startCase } from "lodash"
 import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
 import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
+import { OptionType } from "../mui-restyled/KeyMultiSearchSuggest"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
-import { OptionType } from "./CardSearchSuggest"
 import { cardNameToCardNameKey, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
@@ -41,6 +41,9 @@ export class CardStore {
 
     @observable
     cardNames: OptionType[] = []
+
+    @observable
+    cardTraits: OptionType[] = []
 
     @observable
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
@@ -78,9 +81,11 @@ export class CardStore {
                 &&
                 includeCardOrSpoiler(filters, card)
                 &&
-                (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
+                (filters.traits.length === 0 || filters.traits.some(trait => card.extraCardInfo.traits.some(extraCardTrait => trait === extraCardTrait.trait)))
                 &&
-                (filters.armors.length === 0 || filters.armors.indexOf(card.armor) !== -1)
+                (filters.synergies.length === 0 || filters.synergies.some(trait => card.extraCardInfo.synergies.some(extraCardTrait => trait === extraCardTrait.trait)))
+                &&
+                (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&
                 (!filters.thisExpansionOnly || card.extraCardInfo.cardNumbers.length === 1)
                 &&
@@ -146,6 +151,7 @@ export class CardStore {
                 this.expansionNumberToCard = new Map()
                 this.cardNamesForExpansion = expansionInfos.map(info => ({expansion: info.backendEnum, names: []}))
                 this.cardFlavors = []
+                const traits: Set<string> = new Set()
                 this.cardNames = basisForCards.map(card => {
                     this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
                     this.cardNameHyphenDelimitedLowercaseToCard!.set(cardNameToCardNameKey(card.cardTitle), card)
@@ -160,8 +166,12 @@ export class CardStore {
                             cardNamesForExpansion.names.push(card.cardTitle)
                         }
                     })
+                    if (card.traits != null) {
+                        card.traits.forEach(trait => traits.add(trait))
+                    }
                     return {label: card.cardTitle, value: card.cardTitle}
                 })
+                this.cardTraits = Array.from(traits).map(trait => ({label: startCase(trait.toLowerCase()), value: trait}))
                 this.allCards = basisForCards
                 log.debug(`End load all cards async`)
             })

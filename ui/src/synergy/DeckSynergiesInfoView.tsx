@@ -5,7 +5,7 @@ import TableCell, { TableCellProps } from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import { Info } from "@material-ui/icons"
-import { sortBy, startCase } from "lodash"
+import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -159,12 +159,8 @@ class CellValues extends React.Component<{ combo: SynergyCombo }> {
                                     >
                                         <Typography style={{width: 48}}>{synergy.percentSynergized}%</Typography>
                                         <TraitBubble
-                                            name={startCase(synergy.trait)}
-                                            positive={synergy.rating > 0}
+                                            traitValue={synergy.trait}
                                             synergyWith={synergy.traitCards}
-                                            rating={synergy.rating}
-                                            synTraitHouse={synergy.house}
-                                            cardName={synergy.cardName}
                                         />
                                     </div>
                                 )

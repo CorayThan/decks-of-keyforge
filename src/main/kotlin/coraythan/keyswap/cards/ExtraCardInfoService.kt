@@ -72,9 +72,11 @@ class ExtraCardInfoService(
                 cardIdentifierRepo.save(carNum.copy(info = saved, id = UUID.randomUUID()))
             }
             info.traits.forEach { trait ->
+                trait.validate()
                 synTraitValueRepo.save(trait.copy(traitInfo = saved, id = UUID.randomUUID()))
             }
             info.synergies.map { syn ->
+                syn.validate()
                 synTraitValueRepo.save(syn.copy(synergyInfo = saved, id = UUID.randomUUID()))
             }
             log.info("Created id ${saved.id}")

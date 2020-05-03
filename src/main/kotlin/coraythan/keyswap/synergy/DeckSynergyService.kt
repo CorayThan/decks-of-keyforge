@@ -70,8 +70,9 @@ object DeckSynergyService {
             val cardAllTraits = cardInfo.traits.plus(cardSpecialTraits)
             cardAllTraits
                     .forEach { traitValue ->
-                        traitsMap.addTrait(traitValue, card.cardTitle, card.house)
+                        traitsMap.addTrait(traitValue, card, card.house)
                     }
+            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), card, card.house)
         }
 
         // log.info("Traits map is: ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitsMap)}")
@@ -89,11 +90,10 @@ object DeckSynergyService {
                     val matchedTraits: List<SynergyMatch> = cardInfo.synergies.map { synergy ->
 
                         val synergyTrait = synergy.trait
-                        val cardName = synergy.cardName
                         val cardNames = mutableSetOf<String>()
                         val synPercent = TraitStrength.values().map { strength ->
                             val matches = if (synergy.cardName == null) {
-                                traitsMap[synergyTrait]?.matches(card.cardTitle, card.house, synergy)
+                                traitsMap[synergyTrait]?.matches(card, synergy)
                             } else {
                                 val cardCount = when (synergy.house) {
                                     SynTraitHouse.anyHouse -> cardsMap.map { it.value.getOrDefault(synergy.cardName, 0) }.sum()
@@ -116,7 +116,7 @@ object DeckSynergyService {
                             }
                         }.sum()
 
-                        SynergyMatch(synergyTrait, synPercent, cardNames, synergy.rating, synergy.house, cardName)
+                        SynergyMatch(synergy, synPercent, cardNames)
                     }
 
                     val totalSynPercent = matchedTraits.map { it.percentSynergized }.sum()
@@ -457,16 +457,16 @@ data class SynMatchInfo(
 
 data class SynTraitValueWithHouse(
         val value: SynTraitValue,
-        val cardName: String?,
+        val card: Card?,
         val house: House?,
         val deckTrait: Boolean
 )
 
-fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addTrait(traitValue: SynTraitValue, cardName: String?, house: House?, deckTrait: Boolean = false) {
+fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addTrait(traitValue: SynTraitValue, card: Card?, house: House?, deckTrait: Boolean = false) {
     if (!this.containsKey(traitValue.trait)) {
         this[traitValue.trait] = SynTraitValuesForTrait()
     }
-    this[traitValue.trait]!!.traitValues.add(SynTraitValueWithHouse(traitValue, cardName, house, deckTrait))
+    this[traitValue.trait]!!.traitValues.add(SynTraitValueWithHouse(traitValue, card, house, deckTrait))
 }
 
 fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addDeckTrait(trait: SynergyTrait, count: Int, house: House? = null, traitHouse: SynTraitHouse = SynTraitHouse.anyHouse) {
@@ -478,25 +478,29 @@ fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addDeckTrait(trait: Synergy
 data class SynTraitValuesForTrait(
         val traitValues: MutableList<SynTraitValueWithHouse> = mutableListOf()
 ) {
-    fun matches(cardName: String, house: House, synergyValue: SynTraitValue): SynMatchInfo {
+    fun matches(card: Card, synergyValue: SynTraitValue): SynMatchInfo {
+        val house = card.house
+        val cardName = card.cardTitle
         val matchedTraits = traitValues
                 .filter {
                     typesMatch(synergyValue.cardTypes, it.value.cardTypes) &&
                             playersMatch(synergyValue.player, it.value.player) &&
-                            housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
+                            housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait) &&
+                            synergyValue.powerMatch(card.power) &&
+                            traitsMatch(synergyValue.cardTraits, card.traits)
                 }
 
         var sameCard = false
         val cardNames = matchedTraits.mapNotNull {
-            if (it.cardName == cardName) {
+            if (it.card?.cardTitle == cardName) {
                 sameCard = true
             }
-            it.cardName
+            it.card?.cardTitle
         }
         val strength = matchedTraits
                 .groupBy { it.value.strength() }
                 .map {
-                    it.key to if (sameCard && it.value.any { it.cardName != null && it.cardName == cardName }) it.value.count() - 1 else it.value.count()
+                    it.key to if (sameCard && it.value.any { it.card?.cardTitle != null && it.card.cardTitle == cardName }) it.value.count() - 1 else it.value.count()
                 }
                 .toMap()
         return SynMatchInfo(strength, cardNames)
@@ -508,6 +512,10 @@ data class SynTraitValuesForTrait(
 
     private fun playersMatch(player1: SynTraitPlayer, player2: SynTraitPlayer): Boolean {
         return player1 == SynTraitPlayer.ANY || player2 == SynTraitPlayer.ANY || player1 == player2
+    }
+
+    private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>): Boolean {
+        return synergyTraits.isEmpty() || synergyTraits.all { cardTraits.contains(it) }
     }
 
     private fun housesMatch(synHouse: SynTraitHouse, house1: House, traitHouse: SynTraitHouse, house2: House?, deckTrait: Boolean = false): Boolean {

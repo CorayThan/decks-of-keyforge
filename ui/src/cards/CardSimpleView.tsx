@@ -355,10 +355,7 @@ export const CardTraits = (props: { card: KCard }) => (
         {props.card.extraCardInfo.traits.map(synergy => (
             <TraitBubble
                 key={synergy.id}
-                name={synergy.trait}
-                positive={synergy.rating > 0}
-                synTraitHouse={synergy.house}
-                rating={synergy.rating}
+                traitValue={synergy}
                 trait={true}
             />
         ))}
@@ -370,11 +367,7 @@ export const CardSynergies = (props: { card: KCard }) => (
         {props.card.extraCardInfo.synergies.map(synergy => (
             <TraitBubble
                 key={synergy.id}
-                name={synergy.trait}
-                positive={synergy.rating > 0}
-                synTraitHouse={synergy.house}
-                rating={synergy.rating}
-                cardName={synergy.cardName}
+                traitValue={synergy}
             />
         ))}
     </div>

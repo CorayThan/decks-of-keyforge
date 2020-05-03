@@ -14,7 +14,6 @@ export class SpoilerFilters {
     houses: House[] = []
     powers: number[] = []
     ambers: number[] = []
-    armors: number[] = []
     expansion?: number
 
     @observable

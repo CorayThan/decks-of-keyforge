@@ -8,7 +8,6 @@ import {
     FormLabel,
     Grid,
     IconButton,
-    MenuItem,
     Radio,
     RadioGroup,
     TextField,
@@ -16,7 +15,7 @@ import {
     Typography
 } from "@material-ui/core"
 import { ChevronLeft, ChevronRight, Close, Delete, Save } from "@material-ui/icons"
-import { startCase } from "lodash"
+import { range, startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
@@ -27,22 +26,24 @@ import { cardStore } from "../cards/CardStore"
 import { CardType } from "../cards/CardType"
 import { KCard } from "../cards/KCard"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMultiSearchSuggest"
+import { KeySingleSearchSuggest } from "../mui-restyled/KeySingleSearchSuggest"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SynTraitHouse } from "../synergy/SynTraitHouse"
 import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
-import { TraitBubbleFromTrait } from "../synergy/TraitBubble"
+import { TraitBubble } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
-import { noSynTraits, specialTraits, SynergyTrait } from "./SynergyTrait"
+import { synergyOptions, SynergyTrait, traitOptions } from "./SynergyTrait"
 
 interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
 }
@@ -392,7 +393,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             key={idx}
                                             style={{display: "flex"}}
                                         >
-                                            <TraitBubbleFromTrait
+                                            <TraitBubble
                                                 traitValue={synergy}
                                                 trait={true}
                                             />
@@ -412,7 +413,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                             key={idx}
                                             style={{display: "flex"}}
                                         >
-                                            <TraitBubbleFromTrait
+                                            <TraitBubble
                                                 traitValue={synergy}
                                             />
                                             <IconButton
@@ -471,178 +472,190 @@ const InfoInput = (props: { name: string, value: string, update: (event: EventVa
 @observer
 class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: SynTraitValue[] }> {
 
-    @observable
-    isSynergy = false
+    cardTraitsStore = new SelectedOptions()
 
     @observable
-    trait: SynergyTrait = SynergyTrait.dealsDamage
-
-    @observable
-    traitFilter = ""
+    traitOrSynergy: "trait" | "synergy" = "synergy"
 
     @observable
     rating: SynTraitRatingValues = 3
 
     @observable
-    type: SynTraitHouse = SynTraitHouse.anyHouse
+    house: SynTraitHouse = SynTraitHouse.anyHouse
 
     @observable
     cardTypes: CardType[] = []
+
+    @observable
+    powersString = ""
 
     @observable
     player: SynTraitPlayer = SynTraitPlayer.ANY
 
     @observable
     holdsCard = {
-        cardName: ""
+        option: ""
+    }
+
+    @observable
+    holdsTrait = {
+        option: SynergyTrait.any.toString()
+    }
+
+    get trait(): SynergyTrait | undefined {
+        if (this.holdsTrait.option.length > 0) {
+            log.debug("Find trait for: " + this.holdsTrait.option)
+            return (this.traitOrSynergy === "synergy" ? synergyOptions : traitOptions).find(trait => this.holdsTrait.option === trait.label)!.value as SynergyTrait
+        }
+        return undefined
     }
 
     render() {
         const {traits, synergies} = this.props
 
-        const selectableTraits = (Utils.enumValues(SynergyTrait) as string[])
-            .filter(traitValue => !(!this.isSynergy ? specialTraits : noSynTraits).includes(traitValue as SynergyTrait))
+        const selectableTraits = this.traitOrSynergy === "synergy" ? synergyOptions : traitOptions
 
         return (
-            <Grid container={true} spacing={2}>
-                <Grid item={true} xs={12} sm={6}>
-                    <Grid container={true}>
-                        <Grid item={true} xs={6}>
-                            <FormControl>
-                                <FormLabel>Type</FormLabel>
-                                <RadioGroup value={this.isSynergy} onChange={event => this.isSynergy = event.target.value as unknown as boolean}>
-                                    <FormControlLabel value={false} control={<Radio/>} label={"Trait"}/>
-                                    <FormControlLabel value={true} control={<Radio/>} label={"Synergy"}/>
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid>
-                        <Grid item={true} xs={6}>
-                            <FormControl>
-                                <FormLabel>Card Types</FormLabel>
-                                <FormGroup>
-                                    {(Utils.enumValues(CardType) as CardType[]).map(type => (
-                                        <FormControlLabel
-                                            key={type}
-                                            control={
-                                                <Checkbox
-                                                    checked={this.cardTypes.includes(type)}
-                                                    onChange={() => {
-                                                        if (this.cardTypes.includes(type)) {
-                                                            this.cardTypes = this.cardTypes.filter(toRemove => type !== toRemove)
-                                                        } else {
-                                                            this.cardTypes.push(type)
-                                                        }
-                                                    }}
-                                                />
-                                            }
-                                            label={type}
-                                        />
-                                    ))}
-                                </FormGroup>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                    <TextField
-                        select={true}
-                        label="rating"
-                        value={this.rating}
-                        onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
-                        style={{minWidth: 80, marginTop: spacing(2), marginRight: spacing(2)}}
-                    >
-                        <MenuItem value={-4}>
-                            -4
-                        </MenuItem>
-                        <MenuItem value={-3}>
-                            -3
-                        </MenuItem>
-                        <MenuItem value={-2}>
-                            -2
-                        </MenuItem>
-                        <MenuItem value={-1}>
-                            -1
-                        </MenuItem>
-                        <MenuItem value={1}>
-                            1
-                        </MenuItem>
-                        <MenuItem value={2}>
-                            2
-                        </MenuItem>
-                        <MenuItem value={3}>
-                            3
-                        </MenuItem>
-                        <MenuItem value={4}>
-                            4
-                        </MenuItem>
-                    </TextField>
-                    <TextField
-                        select={true}
-                        label="house"
-                        value={this.type}
-                        onChange={(event) => this.type = event.target.value as SynTraitHouse}
-                        style={{minWidth: 120, marginTop: spacing(2), marginRight: spacing(2)}}
-                    >
-                        {Utils.enumValues(SynTraitHouse).map(option => (
-                            <MenuItem key={option} value={option}>
-                                {startCase(option as string)}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <TextField
-                        select={true}
-                        label="player"
-                        value={this.player}
-                        onChange={(event) => this.player = event.target.value as SynTraitPlayer}
-                        style={{minWidth: 120, marginTop: spacing(2)}}
-                    >
-                        {Utils.enumValues(SynTraitPlayer).map(option => (
-                            <MenuItem key={option} value={option}>
-                                {startCase((option as string).toLowerCase())}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <div style={{marginTop: spacing(2)}}>
-                        <SingleCardSearchSuggest card={this.holdsCard} placeholder={"Card"}/>
-                    </div>
-                </Grid>
-                <Grid item={true} xs={12} sm={6} style={{marginBottom: spacing(2)}}>
-                    <div style={{display: "flex", alignItems: "center"}}>
-                        <TextField
-                            label={"filter traits"}
-                            value={this.traitFilter}
-                            onChange={event => this.traitFilter = event.target.value}
-                            style={{marginBottom: spacing(2), marginRight: spacing(2)}}
-                        />
-                        <div>
-                            <IconButton
-                                onClick={() => this.traitFilter = ""}
-                            >
-                                <Close/>
-                            </IconButton>
-                        </div>
-                        <div style={{flexGrow: 1}}/>
-                        <div>
-                            <IconButton
-                                onClick={() => (this.isSynergy ? synergies : traits).push({
-                                    trait: this.holdsCard.cardName.length > 0 ? SynergyTrait.card : this.trait,
-                                    rating: this.rating,
-                                    cardName: this.holdsCard.cardName.length > 0 ? this.holdsCard.cardName : undefined,
-                                    house: this.type,
-                                    player: this.player,
-                                    cardTypes: this.cardTypes
-                                })}
-                            >
-                                <Save/>
-                            </IconButton>
-                        </div>
-                    </div>
-                    <div style={{maxHeight: 240, overflowY: "auto"}}>
-                        <FormControl>
-                            <RadioGroup value={this.trait} onChange={(event) => this.trait = event.target.value as SynergyTrait}>
-                                {(this.traitFilter.length === 0 ? selectableTraits : selectableTraits.filter(trait => trait.toLowerCase().includes(this.traitFilter.toLowerCase()))).map(option => (
-                                    <FormControlLabel value={option} control={<Radio/>} label={startCase(option)} key={option}/>
+            <Grid container={true} spacing={2} style={{backgroundColor: themeStore.aercViewBackground, marginBottom: spacing(2)}}>
+                <Grid item={true} xs={12}>
+                    <FormControl>
+                        <FormLabel>Rating</FormLabel>
+                        <RadioGroup
+                            value={this.rating}
+                            onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
+                        >
+                            <div style={{display: "flex", flexWrap: "wrap"}}>
+                                {range(-4, 5).map(value => (
+                                    <FormControlLabel key={value} value={value} control={<Radio/>} label={value.toString()}/>
                                 ))}
-                            </RadioGroup>
-                        </FormControl>
+                            </div>
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item={true}>
+                    <FormControl>
+                        <FormLabel>Type</FormLabel>
+                        <RadioGroup value={this.traitOrSynergy} onChange={event => this.traitOrSynergy = event.target.value as "trait" | "synergy"}>
+                            <FormControlLabel value={"trait"} control={<Radio/>} label={"Trait"}/>
+                            <FormControlLabel value={"synergy"} control={<Radio/>} label={"Syn"}/>
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item={true}>
+                    <FormControl>
+                        <FormLabel>Card Types</FormLabel>
+                        <FormGroup>
+                            {(Utils.enumValues(CardType) as CardType[]).map(type => (
+                                <FormControlLabel
+                                    key={type}
+                                    control={
+                                        <Checkbox
+                                            checked={this.cardTypes.includes(type)}
+                                            onChange={() => {
+                                                if (this.cardTypes.includes(type)) {
+                                                    this.cardTypes = this.cardTypes.filter(toRemove => type !== toRemove)
+                                                } else {
+                                                    this.cardTypes.push(type)
+                                                }
+                                            }}
+                                        />
+                                    }
+                                    label={type}
+                                />
+                            ))}
+                        </FormGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item={true}>
+                    <FormControl>
+                        <FormLabel>House</FormLabel>
+                        <RadioGroup
+                            value={this.house}
+                            onChange={(event) => this.house = event.target.value as SynTraitHouse}
+                        >
+                            {Utils.enumValues(SynTraitHouse).map(option => (
+                                <FormControlLabel
+                                    key={option}
+                                    value={option}
+                                    control={<Radio/>}
+                                    label={option === SynTraitHouse.anyHouse ? "Any" : (option === SynTraitHouse.house ? "House" : "Out of")}
+                                />
+                            ))}
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item={true}>
+                    <FormControl>
+                        <FormLabel>Player</FormLabel>
+                        <RadioGroup
+                            value={this.player}
+                            onChange={(event) => this.player = event.target.value as SynTraitPlayer}
+                            color={"primary"}
+                        >
+                            {Utils.enumValues(SynTraitPlayer).map(option => (
+                                <FormControlLabel key={option} value={option} control={<Radio/>} label={startCase((option as string).toLowerCase())}/>
+                            ))}
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item={true} style={{minWidth: 280}}>
+                    <TextField
+                        label={"Power"}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={this.powersString}
+                        placeholder={"odd, even, 2-5, 2 or less, 3+, 3,5,7"}
+                        onChange={(event) => this.powersString = event.target.value}
+                        fullWidth={true}
+                    />
+                    <KeyMultiSearchSuggest
+                        selected={this.cardTraitsStore}
+                        placeholder={"Card Traits"}
+                        options={cardStore.cardTraits}
+                        fullWidth={true}
+                    />
+                    <SingleCardSearchSuggest
+                        selected={this.holdsCard}
+                        placeholder={"Card"}
+                    />
+                    <KeySingleSearchSuggest
+                        selected={this.holdsTrait}
+                        placeholder={"Trait"}
+                        options={selectableTraits}
+                        fullWidth={true}
+                    />
+                    <div style={{display: "flex"}}>
+                        <IconButton
+                            onClick={() => {
+                                this.holdsCard.option = ""
+                                this.powersString = ""
+                                this.player = SynTraitPlayer.ANY
+                                this.house = SynTraitHouse.anyHouse
+                                this.traitOrSynergy = "trait"
+                                this.cardTypes = []
+                                this.rating = 3
+                                this.holdsTrait.option = SynergyTrait.any.toString()
+                                this.cardTraitsStore.reset()
+                            }}
+                        >
+                            <Close/>
+                        </IconButton>
+                        <IconButton
+                            style={{marginRight: spacing(2)}}
+                            onClick={() => (this.traitOrSynergy === "synergy" ? synergies : traits).push({
+                                trait: this.holdsCard.option.length > 0 ? SynergyTrait.card : this.holdsTrait.option as SynergyTrait,
+                                rating: this.rating,
+                                cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
+                                house: this.house,
+                                player: this.player,
+                                cardTypes: this.cardTypes,
+                                cardTraits: this.cardTraitsStore.selectedValues,
+                                powersString: this.powersString.trim()
+                            })}
+                        >
+                            <Save/>
+                        </IconButton>
                     </div>
                 </Grid>
             </Grid>

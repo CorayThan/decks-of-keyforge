@@ -1,6 +1,5 @@
-import { SynergyTrait } from "../extracardinfo/SynergyTrait"
 import { House } from "../houses/House"
-import { SynTraitHouse } from "./SynTraitHouse"
+import { SynTraitValue } from "./SynTraitValue"
 
 export interface DeckSynergyInfo {
     rawAerc: number
@@ -43,10 +42,7 @@ export interface SynergyCombo {
 }
 
 export interface SynergyMatch {
-    trait: SynergyTrait
+    trait: SynTraitValue
     percentSynergized: number
     traitCards: string[]
-    rating: number
-    house: SynTraitHouse
-    cardName?: string
 }

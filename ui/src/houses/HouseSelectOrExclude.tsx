@@ -98,6 +98,6 @@ export class SelectedOrExcludedHouses {
         const totalCount = this.selectedHouses.length
         const requiredCount = this.getHousesSelectedTrue().length
         const excludedCount = this.getHousesExcludedTrue().length
-        return totalCount - excludedCount > 2 && requiredCount < 4
+        return totalCount - excludedCount > 2 && (requiredCount < 4 || excludedCount === 0)
     }
 }

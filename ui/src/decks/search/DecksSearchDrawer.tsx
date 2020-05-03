@@ -13,7 +13,7 @@ import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { MultiCardSearchSuggest } from "../../cards/CardSearchSuggest"
+import { cardStore } from "../../cards/CardStore"
 import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
@@ -30,6 +30,7 @@ import { House, houseValuesArray } from "../../houses/House"
 import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
+import { KeyMultiSearchSuggest, SelectedOptions } from "../../mui-restyled/KeyMultiSearchSuggest"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
@@ -68,7 +69,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
 
         if (!this.selectedHouses.validHouseSelection()) {
-            messageStore.setWarningMessage("You may select up to 3 houses and exclude all but 3.")
+            messageStore.setWarningMessage("You may select up to 3 houses with houses excluded, and exclude all but 3.")
             return
         }
 
@@ -459,11 +460,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <div style={{flexGrow: 1}}>
                                     {cards.map((card, idx) => {
                                         const value = card.house ? card.house : card.quantity.toString()
+                                        const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
                                         return (
                                             <div key={idx}>
-                                                <MultiCardSearchSuggest
-                                                    card={card}
+                                                <KeyMultiSearchSuggest
+                                                    selected={selected}
                                                     placeholder={"Any of these cards"}
+                                                    options={cardStore.cardNames}
                                                     style={{flexGrow: 1}}
                                                 />
                                                 <TextField

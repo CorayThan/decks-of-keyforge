@@ -3,6 +3,7 @@ import { observable } from "mobx"
 import * as React from "react"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
+import { SynergyTrait } from "../extracardinfo/SynergyTrait"
 import { SortDirection } from "../generic/SortDirection"
 import { House } from "../houses/House"
 import { CardType } from "./CardType"
@@ -32,10 +33,11 @@ export class CardFilters {
         } else if (queryObject.ambers != null) {
             queryObject.ambers = queryObject.ambers.map((val: string) => Number(val))
         }
-        if (typeof queryObject.armors === "string") {
-            queryObject.armors = [Number(queryObject.armors)]
-        } else if (queryObject.armors != null) {
-            queryObject.armors = queryObject.armors.map((val: string) => Number(val))
+        if (typeof queryObject.traits === "string") {
+            queryObject.traits = [queryObject.traits]
+        }
+        if (typeof queryObject.synergies === "string") {
+            queryObject.synergies = [queryObject.synergies]
         }
         if (queryObject.expansions != null) {
             if (queryObject.expansions.constructor === Array) {
@@ -71,7 +73,8 @@ export class CardFilters {
     houses: House[] = []
     powers: number[] = []
     ambers: number[] = []
-    armors: number[] = []
+    traits: SynergyTrait[] = []
+    synergies: SynergyTrait[] = []
     expansion?: BackendExpansion
     thisExpansionOnly?: boolean
 
@@ -92,7 +95,8 @@ export class CardFilters {
         this.houses = []
         this.powers = []
         this.ambers = []
-        this.armors = []
+        this.traits = []
+        this.synergies = []
         this.expansion = undefined
         this.thisExpansionOnly = undefined
         this.sort = undefined

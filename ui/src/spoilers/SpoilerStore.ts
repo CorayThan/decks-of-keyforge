@@ -56,8 +56,6 @@ export class SpoilerStore {
                 ((filters.reprints && spoiler.reprint) || (filters.newCards && !spoiler.reprint))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(Number(card.powerString)) !== -1)
-                &&
-                (filters.armors.length === 0 || filters.armors.indexOf(Number(card.armorString)) !== -1)
             )
         })
 
