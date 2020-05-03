@@ -1,8 +1,5 @@
 package coraythan.keyswap.synergy
 
-import coraythan.keyswap.synergy.SynTraitPlayer.FRIENDLY
-import coraythan.keyswap.synergy.SynergyTrait.returnsFriendlyArtifactsToHand
-import coraythan.keyswap.synergy.SynergyTrait.returns_R_ToHand
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,7 +16,7 @@ class FixSynergies(
         var fixed = 0
         val allTraits = repo.findAll()
         allTraits.forEach {
-            val updated = when (it.trait) {
+//            val updated = when (it.trait) {
 //                exaltFriendly ->
 //                    it.copy(trait = exalt, player = FRIENDLY)
 //                damagesMultipleEnemies ->
@@ -72,15 +69,27 @@ class FixSynergies(
 //                    it.copy(trait = reduces_R_HandSize, player = ENEMY)
 //                knight, human, scientist, niffle, beast, thief, shard, wolf, robot, dinosaur, demon, giant, mutant ->
 //                    it.copy(trait = SynergyTrait.any, cardTraitsString = it.trait.toString().toUpperCase())
+//                returnsFriendlyArtifactsToHand ->
+//                    it.copy(trait = returns_R_ToHand, player = FRIENDLY, cardTypesString = "Artifact")
 
-                returnsFriendlyArtifactsToHand ->
-                    it.copy(trait = returns_R_ToHand, player = FRIENDLY, cardTypesString = "Artifact")
-                else -> null
-            }
-            if (updated != null) {
-                fixed++
-                repo.save(updated)
-            }
+//                power5OrHigherCreatures ->
+//                    it.copy(trait = SynergyTrait.any, powersString = "5+")
+//                power4OrHigherCreatures ->
+//                    it.copy(trait = SynergyTrait.any, powersString = "4+")
+//                power3OrHigherCreatures ->
+//                    it.copy(trait = SynergyTrait.any, powersString = "3+")
+//                power3OrLowerCreatures ->
+//                    it.copy(trait = SynergyTrait.any, powersString = "3 or less")
+//                power2OrLowerCreatures ->
+//                    it.copy(trait = SynergyTrait.any, powersString = "2 or less")
+//                power1Creatures ->
+//                    it.copy(trait = SynergyTrait.any, powersString = "1")
+//                else -> null
+//            }
+//            if (updated != null) {
+//                fixed++
+//                repo.save(updated)
+//            }
         }
         log.info("Done fix all synergies: $fixed")
     }

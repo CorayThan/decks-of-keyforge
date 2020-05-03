@@ -49,7 +49,7 @@ export const synTraitName = (traitValue: SynTraitValue) => {
         }
     }
     if (name.includes("_R_")) {
-        name = startCase(name).replace(" R ", nameEnhancer)
+        name = startCase(name).replace(" R ", nameEnhancer + " ")
     } else {
         name = startCase(name) + " " + nameEnhancer
     }

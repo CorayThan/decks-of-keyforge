@@ -398,55 +398,6 @@ object DeckSynergyService {
             deck.creatureCount < 14 -> 2
             else -> 1
         })
-
-        val power1 = cards.filter { it.cardType == CardType.Creature && it.power == 1 }.size
-        val power2OrLower = cards.filter { it.cardType == CardType.Creature && it.power < 3 }.size
-        val power3OrLower = cards.filter { it.cardType == CardType.Creature && it.power < 4 }.size
-        val power3OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 2 }.size
-        val power4OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 3 }.size
-        val power5OrHigher = cards.filter { it.cardType == CardType.Creature && it.power > 4 }.size
-
-        if (power1 > 0) traits.addDeckTrait(SynergyTrait.power1Creatures, when {
-            power1 > 3 -> 4
-            power1 > 2 -> 3
-            power1 > 1 -> 2
-            else -> 1
-        })
-
-        if (power2OrLower > 3) traits.addDeckTrait(SynergyTrait.power2OrLowerCreatures, when {
-            power2OrLower > 6 -> 4
-            power2OrLower > 5 -> 3
-            power2OrLower > 4 -> 2
-            else -> 1
-        })
-
-        if (power3OrLower > 8) traits.addDeckTrait(SynergyTrait.power3OrLowerCreatures, when {
-            power3OrLower > 11 -> 4
-            power3OrLower > 10 -> 3
-            power3OrLower > 9 -> 2
-            else -> 1
-        })
-
-        if (power3OrHigher > 12) traits.addDeckTrait(SynergyTrait.power3OrHigherCreatures, when {
-            power3OrHigher > 16 -> 4
-            power3OrHigher > 14 -> 3
-            power3OrHigher > 13 -> 2
-            else -> 1
-        })
-
-        if (power4OrHigher > 8) traits.addDeckTrait(SynergyTrait.power4OrHigherCreatures, when {
-            power4OrHigher > 12 -> 4
-            power4OrHigher > 10 -> 3
-            power4OrHigher > 9 -> 2
-            else -> 1
-        })
-
-        if (power5OrHigher > 5) traits.addDeckTrait(SynergyTrait.power5OrHigherCreatures, when {
-            power5OrHigher > 9 -> 4
-            power5OrHigher > 7 -> 3
-            power5OrHigher > 6 -> 2
-            else -> 1
-        })
     }
 }
 

@@ -96,6 +96,9 @@ data class SynTraitValue(
                 val nums = powersString.split(",")
                 nums.any { power == it.toInt() }
             }
+            powersString.toIntOrNull() != null -> {
+                powersString.toInt() == power
+            }
             else -> {
                 throw IllegalStateException("Invalid power string: $powersString")
             }

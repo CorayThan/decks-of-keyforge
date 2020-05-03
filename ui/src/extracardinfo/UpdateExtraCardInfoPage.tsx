@@ -535,7 +535,17 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                 <Grid item={true}>
                     <FormControl>
                         <FormLabel>Type</FormLabel>
-                        <RadioGroup value={this.traitOrSynergy} onChange={event => this.traitOrSynergy = event.target.value as "trait" | "synergy"}>
+                        <RadioGroup
+                            value={this.traitOrSynergy}
+                            onChange={event => {
+                                const newValids = this.traitOrSynergy === "synergy" ? traitOptions : synergyOptions
+                                const choosenTrait = this.holdsTrait.option as SynergyTrait | ""
+                                if (choosenTrait.length > 0 && newValids.find(option => choosenTrait === option.value) == null) {
+                                    this.holdsTrait.option = ""
+                                }
+                                this.traitOrSynergy = event.target.value as "trait" | "synergy"
+                            }}
+                        >
                             <FormControlLabel value={"trait"} control={<Radio/>} label={"Trait"}/>
                             <FormControlLabel value={"synergy"} control={<Radio/>} label={"Syn"}/>
                         </RadioGroup>
@@ -643,16 +653,19 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                         </IconButton>
                         <IconButton
                             style={{marginRight: spacing(2)}}
-                            onClick={() => (this.traitOrSynergy === "synergy" ? synergies : traits).push({
-                                trait: this.holdsCard.option.length > 0 ? SynergyTrait.card : this.holdsTrait.option as SynergyTrait,
-                                rating: this.rating,
-                                cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
-                                house: this.house,
-                                player: this.player,
-                                cardTypes: this.cardTypes,
-                                cardTraits: this.cardTraitsStore.selectedValues,
-                                powersString: this.powersString.trim()
-                            })}
+                            onClick={() => {
+                                (this.traitOrSynergy === "synergy" ? synergies : traits).push({
+                                    trait: this.holdsCard.option.length > 0 ? SynergyTrait.card : this.holdsTrait.option as SynergyTrait,
+                                    rating: this.rating,
+                                    cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
+                                    house: this.house,
+                                    player: this.player,
+                                    cardTypes: this.cardTypes.slice(),
+                                    cardTraits: this.cardTraitsStore.selectedValues.slice(),
+                                    powersString: this.powersString.trim()
+                                })
+
+                            }}
                         >
                             <Save/>
                         </IconButton>

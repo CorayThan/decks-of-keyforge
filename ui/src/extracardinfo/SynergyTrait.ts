@@ -104,12 +104,6 @@ export enum SynergyTrait {
 
 
     // Deck traits In general these are 50 to 60 percentile = "0, 60+ = "1, 70+ = "2, 80+ = "3 90+ = "4
-    power5OrHigherCreatures = "power5OrHigherCreatures", // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
-    power4OrHigherCreatures = "power4OrHigherCreatures", // 9+=1/4, 10+=1/2, 11+=3/4, 13+=1
-    power3OrHigherCreatures = "power3OrHigherCreatures", // 13+=1/4, 14+=1/2, 15+=3/4, 17+=1
-    power3OrLowerCreatures = "power3OrLowerCreatures", // 9+=1/4, 10+=1/2, 11+=3/4, 12+=1
-    power2OrLowerCreatures = "power2OrLowerCreatures", // 4+=1/4, 5+=1/2, 6+=3/4, 7+=1
-    power1Creatures = "power1Creatures", // 1=1/4, 2=1/2, 3=3/4, 4+=1
     hasMars = "hasMars",
 
     // Deck or House only traits
