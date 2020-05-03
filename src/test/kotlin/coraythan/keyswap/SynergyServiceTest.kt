@@ -6,10 +6,7 @@ import coraythan.keyswap.cards.ExtraCardInfo
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.synergy.SynTraitHouse
-import coraythan.keyswap.synergy.SynTraitValue
-import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -86,7 +83,7 @@ class SynergyServiceTest {
                         id = "returns creatures to hand",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                        SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
                                 )
                         )
                 )
@@ -101,7 +98,7 @@ class SynergyServiceTest {
                                 expectedAmber = 0.0,
                                 expectedAmberMax = 3.0,
                                 synergies = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                        SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
                                 )
                         )
                 )
@@ -118,8 +115,8 @@ class SynergyServiceTest {
                                     expectedAmber = 1.0,
                                     expectedAmberMax = 3.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4, SynTraitHouse.anyHouse),
-                                            SynTraitValue(SynergyTrait.destroysFriendlyCreatures, -4, SynTraitHouse.anyHouse)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4, SynTraitHouse.anyHouse),
+                                            SynTraitValue(SynergyTrait.destroys, -4, SynTraitHouse.anyHouse)
                                     ))
                     )
             )
@@ -130,7 +127,7 @@ class SynergyServiceTest {
                             cardTitle = "Nature's Call",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
                                     ))
                     )
             )
@@ -141,7 +138,7 @@ class SynergyServiceTest {
                             cardTitle = "gateway to dis",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.destroysFriendlyCreatures, 4)
+                                            SynTraitValue(SynergyTrait.destroys, 4)
                                     ))
                     )
             )
@@ -163,7 +160,7 @@ class SynergyServiceTest {
                             id = "snufflegator",
                             house = House.Untamed,
                             cardTitle = "Snufflegator",
-                            traits = setOf("Beast"),
+                            traits = setOf("BEAST"),
                             extraCardInfo = ExtraCardInfo(
                                     effectivePower = 4
                             )
@@ -173,14 +170,14 @@ class SynergyServiceTest {
                 basicCard().copy(
                         id = "niffle queen",
                         house = House.Untamed,
-                        traits = setOf("Niffle"),
+                        traits = setOf("NIFFLE"),
                         cardTitle = "Niffle Queen",
                         extraCardInfo = ExtraCardInfo(
                                 effectivePower = 6,
                                 effectivePowerMax = 12.0,
                                 synergies = listOf(
-                                        SynTraitValue(SynergyTrait.niffle, 3),
-                                        SynTraitValue(SynergyTrait.beast, 3)
+                                        SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "NIFFLE"),
+                                        SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "BEAST")
                                 )
                         )
                 )
@@ -196,8 +193,8 @@ class SynergyServiceTest {
                                     amberControl = 0.0,
                                     amberControlMax = 16.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitHouse.outOfHouse),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 3, SynTraitHouse.house)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 3, SynTraitHouse.outOfHouse),
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 3, SynTraitHouse.house)
                                     )
                             )
                     )
@@ -209,7 +206,7 @@ class SynergyServiceTest {
                             cardTitle = "hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
                                     )
                             )
                     )
@@ -221,7 +218,7 @@ class SynergyServiceTest {
                             cardTitle = "key abuduction",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitHouse.house)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 2, SynTraitHouse.house)
                                     )
                             )
                     )
@@ -260,8 +257,8 @@ class SynergyServiceTest {
                                     synergies = listOf(
                                             SynTraitValue(SynergyTrait.highCreatureCount, 3, SynTraitHouse.house),
                                             SynTraitValue(SynergyTrait.lowCreatureCount, -3, SynTraitHouse.house),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4, SynTraitHouse.house),
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 2, SynTraitHouse.outOfHouse)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4, SynTraitHouse.house, player = SynTraitPlayer.FRIENDLY, cardTypesString = "Creature"),
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 2, SynTraitHouse.outOfHouse, player = SynTraitPlayer.FRIENDLY, cardTypesString = "Creature")
                                     ))
                     )
             )
@@ -282,7 +279,7 @@ class SynergyServiceTest {
                             cardTitle = "Nature's Call",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4, cardTypesString = "Creature")
                                     ))
                     )
             )
@@ -293,7 +290,7 @@ class SynergyServiceTest {
                             cardTitle = "Hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4, cardTypesString = "Creature")
                                     ))
                     )
             )
@@ -334,7 +331,7 @@ class SynergyServiceTest {
                         id = "returns creatures to hand",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, 4)
+                                        SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
                                 )
                         )
                 )
@@ -349,7 +346,7 @@ class SynergyServiceTest {
                                 expectedAmber = 0.0,
                                 expectedAmberMax = 3.0,
                                 synergies = listOf(
-                                        SynTraitValue(SynergyTrait.returnsFriendlyCreaturesToHand, -4)
+                                        SynTraitValue(SynergyTrait.returns_R_ToHand, -4)
                                 )
                         )
                 )
