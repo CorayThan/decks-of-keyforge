@@ -7,56 +7,28 @@ export enum SynergyTrait {
     any = "any",
 
     exalt = "exalt",
-    exaltFriendly = "exaltFriendly",
 
-    damagesMultipleEnemies = "damagesMultipleEnemies",
-    damagesAllEnemies = "damagesAllEnemies",
-    damagesFriendlyCreatures = "damagesFriendlyCreatures",
     damagesMultiple = "damagesMultiple",
 
-    destroysFriendlyCreatures = "destroysFriendlyCreatures",
-    destroysEnemyCreatures = "destroysEnemyCreatures",
-    destroysEnemyArtifacts = "destroysEnemyArtifacts",
-    destroysFriendlyArtifacts = "destroysFriendlyArtifacts",
     destroys = "destroys",
 
-    movesFriendly = "movesFriendly",
-    movesEnemy = "movesEnemy",
     moves = "moves",
 
-    returnsFriendlyCreaturesToHand = "returnsFriendlyCreaturesToHand",
-    returnsEnemyCreaturesToHand = "returnsEnemyCreaturesToHand",
-    returnsFriendlyArtifactsToHand = "returnsFriendlyArtifactsToHand",
-    returnsEnemyArtifactsToHand = "returnsEnemyArtifactsToHand",
     returns_R_ToHand = "returns_R_ToHand",
 
-
-    usesCreatures = "usesCreatures",
-    readiesCreatures = "readiesCreatures",
-    readiesCreaturesOnPlay = "readiesCreaturesOnPlay",
-    usesCreaturesOutOfHouse = "usesCreaturesOutOfHouse",
     uses = "uses",
 
-    purgesFriendlyCreatures = "purgesFriendlyCreatures",
     purges = "purges",
 
     archives = "archives",
-    archivesEnemyCards = "archivesEnemyCards",
 
-    controlsCreatures = "controlsCreatures",
     controls = "controls",
 
-    returnsCreaturesFromDiscard = "returnsCreaturesFromDiscard",
-    returnsCardsFromDiscard = "returnsCardsFromDiscard",
     returns_R_FromDiscard = "returns_R_FromDiscard",
 
-    discardsFriendlyCards = "discardsFriendlyCards",
-    discardsEnemyCards = "discardsEnemyCards",
     discardsCards = "discardsCards",
 
-    reducesEnemyDraw = "reducesEnemyDraw",
     reduces_R_HandSize = "reduces_R_HandSize",
-
 
     // Amber / keys
     capturesAmberOnEnemies = "capturesAmberOnEnemies",
@@ -129,20 +101,6 @@ export enum SynergyTrait {
     goodDestroyed = "goodDestroyed",
 
     /*** End Deprecated ***/
-
-        // Traits (these don't need to be traits on the extra info)
-    knight = "knight",
-    human = "human",
-    scientist = "scientist",
-    niffle = "niffle",
-    beast = "beast",
-    thief = "thief",
-    shard = "shard",
-    wolf = "wolf",
-    robot = "robot",
-    dinosaur = "dinosaur",
-    demon = "demon",
-    giant = "giant",
 
 
     // Deck traits In general these are 50 to 60 percentile = "0, 60+ = "1, 70+ = "2, 80+ = "3 90+ = "4

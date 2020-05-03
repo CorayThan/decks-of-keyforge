@@ -308,7 +308,7 @@ class SynergyServiceTest {
         log.info("Combos: $combos")
         assertEquals(50, combos.find { it.traitCards.contains("Nature's Call") }!!.percentSynergized)
         assertEquals(25, combos.find { it.traitCards.contains("Hysteria") }!!.percentSynergized)
-        assertEquals(-50, combos.find { it.trait == SynergyTrait.lowCreatureCount }!!.percentSynergized)
+        assertEquals(-50, combos.find { it.trait.trait == SynergyTrait.lowCreatureCount }!!.percentSynergized)
     }
 
     @Test
@@ -377,7 +377,7 @@ class SynergyServiceTest {
         log.info("Found combo: $combo")
         assertEquals("shooler", combo.cardName)
         val synergy = combo.synergies.find { it.percentSynergized > 0 }
-        assertEquals(SynTraitHouse.house, synergy?.house)
+        assertEquals(SynTraitHouse.house, synergy?.trait?.house)
         assertEquals("hysteria", synergy?.traitCards?.first())
         assertEquals(5.28, combo.aercScore, 0.001)
     }

@@ -17,66 +17,30 @@ enum class SynergyTrait {
 
     any,
 
-    // combine these:
-
+    returnsFriendlyArtifactsToHand,
 
     exalt,
-    exaltFriendly,
-    // exalt,
 
-    damagesMultipleEnemies,
-    damagesAllEnemies,
-    damagesFriendlyCreatures,
     damagesMultiple,
 
-    destroysFriendlyCreatures,
-    destroysEnemyCreatures,
-    destroysEnemyArtifacts,
-    destroysFriendlyArtifacts,
     destroys,
 
-    movesFriendly,
-    movesEnemy,
     moves,
 
-
-    returnsFriendlyCreaturesToHand,
-    returnsEnemyCreaturesToHand,
-    returnsFriendlyArtifactsToHand,
-    returnsEnemyArtifactsToHand,
     returns_R_ToHand,
 
-
-    usesCreatures,
-    readiesCreatures,
-    readiesCreaturesOnPlay,
-    usesCreaturesOutOfHouse,
     uses,
 
-
-    purgesFriendlyCreatures,
     purges,
 
-
-    archivesEnemyCards,
     archives,
 
-
-    controlsCreatures,
     controls,
 
-
-    returnsCreaturesFromDiscard,
-    returnsCardsFromDiscard,
     returns_R_FromDiscard,
 
-
-    discardsFriendlyCards,
-    discardsEnemyCards,
     discardsCards,
 
-
-    reducesEnemyDraw,
     reduces_R_HandSize,
 
 
@@ -154,21 +118,6 @@ enum class SynergyTrait {
     goodPlay,
     goodFight,
     goodDestroyed,
-
-    // Traits (these don't need to be traits on the extra info)
-    knight,
-    human,
-    scientist,
-    niffle,
-    beast,
-    thief,
-    shard,
-    wolf,
-    robot,
-    dinosaur,
-    demon,
-    giant,
-    mutant,
 
     power5OrHigherCreatures, // 6+=1/4, 7+=1/2, 8+=3/4, 10+=1
     power4OrHigherCreatures, // 9+=1/4, 10+=1/2, 11+=3/4, 13+=1
