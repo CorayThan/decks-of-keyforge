@@ -15,7 +15,7 @@ import {
     Typography
 } from "@material-ui/core"
 import { ChevronLeft, ChevronRight, Close, Delete, Save } from "@material-ui/icons"
-import { range, startCase } from "lodash"
+import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
@@ -37,7 +37,7 @@ import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMulti
 import { KeySingleSearchSuggest } from "../mui-restyled/KeySingleSearchSuggest"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
-import { SynTraitHouse } from "../synergy/SynTraitHouse"
+import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
 import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
@@ -490,6 +490,9 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
     powersString = ""
 
     @observable
+    baseSynPercent = ""
+
+    @observable
     player: SynTraitPlayer = SynTraitPlayer.ANY
 
     @observable
@@ -517,7 +520,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
 
         return (
             <Grid container={true} spacing={2} style={{backgroundColor: themeStore.aercViewBackground, marginBottom: spacing(2)}}>
-                <Grid item={true} xs={12}>
+                <Grid item={true} xs={9}>
                     <FormControl>
                         <FormLabel>Rating</FormLabel>
                         <RadioGroup
@@ -525,12 +528,26 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                             onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
                         >
                             <div style={{display: "flex", flexWrap: "wrap"}}>
-                                {range(-4, 5).map(value => (
-                                    <FormControlLabel key={value} value={value} control={<Radio/>} label={value.toString()}/>
+                                {[-4, -3, -2, -1, 1, 2, 3, 4].map(value => (
+                                    <FormControlLabel
+                                        key={value}
+                                        value={value}
+                                        control={<Radio  />}
+                                        label={value.toString()}
+                                        disabled={value < 1 && this.traitOrSynergy === "trait"}
+                                    />
                                 ))}
                             </div>
                         </RadioGroup>
                     </FormControl>
+                </Grid>
+                <Grid item={true} xs={3}>
+                    <TextField
+                        label={"Base Syn Percent"}
+                        value={this.baseSynPercent}
+                        type={"numeric"}
+                        onChange={event => this.baseSynPercent = event.target.value}
+                    />
                 </Grid>
                 <Grid item={true}>
                     <FormControl>
@@ -538,10 +555,14 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                         <RadioGroup
                             value={this.traitOrSynergy}
                             onChange={event => {
-                                const newValids = this.traitOrSynergy === "synergy" ? traitOptions : synergyOptions
+                                const changedToTrait = this.traitOrSynergy === "synergy"
+                                const newValids = changedToTrait ? traitOptions : synergyOptions
                                 const choosenTrait = this.holdsTrait.option as SynergyTrait | ""
                                 if (choosenTrait.length > 0 && newValids.find(option => choosenTrait === option.value) == null) {
                                     this.holdsTrait.option = ""
+                                }
+                                if (changedToTrait && this.rating < 1) {
+                                    this.rating = 3
                                 }
                                 this.traitOrSynergy = event.target.value as "trait" | "synergy"
                             }}
@@ -588,7 +609,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                     key={option}
                                     value={option}
                                     control={<Radio/>}
-                                    label={option === SynTraitHouse.anyHouse ? "Any" : (option === SynTraitHouse.house ? "House" : "Out of")}
+                                    label={synTraitHouseShortLabel(option as SynTraitHouse)}
                                 />
                             ))}
                         </RadioGroup>
@@ -647,6 +668,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                 this.rating = 3
                                 this.holdsTrait.option = SynergyTrait.any.toString()
                                 this.cardTraitsStore.reset()
+                                this.baseSynPercent = ""
                             }}
                         >
                             <Close/>
@@ -662,9 +684,9 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                     player: this.player,
                                     cardTypes: this.cardTypes.slice(),
                                     cardTraits: this.cardTraitsStore.selectedValues.slice(),
-                                    powersString: this.powersString.trim()
+                                    powersString: this.powersString.trim(),
+                                    baseSynPercent: Number(this.baseSynPercent.trim())
                                 })
-
                             }}
                         >
                             <Save/>

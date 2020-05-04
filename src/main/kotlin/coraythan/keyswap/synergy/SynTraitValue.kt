@@ -26,6 +26,13 @@ data class SynTraitValue(
         var powersString: String = "",
         var cardTraitsString: String = "",
 
+        /**
+         * Changes the starting base match strength. For example, starts at -50 for Grumpy Buggy. This means you need
+         * 5 matches of 10% value to break even at 0% and start synergizing. This can be used to modify the starting point
+         * for synergies and antisynergies away from the default 0, 50, and 100.
+         */
+        val baseSynPercent: Int = 0,
+
         @JsonIgnoreProperties("traits")
         @ManyToOne
         val traitInfo: ExtraCardInfo? = null,

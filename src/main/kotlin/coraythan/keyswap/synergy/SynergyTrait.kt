@@ -28,6 +28,9 @@ enum class SynergyTrait {
     returns_R_ToHand,
 
     uses,
+    readies,
+    causesFighting,
+    causesReaping,
 
     purges,
 
@@ -49,6 +52,7 @@ enum class SynergyTrait {
     stealsAmber,
     increasesKeyCost,
     scalingSteal,
+    scalingAmberControl,
     spendsCapturedAmber,
 
     // Damage
@@ -62,8 +66,6 @@ enum class SynergyTrait {
     protectsCreatures,
     increasesCreaturePower,
     heals,
-    causesFighting,
-    causesReaping,
     sacrificesCreatures,
 
     // Keywords
@@ -106,22 +108,22 @@ enum class SynergyTrait {
     forgesKeys,
 
 
-    alpha,
-    omega,
-
-    /*** Deprecated ***/
-
     goodReap,
     goodAction,
     goodPlay,
     goodFight,
     goodDestroyed,
 
+    // Bad penny in house, automatons
+    regenerates,
+
+    alpha,
+    omega,
+
     upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
     highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
     lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
 
-    /*** End Deprecated ***/
 
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4 +=1
     hasMars,

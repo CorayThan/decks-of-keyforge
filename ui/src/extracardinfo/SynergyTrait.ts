@@ -17,6 +17,7 @@ export enum SynergyTrait {
     returns_R_ToHand = "returns_R_ToHand",
 
     uses = "uses",
+    readies = "readies",
 
     purges = "purges",
 
@@ -87,21 +88,16 @@ export enum SynergyTrait {
     chains = "chains",
     forgesKeys = "forgesKeys",
 
-
-    // Special traits, don't use these in manual traits
-    alpha = "alpha",
-    omega = "omega",
-
-    /*** Deprecated ***/
-
     goodReap = "goodReap",
     goodAction = "goodAction",
     goodPlay = "goodPlay",
     goodFight = "goodFight",
     goodDestroyed = "goodDestroyed",
+    regenerates = "regenerates",
 
-    /*** End Deprecated ***/
-
+    // Special traits, don't use these in manual traits
+    alpha = "alpha",
+    omega = "omega",
 
     // Deck traits In general these are 50 to 60 percentile = "0, 60+ = "1, 70+ = "2, 80+ = "3 90+ = "4
     hasMars = "hasMars",

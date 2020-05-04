@@ -71,6 +71,9 @@ object DeckSynergyService {
             cardAllTraits
                     .forEach { traitValue ->
                         traitsMap.addTrait(traitValue, card, card.house)
+                        if (traitValue.trait == SynergyTrait.uses && traitValue.cardTypes.isEmpty() || traitValue.cardTypes.contains(CardType.Creature)) {
+                            traitsMap.addTrait(traitValue.copy(trait = SynergyTrait.causesReaping), card, card.house)
+                        }
                     }
             traitsMap.addTrait(SynTraitValue(SynergyTrait.any), card, card.house)
         }
@@ -119,7 +122,9 @@ object DeckSynergyService {
                         SynergyMatch(synergy, synPercent, cardNames)
                     }
 
-                    val totalSynPercent = matchedTraits.map { it.percentSynergized }.sum()
+                    val totalSynPercent = matchedTraits.map {
+                        it.percentSynergized + it.trait.baseSynPercent
+                    }.sum()
 
                     val hasPositive = cardInfo.synergies.find { it.rating > 0 } != null
                     val hasNegative = cardInfo.synergies.find { it.rating < 0 } != null
@@ -199,24 +204,46 @@ object DeckSynergyService {
         val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy
 
-        val info = DeckSynergyInfo(
-                synergyRating = synergy,
-                antisynergyRating = antisynergy,
-                synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
-                rawAerc = rawAerc,
-                sasRating = newSas,
+        val info = if (deck.synergyRating > 0) {
+            // Show old values temporarily
+            DeckSynergyInfo(
+                    synergyRating = deck.synergyRating,
+                    antisynergyRating = deck.antisynergyRating,
+                    synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
+                    rawAerc = deck.aercScore.toInt(),
+                    sasRating = deck.sasRating,
 
-                amberControl = a,
-                expectedAmber = e,
-                artifactControl = r,
-                creatureControl = c,
-                efficiency = f,
-                effectivePower = p,
-                disruption = d,
-                amberProtection = ap,
-                houseCheating = hc,
-                other = o
-        )
+                    amberControl = deck.amberControl,
+                    expectedAmber = deck.expectedAmber,
+                    artifactControl = deck.artifactControl,
+                    creatureControl = deck.creatureControl,
+                    efficiency = deck.efficiency,
+                    effectivePower = deck.effectivePower,
+                    disruption = deck.disruption,
+                    amberProtection = deck.amberProtection,
+                    houseCheating = deck.houseCheating,
+                    other = deck.other
+            )
+        } else {
+            DeckSynergyInfo(
+                    synergyRating = synergy,
+                    antisynergyRating = antisynergy,
+                    synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
+                    rawAerc = rawAerc,
+                    sasRating = newSas,
+
+                    amberControl = a,
+                    expectedAmber = e,
+                    artifactControl = r,
+                    creatureControl = c,
+                    efficiency = f,
+                    effectivePower = p,
+                    disruption = d,
+                    amberProtection = ap,
+                    houseCheating = hc,
+                    other = o
+            )
+        }
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
@@ -429,16 +456,26 @@ fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addDeckTrait(trait: Synergy
 data class SynTraitValuesForTrait(
         val traitValues: MutableList<SynTraitValueWithHouse> = mutableListOf()
 ) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
+
     fun matches(card: Card, synergyValue: SynTraitValue): SynMatchInfo {
         val house = card.house
         val cardName = card.cardTitle
         val matchedTraits = traitValues
                 .filter {
-                    typesMatch(synergyValue.cardTypes, it.value.cardTypes) &&
-                            playersMatch(synergyValue.player, it.value.player) &&
-                            housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait) &&
-                            synergyValue.powerMatch(card.power) &&
-                            traitsMatch(synergyValue.cardTraits, card.traits)
+                    val typeMatch = typesMatch(synergyValue.cardTypes, it.value.cardTypes)
+                    val playerMatch = playersMatch(synergyValue.player, it.value.player)
+                    val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
+                    val powerMatch = synergyValue.powerMatch(it.card?.power ?: -1)
+                    val traitMatch = traitsMatch(synergyValue.cardTraits, card.traits)
+                    val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
+
+                    // log.debug("\ntrait match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
+
+                    match
                 }
 
         var sameCard = false
@@ -476,19 +513,23 @@ data class SynTraitValuesForTrait(
                 SynTraitHouse.anyHouse -> true
                 SynTraitHouse.house -> !deckTrait && house1 == house2
                 SynTraitHouse.outOfHouse -> !deckTrait && house1 != house2
+                SynTraitHouse.continuous -> true
             }
             SynTraitHouse.house -> when (traitHouse) {
                 SynTraitHouse.anyHouse -> !deckTrait && house1 == house2
                 SynTraitHouse.house -> house1 == house2
                 // out of house with in house always false
                 SynTraitHouse.outOfHouse -> false
+                SynTraitHouse.continuous -> true
             }
             SynTraitHouse.outOfHouse -> when (traitHouse) {
                 SynTraitHouse.anyHouse -> !deckTrait && house1 != house2
                 // out of house with in house always false
                 SynTraitHouse.house -> false
                 SynTraitHouse.outOfHouse -> house1 != house2
+                SynTraitHouse.continuous -> true
             }
+            SynTraitHouse.continuous -> throw IllegalStateException("Synergies cannot be continuous.")
         }
     }
 }

@@ -5,4 +5,5 @@ enum class SynTraitHouse {
     // Only synergizes with traits inside its house
     house,
     outOfHouse,
+    continuous,
 }

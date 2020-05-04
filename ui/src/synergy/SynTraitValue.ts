@@ -10,6 +10,7 @@ export interface SynTraitValue {
     player: SynTraitPlayer
     cardTypes: CardType[]
     powersString: string
+    baseSynPercent: number
     cardTraits: string[]
     cardName?: string
     id?: string
@@ -26,7 +27,7 @@ export type SynTraitRatingValues = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4
 export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.house}`
 
 export const synTraitName = (traitValue: SynTraitValue) => {
-    const {trait, player, cardTypes, powersString, cardTraits, cardName} = traitValue
+    const {trait, player, cardTypes, powersString, cardTraits, cardName, house} = traitValue
     if (cardName != null) {
         return cardName
     }
@@ -47,6 +48,9 @@ export const synTraitName = (traitValue: SynTraitValue) => {
         } else {
             nameEnhancer += ` ${cardTypes.map(type => type + "s").join(" ")}`
         }
+    }
+    if (house === SynTraitHouse.continuous) {
+        nameEnhancer += " Continuously"
     }
     if (name.includes("_R_")) {
         name = startCase(name).replace(" R ", nameEnhancer + " ")
