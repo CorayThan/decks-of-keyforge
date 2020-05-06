@@ -1,5 +1,6 @@
 package coraythan.keyswap.synergy
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
@@ -16,6 +17,10 @@ data class SynTraitValue(
 
         @Enumerated(EnumType.STRING)
         val player: SynTraitPlayer = SynTraitPlayer.ANY,
+
+        @Transient
+        @JsonIgnore
+        val cardTypesInitial: List<CardType>? = listOf(),
 
         var cardTypesString: String = "",
         /**
@@ -77,6 +82,12 @@ data class SynTraitValue(
         set(cardTraits) {
             cardTraitsString = cardTraits.joinToString("-")
         }
+
+    init {
+        if (!cardTypesInitial.isNullOrEmpty()) {
+            this.cardTypes = cardTypesInitial
+        }
+    }
 
     fun powerMatch(power: Int): Boolean {
         return when {

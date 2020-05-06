@@ -37,7 +37,7 @@ export enum SynergyTrait {
     capturesOntoTarget = "capturesOntoTarget",
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
-    scalingSteal = "scalingSteal",
+    scalingAmberControl = "scalingAmberControl",
     spendsCapturedAmber = "spendsCapturedAmber",
 
     // Damage

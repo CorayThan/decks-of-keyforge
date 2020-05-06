@@ -3,7 +3,7 @@ import { amber, blue, teal } from "@material-ui/core/colors"
 import Home from "@material-ui/icons/Home"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { AntiIcon } from "../generic/icons/AntiIcon"
+import { OutOfHouseIcon } from "../generic/icons/OutOfHouseIcon"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
 import { SynTraitHouse } from "./SynTraitHouse"
 import { synTraitName, SynTraitValue } from "./SynTraitValue"
@@ -49,12 +49,9 @@ export const TraitBubble = (props: {
                 </Tooltip>
             ) : null}
             {house === SynTraitHouse.outOfHouse ? (
-                <Tooltip title={"Synergizes with out of house traits only"}>
-                    <div style={{width: 18, height: 18, marginLeft: spacing(1), marginRight: spacing(1)}}>
-                        <div style={{position: "absolute", paddingLeft: 2, paddingTop: 1}}>
-                            <Home style={{color, width: 14, height: 14}}/>
-                        </div>
-                        <AntiIcon style={{position: "absolute"}}/>
+                <Tooltip title={"Synergizes with house traits only"}>
+                    <div>
+                        <OutOfHouseIcon style={{color, marginRight: spacing(1), height: 18}}/>
                     </div>
                 </Tooltip>
             ) : null}

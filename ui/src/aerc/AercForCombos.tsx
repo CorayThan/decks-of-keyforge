@@ -1,4 +1,5 @@
 import { Typography } from "@material-ui/core"
+import { sortBy } from "lodash"
 import React from "react"
 import { spacing } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
@@ -21,6 +22,7 @@ export class AercForCombos extends React.Component<AercForCombosProps> {
             return children
         }
         const totalHouseAerc = DeckUtils.sasForHouse(combos, accessor)
+        const combosSorted = sortBy(combos, [accessor == null ? "aercScore" : accessor]).reverse()
 
         return (
             <SasTip
@@ -42,9 +44,9 @@ export class AercForCombos extends React.Component<AercForCombosProps> {
                         )}
                     </div>
                 }
-                contents={(combos.length > 0 &&
+                contents={(combosSorted.length > 0 &&
                     <div style={{display: "grid", gridTemplateColumns: "3fr 1fr"}}>
-                        {combos.map(combo => (
+                        {combosSorted.map(combo => (
                             <React.Fragment key={combo.cardName + combo.house}>
                                 <Typography variant={"body2"} style={{marginRight: spacing(2)}}>
                                     {combo.cardName}

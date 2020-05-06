@@ -204,46 +204,46 @@ object DeckSynergyService {
         val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy
 
-        val info = if (deck.synergyRating > 0) {
-            // Show old values temporarily
-            DeckSynergyInfo(
-                    synergyRating = deck.synergyRating,
-                    antisynergyRating = deck.antisynergyRating,
-                    synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
-                    rawAerc = deck.aercScore.toInt(),
-                    sasRating = deck.sasRating,
+//        val info = if (deck.synergyRating > 0) {
+//            // Show old values temporarily
+//            DeckSynergyInfo(
+//                    synergyRating = deck.synergyRating,
+//                    antisynergyRating = deck.antisynergyRating,
+//                    synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
+//                    rawAerc = deck.aercScore.toInt(),
+//                    sasRating = deck.sasRating,
+//
+//                    amberControl = deck.amberControl,
+//                    expectedAmber = deck.expectedAmber,
+//                    artifactControl = deck.artifactControl,
+//                    creatureControl = deck.creatureControl,
+//                    efficiency = deck.efficiency,
+//                    effectivePower = deck.effectivePower,
+//                    disruption = deck.disruption,
+//                    amberProtection = deck.amberProtection,
+//                    houseCheating = deck.houseCheating,
+//                    other = deck.other
+//            )
+//        } else {
+        val info = DeckSynergyInfo(
+                synergyRating = synergy,
+                antisynergyRating = antisynergy,
+                synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
+                rawAerc = rawAerc,
+                sasRating = newSas,
 
-                    amberControl = deck.amberControl,
-                    expectedAmber = deck.expectedAmber,
-                    artifactControl = deck.artifactControl,
-                    creatureControl = deck.creatureControl,
-                    efficiency = deck.efficiency,
-                    effectivePower = deck.effectivePower,
-                    disruption = deck.disruption,
-                    amberProtection = deck.amberProtection,
-                    houseCheating = deck.houseCheating,
-                    other = deck.other
-            )
-        } else {
-            DeckSynergyInfo(
-                    synergyRating = synergy,
-                    antisynergyRating = antisynergy,
-                    synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
-                    rawAerc = rawAerc,
-                    sasRating = newSas,
-
-                    amberControl = a,
-                    expectedAmber = e,
-                    artifactControl = r,
-                    creatureControl = c,
-                    efficiency = f,
-                    effectivePower = p,
-                    disruption = d,
-                    amberProtection = ap,
-                    houseCheating = hc,
-                    other = o
-            )
-        }
+                amberControl = a,
+                expectedAmber = e,
+                artifactControl = r,
+                creatureControl = c,
+                efficiency = f,
+                effectivePower = p,
+                disruption = d,
+                amberProtection = ap,
+                houseCheating = hc,
+                other = o
+        )
+        // }
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
@@ -464,13 +464,15 @@ data class SynTraitValuesForTrait(
     fun matches(card: Card, synergyValue: SynTraitValue): SynMatchInfo {
         val house = card.house
         val cardName = card.cardTitle
+
         val matchedTraits = traitValues
                 .filter {
-                    val typeMatch = typesMatch(synergyValue.cardTypes, it.value.cardTypes)
+                    val traitsCard = it.card
+                    val typeMatch = typesMatch(it.value.trait, synergyValue.cardTypes, traitsCard?.cardType, it.value.cardTypes)
                     val playerMatch = playersMatch(synergyValue.player, it.value.player)
                     val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
-                    val powerMatch = synergyValue.powerMatch(it.card?.power ?: -1)
-                    val traitMatch = traitsMatch(synergyValue.cardTraits, card.traits)
+                    val powerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1)
+                    val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits)
                     val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
 
                     // log.debug("\ntrait match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
@@ -494,16 +496,20 @@ data class SynTraitValuesForTrait(
         return SynMatchInfo(strength, cardNames)
     }
 
-    private fun typesMatch(types1: List<CardType>, types2: List<CardType>): Boolean {
-        return types1.isEmpty() || types2.isEmpty() || types1.any { type1Type -> types2.any { type1Type == it } }
+    private fun typesMatch(traitTrait: SynergyTrait, synTypes: List<CardType>, cardType: CardType?, traitTypes: List<CardType>): Boolean {
+        return if (traitTrait == SynergyTrait.any) {
+            synTypes.isEmpty() || synTypes.contains(cardType)
+        } else {
+            synTypes.isEmpty() || traitTypes.isEmpty() || synTypes.any { type1Type -> traitTypes.any { type1Type == it } }
+        }
     }
 
     private fun playersMatch(player1: SynTraitPlayer, player2: SynTraitPlayer): Boolean {
         return player1 == SynTraitPlayer.ANY || player2 == SynTraitPlayer.ANY || player1 == player2
     }
 
-    private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>): Boolean {
-        return synergyTraits.isEmpty() || synergyTraits.all { cardTraits.contains(it) }
+    private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?): Boolean {
+        return cardTraits != null && (synergyTraits.isEmpty() || synergyTraits.all { cardTraits.contains(it) })
     }
 
     private fun housesMatch(synHouse: SynTraitHouse, house1: House, traitHouse: SynTraitHouse, house2: House?, deckTrait: Boolean = false): Boolean {

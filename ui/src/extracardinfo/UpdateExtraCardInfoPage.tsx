@@ -248,12 +248,11 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
             >
                 {this.card && (
                     <div>
-                        <Typography variant={"h5"} style={{marginLeft: spacing(2), marginBottom: spacing(2)}}>Current Values</Typography>
                         <CardView card={this.card}/>
                     </div>
                 )}
                 <div>
-                    <Card style={{maxWidth: 800, margin: spacing(4), padding: spacing(2)}}>
+                    <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
                             <Typography variant={"h4"}>
                                 {this.card.cardTitle}'s AERC
@@ -663,7 +662,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                 this.powersString = ""
                                 this.player = SynTraitPlayer.ANY
                                 this.house = SynTraitHouse.anyHouse
-                                this.traitOrSynergy = "trait"
+                                this.traitOrSynergy = "synergy"
                                 this.cardTypes = []
                                 this.rating = 3
                                 this.holdsTrait.option = SynergyTrait.any.toString()

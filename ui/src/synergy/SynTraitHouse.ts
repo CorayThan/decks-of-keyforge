@@ -14,6 +14,6 @@ export const synTraitHouseShortLabel = (house: SynTraitHouse) => {
         case SynTraitHouse.outOfHouse:
             return "Out of"
         case SynTraitHouse.continuous:
-            return "Always"
+            return "Omni"
     }
 }

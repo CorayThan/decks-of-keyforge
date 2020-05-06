@@ -51,7 +51,6 @@ enum class SynergyTrait {
     capturesOntoTarget,
     stealsAmber,
     increasesKeyCost,
-    scalingSteal,
     scalingAmberControl,
     spendsCapturedAmber,
 

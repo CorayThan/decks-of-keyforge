@@ -20,6 +20,12 @@ export interface SortableTableHeaderInfo<T> {
     sortable?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transform?: (data: T) => any
+
+    /**
+     * property must be included with transformProperty
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    transformProperty?: (propertyValue: any) => any
     width?: number
 }
 
@@ -49,8 +55,8 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                     <TableHead>
                         <TableRow>
                             {headers.map(header => (
-                                <TableCell key={header.title} style={{width: header.width}}>
-                                    {header.property != null && header.sortable ? (
+                                <TableCell key={header.title ?? header.property?.toString()} style={{width: header.width}}>
+                                    {header.property != null && header.sortable !== false ? (
                                         <TableSortLabel
                                             active={store.activeTableSort === header.property}
                                             direction={store.tableSortDir}
@@ -68,11 +74,23 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                     <TableBody>
                         {store.sortedItems.map((datum, idx) => (
                             <TableRow key={idx}>
-                                {headers.map(header => (
-                                    <TableCell key={header.title}>
-                                        {header.transform == null ? datum[header.property!] : header.transform(datum)}
-                                    </TableCell>
-                                ))}
+                                {headers.map(header => {
+                                    let value
+                                    if (header.transform != null) {
+                                        value = header.transform(datum)
+                                    } else if (header.transformProperty != null) {
+                                        value = header.transformProperty(datum[header.property!])
+                                    } else {
+                                        value = datum[header.property!]
+                                    }
+                                    return (
+                                        <TableCell key={header.title ?? header.property?.toString()}>
+                                            <div style={{width: header.width}}>
+                                                {value}
+                                            </div>
+                                        </TableCell>
+                                    )
+                                })}
                             </TableRow>
                         ))}
                     </TableBody>
@@ -94,6 +112,7 @@ class SortableTableStore<T> {
     constructor(private defaultSort: keyof T, private data: T[]) {
         this.activeTableSort = defaultSort
         this.sortedItems = data
+        this.resort()
     }
 
     resort = () => {

@@ -5,7 +5,6 @@ import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
-import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { DeckWithSynergyInfo } from "./Deck"
 import { deckImportPopStore } from "./DeckImportPop"
@@ -111,44 +110,16 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
             saleInfoComponent = <Loader/>
         }
 
-        let inner
-
-        if (screenStore.screenSizeMd()) {
-            inner = (
-                <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
-                    <ExtraDeckStatsView deck={deck.deck}/>
-                    <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake}/>
-                    <DeckStatsView deck={deck.deck}/>
-                    {saleInfoComponent}
-                    <DeckSynergiesInfoView
-                        synergies={deck}
-                        width={undefined}
-                    />
-                </div>
-            )
-        } else {
-            const wrapperStyle: React.CSSProperties = {display: "flex", flexWrap: "wrap", justifyContent: "center"}
-            inner = (
-                <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
-                    <ExtraDeckStatsView deck={deck.deck}/>
-                    <div style={wrapperStyle}>
-                        <DeckViewSmall deck={deck.deck} fullVersion={true} style={{marginTop: 0}} hideActions={fake}/>
-                        <DeckStatsView deck={deck.deck}/>
-                    </div>
-                    <div style={wrapperStyle}>
-                        {saleInfoComponent}
-                        <DeckSynergiesInfoView
-                            synergies={deck}
-                            width={1400}
-                        />
-                    </div>
-                </div>
-            )
-        }
 
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                {inner}
+                <ExtraDeckStatsView deck={deck.deck}/>
+                <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake}/>
+                <DeckStatsView deck={deck.deck}/>
+                {saleInfoComponent}
+                <DeckSynergiesInfoView
+                    synergies={deck}
+                />
             </div>
         )
 

@@ -50,10 +50,18 @@ class PatreonService(
             val creatorAccount = patreonAccountRepo.findAll().toList().firstOrNull()
             log.info("Found creator account.")
             if (creatorAccount != null) {
-                val updated = updateCreatorAccount(creatorAccount.refreshToken)
-                log.info("updated creator account")
-                refreshCampaignInfo(updated.accessToken)
-                log.info("refreshed campaign info")
+                try {
+                    val updated = updateCreatorAccount(creatorAccount.refreshToken)
+                    log.info("updated creator account")
+                    refreshCampaignInfo(updated.accessToken)
+                    log.info("refreshed campaign info")
+                } catch (e: Exception) {
+                    if (env == Env.dev) {
+                        log.warn("Couldn't get patron info in dev.")
+                    } else {
+                        throw e
+                    }
+                }
             } else {
                 log.warn("Couldn't refresh patreon creator account.")
             }

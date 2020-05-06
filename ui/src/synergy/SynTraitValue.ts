@@ -49,13 +49,13 @@ export const synTraitName = (traitValue: SynTraitValue) => {
             nameEnhancer += ` ${cardTypes.map(type => type + "s").join(" ")}`
         }
     }
-    if (house === SynTraitHouse.continuous) {
-        nameEnhancer += " Continuously"
-    }
     if (name.includes("_R_")) {
         name = startCase(name).replace(" R ", nameEnhancer + " ")
     } else {
         name = startCase(name) + " " + nameEnhancer
+    }
+    if (house === SynTraitHouse.continuous) {
+        name = "Omni: " + name
     }
     return name.trim()
 }
