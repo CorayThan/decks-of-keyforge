@@ -1,6 +1,5 @@
 package coraythan.keyswap.synergy
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.math.DoubleMath.roundToInt
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
@@ -72,7 +71,7 @@ object DeckSynergyService {
             cardAllTraits
                     .forEach { traitValue ->
                         traitsMap.addTrait(traitValue, card, card.house)
-                        if (traitValue.trait == SynergyTrait.uses && traitValue.cardTypes.isEmpty() || traitValue.cardTypes.contains(CardType.Creature)) {
+                        if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isEmpty() || traitValue.cardTypes.contains(CardType.Creature))) {
                             traitsMap.addTrait(traitValue.copy(trait = SynergyTrait.causesReaping), card, card.house)
                         }
                     }
@@ -466,7 +465,7 @@ data class SynTraitValuesForTrait(
         val house = card.house
         val cardName = card.cardTitle
 
-        log.info("Check if there is a match for card ${card.cardTitle} in trait values ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitValues)}")
+        // log.info("Check if there is a match for card ${card.cardTitle} in trait values ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitValues)}")
 
         val matchedTraits = traitValues
                 .filter {
@@ -474,7 +473,7 @@ data class SynTraitValuesForTrait(
                     val typeMatch = typesMatch(it.value.trait, synergyValue.cardTypes, traitsCard?.cardType, it.value.cardTypes)
                     val playerMatch = playersMatch(synergyValue.player, it.value.player)
                     val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
-                    val powerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1)
+                    val powerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
                     val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits)
                     val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
 
@@ -512,7 +511,7 @@ data class SynTraitValuesForTrait(
     }
 
     private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?): Boolean {
-        log.info("In traits match syn traits $synergyTraits cardTraits $cardTraits")
+        // log.info("In traits match syn traits $synergyTraits cardTraits $cardTraits")
         return synergyTraits.isEmpty() || (cardTraits != null && synergyTraits.all { cardTraits.contains(it) })
     }
 

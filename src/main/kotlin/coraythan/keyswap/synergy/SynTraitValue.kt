@@ -89,10 +89,13 @@ data class SynTraitValue(
         }
     }
 
-    fun powerMatch(power: Int): Boolean {
+    fun powerMatch(power: Int, cardType: CardType? = CardType.Creature): Boolean {
         return when {
             powersString.isBlank() -> {
                 true
+            }
+            cardType != CardType.Creature -> {
+                false
             }
             powersString == "even" -> {
                 power % 2 == 0

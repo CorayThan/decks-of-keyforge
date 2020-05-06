@@ -2,10 +2,9 @@ package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
-import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.synergy.SynTraitValue
-import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -14,52 +13,58 @@ class UseSynsTest {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    val queenCards = listOf<Card>()
+    val woteCards = listOf<Card>()
             .plus(
                     basicCard().copy(
-                            id = "niffle ape",
+                            id = "wote",
                             house = House.Untamed,
-                            traits = setOf("Niffle"),
-                            cardTitle = "Niffle Ape",
+                            cardTitle = "wote",
                             extraCardInfo = ExtraCardInfo(
-                                    effectivePower = 3
+                                    efficiency = 1.0,
+                                    efficiencyMax = 3.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.causesReaping, rating = 3)
+                                    )
                             )
                     )
             )
             .plus(
                     basicCard().copy(
-                            id = "snufflegator",
-                            house = House.Untamed,
-                            cardTitle = "Snufflegator",
-                            traits = setOf("BEAST"),
+                            id = "dominator bauble",
+                            house = House.Dis,
+                            cardTitle = "dominator bauble",
                             extraCardInfo = ExtraCardInfo(
-                                    effectivePower = 4
+                                    traits = listOf(SynTraitValue(SynergyTrait.uses, house = SynTraitHouse.outOfHouse, cardTypesInitial = listOf(CardType.Creature)))
                             )
                     )
             )
-            .plus((0..1).map {
-                basicCard().copy(
-                        id = "niffle queen",
-                        house = House.Untamed,
-                        traits = setOf("NIFFLE"),
-                        cardTitle = "Niffle Queen",
-                        extraCardInfo = ExtraCardInfo(
-                                effectivePower = 6,
-                                effectivePowerMax = 12.0,
-                                synergies = listOf(
-                                        SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "NIFFLE"),
-                                        SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "BEAST")
-                                )
-                        )
-                )
-            })
+            .plus(
+                    basicCard().copy(
+                            id = "hand of dis",
+                            house = House.Dis,
+                            cardTitle = "hand of dis",
+                            extraCardInfo = ExtraCardInfo(
+                                    traits = listOf(SynTraitValue(SynergyTrait.destroys, player = SynTraitPlayer.ENEMY, cardTypesInitial = listOf(CardType.Creature)))
+                            )
+                    )
+            )
+            .plus(
+                    basicCard().copy(
+                            id = "commander remiel",
+                            house = House.Sanctum,
+                            cardTitle = "commander remiel",
+                            extraCardInfo = ExtraCardInfo(
+                                    traits = listOf(SynTraitValue(SynergyTrait.causesReaping, house = SynTraitHouse.outOfHouse))
+                            )
+                    )
+            )
 
     @Test
-    fun testNiffles() {
+    fun testWote() {
 
-        val niffleResults = DeckSynergyService.fromDeckWithCards(boringDeck, queenCards)
-        assertEquals(3, niffleResults.synergyCombos.size)
-        assertEquals(1, niffleResults.synergyRating)
+        val results = DeckSynergyService.fromDeckWithCards(boringDeck, woteCards)
+        assertEquals(2.0, results.efficiency, 0.001)
+        assertEquals(1, results.synergyRating)
     }
 
 }

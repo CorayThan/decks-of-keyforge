@@ -49,7 +49,7 @@ export const TraitBubble = (props: {
                 </Tooltip>
             ) : null}
             {house === SynTraitHouse.outOfHouse ? (
-                <Tooltip title={"Synergizes with house traits only"}>
+                <Tooltip title={"Synergizes with out of house traits only"}>
                     <div>
                         <OutOfHouseIcon style={{color, marginRight: spacing(1), height: 18}}/>
                     </div>

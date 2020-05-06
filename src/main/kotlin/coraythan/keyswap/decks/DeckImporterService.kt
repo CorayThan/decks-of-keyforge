@@ -181,6 +181,11 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksDelay)
     fun rateDecks() {
 
+        if (env == Env.qa) {
+            log.info("QA environment, skip rating decks.")
+            return
+        }
+
         try {
 
             // If next page is null, we know we are done
