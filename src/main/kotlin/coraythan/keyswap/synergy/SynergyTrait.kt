@@ -44,6 +44,7 @@ enum class SynergyTrait {
 
     reduces_R_HandSize,
 
+    inAllHouses,
 
     // Amber / keys
     capturesAmberOnEnemies,

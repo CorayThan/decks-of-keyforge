@@ -60,6 +60,8 @@ export enum SynergyTrait {
     deploy = "deploy",
     ward = "ward",
 
+    inAllHouses = "inAllHouses",
+
     // Archives
     archivesRandom = "archivesRandom",
 

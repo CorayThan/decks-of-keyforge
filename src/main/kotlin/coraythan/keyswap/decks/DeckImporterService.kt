@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.auctions.DeckListingRepo
-import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.CardIds
-import coraythan.keyswap.cards.CardService
-import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
@@ -181,6 +178,8 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksDelay)
     fun rateDecks() {
 
+        return
+
         if (env == Env.qa) {
             log.info("QA environment, skip rating decks.")
             return
@@ -217,7 +216,7 @@ class DeckImporterService(
                     val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
 
                     val rated = deckResults.mapNotNull {
-                        val rated = rateDeck(it)
+                        val rated = rateDeck(it, majorRevision)
                         if (rated == it) {
                             null
                         } else {
@@ -436,7 +435,7 @@ class DeckImporterService(
         return ratedDeck
     }
 
-    fun rateDeck(deck: Deck): Deck {
+    fun rateDeck(deck: Deck, majorRevision: Boolean = false): Deck {
         val cards = cardService.cardsForDeck(deck)
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards)
 
@@ -460,6 +459,8 @@ class DeckImporterService(
                 aercScore = deckSynergyInfo.rawAerc.toDouble(),
                 sasRating = deckSynergyInfo.sasRating,
                 previousSasRating = if (deckSynergyInfo.sasRating != deck.sasRating) deck.sasRating else deck.previousSasRating,
+                previousMajorSasRating = if (majorRevision) deck.sasRating else deck.previousMajorSasRating,
+                aercVersion = publishedAercVersion,
                 synergyRating = deckSynergyInfo.synergyRating,
                 antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
         )

@@ -51,7 +51,8 @@ export interface Deck extends HasAerc {
     totalArmor: number
 
     aercScore: number
-    previousSasRating: number
+    previousSasRating?: number
+    previousMajorSasRating?: number
     sasRating: number
     synergyRating: number
     antisynergyRating: number
