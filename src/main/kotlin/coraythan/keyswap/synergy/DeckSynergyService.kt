@@ -1,5 +1,6 @@
 package coraythan.keyswap.synergy
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.math.DoubleMath.roundToInt
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
@@ -465,6 +466,8 @@ data class SynTraitValuesForTrait(
         val house = card.house
         val cardName = card.cardTitle
 
+        log.info("Check if there is a match for card ${card.cardTitle} in trait values ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitValues)}")
+
         val matchedTraits = traitValues
                 .filter {
                     val traitsCard = it.card
@@ -475,7 +478,7 @@ data class SynTraitValuesForTrait(
                     val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits)
                     val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
 
-                    // log.debug("\ntrait match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
+                    log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
 
                     match
                 }
@@ -509,7 +512,8 @@ data class SynTraitValuesForTrait(
     }
 
     private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?): Boolean {
-        return cardTraits != null && (synergyTraits.isEmpty() || synergyTraits.all { cardTraits.contains(it) })
+        log.info("In traits match syn traits $synergyTraits cardTraits $cardTraits")
+        return synergyTraits.isEmpty() || (cardTraits != null && synergyTraits.all { cardTraits.contains(it) })
     }
 
     private fun housesMatch(synHouse: SynTraitHouse, house1: House, traitHouse: SynTraitHouse, house2: House?, deckTrait: Boolean = false): Boolean {
