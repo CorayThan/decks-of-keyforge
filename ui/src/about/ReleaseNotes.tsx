@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "4.20"
+export const latestVersion = "5.0"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,26 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.0"}
+                    date={"5/6/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS v5!",
+                            note: "SAS has undergone its next major revision! This revision is intended to improve synergy quality, and correct " +
+                                "cards that were grossly underrated, like Martian Generosity. We've also noticed that Worlds Collide seems a little overrated in general compared " +
+                                "to CotA and AoA, so many lower-quality WC cards have been nerfed. In terms of synergies, the biggest revisions " +
+                                "have come to how creatures with good reap / use work, adding friendly vs. enemy effects, adding card-type specific synergies " +
+                                "as well as adding creature power expressions so synergies can target the most appropriate creatures."
+                        },
+                        {
+                            note: "I also want to thank everyone who contributes to improving SAS and making these improvements possible! " +
+                                "On Team SAS-LP, Dunkoro, Luke Daniels , DrSheep, and Big Z have been a great help in evaluating this new version of SAS, " +
+                                "and I also appreciate the input and feedback from everyone who participates in the SAS-discussion channel on the discord!"
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"4.20"}
                     date={"4/23/2020"}

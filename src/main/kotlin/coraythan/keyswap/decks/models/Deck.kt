@@ -162,6 +162,8 @@ data class Deck(
                 other = other,
                 aercScore = aercScore,
                 previousSasRating = previousSasRating ?: sasRating,
+                previousMajorSasRating = previousMajorSasRating,
+                aercVersion = aercVersion ?: 12,
                 sasRating = sasRating,
                 synergyRating = synergyRating,
                 antisynergyRating = antisynergyRating,
