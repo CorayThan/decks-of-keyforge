@@ -531,7 +531,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                     <FormControlLabel
                                         key={value}
                                         value={value}
-                                        control={<Radio  />}
+                                        control={<Radio/>}
                                         label={value.toString()}
                                         disabled={value < 1 && this.traitOrSynergy === "trait"}
                                     />
@@ -675,7 +675,10 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                         <IconButton
                             style={{marginRight: spacing(2)}}
                             onClick={() => {
-                                (this.traitOrSynergy === "synergy" ? synergies : traits).push({
+                                const isSynergy = this.traitOrSynergy === "synergy"
+                                const addTo = isSynergy ? synergies : traits
+
+                                const toAdd = {
                                     trait: this.holdsCard.option.length > 0 ? SynergyTrait.card : this.holdsTrait.option as SynergyTrait,
                                     rating: this.rating,
                                     cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
@@ -685,7 +688,26 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                     cardTraits: this.cardTraitsStore.selectedValues.slice(),
                                     powersString: this.powersString.trim(),
                                     baseSynPercent: Number(this.baseSynPercent.trim())
-                                })
+                                }
+                                addTo.push(toAdd)
+
+                                if (!isSynergy) {
+                                    if (toAdd.trait === SynergyTrait.addsArmor || toAdd.trait === SynergyTrait.increasesCreaturePower) {
+                                        const increasesDurability = {...toAdd}
+                                        increasesDurability.trait = SynergyTrait.increasesDurability
+                                        addTo.push(increasesDurability)
+                                    }
+                                    if (
+                                        toAdd.trait === SynergyTrait.addsArmor ||
+                                        toAdd.trait === SynergyTrait.increasesCreaturePower ||
+                                        toAdd.trait === SynergyTrait.preventsFighting ||
+                                        toAdd.trait === SynergyTrait.preventsRemoval
+                                    ) {
+                                        const protectsCreatures = {...toAdd}
+                                        protectsCreatures.trait = SynergyTrait.protectsCreatures
+                                        addTo.push(protectsCreatures)
+                                    }
+                                }
                             }}
                         >
                             <Save/>

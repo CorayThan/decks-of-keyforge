@@ -82,7 +82,8 @@ export class SasAndAerc extends React.Component {
                                 "Efficiency is increased by effects that allow you to play extra cards. " +
                                 "It is reduced by cards that prevent you from playing or drawing cards, like cards that give chains or Bad Penny.",
                                 "One chain is worth approximately -0.5 F.",
-                                "1 point is approximately equal to drawing two cards or archiving a random card. Archiving a card of your choice is 1.5"
+                                "1 point is approximately equal to drawing two cards,  archiving a random card or discarding a card of your choice. " +
+                                "Archiving a card of your choice is 1.5"
                             ]}
                             icon={AercType.F}
                         />,

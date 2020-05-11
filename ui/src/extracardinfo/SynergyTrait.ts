@@ -47,13 +47,20 @@ export enum SynergyTrait {
 
     // Creatures
     stuns = "stuns",
-    addsArmor = "addsArmor",
-    protectsCreatures = "protectsCreatures",
-    increasesCreaturePower = "increasesCreaturePower",
     heals = "heals",
     causesFighting = "causesFighting",
     causesReaping = "causesReaping",
     sacrificesCreatures = "sacrificesCreatures",
+
+    // Protects Creatures
+    protectsCreatures = "protectsCreatures",
+    preventsFighting = "preventsFighting",
+    preventsRemoval = "preventsRemoval",
+    increasesDurability = "increasesDurability",
+    addsArmor = "addsArmor",
+    increasesCreaturePower = "increasesCreaturePower",
+
+    // Keywords
     elusive = "elusive",
     skirmish = "skirmish",
     poison = "poison",

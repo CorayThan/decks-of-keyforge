@@ -25,7 +25,6 @@ enum class SynergyTrait {
 
     moves,
 
-    returns_R_ToHand,
 
     uses,
     readies,
@@ -38,7 +37,10 @@ enum class SynergyTrait {
 
     controls,
 
+    returns_R_ToHand,
     returns_R_FromDiscard,
+    shuffles_R_IntoDeck,
+    replays,
 
     discardsCards,
 
@@ -62,11 +64,16 @@ enum class SynergyTrait {
 
     // Creatures
     stuns,
-    addsArmor,
-    protectsCreatures,
-    increasesCreaturePower,
     heals,
     sacrificesCreatures,
+
+    // Protects Creatures
+    protectsCreatures,
+    preventsFighting,
+    preventsRemoval,
+    increasesDurability,
+    addsArmor,
+    increasesCreaturePower,
 
     // Keywords
     elusive,

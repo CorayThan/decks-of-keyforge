@@ -12,6 +12,7 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
+import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
@@ -145,7 +146,7 @@ data class Deck(
                     it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
                             || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
                 }?.size,
-                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives) == true }?.size,
+                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size,
                 keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size,
                 rawAmber = rawAmber,
                 totalArmor = totalArmor,

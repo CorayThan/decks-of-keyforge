@@ -130,5 +130,6 @@ export enum CardSort {
     ARTIFACT_CONTROL = "ARTIFACT_CONTROL",
     WIN_RATE = "WIN_RATE",
     SET_NUMBER = "SET_NUMBER",
-    AERC = "AERC"
+    AERC = "AERC",
+    NAME = "NAME",
 }

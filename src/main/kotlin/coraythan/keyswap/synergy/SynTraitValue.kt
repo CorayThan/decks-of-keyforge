@@ -132,4 +132,6 @@ data class SynTraitValue(
 
 }
 
-fun Collection<SynTraitValue>.containsTrait(trait: SynergyTrait) = this.find { valueTrait -> valueTrait.trait == trait } != null
+fun Collection<SynTraitValue>.containsTrait(trait: SynergyTrait, player: SynTraitPlayer? = null) = this.find {
+    valueTrait -> valueTrait.trait == trait && (player == null || player == valueTrait.player)
+} != null

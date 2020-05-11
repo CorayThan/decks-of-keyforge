@@ -73,6 +73,10 @@ object DeckSynergyService {
                         traitsMap.addTrait(traitValue, card, card.house)
                         if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isEmpty() || traitValue.cardTypes.contains(CardType.Creature))) {
                             traitsMap.addTrait(traitValue.copy(trait = SynergyTrait.causesReaping), card, card.house)
+// comment in with next version
+//                            if (traitValue.rating > 1) {
+//                                traitsMap.addTrait(traitValue.copy(trait = SynergyTrait.causesFighting, rating = traitValue.rating - 1), card, card.house)
+//                            }
                         }
                     }
             traitsMap.addTrait(SynTraitValue(SynergyTrait.any), card, card.house)
