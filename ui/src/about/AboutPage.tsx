@@ -15,6 +15,7 @@ import TeamSasLpBanner from "./sas-lp-banner.png"
 import { SasAndAerc } from "./SasAndAerc"
 import { SellersAndDevs } from "./SellersAndDevs"
 import { TeamSasLp } from "./TeamSasLp"
+import { ThirdPartyIntegrations } from "./ThirdPartyIntegrations"
 
 @observer
 export class AboutPage extends React.Component<RouteComponentProps<{}>> {
@@ -40,6 +41,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                             <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
                             <LinkTab label="API" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
                             <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
+                            <LinkTab label="3rd Party Tools" to={AboutSubPaths.thirdPartyIntegrations} value={AboutSubPaths.thirdPartyIntegrations}/>
                         </Tabs>
                     </AppBar>
                 )}
@@ -57,6 +59,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                             <Route path={AboutSubPaths.releaseNotes} component={ReleaseNotes}/>
                             <Route path={AboutSubPaths.sellersAndDevs} component={SellersAndDevs}/>
                             <Route path={AboutSubPaths.teamSas} component={TeamSasLp}/>
+                            <Route path={AboutSubPaths.thirdPartyIntegrations} component={ThirdPartyIntegrations}/>
                         </Switch>
                     </Grid>
                 </div>

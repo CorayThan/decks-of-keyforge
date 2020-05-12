@@ -257,6 +257,9 @@ export class SasAndAerc extends React.Component {
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"AERC + SAS Details"} infos={[
+                        `Traits and synergies are matched together using a complex software algorithm. For example a human creature with the synergy ` +
+                        `"Destroys friendly creatures" would synergize with a trait that read "Destroys creatures artifacts" (where player is unspecified) ` +
+                        `but not a trait that read "Destroys friendly demon creatures" because the card with the synergy is not a demon.`,
                         "For more detailed notes on how AERC and SAS are calculated and rated, please take a look at this google doc.",
                         (
                             <Link href={"https://docs.google.com/document/d/1WkphfSzWj-hZ8l7BMhAgNF6-8b3Qj9cFiV7gGkR9HBU/edit?usp=sharing"}>

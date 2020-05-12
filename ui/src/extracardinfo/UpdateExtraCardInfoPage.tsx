@@ -1,4 +1,5 @@
 import {
+    Button,
     Card,
     CardActions,
     Checkbox,
@@ -504,6 +505,37 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
         option: SynergyTrait.any.toString()
     }
 
+    addTraitOrSyn = (trait?: SynergyTrait) => {
+        const {traits, synergies} = this.props
+        let isSynergy = this.traitOrSynergy === "synergy"
+        if (trait != null) {
+            isSynergy = false
+        }
+        const addTo = isSynergy ? synergies : traits
+
+        let traitValue
+        if (trait != null) {
+            traitValue = trait
+        } else if (this.holdsCard.option.length > 0) {
+            traitValue = SynergyTrait.card
+        } else {
+            traitValue = this.holdsTrait.option as SynergyTrait
+        }
+
+        const toAdd = {
+            trait: traitValue,
+            rating: this.rating,
+            cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
+            house: this.house,
+            player: this.player,
+            cardTypes: this.cardTypes.slice(),
+            cardTraits: this.cardTraitsStore.selectedValues.slice(),
+            powersString: this.powersString.trim(),
+            baseSynPercent: Number(this.baseSynPercent.trim())
+        }
+        addTo.push(toAdd)
+    }
+
     get trait(): SynergyTrait | undefined {
         if (this.holdsTrait.option.length > 0) {
             log.debug("Find trait for: " + this.holdsTrait.option)
@@ -513,7 +545,6 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
     }
 
     render() {
-        const {traits, synergies} = this.props
 
         const selectableTraits = this.traitOrSynergy === "synergy" ? synergyOptions : traitOptions
 
@@ -674,45 +705,47 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                         </IconButton>
                         <IconButton
                             style={{marginRight: spacing(2)}}
-                            onClick={() => {
-                                const isSynergy = this.traitOrSynergy === "synergy"
-                                const addTo = isSynergy ? synergies : traits
-
-                                const toAdd = {
-                                    trait: this.holdsCard.option.length > 0 ? SynergyTrait.card : this.holdsTrait.option as SynergyTrait,
-                                    rating: this.rating,
-                                    cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
-                                    house: this.house,
-                                    player: this.player,
-                                    cardTypes: this.cardTypes.slice(),
-                                    cardTraits: this.cardTraitsStore.selectedValues.slice(),
-                                    powersString: this.powersString.trim(),
-                                    baseSynPercent: Number(this.baseSynPercent.trim())
-                                }
-                                addTo.push(toAdd)
-
-                                if (!isSynergy) {
-                                    if (toAdd.trait === SynergyTrait.addsArmor || toAdd.trait === SynergyTrait.increasesCreaturePower) {
-                                        const increasesDurability = {...toAdd}
-                                        increasesDurability.trait = SynergyTrait.increasesDurability
-                                        addTo.push(increasesDurability)
-                                    }
-                                    if (
-                                        toAdd.trait === SynergyTrait.addsArmor ||
-                                        toAdd.trait === SynergyTrait.increasesCreaturePower ||
-                                        toAdd.trait === SynergyTrait.preventsFighting ||
-                                        toAdd.trait === SynergyTrait.preventsRemoval
-                                    ) {
-                                        const protectsCreatures = {...toAdd}
-                                        protectsCreatures.trait = SynergyTrait.protectsCreatures
-                                        addTo.push(protectsCreatures)
-                                    }
-                                }
-                            }}
+                            onClick={() => this.addTraitOrSyn()}
                         >
                             <Save/>
                         </IconButton>
                     </div>
+                </Grid>
+                <Grid item={true} xs={12}>
+                    <Button
+                        onClick={() => {
+                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
+                            this.addTraitOrSyn(SynergyTrait.increasesDurability)
+                            this.addTraitOrSyn(SynergyTrait.increasesCreaturePower)
+                        }}
+                    >
+                        Adds Power
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
+                            this.addTraitOrSyn(SynergyTrait.increasesDurability)
+                            this.addTraitOrSyn(SynergyTrait.addsArmor)
+                        }}
+                    >
+                        Adds Armor
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
+                            this.addTraitOrSyn(SynergyTrait.preventsRemoval)
+                        }}
+                    >
+                        Stops Removal
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
+                            this.addTraitOrSyn(SynergyTrait.preventsFighting)
+                        }}
+                    >
+                        Stops Fighting
+                    </Button>
                 </Grid>
             </Grid>
         )

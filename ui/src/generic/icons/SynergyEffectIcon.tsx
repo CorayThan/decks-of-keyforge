@@ -13,10 +13,10 @@ export const SynergyEffectIcon = (props: { effect: number }) => {
         title = "Rating 1 – Weakest Effect"
         Icon = WorstIcon
     } else if (quality === 2 || quality === -2) {
-        title = "Rating 2 – Weakest Effect"
+        title = "Rating 2 – Weak Effect"
         Icon = BelowAverageIcon
     } else if (quality === 4 || quality === -4) {
-        title = "Rating 4 – Weakest Effect"
+        title = "Rating 4 – Strong Effect"
         Icon = AboveAverageIcon
     } else {
         return null

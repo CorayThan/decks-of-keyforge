@@ -302,6 +302,7 @@ export class AboutSubPaths {
     static releaseNotes = Routes.about + "/release-notes"
     static sellersAndDevs = Routes.about + "/sellers-and-devs"
     static teamSas = Routes.about + "/team-sas"
+    static thirdPartyIntegrations = Routes.about + "/third-party-integrations"
 }
 
 export class StatsSubPaths {

@@ -31,6 +31,7 @@ import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/Hou
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { KeyMultiSearchSuggest, SelectedOptions } from "../../mui-restyled/KeyMultiSearchSuggest"
+import { Loader, LoaderSize } from "../../mui-restyled/Loader"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
@@ -459,6 +460,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </div>
                                 <div style={{flexGrow: 1}}>
                                     {cards.map((card, idx) => {
+                                        if (cardStore.cardNames.length === 0) {
+                                            return <Loader size={LoaderSize.SMALL}/>
+                                        }
                                         const value = card.house ? card.house : card.quantity.toString()
                                         const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
                                         return (

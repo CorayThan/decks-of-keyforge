@@ -57,7 +57,7 @@ export class SpoilerKudos extends React.Component {
                         />
                         <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                         <Typography variant={"body2"}>
-                            To contribute and get your name in the kudos please contact CorayThan on the DoK discord:
+                            To contribute please let us know about your new spoilers in the #spoilers channel on the DoK discord:
                         </Typography>
                         <DiscordNamedButton name={"DoK"} link={decksOfKeyForgeDiscord} style={{marginTop: spacing(1)}}/>
                     </div>) : (

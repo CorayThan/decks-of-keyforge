@@ -14,7 +14,6 @@ export enum SynergyTrait {
 
     moves = "moves",
 
-    returns_R_ToHand = "returns_R_ToHand",
 
     uses = "uses",
     readies = "readies",
@@ -25,11 +24,14 @@ export enum SynergyTrait {
 
     controls = "controls",
 
-    returns_R_FromDiscard = "returns_R_FromDiscard",
 
     discardsCards = "discardsCards",
-
     reduces_R_HandSize = "reduces_R_HandSize",
+
+    returns_R_ToHand = "returns_R_ToHand",
+    returns_R_FromDiscard = "returns_R_FromDiscard",
+    shuffles_R_IntoDeck = "shuffles_R_IntoDeck",
+    replays = "replays",
 
     // Amber / keys
     capturesAmberOnEnemies = "capturesAmberOnEnemies",
