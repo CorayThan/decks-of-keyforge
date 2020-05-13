@@ -102,8 +102,8 @@ class DeckEndpoints(
     @GetMapping("/updating")
     fun updating() = !doneRatingDecks
 
-    @GetMapping("/update-crucible-tracker-wins")
-    fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
+//    @GetMapping("/update-crucible-tracker-wins")
+//    fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
 
     @PostMapping("/secured/{id}/refresh-deck-scores")
     fun refreshDeckScores(@PathVariable id: String) = deckWinsService.updateSingleDeck(id)

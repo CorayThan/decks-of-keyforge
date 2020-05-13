@@ -34,7 +34,7 @@ export class FiltersConstraintsStore {
 export interface ConstraintDropdownsProps {
     store: FiltersConstraintsStore
     properties: string[]
-    hideMinMax: string[]
+    hideMinMax?: string[]
 }
 
 @observer
@@ -69,7 +69,7 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                             </IconButton>
                         </div>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
-                            {hideMinMax.includes(constraint.property) ? null : (
+                            {hideMinMax != null && hideMinMax.includes(constraint.property) ? null : (
                                 <TextField
                                     select={true}
                                     value={constraint.cap}

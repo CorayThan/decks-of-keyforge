@@ -230,7 +230,7 @@ export const prepareDeckFiltersForQueryString = (filters: DeckFilters): DeckFilt
     return copied
 }
 
-const constraintsAsParam = (constraints: Constraint[]) => (
+export const constraintsAsParam = (constraints: Constraint[]) => (
     constraints.map(constraint => `${constraint.property}-${constraint.cap}-${constraint.value}`)
 )
 

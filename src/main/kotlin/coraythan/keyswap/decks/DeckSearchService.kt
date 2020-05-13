@@ -143,7 +143,7 @@ class DeckSearchService(
                     cardService.deckSearchResultCardsFromCardIds(it.cardIds),
                     cards,
                     stats = statsService.findCurrentStats(),
-                    crucibleWins = deckWinsService.crucibleWins,
+//                    crucibleWins = deckWinsService.crucibleWins,
                     synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
 
@@ -426,7 +426,7 @@ class DeckSearchService(
                         cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
                         cards,
                         stats = stats,
-                        crucibleWins = deckWinsService.crucibleWins,
+                        // crucibleWins = deckWinsService.crucibleWins,
                         synergies = DeckSynergyService.fromDeckWithCards(deck, cards)
                 ),
                 synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,

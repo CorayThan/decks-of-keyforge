@@ -35,8 +35,8 @@ class PublicApiService(
                             deck = it.deck.toDeckSearchResult(
                                     searchResultCards = cardService.deckSearchResultCardsFromCardIds(it.deck.cardIds),
                                     cards = cards,
-                                    stats = statsService.findCurrentStats(),
-                                    crucibleWins = deckWinsService.crucibleWins
+//                                    crucibleWins = deckWinsService.crucibleWins,
+                                    stats = statsService.findCurrentStats()
                             ),
                             wishlist = it.wishlist,
                             funny = it.funny,
@@ -58,8 +58,8 @@ class PublicApiService(
         }
         return deck.toDeckSearchResult(
                 cards = cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats(),
-                crucibleWins = deckWinsService.crucibleWins
+//                crucibleWins = deckWinsService.crucibleWins,
+                stats = statsService.findCurrentStats()
         )
     }
 

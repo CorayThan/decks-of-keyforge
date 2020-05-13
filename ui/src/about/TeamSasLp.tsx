@@ -13,7 +13,7 @@ export class TeamSasLp extends React.Component {
                 <InfoListCard
                     title={"Team SAS-LP"}
                     infos={[
-                        <Typography>
+                        <Typography key={"title"}>
                             Team SAS of the Luxurious Playstyle is a competitive KeyForge team sponsored by Decks of KeyForge
                             and <a href={"https://luxuryplaystyle.com"} target={"_blank"}>Luxury Playstyle</a>
                         </Typography>,

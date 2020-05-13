@@ -70,6 +70,7 @@ enum class SynergyTrait {
     // Protects Creatures
     protectsCreatures,
     preventsFighting,
+    protectsFromEffects,
     preventsRemoval,
     increasesDurability,
     addsArmor,
@@ -90,6 +91,7 @@ enum class SynergyTrait {
 
     // Artifacts
     usableArtifact,
+    staticArtifact,
 
     // Hand Manipulation
 

@@ -14,6 +14,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
+import { ConstraintDropdowns, FiltersConstraintsStore } from "../decks/search/ConstraintDropdowns"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
 import { synergyOptions, SynergyTrait, traitOptions } from "../extracardinfo/SynergyTrait"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
@@ -49,6 +50,8 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedExpansion = new SelectedExpansion(this.props.filters.expansion == null ? undefined : [this.props.filters.expansion])
     selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
 
+    constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
+
     search = (event?: React.FormEvent) => {
         if (event) {
             event.preventDefault()
@@ -65,6 +68,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.expansion = this.selectedExpansion.currentExpansion()
         filters.thisExpansionOnly = this.selectedExpansion.onlyThisExpansion
         filters.aercHistoryDate = this.selectedPublishDate.date
+        filters.constraints = this.constraintsStore.cleanConstraints()
         cardStore.searchCards(filters)
         keyDrawerStore.closeIfSmall()
         this.props.history.push(Routes.cardSearch(filters))
@@ -80,11 +84,25 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         this.selectedPowers.reset()
         this.selectedAmbers.reset()
         this.selectedExpansion.reset()
+        this.constraintsStore.reset()
     }
 
     render() {
         const {filters} = this.props
         const {title, description, handleTitleUpdate, handleDescriptionUpdate} = filters
+
+        const constraintOptions = [
+            "amberControl",
+            "expectedAmber",
+            "artifactControl",
+            "creatureControl",
+            "efficiency",
+            "disruption",
+            "amberProtection",
+            "houseCheating",
+            "effectivePower",
+        ].flatMap(value => [value, `${value}Max`])
+
         return (
             <KeyDrawer>
                 <form onSubmit={this.search}>
@@ -150,6 +168,12 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                         .map(power => power.toString())}
                                 />
                             </div>
+                        </ListItem>
+                        <ListItem>
+                            <ConstraintDropdowns
+                                store={this.constraintsStore}
+                                properties={constraintOptions}
+                            />
                         </ListItem>
                         <ListItem>
                             <KeyMultiSearchSuggest

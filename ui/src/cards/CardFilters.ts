@@ -2,6 +2,8 @@ import { isEqual } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
 import { log, prettyJson, Utils } from "../config/Utils"
+import { Constraint } from "../decks/search/ConstraintDropdowns"
+import { constraintsAsParam } from "../decks/search/DeckFilters"
 import { BackendExpansion } from "../expansions/Expansions"
 import { SynergyTrait } from "../extracardinfo/SynergyTrait"
 import { SortDirection } from "../generic/SortDirection"
@@ -47,6 +49,19 @@ export class CardFilters {
                 queryObject.expansions = [expansionAsNumber]
             }
         }
+        if (queryObject.constraints) {
+            if (typeof queryObject.constraints === "string") {
+                queryObject.constraints = [queryObject.constraints]
+            }
+            queryObject.constraints = queryObject.constraints.map((forQuery: string) => {
+                const split = forQuery.split("-")
+                return {
+                    property: split[0],
+                    cap: split[1],
+                    value: Number(split[2])
+                }
+            })
+        }
         if (queryObject.aercHistory) {
             queryObject.aercHistory = queryObject.aercHistory === "true"
         }
@@ -77,6 +92,7 @@ export class CardFilters {
     synergies: SynergyTrait[] = []
     expansion?: BackendExpansion
     thisExpansionOnly?: boolean
+    constraints: Constraint[] = []
 
     @observable
     aercHistory?: boolean
@@ -96,6 +112,7 @@ export class CardFilters {
         this.powers = []
         this.ambers = []
         this.traits = []
+        this.constraints = []
         this.synergies = []
         this.expansion = undefined
         this.thisExpansionOnly = undefined
@@ -116,6 +133,10 @@ export const prepareCardFiltersForQueryString = (filters: CardFilters): CardFilt
             delete copied[key]
         }
     })
+
+    if (copied.constraints) {
+        copied.constraints = constraintsAsParam(copied.constraints)
+    }
 
     return copied
 }

@@ -3,8 +3,9 @@ import { clone, sortBy, startCase } from "lodash"
 import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
+import { Cap } from "../decks/search/ConstraintDropdowns"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
-import { CardIdentifier } from "../extracardinfo/ExtraCardInfo"
+import { CardIdentifier, ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { OptionType } from "../mui-restyled/KeyMultiSearchSuggest"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -80,6 +81,16 @@ export class CardStore {
                 (filters.aercHistoryDate == null || card.extraCardInfo.publishedDate === filters.aercHistoryDate)
                 &&
                 includeCardOrSpoiler(filters, card)
+                    &&
+                (filters.constraints.length === 0 || filters.constraints.every(constraint => {
+                    const cardValue = card.extraCardInfo[constraint.property as keyof ExtraCardInfo] as number
+                    const constraintValue = Number(constraint.value)
+                    if (constraint.cap == Cap.MAX) {
+                        return cardValue <= constraintValue
+                    } else {
+                        return cardValue >= constraintValue
+                    }
+                }))
                 &&
                 (filters.traits.length === 0 || filters.traits.some(trait => card.extraCardInfo.traits.some(extraCardTrait => trait === extraCardTrait.trait)))
                 &&

@@ -58,6 +58,7 @@ export enum SynergyTrait {
     protectsCreatures = "protectsCreatures",
     preventsFighting = "preventsFighting",
     preventsRemoval = "preventsRemoval",
+    protectsFromEffects = "protectsFromEffects",
     increasesDurability = "increasesDurability",
     addsArmor = "addsArmor",
     increasesCreaturePower = "increasesCreaturePower",
@@ -76,6 +77,7 @@ export enum SynergyTrait {
 
     // Artifacts
     usableArtifact = "usableArtifact",
+    staticArtifact = "staticArtifact",
 
     // Hand Manipulation
     drawsCards = "drawsCards",

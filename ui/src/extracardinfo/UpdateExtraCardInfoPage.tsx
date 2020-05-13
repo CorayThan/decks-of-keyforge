@@ -715,7 +715,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                     <Button
                         onClick={() => {
                             this.addTraitOrSyn(SynergyTrait.protectsCreatures)
-                            this.addTraitOrSyn(SynergyTrait.increasesDurability)
+                            this.addTraitOrSyn(SynergyTrait.protectsFromEffects)
                             this.addTraitOrSyn(SynergyTrait.increasesCreaturePower)
                         }}
                     >
@@ -724,7 +724,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                     <Button
                         onClick={() => {
                             this.addTraitOrSyn(SynergyTrait.protectsCreatures)
-                            this.addTraitOrSyn(SynergyTrait.increasesDurability)
+                            this.addTraitOrSyn(SynergyTrait.protectsFromEffects)
                             this.addTraitOrSyn(SynergyTrait.addsArmor)
                         }}
                     >
@@ -733,6 +733,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                     <Button
                         onClick={() => {
                             this.addTraitOrSyn(SynergyTrait.protectsCreatures)
+                            this.addTraitOrSyn(SynergyTrait.protectsFromEffects)
                             this.addTraitOrSyn(SynergyTrait.preventsRemoval)
                         }}
                     >

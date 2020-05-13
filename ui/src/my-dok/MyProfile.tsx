@@ -350,16 +350,16 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 }
                                                 label={"Let anyone see my decks and user stats"}
                                             />
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.displayCrucibleTrackerWins}
-                                                        onChange={(event) => this.displayCrucibleTrackerWins = event.target.checked}
-                                                        tabIndex={6}
-                                                    />
-                                                }
-                                                label={"Display crucible tracker wins and losses"}
-                                            />
+                                            {/*<FormControlLabel*/}
+                                            {/*    control={*/}
+                                            {/*        <Checkbox*/}
+                                            {/*            checked={this.displayCrucibleTrackerWins}*/}
+                                            {/*            onChange={(event) => this.displayCrucibleTrackerWins = event.target.checked}*/}
+                                            {/*            tabIndex={6}*/}
+                                            {/*        />*/}
+                                            {/*    }*/}
+                                            {/*    label={"Display crucible tracker wins and losses"}*/}
+                                            {/*/>*/}
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
