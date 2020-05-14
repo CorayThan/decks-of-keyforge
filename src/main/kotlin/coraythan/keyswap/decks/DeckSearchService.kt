@@ -357,7 +357,12 @@ class DeckSearchService(
                     } else {
                         Expressions.path(Double::class.java, deckQ, it.property)
                     }
-                    predicate.and(Expressions.predicate(if (it.cap == Cap.MIN) Ops.GOE else Ops.LOE, pathToVal, Expressions.constant(it.value)))
+                    val capOpsValue = when (it.cap) {
+                        Cap.MIN -> Ops.GOE
+                        Cap.MAX -> Ops.LOE
+                        Cap.EQUALS -> Ops.EQ
+                    }
+                    predicate.and(Expressions.predicate(capOpsValue, pathToVal, Expressions.constant(it.value)))
                 }
             }
         }

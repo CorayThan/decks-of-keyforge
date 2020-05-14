@@ -2,6 +2,7 @@ package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
+import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import java.time.ZonedDateTime
@@ -35,6 +36,12 @@ data class Card(
 
         val wins: Int? = 0,
         val losses: Int? = 0,
+
+        /**
+         * Format is: CALL_OF_THE_ARCHONS-10-7|AGE_OF_ASCENSION-4-3
+         *
+         */
+        var winLossBySetString: String = "",
 
         val created: ZonedDateTime = now(),
 
@@ -115,6 +122,19 @@ data class Card(
                     maxAerc
                 }
             }
+        }
+
+    var winLossBySet: Map<Expansion, Wins>
+        get() {
+            return this.winLossBySetString.split("|").map {
+                val values = it.split("-")
+                Expansion.valueOf(values[0]) to Wins(values[1].toInt(), values[2].toInt())
+            }.toMap()
+        }
+        set(value) {
+            this.winLossBySetString = value.entries.map {
+                "${it.key}-${it.value.wins}-${it.value.losses}"
+            }.joinToString("|")
         }
 
     fun toDeckSearchResultCard() = DeckSearchResultCard(

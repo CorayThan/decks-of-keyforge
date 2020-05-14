@@ -96,5 +96,6 @@ data class Constraint(
 
 enum class Cap {
     MIN,
-    MAX
+    MAX,
+    EQUALS
 }

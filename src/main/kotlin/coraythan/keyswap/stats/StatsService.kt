@@ -3,6 +3,7 @@ package coraythan.keyswap.stats
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckPageService
 import coraythan.keyswap.decks.DeckPageType
@@ -17,6 +18,7 @@ import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -34,6 +36,8 @@ class StatsService(
         private val cardService: CardService,
         private val deckStatisticsRepo: DeckStatisticsRepo,
         private val deckPageService: DeckPageService,
+        @Value("\${env}")
+        private val env: Env,
         entityManager: EntityManager
 ) {
 
@@ -81,6 +85,11 @@ class StatsService(
     @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastFor = lockStatsVersionUpdate, lockAtMostFor = lockStatsVersionUpdate)
     fun startNewDeckStats() {
+
+        if (env == Env.qa) {
+            log.info("QA environment, skip stats.")
+            return
+        }
 
         try {
 

@@ -337,6 +337,11 @@ const AppLinks = observer(() => (
                             primary={"Team SAS-LP"}
                         />
                         <ListItemLink
+                            to={AboutSubPaths.sasCouncil}
+                            onClick={rightMenuStore.close}
+                            primary={"SAS Council"}
+                        />
+                        <ListItemLink
                             to={AboutSubPaths.thirdPartyIntegrations}
                             onClick={rightMenuStore.close}
                             primary={"3rd Party Tools"}
@@ -355,6 +360,7 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
                     {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
                     {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
+                    {to: AboutSubPaths.sasCouncil, text: "SAS Council"},
                     {to: AboutSubPaths.thirdPartyIntegrations, text: "3rd Party Tools"},
                 ]}
                 linkMenuStore={aboutMenuStore}

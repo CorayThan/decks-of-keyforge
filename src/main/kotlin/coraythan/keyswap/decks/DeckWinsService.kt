@@ -3,17 +3,18 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
-import coraythan.keyswap.thirdpartyservices.CrucibleTrackerApi
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -35,7 +36,8 @@ class DeckWinsService(
         private val deckPageService: DeckPageService,
         private val userDeckRepo: UserDeckRepo,
         private val userSearchService: UserSearchService,
-        private val crucibleTrackerApi: CrucibleTrackerApi
+        @Value("\${env}")
+        private val env: Env
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -61,6 +63,11 @@ class DeckWinsService(
     @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastFor = lockUpdateWinsLosses, lockAtMostFor = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
+
+        if (env == Env.qa) {
+            log.info("QA environment, skip stats.")
+            return
+        }
 
         try {
             log.info("$scheduledStart start deck win loss update")
@@ -193,7 +200,7 @@ class DeckWinsService(
         }
     }
 
-    private fun saveCardWins(wins: Map<String, Wins>) {
+    private fun  saveCardWins(wins: Map<String, Wins>) {
         val cards = cardRepo.findByMaverickFalse()
                 .map {
                     it.copy(

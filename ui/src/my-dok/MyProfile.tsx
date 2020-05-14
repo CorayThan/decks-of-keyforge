@@ -30,7 +30,7 @@ import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
-import { countries, countryToLabel } from "../generic/Country"
+import { countries, countryToLabel, euCountries } from "../generic/Country"
 import { EventValue } from "../generic/EventValue"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyCard } from "../generic/KeyCard"
@@ -224,6 +224,11 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         userStore.updateUserProfile(update)
     }
 
+    addEuCountries = () => {
+        this.preferredCountries.push(...euCountries)
+        this.preferredCountries = [...new Set(this.preferredCountries)]
+    }
+
     render() {
         const profile = this.props.profile
 
@@ -299,7 +304,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 ))}
                                             </TextField>
                                         </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
+                                        <Grid item={true} xs={8} sm={4}>
                                             <FormControl fullWidth={true} variant={"outlined"}>
                                                 <InputLabel
                                                     htmlFor={"buying-countries-input-id"}
@@ -336,8 +341,15 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 </Select>
                                             </FormControl>
                                             <FormHelperText style={{marginTop: spacing(1)}}>
-                                                Decks for sale search countries
+                                                Sale search countries
                                             </FormHelperText>
+                                        </Grid>
+                                        <Grid item={true} xs={4} sm={2}>
+                                            <Button
+                                                onClick={this.addEuCountries}
+                                            >
+                                                Add EU
+                                            </Button>
                                         </Grid>
                                         <Grid item={true}>
                                             <FormControlLabel

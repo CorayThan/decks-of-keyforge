@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@material-ui/core"
+import { Grid, Link, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -57,7 +57,7 @@ const DisplayIntegration = (props: { name: string, description: string, icon?: R
         props.description
     ]
     if (props.url) {
-        infos.push(<a href={props.url} target={"_blank"} key={"url"}>{props.urlName ? props.urlName : props.url}</a>)
+        infos.push(<Link href={props.url} target={"_blank"} key={"url"}>{props.urlName ? props.urlName : props.url}</Link>)
     }
     if (props.discord) {
         infos.push(<DiscordUser discord={props.discord}/>)

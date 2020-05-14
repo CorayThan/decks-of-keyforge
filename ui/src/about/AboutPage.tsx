@@ -13,6 +13,7 @@ import { PatreonRewards } from "./PatreonRewards"
 import { ReleaseNotes } from "./ReleaseNotes"
 import TeamSasLpBanner from "./sas-lp-banner.png"
 import { SasAndAerc } from "./SasAndAerc"
+import { SasCouncil } from "./SasCouncil"
 import { SellersAndDevs } from "./SellersAndDevs"
 import { TeamSasLp } from "./TeamSasLp"
 import { ThirdPartyIntegrations } from "./ThirdPartyIntegrations"
@@ -41,6 +42,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                             <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
                             <LinkTab label="API" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
                             <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
+                            <LinkTab label="SAS Council" to={AboutSubPaths.sasCouncil} value={AboutSubPaths.sasCouncil}/>
                             <LinkTab label="3rd Party Tools" to={AboutSubPaths.thirdPartyIntegrations} value={AboutSubPaths.thirdPartyIntegrations}/>
                         </Tabs>
                     </AppBar>
@@ -59,6 +61,7 @@ export class AboutPage extends React.Component<RouteComponentProps<{}>> {
                             <Route path={AboutSubPaths.releaseNotes} component={ReleaseNotes}/>
                             <Route path={AboutSubPaths.sellersAndDevs} component={SellersAndDevs}/>
                             <Route path={AboutSubPaths.teamSas} component={TeamSasLp}/>
+                            <Route path={AboutSubPaths.sasCouncil} component={SasCouncil}/>
                             <Route path={AboutSubPaths.thirdPartyIntegrations} component={ThirdPartyIntegrations}/>
                         </Switch>
                     </Grid>

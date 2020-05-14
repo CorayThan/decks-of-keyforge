@@ -9,6 +9,7 @@ import { spacing } from "../../config/MuiConfig"
 export enum Cap {
     MIN = "MIN",
     MAX = "MAX",
+    EQUALS = "EQUALS",
 }
 
 const makeDefaultConstraint = () => ({
@@ -81,6 +82,9 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                                     </MenuItem>
                                     <MenuItem value={Cap.MAX}>
                                         Max
+                                    </MenuItem>
+                                    <MenuItem value={Cap.EQUALS}>
+                                        Equals
                                     </MenuItem>
                                 </TextField>
                             )}
