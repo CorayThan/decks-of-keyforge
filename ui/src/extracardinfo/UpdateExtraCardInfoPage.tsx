@@ -734,6 +734,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                         placeholder={"Trait"}
                         options={selectableTraits}
                         fullWidth={true}
+                        onSelect={() => this.holdsCard.option = ""}
                     />
                     <div style={{display: "flex"}}>
                         <IconButton

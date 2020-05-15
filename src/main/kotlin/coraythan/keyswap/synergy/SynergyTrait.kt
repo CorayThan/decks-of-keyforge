@@ -72,7 +72,6 @@ enum class SynergyTrait {
     preventsFighting,
     protectsFromEffects,
     preventsRemoval,
-    increasesDurability,
     addsArmor,
     increasesCreaturePower,
 
@@ -160,6 +159,7 @@ enum class SynergyTrait {
     // Special traits
     card,
     // Automatically applied
+    good,
     goodCreature;
 
     companion object {

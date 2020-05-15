@@ -26,6 +26,7 @@ export const TraitBubble = (props: {
         title = "Antisynergy"
     }
     const name = synTraitName(traitValue)
+
     return (
         <span
             style={{

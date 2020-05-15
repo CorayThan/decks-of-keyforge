@@ -17,12 +17,13 @@ interface KeySingleSearchSuggestProps {
     placeholder: string
     options: OptionType[]
     fullWidth?: boolean
+    onSelect?: () => void
 }
 
 export const KeySingleSearchSuggest = observer((props: KeySingleSearchSuggestProps) => {
     const classes = useSearchSuggestStyles()
     const theme = useTheme()
-    const {options, selected, placeholder, style, fullWidth} = props
+    const {options, selected, placeholder, style, fullWidth, onSelect} = props
 
     function handleSingleChange(value: ValueType<OptionType>) {
         log.debug(`Handle change single value: ${prettyJson(value)}`)
@@ -31,6 +32,9 @@ export const KeySingleSearchSuggest = observer((props: KeySingleSearchSuggestPro
         } else {
             const valueAsOptionType = value as OptionType
             selected.option = valueAsOptionType.value
+        }
+        if (onSelect) {
+            onSelect()
         }
     }
 
