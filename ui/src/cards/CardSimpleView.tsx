@@ -19,6 +19,7 @@ import { House } from "../houses/House"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
+import { SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
@@ -76,7 +77,10 @@ export const CardView = observer((props: CardViewProps) => {
     if (simple) {
         return <CardSimpleView card={card}/>
     }
-    const {cardTitle, cardType, cardText, amber, extraCardInfo} = card
+    const {cardTitle, cardType, cardText, amber} = card
+
+    const extraCardInfo = cardStore.findExtraInfoToUse(card)
+
     const cardAerc = hasAercFromCard(card)
 
     let previousCard
@@ -351,9 +355,9 @@ export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
     )
 }
 
-export const CardTraits = (props: { card: KCard }) => (
+export const CardTraits = (props: { traits: SynTraitValue[] }) => (
     <div style={{display: "flex", flexWrap: "wrap"}}>
-        {props.card.extraCardInfo.traits.map(synergy => (
+        {props.traits.map(synergy => (
             <TraitBubble
                 key={synergy.id}
                 traitValue={synergy}
@@ -363,9 +367,9 @@ export const CardTraits = (props: { card: KCard }) => (
     </div>
 )
 
-export const CardSynergies = (props: { card: KCard }) => (
+export const CardSynergies = (props: { synergies: SynTraitValue[] }) => (
     <div style={{display: "flex", flexWrap: "wrap"}}>
-        {props.card.extraCardInfo.synergies.map(synergy => (
+        {props.synergies.map(synergy => (
             <TraitBubble
                 key={synergy.id}
                 traitValue={synergy}
@@ -376,7 +380,7 @@ export const CardSynergies = (props: { card: KCard }) => (
 
 const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string }) => {
     const {card, combo, title} = props
-    const {extraCardInfo} = card
+    const extraCardInfo = cardStore.findExtraInfoToUse(card)
     const {traits, synergies, publishedDate} = extraCardInfo
     return (
         <>
@@ -390,9 +394,9 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
             <AercForCard card={card} realValue={combo}/>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             {traits.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Traits</Typography> : null}
-            <CardTraits card={card}/>
+            <CardTraits traits={traits}/>
             {synergies.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Synergies</Typography> : null}
-            <CardSynergies card={card}/>
+            <CardSynergies synergies={synergies}/>
         </>
     )
 }

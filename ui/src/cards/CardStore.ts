@@ -8,6 +8,7 @@ import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
 import { CardIdentifier, ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { OptionType } from "../mui-restyled/KeyMultiSearchSuggest"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
+import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { cardNameToCardNameKey, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
 
@@ -56,7 +57,13 @@ export class CardStore {
     previousExtraInfo?: { [cardName: string]: KCard }
 
     @observable
+    nextExtraInfo?: { [cardName: string]: KCard }
+
+    @observable
     findingPreviousInfo = false
+
+    @observable
+    showFutureCardInfo = false
 
     reset = () => {
         log.debug(`Reset this.cards in card store`)
@@ -66,6 +73,10 @@ export class CardStore {
     }
 
     searchAndReturnCards = (filtersValue: CardFilters) => {
+
+        if (userStore.isAdmin) {
+            this.findNextExtraInfo()
+        }
 
         if (filtersValue.aercHistory) {
             this.findPreviousExtraInfo()
@@ -77,13 +88,14 @@ export class CardStore {
         }
         const toSearch = this.allCards
         let filtered = toSearch.slice().filter(card => {
+            const extraInfo = this.findExtraInfoToUse(card)
             return (
                 (filters.aercHistoryDate == null || card.extraCardInfo.publishedDate === filters.aercHistoryDate)
                 &&
                 includeCardOrSpoiler(filters, card)
                     &&
                 (filters.constraints.length === 0 || filters.constraints.every(constraint => {
-                    const cardValue = card.extraCardInfo[constraint.property as keyof ExtraCardInfo] as number
+                    const cardValue = extraInfo[constraint.property as keyof ExtraCardInfo] as number
                     const constraintValue = Number(constraint.value)
                     if (constraint.cap == Cap.MAX) {
                         return cardValue <= constraintValue
@@ -92,15 +104,15 @@ export class CardStore {
                     }
                 }))
                 &&
-                (filters.traits.length === 0 || filters.traits.some(trait => card.extraCardInfo.traits.some(extraCardTrait => trait === extraCardTrait.trait)))
+                (filters.traits.length === 0 || filters.traits.some(trait => extraInfo.traits.some(extraCardTrait => trait === extraCardTrait.trait)))
                 &&
-                (filters.synergies.length === 0 || filters.synergies.some(trait => card.extraCardInfo.synergies.some(extraCardTrait => trait === extraCardTrait.trait)))
+                (filters.synergies.length === 0 || filters.synergies.some(trait => extraInfo.synergies.some(extraCardTrait => trait === extraCardTrait.trait)))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&
-                (!filters.thisExpansionOnly || card.extraCardInfo.cardNumbers.length === 1)
+                (!filters.thisExpansionOnly || extraInfo.cardNumbers.length === 1)
                 &&
-                (filters.expansion == null || card.extraCardInfo.cardNumbers.map((cardNumberSetPair: CardIdentifier) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
+                (filters.expansion == null || extraInfo.cardNumbers.map((cardNumberSetPair: CardIdentifier) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
             )
         })
 
@@ -229,6 +241,11 @@ export class CardStore {
         log.debug("Found previous info")
     }
 
+    findNextExtraInfo = async () => {
+        const nextInfo = await axios.get(`${CardStore.CONTEXT}/future`)
+        this.nextExtraInfo = nextInfo.data
+    }
+
     fullCardFromCardName = (cardTitle: string) => {
         return this.fullCardFromCardWithName({cardTitle})
     }
@@ -245,6 +262,14 @@ export class CardStore {
             return this.cardNameLowercaseToCard.get(card.cardTitle.toLowerCase())
         }
         return card
+    }
+
+    findExtraInfoToUse = (card: KCard) => {
+        let extraInfo = card.extraCardInfo
+        if (this.showFutureCardInfo && this.nextExtraInfo && this.nextExtraInfo[card.cardTitle] != null) {
+            extraInfo = this.nextExtraInfo[card.cardTitle].extraCardInfo
+        }
+        return extraInfo
     }
 
     @computed

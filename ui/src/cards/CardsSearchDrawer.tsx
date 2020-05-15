@@ -23,6 +23,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMultiSearchSuggest"
 import { KeyMultiSelect, SelectedValues } from "../mui-restyled/KeyMultiSelect"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { cardStore } from "./CardStore"
 import { CardType } from "./CardType"
@@ -275,8 +276,6 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                     </ToggleButton>
                                 </ToggleButtonGroup>
                             </Tooltip>
-                        </ListItem>
-                        <ListItem>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -285,8 +284,22 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                     />
                                 }
                                 label={"All cards"}
+                                style={{marginLeft: spacing(1)}}
                             />
                         </ListItem>
+                        {userStore.isAdmin && (
+                            <ListItem>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={cardStore.showFutureCardInfo}
+                                            onChange={() => cardStore.showFutureCardInfo = !cardStore.showFutureCardInfo}
+                                        />
+                                    }
+                                    label={"Future Card Info"}
+                                />
+                            </ListItem>
+                        )}
                     </List>
                 </form>
             </KeyDrawer>

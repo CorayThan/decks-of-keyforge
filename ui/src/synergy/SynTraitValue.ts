@@ -62,7 +62,7 @@ export const synTraitName = (traitValue: SynTraitValue) => {
     if (synergyGroup != null) {
         name += ` – ${synergyGroup}`
         if (synergyGroupMax != null) {
-            name += ` ${synergyGroupMax}%`
+            name += ` ${synergyGroupMax > 0 ? "<" : ">"}${synergyGroupMax}%`
         }
     }
     return name.trim()

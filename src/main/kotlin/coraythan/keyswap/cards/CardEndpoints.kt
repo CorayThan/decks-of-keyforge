@@ -32,6 +32,9 @@ class CardEndpoints(
     @GetMapping("/historical")
     fun findHistoricalInfo() = cardService.previousInfo()
 
+    @GetMapping("/future")
+    fun findFutureInfo() = cardService.nextInfo()
+
     @PostMapping("/convert-spoilers")
     fun convertSpoilers() = cardService.convertSpoilers()
 }

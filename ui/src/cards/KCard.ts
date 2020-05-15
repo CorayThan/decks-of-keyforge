@@ -5,6 +5,7 @@ import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
+import { cardStore } from "./CardStore"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
 
@@ -46,7 +47,8 @@ export const winPercentForCard = (card: KCard): number | undefined => {
 }
 
 export const hasAercFromCard = (card: KCard): HasAerc => {
-    const {extraCardInfo, effectivePower, aercScore, aercScoreMax} = card
+    const {effectivePower, aercScore, aercScoreMax} = card
+    const extraCardInfo = cardStore.findExtraInfoToUse(card)
     const {
         amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other,
         amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, amberProtectionMax, disruptionMax, houseCheatingMax, otherMax

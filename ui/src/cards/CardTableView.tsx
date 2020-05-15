@@ -46,10 +46,10 @@ export const CardTableView = observer((props: { cards: KCard[] }) => {
                                 <TableCell>{card.cardText}</TableCell>
                                 <TableCell><AercForCard card={card} short={true}/></TableCell>
                                 <TableCell>
-                                    <CardTraits card={card}/>
+                                    <CardTraits traits={card.extraCardInfo.traits}/>
                                 </TableCell>
                                 <TableCell>
-                                    <CardSynergies card={card}/>
+                                    <CardSynergies synergies={card.extraCardInfo.synergies}/>
                                 </TableCell>
                                 <TableCell>
                                     <KeyLink
