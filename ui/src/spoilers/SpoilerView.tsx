@@ -8,7 +8,6 @@ import { findCardImageUrl, KCard } from "../cards/KCard"
 import { rarityValues } from "../cards/rarity/Rarity"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log } from "../config/Utils"
 import { GraySidebar } from "../generic/GraySidebar"
 import { AmberIcon } from "../generic/icons/AmberIcon"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -19,7 +18,6 @@ import { userStore } from "../user/UserStore"
 import { Spoiler } from "./Spoiler"
 
 export const SpoilerImage = observer((props: { cardTitle: string, url?: string }) => {
-    log.info(`Spoiler img from ${props.url} ${props.cardTitle}`)
     const url = makeFullSpoilerUrl(props.url, props.cardTitle)
     if (url == null) {
         return null
@@ -61,7 +59,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
     const displayAember = amber > 0
     const displayCreaturePower = powerString.length > 0 && powerString !== "0"
     const displayCreatureArmor = armorString.length > 0 && armorString !== "0"
-    
+
     return (
         <div style={{display: "flex", flexDirection: screenStore.screenSizeXs() || frontImage === "" ? "column" : undefined}}>
             {frontImage != null && frontImage.length > 0 && (<SpoilerImage cardTitle={cardTitle} url={frontImage}/>)}

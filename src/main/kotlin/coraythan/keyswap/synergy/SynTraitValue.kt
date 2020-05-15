@@ -48,6 +48,9 @@ data class SynTraitValue(
 
         val cardName: String? = null,
 
+        val synergyGroup: String? = null,
+        val synergyGroupMax: Int? = null,
+
         @Id
         val id: UUID = UUID.randomUUID()
 ) : Comparable<SynTraitValue> {

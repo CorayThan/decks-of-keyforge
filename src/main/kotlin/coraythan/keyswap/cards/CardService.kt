@@ -3,6 +3,7 @@ package coraythan.keyswap.cards
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
+import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.expansions.Expansion
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 14
+val publishedAercVersion = 13
 val majorRevision = false
 
 @Transactional
@@ -27,6 +28,7 @@ class CardService(
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val spoilerRepo: SpoilerRepo,
         private val cardIdentifierRepo: CardIdentifierRepo,
+        private val cardWinsService: CardWinsService,
         private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -347,7 +349,9 @@ class CardService(
                     ))
         }.toMap()
         nonMaverickCachedCards = cards
-        nonMaverickCachedCardsList = nonMaverickCachedCards?.values?.toList()?.sorted()
+        val notNullCards = nonMaverickCachedCards?.values?.toList()?.sorted()
+        nonMaverickCachedCardsList = notNullCards
+        if (notNullCards != null) cardWinsService.addWinsToCards(notNullCards)
         nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
                 ?.map { it.cardTitle to it }
                 ?.toMap()?.values

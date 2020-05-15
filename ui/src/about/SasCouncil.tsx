@@ -19,6 +19,7 @@ export class SasCouncil extends React.Component {
                     }
                     infos={[
                         <MemberView
+                            key={"nathan"}
                             name={`Nathan "CorayThan" Westlake`}
                             role={"AERCitect of SAS and DoK"}
                             description={
@@ -27,6 +28,7 @@ export class SasCouncil extends React.Component {
                             }
                         />,
                         <MemberView
+                            key={"dunkoro"}
                             name={`Jakub "Dunkoro" Nosal`}
                             role={"Card Ratings Guru"}
                             description={
@@ -35,6 +37,7 @@ export class SasCouncil extends React.Component {
                             }
                         />,
                         <MemberView
+                            key={"z"}
                             name={`Big Z`}
                             role={"AERC Afficianado"}
                             description={
@@ -43,6 +46,7 @@ export class SasCouncil extends React.Component {
                             }
                         />,
                         <MemberView
+                            key={"luke"}
                             name={`Luke "JustAGuyPlayin" Daniels`}
                             role={"SAS Expert"}
                             description={
@@ -51,6 +55,7 @@ export class SasCouncil extends React.Component {
                             }
                         />,
                         <MemberView
+                            key={"dan"}
                             name={`Dan "Dr Sheep"`}
                             role={"Combo Exploiter"}
                             description={
@@ -59,6 +64,7 @@ export class SasCouncil extends React.Component {
                             }
                         />,
                         <MemberView
+                            key={"dave"}
                             name={`Dave "Bizarro" Cordeiro`}
                             role={"AERCvisor"}
                             description={
@@ -70,6 +76,7 @@ export class SasCouncil extends React.Component {
                             }
                         />,
                         <MemberView
+                            key={"aurore"}
                             name={`Aurore`}
                             role={"Preeminent Evaluator"}
                             description={

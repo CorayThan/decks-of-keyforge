@@ -1,11 +1,9 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import { Info } from "@material-ui/icons"
-import { observable } from "mobx"
-import { observer } from "mobx-react"
 import * as React from "react"
 import { CardAsLine } from "../cards/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
-import { roundToHundreds } from "../config/Utils"
+import { log, roundToHundreds } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
@@ -18,32 +16,17 @@ interface DeckSynergiesInfoViewProps {
     synergies: DeckWithSynergyInfo
 }
 
-@observer
 export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoViewProps> {
 
-    @observable
-    private synergies?: DeckWithSynergyInfo
-
-    componentDidMount(): void {
-        this.update()
-    }
-
-    componentDidUpdate(prevProps: DeckSynergiesInfoViewProps): void {
-        if (prevProps.synergies.deck.keyforgeId !== this.props.synergies.deck.keyforgeId) {
-            this.update()
-        }
-    }
-
-    update = () => {
-        this.synergies = this.props.synergies
-    }
-
     render() {
-        if (this.synergies == null) {
+        if (this.props.synergies == null) {
             return <Loader/>
         }
-        const sasPercentile = this.synergies.deck.sasPercentile
-        const {deck, antisynergyPercentile, synergyPercentile} = this.synergies
+
+        log.info("Display synergies for deck " + this.props.synergies.deck.name)
+
+        const sasPercentile = this.props.synergies.deck.sasPercentile
+        const {deck, antisynergyPercentile, synergyPercentile} = this.props.synergies
         const deckSynergyInfo = deck.synergies!
         const {synergyCombos} = deckSynergyInfo
         return (

@@ -9,6 +9,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { log } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
@@ -124,7 +125,9 @@ export class InlineDeckNote extends React.Component<InlineDeckNoteProps> {
         if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.userDecks == null) {
             return null
         }
-        return <InlineDeckNoteLoaded id={id} notes={userDeckStore.notesForDeck(id)}/>
+        const notesForDeck = userDeckStore.userDecks?.get(id)?.notes ?? ""
+        log.debug("Notes for deck found to be: " + notesForDeck)
+        return <InlineDeckNoteLoaded id={id} notes={notesForDeck}/>
     }
 }
 
@@ -141,6 +144,12 @@ class InlineDeckNoteLoaded extends React.Component<InlineDeckNoteLoadedProps> {
 
     componentDidMount(): void {
         this.notes = this.props.notes ?? ""
+    }
+
+    componentDidUpdate(prevProps: Readonly<InlineDeckNoteLoadedProps>) {
+        if (prevProps.notes !== this.props.notes) {
+            this.notes = this.props.notes ?? ""
+        }
     }
 
     save = () => {

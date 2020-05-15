@@ -1,9 +1,12 @@
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
+import { Redirect } from "react-router-dom"
 import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
+import { userStore } from "../user/UserStore"
 import { CardView } from "./CardSimpleView"
 import { cardStore } from "./CardStore"
 import { KCard } from "./KCard"
@@ -30,6 +33,9 @@ class CardContainer extends React.Component<CardContainerProps> {
         const card = cardStore.fullCardFromCardNameKey(cardName)
         if (card == null || card.house == null) {
             return <Loader/>
+        }
+        if (userStore.isAdmin) {
+            return <Redirect to={Routes.editExtraCardInfo(card.extraCardInfo.id)} />
         }
         return <CardPageView card={card}/>
     }

@@ -93,7 +93,7 @@ object DeckSynergyService {
                     val card = cardsById.value[0]
                     val cardInfo = card.extraCardInfo ?: error("Oh no, ${card.cardTitle} had null extra info! $card")
 
-                    val matchedTraits: List<SynergyMatch> = cardInfo.synergies.map { synergy ->
+                    val matchedTraits: Map<String?, List<SynergyMatch>> = cardInfo.synergies.map { synergy ->
 
                         val synergyTrait = synergy.trait
                         val cardNames = mutableSetOf<String>()
@@ -123,11 +123,21 @@ object DeckSynergyService {
                         }.sum()
 
                         SynergyMatch(synergy, synPercent, cardNames)
+                    }.groupBy { it.trait.synergyGroup }
+
+                    val groupSynPercents = matchedTraits.map { groupSyns ->
+                        val groupMax = groupSyns.value.find { it.trait.synergyGroupMax != 0 }?.trait?.synergyGroupMax
+                        val groupSynergy = groupSyns.value.map { it.percentSynergized + it.trait.baseSynPercent }.sum()
+                        if (groupMax == null) {
+                            groupSynergy
+                        } else if ((groupMax > 0 && groupSynergy > groupMax) || (groupMax < 0 && groupSynergy < groupMax)) {
+                            groupMax
+                        } else {
+                            groupSynergy
+                        }
                     }
 
-                    val totalSynPercent = matchedTraits.map {
-                        it.percentSynergized + it.trait.baseSynPercent
-                    }.sum()
+                    val totalSynPercent = groupSynPercents.sum()
 
                     val hasPositive = cardInfo.synergies.find { it.rating > 0 } != null
                     val hasNegative = cardInfo.synergies.find { it.rating < 0 } != null
@@ -168,7 +178,7 @@ object DeckSynergyService {
                     SynergyCombo(
                             house = card.house,
                             cardName = card.cardTitle,
-                            synergies = matchedTraits,
+                            synergies = matchedTraits.values.flatten(),
                             netSynergy = synergyValues.sum(),
                             aercScore = synergizedValues.map { it.value }.sum() + (if (card.cardType == CardType.Creature) 0.4 else 0.0),
 
@@ -480,7 +490,7 @@ data class SynTraitValuesForTrait(
                     val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits)
                     val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
 
-                    log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
+                    // log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
 
                     match
                 }

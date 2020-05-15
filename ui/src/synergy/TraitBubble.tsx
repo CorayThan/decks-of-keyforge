@@ -14,7 +14,7 @@ export const TraitBubble = (props: {
     synergyWith?: string[]
 }) => {
     const {traitValue, trait, synergyWith} = props
-    const {rating, house} = traitValue
+    const {rating, house, synergyGroup, synergyGroupMax} = traitValue
     const positive = rating > 0
     const color = positive && !props.trait ? "#FFFFFF" : undefined
     let title
@@ -59,6 +59,12 @@ export const TraitBubble = (props: {
                 title={(
                     <div style={{display: "flex", flexDirection: "column"}}>
                         <Typography variant={"body2"}>{title}</Typography>
+                        {synergyGroup && (
+                            <Typography variant={"body2"}>Synergy Group: {synergyGroup}</Typography>
+                        )}
+                        {synergyGroupMax && (
+                            <Typography variant={"body2"}>Group Max Synergy: {synergyGroupMax}%</Typography>
+                        )}
                         {synergyWith != null && (
                             <>
                                 {synergyWith.map((synergy) => (

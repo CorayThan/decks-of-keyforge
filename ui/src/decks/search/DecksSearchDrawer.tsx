@@ -459,67 +459,72 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     </IconButton>
                                 </div>
                                 <div style={{flexGrow: 1}}>
-                                    {cards.map((card, idx) => {
-                                        if (cardStore.cardNames.length === 0) {
-                                            return <Loader size={LoaderSize.SMALL}/>
-                                        }
-                                        const value = card.house ? card.house : card.quantity.toString()
-                                        const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
-                                        return (
-                                            <div key={idx}>
-                                                <KeyMultiSearchSuggest
-                                                    selected={selected}
-                                                    placeholder={"Any of these cards"}
-                                                    options={cardStore.cardNames}
-                                                    style={{flexGrow: 1}}
-                                                />
-                                                <TextField
-                                                    style={{minWidth: 80, marginTop: spacing(1), marginBottom: spacing(1)}}
-                                                    label={"Copies"}
-                                                    select={true}
-                                                    value={value}
-                                                    onChange={event => {
-                                                        const valueAsNumber = Number(event.target.value)
-                                                        if (isNaN(valueAsNumber)) {
-                                                            card.house = event.target.value as House
-                                                            card.quantity = 1
-                                                        } else {
-                                                            card.quantity = valueAsNumber
-                                                            card.house = undefined
-                                                        }
-                                                    }}
-                                                >
-                                                    <MenuItem value={"0"}>None</MenuItem>
-                                                    <MenuItem value={"1"}>1+</MenuItem>
-                                                    <MenuItem value={"2"}>2+</MenuItem>
-                                                    <MenuItem value={"3"}>3+</MenuItem>
-                                                    <MenuItem value={"4"}>4+</MenuItem>
-                                                    <MenuItem value={"5"}>5+</MenuItem>
-                                                    <MenuItem value={"6"}>6+</MenuItem>
-                                                    <MenuItem value={"7"}>7+</MenuItem>
-                                                    {houseValuesArray.map(houseValue => {
-                                                        return (
-                                                            <MenuItem value={houseValue.house} key={houseValue.house}>
-                                                                {houseValue.house}
-                                                            </MenuItem>
-                                                        )
-                                                    })}
-                                                </TextField>
-                                                <IconButton
-                                                    onClick={() => cards.splice(idx, 1)}
-                                                    style={{marginTop: spacing(2), marginLeft: spacing(1)}}
-                                                >
-                                                    <Delete fontSize={"small"}/>
-                                                </IconButton>
-                                                <Button
-                                                    onClick={() => cards.push({cardNames: [], quantity: 1})}
-                                                    style={{marginLeft: spacing(1), marginTop: spacing(2.5)}}
-                                                >
-                                                    And Card...
-                                                </Button>
-                                            </div>
-                                        )
-                                    })}
+                                    {cardStore.cardNames.length === 0 && cards.length > 0 ? (
+                                        <Loader size={LoaderSize.SMALL}/>
+                                    ) : (
+                                        <>
+
+                                            {cards.map((card, idx) => {
+                                                const value = card.house ? card.house : card.quantity.toString()
+                                                const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
+                                                return (
+                                                    <div key={idx}>
+                                                        <KeyMultiSearchSuggest
+                                                            selected={selected}
+                                                            placeholder={"Any of these cards"}
+                                                            options={cardStore.cardNames}
+                                                            style={{flexGrow: 1}}
+                                                        />
+                                                        <TextField
+                                                            style={{minWidth: 80, marginTop: spacing(1), marginBottom: spacing(1)}}
+                                                            label={"Copies"}
+                                                            select={true}
+                                                            value={value}
+                                                            onChange={event => {
+                                                                const valueAsNumber = Number(event.target.value)
+                                                                if (isNaN(valueAsNumber)) {
+                                                                    card.house = event.target.value as House
+                                                                    card.quantity = 1
+                                                                } else {
+                                                                    card.quantity = valueAsNumber
+                                                                    card.house = undefined
+                                                                }
+                                                            }}
+                                                        >
+                                                            <MenuItem value={"0"}>None</MenuItem>
+                                                            <MenuItem value={"1"}>1+</MenuItem>
+                                                            <MenuItem value={"2"}>2+</MenuItem>
+                                                            <MenuItem value={"3"}>3+</MenuItem>
+                                                            <MenuItem value={"4"}>4+</MenuItem>
+                                                            <MenuItem value={"5"}>5+</MenuItem>
+                                                            <MenuItem value={"6"}>6+</MenuItem>
+                                                            <MenuItem value={"7"}>7+</MenuItem>
+                                                            {houseValuesArray.map(houseValue => {
+                                                                return (
+                                                                    <MenuItem value={houseValue.house} key={houseValue.house}>
+                                                                        {houseValue.house}
+                                                                    </MenuItem>
+                                                                )
+                                                            })}
+                                                        </TextField>
+                                                        <IconButton
+                                                            onClick={() => cards.splice(idx, 1)}
+                                                            style={{marginTop: spacing(2), marginLeft: spacing(1)}}
+                                                        >
+                                                            <Delete fontSize={"small"}/>
+                                                        </IconButton>
+                                                        <Button
+                                                            onClick={() => cards.push({cardNames: [], quantity: 1})}
+                                                            style={{marginLeft: spacing(1), marginTop: spacing(2.5)}}
+                                                        >
+                                                            And Card...
+                                                        </Button>
+                                                    </div>
+                                                )
+                                            })}
+
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </ListItem>

@@ -47,8 +47,10 @@ export class UserDeckStore {
         return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
             .then(() => {
                 messageStore.setSuccessMessage(deckName == null ? "Notes saved." : `Updated notes for ${deckName}.`, 2000)
-
-                this.findAllForUser()
+                const deck = this.userDecks?.get(deckId)
+                if (deck != null) {
+                    deck.notes = notes
+                }
             })
     }
 
@@ -59,12 +61,13 @@ export class UserDeckStore {
                 .then((response: AxiosResponse) => {
                     const userDecksList: UserDeckDto[] = response.data
 
-                    this.userDecks = new Map()
-                    userDecksList.forEach((userDeck) => this.userDecks!.set(userDeck.deckId, userDeck))
+                    const userDecks = new Map()
+                    userDecksList.forEach((userDeck) => userDecks!.set(userDeck.deckId, userDeck))
                     log.debug(`User decks loaded`)
 
                     this.refreshDeckInfo()
                     this.loadingDecks = false
+                    this.userDecks = userDecks
                 })
         }
     }

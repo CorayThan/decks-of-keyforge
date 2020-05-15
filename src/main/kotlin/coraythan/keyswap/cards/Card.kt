@@ -37,19 +37,16 @@ data class Card(
         val wins: Int? = 0,
         val losses: Int? = 0,
 
-        /**
-         * Format is: CALL_OF_THE_ARCHONS-10-7|AGE_OF_ASCENSION-4-3
-         *
-         */
-        var winLossBySetString: String = "",
-
         val created: ZonedDateTime = now(),
 
         @ElementCollection
         val traits: Set<String> = setOf(),
 
         @Transient
-        var extraCardInfo: ExtraCardInfo?
+        var extraCardInfo: ExtraCardInfo?,
+
+        @Transient
+        var expansionWins: Map<Expansion, Wins>? = null
 ) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int {
@@ -122,19 +119,6 @@ data class Card(
                     maxAerc
                 }
             }
-        }
-
-    var winLossBySet: Map<Expansion, Wins>
-        get() {
-            return this.winLossBySetString.split("|").map {
-                val values = it.split("-")
-                Expansion.valueOf(values[0]) to Wins(values[1].toInt(), values[2].toInt())
-            }.toMap()
-        }
-        set(value) {
-            this.winLossBySetString = value.entries.map {
-                "${it.key}-${it.value.wins}-${it.value.losses}"
-            }.joinToString("|")
         }
 
     fun toDeckSearchResultCard() = DeckSearchResultCard(

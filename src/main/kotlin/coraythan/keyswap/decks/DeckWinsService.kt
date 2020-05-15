@@ -3,9 +3,11 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
@@ -36,6 +38,7 @@ class DeckWinsService(
         private val deckPageService: DeckPageService,
         private val userDeckRepo: UserDeckRepo,
         private val userSearchService: UserSearchService,
+        private val cardWinsService: CardWinsService,
         @Value("\${env}")
         private val env: Env
 ) {
@@ -155,14 +158,18 @@ class DeckWinsService(
                     "losses ${decksWithScores.sumBy { it.losses }}")
 
             val cardWins = mutableMapOf<String, Wins>()
+            val cardWinsWithExpansions = Expansion.values().map { it to mutableMapOf<String, Wins>() }.toMap().toMutableMap()
             val houseWins = mutableMapOf<House, Wins>()
 
             decksWithScores.forEach { deck ->
                 val cards = cardService.cardsForDeck(deck)
+                val expansion = Expansion.forExpansionNumber(deck.expansion)
 
                 cards.forEach { card ->
                     val wins = cardWins[card.cardTitle] ?: Wins()
-                    cardWins[card.cardTitle] = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
+                    val winsValue = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
+                    cardWins[card.cardTitle] = winsValue
+                    cardWinsWithExpansions[expansion]!![card.cardTitle] = winsValue
                 }
                 deck.houses.forEach { house ->
                     val wins = houseWins[house] ?: Wins()
@@ -177,6 +184,7 @@ class DeckWinsService(
                     }}" + "house map: $houseWins")
 
             saveCardWins(cardWins)
+            cardWinsService.saveCardWins(cardWinsWithExpansions)
             cardService.reloadCachedCards()
         }
 
@@ -200,7 +208,7 @@ class DeckWinsService(
         }
     }
 
-    private fun  saveCardWins(wins: Map<String, Wins>) {
+    private fun saveCardWins(wins: Map<String, Wins>) {
         val cards = cardRepo.findByMaverickFalse()
                 .map {
                     it.copy(
@@ -210,4 +218,5 @@ class DeckWinsService(
                 }
         cardRepo.saveAll(cards)
     }
+
 }

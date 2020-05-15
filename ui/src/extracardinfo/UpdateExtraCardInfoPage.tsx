@@ -9,6 +9,7 @@ import {
     FormLabel,
     Grid,
     IconButton,
+    MenuItem,
     Radio,
     RadioGroup,
     TextField,
@@ -469,6 +470,8 @@ const InfoInput = (props: { name: string, value: string, update: (event: EventVa
     )
 }
 
+type SynGroup = "A" | "B" | "C" | "D" | ""
+
 @observer
 class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: SynTraitValue[] }> {
 
@@ -505,6 +508,12 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
         option: SynergyTrait.any.toString()
     }
 
+    @observable
+    group: SynGroup = ""
+
+    @observable
+    groupMax = ""
+
     addTraitOrSyn = (trait?: SynergyTrait) => {
         const {traits, synergies} = this.props
         let isSynergy = this.traitOrSynergy === "synergy"
@@ -522,7 +531,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
             traitValue = this.holdsTrait.option as SynergyTrait
         }
 
-        const toAdd = {
+        const toAdd: SynTraitValue = {
             trait: traitValue,
             rating: this.rating,
             cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
@@ -531,7 +540,9 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
             cardTypes: this.cardTypes.slice(),
             cardTraits: this.cardTraitsStore.selectedValues.slice(),
             powersString: this.powersString.trim(),
-            baseSynPercent: Number(this.baseSynPercent.trim())
+            baseSynPercent: Number(this.baseSynPercent.trim()),
+            synergyGroup: this.group === "" ? undefined : this.group,
+            synergyGroupMax: this.groupMax === "" ? undefined : Number(this.groupMax)
         }
         addTo.push(toAdd)
     }
@@ -580,27 +591,65 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                     />
                 </Grid>
                 <Grid item={true}>
-                    <FormControl>
-                        <FormLabel>Type</FormLabel>
-                        <RadioGroup
-                            value={this.traitOrSynergy}
-                            onChange={event => {
-                                const changedToTrait = this.traitOrSynergy === "synergy"
-                                const newValids = changedToTrait ? traitOptions : synergyOptions
-                                const choosenTrait = this.holdsTrait.option as SynergyTrait | ""
-                                if (choosenTrait.length > 0 && newValids.find(option => choosenTrait === option.value) == null) {
-                                    this.holdsTrait.option = ""
-                                }
-                                if (changedToTrait && this.rating < 1) {
-                                    this.rating = 3
-                                }
-                                this.traitOrSynergy = event.target.value as "trait" | "synergy"
-                            }}
-                        >
-                            <FormControlLabel value={"trait"} control={<Radio/>} label={"Trait"}/>
-                            <FormControlLabel value={"synergy"} control={<Radio/>} label={"Syn"}/>
-                        </RadioGroup>
-                    </FormControl>
+                    <div>
+                        <div>
+                            <FormControl>
+                                <FormLabel>Type</FormLabel>
+                                <RadioGroup
+                                    value={this.traitOrSynergy}
+                                    onChange={event => {
+                                        const changedToTrait = this.traitOrSynergy === "synergy"
+                                        const newValids = changedToTrait ? traitOptions : synergyOptions
+                                        const choosenTrait = this.holdsTrait.option as SynergyTrait | ""
+                                        if (choosenTrait.length > 0 && newValids.find(option => choosenTrait === option.value) == null) {
+                                            this.holdsTrait.option = ""
+                                        }
+                                        if (changedToTrait && this.rating < 1) {
+                                            this.rating = 3
+                                        }
+                                        this.traitOrSynergy = event.target.value as "trait" | "synergy"
+                                    }}
+                                >
+                                    <FormControlLabel value={"trait"} control={<Radio/>} label={"Trait"}/>
+                                    <FormControlLabel value={"synergy"} control={<Radio/>} label={"Syn"}/>
+                                </RadioGroup>
+                            </FormControl>
+                        </div>
+                        <div>
+                            <TextField
+                                select={true}
+                                label={"Group"}
+                                value={this.group}
+                                onChange={(event) => this.group = event.target.value as SynGroup}
+                                style={{width: 64}}
+                            >
+                                <MenuItem value={""}>
+                                    None
+                                </MenuItem>
+                                <MenuItem value={"A"}>
+                                    A
+                                </MenuItem>
+                                <MenuItem value={"B"}>
+                                    B
+                                </MenuItem>
+                                <MenuItem value={"C"}>
+                                    C
+                                </MenuItem>
+                                <MenuItem value={"D"}>
+                                    D
+                                </MenuItem>
+                            </TextField>
+                        </div>
+                        <div>
+                            <TextField
+                                label="Max"
+                                value={this.groupMax}
+                                type={"number"}
+                                onChange={(event) => this.groupMax = event.target.value}
+                                style={{width: 64}}
+                            />
+                        </div>
+                    </div>
                 </Grid>
                 <Grid item={true}>
                     <FormControl>

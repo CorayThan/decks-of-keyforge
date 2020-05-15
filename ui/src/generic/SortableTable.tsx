@@ -45,6 +45,12 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
         this.store = new SortableTableStore<T>(props.defaultSort, props.data)
     }
 
+    componentDidUpdate(prevProps: SortableTableProps<T>) {
+        if (prevProps.data !== this.props.data) {
+            this.store.update(this.props.defaultSort, this.props.data)
+        }
+    }
+
     render() {
         const store = this.store
         const {headers} = this.props
@@ -101,15 +107,23 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 }
 
 class SortableTableStore<T> {
+
     @observable
+        // @ts-ignore
     activeTableSort: keyof T
+
     @observable
     tableSortDir: SortOrder = "desc"
 
     @observable
+        // @ts-ignore
     sortedItems: T[]
 
     constructor(private defaultSort: keyof T, private data: T[]) {
+        this.update(defaultSort, data)
+    }
+
+    update = (defaultSort: keyof T, data: T[]) => {
         this.activeTableSort = defaultSort
         this.sortedItems = data
         this.resort()

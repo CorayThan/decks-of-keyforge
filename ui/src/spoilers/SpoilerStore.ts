@@ -3,6 +3,7 @@ import { observable } from "mobx"
 import { CardFilters } from "../cards/CardFilters"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
+import { Rarity } from "../cards/rarity/Rarity"
 import { BadRequestException } from "../config/Exceptions"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
@@ -132,6 +133,10 @@ export class SpoilerStore {
 
 
 export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card: KCard | Spoiler): boolean => {
+    // Convert fixed rarity to Variant
+    const cardRarity = card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
+    const filtersRarities = filters.rarities.map(rarity => (rarity as Rarity | "Special") === "Special" ? Rarity.Variant : rarity)
+
     return (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))
         &&
         (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
@@ -140,7 +145,7 @@ export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card
         &&
         (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
         &&
-        (filters.rarities.length === 0 || (card.rarity != null && filters.rarities.indexOf(card.rarity) !== -1))
+        (filtersRarities.length === 0 || (cardRarity != null && filtersRarities.indexOf(cardRarity) !== -1))
         &&
         (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
 }
