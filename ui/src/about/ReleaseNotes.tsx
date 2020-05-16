@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.0"
+export const latestVersion = "5.1"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,29 +44,30 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
-                {/*<ReleaseNote*/}
-                {/*    releaseNumber={"5.1"}*/}
-                {/*    date={"5/13/2020"}*/}
-                {/*    expanded={true}*/}
-                {/*    releaseNotesWithHighlights={[*/}
-                {/*        {*/}
-                {/*            highlight: "SAS v5.1",*/}
-                {/*            note: "I've received feedback that while some Worlds Collide merited a slight nerf, this update went a little overboard. So " +*/}
-                {/*                "some of the Worlds Collide changes have been rolled back, and WC scores have gone back up slightly. This update also sees " +*/}
-                {/*                "improvements to the consistency and AERC allocations for play effects, and adds more complex creature protection traits."*/}
-                {/*        },*/}
-                {/*        {*/}
-                {/*            highlight: "SAS Council",*/}
-                {/*            note: "We've formed a SAS Council to help expand the private conversations that happen when creating new versions of SAS to " +*/}
-                {/*                "members of the community outside Team SAS-LP. Currently the council consists of me, Nathan, Big Z, Dunkoro, Luke Daniels, " +*/}
-                {/*                "and Dan of Team SAS-LP, as well as Dave Cordiero and Aurore from the community at large."*/}
-                {/*        },*/}
-                {/*        {*/}
-                {/*            highlight: "Card Search Improvements",*/}
-                {/*            note: "I've been gradually improving the card search mechanism. You can now search by synergy traits and synergies"*/}
-                {/*        },*/}
-                {/*    ]}*/}
-                {/*/>*/}
+                <ReleaseNote
+                    releaseNumber={"5.1"}
+                    date={"5/16/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS v5 Part 2 (a.k.a. v5.1)",
+                            note: "This is probably what SAS v5 should've been in the first place. WC has had its scores increased slightly, " +
+                                "especially its best cards. " +
+                                "I've also thoroughly revised play effect synergies, protects creatures synergies, and added synergy groups so that " +
+                                "complex cards like Edie or Cincinnatus Rex can be more properly synergized."
+                        },
+                        {
+                            highlight: "SAS Council",
+                            note: "We've formed a SAS Council to help expand the private conversations that happen when creating new versions of SAS to " +
+                                "members of the community outside Team SAS-LP. Currently the council consists of me, Nathan, Big Z, Dunkoro, Luke Daniels, " +
+                                "and Dan of Team SAS-LP, as well as Dave Cordiero and Aurore from the community at large."
+                        },
+                        {
+                            highlight: "Card Search Improvements",
+                            note: "I've been gradually improving the card search mechanism. You can now search by synergy traits and synergies."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.0"}
                     date={"5/6/2020"}

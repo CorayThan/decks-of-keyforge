@@ -7,6 +7,8 @@ enum class TraitStrength(val value: Int) {
     EXTRA_WEAK(1)
 }
 
+val traitsSortedStrongToWeak = TraitStrength.values().sortedByDescending { it.value }
+
 fun Set<String>.toSynergies(): List<SynergyTrait> {
     return this.mapNotNull {
         SynergyTrait.fromTrait(it)
