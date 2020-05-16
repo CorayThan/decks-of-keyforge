@@ -65,6 +65,9 @@ class SearchDeckNameStore {
         this.searchValue = ""
         deckStore.deckNameSearchResults = []
         cardStore.cardNameSearchResults = []
+        if (deckStore.deckNameSearchCancel != null) {
+            deckStore.deckNameSearchCancel.cancel()
+        }
     }
 }
 

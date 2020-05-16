@@ -30,10 +30,11 @@ export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} â
 
 export const synTraitName = (traitValue: SynTraitValue) => {
     const {trait, player, cardTypes, powersString, cardTraits, cardName, house, synergyGroup, synergyGroupMax} = traitValue
-    if (cardName != null) {
-        return cardName
-    }
     let name: string = trait == SynergyTrait.any ? "" : trait
+
+    if (cardName != null) {
+        name = cardName
+    }
     let nameEnhancer = ""
     if (powersString.length > 0) {
         nameEnhancer += ` ${powersString} Power`

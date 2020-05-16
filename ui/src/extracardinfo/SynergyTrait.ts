@@ -6,7 +6,6 @@ export enum SynergyTrait {
 
     any = "any",
 
-    exalt = "exalt",
 
     damagesMultiple = "damagesMultiple",
 
@@ -34,9 +33,10 @@ export enum SynergyTrait {
     replays = "replays",
 
     // Amber / keys
-    capturesAmberOnEnemies = "capturesAmberOnEnemies",
     capturesAmber = "capturesAmber",
-    capturesOntoTarget = "capturesOntoTarget",
+    exalt = "exalt",
+    putsAmberOnTarget = "putsAmberOnTarget",
+
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
     scalingAmberControl = "scalingAmberControl",
@@ -134,8 +134,7 @@ export enum SynergyTrait {
 
     lowExpectedAmber = "lowExpectedAmber", // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
 
-    good = "good",
-    goodCreature = "goodCreature",
+    good = "good stuff",
 
     // no synergy traits
     card = "card",
@@ -147,8 +146,8 @@ export const specialTraits = allSynergyTraits.slice(firstSpecialIndex, allSynerg
 
 export const noSynTraits = [SynergyTrait.card]
 
-export const validSynergies = (Utils.enumValues(SynergyTrait) as string[])
-export const validTraits = (Utils.enumValues(SynergyTrait) as string[])
+export const validSynergies = allSynergyTraits
+export const validTraits = (Utils.enumValues(SynergyTrait) as SynergyTrait[])
     .filter(traitValue => !specialTraits.includes(traitValue as SynergyTrait))
 
 export const traitOptions = validTraits.map(trait => ({label: startCase(trait).replace(" R ", " ??? "), value: trait}))

@@ -17,8 +17,6 @@ enum class SynergyTrait {
 
     any,
 
-    exalt,
-
     damagesMultiple,
 
     destroys,
@@ -49,13 +47,15 @@ enum class SynergyTrait {
     inAllHouses,
 
     // Amber / keys
-    capturesAmberOnEnemies,
     capturesAmber,
-    capturesOntoTarget,
+    putsAmberOnTarget,
+    exalt,
+    removesCapturedAmber,
+    spendsCapturedAmber,
+
     stealsAmber,
     increasesKeyCost,
     scalingAmberControl,
-    spendsCapturedAmber,
 
     // Damage
     distributableDamage, // eg sack of coins, cooperative hunting
@@ -159,8 +159,7 @@ enum class SynergyTrait {
     // Special traits
     card,
     // Automatically applied
-    good,
-    goodCreature;
+    good;
 
     companion object {
         fun fromTrait(trait: String): SynergyTrait? {

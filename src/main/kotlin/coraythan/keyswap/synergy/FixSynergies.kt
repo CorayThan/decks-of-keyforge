@@ -1,6 +1,5 @@
 package coraythan.keyswap.synergy
 
-import coraythan.keyswap.cards.CardType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,8 +18,8 @@ class FixSynergies(
         allTraits.forEach {
             val updated = when (it.trait) {
 
-                SynergyTrait.goodCreature ->
-                    it.copy(trait = SynergyTrait.good, cardTypesInitial = listOf(CardType.Creature))
+                SynergyTrait.spendsCapturedAmber ->
+                    it.copy(trait = SynergyTrait.removesCapturedAmber)
                 else -> null
             }
             if (updated != null) {

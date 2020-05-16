@@ -178,7 +178,8 @@ object DeckSynergyService {
                     SynergyCombo(
                             house = card.house,
                             cardName = card.cardTitle,
-                            synergies = matchedTraits.values.flatten(),
+                            synergies = matchedTraits.values.flatten()
+                                    .sortedBy { it.trait.synergyGroup },
                             netSynergy = synergyValues.sum(),
                             aercScore = synergizedValues.map { it.value }.sum() + (if (card.cardType == CardType.Creature) 0.4 else 0.0),
 

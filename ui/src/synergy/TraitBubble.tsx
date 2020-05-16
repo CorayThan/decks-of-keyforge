@@ -59,12 +59,9 @@ export const TraitBubble = (props: {
             <Tooltip
                 title={(
                     <div style={{display: "flex", flexDirection: "column"}}>
-                        <Typography variant={"body2"}>{title}</Typography>
-                        {synergyGroup && (
-                            <Typography variant={"body2"}>Synergy Group: {synergyGroup}</Typography>
-                        )}
+                        <Typography variant={"body2"}>{synergyGroup ? `Synergy Group ${synergyGroup}` : title}</Typography>
                         {synergyGroupMax && (
-                            <Typography variant={"body2"}>Group Max Synergy: {synergyGroupMax}%</Typography>
+                            <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>Group Max: {synergyGroupMax}%</Typography>
                         )}
                         {synergyWith != null && (
                             <>

@@ -16,11 +16,12 @@ import {
     Tooltip,
     Typography
 } from "@material-ui/core"
-import { ChevronLeft, ChevronRight, Close, Delete, Save } from "@material-ui/icons"
+import { ChevronLeft, ChevronRight, Close, Delete, Edit, Save } from "@material-ui/icons"
+import { Autocomplete } from "@material-ui/lab"
 import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import React from "react"
+import React, { ChangeEvent } from "react"
 import { RouteComponentProps } from "react-router-dom"
 import { SingleCardSearchSuggest } from "../cards/CardSearchSuggest"
 import { CardView } from "../cards/CardSimpleView"
@@ -30,13 +31,12 @@ import { KCard } from "../cards/KCard"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log, prettyJson, Utils } from "../config/Utils"
+import { Utils } from "../config/Utils"
 import { BackendExpansion } from "../expansions/Expansions"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMultiSearchSuggest"
-import { KeySingleSearchSuggest } from "../mui-restyled/KeySingleSearchSuggest"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
@@ -45,7 +45,7 @@ import { TraitBubble } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
-import { synergyOptions, SynergyTrait, traitOptions } from "./SynergyTrait"
+import { synergyOptions, SynergyTrait, traitOptions, validSynergies, validTraits } from "./SynergyTrait"
 
 interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
 }
@@ -183,7 +183,6 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
         this.houseCheatingMax = extraCardInfo.houseCheatingMax == null ? "0" : extraCardInfo.houseCheatingMax.toString()
         this.otherMax = extraCardInfo.otherMax == null ? "0" : extraCardInfo.otherMax.toString()
 
-        log.debug("traits length " + extraCardInfo.traits.length)
         this.traits = extraCardInfo.traits
         this.synergies = extraCardInfo.synergies
 
@@ -220,7 +219,6 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
             traits: this.traits,
             synergies: this.synergies
         }
-        log.debug(`Traits we're saving: ${prettyJson(extraCardInfo.traits)}`)
         await extraCardInfoStore.saveExtraCardInfo(extraCardInfo)
         const saved = await extraCardInfoStore.findExtraCardInfo(this.infoId)
         this.reset(saved)
@@ -387,45 +385,6 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                                 value={this.otherMax}
                                 update={(event: EventValue) => this.otherMax = event.target.value}
                             />
-                            <Grid item={true} xs={12} sm={6}>
-                                <div>
-                                    {this.traits.map((synergy, idx) => (
-                                        <div
-                                            key={idx}
-                                            style={{display: "flex"}}
-                                        >
-                                            <TraitBubble
-                                                traitValue={synergy}
-                                                trait={true}
-                                            />
-                                            <IconButton
-                                                onClick={() => this.traits.splice(idx, 1)}
-                                            >
-                                                <Delete/>
-                                            </IconButton>
-                                        </div>
-                                    ))}
-                                </div>
-                            </Grid>
-                            <Grid item={true} xs={12} sm={6}>
-                                <div>
-                                    {this.synergies.map((synergy, idx) => (
-                                        <div
-                                            key={idx}
-                                            style={{display: "flex"}}
-                                        >
-                                            <TraitBubble
-                                                traitValue={synergy}
-                                            />
-                                            <IconButton
-                                                onClick={() => this.synergies.splice(idx, 1)}
-                                            >
-                                                <Delete/>
-                                            </IconButton>
-                                        </div>
-                                    ))}
-                                </div>
-                            </Grid>
                             <Grid item={true} xs={12}>
                                 <AddTrait traits={this.traits} synergies={this.synergies}/>
                             </Grid>
@@ -472,8 +431,13 @@ const InfoInput = (props: { name: string, value: string, update: (event: EventVa
 
 type SynGroup = "A" | "B" | "C" | "D" | ""
 
+interface AddTraitProps {
+    traits: SynTraitValue[]
+    synergies: SynTraitValue[]
+}
+
 @observer
-class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: SynTraitValue[] }> {
+class AddTrait extends React.Component<AddTraitProps> {
 
     cardTraitsStore = new SelectedOptions()
 
@@ -504,9 +468,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
     }
 
     @observable
-    holdsTrait = {
-        option: SynergyTrait.any.toString()
-    }
+    trait: SynergyTrait = SynergyTrait.any
 
     @observable
     group: SynGroup = ""
@@ -528,11 +490,11 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
         } else if (this.holdsCard.option.length > 0) {
             traitValue = SynergyTrait.card
         } else {
-            traitValue = this.holdsTrait.option as SynergyTrait
+            traitValue = this.trait
         }
 
         const toAdd: SynTraitValue = {
-            trait: traitValue,
+            trait: traitValue as SynergyTrait,
             rating: this.rating,
             cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
             house: this.house,
@@ -547,20 +509,87 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
         addTo.push(toAdd)
     }
 
-    get trait(): SynergyTrait | undefined {
-        if (this.holdsTrait.option.length > 0) {
-            log.debug("Find trait for: " + this.holdsTrait.option)
-            return (this.traitOrSynergy === "synergy" ? synergyOptions : traitOptions).find(trait => this.holdsTrait.option === trait.label)!.value as SynergyTrait
-        }
-        return undefined
+    setTraitTo = (value: SynTraitValue, synergy: boolean) => {
+
+        this.holdsCard.option = value.cardName ?? ""
+        this.powersString = value.powersString
+        this.player = value.player
+        this.house = value.house
+        this.traitOrSynergy = synergy ? "synergy" : "trait"
+        this.cardTypes = value.cardTypes
+        this.rating = value.rating
+        this.trait = value.trait
+        this.cardTraitsStore.reset()
+        this.baseSynPercent = value.baseSynPercent.toString()
+        this.group = value.synergyGroup as SynGroup
+        this.groupMax = value.synergyGroupMax?.toString() ?? ""
     }
 
     render() {
 
-        const selectableTraits = this.traitOrSynergy === "synergy" ? synergyOptions : traitOptions
+        const {traits, synergies} = this.props
+
+        const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
 
         return (
             <Grid container={true} spacing={2} style={{backgroundColor: themeStore.aercViewBackground, marginBottom: spacing(2)}}>
+                <Grid item={true} xs={12} sm={6}>
+                    <div>
+                        {traits.map((synergy, idx) => (
+                            <div
+                                key={idx}
+                                style={{display: "flex"}}
+                            >
+                                <TraitBubble
+                                    traitValue={synergy}
+                                    trait={true}
+                                />
+                                <IconButton
+                                    onClick={() => traits.splice(idx, 1)}
+                                >
+                                    <Delete/>
+                                </IconButton>
+                                <IconButton
+                                    onClick={() => {
+                                        const toEdit = traits[idx]
+                                        this.setTraitTo(toEdit, false)
+                                        traits.splice(idx, 1)
+                                    }}
+                                >
+                                    <Edit/>
+                                </IconButton>
+                            </div>
+                        ))}
+                    </div>
+                </Grid>
+                <Grid item={true} xs={12} sm={6}>
+                    <div>
+                        {synergies.map((synergy, idx) => (
+                            <div
+                                key={idx}
+                                style={{display: "flex"}}
+                            >
+                                <TraitBubble
+                                    traitValue={synergy}
+                                />
+                                <IconButton
+                                    onClick={() => synergies.splice(idx, 1)}
+                                >
+                                    <Delete/>
+                                </IconButton>
+                                <IconButton
+                                    onClick={() => {
+                                        const toEdit = synergies[idx]
+                                        this.setTraitTo(toEdit, true)
+                                        synergies.splice(idx, 1)
+                                    }}
+                                >
+                                    <Edit/>
+                                </IconButton>
+                            </div>
+                        ))}
+                    </div>
+                </Grid>
                 <Grid item={true} xs={9}>
                     <FormControl>
                         <FormLabel>Rating</FormLabel>
@@ -600,9 +629,9 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                     onChange={event => {
                                         const changedToTrait = this.traitOrSynergy === "synergy"
                                         const newValids = changedToTrait ? traitOptions : synergyOptions
-                                        const choosenTrait = this.holdsTrait.option as SynergyTrait | ""
-                                        if (choosenTrait.length > 0 && newValids.find(option => choosenTrait === option.value) == null) {
-                                            this.holdsTrait.option = ""
+                                        const choosenTrait = this.trait
+                                        if (choosenTrait != null && newValids.find(option => choosenTrait === option.value) == null) {
+                                            this.trait = SynergyTrait.any
                                         }
                                         if (changedToTrait && this.rating < 1) {
                                             this.rating = 3
@@ -729,13 +758,16 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                         selected={this.holdsCard}
                         placeholder={"Card"}
                     />
-                    <KeySingleSearchSuggest
-                        selected={this.holdsTrait}
-                        placeholder={"Trait"}
+
+                    <Autocomplete
                         options={selectableTraits}
-                        fullWidth={true}
-                        onSelect={() => this.holdsCard.option = ""}
+                        getOptionLabel={(trait) => startCase(trait).replace(" R ", " ??? ")}
+                        value={this.trait}
+                        renderInput={(params) => <TextField {...params} label={"Trait"}/>}
+                        onChange={(event: ChangeEvent<{}>, newValue: SynergyTrait | null) => this.trait = newValue ?? SynergyTrait.any}
+                        style={{marginTop: spacing(1)}}
                     />
+
                     <div style={{display: "flex"}}>
                         <IconButton
                             onClick={() => {
@@ -746,7 +778,7 @@ class AddTrait extends React.Component<{ traits: SynTraitValue[], synergies: Syn
                                 this.traitOrSynergy = "synergy"
                                 this.cardTypes = []
                                 this.rating = 3
-                                this.holdsTrait.option = SynergyTrait.any.toString()
+                                this.trait = SynergyTrait.any
                                 this.cardTraitsStore.reset()
                                 this.baseSynPercent = ""
                             }}

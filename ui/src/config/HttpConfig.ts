@@ -57,7 +57,9 @@ export class HttpConfig {
         if (code !== 304) {
             log.error(`There was an error completing the request. ${error.message}`)
         }
-        if (code === 401) {
+        if (axios.isCancel(error)) {
+            log.info("Canceled request")
+        } else if (code === 401) {
             messageStore.setErrorMessage("You are unauthorized to make this request.")
         } else if (code === 417) {
             const message = error.response && error.response.data && error.response.data.message

@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios"
+import axios, { AxiosResponse, CancelTokenSource } from "axios"
 import { clone } from "lodash"
 import { observable } from "mobx"
 import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopbar"
@@ -64,6 +64,8 @@ export class DeckStore {
 
     @observable
     deckNameSearchResults: Deck[] = []
+
+    deckNameSearchCancel: CancelTokenSource | undefined
 
     reset = () => {
         this.deckPage = undefined
@@ -151,10 +153,17 @@ export class DeckStore {
     }
 
     findDecksByName = (name: string) => {
-        axios.get(`${DeckStore.CONTEXT}/by-name/${name}`)
+        if (this.deckNameSearchCancel != null) {
+            this.deckNameSearchCancel.cancel()
+        }
+        this.deckNameSearchCancel = axios.CancelToken.source()
+        axios.get(`${DeckStore.CONTEXT}/by-name/${name}`, {
+            cancelToken: this.deckNameSearchCancel.token
+        })
             .then((response: AxiosResponse<Deck[]>) => {
                 // log.debug(`Find decks by name results: ${prettyJson(response.data)}`)
                 this.deckNameSearchResults = response.data
+                this.deckNameSearchCancel = undefined
             })
     }
 
