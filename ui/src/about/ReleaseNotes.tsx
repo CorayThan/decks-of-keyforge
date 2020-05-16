@@ -54,13 +54,17 @@ export class ReleaseNotes extends React.Component {
                             note: "This is probably what SAS v5 should've been in the first place. WC has had its scores increased slightly, " +
                                 "especially its best cards. " +
                                 "I've also thoroughly revised play effect synergies, protects creatures synergies, and added synergy groups so that " +
-                                "complex cards like Edie or Cincinnatus Rex can be more properly synergized."
+                                "complex cards like Edie or Cincinnatus Rex can be more properly synergized. If anyone sees any major issues let me know, " +
+                                "but my primary goal will be to work on Mass Mutation ratings now."
                         },
                         {
                             highlight: "SAS Council",
                             note: "We've formed a SAS Council to help expand the private conversations that happen when creating new versions of SAS to " +
                                 "members of the community outside Team SAS-LP. Currently the council consists of me, Nathan, Big Z, Dunkoro, Luke Daniels, " +
                                 "and Dan of Team SAS-LP, as well as Dave Cordiero and Aurore from the community at large."
+                        },
+                        {
+                            note: (<NotesLink style={{marginRight: spacing(2)}} to={AboutSubPaths.sasCouncil}>SAS Council</NotesLink>)
                         },
                         {
                             highlight: "Card Search Improvements",
