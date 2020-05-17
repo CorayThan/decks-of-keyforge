@@ -3,6 +3,7 @@ package coraythan.keyswap.decks.models
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import java.time.LocalDate
 
@@ -74,4 +75,29 @@ data class DeckSearchResult(
         val synergies: DeckSynergyInfo? = null,
 
         val dateAdded: LocalDate? = null
-)
+) {
+
+    fun printDeckSimple(): String {
+        return "$sasRating SAS • ${expansion.readable} • ${houses.joinToString(" – ") { it.masterVaultValue }}" +
+                if (forSale || forAuction || forTrade) " • For sale" else ""
+    }
+
+    fun printDeck(): String {
+        return """
+            ${printDeckSimple()}
+            
+            ${if (powerLevel > 0 || chains > 0 || wins > 0 || losses > 0) "Power Level $powerLevel • $chains Chains • $wins / $losses OP Wins / Losses\n" else ""}
+            ${amberControl.roundToOneSigDig()} Aember Control (A)
+            ${expectedAmber.roundToOneSigDig()} Expected Aember (E)
+            ${artifactControl.roundToOneSigDig()} Artifact Control (R)
+            ${creatureControl.roundToOneSigDig()} Creature Control (C)
+            ${efficiency.roundToOneSigDig()} Efficiency (F)
+            ${disruption.roundToOneSigDig()} Disruption (D)
+            
+            $actionCount Actions
+            $creatureCount Creatures
+            $artifactCount Artifacts
+            $upgradeCount Upgrades
+        """.trimIndent()
+    }
+}

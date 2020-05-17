@@ -178,7 +178,8 @@ export class LandingPage extends React.Component<{}> {
                                 Decks of KeyForge is not associated with or endorsed by Fantasy Flight games, the producers of KeyForge, in any way.
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}}>
-                                Decks of KeyForge is owned and operated by Graylake LLC. For questions or comments check out the <Link to={AboutSubPaths.contact}>contact me page</Link>!
+                                Decks of KeyForge is owned and operated by Graylake LLC. For questions or comments check out the <Link
+                                to={AboutSubPaths.contact}>contact me page</Link>!
                             </Typography>
                             <Typography>
                                 Decks of KeyForge is owned and operated by Graylake LLC. Please send any questions or comments to decksofkeyforge@gmail.com

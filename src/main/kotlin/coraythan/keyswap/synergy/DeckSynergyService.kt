@@ -218,28 +218,9 @@ object DeckSynergyService {
         val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy
 
-//        val info = if (deck.synergyRating > 0) {
-//            // Show old values temporarily
-//            DeckSynergyInfo(
-//                    synergyRating = deck.synergyRating,
-//                    antisynergyRating = deck.antisynergyRating,
-//                    synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
-//                    rawAerc = deck.aercScore.toInt(),
-//                    sasRating = deck.sasRating,
-//
-//                    amberControl = deck.amberControl,
-//                    expectedAmber = deck.expectedAmber,
-//                    artifactControl = deck.artifactControl,
-//                    creatureControl = deck.creatureControl,
-//                    efficiency = deck.efficiency,
-//                    effectivePower = deck.effectivePower,
-//                    disruption = deck.disruption,
-//                    amberProtection = deck.amberProtection,
-//                    houseCheating = deck.houseCheating,
-//                    other = deck.other
-//            )
-//        } else {
-        val info = DeckSynergyInfo(
+        // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
+
+        return DeckSynergyInfo(
                 synergyRating = synergy,
                 antisynergyRating = antisynergy,
                 synergyCombos = synergyCombos.sortedByDescending { it.netSynergy },
@@ -257,12 +238,6 @@ object DeckSynergyService {
                 houseCheating = hc,
                 other = o
         )
-        // }
-
-        // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
-
-        return info
-
     }
 
     private fun addOutOfHouseTraits(houses: List<House>, cards: List<Card>, traits: MutableMap<SynergyTrait, SynTraitValuesForTrait>) {

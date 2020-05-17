@@ -16,5 +16,8 @@
         <springProfile name="prod">
             <appender-ref ref="loggly"/>
         </springProfile>
+        <springProfile name="qa">
+            <appender-ref ref="loggly"/>
+        </springProfile>
     </root>
 </configuration>

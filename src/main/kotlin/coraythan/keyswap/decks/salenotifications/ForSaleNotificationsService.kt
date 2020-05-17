@@ -49,9 +49,9 @@ class ForSaleNotificationsService(
                         .values.toList()
                         .map { it.first() }
 
-                log.info("Checking for sending")
+                log.debug("Checking for sending")
                 toSend.forEach {
-                    log.info("Sending for sale email ${it.name} to ${it.user?.username} deck id: ${listingInfo.deckId}")
+                    log.debug("Sending for sale email ${it.name} to ${it.user?.username} deck id: ${listingInfo.deckId}")
                     emailService.sendDeckListedNotification(
                             it.user!!,
                             listingInfo,

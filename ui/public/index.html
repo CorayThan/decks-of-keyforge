@@ -10,7 +10,7 @@
     <link rel="manifest" href="%PUBLIC_URL%/site.webmanifest">
     <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#2196F3">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -21,18 +21,32 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
-    <title>Decks of KeyForge</title>
-    <meta
-            name="description"
-            content="Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies for your decks with the SAS rating system."
-    >
-    <meta name="keywords" content="KeyForge,deck,decks,card,cards,sas,crucible,buy,sell,search" >
+    <meta name="keywords" content="KeyForge,deck,decks,card,cards,SAS,crucible,buy,sell,search,AERC">
+
+    <!-- HTML / Google Meta Tags -->
+
+    <title>~~title~~</title>
+    <meta name="description" content="~~description~~">
+
+    <!-- Open Graph / Facebook Meta Tags -->
+
+    <meta property="og:title" content="~~title~~">
+    <meta property="og:description" content="~~description~~">
+    <meta property="og:image" content="~~image~~">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://dok-imgs.s3.us-west-2.amazonaws.com/dok.png">
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132818841-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-132818841-1');

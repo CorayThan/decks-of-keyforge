@@ -95,6 +95,10 @@ class UserSearchService(
         userRepo.setUpdateUserTrue(user.id)
     }
 
+    fun findStatsForUser(username: String): UserSearchResult? {
+        return searchUsers(UserFilters(username = username))[0]
+    }
+
     fun searchUsers(filters: UserFilters, withHidden: Boolean = false): List<UserSearchResult> {
         val userQ = QKeyUser.keyUser
         val predicate = userFilterPredicate(filters, withHidden)
