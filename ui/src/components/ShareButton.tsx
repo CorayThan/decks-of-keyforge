@@ -6,7 +6,7 @@ import { Utils } from "../config/Utils"
 
 export const ShareButton = observer((props: { url: string, title?: string, style?: React.CSSProperties }) => {
 
-    if (!Utils.canWriteToClipboard && !Utils.canShare()) {
+    if (!Utils.canShare()) {
         return null
     }
 

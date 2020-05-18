@@ -3,8 +3,6 @@ import { getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
 import * as loglevel from "loglevel"
-import { observable } from "mobx"
-import { messageStore } from "../ui/MessageStore"
 
 export const log = loglevel
 log.setDefaultLevel("debug")
@@ -16,26 +14,12 @@ export const roundToTens = (round: number) => Math.round(round * 10) / 10
 export const roundToHundreds = (round: number) => Math.round(round * 100) / 100
 export const roundToThousands = (round: number) => Math.round(round * 1000) / 1000
 
-try {
-    // @ts-ignore
-    navigator.permissions.query({name: "clipboard-write"}).then(result => {
-        if (result.state == "granted" || result.state == "prompt") {
-            Utils.canWriteToClipboard = true
-        }
-    })
-} catch (e) {
-    log.warn("Can't write to clipboard due to " + e)
-}
-
 export class Utils {
 
     private static readonly readableDateFormat = "MMM d, yyyy"
     static readonly localDateFormat = "yyyy-MM-dd"
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
-
-    @observable
-    static canWriteToClipboard = false
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
@@ -86,23 +70,6 @@ export class Utils {
         return 0
     }
 
-    static copyToClipboard = (url: string) => {
-        if (Utils.canWriteToClipboard) {
-            try {
-                navigator.clipboard.writeText(url)
-                    .then(() => {
-                        messageStore.setSuccessMessage("Copied URL", 3000)
-                    }, () => {
-                        messageStore.setWarningMessage("Couldn't copy URL", 3000)
-                    })
-            } catch (e) {
-                messageStore.setWarningMessage("Couldn't copy URL", 3000)
-            }
-        } else {
-            log.warn("Can't write to clipboard in this case!")
-        }
-    }
-
     static shareUrl = (url: string, title?: string) => {
         try {
             // @ts-ignore
@@ -111,7 +78,6 @@ export class Utils {
                 url
             })
         } catch (e) {
-            Utils.copyToClipboard(url)
             log.debug(`Couldn't share with bowser info ${prettyJson(Utils.bowser.getBrowser())} ` + e.toString())
         }
     }

@@ -163,15 +163,15 @@ class WebConfiguration(
     private fun transformIndexPage(
             page: Resource,
             title: String = "Decks of KeyForge",
-            description: String = "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies with the SAS and AERC rating systems.",
-            image: String = "https://dok-imgs.s3.us-west-2.amazonaws.com/dok-fb.png"
+            description: String = "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies with the SAS and AERC rating systems."
+//            image: String = "https://dok-imgs.s3.us-west-2.amazonaws.com/dok-square.png"
     ): TransformedResource {
         val bytes = FileCopyUtils.copyToByteArray(page.inputStream)
         val content = String(bytes, StandardCharsets.UTF_8)
         val modified = content
                 .replace("~~title~~", "$title – DoK")
                 .replace("~~description~~", description)
-                .replace("~~image~~", image)
+//                .replace("~~image~~", image)
                 .toByteArray(StandardCharsets.UTF_8)
 
         return TransformedResource(page, modified)
