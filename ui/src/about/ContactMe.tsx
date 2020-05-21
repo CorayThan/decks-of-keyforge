@@ -62,7 +62,7 @@ export class ContactMe extends React.Component {
                         "patron, please consider becoming one to support the site and get some exclusive benefits on the site!",
                         "Thank you to Crucible Tracker for providing wins and losses from that service. Use it to record your wins and losses on " +
                         "The Crucible Online!",
-                        <Link href={"https://www.thecrucibletracker.com?utm_source=decksofkeyforge"} target={"_blank"}>Crucible Tracker</Link>
+                        <Link href={"https://www.thecrucibletracker.com?utm_source=decksofkeyforge"} target={"_blank"} rel={"noopener noreferrer"}>Crucible Tracker</Link>
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>

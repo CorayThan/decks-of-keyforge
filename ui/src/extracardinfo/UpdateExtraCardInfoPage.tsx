@@ -23,7 +23,6 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { ChangeEvent } from "react"
 import { RouteComponentProps } from "react-router-dom"
-import { SingleCardSearchSuggest } from "../cards/CardSearchSuggest"
 import { CardView } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { CardType } from "../cards/CardType"
@@ -36,9 +35,9 @@ import { BackendExpansion } from "../expansions/Expansions"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMultiSearchSuggest"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
+import { SelectedOptions } from "../mui-restyled/SelectedOptions"
 import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
 import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
@@ -463,9 +462,7 @@ class AddTrait extends React.Component<AddTraitProps> {
     player: SynTraitPlayer = SynTraitPlayer.ANY
 
     @observable
-    holdsCard = {
-        option: ""
-    }
+    cardName = ""
 
     @observable
     trait: SynergyTrait = SynergyTrait.any
@@ -487,7 +484,7 @@ class AddTrait extends React.Component<AddTraitProps> {
         let traitValue
         if (trait != null) {
             traitValue = trait
-        } else if (this.holdsCard.option.length > 0) {
+        } else if (this.cardName != "") {
             traitValue = SynergyTrait.card
         } else {
             traitValue = this.trait
@@ -496,7 +493,7 @@ class AddTrait extends React.Component<AddTraitProps> {
         const toAdd: SynTraitValue = {
             trait: traitValue as SynergyTrait,
             rating: this.rating,
-            cardName: this.holdsCard.option.length > 0 ? this.holdsCard.option : undefined,
+            cardName: this.cardName == "" ? undefined : this.cardName,
             house: this.house,
             player: this.player,
             cardTypes: this.cardTypes.slice(),
@@ -511,7 +508,7 @@ class AddTrait extends React.Component<AddTraitProps> {
 
     setTraitTo = (value: SynTraitValue, synergy: boolean) => {
 
-        this.holdsCard.option = value.cardName ?? ""
+        this.cardName = ""
         this.powersString = value.powersString
         this.player = value.player
         this.house = value.house
@@ -530,6 +527,9 @@ class AddTrait extends React.Component<AddTraitProps> {
         const {traits, synergies} = this.props
 
         const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
+
+        const cardNames = cardStore.cardNames.slice()
+        cardNames.push("")
 
         return (
             <Grid container={true} spacing={2} style={{backgroundColor: themeStore.aercViewBackground, marginBottom: spacing(2)}}>
@@ -748,15 +748,26 @@ class AddTrait extends React.Component<AddTraitProps> {
                         onChange={(event) => this.powersString = event.target.value}
                         fullWidth={true}
                     />
-                    <KeyMultiSearchSuggest
-                        selected={this.cardTraitsStore}
-                        placeholder={"Card Traits"}
+
+                    <Autocomplete
+                        multiple={true}
+                        // @ts-ignore
                         options={cardStore.cardTraits}
-                        fullWidth={true}
+                        value={this.cardTraitsStore.selectedValues}
+                        renderInput={(params) => <TextField {...params} label={"Card Traits"}/>}
+                        onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
+                            this.cardTraitsStore.update(newValue ?? [])
+                        }}
+                        size={"small"}
                     />
-                    <SingleCardSearchSuggest
-                        selected={this.holdsCard}
-                        placeholder={"Card"}
+
+                    <Autocomplete
+                        options={cardNames}
+                        value={this.cardName}
+                        renderInput={(params) => <TextField {...params} label={"Card"}/>}
+                        onChange={(event: ChangeEvent<{}>, newValue: string | null) => this.cardName = newValue ?? ""}
+                        clearOnEscape={true}
+                        size={"small"}
                     />
 
                     <Autocomplete
@@ -771,7 +782,7 @@ class AddTrait extends React.Component<AddTraitProps> {
                     <div style={{display: "flex"}}>
                         <IconButton
                             onClick={() => {
-                                this.holdsCard.option = ""
+                                this.cardName = ""
                                 this.powersString = ""
                                 this.player = SynTraitPlayer.ANY
                                 this.house = SynTraitHouse.anyHouse

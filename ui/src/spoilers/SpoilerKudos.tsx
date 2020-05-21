@@ -45,7 +45,7 @@ export class SpoilerKudos extends React.Component {
                                         <Typography variant={"body2"}>
                                             {"Mlvanbie & "}
                                             <Link
-                                                target={"_blank"}
+                                                target={"_blank"} rel={"noopener noreferrer"}
                                                 href={"https://discord.gg/zTKkzp3"}
                                             >
                                                 C.Æ.N.D.L.E. bot

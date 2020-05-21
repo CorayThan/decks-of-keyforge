@@ -1,12 +1,11 @@
 import axios, { AxiosResponse } from "axios"
-import { clone, sortBy, startCase } from "lodash"
+import { clone, sortBy } from "lodash"
 import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
 import { CardIdentifier, ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
-import { OptionType } from "../mui-restyled/KeyMultiSearchSuggest"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -42,10 +41,10 @@ export class CardStore {
     cardNameHyphenDelimitedLowercaseToCard?: Map<string, KCard>
 
     @observable
-    cardNames: OptionType[] = []
+    cardNames: string[] = []
 
     @observable
-    cardTraits: OptionType[] = []
+    cardTraits: string[] = []
 
     @observable
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
@@ -93,7 +92,7 @@ export class CardStore {
                 (filters.aercHistoryDate == null || card.extraCardInfo.publishedDate === filters.aercHistoryDate)
                 &&
                 includeCardOrSpoiler(filters, card)
-                    &&
+                &&
                 (filters.constraints.length === 0 || filters.constraints.every(constraint => {
                     const cardValue = extraInfo[constraint.property as keyof ExtraCardInfo] as number
                     const constraintValue = Number(constraint.value)
@@ -104,9 +103,9 @@ export class CardStore {
                     }
                 }))
                 &&
-                (filters.traits.length === 0 || filters.traits.some(trait => extraInfo.traits.some(extraCardTrait => trait === extraCardTrait.trait)))
+                (filters.trait == null || extraInfo.traits.some(infoTrait => infoTrait.trait === filters.trait))
                 &&
-                (filters.synergies.length === 0 || filters.synergies.some(trait => extraInfo.synergies.some(extraCardTrait => trait === extraCardTrait.trait)))
+                (filters.synergy == null || extraInfo.synergies.some(infoTrait => infoTrait.trait === filters.synergy))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&
@@ -195,9 +194,9 @@ export class CardStore {
                     if (card.traits != null) {
                         card.traits.forEach(trait => traits.add(trait))
                     }
-                    return {label: card.cardTitle, value: card.cardTitle}
+                    return card.cardTitle
                 })
-                this.cardTraits = Array.from(traits).map(trait => ({label: startCase(trait.toLowerCase()), value: trait}))
+                this.cardTraits = Array.from(traits)
                 this.allCards = basisForCards
                 log.debug(`End load all cards async`)
             })

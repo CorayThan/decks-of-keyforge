@@ -151,7 +151,7 @@ export const CardView = observer((props: CardViewProps) => {
                         <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                         <LinkButton
                             to={Routes.editExtraCardInfo(extraCardInfo.id)}
-                            target={"_blank"}
+                            target={"_blank"} rel={"noopener noreferrer"}
                         >
                             Edit
                         </LinkButton>

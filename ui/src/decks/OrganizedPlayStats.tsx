@@ -52,7 +52,7 @@ export const OrganizedPlayStats = observer((props: { deck: Deck, style?: React.C
                 >
                     <Link
                         href={`https://www.thecrucibletracker.com/decks/${keyforgeId}?utm_source=decksofkeyforge`}
-                        target={"_blank"}
+                        target={"_blank"} rel={"noopener noreferrer"}
                         style={{display: "flex", alignItems: "center", marginRight: spacing(1)}}
                     >
                         <img src={CrucibleTrackerLogo} style={{width: 36}}/>

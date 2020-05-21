@@ -8,11 +8,12 @@ import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
 import { Add, BarChart, Close, Delete, ExpandLess, ExpandMore, ViewList, ViewModule } from "@material-ui/icons"
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
+import { Autocomplete, ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
 import { computed } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { ChangeEvent } from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
 import { SortDirectionView } from "../../components/SortDirectionView"
@@ -30,8 +31,8 @@ import { House, houseValuesArray } from "../../houses/House"
 import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
-import { KeyMultiSearchSuggest, SelectedOptions } from "../../mui-restyled/KeyMultiSearchSuggest"
 import { Loader, LoaderSize } from "../../mui-restyled/Loader"
+import { SelectedOptions } from "../../mui-restyled/SelectedOptions"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
@@ -469,11 +470,17 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
                                                 return (
                                                     <div key={idx}>
-                                                        <KeyMultiSearchSuggest
-                                                            selected={selected}
-                                                            placeholder={"Any of these cards"}
+
+                                                        <Autocomplete
+                                                            multiple={true}
+                                                            // @ts-ignore
                                                             options={cardStore.cardNames}
-                                                            style={{flexGrow: 1}}
+                                                            value={selected.selectedValues}
+                                                            renderInput={(params) => <TextField {...params} label={"Any of these cards"}/>}
+                                                            onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
+                                                                selected.update(newValue ?? [])
+                                                            }}
+                                                            style={{marginTop: spacing(1)}}
                                                         />
                                                         <TextField
                                                             style={{minWidth: 80, marginTop: spacing(1), marginBottom: spacing(1)}}

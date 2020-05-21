@@ -74,7 +74,7 @@ export class SellersAndDevs extends React.Component {
                     <InfoListCard title={"File with all SAS and AERC"} infos={[
                         "Please use this instead of the API if it fits your needs to help conserve DoK's server resources.",
                         "I've created csv files (spreadsheets) with the deck info for all decks up to the time they were generated.",
-                        <Link href={"https://drive.google.com/drive/folders/1Yk4x221rqeIr32WrC5hkMXyBmWC311rS?usp=sharing"} target={"_blank"} key={"sas-link4"}>
+                        <Link href={"https://drive.google.com/drive/folders/1Yk4x221rqeIr32WrC5hkMXyBmWC311rS?usp=sharing"} target={"_blank"} rel={"noopener noreferrer"} key={"sas-link4"}>
                             Folder with deck csv files
                         </Link>,
                         "Like with the API, if you use this please attribute decksofkeyforge.com on your site / material.",

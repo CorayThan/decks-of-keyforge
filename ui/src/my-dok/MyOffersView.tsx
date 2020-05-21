@@ -140,7 +140,7 @@ const OffersList = (props: { name: string, noneMessage: string, offers: OffersFo
                                     paddingTop: spacing(2)
                                 }}
                             >
-                                <UnstyledLink to={Routes.deckPage(offersForDeck.deck.id)} target={"_blank"}>
+                                <UnstyledLink to={Routes.deckPage(offersForDeck.deck.id)} target={"_blank"} rel={"noopener noreferrer"}>
                                     <Typography variant={"h6"}>
                                         {offersForDeck.deck.name}
                                     </Typography>

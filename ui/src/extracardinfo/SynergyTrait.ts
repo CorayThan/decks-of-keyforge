@@ -134,7 +134,7 @@ export enum SynergyTrait {
 
     lowExpectedAmber = "lowExpectedAmber", // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
 
-    good = "good stuff",
+    good = "good",
 
     // no synergy traits
     card = "card",

@@ -24,7 +24,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.filter.ShallowEtagHeaderFilter
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -97,9 +96,6 @@ class KeyswapApplication() {
         threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
         return threadPoolTaskScheduler
     }
-
-    @Bean
-    fun shallowEtagHeaderFilter() = ShallowEtagHeaderFilter()
 
 }
 

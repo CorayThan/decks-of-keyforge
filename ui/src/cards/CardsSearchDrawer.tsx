@@ -3,11 +3,12 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import { Close, Image, ViewList, ViewModule } from "@material-ui/icons"
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
+import { Autocomplete, ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
-import { range } from "lodash"
+import { range, startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { ChangeEvent } from "react"
 import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -16,11 +17,10 @@ import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "../decks/search/ConstraintDropdowns"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
-import { synergyOptions, SynergyTrait, traitOptions } from "../extracardinfo/SynergyTrait"
+import { SynergyTrait, validSynergies, validTraits } from "../extracardinfo/SynergyTrait"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { KeyMultiSearchSuggest, SelectedOptions } from "../mui-restyled/KeyMultiSearchSuggest"
 import { KeyMultiSelect, SelectedValues } from "../mui-restyled/KeyMultiSelect"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
@@ -45,8 +45,6 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedRarities = new SelectedValues<Rarity>(this.props.filters.rarities)
     selectedPowers = new SelectedValues<number>(this.props.filters.powers)
     selectedAmbers = new SelectedValues<number>(this.props.filters.ambers)
-    selectedTraits = new SelectedOptions(this.props.filters.traits)
-    selectedSynergies = new SelectedOptions(this.props.filters.synergies)
     selectedSortStore = new CardSortSelectStore(this.props.filters.sort)
     selectedExpansion = new SelectedExpansion(this.props.filters.expansion == null ? undefined : [this.props.filters.expansion])
     selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
@@ -63,8 +61,6 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.rarities = this.selectedRarities.selectedValues
         filters.powers = this.selectedPowers.selectedValues
         filters.ambers = this.selectedAmbers.selectedValues
-        filters.traits = this.selectedTraits.selectedValues as SynergyTrait[]
-        filters.synergies = this.selectedSynergies.selectedValues as SynergyTrait[]
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
         filters.expansion = this.selectedExpansion.currentExpansion()
         filters.thisExpansionOnly = this.selectedExpansion.onlyThisExpansion
@@ -177,21 +173,29 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                             />
                         </ListItem>
                         <ListItem>
-                            <KeyMultiSearchSuggest
-                                placeholder={"Traits"}
-                                selected={this.selectedTraits}
-                                options={traitOptions}
+                            <Autocomplete
+                                options={Utils.arrPlus(validTraits, "") as (SynergyTrait | "")[]}
+                                value={filters.trait ?? ""}
+                                renderInput={(params) => <TextField {...params} label={"Trait"}/>}
+                                renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
+                                onChange={(event: ChangeEvent<{}>, newValue: SynergyTrait | "" | null) => {
+                                    filters.trait = newValue == "" || newValue == null ? undefined : newValue
+                                }}
                                 fullWidth={true}
-                                style={{maxWidth: 311}}
+                                size={"small"}
                             />
                         </ListItem>
                         <ListItem>
-                            <KeyMultiSearchSuggest
-                                placeholder={"Synergies"}
-                                selected={this.selectedSynergies}
-                                options={synergyOptions}
+                            <Autocomplete
+                                options={Utils.arrPlus(validSynergies, "") as (SynergyTrait | "")[]}
+                                value={filters.synergy ?? ""}
+                                renderInput={(params) => <TextField {...params} label={"Synergy"}/>}
+                                renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
+                                onChange={(event: ChangeEvent<{}>, newValue: SynergyTrait | "" | null) => {
+                                    filters.synergy = newValue == "" || newValue == null ? undefined : newValue
+                                }}
                                 fullWidth={true}
-                                style={{maxWidth: 311}}
+                                size={"small"}
                             />
                         </ListItem>
                         <ListItem>

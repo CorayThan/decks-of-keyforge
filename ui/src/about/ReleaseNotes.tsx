@@ -45,6 +45,20 @@ export class ReleaseNotes extends React.Component {
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
+                    releaseNumber={"5.2"}
+                    date={"5/21/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Bug Fixes",
+                            note: "I've been working on fixing a lot of bugs in the system, and upgrading versions of libraries it uses. " +
+                                "I don't normally create a release note for bug fixes, but wanted to add one here as " +
+                                "there are quite a few, so there could be bugs with the bug fixes. Let me know if anyone experiences " +
+                                "any issues."
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"5.1"}
                     date={"5/16/2020"}
                     expanded={true}
@@ -757,14 +771,14 @@ export class ReleaseNotes extends React.Component {
                     "only. Also fixed some issues, like the Thief trait not working.",
                     "Highlights of the update for AoA: ",
                     <List>
-                        <ListItem><Typography>Foozle 2 -> 3</Typography></ListItem>
-                        <ListItem><Typography>Into the Fray 3 -> 1.5</Typography></ListItem>
-                        <ListItem><Typography>Onyx Knight 2 -> 3</Typography></ListItem>
-                        <ListItem><Typography>Archimedes 2.5 -> 3.5</Typography></ListItem>
-                        <ListItem><Typography>Lion Bautrem 2 -> 3</Typography></ListItem>
-                        <ListItem><Typography>Opal Knight 2 -> 3</Typography></ListItem>
-                        <ListItem><Typography>Panpaca, Anga 1.5 -> 2.5</Typography></ListItem>
-                        <ListItem><Typography>Po's Pixies 2 -> 3</Typography></ListItem>
+                        <ListItem><Typography>Foozle 2 {"->"} 3</Typography></ListItem>
+                        <ListItem><Typography>Into the Fray 3 {"->"} 1.5</Typography></ListItem>
+                        <ListItem><Typography>Onyx Knight 2 {"->"} 3</Typography></ListItem>
+                        <ListItem><Typography>Archimedes 2.5 {"->"} 3.5</Typography></ListItem>
+                        <ListItem><Typography>Lion Bautrem 2 {"->"} 3</Typography></ListItem>
+                        <ListItem><Typography>Opal Knight 2 {"->"} 3</Typography></ListItem>
+                        <ListItem><Typography>Panpaca, Anga 1.5 {"->"} 2.5</Typography></ListItem>
+                        <ListItem><Typography>Po's Pixies 2 {"->"} 3</Typography></ListItem>
                     </List>
                 ]}/>
                 <ReleaseNote releaseNumber={"3.17"} date={"6/28/2019"} expanded={true} releaseNotes={[
@@ -843,72 +857,72 @@ export class ReleaseNotes extends React.Component {
                     "The following are the changes to SAS ratings: ",
                     (
                         <List>
-                            <ListItem><Typography>Brothers in Battle 2.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Punch 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Banner of Battle 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Pile of Skulls 2 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Bilgum Avalanche 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Bumpsy 2.5 -> 3</Typography></ListItem>
-                            <ListItem><Typography>Ganger Chieftan 2 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Grenade Snib 2 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Lomir Flamefist 3 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Looter Goblin 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Rogue Ogre 2.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Troll 3 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Valdr 1.5 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Phoenix Heart 1 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>A Fair Game 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Control the Weak 3 -> 4</Typography></ListItem>
-                            <ListItem><Typography>Tendrils of Pain 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Mind Barb 2 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Three Fates 3.5 -> 3</Typography></ListItem>
-                            <ListItem><Typography>Key to Dis 3 -> 3.5</Typography></ListItem>
-                            <ListItem><Typography>Ember Imp 2 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Succubus 2 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Master of 2/3 3 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Collar of Subordination 3.5 -> 3</Typography></ListItem>
-                            <ListItem><Typography>Flame-Wreathed 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Effervescent Principle 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Knowledge is Power 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Phase Shift 3 -> 3.5</Typography></ListItem>
-                            <ListItem><Typography>Scrambler Storm 3 -> 3.5</Typography></ListItem>
-                            <ListItem><Typography>Crazy Killing Machine 1.5 -> 1</Typography></ListItem>
-                            <ListItem><Typography>The Howling Pit 1.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Brain Eater 2.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Ganymede Archivist 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Titan Mechanic 2.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Vespilon Theorist 2.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Experimental Therapy 1 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Martians Make Bad Allies 1.5 -> 1</Typography></ListItem>
-                            <ListItem><Typography>Sample Collection 1 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Shatter Storm 1.5 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Feeding Pit 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Invasion Portal 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Ether Spider 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Mindwarper 1.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Phylyx the Disintegrator 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Brain Stem Antenna 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Charge! 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Clear Mind 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Mighty Lance 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Oath of Poverty 1.5 -> 1</Typography></ListItem>
-                            <ListItem><Typography>Shield of Justice 1 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Terms of Redress 1.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>The Harder They Come 1.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Horseman of Famine 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Jehu the Bureaucrat 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Staunch Knight 1 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Gatekeeper 1.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Routine Job 3 -> 3.5</Typography></ListItem>
-                            <ListItem><Typography>Treasure Map 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Noddy the Thief 2.5 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Shadow Self 2.5 -> 3</Typography></ListItem>
-                            <ListItem><Typography>Umbra 1.5 -> 1</Typography></ListItem>
-                            <ListItem><Typography>Duskrunner 1 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Grasping Vines 3 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Lifeweb 2 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Perilous Wild 3 -> 2</Typography></ListItem>
-                            <ListItem><Typography>Giant Sloth 2 -> 1.5</Typography></ListItem>
+                            <ListItem><Typography>Brothers in Battle 2.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Punch 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Banner of Battle 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Pile of Skulls 2 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Bilgum Avalanche 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Bumpsy 2.5 {"->"} 3</Typography></ListItem>
+                            <ListItem><Typography>Ganger Chieftan 2 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Grenade Snib 2 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Lomir Flamefist 3 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Looter Goblin 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Rogue Ogre 2.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Troll 3 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Valdr 1.5 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>Phoenix Heart 1 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>A Fair Game 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Control the Weak 3 {"->"} 4</Typography></ListItem>
+                            <ListItem><Typography>Tendrils of Pain 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Mind Barb 2 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Three Fates 3.5 {"->"} 3</Typography></ListItem>
+                            <ListItem><Typography>Key to Dis 3 {"->"} 3.5</Typography></ListItem>
+                            <ListItem><Typography>Ember Imp 2 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Succubus 2 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Master of 2/3 3 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Collar of Subordination 3.5 {"->"} 3</Typography></ListItem>
+                            <ListItem><Typography>Flame-Wreathed 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Effervescent Principle 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Knowledge is Power 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Phase Shift 3 {"->"} 3.5</Typography></ListItem>
+                            <ListItem><Typography>Scrambler Storm 3 {"->"} 3.5</Typography></ListItem>
+                            <ListItem><Typography>Crazy Killing Machine 1.5 {"->"} 1</Typography></ListItem>
+                            <ListItem><Typography>The Howling Pit 1.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Brain Eater 2.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Ganymede Archivist 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Titan Mechanic 2.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Vespilon Theorist 2.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Experimental Therapy 1 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>Martians Make Bad Allies 1.5 {"->"} 1</Typography></ListItem>
+                            <ListItem><Typography>Sample Collection 1 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>Shatter Storm 1.5 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Feeding Pit 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Invasion Portal 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Ether Spider 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Mindwarper 1.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Phylyx the Disintegrator 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Brain Stem Antenna 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Charge! 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Clear Mind 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Mighty Lance 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Oath of Poverty 1.5 {"->"} 1</Typography></ListItem>
+                            <ListItem><Typography>Shield of Justice 1 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>Terms of Redress 1.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>The Harder They Come 1.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Horseman of Famine 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Jehu the Bureaucrat 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Staunch Knight 1 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>Gatekeeper 1.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Routine Job 3 {"->"} 3.5</Typography></ListItem>
+                            <ListItem><Typography>Treasure Map 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Noddy the Thief 2.5 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Shadow Self 2.5 {"->"} 3</Typography></ListItem>
+                            <ListItem><Typography>Umbra 1.5 {"->"} 1</Typography></ListItem>
+                            <ListItem><Typography>Duskrunner 1 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Grasping Vines 3 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Lifeweb 2 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Perilous Wild 3 {"->"} 2</Typography></ListItem>
+                            <ListItem><Typography>Giant Sloth 2 {"->"} 1.5</Typography></ListItem>
                         </List>
                     ),
                     "Also, the system for how AERC estimates artifact control has been adjusted. Now hard artifact removal like Sneklifter, or " +
@@ -977,15 +991,15 @@ export class ReleaseNotes extends React.Component {
                     "Some of the major card rating changes include (keep in mind synergies can make the value in a deck go up or down):",
                     (
                         <List>
-                            <ListItem><Typography>Relentless Assault 1 -> 3</Typography></ListItem>
-                            <ListItem><Typography>Hebe the Huge 3 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Key Hammer 2 -> 0.5</Typography></ListItem>
-                            <ListItem><Typography>Restringuntus 1 -> 3</Typography></ListItem>
-                            <ListItem><Typography>Emp Blast 3 -> 1.5</Typography></ListItem>
-                            <ListItem><Typography>Gatekeeper 4 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Total Recall 3 -> 1</Typography></ListItem>
-                            <ListItem><Typography>Safe Place 1 -> 2.5</Typography></ListItem>
-                            <ListItem><Typography>Save the Pack 2 -> 0.5</Typography></ListItem>
+                            <ListItem><Typography>Relentless Assault 1 {"->"} 3</Typography></ListItem>
+                            <ListItem><Typography>Hebe the Huge 3 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Key Hammer 2 {"->"} 0.5</Typography></ListItem>
+                            <ListItem><Typography>Restringuntus 1 {"->"} 3</Typography></ListItem>
+                            <ListItem><Typography>Emp Blast 3 {"->"} 1.5</Typography></ListItem>
+                            <ListItem><Typography>Gatekeeper 4 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Total Recall 3 {"->"} 1</Typography></ListItem>
+                            <ListItem><Typography>Safe Place 1 {"->"} 2.5</Typography></ListItem>
+                            <ListItem><Typography>Save the Pack 2 {"->"} 0.5</Typography></ListItem>
                         </List>
                     ),
                     "Many more have been changed by 0.5 or 1 point. You can see the previous spreadsheet in the 2.0 release notes, and compare to this one.",

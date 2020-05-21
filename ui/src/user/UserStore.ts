@@ -2,8 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios"
 import { computed, observable } from "mobx"
 import { latestVersion } from "../about/ReleaseNotes"
 import { deckListingStore } from "../auctions/DeckListingStore"
-import { etagResponseErrorInterceptor } from "../config/EtagCache"
-import { axiosWithoutErrors, axiosWithoutInterceptors, HttpConfig } from "../config/HttpConfig"
+import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
@@ -40,7 +39,7 @@ export class UserStore {
         if (!keyLocalStorage.hasAuthKey()) {
             return
         }
-        HttpConfig.setAuthHeaders()
+        HttpConfig.setupAxios()
         this.loginInProgress = true
         axiosWithoutErrors
             .get(UserStore.SECURE_CONTEXT + "/your-user")
@@ -52,10 +51,7 @@ export class UserStore {
             })
             .catch((error: AxiosError) => {
                 let logout = true
-                if (error.response && error.response.status === 304) {
-                    logout = false
-                    etagResponseErrorInterceptor(error)
-                } else if (
+                if (
                     // 401 or 403 means there is no logged in user
                     (error.response && (error.response.status === 401 || error.response.status === 403)) ||
                     (error.message && error.message.includes("JWT signature does not match "))
@@ -111,7 +107,7 @@ export class UserStore {
 
     login = (userLogin: UserLogin) => {
         this.loginInProgress = true
-        axiosWithoutInterceptors
+        axiosWithoutErrors
             .post(UserStore.CONTEXT + "/login", userLogin)
             .then((response: AxiosResponse) => {
                 log.info("Logged in!")
@@ -213,7 +209,7 @@ export class UserStore {
         userDeckStore.userDecks = undefined
         deckStore.refreshDeckSearch()
         keyLocalStorage.clear()
-        HttpConfig.clearAuthHeaders()
+        HttpConfig.setupAxios()
     }
 
     loggedIn = () => !!this.user

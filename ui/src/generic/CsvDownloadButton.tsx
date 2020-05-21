@@ -30,7 +30,7 @@ export const CsvDownloadButton = observer((props: { name: string, data?: CsvData
     return (
         <CSVLink
             data={dataEncoded}
-            target={"_blank"}
+            target={"_blank"} rel={"noopener noreferrer"}
             filename={`dok-${name}-${Utils.nowDateString()}.csv`}
 
         >

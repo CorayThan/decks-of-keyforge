@@ -286,7 +286,7 @@ export const preludeToAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "Less immediately impactful than {{cardName: Ganger Chieftain}}, this seems like a more limited and more vulnerable {{cardName: John Smyth}} instead"
+                    text: "Less immediately impactful than {{cardName: Ganger Chieftain}}, this seems like a more limited and more vulnerable {{cardName: “John Smyth”}} instead"
                 },
                 {
                     type: EntryType.PARAGRAPH,
@@ -1417,7 +1417,7 @@ export const preludeToAscension: Article = {
             entries: [
                 {
                     type: EntryType.PARAGRAPH,
-                    text: "And here's our new version of {{cardName: Bait & Switch}}. It's clearly a downgrade; doesn't even allow you to discard your other shadows cards which will stay stuck in your hand."
+                    text: "And here's our new version of {{cardName: Bait and Switch}}. It's clearly a downgrade; doesn't even allow you to discard your other shadows cards which will stay stuck in your hand."
                 },
                 {
                     type: EntryType.PARAGRAPH,

@@ -11,10 +11,10 @@ export class PatronButton extends React.Component<{ size?: "small" | "medium" | 
         return (
             <LinkButton
                 color={"primary"}
-                rel="noopener"
                 variant={"contained"}
                 href={"https://www.patreon.com/decksofkeyforge"}
                 target={"_blank"}
+                rel={"noopener noreferrer"}
                 size={this.props.size}
             >
                 <PatreonIcon primary={false}/>

@@ -7,7 +7,7 @@ export class TwitterButton extends React.Component<{style?: React.CSSProperties}
         return (
             <ButtonBase
                 href={"https://twitter.com/CorayThan"}
-                target={"_blank"}
+                target={"_blank"} rel={"noopener noreferrer"}
                 style={{borderRadius: 4, ...this.props.style}}
             >
                 <TwitterIcon/>

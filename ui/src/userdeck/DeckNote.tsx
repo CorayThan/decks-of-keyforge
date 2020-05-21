@@ -8,8 +8,8 @@ import { Save } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
@@ -122,11 +122,10 @@ export class InlineDeckNote extends React.Component<InlineDeckNoteProps> {
     render() {
         const {id} = this.props
 
-        if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.userDecks == null) {
+        if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.userDecks == null || !keyLocalStorage.genericStorage.viewNotes) {
             return null
         }
         const notesForDeck = userDeckStore.userDecks?.get(id)?.notes ?? ""
-        log.debug("Notes for deck found to be: " + notesForDeck)
         return <InlineDeckNoteLoaded id={id} notes={notesForDeck}/>
     }
 }

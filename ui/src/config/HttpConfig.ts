@@ -1,21 +1,15 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { messageStore } from "../ui/MessageStore"
-import { etagRequestInterceptor, etagResponseErrorInterceptor, etagResponseInterceptor } from "./EtagCache"
 import { keyLocalStorage } from "./KeyLocalStorage"
 import { log } from "./Utils"
 
-export const axiosWithoutInterceptors = axios.create()
-export const axiosWithoutErrors = axios.create()
+export let axiosWithoutErrors = axios.create()
 
 export class HttpConfig {
 
     static API = "/api"
 
     static setupAxios = () => {
-        axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.responseErrorInterceptor)
-        axios.interceptors.response.use(etagResponseInterceptor, etagResponseErrorInterceptor)
-        axiosWithoutErrors.interceptors.response.use(HttpConfig.responseInterceptor)
-        axios.interceptors.request.use(etagRequestInterceptor)
         let timezoneOffset = new Date().getTimezoneOffset() * -1
         if (timezoneOffset == null || isNaN(timezoneOffset)) {
             log.warn("No timezone offset available.")
@@ -24,28 +18,22 @@ export class HttpConfig {
             log.debug(`Time zone offset is ${timezoneOffset}`)
         }
         axios.defaults.headers.common.Timezone = timezoneOffset
-    }
 
-    static setAuthHeader = (authHeader?: string) => {
-        axios.defaults.headers.common.Authorization = authHeader
-    }
-
-    static setAuthHeaders = () => {
         const token = keyLocalStorage.findAuthKey()
         if (token) {
-            HttpConfig.setAuthHeader(token)
+            axios.defaults.headers.common.Authorization = token
         }
-    }
 
-    static clearAuthHeaders = () => {
-        HttpConfig.setAuthHeader(undefined)
+        axiosWithoutErrors = axios.create()
+        axios.interceptors.response.use(HttpConfig.responseInterceptor, HttpConfig.responseErrorInterceptor)
+        axiosWithoutErrors.interceptors.response.use(HttpConfig.responseInterceptor)
     }
 
     private static responseInterceptor = (response: AxiosResponse) => {
         const authHeader = response.headers.authorization
         if (authHeader) {
             keyLocalStorage.saveAuthKey(authHeader)
-            HttpConfig.setAuthHeaders()
+            HttpConfig.setupAxios()
         }
         return response
     }
@@ -59,16 +47,19 @@ export class HttpConfig {
         }
         if (axios.isCancel(error)) {
             log.info("Canceled request")
+            return
         } else if (code === 401) {
             messageStore.setErrorMessage("You are unauthorized to make this request.")
+        } else if (code === 413 && error.config.url?.includes("read-deck-image")) {
+            messageStore.setErrorMessage("Your image is too large, please reduce its size.")
         } else if (code === 417) {
             const message = error.response && error.response.data && error.response.data.message
             messageStore.setErrorMessage(message)
-        } else if (code === 304) {
-            return etagResponseErrorInterceptor(error)
         } else {
             messageStore.setRequestErrorMessage()
         }
+
+        log.debug(`Reject the error with code ${code} message: ${error.message}`)
 
         return Promise.reject(error)
     }

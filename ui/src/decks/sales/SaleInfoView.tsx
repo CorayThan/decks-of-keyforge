@@ -214,7 +214,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     {!externalLink ? null : (
                         <div style={{margin: spacing(2), marginBottom: 0}}>
                             <Typography variant={"subtitle2"}>External listing — Be careful using this link!</Typography>
-                            <a href={externalLink} target={"_blank"}><Typography>{externalLink}</Typography></a>
+                            <a href={externalLink} target={"_blank"} rel={"noopener noreferrer"}><Typography>{externalLink}</Typography></a>
                             <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}

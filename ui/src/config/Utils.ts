@@ -3,6 +3,7 @@ import { getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
 import * as loglevel from "loglevel"
+import { v4 as uuidv4 } from "uuid"
 
 export const log = loglevel
 log.setDefaultLevel("debug")
@@ -21,9 +22,19 @@ export class Utils {
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
+    static uuid = () => {
+        return uuidv4()
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]
+    }
+
+    static arrPlus = <T, O>(array: T[], add: O): (T | O)[] => {
+        const newArr: (T | O)[] = array.slice()
+        newArr.push(add)
+        return newArr
     }
 
     static validateEmail = (email: string) => {

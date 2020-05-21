@@ -71,7 +71,7 @@ export class SasCouncil extends React.Component {
                                 <Typography variant={"body2"}>
                                     Dave is an active community member who has consistently lent his time and thoughts to help improve SAS.
                                     He isn't shy about expressing his opinion, which is of great use when Nathan does something silly. He is a member
-                                    of <Link href={"https://reapout.com"} target={"_blank"}>Team Reapout</Link>
+                                    of <Link href={"https://reapout.com"} target={"_blank"} rel={"noopener noreferrer"}>Team Reapout</Link>
                                 </Typography>
                             }
                         />,
@@ -83,7 +83,7 @@ export class SasCouncil extends React.Component {
                                 <Typography variant={"body2"}>
                                     Aurore helps provide an outside perspective, as well as helping rate and evaluate cards for SAS. She is a member of
                                     the Sanctumonius community, and creator
-                                    of <Link href={"https://timeshapers.com"} target={"_blank"}>timeshapers.com</Link>
+                                    of <Link href={"https://timeshapers.com"} target={"_blank"} rel={"noopener noreferrer"}>timeshapers.com</Link>
                                 </Typography>
                             }
                         />,

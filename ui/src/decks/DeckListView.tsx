@@ -94,6 +94,11 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
     }
 
     render() {
+
+        // Observe changes
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const deckPageId = deckStore.deckPageId
+
         log.debug("Seller version by props? " + this.props.sellerView)
         const {decks, sellerView} = this.props
         const displayPrices = !!decks[0].deckSaleInfo
@@ -363,6 +368,11 @@ const findBuyItNowForDeck = (deck: Deck): number | null => {
 @observer
 export class DeckListView extends React.Component<DeckListViewProps> {
     render() {
+
+        // Observe changes
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const deckPageId = deckStore.deckPageId
+
         if (this.props.sellerView) {
             return <DeckTableView {...this.props}/>
         }

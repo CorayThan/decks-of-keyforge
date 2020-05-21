@@ -35,12 +35,6 @@ export class CardFilters {
         } else if (queryObject.ambers != null) {
             queryObject.ambers = queryObject.ambers.map((val: string) => Number(val))
         }
-        if (typeof queryObject.traits === "string") {
-            queryObject.traits = [queryObject.traits]
-        }
-        if (typeof queryObject.synergies === "string") {
-            queryObject.synergies = [queryObject.synergies]
-        }
         if (queryObject.expansions != null) {
             if (queryObject.expansions.constructor === Array) {
                 queryObject.expansions = queryObject.expansions.map((expansion: string) => Number(expansion))
@@ -88,8 +82,10 @@ export class CardFilters {
     houses: House[] = []
     powers: number[] = []
     ambers: number[] = []
-    traits: SynergyTrait[] = []
-    synergies: SynergyTrait[] = []
+    @observable
+    trait?: SynergyTrait
+    @observable
+    synergy?: SynergyTrait
     expansion?: BackendExpansion
     thisExpansionOnly?: boolean
     constraints: Constraint[] = []
@@ -111,9 +107,9 @@ export class CardFilters {
         this.houses = []
         this.powers = []
         this.ambers = []
-        this.traits = []
+        this.trait = undefined
         this.constraints = []
-        this.synergies = []
+        this.synergy = undefined
         this.expansion = undefined
         this.thisExpansionOnly = undefined
         this.sort = undefined

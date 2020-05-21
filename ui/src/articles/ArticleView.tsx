@@ -242,7 +242,7 @@ const ArticleExternalLink = (props: { externalLink: string, text: string }) => (
     <Link
         color={"primary"}
         href={props.externalLink}
-        target={"_blank"}
+        target={"_blank"} rel={"noopener noreferrer"}
         style={{marginBottom: spacing(2)}}
     >
         {props.text}
@@ -291,6 +291,9 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
                 pushText = textToParse.substring(0, nextCardIdx)
                 const cardName = textToParse.substring(nextCardIdx + 12, endIdx)
                 const card = cardStore.fullCardFromCardName(cardName)!
+                if (card == null) {
+                    throw new Error("No card with name " + cardName)
+                }
                 pushNode = (
                     <div key={cardName}>
                         <CardAsLine card={card} cardActualHouse={card.house!} marginTop={1} hideRarity={true}/>

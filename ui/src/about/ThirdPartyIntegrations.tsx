@@ -57,7 +57,7 @@ const DisplayIntegration = (props: { name: string, description: string, icon?: R
         props.description
     ]
     if (props.url) {
-        infos.push(<Link href={props.url} target={"_blank"} key={"url"}>{props.urlName ? props.urlName : props.url}</Link>)
+        infos.push(<Link href={props.url} target={"_blank"} rel={"noopener noreferrer"} key={"url"}>{props.urlName ? props.urlName : props.url}</Link>)
     }
     if (props.discord) {
         infos.push(<DiscordUser discord={props.discord}/>)

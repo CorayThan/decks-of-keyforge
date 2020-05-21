@@ -12,7 +12,7 @@ export class DiscordButton extends React.Component<{ style?: React.CSSProperties
                 variant={"contained"}
                 color={"primary"}
                 href={decksOfKeyForgeDiscord}
-                target={"_blank"}
+                target={"_blank"} rel={"noopener noreferrer"}
                 style={{borderRadius: 4, ...this.props.style, paddingTop: 4, paddingBottom: 4}}
                 size={"large"}
             >
@@ -28,7 +28,7 @@ export class DiscordNamedButton extends React.Component<{ name: string, link: st
         return (
             <Button
                 href={link}
-                target={"_blank"}
+                target={"_blank"} rel={"noopener noreferrer"}
                 style={style}
             >
                 <DiscordIcon height={24} full={false} style={{marginRight: spacing(1)}}/>

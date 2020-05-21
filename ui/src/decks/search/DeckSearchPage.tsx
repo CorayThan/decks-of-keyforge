@@ -110,11 +110,11 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
     }
 
     render() {
-        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
+        const {deckPage, deckPageId, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
         const {filters, history, location} = this.props
 
         let decksToDisplay = null
-        if (deckPage != null) {
+        if (deckPage != null && deckPageId != null) {
             if (deckPage.decks.length === 0) {
                 decksToDisplay = (
                     <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
