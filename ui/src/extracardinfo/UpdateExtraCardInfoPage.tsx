@@ -13,7 +13,6 @@ import {
     Radio,
     RadioGroup,
     TextField,
-    Tooltip,
     Typography
 } from "@material-ui/core"
 import { ChevronLeft, ChevronRight, Close, Delete, Edit, Save } from "@material-ui/icons"
@@ -27,11 +26,9 @@ import { CardView } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { CardType } from "../cards/CardType"
 import { KCard } from "../cards/KCard"
-import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
-import { BackendExpansion } from "../expansions/Expansions"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -39,6 +36,7 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SelectedOptions } from "../mui-restyled/SelectedOptions"
 import { Spoiler } from "../spoilers/Spoiler"
+import { spoilerStore } from "../spoilers/SpoilerStore"
 import { SpoilerView } from "../spoilers/SpoilerView"
 import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
 import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
@@ -143,8 +141,6 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     // eslint-disable-next-line
     // @ts-ignore
     infoId: string
-    card?: KCard
-    spoiler?: Spoiler
 
     constructor(props: UpdateExtraCardInfoProps) {
         super(props)
@@ -160,8 +156,6 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     reset = (resetTo: ExtraCardInfo) => {
         const extraCardInfo = resetTo == null ? this.props.extraCardInfo : resetTo
         this.infoId = extraCardInfo.id
-        this.card = this.props.card
-        this.spoiler = this.props.spoiler
 
         this.amberControl = extraCardInfo.amberControl.toString()
         this.expectedAmber = extraCardInfo.expectedAmber.toString()
@@ -188,7 +182,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.traits = extraCardInfo.traits
         this.synergies = extraCardInfo.synergies
 
-        uiStore.setTopbarValues("Edit " + this.card?.cardTitle ?? this.spoiler?.cardTitle, "Edit", "")
+        uiStore.setTopbarValues("Edit " + this.props.card?.cardTitle ?? this.props.spoiler?.cardTitle, "Edit", "")
     }
 
     save = async () => {
@@ -227,17 +221,28 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     }
 
     render() {
-        const wcOnly = keyLocalStorage.genericStorage.wcOnly
-        const filteredCards = cardStore.allCards
-            .filter(card => wcOnly ? card.extraCardInfo.cardNumbers.length === 1 && card.extraCardInfo.cardNumbers.find(cardNum => cardNum.expansion === BackendExpansion.MASS_MUTATION) : true)
+        const {card, spoiler} = this.props
         let nextId
         let prevId
-        if (this.card != null && filteredCards.length > 0 && this.props.extraCardInfo != null) {
-            const findWith = filteredCards.find(card => card.id === this.card!.id)
-            if (findWith != null) {
-                const idx = filteredCards.indexOf(findWith)
-                nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
-                prevId = idx > 0 ? filteredCards[idx - 1].extraCardInfo.id : undefined
+        if (card != null) {
+            const filteredCards = cardStore.allCards
+            if (filteredCards.length > 0 && this.props.extraCardInfo != null) {
+                const findWith = filteredCards.find(filterCard => filterCard.id === card.id)
+                if (findWith != null) {
+                    const idx = filteredCards.indexOf(findWith)
+                    nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
+                    prevId = idx > 0 ? filteredCards[idx - 1].extraCardInfo.id : undefined
+                }
+            }
+        } else if (spoiler != null) {
+            const filteredSpoilers = spoilerStore.spoilers?.filter(filterSpoiler => !filterSpoiler.reprint)
+            if (filteredSpoilers != null && filteredSpoilers.length > 0) {
+                const findWith = filteredSpoilers.find(filterSpoiler => filterSpoiler.id === spoiler.id)
+                if (findWith != null) {
+                    const idx = filteredSpoilers.indexOf(findWith)
+                    nextId = idx > -1 && idx < filteredSpoilers.length - 1 ? filteredSpoilers[idx + 1].id : undefined
+                    prevId = idx > 0 ? filteredSpoilers[idx - 1].id : undefined
+                }
             }
         }
         return (
@@ -248,39 +253,37 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                     justifyContent: "center"
                 }}
             >
-                {this.card && (
+                {card && (
                     <div>
-                        <CardView card={this.card}/>
+                        <CardView card={card}/>
                     </div>
                 )}
-                {this.spoiler && (
+                {spoiler && (
                     <div>
-                        <SpoilerView spoiler={this.spoiler}/>
+                        <SpoilerView spoiler={spoiler}/>
                     </div>
                 )}
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
                             <Typography variant={"h4"}>
-                                {this.card?.cardTitle ?? this.spoiler?.cardTitle}'s AERC
+                                {card?.cardTitle ?? spoiler?.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
-                            <Tooltip title={"Worlds Collide Only"}>
-                                <Checkbox
-                                    style={{marginLeft: spacing(2)}}
-                                    checked={wcOnly}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => keyLocalStorage.updateGenericStorage({wcOnly: event.target.checked})}
-                                />
-                            </Tooltip>
                             {prevId != null && (
-                                <UnstyledLink to={Routes.editExtraCardInfo(prevId)} style={{marginLeft: spacing(2)}}>
+                                <UnstyledLink
+                                    to={card != null ? Routes.editExtraCardInfo(prevId) : Routes.editSpoilerAerc(prevId)}
+                                    style={{marginLeft: spacing(2)}}
+                                >
                                     <IconButton>
                                         <ChevronLeft/>
                                     </IconButton>
                                 </UnstyledLink>
                             )}
                             {nextId != null && (
-                                <UnstyledLink to={Routes.editExtraCardInfo(nextId)} style={{marginLeft: spacing(2)}}>
+                                <UnstyledLink
+                                    to={card != null ? Routes.editExtraCardInfo(nextId) : Routes.editSpoilerAerc(nextId)}
+                                    style={{marginLeft: spacing(2)}}>
                                     <IconButton>
                                         <ChevronRight/>
                                     </IconButton>

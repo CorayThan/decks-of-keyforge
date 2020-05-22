@@ -19,7 +19,6 @@ type DeckViewType = "graphs" | "grid" | "table"
 
 interface GenericStorage {
     hideSpoilerKudosThree?: boolean
-    wcOnly?: boolean
     showMoreDeckSearchOptions?: boolean
     userRows?: number
     agreedToSpoilerCreatureRules?: boolean

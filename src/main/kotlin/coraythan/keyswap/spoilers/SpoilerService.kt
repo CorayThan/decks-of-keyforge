@@ -51,7 +51,7 @@ class SpoilerService(
         }
 
         val preexistingSpoilers = if (improvedCardNumber != null) spoilerRepo.findByCardNumberAndExpansion(improvedCardNumber, spoiler.expansion) else null
-        val preexistingName = preexistingSpoilers?.first()?.cardTitle
+        val preexistingName = preexistingSpoilers?.firstOrNull()?.cardTitle
 
         if (spoiler.id == -1L && improvedCardNumber != null) {
             if (!preexistingSpoilers.isNullOrEmpty()) throw IllegalStateException("A spoiler with id $improvedCardNumber and expansion ${spoiler.expansion} already exists.")
