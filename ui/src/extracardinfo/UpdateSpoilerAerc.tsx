@@ -1,6 +1,7 @@
 import { observer } from "mobx-react"
 import React from "react"
 import { RouteComponentProps } from "react-router-dom"
+import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { spoilerStore } from "../spoilers/SpoilerStore"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
@@ -20,7 +21,8 @@ export class UpdateSpoilerAerc extends React.Component<UpdateExtraCardInfoPagePr
     }
 
     componentDidUpdate(prevProps: UpdateExtraCardInfoPageProps): void {
-        if (prevProps.match.params.spoilerId && this.props.match.params.spoilerId != this.props.match.params.spoilerId) {
+        log.info(`switch spoiler ${prevProps.match.params.spoilerId} ${this.props.match.params.spoilerId}`)
+        if (prevProps.match.params.spoilerId && prevProps.match.params.spoilerId != this.props.match.params.spoilerId) {
             extraCardInfoStore.findOrCreateSpoilerAerc(Number(this.props.match.params.spoilerId))
         }
     }
@@ -32,6 +34,7 @@ export class UpdateSpoilerAerc extends React.Component<UpdateExtraCardInfoPagePr
             return <Loader/>
         }
         const spoiler = spoilerStore.findSpoilerById(Number(this.props.match.params.spoilerId))
+        log.info(`Spoiler changed for id: ${this.props.match.params.spoilerId}`)
         if (spoiler == null) {
             return <Loader/>
         }

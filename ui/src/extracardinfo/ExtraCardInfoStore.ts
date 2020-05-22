@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 
@@ -25,6 +26,7 @@ export class ExtraCardInfoStore {
         this.extraCardInfo = undefined
         const extraCardInfo: AxiosResponse<ExtraCardInfo> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/spoiler/${spoilerId}`)
         this.extraCardInfo = extraCardInfo.data
+        log.info(`Updated extra card info for ${this.extraCardInfo.cardName}`)
         return this.extraCardInfo
     }
 

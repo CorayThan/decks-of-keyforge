@@ -182,7 +182,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.traits = extraCardInfo.traits
         this.synergies = extraCardInfo.synergies
 
-        uiStore.setTopbarValues("Edit " + this.props.card?.cardTitle ?? this.props.spoiler?.cardTitle, "Edit", "")
+        uiStore.setTopbarValues("Edit " + this.props.extraCardInfo.cardName, "Edit", "")
     }
 
     save = async () => {
