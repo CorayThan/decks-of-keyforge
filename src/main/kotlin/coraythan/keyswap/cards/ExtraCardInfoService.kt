@@ -1,5 +1,7 @@
 package coraythan.keyswap.cards
 
+import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.SynTraitValueRepo
 import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory
@@ -15,7 +17,8 @@ class ExtraCardInfoService(
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val cardIdentifierRepo: CardIdentifierRepo,
         private val currentUserService: CurrentUserService,
-        private val synTraitValueRepo: SynTraitValueRepo
+        private val synTraitValueRepo: SynTraitValueRepo,
+        private val spoilerRepo: SpoilerRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -24,6 +27,37 @@ class ExtraCardInfoService(
 
         val info = extraCardInfoRepo.findByIdOrNull(id) ?: throw IllegalStateException("No extra card info for id $id")
         return findNextOrCurrentInfo(info)
+    }
+
+    fun findOrCreateExtraCardInfoForSpoiler(id: Long): ExtraCardInfo {
+        val spoiler = spoilerRepo.findByIdOrNull(id) ?: throw IllegalStateException("No spoiler for id $id")
+        val preexistingInfo = extraCardInfoRepo.findByCardName(spoiler.cardTitle)
+        if (preexistingInfo.isNotEmpty()) {
+            return preexistingInfo.first()
+        }
+
+        val cardIdentifier = CardIdentifier(
+                expansion = Expansion.MASS_MUTATION,
+                cardNumber = spoiler.cardNumber ?: throw IllegalStateException("No making spoilers without card numbers")
+        )
+
+        if (cardIdentifierRepo.findByExpansionAndCardNumber(Expansion.MASS_MUTATION, spoiler.cardNumber).isNotEmpty()) {
+            throw IllegalStateException("Extra card info already exists for ${Expansion.MASS_MUTATION} ${spoiler.cardNumber}")
+        }
+
+        val extraInfo = ExtraCardInfo(
+                cardName = spoiler.cardTitle,
+                expectedAmber = spoiler.amber.toDouble(),
+                version = cardService.activeAercVersion + 1,
+                published = null,
+                cardNumbers = mutableListOf(
+                        cardIdentifier
+                )
+        )
+
+        cardIdentifier.info = extraInfo
+
+        return extraCardInfoRepo.save(extraInfo)
     }
 
     fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): UUID {

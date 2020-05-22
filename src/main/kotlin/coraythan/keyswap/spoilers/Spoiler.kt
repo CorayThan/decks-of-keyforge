@@ -5,7 +5,6 @@ import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import java.util.*
 import javax.persistence.*
-import kotlin.math.roundToInt
 
 
 @Entity
@@ -32,17 +31,6 @@ data class Spoiler(
 
         val createdById: UUID,
 
-        val expectedAmber: Double = 0.0,
-        val amberControl: Double = 0.0,
-        val creatureControl: Double = 0.0,
-        val artifactControl: Double = 0.0,
-        val efficiency: Double = 0.0,
-        val effectivePower: Int = 0,
-        val disruption: Double = 0.0,
-        val amberProtection: Double = 0.0,
-        val houseCheating: Double = 0.0,
-        val other: Double = 0.0,
-
         val active: Boolean = true,
 
         @Id
@@ -54,21 +42,4 @@ data class Spoiler(
             get() {
                 return traitsString?.split(",") ?: listOf()
             }
-
-    val aercScore: Double
-        get() {
-            return (
-                    this.amberControl +
-                            this.expectedAmber +
-                            this.artifactControl +
-                            this.creatureControl +
-                            this.efficiency +
-                            this.disruption +
-                            this.houseCheating +
-                            this.amberProtection +
-                            this.other +
-                            (if (this.cardType == CardType.Creature) 0.4 else 0.0) +
-                            (((this.effectivePower.toDouble() / 10) * 10).roundToInt().toDouble() / 10)
-                    )
-        }
 }

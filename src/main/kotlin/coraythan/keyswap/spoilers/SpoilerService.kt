@@ -1,10 +1,12 @@
 package coraythan.keyswap.spoilers
 
 import coraythan.keyswap.cards.CardRepo
+import coraythan.keyswap.cards.ExtraCardInfoRepo
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.S3Service
 import coraythan.keyswap.toUrlFriendlyCardTitle
 import coraythan.keyswap.users.CurrentUserService
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,10 +18,12 @@ class SpoilerService(
         private val spoilerRepo: SpoilerRepo,
         private val s3Service: S3Service,
         private val currentUserService: CurrentUserService,
-        private val cardRepo: CardRepo
+        private val cardRepo: CardRepo,
+        private val extraCardInfoRepo: ExtraCardInfoRepo
 
 ) {
 
+    private val log = LoggerFactory.getLogger(this::class.java)
     private var cachedSpoilers: List<Spoiler>? = null
 
     fun findSpoilers(): List<Spoiler> {
@@ -45,10 +49,14 @@ class SpoilerService(
         if (spoiler.reprint && preexisting.isEmpty()) {
             throw BadRequestException("No card with name ${spoiler.cardTitle}")
         }
+
+        val preexistingSpoilers = if (improvedCardNumber != null) spoilerRepo.findByCardNumberAndExpansion(improvedCardNumber, spoiler.expansion) else null
+        val preexistingName = preexistingSpoilers?.first()?.cardTitle
+
         if (spoiler.id == -1L && improvedCardNumber != null) {
-            val exists = spoilerRepo.findByCardNumberAndExpansion(improvedCardNumber, spoiler.expansion)
-            if (exists.isNotEmpty()) throw IllegalStateException("A spoiler with id $improvedCardNumber and expansion ${spoiler.expansion} already exists.")
+            if (!preexistingSpoilers.isNullOrEmpty()) throw IllegalStateException("A spoiler with id $improvedCardNumber and expansion ${spoiler.expansion} already exists.")
         }
+
         val saved = spoilerRepo.save(spoiler.copy(
                 createdById = user.id,
                 cardNumber = improvedCardNumber,
@@ -60,6 +68,16 @@ class SpoilerService(
                 cardType = if (preexisting.isEmpty()) spoiler.cardType else preexisting.first().cardType
         ))
         this.cachedSpoilers = null
+
+        log.info("pre existing spoilers null or empty ${preexistingSpoilers.isNullOrEmpty()} reprint ${spoiler.reprint} " +
+                "preexisting name: ${preexistingSpoilers?.firstOrNull()?.cardTitle}")
+
+        if (preexistingName != null && !spoiler.reprint && preexistingName != spoiler.cardTitle.trim()) {
+            extraCardInfoRepo.findByCardName(preexistingName).forEach {
+                extraCardInfoRepo.save(it.copy(cardName = spoiler.cardTitle.trim()))
+            }
+        }
+
         return saved.id
     }
 

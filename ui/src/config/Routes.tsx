@@ -19,6 +19,7 @@ import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/saleno
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
+import { UpdateSpoilerAerc } from "../extracardinfo/UpdateSpoilerAerc"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { DeckImportView } from "../importdeck/DeckImportView"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
@@ -61,6 +62,7 @@ class Routes {
     static extraCardInfo = "/extra-card-infos"
     static createSpoiler = `/spoilers/create`
     static editSpoiler = (spoilerId?: string | number) => `${Routes.spoilers}/edit/${spoilerId == null ? ":spoilerId" : spoilerId}`
+    static editSpoilerAerc = (spoilerId?: string | number) => `${Routes.spoilers}/edit-aerc/${spoilerId == null ? ":spoilerId" : spoilerId}`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
@@ -263,6 +265,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.editSpoiler()}
                         component={EditSpoilerPage}
+                    />
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.editSpoilerAerc()}
+                        component={UpdateSpoilerAerc}
                     />
                     <LoggedInRoute
                         exact={true}

@@ -24,13 +24,14 @@ export enum BackendExpansion {
     CALL_OF_THE_ARCHONS = "CALL_OF_THE_ARCHONS",
     AGE_OF_ASCENSION = "AGE_OF_ASCENSION",
     WORLDS_COLLIDE = "WORLDS_COLLIDE",
-    ANOMALY_EXPANSION = "ANOMALY_EXPANSION"
+    ANOMALY_EXPANSION = "ANOMALY_EXPANSION",
+    MASS_MUTATION = "MASS_MUTATION",
 }
 
 export const activeExpansions = [
     BackendExpansion.CALL_OF_THE_ARCHONS,
     BackendExpansion.AGE_OF_ASCENSION,
-    BackendExpansion.WORLDS_COLLIDE
+    BackendExpansion.WORLDS_COLLIDE,
 ]
 
 export const expansionInfos: ExpansionInfo[] = [
@@ -38,6 +39,7 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: Expansion.AOA, name: "Age of Ascension", abbreviation: "AOA", backendEnum: BackendExpansion.AGE_OF_ASCENSION},
     {expansionNumber: Expansion.WC, name: "Worlds Collide", abbreviation: "WC", backendEnum: BackendExpansion.WORLDS_COLLIDE},
     {expansionNumber: Expansion.ANOM, name: "Anomalies", abbreviation: "ANOM", backendEnum: BackendExpansion.ANOMALY_EXPANSION},
+    {expansionNumber: Expansion.MM, name: "Mass Mutation", abbreviation: "MM", backendEnum: BackendExpansion.MASS_MUTATION},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

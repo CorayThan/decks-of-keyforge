@@ -120,28 +120,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     traits = ""
 
     @observable
-    amberControl = "0"
-    @observable
-    expectedAmber = "0"
-    @observable
-    artifactControl = "0"
-    @observable
-    creatureControl = "0"
-    @observable
-    aercScore = "0"
-    @observable
-    efficiency = "0"
-    @observable
-    effectivePower = "0"
-    @observable
-    amberProtection = "0"
-    @observable
-    disruption = "0"
-    @observable
-    houseCheating = "0"
-    @observable
-    other = "0"
-    @observable
     reprint = false
     @observable
     anomaly = false
@@ -179,17 +157,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.spoilerId = spoiler.id
             this.traits = spoiler.traitsString ?? ""
 
-            this.amberControl = spoiler.amberControl.toString()
-            this.expectedAmber = spoiler.expectedAmber.toString()
-            this.artifactControl = spoiler.artifactControl.toString()
-            this.creatureControl = spoiler.creatureControl.toString()
-            this.efficiency = spoiler.efficiency.toString()
-            this.effectivePower = spoiler.effectivePower.toString()
-            this.amberProtection = spoiler.amberProtection.toString()
-            this.disruption = spoiler.disruption.toString()
-            this.houseCheating = spoiler.houseCheating.toString()
-            this.other = spoiler.other.toString()
-
             uiStore.setTopbarValues("Edit " + this.cardTitle, "Edit", "")
         } else {
             this.cardTitle = ""
@@ -206,17 +173,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             this.anomaly = false
             this.doubleCard = false
             this.spoilerId = undefined
-
-            this.amberControl = "0"
-            this.expectedAmber = "0"
-            this.artifactControl = "0"
-            this.creatureControl = "0"
-            this.efficiency = "0"
-            this.effectivePower = "0"
-            this.amberProtection = "0"
-            this.disruption = "0"
-            this.houseCheating = "0"
-            this.other = "0"
 
             uiStore.setTopbarValues("New Spoiler", "New", "")
         }
@@ -247,14 +203,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             defaultCardRarity = rarity
         }
 
-        let effectivePower = Number(this.effectivePower)
-        if (effectivePower === 0) {
-            effectivePower = Number(this.power) + Number(this.armor)
-        }
-        let expectedAmber = Number(this.expectedAmber)
-        if (expectedAmber === 0) {
-            expectedAmber = Number(this.amber)
-        }
         const traits = this.traits.trim().toUpperCase()
         if (!traits.match(/^(\w|,|\?)*$/)) {
             messageStore.setWarningMessage(`Please ensure traits are a comma separated list, for example "GIANT,KNIGHT"`)
@@ -278,18 +226,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             frontImage: this.frontImage,
             id: this.spoilerId,
 
-            amberControl: Number(this.amberControl),
-            expectedAmber,
-            artifactControl: Number(this.artifactControl),
-            creatureControl: Number(this.creatureControl),
-            efficiency: Number(this.efficiency),
-            effectivePower,
-            amberProtection: Number(this.amberProtection),
-            disruption: Number(this.disruption),
-            houseCheating: Number(this.houseCheating),
-            other: Number(this.other),
-
-            aercScore: 0,
             anomaly: this.anomaly,
             reprint: this.reprint,
             doubleCard: this.doubleCard,
@@ -519,112 +455,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                                     variant={"outlined"}
                                     multiline={true}
                                     disabled={this.reprint}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container={true}
-                            spacing={2}
-                            style={{display: userStore.isAdmin ? undefined : "none", marginTop: spacing(2)}}
-                        >
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"expected aember"}
-                                    value={this.expectedAmber}
-                                    onChange={(event: EventValue) => this.expectedAmber = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"aember control"}
-                                    value={this.amberControl}
-                                    onChange={(event: EventValue) => this.amberControl = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"artifact control"}
-                                    value={this.artifactControl}
-                                    onChange={(event: EventValue) => this.artifactControl = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"creature control"}
-                                    value={this.creatureControl}
-                                    onChange={(event: EventValue) => this.creatureControl = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"efficiency"}
-                                    value={this.efficiency}
-                                    onChange={(event: EventValue) => this.efficiency = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"disruption"}
-                                    value={this.disruption}
-                                    onChange={(event: EventValue) => this.disruption = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"effective power"}
-                                    value={this.effectivePower}
-                                    onChange={(event: EventValue) => this.effectivePower = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"aember protection"}
-                                    value={this.amberProtection}
-                                    onChange={(event: EventValue) => this.amberProtection = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"house cheating"}
-                                    value={this.houseCheating}
-                                    onChange={(event: EventValue) => this.houseCheating = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
-                                />
-                            </Grid>
-                            <Grid item={true} xs={3}>
-                                <TextField
-                                    label={"other"}
-                                    value={this.other}
-                                    onChange={(event: EventValue) => this.other = event.target.value}
-                                    fullWidth={true}
-                                    variant={"outlined"}
-                                    type={"number"}
                                 />
                             </Grid>
                         </Grid>

@@ -1,5 +1,4 @@
-import { Button, IconButton, Paper, TableCell, TableSortLabel, TextField, Typography } from "@material-ui/core"
-import Tooltip from "@material-ui/core/Tooltip"
+import { Button, IconButton, Paper, TableCell, TextField, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { sortBy } from "lodash"
 import { IObservableArray, observable } from "mobx"
@@ -127,7 +126,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             },
             {
                 title: "Price",
-                transform: deck =>  <DeckPriceCell deck={deck} sellerVersion={sellerView}/>,
+                transform: deck => <DeckPriceCell deck={deck} sellerVersion={sellerView}/>,
                 sortFunction: deck => DeckUtils.findPrice(deck, sellerView),
                 hide: !displayPrices,
             },
@@ -385,31 +384,6 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
         )
     }
 }
-
-const changeSortHandler = (property: string) => {
-    return () => {
-        if (deckTableViewStore.activeTableSort === property) {
-            deckTableViewStore.tableSortDir = deckTableViewStore.tableSortDir === "desc" ? "asc" : "desc"
-        } else {
-            deckTableViewStore.activeTableSort = property
-        }
-        deckTableViewStore.resort()
-    }
-}
-
-const DeckHeader = (props: { title: React.ReactNode, property: string, tooltip?: string, minWidth?: number }) => (
-    <TableCell style={{minWidth: props.minWidth ? props.minWidth : undefined, maxWidth: 72}}>
-        <Tooltip title={props.tooltip ? props.tooltip : ""}>
-            <TableSortLabel
-                active={deckTableViewStore.activeTableSort === props.property}
-                direction={deckTableViewStore.tableSortDir}
-                onClick={changeSortHandler(props.property)}
-            >
-                {props.title}
-            </TableSortLabel>
-        </Tooltip>
-    </TableCell>
-)
 
 const findBuyItNowForDeck = (deck: Deck): number | null => {
 

@@ -34,7 +34,4 @@ class CardEndpoints(
 
     @GetMapping("/future")
     fun findFutureInfo() = cardService.nextInfo()
-
-    @PostMapping("/convert-spoilers")
-    fun convertSpoilers() = cardService.convertSpoilers()
 }

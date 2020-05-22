@@ -145,6 +145,11 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                                 >
                                     Edit
                                 </LinkButton>
+                                <LinkButton
+                                    to={Routes.editSpoilerAerc(id)}
+                                >
+                                    Edit AERC
+                                </LinkButton>
                             </div>
                         </>
                     )}

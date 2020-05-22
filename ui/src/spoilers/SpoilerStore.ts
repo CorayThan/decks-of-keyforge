@@ -39,6 +39,10 @@ export class SpoilerStore {
         }
     }
 
+    findSpoilerById = (id: number) => {
+        return this.spoilers?.find(spoiler => spoiler.id === id)
+    }
+
     searchSpoilers = (filters: SpoilerFilters) => {
         const toSearch = this.allSpoilers
         const filtered = toSearch.slice().filter(spoiler => {

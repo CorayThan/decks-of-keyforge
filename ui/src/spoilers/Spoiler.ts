@@ -1,4 +1,3 @@
-import { HasAerc } from "../aerc/HasAerc"
 import { CardType } from "../cards/CardType"
 import { Rarity } from "../cards/rarity/Rarity"
 import { Expansion } from "../expansions/Expansions"
@@ -6,7 +5,7 @@ import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
 import { makeFullSpoilerUrl } from "./SpoilerView"
 
-export interface Spoiler extends HasAerc {
+export interface Spoiler {
 
     cardTitle: string
     house?: House // anomalies have no house

@@ -38,6 +38,8 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SelectedOptions } from "../mui-restyled/SelectedOptions"
+import { Spoiler } from "../spoilers/Spoiler"
+import { SpoilerView } from "../spoilers/SpoilerView"
 import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
 import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
@@ -80,11 +82,12 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
 
 interface UpdateExtraCardInfoProps {
     extraCardInfo: ExtraCardInfo
-    card: KCard
+    card?: KCard
+    spoiler?: Spoiler
 }
 
 @observer
-class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
+export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
 
     @observable
     amberControl = "0"
@@ -140,9 +143,8 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
     // eslint-disable-next-line
     // @ts-ignore
     infoId: string
-    // eslint-disable-next-line
-    // @ts-ignore
-    card: KCard
+    card?: KCard
+    spoiler?: Spoiler
 
     constructor(props: UpdateExtraCardInfoProps) {
         super(props)
@@ -159,6 +161,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
         const extraCardInfo = resetTo == null ? this.props.extraCardInfo : resetTo
         this.infoId = extraCardInfo.id
         this.card = this.props.card
+        this.spoiler = this.props.spoiler
 
         this.amberControl = extraCardInfo.amberControl.toString()
         this.expectedAmber = extraCardInfo.expectedAmber.toString()
@@ -185,7 +188,7 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
         this.traits = extraCardInfo.traits
         this.synergies = extraCardInfo.synergies
 
-        uiStore.setTopbarValues("Edit " + this.card.cardTitle, "Edit", "")
+        uiStore.setTopbarValues("Edit " + this.card?.cardTitle ?? this.spoiler?.cardTitle, "Edit", "")
     }
 
     save = async () => {
@@ -226,11 +229,11 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
     render() {
         const wcOnly = keyLocalStorage.genericStorage.wcOnly
         const filteredCards = cardStore.allCards
-            .filter(card => wcOnly ? card.extraCardInfo.cardNumbers.length === 1 && card.extraCardInfo.cardNumbers.find(cardNum => cardNum.expansion === BackendExpansion.WORLDS_COLLIDE || cardNum.expansion === BackendExpansion.ANOMALY_EXPANSION) : true)
+            .filter(card => wcOnly ? card.extraCardInfo.cardNumbers.length === 1 && card.extraCardInfo.cardNumbers.find(cardNum => cardNum.expansion === BackendExpansion.MASS_MUTATION) : true)
         let nextId
         let prevId
-        if (filteredCards.length > 0 && this.props.extraCardInfo != null) {
-            const findWith = filteredCards.find(card => card.id === this.card.id)
+        if (this.card != null && filteredCards.length > 0 && this.props.extraCardInfo != null) {
+            const findWith = filteredCards.find(card => card.id === this.card!.id)
             if (findWith != null) {
                 const idx = filteredCards.indexOf(findWith)
                 nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
@@ -250,11 +253,16 @@ class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProps> {
                         <CardView card={this.card}/>
                     </div>
                 )}
+                {this.spoiler && (
+                    <div>
+                        <SpoilerView spoiler={this.spoiler}/>
+                    </div>
+                )}
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
                             <Typography variant={"h4"}>
-                                {this.card.cardTitle}'s AERC
+                                {this.card?.cardTitle ?? this.spoiler?.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             <Tooltip title={"Worlds Collide Only"}>

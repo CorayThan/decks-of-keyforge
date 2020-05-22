@@ -72,7 +72,7 @@ data class ExtraCardInfo(
         var active: Boolean = false,
         val created: ZonedDateTime? = now(),
         val updated: ZonedDateTime? = now(),
-        var published: ZonedDateTime? = now(),
+        var published: ZonedDateTime? = null,
 //
 //        @OneToOne(mappedBy = "info")
 //        val spoiler: Spoiler? = null,
