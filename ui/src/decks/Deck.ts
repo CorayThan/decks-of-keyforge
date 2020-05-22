@@ -65,7 +65,7 @@ export interface Deck extends HasAerc {
 
     lastSasUpdate: string
 
-    sasPercentile?: number
+    sasPercentile: number
 
     userDecks: UserDeck[]
 

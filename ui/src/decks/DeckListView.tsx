@@ -1,4 +1,4 @@
-import { Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, TextField, Typography } from "@material-ui/core"
+import { Button, IconButton, Paper, TableCell, TableSortLabel, TextField, Typography } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { sortBy } from "lodash"
@@ -10,9 +10,9 @@ import { deckListingStore } from "../auctions/DeckListingStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log, roundToTens, SortOrder } from "../config/Utils"
+import { log, roundToHundreds, roundToTens, SortOrder } from "../config/Utils"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
-import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
+import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
@@ -107,158 +107,210 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
         } else if (sellerView && userStore.username == null) {
             return <Loader/>
         }
+
+        const deckTableHeaders: SortableTableHeaderInfo<Deck>[] = [
+            {
+                property: "name",
+                width: 240,
+                transform: deck => (
+                    <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
+                        {deck.name}
+                    </KeyLink>
+                )
+            },
+            {
+                title: "Houses",
+                sortable: false,
+                transform: deck => (
+                    <HouseBanner houses={deck.houses} size={36}/>
+                )
+            },
+            {
+                title: "Price",
+                transform: deck =>  <DeckPriceCell deck={deck} sellerVersion={sellerView}/>,
+                sortFunction: deck => DeckUtils.findPrice(deck, sellerView),
+                hide: !displayPrices,
+            },
+            {
+                title: "Bid",
+                transform: deck => DeckUtils.findHighestBid(deck),
+                sortFunction: deck => DeckUtils.findHighestBid(deck),
+                hide: !displayPrices
+            },
+            {
+                title: "Seller Tools",
+                transform: deck => (
+                    <MyDecksButton deck={deck}/>
+                ),
+                sortable: false,
+                width: 184,
+                hide: !sellerView
+            },
+
+            {
+                title: "SAS",
+                transform: deck => deck.synergies?.sasRating,
+                sortFunction: deck => deck.synergies?.sasRating
+            },
+            {
+                title: "SAStars",
+                transform: deck => (
+                    <SaStars
+                        sasPercentile={deck.sasPercentile}
+                        small={true}
+                        gray={true}
+                        style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "flex-end",
+                            justifyContent: "center",
+                            width: 48
+                        }}
+                        halfAtEnd={true}
+                        noPercent={true}
+                    />
+                ),
+                sortFunction: deck => deck.synergies?.sasRating,
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                title: "SAS%",
+                transform: deck => roundToTens(deck.sasPercentile),
+                sortFunction: deck => roundToTens(deck.sasPercentile)
+            },
+            {
+                title: "Synergy",
+                transform: deck => roundToHundreds(deck.synergies?.synergyRating),
+                sortFunction: deck => roundToHundreds(deck.synergies?.synergyRating),
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                title: "Antisyn",
+                transform: deck => roundToHundreds(deck.synergies?.antisynergyRating),
+                sortFunction: deck => roundToHundreds(deck.synergies?.antisynergyRating),
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                title: "Raw AERC",
+                transform: deck => roundToHundreds(deck.synergies?.rawAerc),
+                sortFunction: deck => roundToHundreds(deck.synergies?.rawAerc),
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                title: "Notes",
+                transform: deck => (
+                    <div style={{width: 280}}>
+                        <InlineDeckNote id={deck.id}/>
+                    </div>
+                ),
+                hide: !keyLocalStorage.genericStorage.viewNotes
+            },
+            {
+                title: "A",
+                transform: deck => roundToHundreds(deck.synergies?.amberControl),
+                sortFunction: deck => roundToHundreds(deck.synergies?.amberControl)
+            },
+            {
+                title: "E",
+                transform: deck => roundToHundreds(deck.synergies?.expectedAmber),
+                sortFunction: deck => roundToHundreds(deck.synergies?.expectedAmber)
+            },
+            {
+                title: "R",
+                transform: deck => roundToHundreds(deck.synergies?.artifactControl),
+                sortFunction: deck => roundToHundreds(deck.synergies?.artifactControl)
+            },
+            {
+                title: "C",
+                transform: deck => roundToHundreds(deck.synergies?.creatureControl),
+                sortFunction: deck => roundToHundreds(deck.synergies?.creatureControl)
+            },
+            {
+                title: "P",
+                transform: deck => roundToHundreds(deck.synergies?.effectivePower),
+                sortFunction: deck => roundToHundreds(deck.synergies?.effectivePower)
+            },
+            {
+                title: "F",
+                transform: deck => roundToHundreds(deck.synergies?.efficiency),
+                sortFunction: deck => roundToHundreds(deck.synergies?.efficiency)
+            },
+            {
+                title: "D",
+                transform: deck => roundToHundreds(deck.synergies?.disruption),
+                sortFunction: deck => roundToHundreds(deck.synergies?.disruption)
+            },
+            {
+                title: "AP",
+                transform: deck => roundToHundreds(deck.synergies?.amberProtection),
+                sortFunction: deck => roundToHundreds(deck.synergies?.amberProtection),
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                title: "HC",
+                transform: deck => roundToHundreds(deck.synergies?.houseCheating),
+                sortFunction: deck => roundToHundreds(deck.synergies?.houseCheating),
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                title: "O",
+                transform: deck => roundToHundreds(deck.synergies?.other),
+                sortFunction: deck => roundToHundreds(deck.synergies?.other),
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                property: "rawAmber",
+                title: "Bonus Aember",
+                hide: keyLocalStorage.smallTableView
+            },
+            {
+                property: "keyCheatCount",
+                title: "Key Cheats",
+                hide: keyLocalStorage.smallTableView
+            },
+            {property: "cardDrawCount", title: "Draw Cards", hide: keyLocalStorage.smallTableView},
+            {property: "cardArchiveCount", title: "Archive Cards", hide: keyLocalStorage.smallTableView},
+            {property: "totalPower", hide: keyLocalStorage.smallTableView},
+            {property: "totalArmor", hide: keyLocalStorage.smallTableView},
+            {property: "powerLevel", hide: keyLocalStorage.smallTableView},
+            {property: "wins", hide: keyLocalStorage.smallTableView},
+            {property: "losses", hide: keyLocalStorage.smallTableView},
+            {
+                titleNode: (
+                    <div style={{display: "flex"}}>
+                        <CsvDownloadButton name={"decks"} data={DeckUtils.arrayToCSV(decks)}/>
+                        <IconButton
+                            onClick={keyLocalStorage.toggleSmallTableView}
+                            style={{marginLeft: spacing(2)}}
+                        >
+                            {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
+                        </IconButton>
+                    </div>
+                ),
+                transform: deck => (
+                    <div style={{display: "flex"}}>
+                        <KeyLink
+                            to={Routes.deckPage(deck.keyforgeId)}
+                            noStyle={true}
+                            style={{marginRight: spacing(2)}}
+                        >
+                            <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
+                        </KeyLink>
+                        <MoreDeckActions deck={deck} compact={true}/>
+                    </div>
+                ),
+                sortable: false
+            }
+        ]
+
         return (
             <div>
                 <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
-                    <Table size={"small"}>
-                        <TableHead>
-                            <TableRow>
-                                <DeckHeader title={"Name"} property={"name"} minWidth={144}/>
-                                <TableCell>Houses</TableCell>
-                                {displayPrices ? (
-                                    <>
-                                        <DeckHeader title={"Price"} property={"price"}/>
-                                        <DeckHeader title={"Bid"} property={"buyItNow"}/>
-                                    </>
-                                ) : null}
-                                {sellerView ? <TableCell>Seller Tools</TableCell> : null}
-                                <DeckHeader title={"SAS"} property={"sasRating"}/>
-                                <DeckHeader title={"SAStars"} property={"sasPercentile"}/>
-                                <DeckHeader title={"SAS%"} property={"sasPercentile"}/>
-                                <DeckHeader title={"Synergy"} property={"synergyRating"}/>
-                                <DeckHeader title={"Antisyn"} property={"antisynergyRating"}/>
-                                <DeckHeader title={"Raw AERC"} property={"aercScore"}/>
-                                {keyLocalStorage.genericStorage.viewNotes && (
-                                    <TableCell>Notes</TableCell>
-                                )}
-                                <DeckHeader title={"A"} property={"amberControl"} tooltip={"Aember Control"}/>
-                                <DeckHeader title={"E"} property={"expectedAmber"} tooltip={"Expected Aember"}/>
-                                <DeckHeader title={"R"} property={"artifactControl"} tooltip={"Artifact Control"}/>
-                                <DeckHeader title={"C"} property={"creatureControl"} tooltip={"Creature Control"}/>
-                                <DeckHeader title={"P"} property={"effectivePower"} tooltip={"Effective Power"}/>
-                                <DeckHeader title={"F"} property={"efficiency"} tooltip={"Efficiency"}/>
-                                <DeckHeader title={"D"} property={"disruption"} tooltip={"Disruption"}/>
-                                <DeckHeader title={<AercIcon type={AercType.S}/>} property={"amberProtection"} tooltip={"Aember Protection"}/>
-                                <DeckHeader title={<AercIcon type={AercType.H}/>} property={"houseCheating"} tooltip={"House Cheating"}/>
-                                {keyLocalStorage.smallTableView ? null : (
-                                    <>
-                                        <DeckHeader title={"Bonus Aember"} property={"rawAmber"}/>
-                                        <DeckHeader title={"Key Cheats"} property={"keyCheatCount"}/>
-                                        <DeckHeader title={"Draw Cards"} property={"cardDrawCount"}/>
-                                        <DeckHeader title={"Archive Cards"} property={"cardArchiveCount"}/>
-                                        <DeckHeader title={"Creature Power"} property={"totalPower"}/>
-                                        <DeckHeader title={"Total Armor"} property={"totalArmor"}/>
-                                        <DeckHeader title={"Power"} property={"powerLevel"}/>
-                                        <DeckHeader title={"Chains"} property={"chains"}/>
-                                        <DeckHeader title={"Wins"} property={"wins"}/>
-                                        <DeckHeader title={"Losses"} property={"losses"}/>
-                                    </>
-                                )}
-                                <TableCell>
-                                    <div style={{display: "flex"}}>
-                                        <CsvDownloadButton name={"decks"} data={DeckUtils.arrayToCSV(decks)}/>
-                                        <IconButton
-                                            onClick={keyLocalStorage.toggleSmallTableView}
-                                            style={{marginLeft: spacing(2)}}
-                                        >
-                                            {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
-                                        </IconButton>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {decks.map((deck) => {
-                                const synergies = DeckUtils.synergiesRounded(deck.synergies!)
-                                return (
-                                    <TableRow key={deck.id}>
-                                        <TableCell>
-                                            <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
-                                                {deck.name}
-                                            </KeyLink>
-                                        </TableCell>
-                                        <TableCell><HouseBanner houses={deck.houses} size={36}/></TableCell>
-                                        {displayPrices || sellerView ? (
-                                            <>
-                                                <DeckPriceCell deck={deck} sellerVersion={sellerView}/>
-                                                <TableCell>{DeckUtils.findHighestBid(deck)}</TableCell>
-                                            </>
-                                        ) : null}
-                                        {sellerView ? (
-                                            <TableCell style={{minWidth: 200}}>
-                                                <MyDecksButton deck={deck}/>
-                                            </TableCell>
-                                        ) : null}
-                                        <TableCell>{synergies.sasRating}</TableCell>
-                                        <TableCell>
-                                            {deck.sasPercentile && (
-                                                <SaStars
-                                                    sasPercentile={deck.sasPercentile}
-                                                    small={true}
-                                                    gray={true}
-                                                    style={{
-                                                        display: "flex",
-                                                        flexWrap: "wrap",
-                                                        alignItems: "flex-end",
-                                                        justifyContent: "center",
-                                                        width: 48
-                                                    }}
-                                                    halfAtEnd={true}
-                                                    noPercent={true}
-                                                />
-                                            )}
-                                        </TableCell>
-                                        <TableCell>{deck.sasPercentile && roundToTens(deck.sasPercentile)}</TableCell>
-                                        <TableCell>{synergies.synergyRating}</TableCell>
-                                        <TableCell>{synergies.antisynergyRating}</TableCell>
-                                        <TableCell>{synergies.rawAerc}</TableCell>
-                                        {keyLocalStorage.genericStorage.viewNotes && (
-                                            <TableCell>
-                                                <div style={{width: 280}}>
-                                                    <InlineDeckNote id={deck.id}/>
-                                                </div>
-                                            </TableCell>
-                                        )}
-                                        <TableCell>{synergies.amberControl}</TableCell>
-                                        <TableCell>{synergies.expectedAmber}</TableCell>
-                                        <TableCell>{synergies.artifactControl}</TableCell>
-                                        <TableCell>{synergies.creatureControl}</TableCell>
-                                        <TableCell>{synergies.effectivePower}</TableCell>
-                                        <TableCell>{synergies.efficiency}</TableCell>
-                                        <TableCell>{synergies.disruption}</TableCell>
-                                        <TableCell>{synergies.amberProtection}</TableCell>
-                                        <TableCell>{synergies.houseCheating}</TableCell>
-                                        {keyLocalStorage.smallTableView ? null : (
-                                            <>
-                                                <TableCell>{deck.rawAmber}</TableCell>
-                                                <TableCell>{deck.keyCheatCount}</TableCell>
-                                                <TableCell>{deck.cardDrawCount}</TableCell>
-                                                <TableCell>{deck.cardArchiveCount}</TableCell>
-                                                <TableCell>{deck.totalPower}</TableCell>
-                                                <TableCell>{deck.totalArmor}</TableCell>
-                                                <TableCell>{deck.powerLevel}</TableCell>
-                                                <TableCell>{deck.chains}</TableCell>
-                                                <TableCell>{deck.wins}</TableCell>
-                                                <TableCell>{deck.losses}</TableCell>
-                                            </>
-                                        )}
-                                        <TableCell>
-                                            <div style={{display: "flex"}}>
-                                                <KeyLink
-                                                    to={Routes.deckPage(deck.keyforgeId)}
-                                                    noStyle={true}
-                                                    style={{marginRight: spacing(2)}}
-                                                >
-                                                    <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
-                                                </KeyLink>
-                                                <MoreDeckActions deck={deck} compact={true}/>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
+                    <SortableTable
+                        headers={deckTableHeaders}
+                        data={decks}
+                        defaultSort={"sasRating"}
+                    />
                 </Paper>
                 {sellerView ? (
                     <Button
@@ -286,31 +338,35 @@ interface SellerViewCellProps {
 @observer
 class DeckPriceCell extends React.Component<SellerViewCellProps> {
     @observable
-    priceForSeller?: string
+    price?: string
 
     componentDidMount() {
         this.setPriceForSeller(this.props)
     }
 
+    componentDidUpdate() {
+        this.setPriceForSeller(this.props)
+    }
+
     setPriceForSeller = (props: SellerViewCellProps) => {
         const {deck, sellerVersion} = props
-        this.priceForSeller = DeckUtils.findPrice(deck, sellerVersion)?.toString()
+        this.price = DeckUtils.findPrice(deck, sellerVersion)?.toString()
     }
 
     render() {
         const {deck, sellerVersion} = this.props
         const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
-        if (auctionInfo != null && this.priceForSeller != null && sellerVersion) {
+        if (auctionInfo != null && this.price != null && sellerVersion) {
             return (
                 <TableCell>
                     <TextField
                         label={"Price"}
-                        value={this.priceForSeller}
+                        value={this.price}
                         type={"number"}
                         onChange={(event) => {
-                            this.priceForSeller = event.target.value
-                            log.debug(`Price for seller is ${this.priceForSeller}`)
-                            const asNumber = Number(this.priceForSeller)
+                            this.price = event.target.value
+                            log.debug(`Price for seller is ${this.price}`)
+                            const asNumber = Number(this.price)
                             const realPrice = asNumber < 1 ? undefined : asNumber
                             deckTableViewStore.addPriceChange(auctionInfo.id, realPrice)
                         }}
@@ -319,10 +375,12 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
                 </TableCell>
             )
         }
-        const price = DeckUtils.findPrice(deck)
+        if (sellerVersion) {
+            return <TableCell/>
+        }
         return (
             <TableCell>
-                {price == null ? "" : price}
+                {this.price == null ? "" : this.price}
             </TableCell>
         )
     }
@@ -373,9 +431,6 @@ export class DeckListView extends React.Component<DeckListViewProps> {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const deckPageId = deckStore.deckPageId
 
-        if (this.props.sellerView) {
-            return <DeckTableView {...this.props}/>
-        }
         return (
             <>
                 {this.props.decks.map((deck) => {

@@ -12,7 +12,7 @@ log.setDefaultLevel("debug")
 export const prettyJson = (write: any): string => JSON.stringify(write, null, 2)
 
 export const roundToTens = (round: number) => Math.round(round * 10) / 10
-export const roundToHundreds = (round: number) => Math.round(round * 100) / 100
+export const roundToHundreds = (round?: number) => round == null ? 0 : Math.round(round * 100) / 100
 export const roundToThousands = (round: number) => Math.round(round * 1000) / 1000
 
 export class Utils {

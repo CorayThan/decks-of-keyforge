@@ -129,7 +129,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {keyLocalStorage.deckListViewType === "table" ?
                             <DeckTableView decks={deckPage.decks} sellerView={sellerView}/> :
-                            <DeckListView decks={deckPage.decks} sellerView={sellerView}/>}
+                            <DeckListView decks={deckPage.decks}/>}
                     </div>
                 )
             }
