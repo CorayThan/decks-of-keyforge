@@ -1,7 +1,10 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
+import { cardStore } from "../cards/CardStore"
 import { HttpConfig } from "../config/HttpConfig"
-import { Expansion } from "../expansions/Expansions"
+import { log, prettyJson } from "../config/Utils"
+import { BackendExpansion, Expansion, expansionToBackendExpansion } from "../expansions/Expansions"
+import { House } from "../houses/House"
 import { GlobalStats, GlobalStatsWithExpansion } from "./GlobalStats"
 
 export class StatsStore {
@@ -16,13 +19,25 @@ export class StatsStore {
 
     statsBySetNum?: Map<number | null, GlobalStats>
 
+    // expansion-house
+    winsByExpansionAndHouse: { [key: string]: number } = {}
+
     findGlobalStats = () => {
         axios.get(`${StatsStore.CONTEXT}`)
             .then((response: AxiosResponse<GlobalStatsWithExpansion[]>) => {
                 this.statsBySetNum = new Map()
-                // log.debug(`Got stats: ${prettyJson(response.data)}`)
-                response.data.forEach(stats => this.statsBySetNum!.set(stats.expansion, stats.stats))
+                log.debug(`Got stats: ${prettyJson(response.data)}`)
+                response.data.forEach(stats => {
+                    if (stats.expansion != null) {
+                        stats.stats.houseWinRate?.forEach(houseWinRate => {
+                            this.winsByExpansionAndHouse[`${expansionToBackendExpansion(stats.expansion!)}-${houseWinRate.x}`] = houseWinRate.y
+                        })
+                    }
+                    this.statsBySetNum!.set(stats.expansion, stats.stats)
+                })
                 this.stats = this.statsBySetNum!.get(null)
+
+                cardStore.setupCardWinRates()
             })
     }
 
@@ -34,6 +49,13 @@ export class StatsStore {
                 this.stats = this.statsBySetNum!.get(expansion)
             }
             this.currentStatsExpansion = expansion
+        }
+    }
+
+    winRateForExpansionAndHouse = (expansion: BackendExpansion, house: House): number | undefined => {
+        const wins = this.winsByExpansionAndHouse
+        if (wins != null) {
+            return wins[`${expansion}-${house}`]
         }
     }
 

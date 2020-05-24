@@ -7,9 +7,10 @@ import { Cap } from "../decks/search/ConstraintDropdowns"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
 import { CardIdentifier, ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
+import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
-import { cardNameToCardNameKey, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
+import { cardNameToCardNameKey, CardUtils, CardWinRates, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
 
@@ -63,6 +64,27 @@ export class CardStore {
 
     @observable
     showFutureCardInfo = false
+
+    @observable
+    cardWinRatesLoaded = false
+
+    cardWinRates?: Map<string, CardWinRates[]>
+
+
+    setupCardWinRates = () => {
+        if (this.allCards.length === 0 || statsStore.stats == null || this.cardWinRatesLoaded) {
+            return
+        }
+
+        const rates = new Map<string, CardWinRates[]>()
+
+        this.allCards.forEach(card => {
+            rates.set(card.cardTitle, CardUtils.cardWinRates(card))
+        })
+
+        this.cardWinRates = rates
+        this.cardWinRatesLoaded = true
+    }
 
     reset = () => {
         log.debug(`Reset this.cards in card store`)
@@ -127,6 +149,8 @@ export class CardStore {
             filtered = sortBy(filtered, ["extraCardInfo.artifactControl", "cardNumber"])
         } else if (filters.sort === "WIN_RATE") {
             filtered = sortBy(filtered, ["winRate", "cardNumber"])
+        } else if (filters.sort === "RELATIVE_WIN_RATE") {
+            filtered = sortBy(filtered, card => CardUtils.cardAverageRelativeWinRate(card))
         } else if (filters.sort === "NAME") {
             filtered = sortBy(filtered, ["cardTitle", "cardNumber"])
 
@@ -198,6 +222,7 @@ export class CardStore {
                 })
                 this.cardTraits = Array.from(traits)
                 this.allCards = basisForCards
+                this.setupCardWinRates()
                 log.debug(`End load all cards async`)
             })
     }

@@ -1,7 +1,6 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, Tooltip } from "@material-ui/core"
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@material-ui/core"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
-import { round } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -24,6 +23,7 @@ import { TraitBubble } from "../synergy/TraitBubble"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { cardStore } from "./CardStore"
+import { CardWinsDisplay } from "./cardwins/CardWinsDisplay"
 import { CardUtils, findCardImageUrl, hasAercFromCard, KCard } from "./KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, rarityValues } from "./rarity/Rarity"
 
@@ -123,25 +123,8 @@ export const CardView = observer((props: CardViewProps) => {
                     {amber > 0 ? <Typography color={"textPrimary"} variant={"subtitle2"}>{amber} aember</Typography> : null}
                 </div>
                 <Typography color={"textPrimary"}>{cardText}</Typography>
-                {card.winRate != null ? (
-                    <>
-                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                        <div style={{display: "flex", justifyContent: "space-evenly", marginTop: spacing(1)}}>
-                            <Tooltip
-                                title={"This win rate is affected by house win rate, so expect cards in better houses to have higher win rates."}
-                            >
-                                <Typography color={"textPrimary"} variant={"body2"} noWrap={true} style={{fontStyle: "italic"}}>
-                                    {round(card.winRate * 100, 1)}% win rate
-                                </Typography>
-                            </Tooltip>
-                            <Tooltip
-                                title={"Wins / Losses"}
-                            >
-                                <Typography color={"textPrimary"} variant={"body2"} style={{marginLeft: spacing(1)}}>{card.wins} / {card.losses}</Typography>
-                            </Tooltip>
-                        </div>
-                    </>
-                ) : null}
+                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                <CardWinsDisplay card={card}/>
                 <AercAndSynergies card={card} combo={combo} title={previousCard && "Current AERC"}/>
                 {previousCard && (
                     <AercAndSynergies card={previousCard} title={"Previous AERC"}/>

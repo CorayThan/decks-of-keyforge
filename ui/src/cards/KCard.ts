@@ -1,8 +1,12 @@
+import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
 import { roundToHundreds } from "../config/Utils"
+import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
+import { Wins } from "../stats/GlobalStats"
+import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { HasFrontImage } from "./CardSimpleView"
 import { cardStore } from "./CardStore"
@@ -33,6 +37,12 @@ export interface KCard {
     wins?: number
     losses?: number
     winRate?: number
+
+    /**
+     * Key is BackendExpansion
+     */
+    expansionWins?: { [key: string]: Wins }
+
     aercScore: number
     aercScoreMax?: number
 
@@ -101,7 +111,72 @@ export const findCardImageUrl = (card: HasFrontImage) => {
     return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
 }
 
+export interface CardWinRates {
+    expansion?: BackendExpansion
+    winRatePercent?: number
+    relativeToAveragePercent?: number
+    wins?: number
+    losses?: number
+
+}
+
 export class CardUtils {
+
+    static cardAverageRelativeWinRate = (card: KCard): number => {
+
+        const winRates = CardUtils.cardWinRates(card)
+            .map(winRate => winRate.relativeToAveragePercent)
+            .filter(rate => rate != null)
+
+        if (winRates.length === 0) {
+            return 0
+        }
+
+        return winRates.reduce(function (prev, current) {
+            return prev! + current!
+        })! / winRates.length
+    }
+
+    static cardWinRates = (card: KCard): CardWinRates[] => {
+        const winRates: CardWinRates[] = []
+        const expansionWins = card.expansionWins
+
+        if (expansionWins != null) {
+            activeExpansions.forEach(expansion => {
+                const wins = expansionWins[expansion]
+                if (wins != null && (wins.wins + wins.losses > 1000)) {
+                    const winRatePercent = CardUtils.calcWinRate(wins.wins, wins.losses)
+                    const expHouseWinPercent = statsStore.winRateForExpansionAndHouse(expansion, card.house)
+                    let relativeToAveragePercent
+                    if (expHouseWinPercent != null) {
+                        relativeToAveragePercent = round(winRatePercent - expHouseWinPercent, 1)
+                    }
+                    winRates.push({
+                        expansion,
+                        wins: wins.wins,
+                        losses: wins.losses,
+                        winRatePercent: round(winRatePercent, 1),
+                        relativeToAveragePercent
+                    })
+                }
+            })
+        }
+
+        const totalWinRate = card.winRate
+        if (totalWinRate != null && winRates.length !== 1) {
+            winRates.unshift({
+                winRatePercent: round(totalWinRate * 100, 1),
+                wins: card.wins,
+                losses: card.losses,
+            })
+        }
+
+        return winRates
+    }
+
+    private static calcWinRate = (wins: number, losses: number) => {
+        return (wins / (wins + losses)) * 100
+    }
 
     static fakeRatingFromAerc = (card: HasAerc) => {
         const aerc = card.averageAercScore!

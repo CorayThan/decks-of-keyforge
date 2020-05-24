@@ -1,7 +1,7 @@
 import { isEqual } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
-import { log, prettyJson, Utils } from "../config/Utils"
+import { Utils } from "../config/Utils"
 import { Constraint } from "../decks/search/ConstraintDropdowns"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
 import { BackendExpansion } from "../expansions/Expansions"
@@ -15,7 +15,7 @@ export class CardFilters {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static rehydrateFromQuery = (queryObject: any): CardFilters => {
-        log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
+        // log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
         if (typeof queryObject.houses === "string") {
             queryObject.houses = [queryObject.houses]
         }
@@ -69,7 +69,7 @@ export class CardFilters {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const filters = new CardFilters() as any
         Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
-        log.debug(`Rehydrated to: ${prettyJson(filters)}`)
+        // log.debug(`Rehydrated to: ${prettyJson(filters)}`)
         return filters
     }
 
@@ -145,6 +145,7 @@ export enum CardSort {
     AMBER_CONTROL = "AMBER_CONTROL",
     CREATURE_CONTROL = "CREATURE_CONTROL",
     ARTIFACT_CONTROL = "ARTIFACT_CONTROL",
+    RELATIVE_WIN_RATE = "RELATIVE_WIN_RATE",
     WIN_RATE = "WIN_RATE",
     SET_NUMBER = "SET_NUMBER",
     AERC = "AERC",

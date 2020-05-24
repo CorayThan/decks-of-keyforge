@@ -24,7 +24,6 @@ import org.springframework.web.client.HttpClientErrorException
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateWinsLosses = "PT72H"
-private const val lockCrucibleTrackerUpdateWinsLosses = "PT1H"
 private const val onceEverySixHoursLock = "PT6H"
 private const val lockUpdatePageOfWinLosses = "PT20S"
 
@@ -148,6 +147,7 @@ class DeckWinsService(
         }
     }
 
+    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.importNewDecks)
     fun updateCardAndHouseWins() {
         log.info("$scheduledStart card and house win loss update")
 
@@ -169,7 +169,9 @@ class DeckWinsService(
                     val wins = cardWins[card.cardTitle] ?: Wins()
                     val winsValue = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
                     cardWins[card.cardTitle] = winsValue
-                    cardWinsWithExpansions[expansion]!![card.cardTitle] = winsValue
+                    val expansionWins = cardWinsWithExpansions[expansion]?.get(card.cardTitle) ?: Wins()
+                    val expansionWinsValue = expansionWins.copy(wins = expansionWins.wins + deck.wins, losses = expansionWins.losses + deck.losses)
+                    cardWinsWithExpansions[expansion]!![card.cardTitle] = expansionWinsValue
                 }
                 deck.houses.forEach { house ->
                     val wins = houseWins[house] ?: Wins()

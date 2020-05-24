@@ -682,7 +682,7 @@ export const preludeToAscension: Article = {
                 {
                     type: EntryType.PARAGRAPH,
                     text: "I absolutely despise the fact that this card exists, because that forces us to keep track of discard pile's order. When it " +
-                        "comes to the card's merit it's comparable to {{cardName: Random Access Archive}}."
+                        "comes to the card's merit it's comparable to {{cardName: Random Access Archives}}."
                 },
                 {
                     type: EntryType.PARAGRAPH,

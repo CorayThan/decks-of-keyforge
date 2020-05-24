@@ -81,3 +81,8 @@ export interface GlobalStats {
     efficiencyPercentiles: { [key: number]: number }
     disruptionPercentiles: { [key: number]: number }
 }
+
+export interface Wins {
+    wins: number
+    losses: number
+}

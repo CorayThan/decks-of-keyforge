@@ -3,6 +3,7 @@ package coraythan.keyswap.stats
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckPageService
@@ -51,7 +52,7 @@ class StatsService(
     var cachedGlobalStats: List<GlobalStatsWithExpansion> = defaultGlobalStats
 
     fun findGlobalStats(): List<GlobalStatsWithExpansion> {
-        if (cachedGlobalStats != defaultGlobalStats) {
+        if (cachedGlobalStats != defaultGlobalStats && cachedGlobalStats.find { it.winsByExpansionAndHouse != null } != null) {
             return cachedGlobalStats
         }
         this.updateCachedStats()
@@ -242,7 +243,11 @@ class StatsService(
     private fun updateCachedStats() {
         val statsToCache = deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(null)?.toDeckStatistics() ?: DeckStatistics()
         cachedStats = statsToCache
-        cachedGlobalStats = listOf(GlobalStatsWithExpansion(null, statsToCache.toGlobalStats()))
+        cachedGlobalStats = listOf(GlobalStatsWithExpansion(
+                null,
+                statsToCache.toGlobalStats(),
+                CardWinsService.winsByExpansionAndHouseString
+        ))
                 .plus(Expansion.values().map {
                     GlobalStatsWithExpansion(it.expansionNumber,
                             (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)?.toDeckStatistics() ?: DeckStatistics())

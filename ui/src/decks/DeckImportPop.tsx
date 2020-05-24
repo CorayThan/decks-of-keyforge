@@ -140,19 +140,23 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                     </LinkButton>
                                 </div>
                             </Tooltip>
-                            {userStore.loggedIn() ? (
-                                <LinkButton
-                                    to={Routes.importUnregisteredDeck}
-                                    onClick={() => {
-                                        closeAllMenuStoresExcept()
-                                        deckImportPopStore.popOpen = false
-                                    }}
-                                >
-                                    Import Unregistered Deck
-                                </LinkButton>
-                            ) : (
-                                <Typography>Login to import unregistered decks</Typography>
-                            )}
+                            <Tooltip
+                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $1 a month patron to import unregistered decks!"}
+                                style={{zIndex: screenStore.zindexes.tooltip}}
+                            >
+                                <div>
+                                    <LinkButton
+                                        to={Routes.importUnregisteredDeck}
+                                        onClick={() => {
+                                            closeAllMenuStoresExcept()
+                                            deckImportPopStore.popOpen = false
+                                        }}
+                                        disabled={!userStore.theoreticalDecksAllowed}
+                                    >
+                                        Import Unregistered Deck
+                                    </LinkButton>
+                                </div>
+                            </Tooltip>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
                             <Button

@@ -527,7 +527,8 @@ data class SynTraitValuesForTrait(
                 SynTraitHouse.outOfHouse -> house1 != house2
                 SynTraitHouse.continuous -> true
             }
-            SynTraitHouse.continuous -> throw IllegalStateException("Synergies cannot be continuous.")
+            // Synergies with omni always match
+            SynTraitHouse.continuous -> true
         }
     }
 }

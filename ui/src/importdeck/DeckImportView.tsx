@@ -8,6 +8,7 @@ import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSel
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
+import { userStore } from "../user/UserStore"
 import { CreateUnregisteredDeck, saveUnregisteredDeckStore } from "./CreateUnregisteredDeck"
 import { deckImportStore } from "./DeckImportStore"
 
@@ -57,6 +58,11 @@ export class DeckImportView extends React.Component {
     }
 
     render() {
+
+        if (!userStore.theoreticalDecksAllowed) {
+            return <Typography>Please become a patron to import unregistered decks.</Typography>
+        }
+
         // @ts-ignore
         return (
             <div style={{margin: spacing(4), justifyContent: "center", display: "flex", flexWrap: "wrap"}}>

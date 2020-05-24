@@ -2,6 +2,7 @@ import * as Bowser from "bowser"
 import { getMinutes, setMinutes, startOfMinute } from "date-fns"
 import format from "date-fns/format"
 import parse from "date-fns/parse"
+import { round } from "lodash"
 import * as loglevel from "loglevel"
 import { v4 as uuidv4 } from "uuid"
 
@@ -104,6 +105,13 @@ export class Utils {
                     safari: ">=12.1"
                 },
             })
+    }
+
+    static roundToKs = (toRound: number) => {
+        if (toRound < 1000) {
+            return toRound
+        }
+        return round(toRound / 1000, 0) + "k"
     }
 }
 

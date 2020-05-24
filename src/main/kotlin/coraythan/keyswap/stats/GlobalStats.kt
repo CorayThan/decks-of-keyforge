@@ -1,6 +1,9 @@
 package coraythan.keyswap.stats
 
-data class GlobalStatsWithExpansion(val expansion: Int?, val stats: GlobalStats)
+data class GlobalStatsWithExpansion(
+        val expansion: Int?,
+        val stats: GlobalStats
+)
 
 data class GlobalStats(
         val averageActions: Int = 14,
