@@ -506,8 +506,8 @@ class EmailService(
                     <td>${deck.creatureCount}</td>                    
                 </tr>
                 <tr>
-                    <td>Aember Protection</td>
-                    <td>${deck.amberProtection.roundToOneSigDig()}</td>
+                    <td>Creature Protection (CP)</td>
+                    <td>${deck.creatureProtection?.roundToOneSigDig()}</td>
                     <td>Artifacts</td>
                     <td>${deck.artifactCount}</td>                    
                 </tr>
@@ -532,10 +532,6 @@ class EmailService(
                 <tr>
                     <td>Disruption (D)</td>
                     <td>${deck.disruption.roundToOneSigDig()}</td>
-                </tr>
-                <tr>
-                    <td>House Cheating (H)</td>
-                    <td>${deck.houseCheating.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Other (O)</td>

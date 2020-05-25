@@ -240,15 +240,9 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 sortFunction: deck => roundToHundreds(deck.synergies?.disruption)
             },
             {
-                title: "AP",
-                transform: deck => roundToHundreds(deck.synergies?.amberProtection),
-                sortFunction: deck => roundToHundreds(deck.synergies?.amberProtection),
-                hide: keyLocalStorage.smallTableView
-            },
-            {
-                title: "HC",
-                transform: deck => roundToHundreds(deck.synergies?.houseCheating),
-                sortFunction: deck => roundToHundreds(deck.synergies?.houseCheating),
+                title: "CP",
+                transform: deck => roundToHundreds(deck.synergies?.creatureProtection),
+                sortFunction: deck => roundToHundreds(deck.synergies?.creatureProtection),
                 hide: keyLocalStorage.smallTableView
             },
             {

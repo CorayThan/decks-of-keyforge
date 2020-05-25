@@ -8,9 +8,8 @@ export interface  HasAerc {
     creatureControl: number
     efficiency: number
     effectivePower: number
-    amberProtection: number
+    creatureProtection: number
     disruption: number
-    houseCheating: number
     other: number
     aercScore: number
 
@@ -20,9 +19,8 @@ export interface  HasAerc {
     creatureControlMax?: number
     efficiencyMax?: number
     effectivePowerMax?: number
-    amberProtectionMax?: number
+    creatureProtectionMax?: number
     disruptionMax?: number
-    houseCheatingMax?: number
     otherMax?: number
     aercScoreMax?: number
 

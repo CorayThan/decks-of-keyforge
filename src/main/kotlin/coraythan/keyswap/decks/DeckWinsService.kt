@@ -147,7 +147,6 @@ class DeckWinsService(
         }
     }
 
-    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.importNewDecks)
     fun updateCardAndHouseWins() {
         log.info("$scheduledStart card and house win loss update")
 

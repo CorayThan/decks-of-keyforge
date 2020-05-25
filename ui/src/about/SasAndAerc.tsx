@@ -27,8 +27,8 @@ export class SasAndAerc extends React.Component {
                     <InfoListCard title={"The AERC of your Deck"} infos={[
                         <Typography variant={"h5"}>AERC Deck Traits</Typography>,
                         "I've rated every card in key metrics, like its expected Aember Control (A), Expected Aember (E), Artifact Control (R), " +
-                        "Creature Control (C), Efficiency (F), Disruption (D), Effective Creature Power (P), Aember Protection, " +
-                        "House Cheating and Other.",
+                        "Creature Control (C), Efficiency (F), Disruption (D), Effective Creature Power (P), Creature Protection (CP) " +
+                        "and Other.",
                         "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
                         "When added together, these metrics represent the value of a deck converted to Aember.",
                         "When searching for decks you can use these to filter decks and only show decks with strong or weak traits.",
@@ -101,33 +101,22 @@ export class SasAndAerc extends React.Component {
                             img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/mugwump.png"}
                             texts={[
                                 "Effective power represents the real usable power of creatures in a deck. Creatures like Grommid, which " +
-                                "often cannot be played or used, have their total power reduced. Meanwhile, other cards contribute extra " +
-                                "power, like Blood of Titans or Zyzzix the Many.",
+                                "often cannot be played or used, have their total power reduced.",
                                 "Effective power is also increased by Armor at a 1:1 ratio, and other abilities that affect creature survivability, " +
-                                "like elusive, skirmish, hazardous, assault, healing and damage prevention.",
-                                "A single targetted ward provides 5 effective power.",
+                                "like elusive, skirmish, hazardous, assault and healing.",
                                 "When included in total AERC score, Effective Power is divided by 10."
                             ]}
                             icon={AercType.P}
                         />,
                         <AercTraitDescription
-                            title={"Aember Protection"}
-                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/pos-pixies.png"}
+                            title={"Creature Protection"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/encounter-suit.png"}
                             texts={[
-                                "Aember Protection includes any cards with effects that prevent stealing. This includes obvious cards, like Po's Pixies, " +
-                                "as well as Key Cheats (can't steal what you don't have!) and Control the Weak (can't steal with cards you can't play!)"
+                                "Creature Protection includes any cards with effects that protect creatures from fighting, damage, or removal. " +
+                                "This includes cards that increase power, but whose primary value is in making high value creatures harder to destroy, " +
+                                "like Banner of Battle."
                             ]}
                             icon={AercType.S}
-                        />,
-                        <AercTraitDescription
-                            title={"House Cheating"}
-                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ulyq-megamouth.png"}
-                            texts={[
-                                "House cheating represents how well a deck can use cards outside of their normal house. For example, Ulyq Megamouth " +
-                                "allows you to use a friendly non-mars creature, and increases H. Cards that let you play cards out of house, like Phase " +
-                                "Shift, effect efficiency."
-                            ]}
-                            icon={AercType.H}
                         />,
                         <AercTraitDescription
                             title={"Other"}

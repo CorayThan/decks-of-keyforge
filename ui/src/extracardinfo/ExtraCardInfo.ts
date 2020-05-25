@@ -19,10 +19,8 @@ export interface ExtraCardInfo {
     effectivePowerMax?: number
     disruption: number
     disruptionMax?: number
-    amberProtection: number
-    amberProtectionMax?: number
-    houseCheating: number
-    houseCheatingMax?: number
+    creatureProtection: number
+    creatureProtectionMax?: number
     other: number
     otherMax?: number
 

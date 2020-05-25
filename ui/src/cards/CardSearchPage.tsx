@@ -14,11 +14,11 @@ import { Spoiler } from "../spoilers/Spoiler"
 import { SpoilerView } from "../spoilers/SpoilerView"
 import { uiStore } from "../ui/UiStore"
 import { CardFilters } from "./CardFilters"
-import { CardView } from "./CardSimpleView"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { cardStore } from "./CardStore"
-import { CardTableView } from "./CardTableView"
 import { KCard } from "./KCard"
+import { CardView } from "./views/CardSimpleView"
+import { CardTableView } from "./views/CardTableView"
 
 export class CardSearchPage extends React.Component<RouteComponentProps<{}>> {
 

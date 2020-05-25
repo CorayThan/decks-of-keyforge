@@ -83,8 +83,7 @@ data class Card(
                         cardInfo.creatureControl +
                         cardInfo.efficiency +
                         cardInfo.disruption +
-                        cardInfo.houseCheating +
-                        cardInfo.amberProtection +
+                        cardInfo.creatureProtection +
                         cardInfo.other +
                         this.effectivePower.toDouble() / 10 +
                         (if (this.cardType == CardType.Creature) 0.4 else 0.0)
@@ -102,8 +101,7 @@ data class Card(
                         (cardInfo.creatureControlMax ?: cardInfo.creatureControl) +
                         (cardInfo.efficiencyMax ?: cardInfo.efficiency) +
                         (cardInfo.disruptionMax ?: cardInfo.disruption) +
-                        (cardInfo.houseCheatingMax ?: cardInfo.houseCheating) +
-                        (cardInfo.amberProtectionMax ?: cardInfo.amberProtection) +
+                        (cardInfo.creatureProtectionMax ?: cardInfo.creatureProtection) +
                         (cardInfo.otherMax ?: cardInfo.other) +
                         (cardInfo.expectedAmberMax ?: cardInfo.expectedAmber) +
                         (if (cardInfo.effectivePowerMax == null) {

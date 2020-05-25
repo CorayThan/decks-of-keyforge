@@ -16,8 +16,7 @@ export interface GlobalStats {
     averageArtifactControl: number
     averageEfficiency: number
     averageDisruption: number
-    averageHouseCheating: number
-    averageAmberProtection: number
+    averageCreatureProtection: number
     averageOther: number
     averageEffectivePower: number
     sas: BarData[]
@@ -32,8 +31,7 @@ export interface GlobalStats {
     creatureControl: BarData[]
     efficiency: BarData[]
     disruption: BarData[]
-    houseCheating: BarData[]
-    amberProtection: BarData[]
+    creatureProtection: BarData[]
     other: BarData[]
     effectivePower: BarData[]
 
@@ -53,8 +51,7 @@ export interface GlobalStats {
     creatureControlWinRate?: BarData[]
     efficiencyWinRate?: BarData[]
     disruptionWinRate?: BarData[]
-    houseCheatingWinRate?: BarData[]
-    amberProtectionWinRate?: BarData[]
+    creatureProtectionWinRate?: BarData[]
     otherWinRate?: BarData[]
     effectivePowerWinRate?: BarData[]
 
@@ -74,7 +71,7 @@ export interface GlobalStats {
 
     amberControlPercentiles: { [key: number]: number }
     expectedAmberPercentiles: { [key: number]: number }
-    amberProtectionPercentiles: { [key: number]: number }
+    creatureProtectionPercentiles: { [key: number]: number }
     creatureControlPercentiles: { [key: number]: number }
     artifactControlPercentiles: { [key: number]: number }
     effectivePowerPercentiles: { [key: number]: number }

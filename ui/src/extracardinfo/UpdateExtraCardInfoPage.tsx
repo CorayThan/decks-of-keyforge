@@ -22,10 +22,10 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { ChangeEvent } from "react"
 import { RouteComponentProps } from "react-router-dom"
-import { CardView } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { CardType } from "../cards/CardType"
 import { KCard } from "../cards/KCard"
+import { CardView } from "../cards/views/CardSimpleView"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
@@ -102,11 +102,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     @observable
     effectivePower = "0"
     @observable
-    amberProtection = "0"
+    creatureProtection = "0"
     @observable
     disruption = "0"
-    @observable
-    houseCheating = "0"
     @observable
     other = "0"
 
@@ -125,11 +123,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     @observable
     effectivePowerMax = "0"
     @observable
-    amberProtectionMax = "0"
+    creatureProtectionMax = "0"
     @observable
     disruptionMax = "0"
-    @observable
-    houseCheatingMax = "0"
     @observable
     otherMax = "0"
 
@@ -163,9 +159,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.creatureControl = extraCardInfo.creatureControl.toString()
         this.efficiency = extraCardInfo.efficiency.toString()
         this.effectivePower = extraCardInfo.effectivePower.toString()
-        this.amberProtection = extraCardInfo.amberProtection.toString()
+        this.creatureProtection = extraCardInfo.creatureProtection.toString()
         this.disruption = extraCardInfo.disruption.toString()
-        this.houseCheating = extraCardInfo.houseCheating.toString()
         this.other = extraCardInfo.other.toString()
 
         this.amberControlMax = extraCardInfo.amberControlMax == null ? "0" : extraCardInfo.amberControlMax.toString()
@@ -174,9 +169,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.creatureControlMax = extraCardInfo.creatureControlMax == null ? "0" : extraCardInfo.creatureControlMax.toString()
         this.efficiencyMax = extraCardInfo.efficiencyMax == null ? "0" : extraCardInfo.efficiencyMax.toString()
         this.effectivePowerMax = extraCardInfo.effectivePowerMax == null ? "0" : extraCardInfo.effectivePowerMax.toString()
-        this.amberProtectionMax = extraCardInfo.amberProtectionMax == null ? "0" : extraCardInfo.amberProtectionMax.toString()
+        this.creatureProtectionMax = extraCardInfo.creatureProtectionMax == null ? "0" : extraCardInfo.creatureProtectionMax.toString()
         this.disruptionMax = extraCardInfo.disruptionMax == null ? "0" : extraCardInfo.disruptionMax.toString()
-        this.houseCheatingMax = extraCardInfo.houseCheatingMax == null ? "0" : extraCardInfo.houseCheatingMax.toString()
         this.otherMax = extraCardInfo.otherMax == null ? "0" : extraCardInfo.otherMax.toString()
 
         this.traits = extraCardInfo.traits
@@ -196,9 +190,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             creatureControl: Number(this.creatureControl),
             efficiency: Number(this.efficiency),
             effectivePower: Number(this.effectivePower),
-            amberProtection: Number(this.amberProtection),
+            creatureProtection: Number(this.creatureProtection),
             disruption: Number(this.disruption),
-            houseCheating: Number(this.houseCheating),
             other: Number(this.other),
 
             amberControlMax: Number(this.amberControlMax),
@@ -207,9 +200,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             creatureControlMax: Number(this.creatureControlMax),
             efficiencyMax: Number(this.efficiencyMax),
             effectivePowerMax: Number(this.effectivePowerMax),
-            amberProtectionMax: Number(this.amberProtectionMax),
+            creatureProtectionMax: Number(this.creatureProtectionMax),
             disruptionMax: Number(this.disruptionMax),
-            houseCheatingMax: Number(this.houseCheatingMax),
             otherMax: Number(this.otherMax),
 
             traits: this.traits,
@@ -367,23 +359,13 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                             />
                             <InfoInput
                                 name={"aember protection"}
-                                value={this.amberProtection}
-                                update={(event: EventValue) => this.amberProtection = event.target.value}
+                                value={this.creatureProtection}
+                                update={(event: EventValue) => this.creatureProtection = event.target.value}
                             />
                             <InfoInput
                                 name={"aember prot max"}
-                                value={this.amberProtectionMax}
-                                update={(event: EventValue) => this.amberProtectionMax = event.target.value}
-                            />
-                            <InfoInput
-                                name={"house cheating"}
-                                value={this.houseCheating}
-                                update={(event: EventValue) => this.houseCheating = event.target.value}
-                            />
-                            <InfoInput
-                                name={"house cheating max"}
-                                value={this.houseCheatingMax}
-                                update={(event: EventValue) => this.houseCheatingMax = event.target.value}
+                                value={this.creatureProtectionMax}
+                                update={(event: EventValue) => this.creatureProtectionMax = event.target.value}
                             />
                             <InfoInput
                                 name={"other"}

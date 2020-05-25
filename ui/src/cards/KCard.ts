@@ -8,10 +8,10 @@ import { House } from "../houses/House"
 import { Wins } from "../stats/GlobalStats"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
-import { HasFrontImage } from "./CardSimpleView"
 import { cardStore } from "./CardStore"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
+import { HasFrontImage } from "./views/CardSimpleView"
 
 export interface KCard {
     id: string
@@ -60,8 +60,8 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
     const {effectivePower, aercScore, aercScoreMax} = card
     const extraCardInfo = cardStore.findExtraInfoToUse(card)
     const {
-        amberControl, expectedAmber, creatureControl, artifactControl, efficiency, amberProtection, disruption, houseCheating, other,
-        amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, amberProtectionMax, disruptionMax, houseCheatingMax, otherMax
+        amberControl, expectedAmber, creatureControl, artifactControl, efficiency, creatureProtection, disruption, other,
+        amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, creatureProtectionMax, disruptionMax, otherMax
     } = extraCardInfo
 
     let averageAercScore = card.aercScore
@@ -76,9 +76,8 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         artifactControl,
         efficiency,
         effectivePower,
-        amberProtection,
+        creatureProtection,
         disruption,
-        houseCheating,
         other,
         amberControlMax,
         expectedAmberMax,
@@ -86,9 +85,8 @@ export const hasAercFromCard = (card: KCard): HasAerc => {
         artifactControlMax,
         efficiencyMax,
         effectivePowerMax,
-        amberProtectionMax,
+        creatureProtectionMax,
         disruptionMax,
-        houseCheatingMax,
         otherMax,
         aercScoreMax: aercScoreMax == null ? undefined : roundToHundreds(aercScoreMax),
         aercScore: roundToHundreds(aercScore),
@@ -207,8 +205,8 @@ export class CardUtils {
                 card.extraCardInfo.amberControlMax,
                 card.extraCardInfo.expectedAmber,
                 card.extraCardInfo.expectedAmberMax,
-                card.extraCardInfo.amberProtection,
-                card.extraCardInfo.amberProtectionMax,
+                card.extraCardInfo.creatureProtection,
+                card.extraCardInfo.creatureProtectionMax,
                 card.extraCardInfo.artifactControl,
                 card.extraCardInfo.artifactControlMax,
                 card.extraCardInfo.creatureControl,
@@ -219,8 +217,6 @@ export class CardUtils {
                 card.extraCardInfo.efficiencyMax,
                 card.extraCardInfo.disruption,
                 card.extraCardInfo.disruptionMax,
-                card.extraCardInfo.houseCheating,
-                card.extraCardInfo.houseCheatingMax,
                 card.extraCardInfo.other,
                 card.extraCardInfo.otherMax,
 
@@ -249,8 +245,8 @@ export class CardUtils {
             "Amber Control Max",
             "Expected Amber",
             "Expected Amber Max",
-            "Aember Protection",
-            "Aember Protection Max",
+            "Creature Protection",
+            "Creature Protection Max",
             "Artifact Control",
             "Artifact Control Max",
             "Creature Control",
@@ -261,8 +257,6 @@ export class CardUtils {
             "Efficiency Max",
             "Disruption",
             "Disruption Max",
-            "House Cheating",
-            "House Cheating Max",
             "Other",
             "Other Max",
 

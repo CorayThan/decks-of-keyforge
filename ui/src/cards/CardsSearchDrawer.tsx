@@ -95,8 +95,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
             "creatureControl",
             "efficiency",
             "disruption",
-            "amberProtection",
-            "houseCheating",
+            "creatureProtection",
             "effectivePower",
         ].flatMap(value => [value, `${value}Max`])
 

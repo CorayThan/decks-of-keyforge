@@ -24,8 +24,8 @@ export class AercAveragesRadar extends React.Component<AercRadarProps> {
                 deck: deck.expectedAmber,
             },
             {
-                aerc: "Aember Protection",
-                deck: deck.amberProtection,
+                aerc: "Creature Protection",
+                deck: deck.creatureProtection,
             },
             {
                 aerc: "Aember Control",

@@ -6,7 +6,6 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.KeyforgeDeck
-import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.*
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 14
+val publishedAercVersion = 15
 val majorRevision = false
 
 @Transactional
@@ -25,8 +24,6 @@ class CardService(
         private val cardRepo: CardRepo,
         private val keyforgeApi: KeyforgeApi,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
-        private val spoilerRepo: SpoilerRepo,
-        private val cardIdentifierRepo: CardIdentifierRepo,
         private val cardWinsService: CardWinsService,
         private val objectMapper: ObjectMapper
 ) {

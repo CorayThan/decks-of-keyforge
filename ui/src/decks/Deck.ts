@@ -142,26 +142,24 @@ export class DeckUtils {
         const {
             amberControl,
             expectedAmber,
-            amberProtection,
+            creatureProtection,
             artifactControl,
             creatureControl,
             effectivePower,
             efficiency,
             disruption,
-            houseCheating,
             other,
             ...rest
         } = synergies
         return {
             amberControl: roundToHundreds(amberControl),
             expectedAmber: roundToHundreds(expectedAmber),
-            amberProtection: roundToHundreds(amberProtection),
+            creatureProtection: roundToHundreds(creatureProtection),
             artifactControl: roundToHundreds(artifactControl),
             creatureControl: roundToHundreds(creatureControl),
             effectivePower: roundToHundreds(effectivePower),
             efficiency: roundToHundreds(efficiency),
             disruption: roundToHundreds(disruption),
-            houseCheating: roundToHundreds(houseCheating),
             other: roundToHundreds(other),
             ...rest
         }
@@ -181,13 +179,12 @@ export class DeckUtils {
                 synergies.rawAerc,
                 synergies.amberControl,
                 synergies.expectedAmber,
-                synergies.amberProtection,
+                synergies.creatureProtection,
                 synergies.artifactControl,
                 synergies.creatureControl,
                 synergies.effectivePower,
                 synergies.efficiency,
                 synergies.disruption,
-                synergies.houseCheating,
                 synergies.other,
 
                 DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[0]),
@@ -236,13 +233,12 @@ export class DeckUtils {
             "Raw Aerc Score",
             "Amber Control",
             "Expected Amber",
-            "Aember Protection",
+            "Creature Protection",
             "Artifact Control",
             "Creature Control",
             "Effective Power",
             "Efficiency",
             "Disruption",
-            "House Cheating",
             "Other",
 
             "House 1 SAS",

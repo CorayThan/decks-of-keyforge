@@ -96,7 +96,7 @@ class UserSearchService(
     }
 
     fun findStatsForUser(username: String): UserSearchResult? {
-        return searchUsers(UserFilters(username = username))[0]
+        return searchUsers(UserFilters(username = username)).getOrNull(0)
     }
 
     fun searchUsers(filters: UserFilters, withHidden: Boolean = false): List<UserSearchResult> {

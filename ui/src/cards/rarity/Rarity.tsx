@@ -1,3 +1,4 @@
+import { makeStyles } from "@material-ui/core/styles"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { themeStore } from "../../config/MuiConfig"
@@ -28,7 +29,6 @@ export interface RarityValue {
     rarity: Rarity
     img: string
     imgDark: string
-    icon?: React.ReactElement<HTMLImageElement>
 }
 
 export const rarityValuesArray: RarityValue[] = [
@@ -59,14 +59,37 @@ export const rarityValuesArray: RarityValue[] = [
     },
 ]
 
-rarityValuesArray.forEach((rarityValue) => {
-    rarityValue.icon = (<img alt={rarityValue.rarity} src={themeStore.darkMode ? rarityValue.imgDark : rarityValue.img} style={{width: 16, height: 16}}/>)
+const useStyles = makeStyles({
+    icon: {width: 16, height: 16}
 })
 
-export const MaverickIcon = observer(() => (<img alt={"maverick"} src={themeStore.darkMode ? maverickDark : maverick} style={{width: 16, height: 16}}/>))
-export const LegacyIcon = observer(() => (<img alt={"legacy"} src={themeStore.darkMode ? legacyDark : legacy} style={{width: 16, height: 16}}/>))
-export const AnomalyIcon = observer(() => (<img alt={"anomaly"} src={themeStore.darkMode ? anomalyDark : anomaly} style={{width: 16, height: 16}}/>))
+export const MaverickIcon = observer(() => {
+    const classes = useStyles()
+    return (
+        <img alt={"maverick"} src={themeStore.darkMode ? maverickDark : maverick} className={classes.icon}/>
+    )
+})
+export const LegacyIcon = observer(() => {
+    const classes = useStyles()
+    return (
+        <img alt={"legacy"} src={themeStore.darkMode ? legacyDark : legacy} className={classes.icon}/>
+    )
+})
+export const AnomalyIcon = observer(() => {
+    const classes = useStyles()
+    return (
+        <img alt={"anomaly"} src={themeStore.darkMode ? anomalyDark : anomaly} className={classes.icon}/>
+    )
+})
 
 export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.map(rarityValue => (
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]
 )))
+
+export const RarityIcon = observer((props: {rarity: Rarity}) => {
+    const classes = useStyles()
+    const value = rarityValues.get(props.rarity)!
+    return (
+        <img alt={props.rarity} src={themeStore.darkMode ? value.imgDark : value.img} className={classes.icon}/>
+    )
+})

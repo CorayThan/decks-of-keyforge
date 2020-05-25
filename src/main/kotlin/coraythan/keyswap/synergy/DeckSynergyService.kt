@@ -154,8 +154,7 @@ object DeckSynergyService {
                         synergizedValue(totalSynPercent, cardInfo.effectivePower.toDouble(), cardInfo.effectivePowerMax, hasPositive, hasNegative)
                     }
                     val dValue = synergizedValue(totalSynPercent, cardInfo.disruption, cardInfo.disruptionMax, hasPositive, hasNegative)
-                    val hcValue = synergizedValue(totalSynPercent, cardInfo.houseCheating, cardInfo.houseCheatingMax, hasPositive, hasNegative)
-                    val apValue = synergizedValue(totalSynPercent, cardInfo.amberProtection, cardInfo.amberProtectionMax, hasPositive, hasNegative)
+                    val apValue = synergizedValue(totalSynPercent, cardInfo.creatureProtection, cardInfo.creatureProtectionMax, hasPositive, hasNegative)
                     val oValue = synergizedValue(totalSynPercent, cardInfo.other, cardInfo.otherMax, hasPositive, hasNegative)
 
                     val synergizedValues = listOf(
@@ -169,7 +168,6 @@ object DeckSynergyService {
                                     synergy = (pValue.synergy / 10).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
                             ),
                             dValue,
-                            hcValue,
                             apValue,
                             oValue
                     )
@@ -191,8 +189,7 @@ object DeckSynergyService {
                             effectivePower = pValue.value.toInt(),
 
                             disruption = dValue.value,
-                            houseCheating = hcValue.value,
-                            amberProtection = apValue.value,
+                            creatureProtection = apValue.value,
                             other = oValue.value,
                             copies = count
                     )
@@ -206,8 +203,7 @@ object DeckSynergyService {
         val d = synergyCombos.map { it.disruption * it.copies }.sum()
         val p = synergyCombos.map { it.effectivePower * it.copies }.sum()
         val o = synergyCombos.map { it.other * it.copies }.sum()
-        val ap = synergyCombos.map { it.amberProtection * it.copies }.sum()
-        val hc = synergyCombos.map { it.houseCheating * it.copies }.sum()
+        val cp = synergyCombos.map { it.creatureProtection * it.copies }.sum()
 
         val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
         val powerValue = p / 10
@@ -215,7 +211,7 @@ object DeckSynergyService {
         val synergy = roundToInt(synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum(), RoundingMode.HALF_UP)
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
         val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
-        val newSas = roundToInt(a + e + r + c + f + d + ap + hc + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
+        val newSas = roundToInt(a + e + r + c + f + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4), RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
@@ -234,8 +230,7 @@ object DeckSynergyService {
                 efficiency = f,
                 effectivePower = p,
                 disruption = d,
-                amberProtection = ap,
-                houseCheating = hc,
+                creatureProtection = cp,
                 other = o
         )
     }

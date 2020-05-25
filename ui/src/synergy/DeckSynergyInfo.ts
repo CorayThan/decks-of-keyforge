@@ -14,9 +14,8 @@ export interface DeckSynergyInfo {
     artifactControl: number,
     efficiency: number,
     effectivePower: number,
-    amberProtection: number,
+    creatureProtection: number,
     disruption: number,
-    houseCheating: number,
     other: number,
 }
 
@@ -33,9 +32,8 @@ export interface SynergyCombo {
     artifactControl: number,
     efficiency: number,
     effectivePower: number,
-    amberProtection: number,
+    creatureProtection: number,
     disruption: number,
-    houseCheating: number,
     other: number,
 
     copies: number

@@ -53,13 +53,11 @@ class WebConfiguration(
                 .addResolver(object : PathResourceResolver() {
                     @Throws(IOException::class)
                     override fun getResource(resourcePath: String, location: Resource): Resource? {
-                        log.info("Request for $resourcePath")
                         if (resourcePath.startsWith(Api.base) || resourcePath.startsWith(Api.base.substring(1))) {
                             return null
                         }
 
                         return if (location.exists() && location.isReadable) {
-                            log.info("Getting index.html for $resourcePath")
                             location
                         } else {
                             null

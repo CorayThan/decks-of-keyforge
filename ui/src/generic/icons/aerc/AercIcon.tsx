@@ -6,7 +6,6 @@ import CreatureControl from "./creature-control.svg"
 import Disruption from "./disruption.svg"
 import Efficiency from "./efficiency.svg"
 import ExpectedAmber from "./expected-amber.svg"
-import HouseCheating from "./house-cheating.svg"
 import Other from "./other.svg"
 import Power from "./power.svg"
 
@@ -50,9 +49,6 @@ export const AercIcon = (props: { type: AercType, width?: number, style?: React.
             break
         case AercType.S:
             icon = AmberProtection
-            break
-        case AercType.H:
-            icon = HouseCheating
             break
         case AercType.O:
             icon = Other

@@ -1,9 +1,9 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import { Info } from "@material-ui/icons"
 import * as React from "react"
-import { CardAsLine } from "../cards/CardSimpleView"
+import { CardAsLine } from "../cards/views/CardAsLine"
 import { spacing } from "../config/MuiConfig"
-import { log, roundToHundreds } from "../config/Utils"
+import { roundToHundreds } from "../config/Utils"
 import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { KeyCard } from "../generic/KeyCard"
@@ -22,8 +22,6 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
         if (this.props.synergies == null) {
             return <Loader/>
         }
-
-        log.info("Display synergies for deck " + this.props.synergies.deck.name)
 
         const sasPercentile = this.props.synergies.deck.sasPercentile
         const {deck, antisynergyPercentile, synergyPercentile} = this.props.synergies
@@ -90,12 +88,11 @@ const synergyDetailHeaders: SortableTableHeaderInfo<SynergyCombo>[] = [
     },
     {property: "amberControl", transformProperty: roundToHundreds},
     {property: "expectedAmber", transformProperty: roundToHundreds},
-    {property: "amberProtection", transformProperty: roundToHundreds},
+    {property: "creatureProtection", transformProperty: roundToHundreds},
     {property: "artifactControl", transformProperty: roundToHundreds},
     {property: "creatureControl", transformProperty: roundToHundreds},
     {property: "effectivePower", transformProperty: roundToHundreds},
     {property: "efficiency", transformProperty: roundToHundreds},
     {property: "disruption", transformProperty: roundToHundreds},
-    {property: "houseCheating", transformProperty: roundToHundreds},
     {property: "other", transformProperty: roundToHundreds},
 ]

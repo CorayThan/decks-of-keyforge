@@ -14,8 +14,7 @@ data class DeckStatistics(
         val artifactControl: MutableMap<Int, Int> = mutableMapOf(),
         val efficiency: MutableMap<Int, Int> = mutableMapOf(),
         val disruption: MutableMap<Int, Int> = mutableMapOf(),
-        val houseCheating: MutableMap<Int, Int> = mutableMapOf(),
-        val amberProtection: MutableMap<Int, Int> = mutableMapOf(),
+        val creatureProtection: MutableMap<Int, Int> = mutableMapOf(),
         val other: MutableMap<Int, Int> = mutableMapOf(),
         val effectivePower: MutableMap<Int, Int> = mutableMapOf(),
         val sas: MutableMap<Int, Int> = mutableMapOf(),
@@ -42,8 +41,7 @@ data class DeckStatistics(
         val creatureControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val efficiencyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val disruptionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
-        val houseCheatingToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
-        val amberProtectionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
+        val creatureProtectionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val otherToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val effectivePowerToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
 
@@ -67,10 +65,8 @@ data class DeckStatistics(
         get() = IndividalDeckTraitStats.fromValues(efficiency)
     val disruptionStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(disruption)
-    val houseCheatingStats: IndividalDeckTraitStats
-        get() = IndividalDeckTraitStats.fromValues(houseCheating)
-    val amberProtectionStats: IndividalDeckTraitStats
-        get() = IndividalDeckTraitStats.fromValues(amberProtection)
+    val creatureProtectionStats: IndividalDeckTraitStats
+        get() = IndividalDeckTraitStats.fromValues(creatureProtection)
     val otherStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(other)
     val effectivePowerStats: IndividalDeckTraitStats
@@ -101,8 +97,7 @@ data class DeckStatistics(
             averageArtifactControl = artifactControlStats.median,
             averageEfficiency = efficiencyStats.median,
             averageDisruption = disruptionStats.median,
-            averageHouseCheating = houseCheatingStats.median,
-            averageAmberProtection = amberProtectionStats.median,
+            averageCreatureProtection = creatureProtectionStats.median,
             averageOther = otherStats.median,
             averageEffectivePower = effectivePowerStats.median,
             sas = sas.map { BarData(it.key, it.value) },
@@ -117,8 +112,7 @@ data class DeckStatistics(
             creatureControl = creatureControl.map { BarData(it.key, it.value) },
             efficiency = efficiency.map { BarData(it.key, it.value) },
             disruption = disruption.map { BarData(it.key, it.value) },
-            houseCheating = houseCheating.map { BarData(it.key, it.value) },
-            amberProtection = amberProtection.map { BarData(it.key, it.value) },
+            creatureProtection = creatureProtection.map { BarData(it.key, it.value) },
             other = other.map { BarData(it.key, it.value) },
             effectivePower = groupEffectiveCreaturePowerByTens(),
 
@@ -138,8 +132,7 @@ data class DeckStatistics(
             creatureControlWinRate = creatureControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             efficiencyWinRate = efficiencyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             disruptionWinRate = disruptionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
-            houseCheatingWinRate = houseCheatingToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
-            amberProtectionWinRate = amberProtectionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            creatureProtectionWinRate = creatureProtectionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             otherWinRate = otherToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             effectivePowerWinRate = effectivePowerToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
 
@@ -158,7 +151,7 @@ data class DeckStatistics(
 
             amberControlPercentiles = amberControlStats.percentileForValue,
             expectedAmberPercentiles = expectedAmberStats.percentileForValue,
-            amberProtectionPercentiles = amberProtectionStats.percentileForValue,
+            creatureProtectionPercentiles = creatureProtectionStats.percentileForValue,
             creatureControlPercentiles = creatureControlStats.percentileForValue,
             artifactControlPercentiles = artifactControlStats.percentileForValue,
             effectivePowerPercentiles = effectivePowerStats.percentileForValue,

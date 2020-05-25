@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core"
+import { createMuiTheme, makeStyles } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
 import { computed, observable } from "mobx"
 import { screenStore } from "../ui/ScreenStore"
@@ -95,3 +95,24 @@ export let theme = makeTheme()
 export const updateTheme = () => {
     theme = makeTheme()
 }
+
+export const useGlobalStyles = makeStyles({
+    marginRight: {
+        marginRight: spacing(2)
+    },
+    marginBottom: {
+        marginBottom: spacing(2)
+    },
+    marginRightSmall: {
+        marginRight: spacing(1)
+    },
+    marginLeftSmall: {
+        marginLeft: spacing(1)
+    },
+    marginBottomSmall: {
+        marginBottom: spacing(1)
+    },
+    flex: {
+        display: "flex"
+    }
+})

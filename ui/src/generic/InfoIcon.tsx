@@ -1,9 +1,28 @@
 import { Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
 import { TypographyClassKey } from "@material-ui/core/Typography"
 import * as React from "react"
 import { AercForCombos, AercForCombosProps } from "../aerc/AercForCombos"
 import { CardsMatchSasTip, CardsMatchSasTipProps } from "../aerc/CardsMatchSasTip"
 import { spacing } from "../config/MuiConfig"
+
+const useStyles = makeStyles({
+    root: (props: { small?: boolean }) => ({
+        display: "flex",
+        alignItems: "center",
+        marginBottom: props.small ? spacing(0.25) : spacing(0.5),
+        marginLeft: spacing(1)
+    }),
+    text: {
+        marginRight: spacing(1),
+        width: 32,
+        textAlign: "right"
+    },
+    icon: (props: { small?: boolean }) => ({
+        display: "flex",
+        width: props.small ? 20 : 24
+    })
+})
 
 export interface InfoIconValue {
     info: number | string
@@ -12,21 +31,26 @@ export interface InfoIconValue {
     cardsTips?: Omit<CardsMatchSasTipProps, "children">
 }
 
-export const InfoIconList = (props: { values: InfoIconValue[], horizontal?: boolean, small?: boolean, style?: React.CSSProperties }) => {
-    const {values, horizontal, style, small} = props
+export const InfoIconList = (props: { values: InfoIconValue[], small?: boolean }) => {
+    const {values, small} = props
     return (
-        <div style={{display: horizontal ? "flex" : undefined, ...style}}>
+        <div>
             {values.map((value, idx) => {
                 return (
-                    <InfoIcon value={value} key={idx} style={{marginBottom: small ? spacing(0.25) : spacing(0.5), marginLeft: spacing(1)}} small={small}/>
+                    <InfoIcon
+                        value={value}
+                        key={idx}
+                        small={small}
+                    />
                 )
             })}
         </div>
     )
 }
 
-export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?: React.CSSProperties }) => {
-    const {value} = props
+const InfoIcon = (props: { value: InfoIconValue, small?: boolean }) => {
+    const classes = useStyles(props)
+    const {value, small} = props
     const {info, combosTips, cardsTips} = value
     let displayValue = info
     if (typeof displayValue === "number") {
@@ -34,20 +58,21 @@ export const InfoIcon = (props: { value: InfoIconValue, small?: boolean, style?:
     }
 
     let variant: TypographyClassKey
-    let iconSize = 24
-    if (props.small) {
+    if (small) {
         variant = "body1"
-        iconSize = 20
     } else {
         variant = "h6"
     }
 
     const content = (
-        <div style={{display: "flex", alignItems: "center", ...props.style}}>
-            <Typography variant={variant} style={{marginRight: spacing(1), width: 32, textAlign: "right"}}>
+        <div className={classes.root}>
+            <Typography
+                variant={variant}
+                className={classes.text}
+            >
                 {displayValue}
             </Typography>
-            <div style={{display: "flex", width: iconSize}}>
+            <div className={classes.icon}>
                 {props.value.icon}
             </div>
         </div>

@@ -1,14 +1,14 @@
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core"
 import { observer } from "mobx-react"
 import React from "react"
-import { AercForCard } from "../aerc/AercViews"
-import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
-import { CsvDownloadButton } from "../generic/CsvDownloadButton"
-import { KeyButton } from "../mui-restyled/KeyButton"
-import { KeyLink } from "../mui-restyled/KeyLink"
+import { AercForCard } from "../../aerc/views/AercForCard"
+import { spacing } from "../../config/MuiConfig"
+import { Routes } from "../../config/Routes"
+import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
+import { KeyButton } from "../../mui-restyled/KeyButton"
+import { KeyLink } from "../../mui-restyled/KeyLink"
+import { CardUtils, KCard } from "../KCard"
 import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSimpleView"
-import { CardUtils, KCard } from "./KCard"
 
 export const CardTableView = observer((props: { cards: KCard[] }) => {
     return (

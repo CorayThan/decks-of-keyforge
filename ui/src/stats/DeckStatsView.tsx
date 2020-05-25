@@ -72,7 +72,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
         const {
             sasRating, synergyRating, antisynergyRating,
             aercScore, amberControl, expectedAmber, artifactControl, creatureControl,
-            efficiency, effectivePower, disruption, houseCheating, amberProtection
+            efficiency, effectivePower, disruption, creatureProtection
         } = this.props.deck
         const stats = statsStore.stats
         if (!stats) {
@@ -89,13 +89,12 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
             {name: "Raw AERC", data: stats.aerc, comparison: Math.round(aercScore)},
             {name: "Aember Control", data: stats.amberControl, comparison: Math.round(amberControl)},
             {name: "Expected Aember", data: stats.expectedAmber, comparison: Math.round(expectedAmber)},
-            {name: "Aember Protection", data: stats.amberProtection, comparison: Math.round(amberProtection)},
+            {name: "Creature Protection", data: stats.creatureProtection, comparison: Math.round(creatureProtection)},
             {name: "Artifact Control", data: stats.artifactControl, comparison: Math.round(artifactControl)},
             {name: "Creature Control", data: stats.creatureControl, comparison: Math.round(creatureControl)},
             {name: "Effective Power", data: stats.effectivePower, comparison: effectiveCreaturePowerCompareValue},
             {name: "Efficiency", data: stats.efficiency, comparison: Math.round(efficiency)},
             {name: "Disruption", data: stats.disruption, comparison: Math.round(disruption)},
-            {name: "House Cheating", data: stats.houseCheating, comparison: Math.round(houseCheating)},
         ]
 
         const firstRowProps = barProps.slice(0, rowSize)

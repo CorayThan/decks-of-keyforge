@@ -3,7 +3,6 @@ package coraythan.keyswap.stats
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckPageService
@@ -52,7 +51,7 @@ class StatsService(
     var cachedGlobalStats: List<GlobalStatsWithExpansion> = defaultGlobalStats
 
     fun findGlobalStats(): List<GlobalStatsWithExpansion> {
-        if (cachedGlobalStats != defaultGlobalStats && cachedGlobalStats.find { it.winsByExpansionAndHouse != null } != null) {
+        if (cachedGlobalStats != defaultGlobalStats) {
             return cachedGlobalStats
         }
         this.updateCachedStats()
@@ -188,8 +187,7 @@ class StatsService(
                         stats.artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
                         stats.efficiency.incrementValue(ratedDeck.efficiency.roundToInt())
                         stats.disruption.incrementValue(ratedDeck.disruption.roundToInt())
-                        stats.houseCheating.incrementValue(ratedDeck.houseCheating.roundToInt())
-                        stats.amberProtection.incrementValue(ratedDeck.amberProtection.roundToInt())
+                        stats.creatureProtection.incrementValue(ratedDeck.creatureProtection?.roundToInt() ?: 0)
                         stats.other.incrementValue(ratedDeck.other.roundToInt())
                         stats.effectivePower.incrementValue(ratedDeck.effectivePower)
                         stats.sas.incrementValue(ratedDeck.sasRating)
@@ -219,8 +217,7 @@ class StatsService(
                             stats.creatureControlToWinsLosses.addWinsLosses(ratedDeck.creatureControl.roundToInt(), wins)
                             stats.efficiencyToWinsLosses.addWinsLosses(ratedDeck.efficiency.roundToInt(), wins)
                             stats.disruptionToWinsLosses.addWinsLosses(ratedDeck.disruption.roundToInt(), wins)
-                            stats.houseCheatingToWinsLosses.addWinsLosses(ratedDeck.houseCheating.roundToInt(), wins)
-                            stats.amberProtectionToWinsLosses.addWinsLosses(ratedDeck.amberProtection.roundToInt(), wins)
+                            stats.creatureProtectionToWinsLosses.addWinsLosses(ratedDeck.creatureProtection?.roundToInt() ?: 0, wins)
                             stats.otherToWinsLosses.addWinsLosses(ratedDeck.other.roundToInt(), wins)
                             stats.effectivePowerToWinsLosses.addWinsLosses((ratedDeck.effectivePower / 5) * 5, wins)
 
@@ -245,8 +242,7 @@ class StatsService(
         cachedStats = statsToCache
         cachedGlobalStats = listOf(GlobalStatsWithExpansion(
                 null,
-                statsToCache.toGlobalStats(),
-                CardWinsService.winsByExpansionAndHouseString
+                statsToCache.toGlobalStats()
         ))
                 .plus(Expansion.values().map {
                     GlobalStatsWithExpansion(it.expansionNumber,

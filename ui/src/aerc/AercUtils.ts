@@ -10,8 +10,7 @@ export const aercProperties = [
     "effectivePower",
     "efficiency",
     "disruption",
-    "amberProtection",
-    "houseCheating",
+    "creatureProtection",
     "other"
 ]
 

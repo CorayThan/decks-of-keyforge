@@ -47,11 +47,8 @@ data class ExtraCardInfo(
         val disruption: Double = 0.0,
         val disruptionMax: Double? = null,
 
-        val amberProtection: Double = 0.0,
-        val amberProtectionMax: Double? = null,
-
-        val houseCheating: Double = 0.0,
-        val houseCheatingMax: Double? = null,
+        val creatureProtection: Double = 0.0,
+        val creatureProtectionMax: Double? = null,
 
         val other: Double = 0.0,
         val otherMax: Double? = null,
@@ -101,13 +98,12 @@ data class ExtraCardInfo(
     fun nullMaxes() = this.copy(
             amberControlMax = if (this.amberControlMax == 0.0) null else this.amberControlMax,
             expectedAmberMax = if (this.expectedAmberMax == 0.0) null else this.expectedAmberMax,
-            amberProtectionMax = if (this.amberProtectionMax == 0.0) null else this.amberProtectionMax,
+            creatureProtectionMax = if (this.creatureProtectionMax == 0.0) null else this.creatureProtectionMax,
             artifactControlMax = if (this.artifactControlMax == 0.0) null else this.artifactControlMax,
             creatureControlMax = if (this.creatureControlMax == 0.0) null else this.creatureControlMax,
             effectivePowerMax = if (this.effectivePowerMax == 0.0) null else this.effectivePowerMax,
             efficiencyMax = if (this.efficiencyMax == 0.0) null else this.efficiencyMax,
             disruptionMax = if (this.disruptionMax == 0.0) null else this.disruptionMax,
-            houseCheatingMax = if (this.houseCheatingMax == 0.0) null else this.houseCheatingMax,
             otherMax = if (this.otherMax == 0.0) null else this.otherMax
     )
 
@@ -128,10 +124,8 @@ data class ExtraCardInfo(
                 effectivePowerMax = info.effectivePowerMax,
                 disruption = info.disruption,
                 disruptionMax = info.disruptionMax,
-                amberProtection = info.amberProtection,
-                amberProtectionMax = info.amberProtectionMax,
-                houseCheating = info.houseCheating,
-                houseCheatingMax = info.houseCheatingMax,
+                creatureProtection = info.creatureProtection,
+                creatureProtectionMax = info.creatureProtectionMax,
                 other = info.other,
                 otherMax = info.otherMax,
                 traits = mutableListOf(),

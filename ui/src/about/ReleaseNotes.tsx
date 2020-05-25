@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.1"
+export const latestVersion = "5.3"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,31 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.3"}
+                    date={"5/24/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Removed Aember Protection and House Cheating",
+                            note: "The intent with AERC categories is to create values KeyForge players will frequently look at to evaluate the quality of " +
+                                "their decks. Over time, I've realized that House Cheating and Aember Protection didn't provide much benefit in terms " +
+                                "of deck evaluation, and House Cheating especially caused confusion in terms of how it is different from Efficiency. " +
+                                "Their values have been redistributed to other AERC categories where appropriate."
+                        },
+                        {
+                            highlight: "New AERC Category: Creature Protection",
+                            note: "However, a new category is being added, Creature Protection. Certain creatures gain so much value with enough creature " +
+                                "protection that this seems like a category that will be valuable as an evaluation and query value. Go find your " +
+                                "Valtron: Defender of the Crucible!"
+                        },
+                        {
+                            highlight: "Relative Win Rates for cards",
+                            note: "You can now view card win rates on a per-set basis, as well as see how good the card is relative to average for its " +
+                                "house + set combinations."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.2"}
                     date={"5/21/2020"}

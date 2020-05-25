@@ -2,7 +2,7 @@ import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import React from "react"
-import { AercView } from "../../aerc/AercViews"
+import { AercViewForDeck, AercViewType } from "../../aerc/views/AercViews"
 import { spacing, theme } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { LinkMenuItem } from "../../mui-restyled/LinkMenuItem"
@@ -45,10 +45,10 @@ export const FancyDeckMenuItem = observer((props: { deck: Deck, onClick: () => v
                 <div
                     style={{marginRight: spacing(1), flexGrow: 1}}
                 >
-                    <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>
+                    <Typography variant={"h6"} style={{marginBottom: spacing(1)}}>
                         {deck.name}
                     </Typography>
-                    <AercView deck={deck} excludeMisc={true} horizontal={true}/>
+                    <AercViewForDeck deck={deck} type={AercViewType.MINI_DECK}/>
                 </div>
                 <div style={{display: "flex", alignItems: "flex-end"}}>
                     <DeckScorePill

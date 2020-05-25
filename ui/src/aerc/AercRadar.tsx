@@ -24,8 +24,8 @@ export class AercRadar extends React.Component<AercRadarProps> {
                 deck: Utils.valueFromPercentiles(deck.expectedAmber, stats.expectedAmberPercentiles),
             },
             {
-                aerc: "Aember Protection",
-                deck: Utils.valueFromPercentiles(deck.amberProtection, stats.amberProtectionPercentiles),
+                aerc: "Creature Protection",
+                deck: Utils.valueFromPercentiles(deck.creatureProtection, stats.creatureProtectionPercentiles),
             },
             {
                 aerc: "Aember Ctrl (A)",

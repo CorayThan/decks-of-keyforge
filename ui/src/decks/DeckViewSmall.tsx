@@ -7,13 +7,13 @@ import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCombos } from "../aerc/AercForCombos"
-import { AercView } from "../aerc/AercViews"
+import { AercViewForDeck, AercViewType } from "../aerc/views/AercViews"
 import { DeckListingStatus } from "../auctions/DeckListingDto"
 import { deckListingStore } from "../auctions/DeckListingStore"
-import { CardAsLine } from "../cards/CardSimpleView"
 import { KCard } from "../cards/KCard"
+import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { spacing } from "../config/MuiConfig"
+import { spacing, useGlobalStyles } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
@@ -102,7 +102,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 id={deck.keyforgeId}
             >
                 {compact && activeExpansions.includes(deck.expansion) && (
-                    <AercView deck={deck} horizontal={true} style={{marginLeft: spacing(1)}}/>
+                    <AercViewForDeck deck={deck} type={AercViewType.MOBILE_DECK}/>
                 )}
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}>
@@ -176,7 +176,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardActions>
                         )}
                     </div>
-                    {!compact && activeExpansions.includes(deck.expansion) && <AercView deck={deck}/>}
+                    {!compact && activeExpansions.includes(deck.expansion) && <AercViewForDeck deck={deck} type={AercViewType.DECK}/>}
                 </div>
             </KeyCard>
         )
@@ -194,9 +194,9 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
                 flexDirection: "column",
             }}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    <HouseBanner houses={houses} size={48} vertical={true}/>
+                    <HouseBanner houses={houses} size={40} vertical={true}/>
                     <Tooltip title={expansionInfoMap.get(deck.expansion)!.name}>
-                        <div style={{marginLeft: spacing(2)}}>
+                        <div style={{marginLeft: spacing(0.5)}}>
                             <ExpansionIcon expansion={deck.expansion} size={32} white={true}/>
                         </div>
                     </Tooltip>
@@ -254,6 +254,7 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
 const smallDeckViewCardLineWidth = 144
 
 const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, compact?: boolean, deck: Deck }) => {
+    const globalClasses = useGlobalStyles()
     const {house, deck, cards, deckExpansion, compact} = props
     return (
         <List>
@@ -263,8 +264,8 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
             <Divider style={{marginTop: 4}}/>
             {compact ?
                 (
-                    <div style={{display: "flex"}}>
-                        <div style={{marginRight: spacing(1)}}>
+                    <div className={globalClasses.flex}>
+                        <div className={globalClasses.marginRightSmall}>
                             {cards.slice(0, 6).map((card, idx) => (
                                 <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={smallDeckViewCardLineWidth} marginTop={4}
                                             deckExpansion={deckExpansion} deck={deck}/>))}

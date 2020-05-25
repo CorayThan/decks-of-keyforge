@@ -2,13 +2,13 @@ import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import React from "react"
-import { AercForCard } from "../aerc/AercViews"
+import { AercForCard } from "../aerc/views/AercForCard"
 import { theme } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { screenStore } from "../ui/ScreenStore"
-import { CardSimpleView } from "./CardSimpleView"
 import { KCard } from "./KCard"
+import { CardSimpleView } from "./views/CardSimpleView"
 
 export const FancyCardMenuItem = observer((props: { card: KCard, onClick: () => void }) => {
     const {card, onClick} = props

@@ -15,9 +15,8 @@ data class SynergyCombo(
         val artifactControl: Double,
         val efficiency: Double,
         val effectivePower: Int,
-        val amberProtection: Double,
+        val creatureProtection: Double,
         val disruption: Double,
-        val houseCheating: Double,
         val other: Double,
 
         val copies: Int = 1
@@ -36,9 +35,8 @@ data class DeckSynergyInfo(
         val artifactControl: Double,
         val efficiency: Double,
         val effectivePower: Int,
-        val amberProtection: Double,
+        val creatureProtection: Double,
         val disruption: Double,
-        val houseCheating: Double,
         val other: Double
 
 )

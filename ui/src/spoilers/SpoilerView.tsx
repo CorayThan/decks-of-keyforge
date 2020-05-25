@@ -2,10 +2,10 @@ import { Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { CardSetsFromCard } from "../cards/CardSimpleView"
 import { cardStore } from "../cards/CardStore"
 import { findCardImageUrl, KCard } from "../cards/KCard"
-import { rarityValues } from "../cards/rarity/Rarity"
+import { RarityIcon } from "../cards/rarity/Rarity"
+import { CardSetsFromCard } from "../cards/views/CardSimpleView"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { GraySidebar } from "../generic/GraySidebar"
@@ -82,9 +82,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                         <div style={{flexGrow: 1}}/>
                         <Typography>{cardNumber == null || cardNumber.length === 0 ? "" : cardNumber}</Typography>
                         {rarity != null && (
-                            <>
-                                {rarityValues.get(rarity)!.icon}
-                            </>
+                            <RarityIcon rarity={rarity}/>
                         )}
                     </div>
                     <div style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}>

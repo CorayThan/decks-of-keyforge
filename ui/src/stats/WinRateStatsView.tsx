@@ -50,8 +50,7 @@ export class WinRateStatsView extends React.Component<{}> {
                 />
                 <WinRateBar name={"Disruption Win Rate"} data={stats.disruptionWinRate} secondary={true} quantities={stats.disruption}/>
                 <WinRateBar name={"Effective Power Win Rate"} data={stats.effectivePowerWinRate} secondary={true} quantities={stats.effectivePower}/>
-                <WinRateBar name={"House Cheating Win Rate"} data={stats.houseCheatingWinRate} secondary={true} quantities={stats.houseCheating}/>
-                <WinRateBar name={"Aember Protection Win Rate"} data={stats.amberProtectionWinRate} secondary={true} quantities={stats.amberProtection}/>
+                <WinRateBar name={"Creature Protection Win Rate"} data={stats.creatureProtectionWinRate} secondary={true} quantities={stats.creatureProtection}/>
                 <WinRateBar name={"Other Win Rate"} data={stats.otherWinRate} secondary={true} quantities={stats.other}/>
 
                 <WinRateBar name={"Creature Count Win Rate"} data={stats.creatureCountWinRate} quantities={stats.creatures}/>
