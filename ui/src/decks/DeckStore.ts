@@ -4,7 +4,7 @@ import { observable } from "mobx"
 import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopbar"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { log, Utils } from "../config/Utils"
+import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
@@ -21,10 +21,9 @@ export class DeckStore {
     simpleDecks: Map<string, Deck> = new Map()
 
     @observable
-    deckPageId?: string
-
     deckPage?: DeckPage
 
+    @observable
     nextDeckPage?: DeckPage
 
     @observable
@@ -71,7 +70,6 @@ export class DeckStore {
     reset = () => {
         this.deckPage = undefined
         this.nextDeckPage = undefined
-        this.deckPageId = undefined
         this.decksCount = undefined
         this.currentFilters = undefined
     }
@@ -190,7 +188,6 @@ export class DeckStore {
         if (decks) {
             // log.debug(`Replacing decks page with decks:  ${decks.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
             this.deckPage = decks
-            this.deckPageId = Utils.uuid()
         }
         this.searchingForDecks = false
         await countPromise
@@ -216,7 +213,6 @@ export class DeckStore {
             // log.debug(`Pushing decks name: ${this.nextDeckPage.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
             this.deckPage.decks.push(...this.nextDeckPage.decks)
             this.deckPage.page++
-            this.deckPageId = Utils.uuid()
             this.nextDeckPage = undefined
             log.debug(`Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
             this.findNextDecks()

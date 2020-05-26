@@ -184,7 +184,7 @@ const CardLine = observer((props: CardAsLineProps) => {
 
     return (
         <div className={classes.root}>
-            {!hideRarity && fullCard.rarity ? <RarityIcon rarity={fullCard.rarity} /> : null}
+            {!hideRarity && fullCard.rarity ? <RarityIcon rarity={fullCard.rarity}/> : null}
             <Typography
                 variant={"body2"}
                 style={{marginLeft: spacing(1)}}

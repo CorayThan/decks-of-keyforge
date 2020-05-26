@@ -16,8 +16,9 @@ import { sellerStore } from "../../sellers/SellerStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
-import { DeckListView, DeckTableView } from "../DeckListView"
+import { DeckListView } from "../DeckListView"
 import { deckStore } from "../DeckStore"
+import { DeckTableView } from "../DeckTableView"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
@@ -110,11 +111,11 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
     }
 
     render() {
-        const {deckPage, deckPageId, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
+        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
         const {filters, history, location} = this.props
 
         let decksToDisplay = null
-        if (deckPage != null && deckPageId != null) {
+        if (deckPage != null) {
             if (deckPage.decks.length === 0) {
                 decksToDisplay = (
                     <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>

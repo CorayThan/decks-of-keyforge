@@ -27,104 +27,145 @@ interface AercCatProps {
     deck: Deck
     hasAerc: HasAerc
     combos?: SynergyCombo[]
+    twoHigh?: boolean
 }
 
 export const AercCategoryExtras = (props: AercCatProps) => {
-    const {deck, hasAerc, combos} = props
+    const {deck, hasAerc, combos, twoHigh} = props
+    const width = twoHigh ? undefined : 20
+    const firstTwo: InfoIconValue[] = [
+        {
+            icon: <AercIcon type={AercType.O} width={width}/>,
+            info: hasAerc.other,
+            combosTips: {
+                title: "Other",
+                combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? [],
+                accessor: combo => combo.other
+            }
+        },
+        {
+            icon: <AmberIcon width={width}/>,
+            info: deck.rawAmber,
+            cardsTips: {
+                matches: card => card.amber > 0,
+                cards: deck.searchResultCards ?? [],
+                title: "Bonus Aember"
+            }
+        },
+    ]
+
+    const secondTwo: InfoIconValue[] = [
+        {
+            icon: <KeyCheatIcon width={width}/>,
+            info: deck.keyCheatCount,
+            cardsTips: {
+                matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
+                cards: deck.searchResultCards ?? [],
+                title: "Key Cheat Cards"
+            }
+        },
+        {
+            icon: <ArchiveIcon width={width}/>,
+            info: deck.cardArchiveCount,
+            cardsTips: {
+                matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.archives),
+                cards: deck.searchResultCards ?? [],
+                title: "Archive Cards"
+            }
+        }
+    ]
+
+    if (twoHigh) {
+        return (
+            <>
+                <AercCategory
+                    name={"Extras"}
+                    infos={firstTwo}
+                />
+                <AercCategory
+                    name={"Extras"}
+                    infos={secondTwo}
+                />
+            </>
+        )
+    }
+
+
     return (
         <AercCategory
             name={"Extras"}
             small={true}
-            infos={
-                [
-                    {
-                        icon: <AercIcon type={AercType.O} width={20}/>,
-                        info: hasAerc.other,
-                        combosTips: {
-                            title: "Other",
-                            combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? [],
-                            accessor: combo => combo.other
-                        }
-                    },
-                    {
-                        icon: <AmberIcon width={20}/>,
-                        info: deck.rawAmber,
-                        cardsTips: {
-                            matches: card => card.amber > 0,
-                            cards: deck.searchResultCards ?? [],
-                            title: "Bonus Aember"
-                        }
-                    },
-                    {
-                        icon: <KeyCheatIcon width={20}/>,
-                        info: deck.keyCheatCount,
-                        cardsTips: {
-                            matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
-                            cards: deck.searchResultCards ?? [],
-                            title: "Key Cheat Cards"
-                        }
-                    },
-                    {
-                        icon: <ArchiveIcon width={20}/>,
-                        info: deck.cardArchiveCount,
-                        cardsTips: {
-                            matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.archives),
-                            cards: deck.searchResultCards ?? [],
-                            title: "Archive Cards"
-                        }
-                    }
-                ]
-            }
+            infos={firstTwo.concat(secondTwo)}
         />
     )
 }
 
 export const AercCategoryCounts = (props: AercCatProps) => {
-    const {deck} = props
+    const {deck, twoHigh} = props
+    const width = twoHigh ? undefined : 20
+    const firstTwo: InfoIconValue[] = [
+        {
+            icon: <ActionIcon width={width}/>,
+            info: deck.actionCount,
+            cardsTips: {
+                matches: card => card.cardType === CardType.Action,
+                cards: deck.searchResultCards ?? [],
+                title: "Actions"
+            }
+        },
+        {
+            icon: <CreatureIcon width={width}/>,
+            info: deck.creatureCount,
+            cardsTips: {
+                matches: card => card.cardType === CardType.Creature,
+                cards: deck.searchResultCards ?? [],
+                title: "Creatures"
+            }
+        },
+    ]
+
+    const secondTwo: InfoIconValue[] = [
+        {
+            icon: <ArtifactIcon width={width}/>,
+            info: deck.artifactCount,
+            cardsTips: {
+                matches: card => card.cardType === CardType.Artifact,
+                cards: deck.searchResultCards ?? [],
+                title: "Artifacts"
+            }
+        },
+        {
+            icon: <UpgradeIcon width={width}/>,
+            info: deck.upgradeCount,
+            cardsTips: {
+                matches: card => card.cardType === CardType.Upgrade,
+                cards: deck.searchResultCards ?? [],
+                title: "Upgrades"
+            }
+        }
+    ]
+
+    if (twoHigh) {
+        return (
+            <>
+                <AercCategory
+                    name={"Counts"}
+                    infos={firstTwo}
+                />
+                <AercCategory
+                    name={"Counts"}
+                    infos={secondTwo}
+                />
+            </>
+        )
+    }
+
+
     return (
         <AercCategory
             name={"Counts"}
             small={true}
-            infos={
-                [
-                    {
-                        icon: <ActionIcon width={20}/>,
-                        info: deck.actionCount,
-                        cardsTips: {
-                            matches: card => card.cardType === CardType.Action,
-                            cards: deck.searchResultCards ?? [],
-                            title: "Actions"
-                        }
-                    },
-                    {
-                        icon: <CreatureIcon width={20}/>,
-                        info: deck.creatureCount,
-                        cardsTips: {
-                            matches: card => card.cardType === CardType.Creature,
-                            cards: deck.searchResultCards ?? [],
-                            title: "Creatures"
-                        }
-                    },
-                    {
-                        icon: <ArtifactIcon width={20}/>,
-                        info: deck.artifactCount,
-                        cardsTips: {
-                            matches: card => card.cardType === CardType.Artifact,
-                            cards: deck.searchResultCards ?? [],
-                            title: "Artifacts"
-                        }
-                    },
-                    {
-                        icon: <UpgradeIcon width={20}/>,
-                        info: deck.upgradeCount,
-                        cardsTips: {
-                            matches: card => card.cardType === CardType.Upgrade,
-                            cards: deck.searchResultCards ?? [],
-                            title: "Upgrades"
-                        }
-                    }
-                ]
-            }
+            infos={firstTwo.concat(secondTwo)}
         />
     )
 }

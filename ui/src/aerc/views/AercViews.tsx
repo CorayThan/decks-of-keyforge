@@ -41,12 +41,15 @@ export const AercViewForDeck = (props: { deck: Deck, type: AercViewType }) => {
                     gridAutoFlow: "column",
                     backgroundColor: themeStore.aercViewBackground,
                     padding: spacing(1),
+                    overflowX: "auto"
                 }}
             >
                 <AercCategoryAmber deck={deck} hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryControl deck={deck} hasAerc={hasAerc} combos={combos}/>
                 <AercCategorySpeed deck={deck} hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryBoard deck={deck} hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryExtras deck={deck} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryCounts deck={deck} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
             </div>
         )
     }

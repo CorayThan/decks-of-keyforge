@@ -102,14 +102,20 @@ class ForSaleNotificationsService(
     }
 
     private fun queryMatchesDeck(queryEntity: ForSaleQueryEntity, deckId: Long): Boolean {
-        val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
-        val userHolder = DeckSearchService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
-        if (queryEntity.name.contains("Test Query")) {
-            log.info("For sale query is $query")
+        try {
+            val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
+            val userHolder = DeckSearchService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
+            if (queryEntity.name.contains("Test Query")) {
+                log.info("For sale query is $query")
+            }
+            val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
+                    .and(QDeck.deck.id.eq(deckId))
+            return deckRepo.exists(predicate)
+        } catch (e: Exception) {
+            log.error("Couldn't match deck in for sale notif due to exception!", e)
+            emailService.sendErrorMessageToMe(e)
+            return false
         }
-        val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
-                .and(QDeck.deck.id.eq(deckId))
-        return deckRepo.exists(predicate)
     }
 
     private fun reloadQueries() {
