@@ -378,7 +378,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 update={(event: EventValue) => this.otherMax = event.target.value}
                             />
                             <Grid item={true} xs={12}>
-                                <AddTrait traits={this.traits} synergies={this.synergies}/>
+                                <AddTrait traits={this.traits} synergies={this.synergies} reset={this.reset}/>
                             </Grid>
                         </Grid>
                         <CardActions>
@@ -426,6 +426,7 @@ type SynGroup = "A" | "B" | "C" | "D" | ""
 interface AddTraitProps {
     traits: SynTraitValue[]
     synergies: SynTraitValue[]
+    reset: (resetTo: ExtraCardInfo) => void
 }
 
 @observer
@@ -517,7 +518,7 @@ class AddTrait extends React.Component<AddTraitProps> {
 
     render() {
 
-        const {traits, synergies} = this.props
+        const {traits, synergies, reset} = this.props
 
         const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
 
@@ -798,6 +799,17 @@ class AddTrait extends React.Component<AddTraitProps> {
                     </div>
                 </Grid>
                 <Grid item={true} xs={12}>
+                    <Button
+                        onClick={() => {
+                            const cardName = this.cardName
+                            if (cardName) {
+                                const card = cardStore.fullCardFromCardName(cardName)!
+                                reset(card!.extraCardInfo!)
+                            }
+                        }}
+                    >
+                        Copy Card
+                    </Button>
                     <Button
                         onClick={() => {
                             this.addTraitOrSyn(SynergyTrait.protectsCreatures)
