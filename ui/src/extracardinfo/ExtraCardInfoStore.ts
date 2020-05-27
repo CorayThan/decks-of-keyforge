@@ -22,10 +22,14 @@ export class ExtraCardInfoStore {
         }
     }
 
+    findCreateSpoilerAercNoSet = async (spoilerId: number) => {
+        const extraCardInfo: AxiosResponse<ExtraCardInfo> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/spoiler/${spoilerId}`)
+        return extraCardInfo.data
+    }
+
     findOrCreateSpoilerAerc = async (spoilerId: number) => {
         this.extraCardInfo = undefined
-        const extraCardInfo: AxiosResponse<ExtraCardInfo> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/spoiler/${spoilerId}`)
-        this.extraCardInfo = extraCardInfo.data
+        this.extraCardInfo = await this.findCreateSpoilerAercNoSet(spoilerId)
         log.info(`Updated extra card info for ${this.extraCardInfo.cardName}`)
         return this.extraCardInfo
     }

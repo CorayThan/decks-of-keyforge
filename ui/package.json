@@ -5,9 +5,9 @@
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@craco/craco": "^5.6.4",
-    "@material-ui/core": "^4.9.14",
+    "@material-ui/core": "^4.10.0",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.53",
+    "@material-ui/lab": "^4.0.0-alpha.54",
     "@nivo/bar": "^0.61.1",
     "@nivo/pie": "^0.61.1",
     "@nivo/radar": "^0.61.1",

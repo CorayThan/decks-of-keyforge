@@ -18,6 +18,7 @@ import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyMultiSelect, SelectedValues } from "../mui-restyled/KeyMultiSelect"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 import { SpoilerUtils } from "./Spoiler"
 import { SpoilerFilters } from "./SpoilerFilters"
 import { spoilerStore } from "./SpoilerStore"
@@ -196,17 +197,19 @@ export class SpoilerSearchDrawer extends React.Component {
                                 <Typography variant={"subtitle2"}>You found {spoilerStore.spoilers.length} cards</Typography>
                             </ListItem>
                         ) : null}
-                        <ListItem>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={keyLocalStorage.showAllCards}
-                                        onChange={keyLocalStorage.toggleShowAllCards}
-                                    />
-                                }
-                                label={"All cards"}
-                            />
-                        </ListItem>
+                        {userStore.isAdmin && (
+                            <ListItem>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={keyLocalStorage.showAllCards}
+                                            onChange={keyLocalStorage.toggleShowAllCards}
+                                        />
+                                    }
+                                    label={"All cards"}
+                                />
+                            </ListItem>
+                        )}
                     </List>
                 </form>
             </KeyDrawer>

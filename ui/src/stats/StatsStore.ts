@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
 import { BackendExpansion, Expansion, expansionToBackendExpansion } from "../expansions/Expansions"
 import { House } from "../houses/House"
 import { GlobalStats, GlobalStatsWithExpansion } from "./GlobalStats"
@@ -26,7 +25,7 @@ export class StatsStore {
         axios.get(`${StatsStore.CONTEXT}`)
             .then((response: AxiosResponse<GlobalStatsWithExpansion[]>) => {
                 this.statsBySetNum = new Map()
-                log.debug(`Got stats: ${prettyJson(response.data)}`)
+                // log.debug(`Got stats: ${prettyJson(response.data)}`)
                 response.data.forEach(stats => {
                     if (stats.expansion != null) {
                         stats.stats.houseWinRate?.forEach(houseWinRate => {

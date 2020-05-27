@@ -8,6 +8,7 @@ import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
+import { userStore } from "../user/UserStore"
 import { SpoilerKudos } from "./SpoilerKudos"
 import { SpoilerSearchDrawer } from "./SpoilerSearchDrawer"
 import { spoilerStore } from "./SpoilerStore"
@@ -46,7 +47,7 @@ export class SpoilersPage extends React.Component {
                 )
             } else {
                 cardsDisplay = (
-                    <CardsContainerWithScroll allSpoilers={spoilers} showAllCards={keyLocalStorage.showAllCards}/>
+                    <CardsContainerWithScroll allSpoilers={spoilers} showAllCards={keyLocalStorage.showAllCards && userStore.isAdmin}/>
                 )
             }
         }

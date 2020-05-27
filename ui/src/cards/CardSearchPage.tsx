@@ -13,6 +13,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { Spoiler } from "../spoilers/Spoiler"
 import { SpoilerView } from "../spoilers/SpoilerView"
 import { uiStore } from "../ui/UiStore"
+import { userStore } from "../user/UserStore"
 import { CardFilters } from "./CardFilters"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { cardStore } from "./CardStore"
@@ -42,7 +43,7 @@ interface WaitForAllCardsProps {
 class WaitForAllCards extends React.Component<WaitForAllCardsProps> {
 
     render() {
-        if (cardStore.allCards.length === 0) {
+        if (!cardStore.cardsLoaded) {
             return <Loader/>
         }
         return <LoadInitialCardSearch {...this.props}/>
@@ -109,7 +110,7 @@ class CardSearchContainer extends React.Component<CardSearchContainerProps> {
             )
         } else {
             cardsDisplay = (
-                <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards} showHistory={filters.aercHistory}/>
+                <CardsContainerWithScroll allCards={cards} showAllCards={keyLocalStorage.showAllCards && userStore.isAdmin} showHistory={filters.aercHistory}/>
             )
         }
 

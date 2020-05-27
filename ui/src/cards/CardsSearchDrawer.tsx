@@ -177,8 +177,9 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 value={filters.trait ?? ""}
                                 renderInput={(params) => <TextField {...params} label={"Trait"}/>}
                                 renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
-                                onChange={(event: ChangeEvent<{}>, newValue: SynergyTrait | "" | null) => {
-                                    filters.trait = newValue == "" || newValue == null ? undefined : newValue
+                                onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
+                                    const newValueTyped = newValue as (SynergyTrait | "" | null)
+                                    filters.trait = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
                                 }}
                                 fullWidth={true}
                                 size={"small"}
@@ -190,8 +191,9 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 value={filters.synergy ?? ""}
                                 renderInput={(params) => <TextField {...params} label={"Synergy"}/>}
                                 renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
-                                onChange={(event: ChangeEvent<{}>, newValue: SynergyTrait | "" | null) => {
-                                    filters.synergy = newValue == "" || newValue == null ? undefined : newValue
+                                onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
+                                    const newValueTyped = newValue as (SynergyTrait | "" | null)
+                                    filters.synergy = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
                                 }}
                                 fullWidth={true}
                                 size={"small"}
@@ -279,16 +281,18 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                     </ToggleButton>
                                 </ToggleButtonGroup>
                             </Tooltip>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={keyLocalStorage.showAllCards}
-                                        onChange={keyLocalStorage.toggleShowAllCards}
-                                    />
-                                }
-                                label={"All cards"}
-                                style={{marginLeft: spacing(1)}}
-                            />
+                            {userStore.isAdmin && (
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={keyLocalStorage.showAllCards}
+                                            onChange={keyLocalStorage.toggleShowAllCards}
+                                        />
+                                    }
+                                    label={"All cards"}
+                                    style={{marginLeft: spacing(1)}}
+                                />
+                            )}
                         </ListItem>
                         {userStore.isAdmin && (
                             <ListItem>

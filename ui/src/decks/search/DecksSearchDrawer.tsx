@@ -37,7 +37,6 @@ import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { deckStore } from "../DeckStore"
-import { deckTableViewStore } from "../DeckTableView"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
 import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
@@ -88,7 +87,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
         this.props.history.push(Routes.deckSearch(filters))
         keyDrawerStore.closeIfSmall()
-        deckTableViewStore.reset()
     }
 
     clearSearch = () => {

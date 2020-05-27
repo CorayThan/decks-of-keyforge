@@ -14,8 +14,6 @@ export class HttpConfig {
         if (timezoneOffset == null || isNaN(timezoneOffset)) {
             log.warn("No timezone offset available.")
             timezoneOffset = 0
-        } else {
-            log.debug(`Time zone offset is ${timezoneOffset}`)
         }
         axios.defaults.headers.common.Timezone = timezoneOffset
 

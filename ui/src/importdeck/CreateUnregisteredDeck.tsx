@@ -123,7 +123,7 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
             return <Redirect to={Routes.deckPage(deckImportStore.newDeckId)}/>
         }
 
-        if (saveUnregisteredDeckStore.currentDeck == null || cardStore.cardNameLowercaseToCard == null) {
+        if (saveUnregisteredDeckStore.currentDeck == null || !cardStore.cardsLoaded) {
             return null
         }
         const {name, cards} = saveUnregisteredDeckStore.currentDeck
@@ -193,7 +193,7 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
 export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: string[], expansion: BackendExpansion }> {
     render() {
         const cards = this.props.cards.map(cardName => cardStore.fullCardFromCardName(cardName) as KCard)
-        const searchSuggestCardNames = Array.from(new Set(cardStore.cardNamesForExpansion!.flatMap(forExp => {
+        const searchSuggestCardNames = Array.from(new Set(cardStore.findCardNamesForExpansion().flatMap(forExp => {
             const validExpansions = possibleCardExpansionsForExpansion(expansionInfoMap.get(this.props.expansion)!.expansionNumber)
             if (validExpansions.includes(expansionInfoMap.get(forExp.expansion)!.expansionNumber)) {
                 return forExp.names

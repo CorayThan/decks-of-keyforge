@@ -54,26 +54,26 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
 
     componentDidMount(): void {
         if (this.props.match.params.infoId) {
-            extraCardInfoStore.findExtraCardInfo(this.props.match.params.infoId)
+            this.onUpdate(this.props.match.params.infoId)
         }
     }
 
     componentDidUpdate(prevProps: UpdateExtraCardInfoPageProps): void {
         if (prevProps.match.params.infoId && this.props.match.params.infoId != this.props.match.params.infoId) {
-            extraCardInfoStore.findExtraCardInfo(this.props.match.params.infoId)
+            this.onUpdate(this.props.match.params.infoId)
         }
+    }
+
+    onUpdate = (infoId: string) => {
+        extraCardInfoStore.findExtraCardInfo(infoId)
     }
 
     render() {
         const extraCardInfo = extraCardInfoStore.extraCardInfo
-        const allCards = cardStore.allCards
-        if (extraCardInfo == null || allCards.length === 0) {
+        if (extraCardInfo == null || !cardStore.cardsLoaded) {
             return <Loader/>
         }
-        const card = cardStore.findCardByIdentifier(extraCardInfo.cardNumbers[0])
-        if (card == null) {
-            return <Loader/>
-        }
+        const card = cardStore.cardNameLowercaseToCard?.get(extraCardInfo.cardName.toLowerCase())
         return <UpdateExtraCardInfo extraCardInfo={extraCardInfo} card={card}/>
     }
 }
@@ -358,12 +358,12 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 update={(event: EventValue) => this.effectivePowerMax = event.target.value}
                             />
                             <InfoInput
-                                name={"aember protection"}
+                                name={"creature protection"}
                                 value={this.creatureProtection}
                                 update={(event: EventValue) => this.creatureProtection = event.target.value}
                             />
                             <InfoInput
-                                name={"aember prot max"}
+                                name={"creature prot max"}
                                 value={this.creatureProtectionMax}
                                 update={(event: EventValue) => this.creatureProtectionMax = event.target.value}
                             />
@@ -427,6 +427,7 @@ interface AddTraitProps {
     traits: SynTraitValue[]
     synergies: SynTraitValue[]
     reset: (resetTo: ExtraCardInfo) => void
+    spoilerId?: number
 }
 
 @observer
@@ -510,7 +511,7 @@ class AddTrait extends React.Component<AddTraitProps> {
         this.cardTypes = value.cardTypes
         this.rating = value.rating
         this.trait = value.trait
-        this.cardTraitsStore.reset()
+        this.cardTraitsStore.update(value.cardTraits)
         this.baseSynPercent = value.baseSynPercent.toString()
         this.group = value.synergyGroup as SynGroup
         this.groupMax = value.synergyGroupMax?.toString() ?? ""
@@ -518,7 +519,7 @@ class AddTrait extends React.Component<AddTraitProps> {
 
     render() {
 
-        const {traits, synergies, reset} = this.props
+        const {traits, synergies, reset, spoilerId} = this.props
 
         const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
 
@@ -800,11 +801,22 @@ class AddTrait extends React.Component<AddTraitProps> {
                 </Grid>
                 <Grid item={true} xs={12}>
                     <Button
-                        onClick={() => {
+                        onClick={async () => {
                             const cardName = this.cardName
                             if (cardName) {
-                                const card = cardStore.fullCardFromCardName(cardName)!
-                                reset(card!.extraCardInfo!)
+                                let spoilerInfo
+                                if (spoilerId != null) {
+                                    spoilerInfo = await extraCardInfoStore.findCreateSpoilerAercNoSet(spoilerId)
+                                }
+                                const nextInfoMap = cardStore.nextExtraInfo
+                                if (spoilerInfo != null) {
+                                    reset(spoilerInfo)
+                                } else if (nextInfoMap != null && nextInfoMap[cardName] != null) {
+                                    reset(nextInfoMap[cardName]!.extraCardInfo!)
+                                } else {
+                                    const card = cardStore.fullCardFromCardName(cardName)!
+                                    reset(card!.extraCardInfo!)
+                                }
                             }
                         }}
                     >

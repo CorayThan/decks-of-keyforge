@@ -1,7 +1,6 @@
-import * as React from "react"
 import { KCard } from "../cards/KCard"
 
-export interface  HasAerc {
+export interface HasAerc {
     amberControl: number
     expectedAmber: number
     artifactControl: number
@@ -25,6 +24,6 @@ export interface  HasAerc {
     aercScoreMax?: number
 
     averageAercScore?: number
-    
+
     searchResultCards?: KCard[]
 }

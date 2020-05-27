@@ -22,7 +22,7 @@ export class CardStatsView extends React.Component<{}> {
 
     render() {
 
-        if (cardStore.allCards.length === 0) {
+        if (!cardStore.cardsLoaded) {
             return <Loader/>
         }
 

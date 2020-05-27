@@ -45,12 +45,14 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
     const spoiler = props.spoiler
     let cardData: Spoiler | KCard
     const {reprint, cardTitle, cardNumber, id} = spoiler
+    let extraInfoId
     if (reprint) {
         const preexisting = cardStore.fullCardFromCardName(cardTitle)
         if (preexisting == null || preexisting.extraCardInfo == null) {
             return <div>Loading card for ${cardTitle}</div>
         }
         cardData = preexisting as KCard
+        extraInfoId = preexisting.extraCardInfo.id
     } else {
         cardData = spoiler
     }
@@ -144,7 +146,7 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                                     Edit
                                 </LinkButton>
                                 <LinkButton
-                                    to={Routes.editSpoilerAerc(id)}
+                                    to={reprint ? Routes.editExtraCardInfo(extraInfoId) : Routes.editSpoilerAerc(id)}
                                 >
                                     Edit AERC
                                 </LinkButton>

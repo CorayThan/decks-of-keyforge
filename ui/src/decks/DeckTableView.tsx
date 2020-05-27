@@ -1,14 +1,13 @@
 import { Button, IconButton, Paper, TableCell, TextField, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
-import { sortBy } from "lodash"
-import { IObservableArray, observable } from "mobx"
+import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log, roundToHundreds, roundToTens, SortOrder } from "../config/Utils"
+import { log, roundToHundreds, roundToTens } from "../config/Utils"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { HouseBanner } from "../houses/HouseBanner"
@@ -24,13 +23,8 @@ import { MyDecksButton } from "./buttons/MyDecksButton"
 import { Deck, DeckUtils } from "./Deck"
 import { DeckListViewProps } from "./DeckListView"
 import { SaStars } from "./DeckScoreView"
-import { deckStore } from "./DeckStore"
 
 class DeckTableViewStore {
-    @observable
-    activeTableSort = ""
-    @observable
-    tableSortDir: SortOrder = "desc"
     @observable
     priceChanges: UpdatePrice[] = []
 
@@ -38,43 +32,9 @@ class DeckTableViewStore {
         this.priceChanges = this.priceChanges.filter(priceChange => priceChange.auctionId !== auctionId)
         this.priceChanges.push({auctionId, askingPrice})
     }
-
-    resort = () => {
-        if (deckStore.deckPage) {
-            const decks: IObservableArray<Deck> = deckStore.deckPage.decks as IObservableArray<Deck>
-            if (deckTableViewStore.activeTableSort === "price") {
-                decks.replace(sortBy(decks.slice(), (deck: Deck) => {
-                    if (deck.deckSaleInfo && deck.deckSaleInfo.length > 0 && deck.deckSaleInfo[0] && deck.deckSaleInfo[0].buyItNow) {
-                        return deck.deckSaleInfo[0].buyItNow
-                    } else {
-                        return deckTableViewStore.tableSortDir === "desc" ? 0 : 1000000
-                    }
-                }))
-            } else if (deckTableViewStore.activeTableSort === "buyItNow") {
-                decks.replace(sortBy(decks.slice(), (deck: Deck) => {
-                    const buyItNow = findBuyItNowForDeck(deck)
-                    if (buyItNow) {
-                        return buyItNow
-                    }
-                    return deckTableViewStore.tableSortDir === "desc" ? 0 : 1000000
-                }))
-            } else {
-                decks.replace(sortBy(decks.slice(), deckTableViewStore.activeTableSort))
-            }
-            if (deckTableViewStore.tableSortDir === "desc") {
-                log.info("Reversing table sort")
-                decks.replace(decks.slice().reverse())
-            }
-        }
-    }
-
-    reset = () => {
-        this.activeTableSort = ""
-        this.tableSortDir = "desc"
-    }
 }
 
-export const deckTableViewStore = new DeckTableViewStore()
+const deckTableViewStore = new DeckTableViewStore()
 
 @observer
 export class DeckTableView extends React.Component<DeckListViewProps> {
@@ -364,16 +324,4 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
             </TableCell>
         )
     }
-}
-
-const findBuyItNowForDeck = (deck: Deck): number | null => {
-
-    if (deck.deckSaleInfo) {
-        for (const saleInfo of deck.deckSaleInfo) {
-            if (saleInfo.buyItNow) {
-                return saleInfo.buyItNow
-            }
-        }
-    }
-    return null
 }

@@ -111,13 +111,14 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
     }
 
     render() {
-        const {deckPage, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
+        const {decksToDisplay, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
         const {filters, history, location} = this.props
 
-        let decksToDisplay = null
-        if (deckPage != null) {
-            if (deckPage.decks.length === 0) {
-                decksToDisplay = (
+        let decksView
+
+        if (decksToDisplay != null) {
+            if (decksToDisplay.length === 0) {
+                decksView = (
                     <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
                         Sorry, no decks match your search criteria.
                     </Typography>
@@ -126,11 +127,14 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                 const sellerView = location.search.includes("forSale=true")
                     && location.search.includes(`owner=${userStore.username}`)
                     && keyLocalStorage.deckListViewType === "table"
-                decksToDisplay = (
+                const decks = decksToDisplay
+                    .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
+                    .filter(deck => deck != null)
+                decksView = (
                     <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {keyLocalStorage.deckListViewType === "table" ?
-                            <DeckTableView decks={deckPage.decks} sellerView={sellerView}/> :
-                            <DeckListView decks={deckPage.decks}/>}
+                            <DeckTableView decks={decks} sellerView={sellerView}/> :
+                            <DeckListView decks={decks}/>}
                     </div>
                 )
             }
@@ -160,7 +164,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
                         {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
-                        {decksToDisplay}
+                        {decksView}
                         {showMoreButton}
                     </div>
                 </div>

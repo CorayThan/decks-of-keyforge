@@ -21,9 +21,14 @@ export class DeckStore {
     simpleDecks: Map<string, Deck> = new Map()
 
     @observable
-    deckPage?: DeckPage
+    currentDeckPage = 0
 
     @observable
+    decksToDisplay?: number[]
+
+    deckIdToDeck?: Map<number, Deck>
+
+    deckPage?: DeckPage
     nextDeckPage?: DeckPage
 
     @observable
@@ -68,6 +73,8 @@ export class DeckStore {
     deckNameSearchCancel: CancelTokenSource | undefined
 
     reset = () => {
+        this.currentDeckPage = 0
+        this.deckIdToDeck = undefined
         this.deckPage = undefined
         this.nextDeckPage = undefined
         this.decksCount = undefined
@@ -187,7 +194,9 @@ export class DeckStore {
         const decks = await decksPromise
         if (decks) {
             // log.debug(`Replacing decks page with decks:  ${decks.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
-            this.deckPage = decks
+            this.decksToDisplay = undefined
+            this.deckIdToDeck = undefined
+            this.addNewDecksToDecks(decks)
         }
         this.searchingForDecks = false
         await countPromise
@@ -203,19 +212,34 @@ export class DeckStore {
             if (decks) {
                 this.addingMoreDecks = false
                 this.nextDeckPage = decks
+
             }
         }
     }
 
-    showMoreDecks = () => {
+    private addNewDecksToDecks = (decks: DeckPage) => {
+        this.deckPage = decks
+        if (this.deckIdToDeck == null) {
+            this.deckIdToDeck = new Map()
+        }
+        decks.decks.forEach(deck => {
+            this.deckIdToDeck!.set(deck.id, deck)
+        })
+        const decksToAdd = decks.decks.map(deck => deck.id)
+        if (this.decksToDisplay == null) {
+            this.decksToDisplay = []
+        }
+        this.decksToDisplay = this.decksToDisplay.concat(decksToAdd)
+        this.currentDeckPage = decks.page
+    }
+
+    showMoreDecks = async () => {
         if (this.deckPage && this.nextDeckPage && this.decksCount) {
-            // log.debug(`Current decks name: ${this.deckPage.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
-            // log.debug(`Pushing decks name: ${this.nextDeckPage.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
-            this.deckPage.decks.push(...this.nextDeckPage.decks)
-            this.deckPage.page++
+            // log.debug(`Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
+            this.addNewDecksToDecks(this.nextDeckPage)
             this.nextDeckPage = undefined
-            log.debug(`Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
             this.findNextDecks()
+            // log.debug(`Done finding decks. Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
         }
     }
 

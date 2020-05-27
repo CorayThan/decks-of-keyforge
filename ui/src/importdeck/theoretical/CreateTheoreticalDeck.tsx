@@ -62,7 +62,7 @@ export const CreateTheoreticalDeck = observer(() => {
         }
     }, [housesStore.getHousesSelectedTrue()])
 
-    if (cardStore.allCards.length === 0) {
+    if (!cardStore.cardsLoaded) {
         return <Loader/>
     }
 

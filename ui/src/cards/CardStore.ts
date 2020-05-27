@@ -23,23 +23,11 @@ export class CardStore {
     searchingForCards = false
 
     @observable
+    cardsLoaded = false
+
     allCards: KCard[] = []
 
-    // Format is ExpansionEnum-cardNumber
-    @observable
-    expansionNumberToCard?: Map<string, KCard>
-
-    @observable
-    cardNamesForExpansion?: {
-        expansion: BackendExpansion,
-        names: string[]
-    }[]
-
-    @observable
     cardNameLowercaseToCard?: Map<string, KCard>
-
-    @observable
-    cardNameHyphenDelimitedLowercaseToCard?: Map<string, KCard>
 
     @observable
     cardNames: string[] = []
@@ -72,7 +60,7 @@ export class CardStore {
 
 
     setupCardWinRates = () => {
-        if (this.allCards.length === 0 || statsStore.stats == null || this.cardWinRatesLoaded) {
+        if (!cardStore.cardsLoaded || statsStore.stats == null || this.cardWinRatesLoaded) {
             return
         }
 
@@ -95,8 +83,9 @@ export class CardStore {
 
     searchAndReturnCards = (filtersValue: CardFilters) => {
 
-        if (userStore.isAdmin) {
+        if (userStore.contentCreator) {
             this.findNextExtraInfo()
+            this.loadCardTraits()
         }
 
         if (filtersValue.aercHistory) {
@@ -196,42 +185,51 @@ export class CardStore {
                     card.winRate = winPercentForCard(card)
                 })
                 this.cardNameLowercaseToCard = new Map()
-                this.cardNameHyphenDelimitedLowercaseToCard = new Map()
-                this.expansionNumberToCard = new Map()
-                this.cardNamesForExpansion = expansionInfos.map(info => ({expansion: info.backendEnum, names: []}))
-                this.cardFlavors = []
-                const traits: Set<string> = new Set()
                 this.cardNames = basisForCards.map(card => {
                     this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
-                    this.cardNameHyphenDelimitedLowercaseToCard!.set(cardNameToCardNameKey(card.cardTitle), card)
-                    if (card.flavorText) {
-                        this.cardFlavors.push(card.flavorText)
-                    }
-                    card.extraCardInfo.cardNumbers.forEach((cardIdentifier: CardIdentifier) => {
-                        this.expansionNumberToCard!.set(`${cardIdentifier.expansion}-${cardIdentifier.cardNumber}`, card)
-                    })
-                    this.cardNamesForExpansion!.forEach(cardNamesForExpansion => {
-                        if (card.extraCardInfo.cardNumbers.map(cardNum => cardNum.expansion).includes(cardNamesForExpansion.expansion)) {
-                            cardNamesForExpansion.names.push(card.cardTitle)
-                        }
-                    })
-                    if (card.traits != null) {
-                        card.traits.forEach(trait => traits.add(trait))
-                    }
                     return card.cardTitle
                 })
-                this.cardTraits = Array.from(traits)
                 this.allCards = basisForCards
                 this.setupCardWinRates()
                 log.debug(`End load all cards async`)
+                this.cardsLoaded = true
             })
     }
 
-    findCardByIdentifier = (cardIdentifier: CardIdentifier) => {
-        if (this.expansionNumberToCard == null) {
-            return undefined
-        }
-        return this.expansionNumberToCard.get(`${cardIdentifier.expansion}-${cardIdentifier.cardNumber}`)
+    loadCardFlavors = () => {
+        this.allCards.map(card => {
+            if (card.flavorText) {
+                this.cardFlavors.push(card.flavorText)
+            }
+        })
+    }
+
+    loadCardTraits = () => {
+        const traits: Set<string> = new Set()
+        this.allCards.map(card => {
+            if (card.traits != null) {
+                card.traits.forEach(trait => traits.add(trait))
+            }
+        })
+        this.cardTraits = Array.from(traits)
+    }
+
+    findCardNamesForExpansion = () => {
+        const cardNamesForExpansion: {
+            expansion: BackendExpansion,
+            names: string[]
+        }[] = expansionInfos.map(info => ({expansion: info.backendEnum, names: []}))
+        this.allCards.map(card => {
+            this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
+            cardNamesForExpansion.forEach(cardNamesForExpansion => {
+                if (card.extraCardInfo.cardNumbers.map(cardNum => cardNum.expansion).includes(cardNamesForExpansion.expansion)) {
+                    cardNamesForExpansion.names.push(card.cardTitle)
+                }
+            })
+
+            return card.cardTitle
+        })
+        return cardNamesForExpansion
     }
 
     findCardsByName = (searchValue: string) => {
@@ -275,10 +273,7 @@ export class CardStore {
     }
 
     fullCardFromCardNameKey = (cardNameKey: string) => {
-        if (this.cardNameHyphenDelimitedLowercaseToCard) {
-            return this.cardNameHyphenDelimitedLowercaseToCard.get(cardNameKey)
-        }
-        return undefined
+        return this.allCards.find(card => cardNameToCardNameKey(card.cardTitle) === cardNameKey)
     }
 
     fullCardFromCardWithName = (card: Partial<KCard>) => {

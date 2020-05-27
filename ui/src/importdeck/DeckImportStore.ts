@@ -49,6 +49,7 @@ class DeckImportStore {
     }
 
     startMessages = () => {
+        cardStore.loadCardFlavors()
         this.readingDeckMessage = sample(cardStore.cardFlavors)!
         this.messageIntervalId = window.setInterval(() => {
             this.readingDeckMessage = sample(cardStore.cardFlavors)!

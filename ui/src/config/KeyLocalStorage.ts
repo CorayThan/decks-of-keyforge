@@ -88,7 +88,6 @@ class KeyLocalStorage {
             log.debug("No auth key in local storage.")
             return undefined
         }
-        log.debug("Found auth key in local storage.")
         return key
     }
 

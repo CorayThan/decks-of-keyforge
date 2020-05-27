@@ -101,7 +101,7 @@ export class DeckImportView extends React.Component {
                                     disabled={
                                         !deckImportViewStore.deckImage
                                         || deckImportStore.readingDeckImage
-                                        || !cardStore.cardNameLowercaseToCard
+                                        || !cardStore.cardsLoaded
                                         || !!saveUnregisteredDeckStore.currentDeck
                                         || this.expansionStore.currentExpansion() == null
                                     }
