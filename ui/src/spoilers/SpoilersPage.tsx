@@ -31,9 +31,8 @@ export class SpoilersPage extends React.Component {
     render() {
 
         const {spoilers, searchingForSpoilers} = spoilerStore
-        const {allCards} = cardStore
 
-        if (spoilers == null || allCards.length === 0) {
+        if (spoilers == null || !cardStore.cardsLoaded) {
             return <Loader/>
         }
 

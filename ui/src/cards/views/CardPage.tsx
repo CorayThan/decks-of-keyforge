@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
@@ -30,9 +31,12 @@ class CardContainer extends React.Component<CardContainerProps> {
 
     render() {
         const cardName = this.props.cardName
-        const card = cardStore.fullCardFromCardNameKey(cardName)
-        if (card == null || card.house == null) {
+        if (!cardStore.cardsLoaded) {
             return <Loader/>
+        }
+        const card = cardStore.fullCardFromCardNameKey(cardName)
+        if (card == null) {
+            return <Typography>Can't find card with name {cardName}</Typography>
         }
         if (userStore.isAdmin) {
             return <Redirect to={Routes.editExtraCardInfo(card.extraCardInfo.id)} />

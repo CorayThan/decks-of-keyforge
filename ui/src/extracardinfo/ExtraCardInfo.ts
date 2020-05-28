@@ -24,6 +24,11 @@ export interface ExtraCardInfo {
     other: number
     otherMax?: number
 
+    enhancementAmber: number
+    enhancementCapture: number
+    enhancementDraw: number
+    enhancementDamage: number
+
     /**
      * In Zoned Date Time format
      */

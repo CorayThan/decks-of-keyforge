@@ -23,6 +23,7 @@ export enum Rarity {
     Rare = "Rare",
     FIXED = "FIXED",
     Variant = "Variant",
+    Special = "Special",
 }
 
 export interface RarityValue {
@@ -54,6 +55,11 @@ export const rarityValuesArray: RarityValue[] = [
     },
     {
         rarity: Rarity.Variant,
+        img: special,
+        imgDark: specialDark
+    },
+    {
+        rarity: Rarity.Special,
         img: special,
         imgDark: specialDark
     },

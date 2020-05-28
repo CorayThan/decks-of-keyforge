@@ -40,7 +40,7 @@ export enum SynergyTrait {
     stealsAmber = "stealsAmber",
     increasesKeyCost = "increasesKeyCost",
     scalingAmberControl = "scalingAmberControl",
-    spendsCapturedAmber = "spendsCapturedAmber",
+    removesCapturedAmber = "removesCapturedAmber",
 
     // Damage
     dealsDamage = "dealsDamage",
@@ -113,6 +113,11 @@ export enum SynergyTrait {
 
     // Deck traits In general these are 50 to 60 percentile = "0, 60+ = "1, 70+ = "2, 80+ = "3 90+ = "4
     hasMars = "hasMars",
+
+    bonusAmber = "bonusAmber",
+    bonusDraw = "bonusDraw",
+    bonusDamage = "bonusDamage",
+    bonusCapture = "bonusCapture",
 
     // Deck or House only traits
     upgradeCount = "upgradeCount",

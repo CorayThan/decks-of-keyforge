@@ -5,7 +5,7 @@ enum class Expansion(val expansionNumber: Int, val readable: String) {
     AGE_OF_ASCENSION(435, "AoA"),
     WORLDS_COLLIDE(452, "WC"),
     ANOMALY_EXPANSION(453, "AE"),
-    MASS_MUTATION(512, "MM");
+    MASS_MUTATION(479, "MM");
 
     companion object {
         fun forExpansionNumber(expansionNumber: Int) = values().find { it.expansionNumber == expansionNumber }

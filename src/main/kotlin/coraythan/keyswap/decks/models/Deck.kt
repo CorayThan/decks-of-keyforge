@@ -243,7 +243,7 @@ data class Deck(
                 upgradeCount = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
                 maverickCount = newCardsList.filter { it.maverick }.size,
                 anomalyCount = newCardsList.filter { it.anomaly }.size,
-                specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant }.size,
+                specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant || it.rarity == Rarity.Special }.size,
                 raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
                 uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size
         )

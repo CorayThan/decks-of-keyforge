@@ -130,6 +130,15 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     otherMax = "0"
 
     @observable
+    enhancementAmber = "0"
+    @observable
+    enhancementCapture = "0"
+    @observable
+    enhancementDraw = "0"
+    @observable
+    enhancementDamage = "0"
+
+    @observable
     traits: SynTraitValue[] = []
     @observable
     synergies: SynTraitValue[] = []
@@ -173,6 +182,11 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.disruptionMax = extraCardInfo.disruptionMax == null ? "0" : extraCardInfo.disruptionMax.toString()
         this.otherMax = extraCardInfo.otherMax == null ? "0" : extraCardInfo.otherMax.toString()
 
+        this.enhancementAmber = extraCardInfo.enhancementAmber.toString()
+        this.enhancementCapture = extraCardInfo.enhancementCapture.toString()
+        this.enhancementDraw = extraCardInfo.enhancementDraw.toString()
+        this.enhancementDamage = extraCardInfo.enhancementDamage.toString()
+
         this.traits = extraCardInfo.traits
         this.synergies = extraCardInfo.synergies
 
@@ -203,6 +217,11 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             creatureProtectionMax: Number(this.creatureProtectionMax),
             disruptionMax: Number(this.disruptionMax),
             otherMax: Number(this.otherMax),
+
+            enhancementAmber: Number(this.enhancementAmber),
+            enhancementCapture: Number(this.enhancementCapture),
+            enhancementDraw: Number(this.enhancementDraw),
+            enhancementDamage: Number(this.enhancementDamage),
 
             traits: this.traits,
             synergies: this.synergies
@@ -288,42 +307,42 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                             style={{marginTop: spacing(2)}}
                         >
                             <InfoInput
-                                name={"expected aember"}
+                                name={"E"}
                                 value={this.expectedAmber}
                                 update={(event: EventValue) => this.expectedAmber = event.target.value}
                             />
                             <InfoInput
-                                name={"exp aember max"}
+                                name={"E max"}
                                 value={this.expectedAmberMax}
                                 update={(event: EventValue) => this.expectedAmberMax = event.target.value}
                             />
                             <InfoInput
-                                name={"aember control"}
+                                name={"A"}
                                 value={this.amberControl}
                                 update={(event: EventValue) => this.amberControl = event.target.value}
                             />
                             <InfoInput
-                                name={"aember control max"}
+                                name={"A max"}
                                 value={this.amberControlMax}
                                 update={(event: EventValue) => this.amberControlMax = event.target.value}
                             />
                             <InfoInput
-                                name={"artifact control"}
+                                name={"R"}
                                 value={this.artifactControl}
                                 update={(event: EventValue) => this.artifactControl = event.target.value}
                             />
                             <InfoInput
-                                name={"artifact control max"}
+                                name={"R max"}
                                 value={this.artifactControlMax}
                                 update={(event: EventValue) => this.artifactControlMax = event.target.value}
                             />
                             <InfoInput
-                                name={"creature control"}
+                                name={"C"}
                                 value={this.creatureControl}
                                 update={(event: EventValue) => this.creatureControl = event.target.value}
                             />
                             <InfoInput
-                                name={"creature control max"}
+                                name={"C max"}
                                 value={this.creatureControlMax}
                                 update={(event: EventValue) => this.creatureControlMax = event.target.value}
                             />
@@ -353,29 +372,55 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 update={(event: EventValue) => this.effectivePower = event.target.value}
                             />
                             <InfoInput
-                                name={"effective power max"}
+                                name={"P max"}
                                 value={this.effectivePowerMax}
                                 update={(event: EventValue) => this.effectivePowerMax = event.target.value}
                             />
                             <InfoInput
-                                name={"creature protection"}
+                                name={"creature prot"}
                                 value={this.creatureProtection}
                                 update={(event: EventValue) => this.creatureProtection = event.target.value}
                             />
                             <InfoInput
-                                name={"creature prot max"}
+                                name={"CP max"}
                                 value={this.creatureProtectionMax}
                                 update={(event: EventValue) => this.creatureProtectionMax = event.target.value}
                             />
                             <InfoInput
                                 name={"other"}
                                 value={this.other}
+                                small={true}
                                 update={(event: EventValue) => this.other = event.target.value}
                             />
                             <InfoInput
                                 name={"other max"}
                                 value={this.otherMax}
+                                small={true}
                                 update={(event: EventValue) => this.otherMax = event.target.value}
+                            />
+                            <InfoInput
+                                name={"bonus amber"}
+                                value={this.enhancementAmber}
+                                small={true}
+                                update={(event: EventValue) => this.enhancementAmber = event.target.value}
+                            />
+                            <InfoInput
+                                name={"bonus capture"}
+                                value={this.enhancementCapture}
+                                small={true}
+                                update={(event: EventValue) => this.enhancementCapture = event.target.value}
+                            />
+                            <InfoInput
+                                name={"bonus draw"}
+                                value={this.enhancementDraw}
+                                small={true}
+                                update={(event: EventValue) => this.enhancementDraw = event.target.value}
+                            />
+                            <InfoInput
+                                name={"bonus damage"}
+                                value={this.enhancementDamage}
+                                small={true}
+                                update={(event: EventValue) => this.enhancementDamage = event.target.value}
                             />
                             <Grid item={true} xs={12}>
                                 <AddTrait traits={this.traits} synergies={this.synergies} reset={this.reset}/>
@@ -405,10 +450,10 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     }
 }
 
-const InfoInput = (props: { name: string, value: string, update: (event: EventValue) => void }) => {
-    const {name, value, update} = props
+const InfoInput = (props: { name: string, value: string, update: (event: EventValue) => void, small?: boolean }) => {
+    const {name, value, update, small} = props
     return (
-        <Grid item={true} xs={6} sm={3}>
+        <Grid item={true} xs={6} sm={2}>
             <TextField
                 label={name}
                 value={value}

@@ -179,5 +179,6 @@ enum class Rarity {
     Uncommon,
     Rare,
     Variant,
-    FIXED;
+    FIXED,
+    Special;
 }

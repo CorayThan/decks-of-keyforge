@@ -10,7 +10,7 @@ export enum Expansion {
     AOA = 435,
     WC = 452,
     ANOM = 453,
-    MM = 512,
+    MM = 479,
 }
 
 export const possibleCardExpansionsForExpansion = (exp: Expansion): Expansion[] => {

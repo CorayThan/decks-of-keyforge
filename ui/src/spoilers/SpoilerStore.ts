@@ -138,7 +138,7 @@ export class SpoilerStore {
 
 export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card: KCard | Spoiler): boolean => {
     // Convert fixed rarity to Variant
-    const cardRarity = card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
+    const cardRarity = card.rarity == Rarity.Special || card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
     const filtersRarities = filters.rarities.map(rarity => (rarity as Rarity | "Special") === "Special" ? Rarity.Variant : rarity)
 
     return (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))

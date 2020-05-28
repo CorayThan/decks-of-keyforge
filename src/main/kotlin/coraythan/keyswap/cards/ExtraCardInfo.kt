@@ -53,6 +53,11 @@ data class ExtraCardInfo(
         val other: Double = 0.0,
         val otherMax: Double? = null,
 
+        val enhancementAmber: Int = 0,
+        val enhancementCapture: Int = 0,
+        val enhancementDraw: Int = 0,
+        val enhancementDamage: Int = 0,
+
         @JsonIgnoreProperties("info")
         @OneToMany(mappedBy = "info", cascade = [CascadeType.ALL])
         val cardNumbers: MutableList<CardIdentifier> = mutableListOf(),

@@ -341,6 +341,16 @@ object DeckSynergyService {
 
         if (deck.houses.contains(House.Mars)) traits.addDeckTrait(SynergyTrait.hasMars, 4)
 
+        val bonusAmber = cards.map { it.amber + (it.extraCardInfo?.enhancementAmber ?: 0) }.sum()
+        val bonusCapture = cards.mapNotNull { it.extraCardInfo?.enhancementCapture }.sum()
+        val bonusDraw = cards.mapNotNull { it.extraCardInfo?.enhancementDraw }.sum()
+        val bonusDamage = cards.mapNotNull {it.extraCardInfo?.enhancementDamage }.sum()
+
+        traits.addDeckTrait(SynergyTrait.bonusAmber, bonusAmber, strength = TraitStrength.EXTRA_WEAK)
+        traits.addDeckTrait(SynergyTrait.bonusCapture, bonusCapture, strength = TraitStrength.EXTRA_WEAK)
+        traits.addDeckTrait(SynergyTrait.bonusDraw, bonusDraw, strength = TraitStrength.EXTRA_WEAK)
+        traits.addDeckTrait(SynergyTrait.bonusDamage, bonusDamage, strength = TraitStrength.EXTRA_WEAK)
+
         val totalExpectedAmber = cards.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
         if (totalExpectedAmber > 21) traits.addDeckTrait(SynergyTrait.highExpectedAmber, when {
             totalExpectedAmber > 26 -> 4
@@ -431,9 +441,11 @@ fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addTrait(traitValue: SynTra
     this[traitValue.trait]!!.traitValues.add(SynTraitValueWithHouse(traitValue, card, house, deckTrait))
 }
 
-fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addDeckTrait(trait: SynergyTrait, count: Int, house: House? = null, traitHouse: SynTraitHouse = SynTraitHouse.anyHouse) {
+fun MutableMap<SynergyTrait, SynTraitValuesForTrait>.addDeckTrait(
+        trait: SynergyTrait, count: Int, house: House? = null, traitHouse: SynTraitHouse = SynTraitHouse.anyHouse, strength: TraitStrength = TraitStrength.NORMAL
+) {
     repeat(count) {
-        this.addTrait(SynTraitValue(trait, TraitStrength.NORMAL.value, traitHouse), null, house, true)
+        this.addTrait(SynTraitValue(trait, strength.value, traitHouse), null, house, true)
     }
 }
 

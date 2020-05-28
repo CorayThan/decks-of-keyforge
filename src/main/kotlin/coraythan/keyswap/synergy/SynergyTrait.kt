@@ -130,6 +130,11 @@ enum class SynergyTrait {
     alpha,
     omega,
 
+    bonusAmber,
+    bonusDraw,
+    bonusDamage,
+    bonusCapture,
+
     upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
     highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
     lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
