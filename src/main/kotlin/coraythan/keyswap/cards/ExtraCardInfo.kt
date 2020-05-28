@@ -133,6 +133,10 @@ data class ExtraCardInfo(
                 creatureProtectionMax = info.creatureProtectionMax,
                 other = info.other,
                 otherMax = info.otherMax,
+                enhancementAmber = info.enhancementAmber,
+                enhancementCapture = info.enhancementCapture,
+                enhancementDamage = info.enhancementDamage,
+                enhancementDraw = info.enhancementDraw,
                 traits = mutableListOf(),
                 synergies = mutableListOf()
         )

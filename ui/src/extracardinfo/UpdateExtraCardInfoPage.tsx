@@ -28,7 +28,7 @@ import { KCard } from "../cards/KCard"
 import { CardView } from "../cards/views/CardSimpleView"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { Utils } from "../config/Utils"
+import { log, prettyJson, Utils } from "../config/Utils"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -226,6 +226,10 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             traits: this.traits,
             synergies: this.synergies
         }
+
+        log.info("In save enhancement amber is " + this.enhancementAmber + " saving: " + prettyJson(extraCardInfo))
+
+
         await extraCardInfoStore.saveExtraCardInfo(extraCardInfo)
         const saved = await extraCardInfoStore.findExtraCardInfo(this.infoId)
         this.reset(saved)

@@ -58,7 +58,6 @@ export class CardStore {
 
     cardWinRates?: Map<string, CardWinRates[]>
 
-
     setupCardWinRates = () => {
         if (!cardStore.cardsLoaded || statsStore.stats == null || this.cardWinRatesLoaded) {
             return
@@ -190,9 +189,9 @@ export class CardStore {
                     return card.cardTitle
                 })
                 this.allCards = basisForCards
-                this.setupCardWinRates()
                 log.debug(`End load all cards async`)
                 this.cardsLoaded = true
+                this.setupCardWinRates()
             })
     }
 
