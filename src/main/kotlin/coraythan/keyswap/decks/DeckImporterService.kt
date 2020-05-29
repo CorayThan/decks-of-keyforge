@@ -86,7 +86,7 @@ class DeckImporterService(
                 if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
-                    val decks = keyforgeApi.findDecks(currentPage)
+                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true)
                     if (decks == null) {
                         deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")

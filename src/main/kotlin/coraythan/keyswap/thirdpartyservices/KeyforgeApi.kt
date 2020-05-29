@@ -10,7 +10,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import kotlin.system.measureTimeMillis
 
 data class KeyForgeDeckResponse(
         val deck: KeyForgeDeckDto? = null,
@@ -60,24 +59,26 @@ class KeyforgeApi(
     /**
      * Null implies no decks available.
      */
-    fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize, expansion: Int? = null): KeyforgeDecksPageDto? {
-        var decks: KeyforgeDecksPageDto? = null
-
-        val keyforgeRequestDuration = measureTimeMillis {
-            decks = keyforgeGetRequest(
+    fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize, expansion: Int? = null, useMasterVault: Boolean = false): KeyforgeDecksPageDto? {
+        return if (useMasterVault) {
+            keyforgeGetRequest(
                     KeyforgeDecksPageDto::class.java,
                     "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering" +
                             if (expansion == null) "" else "&expansion=$expansion"
             )
+        } else {
+            restTemplate.getForObject(
+                    "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks?page=$page&pageSize=$pageSize&ordering=$ordering" +
+                            if (expansion == null) "" else "&expansion=$expansion",
+                    KeyforgeDecksPageDto::class.java
+            )
         }
-        log.debug("Getting $pageSize decks from keyforge api took $keyforgeRequestDuration got decks ${decks?.count}")
-        return decks
     }
 
     fun findDeckToImport(deckId: String): KeyForgeDeckDto? {
         val deckResponse = restTemplate.getForObject(
                 "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks/$deckId",
-                    KeyForgeDeckResponse::class.java
+                KeyForgeDeckResponse::class.java
         )
         if (deckResponse == null) {
             log.warn("Deck response was null for $deckId")

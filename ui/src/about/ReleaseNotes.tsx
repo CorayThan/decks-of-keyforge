@@ -1,4 +1,4 @@
-import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, List, ListItem, Paper, Typography } from "@material-ui/core"
+import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Paper, Typography } from "@material-ui/core"
 import Link from "@material-ui/core/Link"
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.3"
+export const latestVersion = "5.4"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,31 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.4"}
+                    date={"5/29/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Mass Mutation decks, cards and preliminary ratings!",
+                            note: "I've finished mutating DoK to import MM decks! I was caught a little off guard " +
+                                "by the timing of when this was released on Master Vault (even though I shouldn't have been) so these ratings " +
+                                "are highly preliminary. Expect to see some errors and strange numbers until they've been fully reviewed in the coming days."
+                        },
+                        {
+                            highlight: "Petition to add bonus icons to Master Vault",
+                            note: (
+                                <Typography variant={"body2"}>
+                                    We can't currently see which cards are modified with what bonus icons, either on Master Vault's deck view, or in the API.
+                                    This is a big problem for deck content verification. We need to be able to verify deck contents to prevent cheating,
+                                    safely sell second hand online, and play online. Please
+                                    consider signing <Link href={"https://www.change.org/keyforge-bonus-icons"} target={"_blank"}>this petition to FFG</Link> to
+                                    encourage them to add this data sooner than later!
+                                </Typography>
+                            )
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.3"}
                     date={"5/24/2020"}
@@ -693,19 +718,6 @@ export class ReleaseNotes extends React.Component {
                                 "creatures. This completes step 3 of the 4 step SAS revision plan."
                         },
                         {
-                            highlight: "Card Table View + Spreadsheet",
-                            note: "Card table view and spreadsheet download! Find a link to the previous AERC ratings csv below."
-                        },
-                        {
-                            note: (
-                                <div style={{margin: spacing(1)}}>
-                                    <Link href={"https://docs.google.com/spreadsheets/d/1BQ-PB1btHAyc38Dr4RXIFbuTm4oMkTAM_x7rGo5IMnc/edit?usp=sharing"}>
-                                        All cards spreadsheet pre-major AERC scores revision
-                                    </Link>
-                                </div>
-                            )
-                        },
-                        {
                             highlight: "Deck Sale Listing Defaults",
                             note: "Save defaults when listing decks for sale! No more re-entering the same thing to list 10 similar decks."
                         },
@@ -794,17 +806,6 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"3.18"} date={"6/30/2019"} expanded={true} releaseNotes={[
                     "Updated SAS. Added some new traits, like Deploy and an Out of House synergy type. (Synergizes with traits from cards in other houses " +
                     "only. Also fixed some issues, like the Thief trait not working.",
-                    "Highlights of the update for AoA: ",
-                    <List>
-                        <ListItem><Typography>Foozle 2 {"->"} 3</Typography></ListItem>
-                        <ListItem><Typography>Into the Fray 3 {"->"} 1.5</Typography></ListItem>
-                        <ListItem><Typography>Onyx Knight 2 {"->"} 3</Typography></ListItem>
-                        <ListItem><Typography>Archimedes 2.5 {"->"} 3.5</Typography></ListItem>
-                        <ListItem><Typography>Lion Bautrem 2 {"->"} 3</Typography></ListItem>
-                        <ListItem><Typography>Opal Knight 2 {"->"} 3</Typography></ListItem>
-                        <ListItem><Typography>Panpaca, Anga 1.5 {"->"} 2.5</Typography></ListItem>
-                        <ListItem><Typography>Po's Pixies 2 {"->"} 3</Typography></ListItem>
-                    </List>
                 ]}/>
                 <ReleaseNote releaseNumber={"3.17"} date={"6/28/2019"} expanded={true} releaseNotes={[
                     "You can now search for a number of copies of any cards. For example, you could search for decks with 1 of Key Charge, Chota Hazri, or " +
@@ -879,77 +880,6 @@ export class ReleaseNotes extends React.Component {
                 <ReleaseNote releaseNumber={"3.8"} date={"5/18/2019"} expanded={true} releaseNotes={[
                     "Updates to SAS and AERC! Please note the stats will be out of date temporarily. " +
                     "This will be the last big change before Age of Ascension.",
-                    "The following are the changes to SAS ratings: ",
-                    (
-                        <List>
-                            <ListItem><Typography>Brothers in Battle 2.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Punch 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Banner of Battle 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Pile of Skulls 2 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Bilgum Avalanche 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Bumpsy 2.5 {"->"} 3</Typography></ListItem>
-                            <ListItem><Typography>Ganger Chieftan 2 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Grenade Snib 2 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Lomir Flamefist 3 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Looter Goblin 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Rogue Ogre 2.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Troll 3 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Valdr 1.5 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>Phoenix Heart 1 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>A Fair Game 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Control the Weak 3 {"->"} 4</Typography></ListItem>
-                            <ListItem><Typography>Tendrils of Pain 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Mind Barb 2 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Three Fates 3.5 {"->"} 3</Typography></ListItem>
-                            <ListItem><Typography>Key to Dis 3 {"->"} 3.5</Typography></ListItem>
-                            <ListItem><Typography>Ember Imp 2 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Succubus 2 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Master of 2/3 3 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Collar of Subordination 3.5 {"->"} 3</Typography></ListItem>
-                            <ListItem><Typography>Flame-Wreathed 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Effervescent Principle 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Knowledge is Power 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Phase Shift 3 {"->"} 3.5</Typography></ListItem>
-                            <ListItem><Typography>Scrambler Storm 3 {"->"} 3.5</Typography></ListItem>
-                            <ListItem><Typography>Crazy Killing Machine 1.5 {"->"} 1</Typography></ListItem>
-                            <ListItem><Typography>The Howling Pit 1.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Brain Eater 2.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Ganymede Archivist 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Titan Mechanic 2.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Vespilon Theorist 2.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Experimental Therapy 1 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>Martians Make Bad Allies 1.5 {"->"} 1</Typography></ListItem>
-                            <ListItem><Typography>Sample Collection 1 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>Shatter Storm 1.5 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Feeding Pit 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Invasion Portal 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Ether Spider 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Mindwarper 1.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Phylyx the Disintegrator 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Brain Stem Antenna 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Charge! 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Clear Mind 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Mighty Lance 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Oath of Poverty 1.5 {"->"} 1</Typography></ListItem>
-                            <ListItem><Typography>Shield of Justice 1 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>Terms of Redress 1.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>The Harder They Come 1.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Horseman of Famine 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Jehu the Bureaucrat 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Staunch Knight 1 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>Gatekeeper 1.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Routine Job 3 {"->"} 3.5</Typography></ListItem>
-                            <ListItem><Typography>Treasure Map 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Noddy the Thief 2.5 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Shadow Self 2.5 {"->"} 3</Typography></ListItem>
-                            <ListItem><Typography>Umbra 1.5 {"->"} 1</Typography></ListItem>
-                            <ListItem><Typography>Duskrunner 1 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Grasping Vines 3 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Lifeweb 2 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Perilous Wild 3 {"->"} 2</Typography></ListItem>
-                            <ListItem><Typography>Giant Sloth 2 {"->"} 1.5</Typography></ListItem>
-                        </List>
-                    ),
                     "Also, the system for how AERC estimates artifact control has been adjusted. Now hard artifact removal like Sneklifter, or " +
                     "Neutron Shark provides 1.5 R, artifact use (removing one-use artifacts) like Remote Access or Nexus provides 1 R, and artifact delay " +
                     "like Barehanded or Grasping Vines provides 0.5 R.",
@@ -1013,24 +943,6 @@ export class ReleaseNotes extends React.Component {
                     "I've also added new tiers to the card ratings, which include 0.5, 1.5, 2.5 and 3.5 for more precision in rating.",
                     "These changes have changed the scale of SAS somewhat. 75 is still pretty close to average, but the scale has widened. " +
                     "There are now 105 SAS decks (rather than 102) and 39 SAS decks (rather than 45).",
-                    "Some of the major card rating changes include (keep in mind synergies can make the value in a deck go up or down):",
-                    (
-                        <List>
-                            <ListItem><Typography>Relentless Assault 1 {"->"} 3</Typography></ListItem>
-                            <ListItem><Typography>Hebe the Huge 3 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Key Hammer 2 {"->"} 0.5</Typography></ListItem>
-                            <ListItem><Typography>Restringuntus 1 {"->"} 3</Typography></ListItem>
-                            <ListItem><Typography>Emp Blast 3 {"->"} 1.5</Typography></ListItem>
-                            <ListItem><Typography>Gatekeeper 4 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Total Recall 3 {"->"} 1</Typography></ListItem>
-                            <ListItem><Typography>Safe Place 1 {"->"} 2.5</Typography></ListItem>
-                            <ListItem><Typography>Save the Pack 2 {"->"} 0.5</Typography></ListItem>
-                        </List>
-                    ),
-                    "Many more have been changed by 0.5 or 1 point. You can see the previous spreadsheet in the 2.0 release notes, and compare to this one.",
-                    <a href={"https://docs.google.com/spreadsheets/d/1NpRMo_uZcOh8EkiYTvSQZOPHgfAEDU88rd7VuBDkgwQ/edit?usp=sharing"}>
-                        Card Ratings v3 Spreadsheet
-                    </a>,
                     "Also, you can see the win ratings for cards on the Cards page, and sort by win rating. The ratings are pretty interesting, but need " +
                     "to be taken with a huge grain of salt. First, they are highly correlated with house win rates. Shadows wins the most, so all its cards " +
                     "rate high, and Mars wins the least, so all its rate low. I've used the range of ratings intra-house more than I've compared across " +
@@ -1152,10 +1064,9 @@ export const ReleaseNote = (props: {
             <div style={{width: "100%"}}>
                 {props.releaseNotesWithHighlights && props.releaseNotesWithHighlights.map((noteAndHighlight, idx) => {
                     let note
-                    if (typeof note === "string") {
+                    if (typeof noteAndHighlight.note === "string") {
                         note = (
-                            <Typography
-                            >
+                            <Typography variant={"body2"}>
                                 {noteAndHighlight.note}
                             </Typography>
                         )
@@ -1178,7 +1089,7 @@ export const ReleaseNote = (props: {
                 {props.releaseNotes && props.releaseNotes.map((note, idx) => {
                     if (typeof note === "string") {
                         return (
-                            <Typography key={idx} style={{marginBottom: idx !== props.releaseNotes!.length - 1 ? spacing(1) : undefined}}>
+                            <Typography variant={"body2"} key={idx} style={{marginBottom: idx !== props.releaseNotes!.length - 1 ? spacing(1) : undefined}}>
                                 {note}
                             </Typography>
                         )
