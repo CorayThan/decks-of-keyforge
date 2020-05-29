@@ -1,7 +1,7 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
 import { roundToHundreds } from "../config/Utils"
-import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
+import { activeExpansions, BackendExpansion, Expansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
@@ -32,6 +32,7 @@ export interface KCard {
     expansion: number
     maverick: boolean
     anomaly: boolean
+    big?: boolean
     effectivePower: number
 
     wins?: number
@@ -103,9 +104,9 @@ export const cardNameToCardNameKey = (name: string) => {
 }
 
 export const findCardImageUrl = (card: HasFrontImage) => {
-    // if (card.expansion === Expansion.WC || card.expansion === Expansion.ANOM) {
-    //     return card.frontImage
-    // }
+    if (card.expansion === Expansion.MM) {
+        return card.frontImage
+    }
     return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
 }
 

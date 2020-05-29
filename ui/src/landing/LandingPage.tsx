@@ -28,6 +28,8 @@ const aoa = new DeckFilters()
 aoa.expansions = [Expansion.AOA]
 const wc = new DeckFilters()
 wc.expansions = [Expansion.WC]
+const mm = new DeckFilters()
+mm.expansions = [Expansion.MM]
 const topAerc = new DeckFilters()
 topAerc.sort = DeckSorts.aerc
 const topChains = new DeckFilters()
@@ -70,7 +72,12 @@ export class LandingPage extends React.Component<{}> {
                 <div style={{display: "flex"}}>
                     <KeyDrawer width={landingPageDrawerWidth} hamburgerMenu={true}>
                         <List>
-                            <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true} style={{marginTop: spacing(2)}}/>
+                            <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2)}}>
+                                <DeckSearchLink name={"Search Decks"} filters={topSas} dontSearch={true}/>
+                                <DeckSearchLink
+                                    name={<ExpansionIcon expansion={BackendExpansion.MASS_MUTATION} white={true}/>} filters={mm}
+                                />
+                            </div>
                             <div style={{paddingRight: spacing(2)}}>
                                 <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2)}}>
                                     <DeckSearchLink
@@ -111,7 +118,13 @@ export class LandingPage extends React.Component<{}> {
                                 Cards
                             </ListSubheader>
                             <div style={{paddingRight: spacing(2)}}>
-                                <CardSearchLink name={"Search Cards"} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                <div style={{display: "flex", flexWrap: "wrap"}}>
+                                    <CardSearchLink name={"Search Cards"} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                    <CardSearchLink
+                                        name={<ExpansionIcon expansion={BackendExpansion.MASS_MUTATION} white={false}/>} color={"secondary"}
+                                        to={Routes.mmCards} style={{marginBottom: spacing(2)}}
+                                    />
+                                </div>
                                 <div style={{display: "flex", flexWrap: "wrap"}}>
                                     <CardSearchLink
                                         name={<ExpansionIcon expansion={BackendExpansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
@@ -175,7 +188,8 @@ export class LandingPage extends React.Component<{}> {
                                 Disclaimers
                             </LandingPageTitle>
                             <Typography style={{marginBottom: spacing(1)}}>
-                                DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight Games, the producers of KeyForge, in any way.
+                                DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight Games, the producers of KeyForge, in any
+                                way.
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}}>
                                 DoK is owned and operated by Graylake LLC. For questions or comments check out the

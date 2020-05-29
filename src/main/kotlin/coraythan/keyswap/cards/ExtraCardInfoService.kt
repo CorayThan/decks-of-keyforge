@@ -52,7 +52,8 @@ class ExtraCardInfoService(
                 published = null,
                 cardNumbers = mutableListOf(
                         cardIdentifier
-                )
+                ),
+                active = true
         )
 
         cardIdentifier.info = extraInfo

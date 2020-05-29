@@ -427,7 +427,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 update={(event: EventValue) => this.enhancementDamage = event.target.value}
                             />
                             <Grid item={true} xs={12}>
-                                <AddTrait traits={this.traits} synergies={this.synergies} reset={this.reset}/>
+                                <AddTrait traits={this.traits} synergies={this.synergies} reset={this.reset} extraCardId={this.infoId}/>
                             </Grid>
                         </Grid>
                         <CardActions>
@@ -476,6 +476,7 @@ interface AddTraitProps {
     traits: SynTraitValue[]
     synergies: SynTraitValue[]
     reset: (resetTo: ExtraCardInfo) => void
+    extraCardId: string
     spoilerId?: number
 }
 
@@ -568,7 +569,7 @@ class AddTrait extends React.Component<AddTraitProps> {
 
     render() {
 
-        const {traits, synergies, reset, spoilerId} = this.props
+        const {traits, synergies, reset, spoilerId, extraCardId} = this.props
 
         const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
 
@@ -858,14 +859,20 @@ class AddTrait extends React.Component<AddTraitProps> {
                                     spoilerInfo = await extraCardInfoStore.findCreateSpoilerAercNoSet(spoilerId)
                                 }
                                 const nextInfoMap = cardStore.nextExtraInfo
+                                let resetWith
                                 if (spoilerInfo != null) {
-                                    reset(spoilerInfo)
+                                    resetWith = spoilerInfo
                                 } else if (nextInfoMap != null && nextInfoMap[cardName] != null) {
-                                    reset(nextInfoMap[cardName]!.extraCardInfo!)
+                                    resetWith = nextInfoMap[cardName]!.extraCardInfo!
                                 } else {
                                     const card = cardStore.fullCardFromCardName(cardName)!
-                                    reset(card!.extraCardInfo!)
+                                    resetWith = card!.extraCardInfo!
                                 }
+
+                                resetWith = Utils.jsonCopy(resetWith) as ExtraCardInfo
+                                resetWith.id = extraCardId
+
+                                reset(resetWith)
                             }
                         }}
                     >

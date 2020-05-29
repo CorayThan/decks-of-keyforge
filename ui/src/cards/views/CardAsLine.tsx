@@ -109,15 +109,25 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
 
     render() {
         const card = this.props.card
-        const fullCard = cardStore.fullCardFromCardWithName(card)
 
-        if (card == null) {
+        if (!cardStore.cardsLoaded) {
             return null
         }
 
-        let pop = null
-        if (fullCard && fullCard.id != null) {
-            pop = (
+        const fullCard = cardStore.fullCardFromCardWithName(card)
+
+        if (fullCard == null) {
+            return <Typography>Can't find card {card.cardTitle}</Typography>
+        }
+
+        return (
+            <div
+                onWheel={this.handlePopoverClose}
+                onClick={() => this.popOpen = true}
+                onMouseEnter={this.handlePopoverOpen}
+                onMouseLeave={this.handlePopoverClose}
+            >
+                <CardLine  {...this.props} card={this.props.card}/>
                 <Popover
                     style={{pointerEvents: "none"}}
                     open={this.popOpen}
@@ -136,18 +146,6 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 >
                     <CardView card={fullCard as KCard} combo={findSynegyComboForCardFromDeck(fullCard, card.house, this.props.deck)}/>
                 </Popover>
-            )
-        }
-
-        return (
-            <div
-                onWheel={this.handlePopoverClose}
-                onClick={() => this.popOpen = true}
-                onMouseEnter={this.handlePopoverOpen}
-                onMouseLeave={this.handlePopoverClose}
-            >
-                <CardLine  {...this.props} card={this.props.card}/>
-                {pop}
             </div>
         )
     }

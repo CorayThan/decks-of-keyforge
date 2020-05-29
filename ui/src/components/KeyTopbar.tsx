@@ -272,11 +272,11 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.cards, text: "Cards", mobileActive: true},
-                {to: Routes.spoilers, text: "Mass Mutation Cards", mobileActive: true},
                 {to: Routes.cotaCards, text: "CotA Cards", mobileActive: false},
                 {to: Routes.aoaCards, text: "AoA Cards", mobileActive: false},
                 {to: Routes.wcCards, text: "WC Cards", mobileActive: false},
-                {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
+                {to: Routes.mmCards, text: "MM Cards", mobileActive: false},
+                // {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
             ]}
             linkMenuStore={cardsMenuStore}
         />

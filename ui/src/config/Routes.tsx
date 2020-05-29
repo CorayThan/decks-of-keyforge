@@ -58,6 +58,7 @@ class Routes {
     static cotaCards = "/cards?expansion=CALL_OF_THE_ARCHONS"
     static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
     static wcCards = "/cards?expansion=WORLDS_COLLIDE"
+    static mmCards = "/cards?expansion=MASS_MUTATION"
     static spoilers = "/spoilers"
     static extraCardInfo = "/extra-card-infos"
     static createSpoiler = `/spoilers/create`

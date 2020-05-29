@@ -1,0 +1,2 @@
+ALTER TABLE card
+    ADD COLUMN big BOOLEAN;

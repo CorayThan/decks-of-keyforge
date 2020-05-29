@@ -32,6 +32,7 @@ export const activeExpansions = [
     BackendExpansion.CALL_OF_THE_ARCHONS,
     BackendExpansion.AGE_OF_ASCENSION,
     BackendExpansion.WORLDS_COLLIDE,
+    BackendExpansion.MASS_MUTATION,
 ]
 
 export const expansionInfos: ExpansionInfo[] = [

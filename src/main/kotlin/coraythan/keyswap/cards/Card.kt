@@ -33,6 +33,7 @@ data class Card(
         val expansionEnum: Expansion,
         val maverick: Boolean,
         val anomaly: Boolean,
+        val big: Boolean? = null,
 
         val wins: Int? = 0,
         val losses: Int? = 0,
@@ -134,7 +135,7 @@ data class KeyforgeCard(
         val id: String,
         val card_title: String,
         val house: String,
-        val card_type: CardType,
+        val card_type: KeyForgeCardType,
         val front_image: String,
         val card_text: String,
         val amber: Int,
@@ -152,10 +153,13 @@ data class KeyforgeCard(
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
         val expansionEnum = Expansion.forExpansionNumber(expansion)
-        return Card(id, card_title, House.fromMasterVaultValue(house)!!, card_type, front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
+        return Card(
+                id, card_title, House.fromMasterVaultValue(house)!!, card_type.toCardType(), front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick, is_anomaly,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
-                traits = traits?.toUpperCase()?.split(" • ")?.toSet() ?: setOf())
+                traits = traits?.toUpperCase()?.split(" • ")?.toSet() ?: setOf(),
+                big = card_type == KeyForgeCardType.Creature1 || card_type == KeyForgeCardType.Creature2
+        )
     }
 }
 
@@ -167,11 +171,29 @@ data class DeckSearchResultCard(
         val anomaly: Boolean
 )
 
+enum class KeyForgeCardType {
+    Action,
+    Artifact,
+    Creature,
+    Creature1,
+    Creature2,
+    Upgrade;
+}
+
 enum class CardType {
     Action,
     Artifact,
     Creature,
     Upgrade;
+}
+
+fun KeyForgeCardType.toCardType() = when (this) {
+    KeyForgeCardType.Action -> CardType.Action
+    KeyForgeCardType.Artifact -> CardType.Artifact
+    KeyForgeCardType.Creature -> CardType.Creature
+    KeyForgeCardType.Creature1 -> CardType.Creature
+    KeyForgeCardType.Creature2 -> CardType.Creature
+    KeyForgeCardType.Upgrade -> CardType.Upgrade
 }
 
 enum class Rarity {

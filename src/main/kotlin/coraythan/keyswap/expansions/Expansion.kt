@@ -13,4 +13,4 @@ enum class Expansion(val expansionNumber: Int, val readable: String) {
     }
 }
 
-val activeExpansions = setOf(Expansion.CALL_OF_THE_ARCHONS, Expansion.AGE_OF_ASCENSION, Expansion.WORLDS_COLLIDE)
+val activeExpansions = setOf(Expansion.CALL_OF_THE_ARCHONS, Expansion.AGE_OF_ASCENSION, Expansion.WORLDS_COLLIDE, Expansion.MASS_MUTATION)

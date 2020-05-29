@@ -8,6 +8,8 @@ import aoaDark from "./imgs/aoa-dark.svg"
 import aoa from "./imgs/aoa.svg"
 import cotaDark from "./imgs/cota-dark.svg"
 import cota from "./imgs/cota.svg"
+import mmDark from "./imgs/mm-dark.svg"
+import mm from "./imgs/mm.svg"
 import wcDark from "./imgs/wc-dark.svg"
 import wc from "./imgs/wc.svg"
 
@@ -27,6 +29,10 @@ export const ExpansionIcon = observer((props: { expansion: BackendExpansion, siz
         case BackendExpansion.AGE_OF_ASCENSION:
             lightSrc = aoa
             darkSrc = aoaDark
+            break
+        case BackendExpansion.MASS_MUTATION:
+            lightSrc = mm
+            darkSrc = mmDark
             break
         case BackendExpansion.ANOMALY_EXPANSION:
             lightSrc = anomaly

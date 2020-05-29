@@ -50,5 +50,6 @@ data class CardIdentifier(
 
 interface CardIdentifierRepo : JpaRepository<CardIdentifier, UUID>, QuerydslPredicateExecutor<CardIdentifier> {
     fun findByExpansionAndCardNumber(expansion: Expansion, cardNumber: String): List<CardIdentifier>
+    fun existsByExpansionAndCardNumber(expansion: Expansion, cardNumber: String): Boolean
     fun countByExpansion(expansion: Expansion): Long
 }

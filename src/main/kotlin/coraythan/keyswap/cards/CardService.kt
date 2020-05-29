@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
+import javax.persistence.EntityManager
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
 val publishedAercVersion = 15
@@ -25,7 +26,8 @@ class CardService(
         private val keyforgeApi: KeyforgeApi,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val cardWinsService: CardWinsService,
-        private val objectMapper: ObjectMapper
+        private val objectMapper: ObjectMapper,
+        val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -48,23 +50,6 @@ class CardService(
 
             log.info("Active aerc version $activeAercVersion published version $publishedAercVersion")
             if (activeAercVersion < publishedAercVersion) {
-
-//                val allInfosToPotentiallyUpdateNamesFor = extraCardInfoRepo.findAll()
-//                        .mapNotNull {
-//                            val num = it.cardNumbers.first()
-//                            val card = cardRepo.findByExpansionAndCardNumberAndMaverickFalse(num.expansion.expansionNumber, num.cardNumber).first()
-//                            if (card.cardTitle == it.cardName) {
-//                                null
-//                            } else {
-//                                log.info("Card name to update: ${it.cardName} -> ${card.cardTitle}")
-//                                it.cardName = card.cardTitle
-//                                it
-//                            }
-//                        }
-//
-//                if (allInfosToPotentiallyUpdateNamesFor.isNotEmpty()) {
-//                    extraCardInfoRepo.saveAll(allInfosToPotentiallyUpdateNamesFor)
-//                }
 
                 val toPublish = mapInfosOnly(extraCardInfoRepo.findByVersion(publishedAercVersion))
                 toPublish.forEach {
@@ -91,6 +76,7 @@ class CardService(
         log.info("Loading extra info started")
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
+
             this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
             this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
             val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(this.activeAercVersion)
@@ -214,63 +200,57 @@ class CardService(
         return fullCardsFromCards(cards)
     }
 
-    fun importNewCards(decks: List<KeyforgeDeck>): List<Card> {
-        val cards = cardRepo.findAll()
-        val cardsToReturn = cards.toMutableList()
-        val cardKeys = cards.map { it.id }.toSet()
+    fun importNewCards(decks: List<KeyforgeDeck>) {
         decks.forEach { deck ->
             if (deck.cards == null || deck.cards.isEmpty()) {
                 log.warn("Deck from keyforge api didn't have cards!? ${deck.id}")
             }
-            if (deck.cards?.any { !cardKeys.contains(it) } == true) {
+            if (deck.cards?.any { !cardRepo.existsById(it) } == true) {
                 keyforgeApi.findDeck(deck.id)?._linked?.cards?.forEach {
-                    if (!cardKeys.contains(it.id)) {
-                        cardsToReturn.add(this.saveNewCard(it.toCard(this.extraInfo)))
+                    if (!cardRepo.existsById(it.id)) {
+                        this.saveNewCard(it.toCard(this.extraInfo))
                     }
                 }
                 reloadCachedCards()
                 log.debug("Loaded cards from deck.")
             }
         }
-        return cardsToReturn
     }
 
     fun saveNewCard(card: Card): Card {
-//        if (card.extraCardInfo == null) {
-//            val preexistingInfo = extraInfo.values.filter { it.cardName == card.cardTitle }
+        if (card.extraCardInfo == null) {
+
+            throw IllegalStateException("extra info not found for ${card.cardTitle} id ${card.id} expansion ${card.expansion} num ${card.cardNumber}")
+
+//            val existingInfo = extraCardInfoRepo.findByCardName(card.cardTitle)
+//                    .sortedByDescending { it.version }
+//                    .firstOrNull()
 //
-//            if (preexistingInfo.isEmpty()) {
-//                val cardId = CardIdentifier(expansion = card.expansionEnum, cardNumber = card.cardNumber)
-//                val info = ExtraCardInfo(
-//                        cardName = card.cardTitle,
-//                        active = true,
-//                        version = activeAercVersion
-//                )
-//
-//                val savedInfo = extraCardInfoRepo.save(info)
-//                cardId.info = savedInfo
-//                cardIdentifierRepo.save(cardId)
-//
-//                // log.info("Saved ${card.cardTitle} ${card.cardNumber}")
-//
+//            if (existingInfo == null) {
+//                throw IllegalStateException("No extra info available for new card ${card.cardTitle}!")
 //            } else {
-//                preexistingInfo.forEach {
-//                    val savedCardId = cardIdentifierRepo.save(CardIdentifier(
-//                            expansion = card.expansionEnum,
-//                            cardNumber = card.cardNumber,
-//                            info = extraCardInfoRepo.findByIdOrNull(it.id)!!
-//                    ))
-//                    it.cardNumbers.add(savedCardId)
-//                    extraCardInfoRepo.save(it)
-//                }
-//                // log.info("Added new sets for ${card.cardTitle} ${card.cardNumber}")
+//                extraCardInfoRepo.save(existingInfo.copy(active = true))
+//                log.info("Successfully updated extra info for ${card.cardTitle}")
 //            }
-//        }
+        }
         return cardRepo.save(card)
     }
 
     fun reloadCachedCards() {
-        val cards = fullCardsFromCards(cardRepo.findByMaverickFalse()).map {
+
+
+
+
+        val cards = fullCardsFromCards(
+                cardRepo.findAll()
+                        .groupBy { "${it.expansion}-${it.cardNumber}" }
+                        .values
+                        .map {  groupedCards ->
+                            groupedCards.let { sameCards ->
+                                sameCards.find { !it.maverick } ?: sameCards.first()
+                            }
+                        }
+        ).map {
             val extraTraits = it.traits
                     .mapNotNull { trait ->
                         SynergyTrait.fromTrait(trait)

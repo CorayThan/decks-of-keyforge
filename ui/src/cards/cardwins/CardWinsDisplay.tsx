@@ -41,6 +41,10 @@ const IndividualCardWinsDisplay = (props: { winRates: CardWinRates }) => {
     const {winRates} = props
     const {expansion, winRatePercent, relativeToAveragePercent, wins, losses} = winRates
 
+    if (((wins ?? 0) + (losses ?? 0)) < 1000) {
+        return <Typography variant={"body2"}>Insufficent Data</Typography>
+    }
+
     return (
         <>
             {expansion != null ? (

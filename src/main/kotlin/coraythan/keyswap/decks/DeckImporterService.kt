@@ -26,6 +26,7 @@ import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -57,6 +58,7 @@ class DeckImporterService(
         private val statsService: StatsService,
         private val objectMapper: ObjectMapper,
         private val deckListingRepo: DeckListingRepo,
+        private val cardRepo: CardRepo,
         @Value("\${env}")
         private val env: Env,
         val entityManager: EntityManager
@@ -67,7 +69,7 @@ class DeckImporterService(
 
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecks)
-    @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
+    // @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
@@ -97,9 +99,9 @@ class DeckImporterService(
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
                         break
                     } else {
-                        val cards = cardService.importNewCards(decks.data)
+                        cardService.importNewCards(decks.data)
                         val decksToSaveCount = decks.data.count()
-                        decksAdded += saveDecks(decks.data, cards, currentPage)
+                        decksAdded += saveDecks(decks.data, currentPage)
                         currentPage++
                         pagesRequested++
 
@@ -298,9 +300,9 @@ class DeckImporterService(
             val deck = keyforgeApi.findDeckToImport(deckId)
             if (deck != null) {
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
-                val cards = cardService.importNewCards(deckList)
+                cardService.importNewCards(deckList)
                 return try {
-                    saveDecks(deckList, cards)
+                    saveDecks(deckList)
                     deckRepo.findByKeyforgeId(deckId)?.id
                 } catch (e: RuntimeException) {
                     if (e::class.java == DataIntegrityViolationException::class.java || e::class.java == ConstraintViolationException::class.java) {
@@ -371,16 +373,17 @@ class DeckImporterService(
      * Only set current page if this is auto importing new decks
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    fun saveDecks(deck: List<KeyforgeDeck>, cardsForDecks: List<Card>, currentPage: Int? = null): Int {
+    fun saveDecks(deck: List<KeyforgeDeck>, currentPage: Int? = null): Int {
         var savedCount = 0
-        val cardsById: Map<String, Card> = cardsForDecks.associateBy { it.id }
+//        val cardsById: Map<String, Card> = cardsForDecks.associateBy { it.id }
         deck
                 .forEach { keyforgeDeck ->
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
-                        val cardsList = keyforgeDeck.cards?.map { cardsById.getValue(it) } ?: listOf()
+                        val cardsList = keyforgeDeck.cards?.mapNotNull { cardRepo.findByIdOrNull(it) } ?: listOf()
                         val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                                 ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
                         check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
+                        check(cardsList.isNotEmpty()) { "Deck ${keyforgeDeck.id} doesn't have cards!" }
                         val deckToSave = keyforgeDeck.toDeck()
 
                         try {
