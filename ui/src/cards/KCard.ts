@@ -32,6 +32,7 @@ export interface KCard {
     expansion: number
     maverick: boolean
     anomaly: boolean
+    enhanced?: boolean
     big?: boolean
     effectivePower: number
 

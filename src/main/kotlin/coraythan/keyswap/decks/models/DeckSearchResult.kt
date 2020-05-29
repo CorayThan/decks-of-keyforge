@@ -26,8 +26,6 @@ data class DeckSearchResult(
         val chains: Int = 0,
         val wins: Int = 0,
         val losses: Int = 0,
-        val crucibleTrackerWins: Int? = null,
-        val crucibleTrackerLosses: Int? = null,
 
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,

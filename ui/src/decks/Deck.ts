@@ -28,8 +28,6 @@ export interface Deck extends HasAerc {
     chains: number
     wins: number
     losses: number
-    crucibleTrackerWins?: number
-    crucibleTrackerLosses?: number
 
     registered: boolean
 

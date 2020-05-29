@@ -88,6 +88,7 @@ class Routes {
     static usersCota = () => `/decks?owner=${userStore.username}&expansions=341`
     static usersAoa = () => `/decks?owner=${userStore.username}&expansions=435`
     static usersWc = () => `/decks?owner=${userStore.username}&expansions=452`
+    static usersMm = () => `/decks?owner=${userStore.username}&expansions=479`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
 
     /**

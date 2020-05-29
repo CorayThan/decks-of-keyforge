@@ -14,7 +14,9 @@ data class CardIds(
     companion object {
         fun fromCards(cards: List<Card>): CardIds {
             if (cards.size != 36) throw IllegalArgumentException("Cards for card ids must be 36")
-            return CardIds(cards.groupBy { it.house }.mapValues { it.value.map { CardNumberSetPairOld(it.expansion, it.cardNumber) } })
+            return CardIds(cards.groupBy { it.house }.mapValues { houseToCards ->
+                houseToCards.value.map { CardNumberSetPairOld(it.expansion, it.cardNumber, it.enhanced) }
+            })
         }
     }
 }
@@ -51,5 +53,4 @@ data class CardIdentifier(
 interface CardIdentifierRepo : JpaRepository<CardIdentifier, UUID>, QuerydslPredicateExecutor<CardIdentifier> {
     fun findByExpansionAndCardNumber(expansion: Expansion, cardNumber: String): List<CardIdentifier>
     fun existsByExpansionAndCardNumber(expansion: Expansion, cardNumber: String): Boolean
-    fun countByExpansion(expansion: Expansion): Long
 }

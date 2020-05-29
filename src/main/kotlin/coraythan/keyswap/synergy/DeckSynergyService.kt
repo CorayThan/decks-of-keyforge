@@ -51,7 +51,15 @@ object DeckSynergyService {
         }
     }
 
-    fun fromDeckWithCards(deck: Deck, cards: List<Card>): DeckSynergyInfo {
+    fun fromDeckWithCards(deck: Deck, inputCards: List<Card>): DeckSynergyInfo {
+
+        val cards = if (inputCards.any { it.big == true }) {
+            inputCards
+                    .groupBy { it.cardTitle }
+                    .flatMap { if (it.value.first().big == true) listOf(it.value.first()) else it.value }
+        } else {
+            inputCards
+        }
 
         val traitsMap = mutableMapOf<SynergyTrait, SynTraitValuesForTrait>()
 
@@ -344,7 +352,7 @@ object DeckSynergyService {
         val bonusAmber = cards.map { it.amber + (it.extraCardInfo?.enhancementAmber ?: 0) }.sum()
         val bonusCapture = cards.mapNotNull { it.extraCardInfo?.enhancementCapture }.sum()
         val bonusDraw = cards.mapNotNull { it.extraCardInfo?.enhancementDraw }.sum()
-        val bonusDamage = cards.mapNotNull {it.extraCardInfo?.enhancementDamage }.sum()
+        val bonusDamage = cards.mapNotNull { it.extraCardInfo?.enhancementDamage }.sum()
 
         traits.addDeckTrait(SynergyTrait.bonusAmber, bonusAmber, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusCapture, bonusCapture, strength = TraitStrength.EXTRA_WEAK)

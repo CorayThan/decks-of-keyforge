@@ -234,7 +234,7 @@ data class Deck(
 
         return this.copy(
                 cardNames = cardNames,
-                rawAmber = newCardsList.map { it.amber }.sum(),
+                rawAmber = newCardsList.map { it.amber + (it.extraCardInfo?.enhancementAmber ?: 0) }.sum(),
                 totalPower = newCardsList.map { it.power }.sum(),
                 totalArmor = newCardsList.map { it.armor }.sum(),
                 creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,

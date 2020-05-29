@@ -53,6 +53,8 @@ class RunOnStart(
         fixSynergies.fix()
 
         startupComplete = true
+
+        log.info("~~~START UP COMPLETE!~~~")
     }
 
     private fun downloadAllCardImages() {

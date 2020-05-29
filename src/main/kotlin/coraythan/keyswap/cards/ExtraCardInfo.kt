@@ -1,6 +1,7 @@
 package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValue
@@ -14,7 +15,9 @@ import javax.persistence.OneToMany
 
 data class CardNumberSetPairOld(
         val expansion: Int,
-        val cardNumber: String
+        val cardNumber: String,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        val enhanced: Boolean? = null
 ) {
     fun toNew() = CardNumberSetPair(Expansion.forExpansionNumber(expansion), this.padded().cardNumber)
     private fun padded() = this.copy(cardNumber = cardNumber.padStart(3, '0'))

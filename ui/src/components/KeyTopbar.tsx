@@ -46,6 +46,7 @@ const myDeckLinks = () => [
     {to: Routes.usersCota(), text: "My COTA"},
     {to: Routes.usersAoa(), text: "My AOA"},
     {to: Routes.usersWc(), text: "My WC"},
+    {to: Routes.usersMm(), text: "My MM"},
     {to: Routes.usersFavorites(), text: "My Favorites"},
     {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
     {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},

@@ -1,19 +1,16 @@
-import { Link, Tooltip, Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { ChainIcon } from "../generic/icons/ChainIcon"
 import { PowerIcon } from "../generic/icons/PowerIcon"
-import CrucibleTrackerLogo from "../generic/imgs/crucible-tracker-logo.gif"
 import { screenStore } from "../ui/ScreenStore"
-import { userStore } from "../user/UserStore"
 import { Deck } from "./Deck"
 
 export const OrganizedPlayStats = observer((props: { deck: Deck, style?: React.CSSProperties }) => {
-    const {powerLevel, chains, wins, losses, crucibleTrackerWins, crucibleTrackerLosses, keyforgeId} = props.deck
+    const {powerLevel, chains, wins, losses} = props.deck
     const showOpWins = !(!powerLevel && !chains && !wins && !losses)
-    const showCrucibleTrackerWins = crucibleTrackerWins != null && userStore.displayCrucibleTrackerWins
-    if (!showOpWins && !showCrucibleTrackerWins) {
+    if (!showOpWins) {
         return null
     }
     return (
@@ -38,30 +35,13 @@ export const OrganizedPlayStats = observer((props: { deck: Deck, style?: React.C
                     />
                 </div>
             )}
-            {!screenStore.smallDeckView() && showOpWins && showCrucibleTrackerWins && (
+            {!screenStore.smallDeckView() && showOpWins && (
                 <Typography
                     variant={"h5"}
                     style={{marginLeft: spacing(2), marginRight: spacing(2), color: "#FFF", marginTop: spacing(1)}}
                 >
                     —
                 </Typography>
-            )}
-            {showCrucibleTrackerWins && (
-                <div
-                    style={{display: "flex", alignItems: "center", marginTop: spacing(1)}}
-                >
-                    <Link
-                        href={`https://www.thecrucibletracker.com/decks/${keyforgeId}?utm_source=decksofkeyforge`}
-                        target={"_blank"} rel={"noopener noreferrer"}
-                        style={{display: "flex", alignItems: "center", marginRight: spacing(1)}}
-                    >
-                        <img src={CrucibleTrackerLogo} style={{width: 36}}/>
-                    </Link>
-                    <OpStat
-                        value={`${crucibleTrackerWins} / ${crucibleTrackerLosses}`}
-                        tooltip={"Crucible Tracker Wins / Losses"}
-                    />
-                </div>
             )}
         </div>
     )

@@ -82,6 +82,9 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         sasInfo = <div style={{width: 36}}/>
     }
 
+    const sasName = expansion === BackendExpansion.MASS_MUTATION ? "WIP" : "SAS"
+    const sasTooltip = expansion === BackendExpansion.MASS_MUTATION ? "This is a work in progress SAS rating. Expect this to change a bunch over the coming days." : "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
+
     return (
         <div style={{display: "flex"}}>
             <div style={props.style}>
@@ -96,13 +99,13 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}/>
                     <Tooltip
-                        title={"Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."}>
+                        title={sasTooltip}>
                         <div>
                             {noLinks ? (
-                                <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                                <RatingRow value={sasRating} name={sasName} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
                             ) : (
                                 <UnstyledLink to={AboutSubPaths.sas}>
-                                    <RatingRow value={sasRating} name={"SAS"} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                                    <RatingRow value={sasRating} name={sasName} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
                                 </UnstyledLink>
                             )}
                         </div>

@@ -24,7 +24,7 @@ export class FeaturedSellersView extends React.Component<{}> {
         }
 
         const screenWidth = screenStore.screenWidth
-        const availableWidth = screenWidth - (screenStore.screenSizeSm() ? 0 : (landingPageDrawerWidth + 24))
+        const availableWidth = screenWidth - (screenStore.screenSizeSm() ? 24 : (landingPageDrawerWidth + 24))
 
         return (
             <>

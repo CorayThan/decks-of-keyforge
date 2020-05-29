@@ -1,4 +1,5 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
+import { blue } from "@material-ui/core/colors"
 import Popover from "@material-ui/core/Popover/Popover"
 import { makeStyles } from "@material-ui/core/styles"
 import Typography from "@material-ui/core/Typography/Typography"
@@ -185,7 +186,7 @@ const CardLine = observer((props: CardAsLineProps) => {
             {!hideRarity && fullCard.rarity ? <RarityIcon rarity={fullCard.rarity}/> : null}
             <Typography
                 variant={"body2"}
-                style={{marginLeft: spacing(1)}}
+                style={{marginLeft: spacing(1), color: card.enhanced ? blue.A200 : undefined}}
                 noWrap={true}
             >
                 {fullCard.cardTitle}
