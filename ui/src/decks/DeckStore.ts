@@ -7,7 +7,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { Deck, DeckCount, DeckPage, DeckWithSynergyInfo } from "./Deck"
+import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
 
@@ -18,7 +18,7 @@ export class DeckStore {
     static readonly CONTEXT_SECURE = HttpConfig.API + "/decks/secured"
 
     @observable
-    simpleDecks: Map<string, Deck> = new Map()
+    simpleDecks: Map<string, DeckSearchResult> = new Map()
 
     @observable
     currentDeckPage = 0
@@ -26,7 +26,7 @@ export class DeckStore {
     @observable
     decksToDisplay?: number[]
 
-    deckIdToDeck?: Map<number, Deck>
+    deckIdToDeck?: Map<number, DeckSearchResult>
 
     deckPage?: DeckPage
     nextDeckPage?: DeckPage
@@ -68,7 +68,7 @@ export class DeckStore {
     randomDeckId?: string
 
     @observable
-    deckNameSearchResults: Deck[] = []
+    deckNameSearchResults: DeckSearchResult[] = []
 
     deckNameSearchCancel: CancelTokenSource | undefined
 
@@ -88,7 +88,6 @@ export class DeckStore {
                 if (!deck || !deck.deck) {
                     messageStore.setWarningMessage(`You might need to import this deck. We couldn't find a deck with the id: ${keyforgeId}`)
                 } else {
-                    deck.deck.houses.sort()
                     this.deck = deck
                 }
             })
@@ -106,8 +105,7 @@ export class DeckStore {
         if (this.simpleDecks.get(keyforgeId) == null) {
             axios.get(`${DeckStore.CONTEXT}/search-result-with-cards/${keyforgeId}`)
                 .then((response: AxiosResponse) => {
-                    const deck: Deck = response.data
-                    deck.houses.sort()
+                    const deck: DeckSearchResult = response.data
                     this.simpleDecks.set(keyforgeId, deck)
                 })
         }
@@ -167,7 +165,7 @@ export class DeckStore {
         axios.get(`${DeckStore.CONTEXT}/by-name/${name}`, {
             cancelToken: this.deckNameSearchCancel.token
         })
-            .then((response: AxiosResponse<Deck[]>) => {
+            .then((response: AxiosResponse<DeckSearchResult[]>) => {
                 // log.debug(`Find decks by name results: ${prettyJson(response.data)}`)
                 this.deckNameSearchResults = response.data
                 this.deckNameSearchCancel = undefined
@@ -251,7 +249,6 @@ export class DeckStore {
             .then((response: AxiosResponse) => {
                 // log.debug(`With filters: ${prettyJson(filters)} Got the filtered decks. decks: ${prettyJson(response.data)}`)
                 const decks: DeckPage = response.data
-                decks.decks.forEach(deck => deck.houses.sort())
                 resolve(decks)
             })
             .catch(() => {

@@ -26,12 +26,12 @@ import { ListingInfo } from "../../userdeck/ListingInfo"
 import { DeckCondition, deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
-import { Deck } from "../Deck"
 import { DeckLanguage } from "../DeckLanguage"
+import { DeckSearchResult } from "../models/DeckSearchResult"
 import { SoldButton } from "./SoldButton"
 
 interface ListForSaleViewProps {
-    deck: Deck
+    deck: DeckSearchResult
     menuItem?: boolean
 }
 

@@ -1,9 +1,9 @@
 package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.House
 import coraythan.keyswap.decks.Wins
+import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import java.time.ZonedDateTime
@@ -122,9 +122,8 @@ data class Card(
             }
         }
 
-    fun toDeckSearchResultCard() = DeckSearchResultCard(
+    fun toSimpleCard() = SimpleCard(
             cardTitle = cardTitle,
-            house = house,
             rarity = rarity,
             maverick = maverick,
             anomaly = anomaly,
@@ -158,7 +157,8 @@ data class KeyforgeCard(
         val armorNumber = armor?.toIntOrNull() ?: 0
         val expansionEnum = Expansion.forExpansionNumber(expansion)
         return Card(
-                id, card_title, House.fromMasterVaultValue(house)!!, card_type.toCardType(), front_image, card_text, amber, powerNumber, power ?: "", armorNumber, armor ?: "", rarity, flavor_text,
+                id, card_title, House.fromMasterVaultValue(house)!!, card_type.toCardType(), front_image, card_text, amber, powerNumber, power
+                ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick, is_anomaly,
                 extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
                 traits = traits?.toUpperCase()?.split(" • ")?.toSet() ?: setOf(),
@@ -167,16 +167,6 @@ data class KeyforgeCard(
         )
     }
 }
-
-data class DeckSearchResultCard(
-        val cardTitle: String,
-        val house: House,
-        val rarity: Rarity,
-        val maverick: Boolean,
-        val anomaly: Boolean,
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        val enhanced: Boolean? = null
-)
 
 enum class KeyForgeCardType {
     Action,

@@ -6,6 +6,7 @@ import { AercForCard } from "../../aerc/views/AercForCard"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
+import { SimpleCard } from "../../decks/models/HouseAndCards"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { expansionInfoMap } from "../../expansions/Expansions"
 import { GraySidebar } from "../../generic/GraySidebar"
@@ -21,14 +22,8 @@ import { cardStore } from "../CardStore"
 import { CardWinsDisplay } from "../cardwins/CardWinsDisplay"
 import { CardUtils, findCardImageUrl, hasAercFromCard, KCard } from "../KCard"
 
-export interface HasFrontImage {
-    cardTitle: string
-    expansion?: number
-    frontImage?: string
-}
-
 interface CardSimpleViewProps {
-    card: HasFrontImage
+    card: SimpleCard
     size?: number
     style?: React.CSSProperties
     noLink?: boolean

@@ -20,9 +20,9 @@ import { InlineDeckNote } from "../userdeck/DeckNote"
 import { UpdatePrice } from "../userdeck/ListingInfo"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
-import { Deck, DeckUtils } from "./Deck"
 import { DeckListViewProps } from "./DeckListView"
 import { SaStars } from "./DeckScoreView"
+import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
 
 class DeckTableViewStore {
     @observable
@@ -54,7 +54,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             return <Loader/>
         }
 
-        const deckTableHeaders: SortableTableHeaderInfo<Deck>[] = [
+        const deckTableHeaders: SortableTableHeaderInfo<DeckSearchResult>[] = [
             {
                 property: "name",
                 width: 240,
@@ -68,7 +68,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 title: "Houses",
                 sortable: false,
                 transform: deck => (
-                    <HouseBanner houses={deck.houses} size={36}/>
+                    <HouseBanner houses={deck.housesAndCards.map(house => house.house)} size={36}/>
                 )
             },
             {
@@ -271,7 +271,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
 }
 
 interface SellerViewCellProps {
-    deck: Deck
+    deck: DeckSearchResult
     sellerVersion?: boolean
 }
 

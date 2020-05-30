@@ -1,13 +1,13 @@
 package coraythan.keyswap.decks.models
 
-import coraythan.keyswap.House
-import coraythan.keyswap.cards.DeckSearchResultCard
+import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import java.time.LocalDate
 
 // It takes a long time to load all the crap in hibernate, so avoid that.
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class DeckSearchResult(
         val id: Long = -1,
         val keyforgeId: String = "",
@@ -61,9 +61,7 @@ data class DeckSearchResult(
 
         val sasPercentile: Double = 0.0,
 
-        val searchResultCards: List<DeckSearchResultCard> = listOf(),
-
-        val houses: List<House> = listOf(),
+        val housesAndCards: List<HouseAndCards> = listOf(),
 
         val deckSaleInfo: List<DeckSaleInfo>? = null,
 
@@ -75,7 +73,7 @@ data class DeckSearchResult(
 ) {
 
     fun printDeckSimple(): String {
-        return "$sasRating SAS • ${expansion.readable} • ${houses.joinToString(" – ") { it.masterVaultValue }}" +
+        return "$sasRating SAS • ${expansion.readable} • ${housesAndCards.map { it.house }.joinToString(" – ") { it.masterVaultValue }}" +
                 if (forSale || forAuction || forTrade) " • For sale" else ""
     }
 

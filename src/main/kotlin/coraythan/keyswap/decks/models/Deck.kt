@@ -5,7 +5,6 @@ import coraythan.keyswap.House
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.DeckSearchResultCard
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
@@ -114,7 +113,7 @@ data class Deck(
         get() = this.importDateTime?.toLocalDate()
 
     fun toDeckSearchResult(
-            searchResultCards: List<DeckSearchResultCard>? = null,
+            housesAndCards: List<HouseAndCards>,
             cards: List<Card>? = null,
 //            crucibleWins: Map<String, Wins>? = null,
             stats: DeckStatistics? = null,
@@ -171,8 +170,7 @@ data class Deck(
                 forAuction = forAuction,
                 wishlistCount = wishlistCount,
                 funnyCount = funnyCount,
-                searchResultCards = searchResultCards ?: listOf(),
-                houses = houses,
+                housesAndCards = housesAndCards,
 
                 lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString() ?: "",
 

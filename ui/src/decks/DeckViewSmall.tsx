@@ -10,13 +10,12 @@ import { AercForCombos } from "../aerc/AercForCombos"
 import { AercViewForDeck, AercViewType } from "../aerc/views/AercViews"
 import { DeckListingStatus } from "../auctions/DeckListingDto"
 import { deckListingStore } from "../auctions/DeckListingStore"
-import { KCard } from "../cards/KCard"
 import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, useGlobalStyles } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { activeExpansions, BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
+import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
@@ -34,12 +33,13 @@ import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { WishlistDeck } from "./buttons/WishlistDeck"
-import { Deck, DeckUtils } from "./Deck"
 import { DeckScoreView } from "./DeckScoreView"
+import { DeckSearchResult } from "./models/DeckSearchResult"
+import { SimpleCard } from "./models/HouseAndCards"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 
 interface DeckViewSmallProps {
-    deck: Deck
+    deck: DeckSearchResult
     fullVersion?: boolean
     hideActions?: boolean
     forceNarrow?: boolean
@@ -183,9 +183,9 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     }
 }
 
-const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
+const DeckViewTopContents = (props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props
-    const {houses} = deck
+    const houses = deck.housesAndCards.map(house => house.house)
     if (compact) {
         return (
             <div style={{
@@ -224,28 +224,25 @@ const DeckViewTopContents = (props: { deck: Deck, compact: boolean }) => {
     }
 }
 
-const DisplayAllCardsByHouse = (props: { deck: Deck, compact: boolean }) => {
-    const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
-
-    if (props.compact) {
-        return <DisplayAllCardsByHouseCompact {...props}/>
+const DisplayAllCardsByHouse = (props: { deck: DeckSearchResult, compact: boolean }) => {
+    const {deck, compact} = props
+    if (compact) {
+        return <DisplayAllCardsByHouseCompact deck={deck}/>
     }
 
     return (
         <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-            {cardsByHouse.map((cardsForHouse) => (
-                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} deckExpansion={props.deck.expansion} deck={props.deck}/>))}
+            {deck.housesAndCards.map((cardsForHouse) => (
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} deck={props.deck}/>))}
         </div>
     )
 }
 
-const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
-    const cardsByHouse = DeckUtils.cardsInHouses(props.deck)
-    const deckExpansion = props.deck.expansion
+const DisplayAllCardsByHouseCompact = (props: { deck: DeckSearchResult }) => {
     return (
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-            {cardsByHouse.map((cardsForHouse) => (
-                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true} deckExpansion={deckExpansion} deck={props.deck}/>
+            {props.deck.housesAndCards.map((cardsForHouse) => (
+                <DisplayCardsInHouse key={cardsForHouse.house} {...cardsForHouse} compact={true} deck={props.deck}/>
             ))}
         </div>
     )
@@ -253,9 +250,10 @@ const DisplayAllCardsByHouseCompact = (props: { deck: Deck }) => {
 
 const smallDeckViewCardLineWidth = 144
 
-const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansion: BackendExpansion, compact?: boolean, deck: Deck }) => {
+const DisplayCardsInHouse = (props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult }) => {
     const globalClasses = useGlobalStyles()
-    const {house, deck, cards, deckExpansion, compact} = props
+    const {house, deck, cards, compact} = props
+    const deckExpansion = deck.expansion
     return (
         <List>
             <AercForCombos combos={deck.synergies?.synergyCombos.filter(combo => combo.house === house)}>
@@ -267,19 +265,44 @@ const DisplayCardsInHouse = (props: { house: House, cards: KCard[], deckExpansio
                     <div className={globalClasses.flex}>
                         <div className={globalClasses.marginRightSmall}>
                             {cards.slice(0, 6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={smallDeckViewCardLineWidth} marginTop={4}
-                                            deckExpansion={deckExpansion} deck={deck}/>))}
+                                <CardAsLine
+                                    key={idx}
+                                    card={card}
+                                    cardActualHouse={house}
+                                    width={smallDeckViewCardLineWidth}
+                                    marginTop={4}
+                                    deckExpansion={deckExpansion}
+                                    deck={deck}
+                                />
+                            ))}
                         </div>
                         <div>
                             {cards.slice(6).map((card, idx) => (
-                                <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={smallDeckViewCardLineWidth} marginTop={4}
-                                            deckExpansion={deckExpansion} deck={deck}/>))}
+                                <CardAsLine
+                                    key={idx}
+                                    card={card}
+                                    cardActualHouse={house}
+                                    width={smallDeckViewCardLineWidth}
+                                    marginTop={4}
+                                    deckExpansion={deckExpansion}
+                                    deck={deck}
+                                />
+                            ))}
                         </div>
                     </div>
                 )
                 :
                 cards.map((card, idx) => (
-                    <CardAsLine key={idx} card={card} cardActualHouse={card.house} width={160} marginTop={4} deckExpansion={deckExpansion} deck={deck}/>))
+                    <CardAsLine
+                        key={idx}
+                        card={card}
+                        cardActualHouse={house}
+                        width={160}
+                        marginTop={4}
+                        deckExpansion={deckExpansion}
+                        deck={deck}
+                    />
+                ))
             }
         </List>
     )

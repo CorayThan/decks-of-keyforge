@@ -1,13 +1,13 @@
 import { observer } from "mobx-react"
 import React from "react"
 import { Utils } from "../config/Utils"
-import { Deck } from "../decks/Deck"
+import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { DokRadar } from "../graphs/DokRadar"
 import { Loader } from "../mui-restyled/Loader"
 import { statsStore } from "../stats/StatsStore"
 
 interface AercRadarProps {
-    deck: Deck
+    deck: DeckSearchResult
 }
 
 @observer

@@ -2,7 +2,8 @@ import { Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import * as React from "react"
 import { CardType } from "../../cards/CardType"
-import { Deck } from "../../decks/Deck"
+import { KCard } from "../../cards/KCard"
+import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { SynergyTrait } from "../../extracardinfo/SynergyTrait"
 import { AercIcon, AercType } from "../../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../../generic/icons/AmberIcon"
@@ -24,15 +25,17 @@ const useStyles = makeStyles({
 })
 
 interface AercCatProps {
-    deck: Deck
+    deck: DeckSearchResult
+    cards: KCard[]
     hasAerc: HasAerc
     combos?: SynergyCombo[]
     twoHigh?: boolean
 }
 
 export const AercCategoryExtras = (props: AercCatProps) => {
-    const {deck, hasAerc, combos, twoHigh} = props
+    const {deck, cards, hasAerc, combos, twoHigh} = props
     const width = twoHigh ? undefined : 20
+
     const firstTwo: InfoIconValue[] = [
         {
             icon: <AercIcon type={AercType.O} width={width}/>,
@@ -48,7 +51,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             info: deck.rawAmber,
             cardsTips: {
                 matches: card => card.amber > 0,
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Bonus Aember"
             }
         },
@@ -60,7 +63,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             info: deck.keyCheatCount,
             cardsTips: {
                 matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Key Cheat Cards"
             }
         },
@@ -69,7 +72,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             info: deck.cardArchiveCount,
             cardsTips: {
                 matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.archives),
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Archive Cards"
             }
         }
@@ -101,7 +104,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
 }
 
 export const AercCategoryCounts = (props: AercCatProps) => {
-    const {deck, twoHigh} = props
+    const {deck, cards, twoHigh} = props
     const width = twoHigh ? undefined : 20
     const firstTwo: InfoIconValue[] = [
         {
@@ -109,7 +112,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
             info: deck.actionCount,
             cardsTips: {
                 matches: card => card.cardType === CardType.Action,
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Actions"
             }
         },
@@ -118,7 +121,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
             info: deck.creatureCount,
             cardsTips: {
                 matches: card => card.cardType === CardType.Creature,
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Creatures"
             }
         },
@@ -130,7 +133,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
             info: deck.artifactCount,
             cardsTips: {
                 matches: card => card.cardType === CardType.Artifact,
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Artifacts"
             }
         },
@@ -139,7 +142,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
             info: deck.upgradeCount,
             cardsTips: {
                 matches: card => card.cardType === CardType.Upgrade,
-                cards: deck.searchResultCards ?? [],
+                cards,
                 title: "Upgrades"
             }
         }
@@ -170,7 +173,12 @@ export const AercCategoryCounts = (props: AercCatProps) => {
     )
 }
 
-export const AercCategoryAmber = (props: AercCatProps) => {
+interface AercScoresCategoryProps {
+    hasAerc: HasAerc
+    combos: SynergyCombo[]
+}
+
+export const AercCategoryAmber = (props: AercScoresCategoryProps) => {
     const {hasAerc, combos} = props
     return (
         <AercCategory
@@ -182,7 +190,7 @@ export const AercCategoryAmber = (props: AercCatProps) => {
                         info: hasAerc.amberControl,
                         combosTips: {
                             title: "Aember Control (A)",
-                            combos: combos?.filter(combo => combo.amberControl != null && combo.amberControl != 0) ?? [],
+                            combos: combos.filter(combo => combo.amberControl != null && combo.amberControl != 0),
                             accessor: combo => combo.amberControl
                         }
                     },
@@ -201,7 +209,7 @@ export const AercCategoryAmber = (props: AercCatProps) => {
     )
 }
 
-export const AercCategorySpeed = (props: AercCatProps) => {
+export const AercCategorySpeed = (props: AercScoresCategoryProps) => {
     const {hasAerc, combos} = props
     return (
         <AercCategory
@@ -213,7 +221,7 @@ export const AercCategorySpeed = (props: AercCatProps) => {
                         info: hasAerc.efficiency,
                         combosTips: {
                             title: "Efficiency (F)",
-                            combos: combos?.filter(combo => combo.efficiency != null && combo.efficiency != 0) ?? [],
+                            combos: combos.filter(combo => combo.efficiency != null && combo.efficiency != 0) ,
                             accessor: (combo: SynergyCombo) => combo.efficiency
                         }
                     },
@@ -222,7 +230,7 @@ export const AercCategorySpeed = (props: AercCatProps) => {
                         info: hasAerc.disruption,
                         combosTips: {
                             title: "Disruption (D)",
-                            combos: combos?.filter(combo => combo.disruption != null && combo.disruption != 0) ?? [],
+                            combos: combos.filter(combo => combo.disruption != null && combo.disruption != 0),
                             accessor: (combo: SynergyCombo) => combo.disruption
                         }
                     },
@@ -232,7 +240,7 @@ export const AercCategorySpeed = (props: AercCatProps) => {
     )
 }
 
-export const AercCategoryControl = (props: AercCatProps) => {
+export const AercCategoryControl = (props: AercScoresCategoryProps) => {
     const {hasAerc, combos} = props
     return (
         <AercCategory
@@ -244,7 +252,7 @@ export const AercCategoryControl = (props: AercCatProps) => {
                         info: hasAerc.artifactControl,
                         combosTips: {
                             title: "Artifact Control (R)",
-                            combos: combos?.filter(combo => combo.artifactControl != null && combo.artifactControl != 0) ?? [],
+                            combos: combos.filter(combo => combo.artifactControl != null && combo.artifactControl != 0),
                             accessor: combo => combo.artifactControl
                         }
                     },
@@ -253,7 +261,7 @@ export const AercCategoryControl = (props: AercCatProps) => {
                         info: hasAerc.creatureControl,
                         combosTips: {
                             title: "Creature Control (C)",
-                            combos: combos?.filter(combo => combo.creatureControl != null && combo.creatureControl != 0) ?? [],
+                            combos: combos.filter(combo => combo.creatureControl != null && combo.creatureControl != 0),
                             accessor: combo => combo.creatureControl
                         }
                     },
@@ -263,7 +271,7 @@ export const AercCategoryControl = (props: AercCatProps) => {
     )
 }
 
-export const AercCategoryBoard = (props: AercCatProps) => {
+export const AercCategoryBoard = (props: AercScoresCategoryProps) => {
     const {hasAerc, combos} = props
     return (
         <AercCategory
@@ -275,7 +283,7 @@ export const AercCategoryBoard = (props: AercCatProps) => {
                         info: hasAerc.effectivePower,
                         combosTips: {
                             title: "Effective Power (P)",
-                            combos: combos?.filter(combo => combo.effectivePower != null && combo.effectivePower != 0) ?? [],
+                            combos: combos.filter(combo => combo.effectivePower != null && combo.effectivePower != 0),
                             accessor: combo => combo.effectivePower
                         }
                     },
@@ -284,7 +292,7 @@ export const AercCategoryBoard = (props: AercCatProps) => {
                         info: hasAerc.creatureProtection,
                         combosTips: {
                             title: "Creature Protection",
-                            combos: combos?.filter(combo => combo.creatureProtection != null && combo.creatureProtection != 0) ?? [],
+                            combos: combos.filter(combo => combo.creatureProtection != null && combo.creatureProtection != 0),
                             accessor: combo => combo.creatureProtection
                         }
                     },

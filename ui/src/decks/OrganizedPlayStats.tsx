@@ -5,9 +5,9 @@ import { spacing } from "../config/MuiConfig"
 import { ChainIcon } from "../generic/icons/ChainIcon"
 import { PowerIcon } from "../generic/icons/PowerIcon"
 import { screenStore } from "../ui/ScreenStore"
-import { Deck } from "./Deck"
+import { DeckSearchResult } from "./models/DeckSearchResult"
 
-export const OrganizedPlayStats = observer((props: { deck: Deck, style?: React.CSSProperties }) => {
+export const OrganizedPlayStats = observer((props: { deck: DeckSearchResult, style?: React.CSSProperties }) => {
     const {powerLevel, chains, wins, losses} = props.deck
     const showOpWins = !(!powerLevel && !chains && !wins && !losses)
     if (!showOpWins) {
@@ -34,14 +34,6 @@ export const OrganizedPlayStats = observer((props: { deck: Deck, style?: React.C
                         tooltip={"Organized Play Wins / Losses"}
                     />
                 </div>
-            )}
-            {!screenStore.smallDeckView() && showOpWins && (
-                <Typography
-                    variant={"h5"}
-                    style={{marginLeft: spacing(2), marginRight: spacing(2), color: "#FFF", marginTop: spacing(1)}}
-                >
-                    —
-                </Typography>
             )}
         </div>
     )

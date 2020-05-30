@@ -1,11 +1,12 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import { Info } from "@material-ui/icons"
 import * as React from "react"
+import { cardStore } from "../cards/CardStore"
 import { CardAsLine } from "../cards/views/CardAsLine"
 import { spacing } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
-import { DeckWithSynergyInfo } from "../decks/Deck"
 import { PercentRatingRow } from "../decks/DeckScoreView"
+import { DeckWithSynergyInfo } from "../decks/models/DeckSearchResult"
 import { KeyCard } from "../generic/KeyCard"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { Loader } from "../mui-restyled/Loader"
@@ -21,6 +22,10 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
     render() {
         if (this.props.synergies == null) {
             return <Loader/>
+        }
+
+        if (!cardStore.cardsLoaded) {
+            return null
         }
 
         const sasPercentile = this.props.synergies.deck.sasPercentile
@@ -60,7 +65,7 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
 }
 
 const synergyDetailHeaders: SortableTableHeaderInfo<SynergyCombo>[] = [
-    {property: "cardName", transform: combo => <CardAsLine card={{cardTitle: combo.cardName}} cardActualHouse={combo.house}/>},
+    {property: "cardName", transform: combo => <CardAsLine card={cardStore.fullCardFromCardName(combo.cardName)!} cardActualHouse={combo.house}/>},
     {property: "copies"},
     {title: "Base AERC", sortable: false, transform: (combo) => roundToHundreds(combo.aercScore - combo.netSynergy)},
     {property: "netSynergy", transformProperty: roundToHundreds},

@@ -8,7 +8,8 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
 import { spacing, useGlobalStyles } from "../../config/MuiConfig"
-import { Deck } from "../../decks/Deck"
+import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
+import { SimpleCard } from "../../decks/models/HouseAndCards"
 import { BackendExpansion } from "../../expansions/Expansions"
 import { House } from "../../houses/House"
 import { KeyButton } from "../../mui-restyled/KeyButton"
@@ -16,19 +17,23 @@ import { screenStore } from "../../ui/ScreenStore"
 import { cardStore } from "../CardStore"
 import { KCard } from "../KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, RarityIcon } from "../rarity/Rarity"
-import { CardSimpleView, CardView, HasFrontImage } from "./CardSimpleView"
+import { CardSimpleView, CardView } from "./CardSimpleView"
 
 interface CardAsLineProps {
-    card: Partial<KCard>
+    card: SimpleCard
     cardActualHouse: House
     deckExpansion?: BackendExpansion
     width?: number
     marginTop?: number
     hideRarity?: boolean
-    deck?: Deck
+    deck?: DeckSearchResult
 }
 
 export const CardAsLine = observer((props: CardAsLineProps) => {
+
+    if (!cardStore.cardsLoaded) {
+        return null
+    }
 
     const complex = screenStore.screenSizeMdPlus()
 
@@ -50,16 +55,23 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
     }
 
     render() {
-        const card = this.props.card
-        const fullCard = cardStore.fullCardFromCardWithName(card)
+        const {card, cardActualHouse} = this.props
 
-        if (card == null) {
+        if (!cardStore.cardsLoaded) {
             return null
         }
 
-        let dialog = null
-        if (fullCard && fullCard.id != null) {
-            dialog = (
+        const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
+
+        if (fullCard == null) {
+            return <Typography>No card {card.cardTitle}</Typography>
+        }
+
+        return (
+            <div>
+                <div onClick={this.handleOpen}>
+                    <CardLine {...this.props} card={card}/>
+                </div>
                 <Dialog
                     open={this.open}
                     onClose={this.handleClose}
@@ -69,23 +81,15 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                         <Typography variant={"h5"}>{card.cardTitle}</Typography>
                     </DialogTitle>
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
-                        <CardSimpleView card={card as HasFrontImage} size={250} style={{margin: 4}}/>
+                        <CardSimpleView card={card} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={fullCard as KCard} realValue={findSynegyComboForCardFromDeck(fullCard, card.house, this.props.deck)}/>
+                            <AercForCard card={fullCard as KCard} realValue={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
                         <KeyButton color={"primary"} onClick={this.handleClose}>Close</KeyButton>
                     </DialogActions>
                 </Dialog>
-            )
-        }
-        return (
-            <div>
-                <div onClick={this.handleOpen}>
-                    <CardLine {...this.props} card={fullCard == null ? this.props.card : fullCard}/>
-                </div>
-                {dialog}
             </div>
         )
     }
@@ -109,13 +113,13 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     }
 
     render() {
-        const card = this.props.card
+        const {card, cardActualHouse} = this.props
 
         if (!cardStore.cardsLoaded) {
             return null
         }
 
-        const fullCard = cardStore.fullCardFromCardWithName(card)
+        const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
 
         if (fullCard == null) {
             return <Typography>Can't find card {card.cardTitle}</Typography>
@@ -145,14 +149,14 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
                 >
-                    <CardView card={fullCard as KCard} combo={findSynegyComboForCardFromDeck(fullCard, card.house, this.props.deck)}/>
+                    <CardView card={fullCard} combo={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
                 </Popover>
             </div>
         )
     }
 }
 
-const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, deck?: Deck) => {
+const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, deck?: DeckSearchResult) => {
     const name = card.cardTitle
     if (name == null || deck == null || deck.synergies == null) {
         return
@@ -169,8 +173,12 @@ const CardLine = observer((props: CardAsLineProps) => {
     const globalClasses = useGlobalStyles()
     const {card, deckExpansion, hideRarity, cardActualHouse} = props
 
-    const fullCard = cardStore.fullCardFromCardWithName(card)
-    if (fullCard == null) return null
+    if (!cardStore.cardsLoaded) {
+        return null
+    }
+
+    const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
+    if (fullCard == null) return <Typography>No card {card.cardTitle}</Typography>
 
     let cardExpansions
     if (fullCard.extraCardInfo != null) {

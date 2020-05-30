@@ -33,9 +33,8 @@ class PublicApiService(
                     val cards = cardService.cardsForDeck(it.deck)
                     PublicMyDeckInfo(
                             deck = it.deck.toDeckSearchResult(
-                                    searchResultCards = cardService.deckSearchResultCardsFromCardIds(it.deck.cardIds),
+                                    housesAndCards = cardService.deckToHouseAndCards(it.deck),
                                     cards = cards,
-//                                    crucibleWins = deckWinsService.crucibleWins,
                                     stats = statsService.findCurrentStats()
                             ),
                             wishlist = it.wishlist,
@@ -57,8 +56,8 @@ class PublicApiService(
             return null
         }
         return deck.toDeckSearchResult(
+                housesAndCards = cardService.deckToHouseAndCards(deck),
                 cards = cardService.cardsForDeck(deck),
-//                crucibleWins = deckWinsService.crucibleWins,
                 stats = statsService.findCurrentStats()
         )
     }

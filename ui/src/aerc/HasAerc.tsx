@@ -1,5 +1,3 @@
-import { KCard } from "../cards/KCard"
-
 export interface HasAerc {
     amberControl: number
     expectedAmber: number
@@ -24,6 +22,4 @@ export interface HasAerc {
     aercScoreMax?: number
 
     averageAercScore?: number
-
-    searchResultCards?: KCard[]
 }

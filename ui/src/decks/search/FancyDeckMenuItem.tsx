@@ -7,10 +7,10 @@ import { spacing, theme } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { LinkMenuItem } from "../../mui-restyled/LinkMenuItem"
 import { screenStore } from "../../ui/ScreenStore"
-import { Deck } from "../Deck"
 import { DeckScorePill } from "../DeckScoreView"
+import { DeckSearchResult } from "../models/DeckSearchResult"
 
-export const FancyDeckMenuItem = observer((props: { deck: Deck, onClick: () => void }) => {
+export const FancyDeckMenuItem = observer((props: { deck: DeckSearchResult, onClick: () => void }) => {
     const {deck, onClick} = props
     if (screenStore.smallDeckView()) {
         return (

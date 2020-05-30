@@ -16,10 +16,10 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
-import { Deck } from "../Deck"
+import { DeckSearchResult } from "../models/DeckSearchResult"
 
 interface SoldButtonProps {
-    deck: Deck
+    deck: DeckSearchResult
     menuItem?: boolean
 }
 

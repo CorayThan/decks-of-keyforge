@@ -1,8 +1,10 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
+import { cardStore } from "../../cards/CardStore"
+import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
-import { Deck, DeckUtils } from "../../decks/Deck"
+import { DeckSearchResult, DeckUtils } from "../../decks/models/DeckSearchResult"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
 
 export enum AercViewType {
@@ -11,26 +13,36 @@ export enum AercViewType {
     MINI_DECK
 }
 
-export const AercViewForDeck = (props: { deck: Deck, type: AercViewType }) => {
+export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewType }) => {
     const {deck, type} = props
-    let combos
-    const hasAerc = DeckUtils.hasAercFromDeck(deck)
-    if (deck.synergies) {
-        combos = deck.synergies.synergyCombos
+    const combos = deck.synergies?.synergyCombos
+
+    if (combos == null) {
+        return null
     }
+    if (!cardStore.cardsLoaded) {
+        return null
+    }
+
+    const hasAerc = DeckUtils.hasAercFromDeck(deck)
 
     if (type === AercViewType.MINI_DECK) {
         return (
             <div
                 style={{display: "flex", justifyContent: "space-between", backgroundColor: themeStore.aercViewBackground, padding: spacing(1)}}
             >
-                <AercCategoryAmber deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryControl deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategorySpeed deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryBoard deck={deck} hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryAmber hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryControl hasAerc={hasAerc} combos={combos}/>
+                <AercCategorySpeed hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
             </div>
         )
     }
+
+    const cards = deck.housesAndCards
+        .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
+        .filter(card => card != null) as KCard[]
+
 
     if (type === AercViewType.MOBILE_DECK) {
         return (
@@ -44,12 +56,12 @@ export const AercViewForDeck = (props: { deck: Deck, type: AercViewType }) => {
                     overflowX: "auto"
                 }}
             >
-                <AercCategoryAmber deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryControl deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategorySpeed deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryBoard deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryExtras deck={deck} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
-                <AercCategoryCounts deck={deck} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryAmber hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryControl hasAerc={hasAerc} combos={combos}/>
+                <AercCategorySpeed hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
             </div>
         )
     }
@@ -77,12 +89,12 @@ export const AercViewForDeck = (props: { deck: Deck, type: AercViewType }) => {
                     rowGap: spacing(1),
                 }}
             >
-                <AercCategoryAmber deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryControl deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategorySpeed deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryBoard deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryExtras deck={deck} hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryCounts deck={deck} hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryAmber hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryControl hasAerc={hasAerc} combos={combos}/>
+                <AercCategorySpeed hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos}/>
+                <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos}/>
             </div>
             {deck.dateAdded != null && (
                 <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>

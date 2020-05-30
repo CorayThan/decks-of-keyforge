@@ -4,7 +4,6 @@ import format from "date-fns/format"
 import parse from "date-fns/parse"
 import { round } from "lodash"
 import * as loglevel from "loglevel"
-import { v4 as uuidv4 } from "uuid"
 
 export const log = loglevel
 log.setDefaultLevel("debug")
@@ -24,7 +23,7 @@ export class Utils {
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
     static uuid = () => {
-        return uuidv4()
+        return "11111111"
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

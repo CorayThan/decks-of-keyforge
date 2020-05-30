@@ -5,7 +5,7 @@ import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { theme } from "../config/MuiConfig"
-import { Deck } from "../decks/Deck"
+import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { CardTypePie, CardTypePieGlobalAverages } from "../graphs/CardTypePie"
 import { ComparisonBar, ComparisonBarProps } from "../graphs/ComparisonBar"
 import { Loader } from "../mui-restyled/Loader"
@@ -15,7 +15,7 @@ import { statsStore } from "./StatsStore"
 import { ToggleStats } from "./ToggleStats"
 
 interface DeckStatsViewProps {
-    deck: Deck
+    deck: DeckSearchResult
 }
 
 @observer

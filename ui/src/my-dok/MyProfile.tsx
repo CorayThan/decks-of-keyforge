@@ -226,7 +226,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     addEuCountries = () => {
         this.preferredCountries.push(...euCountries)
-        this.preferredCountries = [...new Set(this.preferredCountries)]
+        const asSet = new Set(this.preferredCountries)
+        this.preferredCountries = Array.from(asSet)
     }
 
     render() {

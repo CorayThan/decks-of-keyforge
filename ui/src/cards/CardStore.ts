@@ -268,18 +268,14 @@ export class CardStore {
     }
 
     fullCardFromCardName = (cardTitle: string) => {
-        return this.fullCardFromCardWithName({cardTitle})
+        if (this.cardNameLowercaseToCard) {
+            return this.cardNameLowercaseToCard.get(cardTitle.toLowerCase())
+        }
+        return undefined
     }
 
     fullCardFromCardNameKey = (cardNameKey: string) => {
         return this.allCards.find(card => cardNameToCardNameKey(card.cardTitle) === cardNameKey)
-    }
-
-    fullCardFromCardWithName = (card: Partial<KCard>) => {
-        if (this.cardNameLowercaseToCard && card && card.cardTitle) {
-            return this.cardNameLowercaseToCard.get(card.cardTitle.toLowerCase())
-        }
-        return card
     }
 
     findExtraInfoToUse = (card: KCard) => {

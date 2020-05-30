@@ -1,12 +1,12 @@
 import React from "react"
 import { Utils } from "../config/Utils"
-import { Deck } from "../decks/Deck"
+import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { DokRadar } from "../graphs/DokRadar"
 import { Loader } from "../mui-restyled/Loader"
 import { statsStore } from "./StatsStore"
 
 interface CardTypeRadarProps {
-    deck: Deck
+    deck: DeckSearchResult
     style?: React.CSSProperties
 }
 

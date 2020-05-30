@@ -6,10 +6,10 @@ import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
 import { uiStore } from "../ui/UiStore"
-import { DeckWithSynergyInfo } from "./Deck"
 import { deckImportPopStore } from "./DeckImportPop"
 import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
+import { DeckWithSynergyInfo } from "./models/DeckSearchResult"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
 interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string }> {

@@ -5,12 +5,12 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { CardTypeRadar } from "../stats/CardTypeRadar"
 import { screenStore } from "../ui/ScreenStore"
-import { Deck } from "./Deck"
 import { DeckViewSmall } from "./DeckViewSmall"
+import { DeckSearchResult } from "./models/DeckSearchResult"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
 export interface DeckListViewProps {
-    decks: Deck[]
+    decks: DeckSearchResult[]
     sellerView?: boolean
 }
 

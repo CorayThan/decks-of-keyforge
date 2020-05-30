@@ -1,24 +1,23 @@
-import { Deck } from "@material-ui/icons"
-import { HasAerc } from "../aerc/HasAerc"
-import { KCard } from "../cards/KCard"
-import { log, roundToHundreds } from "../config/Utils"
-import { BackendExpansion } from "../expansions/Expansions"
-import { CsvData } from "../generic/CsvDownloadButton"
-import { House } from "../houses/House"
-import { DeckSynergyInfo, SynergyCombo } from "../synergy/DeckSynergyInfo"
-import { userStore } from "../user/UserStore"
-import { UserDeck } from "../userdeck/UserDeck"
-import { userDeckStore } from "../userdeck/UserDeckStore"
-import { DeckSaleInfo } from "./sales/DeckSaleInfo"
+import { HasAerc } from "../../aerc/HasAerc"
+import { log, roundToHundreds } from "../../config/Utils"
+import { BackendExpansion } from "../../expansions/Expansions"
+import { CsvData } from "../../generic/CsvDownloadButton"
+import { House } from "../../houses/House"
+import { DeckSynergyInfo, SynergyCombo } from "../../synergy/DeckSynergyInfo"
+import { userStore } from "../../user/UserStore"
+import { UserDeck } from "../../userdeck/UserDeck"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
+import { DeckSaleInfo } from "../sales/DeckSaleInfo"
+import { HouseAndCards } from "./HouseAndCards"
 
 export interface DeckWithSynergyInfo {
-    deck: Deck
+    deck: DeckSearchResult
     cardRatingPercentile: number
     synergyPercentile: number
     antisynergyPercentile: number
 }
 
-export interface Deck extends HasAerc {
+export interface DeckSearchResult extends HasAerc {
 
     id: number
     keyforgeId: string
@@ -67,7 +66,7 @@ export interface Deck extends HasAerc {
 
     userDecks: UserDeck[]
 
-    houses: House[]
+    housesAndCards: HouseAndCards[]
 
     deckSaleInfo?: DeckSaleInfo[]
 
@@ -81,7 +80,7 @@ export interface Deck extends HasAerc {
 
 export class DeckUtils {
 
-    static findPrice = (deck: Deck, myPriceOnly?: boolean): number | undefined => {
+    static findPrice = (deck: DeckSearchResult, myPriceOnly?: boolean): number | undefined => {
         const saleInfo = deck.deckSaleInfo
         if (saleInfo && saleInfo.length > 0) {
             for (const info of saleInfo) {
@@ -93,7 +92,7 @@ export class DeckUtils {
         return undefined
     }
 
-    static findHighestBid = (deck: Deck): number | undefined => {
+    static findHighestBid = (deck: DeckSearchResult): number | undefined => {
         const saleInfo = deck.deckSaleInfo
         if (saleInfo && saleInfo.length > 0) {
             for (const info of saleInfo) {
@@ -105,7 +104,7 @@ export class DeckUtils {
         return undefined
     }
 
-    static hasAercFromDeck = (deck: Deck): HasAerc => {
+    static hasAercFromDeck = (deck: DeckSearchResult): HasAerc => {
         if (deck.synergies == null) {
             log.warn("Synergies shouldnt' be null!")
             return deck
@@ -124,16 +123,6 @@ export class DeckUtils {
         return filteredCombos.length === 0 ? 0 : filteredCombos
             .map(combo => (accessor == null ? combo.aercScore : accessor(combo)) * combo.copies)
             .reduce((prev, next) => prev + next)
-    }
-
-    static cardsInHouses = (deck: Deck) => {
-        const cardsByHouse: { house: House, cards: KCard[] }[] = []
-        deck.houses
-            .forEach((house) => {
-                const cards = deck.searchResultCards!.filter(card => card.house === house)
-                cardsByHouse.push({house, cards})
-            })
-        return cardsByHouse
     }
 
     static synergiesRounded = (synergies: DeckSynergyInfo) => {
@@ -163,12 +152,12 @@ export class DeckUtils {
         }
     }
 
-    static arrayToCSV = (decks: Deck[]): CsvData => {
+    static arrayToCSV = (decks: DeckSearchResult[]): CsvData => {
         const data = decks.map(deck => {
             const synergies = DeckUtils.synergiesRounded(deck.synergies!)
             return [
                 deck.name,
-                deck.houses,
+                deck.housesAndCards.map(houseAndCards => houseAndCards.house),
                 deck.expansion,
                 synergies.sasRating,
                 synergies.synergyRating,
@@ -185,9 +174,9 @@ export class DeckUtils {
                 synergies.disruption,
                 synergies.other,
 
-                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[0]),
-                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[1]),
-                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.houses[2]),
+                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.housesAndCards[0].house),
+                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.housesAndCards[1].house),
+                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.housesAndCards[2].house),
 
                 deck.creatureCount,
                 deck.actionCount,
@@ -210,7 +199,9 @@ export class DeckUtils {
                 deck.forAuction,
                 deck.forTrade,
                 DeckUtils.findPrice(deck),
-                deck.searchResultCards?.map(card => card.cardTitle),
+                deck.housesAndCards[0].cards.map(card => card.cardTitle),
+                deck.housesAndCards[1].cards.map(card => card.cardTitle),
+                deck.housesAndCards[2].cards.map(card => card.cardTitle),
                 deck.wishlistCount,
                 deck.funnyCount,
                 `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,
@@ -265,7 +256,9 @@ export class DeckUtils {
             "For Trade",
             "Price",
 
-            "Cards",
+            "House 1 Cards",
+            "House 2 Cards",
+            "House 3 Cards",
             "Wishlist",
             "Funny",
             "DoK Link",
@@ -279,7 +272,7 @@ export class DeckUtils {
 }
 
 export interface DeckPage {
-    decks: Deck[]
+    decks: DeckSearchResult[]
     page: number
 }
 

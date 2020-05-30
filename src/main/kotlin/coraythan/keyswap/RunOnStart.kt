@@ -1,6 +1,7 @@
 package coraythan.keyswap
 
 import coraythan.keyswap.auctions.DeckListingService
+import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryRepo
@@ -31,6 +32,7 @@ class RunOnStart(
         private val userRepo: KeyUserRepo,
         private val fixSynergies: FixSynergies,
         private val userSearchService: UserSearchService,
+        private val cardRepo: CardRepo,
         private val restTemplate: RestTemplate
 ) : CommandLineRunner {
 
@@ -46,7 +48,7 @@ class RunOnStart(
 
         // deckImporterService.updateDeckStats()
 
-        // this.downloadAllCardImages()
+//        this.downloadAllNewCardImages()
 
         userSearchService.updateSearchResults()
 
@@ -57,17 +59,9 @@ class RunOnStart(
         log.info("~~~START UP COMPLETE!~~~")
     }
 
-    private fun downloadAllCardImages() {
-        val allRealCards = cardService.realAllCards()
-        val preExistingCardNames = allRealCards
-                .filter { it.expansionEnum != Expansion.WORLDS_COLLIDE && it.expansionEnum != Expansion.ANOMALY_EXPANSION }
-                .map { it.cardTitle }
-                .toSet()
-        cardService.realAllCards()
-                .filter {
-                    (it.expansionEnum == Expansion.WORLDS_COLLIDE || it.expansionEnum == Expansion.ANOMALY_EXPANSION) &&
-                            !preExistingCardNames.contains(it.cardTitle)
-                }
+    private fun downloadAllNewCardImages() {
+        cardRepo.findByExpansion(Expansion.MASS_MUTATION.expansionNumber)
+                .distinctBy { it.cardTitle }
                 .forEach { card ->
 
                     val headers = HttpHeaders()

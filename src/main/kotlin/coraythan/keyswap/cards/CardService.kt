@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.HouseAndCards
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.synergy.*
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
@@ -155,10 +156,19 @@ class CardService(
         return cardRepo.findAll()
     }
 
-    fun deckSearchResultCardsFromCardIds(cardIdsString: String): List<DeckSearchResultCard> {
-        return cardsFromCardIds(cardIdsString)
-                .sorted()
-                .map { it.toDeckSearchResultCard() }
+    fun deckToHouseAndCards(deck: Deck): List<HouseAndCards> {
+        val houses = deck.houses
+        val cardIdsString = deck.cardIds
+        val cards = cardsFromCardIds(cardIdsString)
+        return houses.map { house ->
+            HouseAndCards(
+                    house,
+                    cards
+                            .filter { it.house == house }
+                            .sorted()
+                            .map { it.toSimpleCard() }
+            )
+        }
     }
 
     fun cardsForDeck(deck: Deck): List<Card> {
@@ -219,33 +229,18 @@ class CardService(
 
     fun saveNewCard(card: Card): Card {
         if (card.extraCardInfo == null) {
-
             throw IllegalStateException("extra info not found for ${card.cardTitle} id ${card.id} expansion ${card.expansion} num ${card.cardNumber}")
-
-//            val existingInfo = extraCardInfoRepo.findByCardName(card.cardTitle)
-//                    .sortedByDescending { it.version }
-//                    .firstOrNull()
-//
-//            if (existingInfo == null) {
-//                throw IllegalStateException("No extra info available for new card ${card.cardTitle}!")
-//            } else {
-//                extraCardInfoRepo.save(existingInfo.copy(active = true))
-//                log.info("Successfully updated extra info for ${card.cardTitle}")
-//            }
         }
         return cardRepo.save(card)
     }
 
     fun reloadCachedCards() {
 
-
-
-
         val cards = fullCardsFromCards(
                 cardRepo.findAll()
                         .groupBy { "${it.expansion}-${it.cardNumber}" }
                         .values
-                        .map {  groupedCards ->
+                        .map { groupedCards ->
                             groupedCards.let { sameCards ->
                                 sameCards.find { !it.maverick } ?: sameCards.first()
                             }

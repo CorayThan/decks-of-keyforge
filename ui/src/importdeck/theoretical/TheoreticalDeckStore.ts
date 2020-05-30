@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
-import { DeckWithSynergyInfo } from "../../decks/Deck"
+import { DeckWithSynergyInfo } from "../../decks/models/DeckSearchResult"
 import { SaveUnregisteredDeck } from "../SaveUnregisteredDeck"
 
 export class TheoreticalDeckStore {
@@ -20,9 +20,7 @@ export class TheoreticalDeckStore {
     findDeck = (id: string) => {
         axios.get(`${TheoreticalDeckStore.CONTEXT}/${id}`)
             .then((response: AxiosResponse<DeckWithSynergyInfo>) => {
-                const deck = response.data
-                deck.deck.houses.sort()
-                this.deck = deck
+                this.deck = response.data
             })
     }
 

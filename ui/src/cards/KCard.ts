@@ -1,7 +1,8 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
 import { roundToHundreds } from "../config/Utils"
-import { activeExpansions, BackendExpansion, Expansion } from "../expansions/Expansions"
+import { SimpleCard } from "../decks/models/HouseAndCards"
+import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { House } from "../houses/House"
@@ -11,7 +12,6 @@ import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { cardStore } from "./CardStore"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
-import { HasFrontImage } from "./views/CardSimpleView"
 
 export interface KCard {
     id: string
@@ -104,10 +104,7 @@ export const cardNameToCardNameKey = (name: string) => {
         .toLowerCase()
 }
 
-export const findCardImageUrl = (card: HasFrontImage) => {
-    if (card.expansion === Expansion.MM) {
-        return card.frontImage
-    }
+export const findCardImageUrl = (card: SimpleCard) => {
     return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
 }
 

@@ -1,11 +1,11 @@
-import { Deck } from "../decks/Deck"
 import { DeckLanguage } from "../decks/DeckLanguage"
+import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { KeyUser } from "../user/KeyUser"
 
 export interface UserDeck {
     id: string
     user: KeyUser
-    deck: Deck
+    deck: DeckSearchResult
     wishlist: boolean
     funny: boolean
     ownedBy: string

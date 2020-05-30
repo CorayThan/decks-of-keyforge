@@ -140,7 +140,7 @@ class DeckSearchService(
         val decks = deckResults.mapNotNull {
             val cards = cardService.cardsForDeck(it)
             var searchResult = it.toDeckSearchResult(
-                    cardService.deckSearchResultCardsFromCardIds(it.cardIds),
+                    cardService.deckToHouseAndCards(it),
                     cards,
                     stats = statsService.findCurrentStats(),
 //                    crucibleWins = deckWinsService.crucibleWins,
@@ -405,7 +405,7 @@ class DeckSearchService(
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
         return deck.toDeckSearchResult(
-                cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
+                cardService.deckToHouseAndCards(deck),
                 cardService.cardsForDeck(deck),
                 stats = statsService.findCurrentStats())
     }
@@ -428,7 +428,7 @@ class DeckSearchService(
         val cards = cardService.cardsForDeck(deck)
         return DeckWithSynergyInfo(
                 deck = deck.toDeckSearchResult(
-                        cardService.deckSearchResultCardsFromCardIds(deck.cardIds),
+                        cardService.deckToHouseAndCards(deck),
                         cards,
                         stats = stats,
                         // crucibleWins = deckWinsService.crucibleWins,
@@ -476,6 +476,7 @@ class DeckSearchService(
                 .map {
                     val cards = cardService.cardsForDeck(it)
                     it.toDeckSearchResult(
+                            housesAndCards = it.houses.map { house -> HouseAndCards(house, listOf()) },
                             stats = statsService.findCurrentStats(),
                             synergies = DeckSynergyService.fromDeckWithCards(it, cards)
                     )

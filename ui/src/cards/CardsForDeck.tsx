@@ -6,13 +6,13 @@ import MenuItem from "@material-ui/core/MenuItem"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { HouseAndCards } from "../decks/models/HouseAndCards"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
-import { KCard } from "./KCard"
 import { CardSimpleView } from "./views/CardSimpleView"
 
 interface CardsForDeckProps {
-    cards?: KCard[]
+    cards: HouseAndCards[]
     deckName: string
     onClick: () => void
 }
@@ -31,9 +31,6 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
 
     render() {
         const {cards, deckName} = this.props
-        if (cards == null) {
-            return null
-        }
 
         let maxWidth = 1600
         if (screenStore.screenWidth < 1630) {
@@ -58,9 +55,11 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
                     </DialogTitle>
                     <DialogContent style={{display: "flex", justifyContent: "center"}}>
                         <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", maxWidth}}>
-                            {cards.map((card, idx) => (
-                                <CardSimpleView card={card} key={idx} size={250} style={{margin: 4}}/>
-                            ))}
+                            {cards
+                                .flatMap(houseAndCards => houseAndCards.cards)
+                                .map((card, idx) => (
+                                    <CardSimpleView card={card} key={idx} size={250} style={{margin: 4}}/>
+                                ))}
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>

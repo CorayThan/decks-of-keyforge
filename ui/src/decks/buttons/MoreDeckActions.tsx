@@ -7,12 +7,12 @@ import { ReportPurchaseButton } from "../../auctions/purchases/ReportPurchaseBut
 import { CardsForDeck } from "../../cards/CardsForDeck"
 import { userStore } from "../../user/UserStore"
 import { DeckNote } from "../../userdeck/DeckNote"
-import { Deck } from "../Deck"
 import { deckStore } from "../DeckStore"
+import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckActionClickable } from "./DeckActionClickable"
 import { MyDecksButton } from "./MyDecksButton"
 
-export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
+export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -39,7 +39,7 @@ export const MoreDeckActions = (props: { deck: Deck, compact: boolean }) => {
             >
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
                 <ReportPurchaseButton deckId={deck.id} deckName={deck.name} onClick={handleClose}/>
-                <CardsForDeck cards={deck.searchResultCards} deckName={deck.name} onClick={handleClose}/>
+                <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
                 <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
                 {deck.registered && (
                     <MenuItem

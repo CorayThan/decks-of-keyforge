@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/browser"
-import "mobx-react-lite/batchingForReactDom"
+import "mobx-react/batchingForReactDom"
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { App } from "./App"

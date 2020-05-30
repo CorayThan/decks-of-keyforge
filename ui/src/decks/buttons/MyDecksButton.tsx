@@ -4,12 +4,12 @@ import { deckListingStore } from "../../auctions/DeckListingStore"
 import { Loader, LoaderSize } from "../../mui-restyled/Loader"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
-import { Deck } from "../Deck"
+import { DeckSearchResult } from "../models/DeckSearchResult"
 import { ListForSaleView } from "../sales/ListForSaleView"
 import { DeckActionClickable } from "./DeckActionClickable"
 
 interface MyDecksButtonProps {
-    deck: Deck
+    deck: DeckSearchResult
     menuItem?: boolean
 }
 

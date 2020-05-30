@@ -4,7 +4,7 @@ import { sortBy } from "lodash"
 import * as React from "react"
 import { useGlobalStyles } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
-import { DeckUtils } from "../decks/Deck"
+import { DeckUtils } from "../decks/models/DeckSearchResult"
 import { SasTip } from "../mui-restyled/SasTip"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
 
