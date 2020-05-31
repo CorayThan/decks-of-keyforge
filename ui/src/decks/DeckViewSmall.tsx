@@ -10,6 +10,7 @@ import { AercForCombos } from "../aerc/AercForCombos"
 import { AercViewForDeck, AercViewType } from "../aerc/views/AercViews"
 import { DeckListingStatus } from "../auctions/DeckListingDto"
 import { deckListingStore } from "../auctions/DeckListingStore"
+import { cardStore } from "../cards/CardStore"
 import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, useGlobalStyles } from "../config/MuiConfig"
@@ -52,6 +53,11 @@ export const standardDeckViewWidth = 704
 @observer
 export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     render() {
+
+        if (!cardStore.cardsLoaded) {
+            return null
+        }
+
         const {deck, fullVersion, hideActions, forceNarrow, style} = this.props
         const {
             id, keyforgeId, name, wishlistCount, funnyCount,

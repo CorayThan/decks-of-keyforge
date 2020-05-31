@@ -5,7 +5,6 @@ import { CsvData } from "../../generic/CsvDownloadButton"
 import { House } from "../../houses/House"
 import { DeckSynergyInfo, SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { userStore } from "../../user/UserStore"
-import { UserDeck } from "../../userdeck/UserDeck"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckSaleInfo } from "../sales/DeckSaleInfo"
 import { HouseAndCards } from "./HouseAndCards"
@@ -21,38 +20,35 @@ export interface DeckSearchResult extends HasAerc {
 
     id: number
     keyforgeId: string
-    name: string
     expansion: BackendExpansion
-    powerLevel: number
-    chains: number
-    wins: number
-    losses: number
 
-    registered: boolean
+    name: string
 
-    maverickCount: number
-    specialsCount: number
-    raresCount: number
-    uncommonsCount: number
-
-    rawAmber: number
-    totalPower: number
     creatureCount: number
     actionCount: number
     artifactCount: number
     upgradeCount: number
 
-    cardDrawCount: number
-    cardArchiveCount: number
-    keyCheatCount: number
-    totalArmor: number
+    registered: boolean
+
+    powerLevel: number
+    chains: number
+    wins: number
+    losses: number
 
     aercScore: number
-    previousSasRating?: number
+    previousSasRating: number
     previousMajorSasRating?: number
     sasRating: number
     synergyRating: number
     antisynergyRating: number
+
+    totalPower: number
+    cardDrawCount: number
+    cardArchiveCount: number
+    keyCheatCount: number
+    rawAmber: number
+    totalArmor: number
 
     forSale: boolean
     forTrade: boolean
@@ -61,19 +57,12 @@ export interface DeckSearchResult extends HasAerc {
     funnyCount: number
 
     lastSasUpdate: string
-
     sasPercentile: number
 
-    userDecks: UserDeck[]
-
     housesAndCards: HouseAndCards[]
-
     deckSaleInfo?: DeckSaleInfo[]
-
     owners?: string[]
-
     synergies?: DeckSynergyInfo
-
     dateAdded?: string
 
 }

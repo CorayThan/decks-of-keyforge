@@ -36,6 +36,7 @@ data class DeckSearchResult(
         val creatureProtection: Double = 0.0,
         val disruption: Double = 0.0,
         val other: Double = 0.0,
+
         val aercScore: Double = 0.0,
         val previousSasRating: Int = 0,
         val previousMajorSasRating: Int? = null,
@@ -45,9 +46,9 @@ data class DeckSearchResult(
         val antisynergyRating: Int = 0,
 
         val totalPower: Int = 0,
-        val cardDrawCount: Int? = null,
-        val cardArchiveCount: Int? = null,
-        val keyCheatCount: Int? = null,
+        val cardDrawCount: Int = 0,
+        val cardArchiveCount: Int = 0,
+        val keyCheatCount: Int = 0,
         val rawAmber: Int = 0,
         val totalArmor: Int = 0,
 
@@ -58,17 +59,12 @@ data class DeckSearchResult(
         val funnyCount: Int = 0,
 
         val lastSasUpdate: String = "",
-
         val sasPercentile: Double = 0.0,
 
         val housesAndCards: List<HouseAndCards> = listOf(),
-
         val deckSaleInfo: List<DeckSaleInfo>? = null,
-
         val owners: List<String>? = null,
-
         val synergies: DeckSynergyInfo? = null,
-
         val dateAdded: LocalDate? = null
 ) {
 
