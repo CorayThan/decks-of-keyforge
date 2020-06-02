@@ -3,7 +3,6 @@ import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
 import { cardStore } from "../cards/CardStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { Loader } from "../mui-restyled/Loader"
 import { CardTypeRadar } from "../stats/CardTypeRadar"
 import { screenStore } from "../ui/ScreenStore"
 import { DeckViewSmall } from "./DeckViewSmall"
@@ -19,7 +18,7 @@ export class DeckListView extends React.Component<DeckListViewProps> {
     render() {
 
         if (!cardStore.cardsLoaded) {
-            return <Loader/>
+            return null
         }
 
         const {decks} = this.props
@@ -30,7 +29,7 @@ export class DeckListView extends React.Component<DeckListViewProps> {
                 {decks.map((deck) => {
                     return (
                         <div key={deck.id} style={{display: "flex"}}>
-                                <DeckViewSmall deck={deck} saleInfo={deck.deckSaleInfo}/>
+                            <DeckViewSmall deck={deck} saleInfo={deck.deckSaleInfo}/>
                             {displayGraphs && (
                                 <div style={{display: screenStore.smallDeckView() ? undefined : "flex", flexWrap: "wrap"}}>
                                     <AercRadar deck={deck}/>

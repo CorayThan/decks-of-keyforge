@@ -1,6 +1,7 @@
 package coraythan.keyswap.synergy
 
 import coraythan.keyswap.cards.CardIdentifierRepo
+import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfoRepo
 import coraythan.keyswap.spoilers.SpoilerRepo
@@ -14,7 +15,8 @@ class FixSynergies(
         private val repo: SynTraitValueRepo,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val spoilerRepo: SpoilerRepo,
-        private val cardIdentifierRepo: CardIdentifierRepo
+        private val cardIdentifierRepo: CardIdentifierRepo,
+        private val cardRepo: CardRepo
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 

@@ -6,10 +6,10 @@ enum class House(val masterVaultValue: String) {
     Logos("Logos"),
     Mars("Mars"),
     Sanctum("Sanctum"),
+    Saurian("Saurian"),
     Shadows("Shadows"),
-    Untamed("Untamed"),
     StarAlliance("Star Alliance"),
-    Saurian("Saurian");
+    Untamed("Untamed");
 
     companion object {
         fun fromMasterVaultValue(value: String): House? {

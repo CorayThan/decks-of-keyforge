@@ -2,6 +2,7 @@ import { TextField } from "@material-ui/core"
 import { Autocomplete } from "@material-ui/lab"
 import { observer } from "mobx-react"
 import React, { ChangeEvent } from "react"
+import { Utils } from "../config/Utils"
 import { cardStore } from "./CardStore"
 
 export interface SingleOption {
@@ -22,7 +23,7 @@ export class SingleCardSearchSuggest extends React.Component<SingleCardSearchSug
         const names = this.props.names ?? cardStore.cardNames
         return (
             <Autocomplete
-                options={names}
+                options={Utils.arrPlus(names, "")}
                 value={selected.option}
                 renderInput={(params) => <TextField {...params} label={"Card"}/>}
                 onChange={(event: ChangeEvent<{}>, newValue: string | null) => selected.option = newValue ?? ""}

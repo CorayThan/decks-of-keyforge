@@ -14,7 +14,7 @@ export enum Expansion {
 }
 
 export const possibleCardExpansionsForExpansion = (exp: Expansion): Expansion[] => {
-   return [Expansion.COTA, Expansion.AOA, Expansion.WC, Expansion.ANOM]
+   return [Expansion.COTA, Expansion.AOA, Expansion.WC, Expansion.ANOM, Expansion.MM]
        .filter(possibleExpansion => (
            possibleExpansion <= exp || (exp === Expansion.WC && possibleExpansion === Expansion.ANOM)
        ))

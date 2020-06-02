@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 16
+val publishedAercVersion = 17
 val majorRevision = false
 
 @Transactional
@@ -152,15 +152,17 @@ class CardService(
         val houses = deck.houses
         val cardIdsString = deck.cardIds
         val cards = cardsFromCardIds(cardIdsString)
-        return houses.map { house ->
-            HouseAndCards(
-                    house,
-                    cards
-                            .filter { it.house == house }
-                            .sorted()
-                            .map { it.toSimpleCard() }
-            )
-        }
+        return houses
+                .map { house ->
+                    HouseAndCards(
+                            house,
+                            cards
+                                    .filter { it.house == house }
+                                    .sorted()
+                                    .map { it.toSimpleCard() }
+                    )
+                }
+                .sortedBy { it.house }
     }
 
     fun cardsForDeck(deck: Deck): List<Card> {

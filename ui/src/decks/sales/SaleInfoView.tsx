@@ -243,7 +243,7 @@ const InfoBox = (props: { title: string, info?: string, link?: string }) => {
     }
     return (
         <>
-            <div style={{margin: spacing(2), marginBottom: 0}}>
+            <div style={{margin: marginSpacing3(2, 2, 0)}}>
                 <Typography variant={"subtitle2"} style={{marginBottom: spacing(0.5)}}>{props.title}</Typography>
                 {props.info ? (
                     <Typography variant={"body2"} style={{whiteSpace: "pre-wrap"}}>{props.info}</Typography>

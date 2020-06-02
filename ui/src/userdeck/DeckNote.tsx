@@ -163,7 +163,7 @@ class InlineDeckNoteLoaded extends React.Component<InlineDeckNoteLoadedProps> {
             >
                 <TextField
                     multiline={true}
-                    rowsMax={3}
+                    rows={3}
                     value={this.notes}
                     variant={"filled"}
                     fullWidth={true}

@@ -1,4 +1,6 @@
 import { observable } from "mobx"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { spacing } from "../config/MuiConfig"
 
 export enum ScreenSize {
     xs,
@@ -52,7 +54,19 @@ export class ScreenStore {
             return 704
         }
     }
-    deckHeight = () => this.smallDeckView() ? 960 : this.wideScreenDeckHeight
+
+    deckHeight = () => {
+        let height
+        if (this.smallDeckView()) {
+            height = 948
+        } else {
+            height = this.wideScreenDeckHeight
+        }
+        if (keyLocalStorage.genericStorage.viewNotes) {
+            height += 94 + spacing(2)
+        }
+        return height
+    }
 
     screenSizeXs = () => this.screenSize === ScreenSize.xs
     screenSizeSm = () => this.screenSize <= ScreenSize.sm

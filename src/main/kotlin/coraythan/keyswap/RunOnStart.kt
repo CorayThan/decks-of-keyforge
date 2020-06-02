@@ -40,6 +40,8 @@ class RunOnStart(
 
     override fun run(vararg args: String?) {
 
+        fixSynergies.fix()
+
         cardService.publishNextInfo()
         cardService.loadExtraInfo()
         cardService.allFullCardsNonMaverick()
@@ -51,8 +53,6 @@ class RunOnStart(
 //        this.downloadAllNewCardImages()
 
         userSearchService.updateSearchResults()
-
-        fixSynergies.fix()
 
         startupComplete = true
 
