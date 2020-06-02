@@ -130,13 +130,9 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                 const decks = decksToDisplay
                     .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
                     .filter(deck => deck != null)
-                decksView = (
-                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                        {keyLocalStorage.deckListViewType === "table" ?
-                            <DeckTableView decks={decks} sellerView={sellerView}/> :
-                            <DeckListView decks={decks}/>}
-                    </div>
-                )
+                decksView = keyLocalStorage.deckListViewType === "table" ?
+                    <DeckTableView decks={decks} sellerView={sellerView}/> :
+                    <DeckListView decks={decks}/>
             }
         }
 
@@ -159,7 +155,6 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                 <div
                     style={{
                         flexGrow: 1,
-                        margin: spacing(2),
                     }}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>

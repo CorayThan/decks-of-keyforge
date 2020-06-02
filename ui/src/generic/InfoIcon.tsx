@@ -1,28 +1,9 @@
 import { Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
 import { TypographyClassKey } from "@material-ui/core/Typography"
 import * as React from "react"
 import { AercForCombos, AercForCombosProps } from "../aerc/AercForCombos"
 import { CardsMatchSasTip, CardsMatchSasTipProps } from "../aerc/CardsMatchSasTip"
 import { spacing } from "../config/MuiConfig"
-
-const useStyles = makeStyles({
-    root: (props: { small?: boolean }) => ({
-        display: "flex",
-        alignItems: "center",
-        marginBottom: props.small ? spacing(0.25) : spacing(0.5),
-        marginLeft: spacing(1)
-    }),
-    text: {
-        marginRight: spacing(1),
-        width: 32,
-        textAlign: "right"
-    },
-    icon: (props: { small?: boolean }) => ({
-        display: "flex",
-        width: props.small ? 20 : 24
-    })
-})
 
 export interface InfoIconValue {
     info: number | string
@@ -49,7 +30,6 @@ export const InfoIconList = (props: { values: InfoIconValue[], small?: boolean }
 }
 
 const InfoIcon = (props: { value: InfoIconValue, small?: boolean }) => {
-    const classes = useStyles(props)
     const {value, small} = props
     const {info, combosTips, cardsTips} = value
     let displayValue = info
@@ -65,14 +45,30 @@ const InfoIcon = (props: { value: InfoIconValue, small?: boolean }) => {
     }
 
     const content = (
-        <div className={classes.root}>
+        <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: props.small ? spacing(0.25) : spacing(0.5),
+                marginLeft: spacing(1)
+            }}
+        >
             <Typography
                 variant={variant}
-                className={classes.text}
+                style={{
+                    marginRight: spacing(1),
+                    width: 32,
+                    textAlign: "right"
+                }}
             >
                 {displayValue}
             </Typography>
-            <div className={classes.icon}>
+            <div
+                style={{
+                    display: "flex",
+                    width: props.small ? 20 : 24
+                }}
+            >
                 {props.value.icon}
             </div>
         </div>

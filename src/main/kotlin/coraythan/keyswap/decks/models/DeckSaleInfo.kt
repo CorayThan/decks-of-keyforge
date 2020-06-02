@@ -24,7 +24,7 @@ data class DeckSaleInfo(
         val buyItNow: Int? = null,
         val startingBid: Int? = null,
         val auctionEndDateTime: String? = null,
-        val auctionId: UUID? = null,
+        val auctionId: UUID,
         val nextBid: Int? = null,
         val youAreHighestBidder: Boolean? = null,
         val yourMaxBid: Int? = null,

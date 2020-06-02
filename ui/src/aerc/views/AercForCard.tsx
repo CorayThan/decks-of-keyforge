@@ -1,37 +1,43 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardType } from "../../cards/CardType"
-import { hasAercFromCard, KCard } from "../../cards/KCard"
+import { KCard } from "../../cards/KCard"
 import { spacing, theme } from "../../config/MuiConfig"
 import { roundToHundreds, roundToTens } from "../../config/Utils"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 
 export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo }) => {
     const {card, short, realValue} = props
-    const hasAerc = hasAercFromCard(card)
+    const info = card.extraCardInfo
     return (
         <div style={{display: "grid", gridTemplateColumns: "6fr 4fr 2fr"}}>
             <AercScore
-                score={hasAerc.amberControl}
-                max={hasAerc.amberControlMax}
+                score={info.amberControl}
+                max={info.amberControlMax}
                 synergizedScore={realValue && realValue.amberControl}
                 name={short ? "A" : "Aember Control (A)"}
             />
             <AercScore
-                score={hasAerc.expectedAmber} max={hasAerc.expectedAmberMax} synergizedScore={realValue && realValue.expectedAmber}
+                score={info.expectedAmber}
+                max={info.expectedAmberMax}
+                synergizedScore={realValue && realValue.expectedAmber}
                 name={short ? "E" : "Expected Aember (E)"}
             />
             <AercScore
-                score={hasAerc.artifactControl} max={hasAerc.artifactControlMax} synergizedScore={realValue && realValue.artifactControl}
+                score={info.artifactControl}
+                max={info.artifactControlMax}
+                synergizedScore={realValue && realValue.artifactControl}
                 name={short ? "R" : "Artifact Control (R)"}
             />
             <AercScore
-                score={hasAerc.creatureControl} max={hasAerc.creatureControlMax} synergizedScore={realValue && realValue.creatureControl}
+                score={info.creatureControl}
+                max={info.creatureControlMax}
+                synergizedScore={realValue && realValue.creatureControl}
                 name={short ? "C" : "Creature Control (C)"}
             />
             <AercScore
-                score={roundToTens(hasAerc.effectivePower / 10)}
-                max={hasAerc.effectivePowerMax != null ? roundToTens(hasAerc.effectivePowerMax / 10) : undefined}
+                score={roundToTens(info.effectivePower / 10)}
+                max={info.effectivePowerMax != null ? roundToTens(info.effectivePowerMax / 10) : undefined}
                 synergizedScore={realValue && roundToTens(realValue.effectivePower / 10)}
                 name={short ? "P" : "Effective Power (P)"}
             />
@@ -43,23 +49,32 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
                 />
             )}
             <AercScore
-                score={hasAerc.efficiency} max={hasAerc.efficiencyMax} synergizedScore={realValue && realValue.efficiency}
+                score={info.efficiency}
+                max={info.efficiencyMax}
+                synergizedScore={realValue && realValue.efficiency}
                 name={short ? "F" : "Efficiency (F)"}
             />
             <AercScore
-                score={hasAerc.disruption} max={hasAerc.disruptionMax} synergizedScore={realValue && realValue.disruption}
+                score={info.disruption}
+                max={info.disruptionMax}
+                synergizedScore={realValue && realValue.disruption}
                 name={short ? "D" : "Disruption (D)"}
             />
             <AercScore
-                score={hasAerc.creatureProtection} max={hasAerc.creatureProtectionMax} synergizedScore={realValue && realValue.creatureProtection}
+                score={info.creatureProtection}
+                max={info.creatureProtectionMax}
+                synergizedScore={realValue && realValue.creatureProtection}
                 name={short ? "CP" : "Creature Protection"}
             />
             <AercScore
-                score={hasAerc.other} max={hasAerc.otherMax} synergizedScore={realValue && realValue.other} name={short ? "O" : "Other"}
+                score={info.other}
+                max={info.otherMax}
+                synergizedScore={realValue && realValue.other}
+                name={short ? "O" : "Other"}
             />
             {realValue == null ? (
                 <AercScore
-                    score={hasAerc.aercScore} max={hasAerc.aercScoreMax} name={"AERC"}
+                    score={card.aercScore} max={card.aercScoreMax} name={"AERC"}
                 />
             ) : (
                 <AercAercScore score={realValue.aercScore} synergy={realValue.netSynergy}/>

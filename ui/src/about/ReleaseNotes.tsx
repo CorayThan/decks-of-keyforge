@@ -16,7 +16,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.4"
+export const latestVersion = "5.5"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,6 +44,28 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.5"}
+                    date={"6/1/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Ratings Update",
+                            note: "First version of MM ratings had a fair number of mistakes. Hopefully this version has many fewer mistakes! I've also " +
+                                "made a few updates to cards in previous sets to continue improving consistency of traits and ratings."
+                        },
+                        {
+                            highlight: "For Sale View Revised",
+                            note: "I've revised the for sale view to waste less space, and use scroll we needed to keep sizes reasonable."
+                        },
+                        {
+                            highlight: "Deck List Performance",
+                            note: "A recent update rendered the deck list very very slow. That has now been fixed. If loading 100 decks at once, it will " +
+                                "still be somewhat slow. The deck view is very complex with many tooltips and small pieces of information. I'll continue " +
+                                "looking into ways to make it work as fast as possible."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.4"}
                     date={"5/29/2020"}

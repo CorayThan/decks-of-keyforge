@@ -1,5 +1,4 @@
-import { Tooltip } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Divider, Tooltip } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -9,17 +8,8 @@ import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { cardStore } from "../CardStore"
 import { CardWinRates, KCard } from "../KCard"
 
-const useStyles = makeStyles({
-    root: {
-        display: "grid",
-        gridTemplateColumns: "2fr 5fr 3fr 2fr",
-        rowGap: "4px"
-    }
-})
-
 export const CardWinsDisplay = observer((props: { card: KCard }) => {
 
-    const classes = useStyles()
     const {card} = props
 
     const winRates = cardStore.cardWinRates?.get(card.cardTitle)
@@ -27,12 +17,25 @@ export const CardWinsDisplay = observer((props: { card: KCard }) => {
         return null
     }
 
+    if (((winRates[0].wins ?? 0) + (winRates[0].losses ?? 0)) < 1000) {
+        return null
+    }
+
     return (
-        <div className={classes.root}>
-            {winRates.map(winRate => (
-                <IndividualCardWinsDisplay winRates={winRate} key={winRate.expansion ?? "none"}/>
-            ))}
-        </div>
+        <>
+            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "2fr 5fr 3fr 2fr",
+                    rowGap: "4px"
+                }}
+            >
+                {winRates.map(winRate => (
+                    <IndividualCardWinsDisplay winRates={winRate} key={winRate.expansion ?? "none"}/>
+                ))}
+            </div>
+        </>
     )
 })
 
@@ -40,10 +43,6 @@ const IndividualCardWinsDisplay = (props: { winRates: CardWinRates }) => {
 
     const {winRates} = props
     const {expansion, winRatePercent, relativeToAveragePercent, wins, losses} = winRates
-
-    if (((wins ?? 0) + (losses ?? 0)) < 1000) {
-        return <Typography variant={"body2"}>Insufficent Data</Typography>
-    }
 
     return (
         <>

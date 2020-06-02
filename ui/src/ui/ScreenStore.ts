@@ -37,6 +37,23 @@ export class ScreenStore {
     }
 
     smallDeckView = () => screenStore.screenWidth < 768
+
+    smallScreenDeckWidth = 328
+    wideScreenDeckHeight = 612
+
+    displayDeckSaleInfoSeparately = () => this.screenWidth < 1080
+
+    deckWidth = (forSale: boolean) => {
+        if (this.smallDeckView()) {
+            return this.smallScreenDeckWidth
+        } else if (forSale && !this.displayDeckSaleInfoSeparately()) {
+            return 1032
+        } else {
+            return 704
+        }
+    }
+    deckHeight = () => this.smallDeckView() ? 960 : this.wideScreenDeckHeight
+
     screenSizeXs = () => this.screenSize === ScreenSize.xs
     screenSizeSm = () => this.screenSize <= ScreenSize.sm
     screenSizeMd = () => this.screenSize <= ScreenSize.md

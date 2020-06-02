@@ -1,13 +1,12 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import Popover from "@material-ui/core/Popover/Popover"
-import { makeStyles } from "@material-ui/core/styles"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
-import { spacing, useGlobalStyles } from "../../config/MuiConfig"
+import { spacing } from "../../config/MuiConfig"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { SimpleCard } from "../../decks/models/HouseAndCards"
 import { BackendExpansion } from "../../expansions/Expansions"
@@ -56,10 +55,6 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
 
     render() {
         const {card, cardActualHouse} = this.props
-
-        if (!cardStore.cardsLoaded) {
-            return null
-        }
 
         const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
 
@@ -164,18 +159,8 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
     return deck.synergies.synergyCombos.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
-const useStyles = makeStyles({
-    root: (props: CardAsLineProps) => ({display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width})
-})
-
 const CardLine = observer((props: CardAsLineProps) => {
-    const classes = useStyles(props)
-    const globalClasses = useGlobalStyles()
     const {card, deckExpansion, hideRarity, cardActualHouse} = props
-
-    if (!cardStore.cardsLoaded) {
-        return null
-    }
 
     const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
     if (fullCard == null) return <Typography>No card {card.cardTitle}</Typography>
@@ -190,7 +175,9 @@ const CardLine = observer((props: CardAsLineProps) => {
     const isMaverick = fullCard.house !== cardActualHouse && !isAnomaly
 
     return (
-        <div className={classes.root}>
+        <div
+            style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
+        >
             {!hideRarity && fullCard.rarity ? <RarityIcon rarity={fullCard.rarity}/> : null}
             <Typography
                 variant={"body2"}
@@ -199,9 +186,9 @@ const CardLine = observer((props: CardAsLineProps) => {
             >
                 {fullCard.cardTitle}
             </Typography>
-            {isMaverick ? <div className={globalClasses.marginLeftSmall}><MaverickIcon/></div> : null}
-            {isLegacy ? <div className={globalClasses.marginLeftSmall}><LegacyIcon/></div> : null}
-            {isAnomaly ? <div className={globalClasses.marginLeftSmall}><AnomalyIcon/></div> : null}
+            {isMaverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
+            {isLegacy ? <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div> : null}
+            {isAnomaly ? <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div> : null}
         </div>
     )
 })

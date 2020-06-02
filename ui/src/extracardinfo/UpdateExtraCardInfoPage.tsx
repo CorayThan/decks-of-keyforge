@@ -73,7 +73,7 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
         if (extraCardInfo == null || !cardStore.cardsLoaded) {
             return <Loader/>
         }
-        const card = cardStore.cardNameLowercaseToCard?.get(extraCardInfo.cardName.toLowerCase())
+        const card = cardStore.fullCardFromCardName(extraCardInfo.cardName)
         return <UpdateExtraCardInfo extraCardInfo={extraCardInfo} card={card}/>
     }
 }
@@ -852,12 +852,12 @@ class AddTrait extends React.Component<AddTraitProps> {
                                 if (spoilerId != null) {
                                     spoilerInfo = await extraCardInfoStore.findCreateSpoilerAercNoSet(spoilerId)
                                 }
-                                const nextInfoMap = cardStore.nextExtraInfo
+                                const nextInfo = cardStore.findNextExtraInfoForCard(cardName)
                                 let resetWith
                                 if (spoilerInfo != null) {
                                     resetWith = spoilerInfo
-                                } else if (nextInfoMap != null && nextInfoMap[cardName] != null) {
-                                    resetWith = nextInfoMap[cardName]!.extraCardInfo!
+                                } else if (nextInfo != null) {
+                                    resetWith = nextInfo
                                 } else {
                                     const card = cardStore.fullCardFromCardName(cardName)!
                                     resetWith = card!.extraCardInfo!

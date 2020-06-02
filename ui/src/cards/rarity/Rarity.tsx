@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { memo } from "react"
 import { themeStore } from "../../config/MuiConfig"
 import anomalyDark from "../imgs/anomaly-dark.svg"
 import anomaly from "../imgs/anomaly.svg"
@@ -65,26 +65,19 @@ export const rarityValuesArray: RarityValue[] = [
     },
 ]
 
-const useStyles = makeStyles({
-    icon: {width: 16, height: 16}
-})
-
 export const MaverickIcon = observer(() => {
-    const classes = useStyles()
     return (
-        <img alt={"maverick"} src={themeStore.darkMode ? maverickDark : maverick} className={classes.icon}/>
+        <img alt={"maverick"} src={themeStore.darkMode ? maverickDark : maverick} style={{width: 16, height: 16}}/>
     )
 })
 export const LegacyIcon = observer(() => {
-    const classes = useStyles()
     return (
-        <img alt={"legacy"} src={themeStore.darkMode ? legacyDark : legacy} className={classes.icon}/>
+        <img alt={"legacy"} src={themeStore.darkMode ? legacyDark : legacy} style={{width: 16, height: 16}}/>
     )
 })
 export const AnomalyIcon = observer(() => {
-    const classes = useStyles()
     return (
-        <img alt={"anomaly"} src={themeStore.darkMode ? anomalyDark : anomaly} className={classes.icon}/>
+        <img alt={"anomaly"} src={themeStore.darkMode ? anomalyDark : anomaly} style={{width: 16, height: 16}}/>
     )
 })
 
@@ -92,10 +85,9 @@ export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]
 )))
 
-export const RarityIcon = observer((props: {rarity: Rarity}) => {
-    const classes = useStyles()
+export const RarityIcon = memo((props: { rarity: Rarity }) => {
     const value = rarityValues.get(props.rarity)!
     return (
-        <img alt={props.rarity} src={themeStore.darkMode ? value.imgDark : value.img} className={classes.icon}/>
+        <img alt={props.rarity} src={themeStore.darkMode ? value.imgDark : value.img} style={{width: 16, height: 16}}/>
     )
 })

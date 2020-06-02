@@ -85,13 +85,14 @@ export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(
     [houseValue.house, houseValue] as [House, HouseValue]
 )))
 
-export const HouseLabel = (props: { house: House, title?: boolean, width?: number }) => {
+export const HouseLabel = (props: { house: House, title?: boolean, width?: number, iconSize?: number }) => {
     const value = houseValues.get(props.house)!
+    const houseSize = props.iconSize ? props.iconSize : 32
 
     return (
         <div style={{display: "flex", alignItems: "center"}}>
-            <img alt={props.house} src={value.img} style={{width: 32, height: 32, marginRight: spacing(1)}}/>
-            <Typography noWrap={false} variant={props.title ? "subtitle2" : "body2"} style={{width: props.width}}>
+            <img alt={props.house} src={value.img} style={{width: houseSize, height: houseSize, marginRight: spacing(1)}}/>
+            <Typography noWrap={false} variant={props.title ? "subtitle1" : "body2"} style={{width: props.width}}>
                 {value.displayName == null ? props.house : value.displayName}
             </Typography>
         </div>

@@ -1,10 +1,12 @@
-import { createMuiTheme, makeStyles } from "@material-ui/core"
+import { createMuiTheme } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
 import { computed, observable } from "mobx"
 import { screenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
 
 export const spacing = (spacingValue = 1) => spacingValue * 8 * (screenStore.screenSizeXs() ? 0.5 : 1)
+export const marginSpacing = (topBottom: number, leftRight = 0) => `${spacing(topBottom)}px ${spacing(leftRight)}px`
+export const marginSpacing3 = (top: number, leftRight: number, bottom: number) => `${spacing(top)}px ${spacing(leftRight)}px ${spacing(bottom)}px`
 
 export const darkModeKey = "DARK_MODE"
 
@@ -41,6 +43,16 @@ export class ThemeStore {
     @computed
     get lightBackgroundColor() {
         return this.darkMode ? "#999999" : "#EEEEEE"
+    }
+
+    @computed
+    get cardBackground() {
+        return this.darkMode ? "#424242" : "#FFFFFF"
+    }
+
+    @computed
+    get lightBlueBackground() {
+        return this.darkMode ? blue["800"] : blue["100"]
     }
 
     @computed
@@ -95,24 +107,3 @@ export let theme = makeTheme()
 export const updateTheme = () => {
     theme = makeTheme()
 }
-
-export const useGlobalStyles = makeStyles({
-    marginRight: {
-        marginRight: spacing(2)
-    },
-    marginBottom: {
-        marginBottom: spacing(2)
-    },
-    marginRightSmall: {
-        marginRight: spacing(1)
-    },
-    marginLeftSmall: {
-        marginLeft: spacing(1)
-    },
-    marginBottomSmall: {
-        marginBottom: spacing(1)
-    },
-    flex: {
-        display: "flex"
-    }
-})

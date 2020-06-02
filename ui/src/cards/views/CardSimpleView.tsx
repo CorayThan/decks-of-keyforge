@@ -20,7 +20,7 @@ import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { cardStore } from "../CardStore"
 import { CardWinsDisplay } from "../cardwins/CardWinsDisplay"
-import { CardUtils, findCardImageUrl, hasAercFromCard, KCard } from "../KCard"
+import { CardUtils, findCardImageUrl, KCard } from "../KCard"
 
 interface CardSimpleViewProps {
     card: SimpleCard
@@ -70,12 +70,11 @@ export const CardView = observer((props: CardViewProps) => {
 
     const extraCardInfo = cardStore.findExtraInfoToUse(card)
 
-    const cardAerc = hasAercFromCard(card)
+    const cardAerc = cardStore.hasAercFromCardName(card.cardTitle)!
 
     let previousCard
-    const previousExtraInfo = cardStore.previousExtraInfo
-    if (displayHistory && previousExtraInfo != null) {
-        previousCard = previousExtraInfo[card.cardTitle]
+    if (displayHistory) {
+        previousCard = cardStore.findPrevExtraInfoForCard(card.cardTitle)
     }
 
     const sidebarProps = screenStore.screenSizeXs() ? {
@@ -111,8 +110,7 @@ export const CardView = observer((props: CardViewProps) => {
                     <div style={{flexGrow: 1}}/>
                     {amber > 0 ? <Typography color={"textPrimary"} variant={"subtitle2"}>{amber} aember</Typography> : null}
                 </div>
-                <Typography color={"textPrimary"}>{cardText}</Typography>
-                <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                <Typography color={"textPrimary"} variant={"body2"}>{cardText}</Typography>
                 <CardWinsDisplay card={card}/>
                 <AercAndSynergies card={card} combo={combo} title={previousCard && "Current AERC"}/>
                 {previousCard && (
@@ -170,7 +168,7 @@ export const CardSynergies = (props: { synergies: SynTraitValue[] }) => (
 
 const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string }) => {
     const {card, combo, title} = props
-    const extraCardInfo = cardStore.findExtraInfoToUse(card)
+    const extraCardInfo = card.extraCardInfo
     const {traits, synergies, publishedDate} = extraCardInfo
     return (
         <>

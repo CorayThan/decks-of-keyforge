@@ -1,4 +1,5 @@
-import { hasAercFromCard, KCard } from "../cards/KCard"
+import { cardStore } from "../cards/CardStore"
+import { KCard } from "../cards/KCard"
 import { Rarity } from "../cards/rarity/Rarity"
 import { roundToHundreds } from "../config/Utils"
 
@@ -19,10 +20,11 @@ export interface CardAercData {
 }
 
 export class AercUtils {
+
     static cardsAverageAerc = (cards: KCard[]): CardAercData => {
         const cumulative: CardAercData = {}
         cards
-            .map(card => ({aerc: hasAercFromCard(card), card: card}))
+            .map(card => ({aerc: cardStore.hasAercFromCardName(card.cardTitle), card: card}))
             .forEach(cardAerc => {
                 const aerc = cardAerc.aerc
                 aercProperties.forEach(prop => {

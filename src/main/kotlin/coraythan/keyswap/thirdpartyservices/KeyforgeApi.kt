@@ -2,8 +2,10 @@ package coraythan.keyswap.thirdpartyservices
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.KeyforgeCard
+import coraythan.keyswap.config.Env
 import coraythan.keyswap.decks.models.KeyforgeDeck
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -51,7 +53,9 @@ const val keyforgeApiDeckPageSize = 10
 
 @Service
 class KeyforgeApi(
-        val restTemplate: RestTemplate
+        private val restTemplate: RestTemplate,
+        @Value("\${env}")
+        private val env: Env
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -60,7 +64,7 @@ class KeyforgeApi(
      * Null implies no decks available.
      */
     fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize, expansion: Int? = null, useMasterVault: Boolean = false): KeyforgeDecksPageDto? {
-        return if (useMasterVault) {
+        return if (useMasterVault || env == Env.dev) {
             keyforgeGetRequest(
                     KeyforgeDecksPageDto::class.java,
                     "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering" +

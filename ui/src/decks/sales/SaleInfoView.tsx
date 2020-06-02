@@ -1,4 +1,4 @@
-import { Link, Tooltip } from "@material-ui/core"
+import { Link } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import { startCase } from "lodash"
@@ -9,15 +9,12 @@ import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { DeckListingStatus } from "../../auctions/DeckListingDto"
 import { OfferButton } from "../../auctions/offers/OfferButton"
-import { spacing } from "../../config/MuiConfig"
+import { marginSpacing3, spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendEmailDialog } from "../../emails/SendEmailDialog"
 import { countryToLabel } from "../../generic/Country"
-import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
-import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
-import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
-import { KeyCard } from "../../generic/KeyCard"
+import { HelperText } from "../../generic/CustomTypographies"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
@@ -31,25 +28,36 @@ interface SaleInfoViewProps {
     saleInfo: DeckSaleInfo[]
     deckName: string
     keyforgeId: string
-    deckId: number
+    height?: number
 }
 
 @observer
 export class SaleInfoView extends React.Component<SaleInfoViewProps> {
     render() {
-        if (this.props.saleInfo.length === 0) {
+        const {saleInfo, deckName, keyforgeId, height} = this.props
+        if (saleInfo.length === 0) {
             return null
         }
         return (
-            <div>
-                {this.props.saleInfo.map((saleInfo) => {
-
+            <div
+                style={{
+                    backgroundColor: themeStore.cardBackground,
+                    overflowY: "auto",
+                    height
+                }}
+            >
+                {this.props.saleInfo.map((saleInfo, idx) => {
                     return (
-                        <div style={{marginTop: spacing(2), marginBottom: spacing(2)}} key={saleInfo.username}>
+                        <div key={saleInfo.auctionId}>
+                            {idx > 0 && (
+                                <div style={{margin: spacing(2)}}>
+                                    <Typography variant={"h6"}>{idx + 1} Deck Sale Info</Typography>
+                                </div>
+                            )}
                             <SingleSaleInfoView
                                 saleInfo={saleInfo}
-                                deckName={this.props.deckName}
-                                keyforgeId={this.props.keyforgeId}
+                                deckName={deckName}
+                                keyforgeId={keyforgeId}
                             />
                         </div>
                     )
@@ -69,7 +77,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
 
         const {deckName, saleInfo} = this.props
         const {
-            forTrade, forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
+            forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
             startingBid, shippingCost, acceptingOffers, highestOffer
         } = saleInfo
@@ -80,85 +88,60 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const allowEmail = yourEmail && yourUsername
 
         const sellerDetails = sellerStore.findSellerWithUsername(username)
-        const saleIconHeight = 40
 
         return (
-            <KeyCard
-                style={{width: 328}}
-                topContents={
-                    (
-                        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                            <div style={{display: "grid", gridTemplateColumns: "80px 1fr"}}>
+            <div style={{marginTop: spacing(2), marginBottom: spacing(2)}}>
+                {(buyItNow != null || highestOffer != null || startingBid != null) && (
+                    <>
+                        <div style={{marginLeft: spacing(2), marginRight: spacing(2), display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                            <div style={{display: "grid", gridTemplateColumns: "152px 1fr"}}>
                                 {!acceptingOffers && !forAuction && buyItNow != null && (
-                                    <Typography variant={"h4"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                                    <Typography variant={"h4"} style={{marginLeft: spacing(1), marginRight: spacing(1)}}>
                                         {currencySymbol}{buyItNow}
                                     </Typography>
                                 )}
                                 {acceptingOffers && (
                                     <TwoPricesDisplay
                                         currencySymbol={currencySymbol}
-                                        priceOneName={"Offer:"}
+                                        priceOneName={"High Offer:"}
                                         priceOneValue={highestOffer}
-                                        priceTwoName={"BIN:"}
+                                        priceTwoName={"Buy it Now:"}
                                         priceTwoValue={buyItNow}
                                     />
                                 )}
                                 {forAuction && (
                                     <TwoPricesDisplay
                                         currencySymbol={currencySymbol}
-                                        priceOneName={"Bid:"}
+                                        priceOneName={"High Bid:"}
                                         priceOneValue={highestBid ? highestBid : startingBid}
-                                        priceTwoName={"BIN:"}
+                                        priceTwoName={"Buy it Now:"}
                                         priceTwoValue={buyItNow}
                                     />
                                 )}
                             </div>
-                            <div>
-                                <div style={{display: "flex"}}>
-                                    <div style={{flexGrow: 1}}/>
-                                    {forAuction ? (
-                                        <Tooltip title={"Auction"}>
-                                            <div><AuctionDeckIcon height={saleIconHeight}/></div>
-                                        </Tooltip>
-                                    ) : (
-                                        <Tooltip title={"For sale"}>
-                                            <div><SellDeckIcon height={saleIconHeight}/></div>
-                                        </Tooltip>
-                                    )}
-                                    {forTrade ? (
-                                        <>
-                                            <div style={{marginRight: spacing(1)}}/>
-                                            <Tooltip title={"For trade"}>
-                                                <div><TradeDeckIcon height={saleIconHeight}/></div>
-                                            </Tooltip>
-                                        </>
-                                    ) : null}
-                                </div>
-                                <Typography variant={"subtitle2"} style={{color: "#FFFFFF", marginTop: spacing(1), textAlign: "right"}}>
-                                    {deckConditionReadableValue(condition)}
-                                </Typography>
-                            </div>
                         </div>
-                    )
-                }
-            >
+                        <Divider style={{marginTop: spacing(2)}}/>
+                    </>
+                )}
                 <div>
                     {acceptingOffers && (
-                        <div style={{margin: spacing(2)}}>
-                            <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
-                                <OfferButton
-                                    deckName={deckName}
-                                    currencySymbol={currencySymbol}
-                                    deckListingId={auctionId!}
-                                    sellerUsername={username}
-                                    style={{marginRight: spacing(2)}}
-                                />
-                                {buyItNow == null ? null : (
-                                    <BuyItNowButton currencySymbol={currencySymbol} auctionId={auctionId!} sellerUsername={username} buyItNow={buyItNow}/>
-                                )}
+                        <>
+                            <div style={{margin: spacing(2)}}>
+                                <div style={{display: "flex", alignItems: "center", marginTop: spacing(2)}}>
+                                    <OfferButton
+                                        deckName={deckName}
+                                        currencySymbol={currencySymbol}
+                                        deckListingId={auctionId!}
+                                        sellerUsername={username}
+                                        style={{marginRight: spacing(2)}}
+                                    />
+                                    {buyItNow == null ? null : (
+                                        <BuyItNowButton currencySymbol={currencySymbol} auctionId={auctionId!} sellerUsername={username} buyItNow={buyItNow}/>
+                                    )}
+                                </div>
                             </div>
                             <Divider style={{marginTop: spacing(2)}}/>
-                        </div>
+                        </>
                     )}
                     {forAuction && (
                         <div style={{margin: spacing(2)}}>
@@ -193,99 +176,90 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                 <div style={{flexGrow: 1}}/>
                                 <BidHistoryButton auctionId={auctionId!}/>
                             </div>
-                            <Divider style={{marginTop: spacing(2)}}/>
                         </div>
                     )}
                     {sellerDetails == null ? null : (
-                        <div style={{display: "flex", alignItems: "center", margin: spacing(2), marginBottom: 0}}>
+                        <div style={{display: "flex", alignItems: "center", margin: marginSpacing3(0, 2, 2)}}>
                             <SellerImg sellerUsername={username}/>
                             <KeyLink to={Routes.userDecksForSale(username)} noStyle={true}>
                                 <Typography variant={"h5"}>{sellerDetails.storeName}</Typography>
                             </KeyLink>
                         </div>
                     )}
-                    {!listingInfo ? null : (
-                        <div style={{margin: spacing(2), marginBottom: 0}}>
-                            <Typography variant={"subtitle2"}>Listing Details</Typography>
-                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{listingInfo}</Typography>
-                            <Divider style={{marginTop: spacing(2)}}/>
-                        </div>
-                    )}
-                    {!externalLink ? null : (
-                        <div style={{margin: spacing(2), marginBottom: 0}}>
-                            <Typography variant={"subtitle2"}>External listing — Be careful using this link!</Typography>
-                            <a href={externalLink} target={"_blank"} rel={"noopener noreferrer"}><Typography>{externalLink}</Typography></a>
-                            <Divider style={{marginTop: spacing(2)}}/>
-                        </div>
-                    )}
-                    {!publicContactInfo ? null : (
-                        <div style={{margin: spacing(2), marginBottom: 0}}>
-                            <Typography variant={"subtitle2"}>Seller Details</Typography>
-                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{publicContactInfo}</Typography>
-                            <Divider style={{marginTop: spacing(2)}}/>
-                        </div>
-                    )}
-                    {!shippingCost ? null : (
-                        <div style={{margin: spacing(2), marginBottom: 0}}>
-                            <Typography variant={"subtitle2"}>Shipping Cost</Typography>
-                            <Typography variant={"body1"} style={{whiteSpace: "pre-wrap"}}>{shippingCost}</Typography>
-                            <Divider style={{marginTop: spacing(2)}}/>
-                        </div>
-                    )}
+                    <InfoBox title={"Listing Details"} info={listingInfo}/>
+                    <InfoBox title={"External listing — Be careful using this link!"} info={externalLink}/>
+                    <InfoBox title={"Seller Details"} info={publicContactInfo}/>
+                    <InfoBox title={"Shipping Cost"} info={shippingCost}/>
                     {discord || (allowEmail && !forAuction) ? (
-                        <div style={{margin: spacing(2), marginTop: 0}}>
-                            <div style={{display: "flex", flexWrap: "wrap"}}>
-                                {discord ? (
-                                    <>
-                                        <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
-                                        <div style={{flexGrow: 1}}/>
-                                    </>
-                                ) : null}
-                                {allowEmail ? (
-                                    <div
-                                        style={{marginTop: spacing(2)}}
-                                    >
-                                        <SendEmailDialog
-                                            deckName={deckName}
-                                            recipientUsername={username}
-                                            keyforgeId={this.props.keyforgeId}
-                                        />
-                                    </div>
-                                ) : null}
+                        <>
+                            <div style={{margin: marginSpacing3(0, 2, 2)}}>
+                                <div style={{display: "flex", flexWrap: "wrap"}}>
+                                    {discord ? (
+                                        <>
+                                            <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
+                                            <div style={{flexGrow: 1}}/>
+                                        </>
+                                    ) : null}
+                                    {allowEmail ? (
+                                        <div
+                                            style={{marginTop: spacing(2)}}
+                                        >
+                                            <SendEmailDialog
+                                                deckName={deckName}
+                                                recipientUsername={username}
+                                                keyforgeId={this.props.keyforgeId}
+                                            />
+                                        </div>
+                                    ) : null}
+                                </div>
                             </div>
                             <Divider style={{marginTop: spacing(2)}}/>
-                        </div>
+                        </>
                     ) : null}
-                    {forSaleInCountry ? (
-                        <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                            Located in {countryToLabel(forSaleInCountry)}.
+                    <div>
+                        <Typography style={{margin: marginSpacing3(2, 2, 0)}} variant={"subtitle2"}>
+                            {countryToLabel(forSaleInCountry)} – {startCase(language.toString().toLowerCase())} – {deckConditionReadableValue(condition)}
                         </Typography>
-                    ) : null}
-                    {language ? (
-                        <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                            Deck language: {startCase(language.toString().toLowerCase())}
-                        </Typography>
-                    ) : null}
-                    <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                        Listed on {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
+                    </div>
+                    <Typography style={{margin: marginSpacing3(1, 2, 0)}} variant={"subtitle2"}>
+                        Listed {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
                     {expiresAt != null && !forAuction ? (
-                        <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                            Expires on {Utils.formatDate(expiresAt)}
+                        <Typography style={{margin: marginSpacing3(1, 2, 2)}} variant={"subtitle2"}>
+                            Expires {Utils.formatDate(expiresAt)}
                         </Typography>
                     ) : null}
                     <Divider style={{marginTop: spacing(2)}}/>
                     <BuyingDisclaimer style={{margin: spacing(2)}}/>
                 </div>
-            </KeyCard>
+            </div>
         )
     }
 }
 
+const InfoBox = (props: { title: string, info?: string, link?: string }) => {
+    if (!props.info && !props.link) {
+        return null
+    }
+    return (
+        <>
+            <div style={{margin: spacing(2), marginBottom: 0}}>
+                <Typography variant={"subtitle2"} style={{marginBottom: spacing(0.5)}}>{props.title}</Typography>
+                {props.info ? (
+                    <Typography variant={"body2"} style={{whiteSpace: "pre-wrap"}}>{props.info}</Typography>
+                ) : (
+                    <a href={props.link} target={"_blank"} rel={"noopener noreferrer"}><Typography>{props.link}</Typography></a>
+                )}
+            </div>
+            <Divider style={{marginTop: spacing(2)}}/>
+        </>
+    )
+}
+
 export const BuyingDisclaimer = (props: { style?: React.CSSProperties }) => (
-    <Typography color={"textSecondary"} style={{fontStyle: "italic", ...props.style}}>
-        Decks of KeyForge does not verify the authenticity or trustworthiness of any deck sales. Purchase and trade decks at your own risk.
-    </Typography>
+    <HelperText style={props.style}>
+        DoK does not verify the authenticity or trustworthiness of any deck sales. Purchase and trade decks at your own risk.
+    </HelperText>
 )
 
 const TwoPricesDisplay = (props: {
@@ -298,22 +272,22 @@ const TwoPricesDisplay = (props: {
     <>
         <Typography
             variant={"h5"}
-            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+            style={{marginLeft: spacing(1), marginRight: spacing(1)}}
         >
             {props.priceOneName}
         </Typography>
         <Typography
             variant={"h5"}
-            style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}
+            style={{marginLeft: spacing(1), marginRight: spacing(1)}}
         >
             {props.priceOneValue == null ? "" : `${props.currencySymbol}${props.priceOneValue}`}
         </Typography>
         {props.priceTwoValue != null && (
             <>
-                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                <Typography variant={"h5"} style={{marginLeft: spacing(1), marginRight: spacing(1)}}>
                     {props.priceTwoName}
                 </Typography>
-                <Typography variant={"h5"} style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}>
+                <Typography variant={"h5"} style={{marginLeft: spacing(1), marginRight: spacing(1)}}>
                     {props.priceTwoValue == null ? "" : `${props.currencySymbol}${props.priceTwoValue}`}
                 </Typography>
             </>

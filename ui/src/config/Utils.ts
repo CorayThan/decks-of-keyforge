@@ -31,10 +31,14 @@ export class Utils {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]
     }
 
-    static arrPlus = <T, O>(array: T[], add: O): (T | O)[] => {
+    static arrPlus = <T, O>(array: T[], add: O | O[]): (T | O)[] => {
         const newArr: (T | O)[] = array.slice()
-        newArr.push(add)
-        return newArr
+        if (Array.isArray(add)) {
+            return newArr.concat(add)
+        } else {
+            newArr.push(add)
+            return newArr
+        }
     }
 
     static validateEmail = (email: string) => {

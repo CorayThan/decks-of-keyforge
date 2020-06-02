@@ -152,7 +152,7 @@ data class KeyforgeCard(
         val is_enhanced: Boolean,
         val traits: String? = null
 ) {
-    fun toCard(extraInfoMap: Map<CardNumberSetPair, ExtraCardInfo>): Card {
+    fun toCard(extraInfoMap: Map<String, ExtraCardInfo>): Card {
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
         val expansionEnum = Expansion.forExpansionNumber(expansion)
@@ -160,7 +160,7 @@ data class KeyforgeCard(
                 id, card_title, House.fromMasterVaultValue(house)!!, card_type.toCardType(), front_image, card_text, amber, powerNumber, power
                 ?: "", armorNumber, armor ?: "", rarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick, is_anomaly,
-                extraCardInfo = extraInfoMap[CardNumberSetPair(expansionEnum, card_number)],
+                extraCardInfo = extraInfoMap[card_title.cleanCardName()],
                 traits = traits?.toUpperCase()?.split(" • ")?.toSet() ?: setOf(),
                 big = card_type == KeyForgeCardType.Creature1 || card_type == KeyForgeCardType.Creature2,
                 enhanced = is_enhanced

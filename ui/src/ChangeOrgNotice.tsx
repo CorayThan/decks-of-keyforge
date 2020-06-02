@@ -1,5 +1,4 @@
 import { Card, Link, Typography } from "@material-ui/core"
-import { blue } from "@material-ui/core/colors"
 import { observer } from "mobx-react"
 import React from "react"
 import { spacing, themeStore } from "./config/MuiConfig"
@@ -10,7 +9,7 @@ export const ChangeOrgNotice = observer(() => {
             style={{
                 margin: spacing(4),
                 padding: spacing(2),
-                backgroundColor: themeStore.darkMode ? blue["800"] : blue["50"],
+                backgroundColor: themeStore.lightBlueBackground,
                 maxWidth: 800
             }}
         >

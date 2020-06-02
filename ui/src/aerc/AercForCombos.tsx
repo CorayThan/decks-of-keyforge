@@ -1,17 +1,11 @@
 import { Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
 import { sortBy } from "lodash"
 import * as React from "react"
-import { useGlobalStyles } from "../config/MuiConfig"
+import { spacing } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
 import { DeckUtils } from "../decks/models/DeckSearchResult"
 import { SasTip } from "../mui-restyled/SasTip"
 import { SynergyCombo } from "../synergy/DeckSynergyInfo"
-
-const useStyles = makeStyles({
-    title: {display: "flex", alignItems: "flex-end"},
-    contents: {display: "grid", gridTemplateColumns: "3fr 1fr"}
-})
 
 export interface AercForCombosProps {
     title?: string
@@ -20,8 +14,6 @@ export interface AercForCombosProps {
 }
 
 export const AercForCombos = (props: React.PropsWithChildren<AercForCombosProps>) => {
-    const classes = useStyles()
-    const globalClasses = useGlobalStyles()
     const {title, combos, children, accessor} = props
     if (combos == null) {
         return (
@@ -36,17 +28,19 @@ export const AercForCombos = (props: React.PropsWithChildren<AercForCombosProps>
     return (
         <SasTip
             title={
-                <div className={classes.title}>
+                <div
+                    style={{display: "flex", alignItems: "flex-end"}}
+                >
                     {title ? (
                         <>
-                            <Typography variant={"subtitle1"} className={globalClasses.marginRightSmall}>{title}</Typography>
+                            <Typography variant={"subtitle1"} style={{marginRight: spacing(1)}}>{title}</Typography>
                         </>
                     ) : (
                         <>
-                            <Typography variant={"h4"} className={globalClasses.marginRightSmall} color={"primary"}>
+                            <Typography variant={"h4"} style={{marginRight: spacing(1)}} color={"primary"}>
                                 {Math.round(totalHouseAerc)}
                             </Typography>
-                            <Typography variant={"h5"} className={globalClasses.marginBottomSmall} color={"primary"}>
+                            <Typography variant={"h5"} style={{marginRight: spacing(1)}} color={"primary"}>
                                 SAS
                             </Typography>
                         </>
@@ -54,10 +48,12 @@ export const AercForCombos = (props: React.PropsWithChildren<AercForCombosProps>
                 </div>
             }
             contents={(combosSorted.length > 0 &&
-                <div className={classes.contents}>
+                <div
+                    style={{display: "grid", gridTemplateColumns: "3fr 1fr"}}
+                >
                     {combosSorted.map(combo => (
                         <React.Fragment key={combo.cardName + combo.house}>
-                            <Typography variant={"body2"} className={globalClasses.marginRight}>
+                            <Typography variant={"body2"} style={{marginRight: spacing(2)}}>
                                 {combo.cardName}
                             </Typography>
                             <Typography variant={"body2"}>

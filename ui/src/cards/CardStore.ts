@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from "axios"
 import { clone, sortBy } from "lodash"
 import { computed, observable } from "mobx"
+import { HasAerc } from "../aerc/HasAerc"
 import { HttpConfig } from "../config/HttpConfig"
-import { log } from "../config/Utils"
+import { log, prettyJson, roundToHundreds } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
 import { CardIdentifier, ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
@@ -10,11 +11,12 @@ import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
-import { cardNameToCardNameKey, CardUtils, CardWinRates, hasAercFromCard, KCard, winPercentForCard } from "./KCard"
+import { cardNameToCardNameKey, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
 
     static readonly CONTEXT = HttpConfig.API + "/cards"
+    private nonAlphanumericSpaceRegex = /[^a-zA-Z0-9\s\-,]/g
 
     @observable
     cards?: KCard[]
@@ -27,7 +29,8 @@ export class CardStore {
 
     allCards: KCard[] = []
 
-    cardNameLowercaseToCard?: Map<string, KCard>
+    private cardNameLowercaseToCard?: Map<string, KCard>
+    private cardNameLowercaseToHasAerc?: Map<string, HasAerc>
 
     @observable
     cardNames: string[] = []
@@ -42,10 +45,10 @@ export class CardStore {
     cardNameSearchResults: KCard[] = []
 
     @observable
-    previousExtraInfo?: { [cardName: string]: KCard }
+    private previousExtraInfo?: { [cardName: string]: KCard }
 
     @observable
-    nextExtraInfo?: { [cardName: string]: KCard }
+    private nextExtraInfo?: { [cardName: string]: KCard }
 
     @observable
     findingPreviousInfo = false
@@ -66,7 +69,7 @@ export class CardStore {
         const rates = new Map<string, CardWinRates[]>()
 
         this.allCards.forEach(card => {
-            rates.set(card.cardTitle, CardUtils.cardWinRates(card))
+            rates.set(this.cleanCardName(card.cardTitle), CardUtils.cardWinRates(card))
         })
 
         this.cardWinRates = rates
@@ -126,7 +129,7 @@ export class CardStore {
         })
 
         if (filters.sort === CardSort.AERC) {
-            filtered = sortBy(filtered, [(card) => hasAercFromCard(card).averageAercScore!, "cardNumber"])
+            filtered = sortBy(filtered, [(card) => this.hasAercFromCardName(card.cardTitle)!.averageAercScore!, "cardNumber"])
         } else if (filters.sort === "EXPECTED_AMBER") {
             filtered = sortBy(filtered, ["extraCardInfo.expectedAmber", "cardNumber"])
         } else if (filters.sort === "AMBER_CONTROL") {
@@ -184,8 +187,10 @@ export class CardStore {
                     card.winRate = winPercentForCard(card)
                 })
                 this.cardNameLowercaseToCard = new Map()
+                this.cardNameLowercaseToHasAerc = new Map()
                 this.cardNames = basisForCards.map(card => {
-                    this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
+                    this.cardNameLowercaseToCard!.set(this.cleanCardName(card.cardTitle.toLowerCase()), card)
+                    this.cardNameLowercaseToHasAerc!.set(this.cleanCardName(card.cardTitle.toLowerCase()), this.hasAercFromCard(card))
                     return card.cardTitle
                 })
                 this.allCards = basisForCards
@@ -219,7 +224,7 @@ export class CardStore {
             names: string[]
         }[] = expansionInfos.map(info => ({expansion: info.backendEnum, names: []}))
         this.allCards.map(card => {
-            this.cardNameLowercaseToCard!.set(card.cardTitle.toLowerCase(), card)
+            this.cardNameLowercaseToCard!.set(this.cleanCardName(card.cardTitle.toLowerCase()), card)
             cardNamesForExpansion.forEach(cardNamesForExpansion => {
                 if (card.extraCardInfo.cardNumbers.map(cardNum => cardNum.expansion).includes(cardNamesForExpansion.expansion)) {
                     cardNamesForExpansion.names.push(card.cardTitle)
@@ -238,7 +243,7 @@ export class CardStore {
         } else {
             this.cardNameSearchResults = this.allCards.slice().filter(card => {
                 for (let x = 0; x < tokenized.length; x++) {
-                    if (!card.cardTitle.toLowerCase().includes(tokenized[x])) {
+                    if (!this.cleanCardName(card.cardTitle.toLowerCase()).includes(tokenized[x])) {
                         return false
                     }
                 }
@@ -260,6 +265,7 @@ export class CardStore {
         this.findingPreviousInfo = false
         this.previousExtraInfo = prevInfo.data
         log.debug("Found previous info")
+        log.debug("prev info for waking nightmare" + prettyJson(this.findPrevExtraInfoForCard("Waking Nightmare")))
     }
 
     findNextExtraInfo = async () => {
@@ -269,7 +275,14 @@ export class CardStore {
 
     fullCardFromCardName = (cardTitle: string) => {
         if (this.cardNameLowercaseToCard) {
-            return this.cardNameLowercaseToCard.get(cardTitle.toLowerCase())
+            return this.cardNameLowercaseToCard.get(this.cleanCardName(cardTitle.toLowerCase()))
+        }
+        return undefined
+    }
+
+    hasAercFromCardName = (cardTitle: string) => {
+        if (this.cardNameLowercaseToHasAerc) {
+            return this.cardNameLowercaseToHasAerc.get(this.cleanCardName(cardTitle.toLowerCase()))
         }
         return undefined
     }
@@ -281,9 +294,23 @@ export class CardStore {
     findExtraInfoToUse = (card: KCard) => {
         let extraInfo = card.extraCardInfo
         if (this.showFutureCardInfo && this.nextExtraInfo && this.nextExtraInfo[card.cardTitle] != null) {
-            extraInfo = this.nextExtraInfo[card.cardTitle].extraCardInfo
+            extraInfo = this.nextExtraInfo[this.cleanCardName(card.cardTitle)].extraCardInfo
         }
         return extraInfo
+    }
+
+    findPrevExtraInfoForCard = (cardName: string) => {
+       if (this.previousExtraInfo == null) {
+           return undefined
+       }
+        return this.previousExtraInfo[this.cleanCardName(cardName)]
+    }
+
+    findNextExtraInfoForCard = (cardName: string) => {
+        if (this.nextExtraInfo == null) {
+            return undefined
+        }
+        return this.nextExtraInfo[this.cleanCardName(cardName)]
     }
 
     @computed
@@ -291,7 +318,7 @@ export class CardStore {
         if (this.allCards != null) {
             const datesSet = new Set(this.allCards.map(card => card.extraCardInfo.publishedDate))
             log.debug("Update dates: " + Array.from(datesSet.values()).sort().reverse())
-            return Array.from(datesSet.values()).sort().reverse()
+            return Array.from(datesSet.values()).filter(date => date != null).sort().reverse()
         }
         return []
     }
@@ -305,11 +332,57 @@ export class CardStore {
         return undefined
     }
 
-    private cardSearchTokenized = (searchValue: string) => searchValue
+    private cardSearchTokenized = (searchValue: string) => this.cleanCardName(searchValue)
         .trim()
         .toLowerCase()
         .split(/\W+/)
         .filter(token => token.length > 2)
+
+    /**
+     * Don't use on the fly
+     * @param card
+     */
+    private hasAercFromCard = (card: KCard): HasAerc => {
+        const {effectivePower, aercScore, aercScoreMax} = card
+        const extraCardInfo = cardStore.findExtraInfoToUse(card)
+        const {
+            amberControl, expectedAmber, creatureControl, artifactControl, efficiency, creatureProtection, disruption, other,
+            amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, creatureProtectionMax, disruptionMax, otherMax
+        } = extraCardInfo
+
+        let averageAercScore = card.aercScore
+        if (card.aercScoreMax != null) {
+            averageAercScore = roundToHundreds((card.aercScore + card.aercScoreMax) / 2)
+        }
+
+        return {
+            amberControl,
+            expectedAmber,
+            creatureControl,
+            artifactControl,
+            efficiency,
+            effectivePower,
+            creatureProtection,
+            disruption,
+            other,
+            amberControlMax,
+            expectedAmberMax,
+            creatureControlMax,
+            artifactControlMax,
+            efficiencyMax,
+            effectivePowerMax,
+            creatureProtectionMax,
+            disruptionMax,
+            otherMax,
+            aercScoreMax: aercScoreMax == null ? undefined : roundToHundreds(aercScoreMax),
+            aercScore: roundToHundreds(aercScore),
+            averageAercScore
+        }
+    }
+
+    private cleanCardName = (cardName: string) => {
+        return cardName.replace(this.nonAlphanumericSpaceRegex, "")
+    }
 }
 
 export const cardStore = new CardStore()

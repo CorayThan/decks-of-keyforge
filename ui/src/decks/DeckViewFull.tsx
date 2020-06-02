@@ -1,3 +1,4 @@
+import { Card } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
@@ -105,7 +106,11 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
         const {saleInfo} = deckStore
         let saleInfoComponent = null
         if (saleInfo) {
-            saleInfoComponent = <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
+            saleInfoComponent = (
+                <Card>
+                    <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId}/>
+                </Card>
+            )
         } else if (!fake) {
             saleInfoComponent = <Loader/>
         }

@@ -6,7 +6,6 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { deckStore } from "../decks/DeckStore"
-import { standardDeckViewWidth } from "../decks/DeckViewSmall"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
 
@@ -37,7 +36,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode, widt
         const panelWidth = width ? width : standardPanelWidth
         let small = screenStore.screenSizeSm()
         if (deckVersion) {
-            small = (screenStore.screenWidth - standardDeckViewWidth - panelWidth) < 64
+            small = (screenStore.screenWidth - screenStore.deckWidth(!!deckStore.currentFilters?.isForSaleOrTrade) - panelWidth) < 64
         }
         if (small) {
             if (hamburgerMenu) {

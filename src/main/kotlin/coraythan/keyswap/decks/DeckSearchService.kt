@@ -143,7 +143,6 @@ class DeckSearchService(
                     cardService.deckToHouseAndCards(it),
                     cards,
                     stats = statsService.findCurrentStats(),
-//                    crucibleWins = deckWinsService.crucibleWins,
                     synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
 

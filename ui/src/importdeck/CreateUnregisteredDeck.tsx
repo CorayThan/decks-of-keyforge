@@ -72,7 +72,8 @@ class SaveUnregisteredDeckStore {
 
         autorun(() => {
             if (cardHolder.option !== "") {
-                const foundCard = cardStore.cardNameLowercaseToCard!.get(cardHolder.option.toLowerCase())!
+
+                const foundCard = cardStore.fullCardFromCardName(cardHolder.option)!
                 const copiedCard = cloneDeep(foundCard)
                 if (copiedCard.house !== house) {
                     copiedCard.maverick = true

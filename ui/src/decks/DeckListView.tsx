@@ -1,13 +1,13 @@
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
+import { cardStore } from "../cards/CardStore"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { spacing } from "../config/MuiConfig"
+import { Loader } from "../mui-restyled/Loader"
 import { CardTypeRadar } from "../stats/CardTypeRadar"
 import { screenStore } from "../ui/ScreenStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { DeckSearchResult } from "./models/DeckSearchResult"
-import { SaleInfoView } from "./sales/SaleInfoView"
 
 export interface DeckListViewProps {
     decks: DeckSearchResult[]
@@ -17,48 +17,21 @@ export interface DeckListViewProps {
 @observer
 export class DeckListView extends React.Component<DeckListViewProps> {
     render() {
+
+        if (!cardStore.cardsLoaded) {
+            return <Loader/>
+        }
+
+        const {decks} = this.props
+        const displayGraphs = keyLocalStorage.deckListViewType === "graphs"
+
         return (
-            <>
-                {this.props.decks.map((deck) => {
-
-                    let saleInfo = null
-                    if (deck.deckSaleInfo) {
-                        saleInfo = (
-                            <SaleInfoView
-                                saleInfo={deck.deckSaleInfo}
-                                deckName={deck.name}
-                                keyforgeId={deck.keyforgeId}
-                                deckId={deck.id}
-                            />
-                        )
-                    }
-
-                    let deckContainerStyle
-                    if (!saleInfo && screenStore.screenWidth > 1472) {
-                        deckContainerStyle = {display: "flex"}
-                    } else if (screenStore.screenWidth > 1888) {
-                        deckContainerStyle = {display: "flex"}
-                    }
-
+            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                {decks.map((deck) => {
                     return (
-                        <div key={deck.id} style={deckContainerStyle}>
-                            <div>
-                                <DeckViewSmall deck={deck}/>
-                            </div>
-                            {saleInfo && (
-                                <div>
-                                    <div style={{display: screenStore.smallDeckView() ? undefined : "flex", flexWrap: "wrap"}}>
-                                        {saleInfo}
-                                        {keyLocalStorage.deckListViewType === "graphs" ? (
-                                            <div>
-                                                <AercRadar deck={deck}/>
-                                                <CardTypeRadar deck={deck} style={{marginTop: spacing(4)}}/>
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                </div>
-                            )}
-                            {!saleInfo && keyLocalStorage.deckListViewType === "graphs" && (
+                        <div key={deck.id} style={{display: "flex"}}>
+                                <DeckViewSmall deck={deck} saleInfo={deck.deckSaleInfo}/>
+                            {displayGraphs && (
                                 <div style={{display: screenStore.smallDeckView() ? undefined : "flex", flexWrap: "wrap"}}>
                                     <AercRadar deck={deck}/>
                                     <CardTypeRadar deck={deck}/>
@@ -67,7 +40,7 @@ export class DeckListView extends React.Component<DeckListViewProps> {
                         </div>
                     )
                 })}
-            </>
+            </div>
         )
     }
 }

@@ -1,6 +1,5 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
-import { roundToHundreds } from "../config/Utils"
 import { SimpleCard } from "../decks/models/HouseAndCards"
 import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
@@ -9,7 +8,6 @@ import { House } from "../houses/House"
 import { Wins } from "../stats/GlobalStats"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
-import { cardStore } from "./CardStore"
 import { CardType } from "./CardType"
 import { Rarity } from "./rarity/Rarity"
 
@@ -56,44 +54,6 @@ export const winPercentForCard = (card: KCard): number | undefined => {
         return undefined
     }
     return (card.wins / (card.wins + card.losses))
-}
-
-export const hasAercFromCard = (card: KCard): HasAerc => {
-    const {effectivePower, aercScore, aercScoreMax} = card
-    const extraCardInfo = cardStore.findExtraInfoToUse(card)
-    const {
-        amberControl, expectedAmber, creatureControl, artifactControl, efficiency, creatureProtection, disruption, other,
-        amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, creatureProtectionMax, disruptionMax, otherMax
-    } = extraCardInfo
-
-    let averageAercScore = card.aercScore
-    if (card.aercScoreMax != null) {
-        averageAercScore = roundToHundreds((card.aercScore + card.aercScoreMax) / 2)
-    }
-
-    return {
-        amberControl,
-        expectedAmber,
-        creatureControl,
-        artifactControl,
-        efficiency,
-        effectivePower,
-        creatureProtection,
-        disruption,
-        other,
-        amberControlMax,
-        expectedAmberMax,
-        creatureControlMax,
-        artifactControlMax,
-        efficiencyMax,
-        effectivePowerMax,
-        creatureProtectionMax,
-        disruptionMax,
-        otherMax,
-        aercScoreMax: aercScoreMax == null ? undefined : roundToHundreds(aercScoreMax),
-        aercScore: roundToHundreds(aercScore),
-        averageAercScore
-    }
 }
 
 const cardNameReplacementRegex = /[^\d\w\s]/g

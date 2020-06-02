@@ -56,7 +56,7 @@ object DeckSynergyService {
         val cards = if (inputCards.any { it.big == true }) {
             inputCards
                     .groupBy { it.cardTitle }
-                    .flatMap { if (it.value.first().big == true) listOf(it.value.first()) else it.value }
+                    .flatMap { if (it.value.first().big == true) it.value.drop( it.value.size / 2) else it.value }
         } else {
             inputCards
         }

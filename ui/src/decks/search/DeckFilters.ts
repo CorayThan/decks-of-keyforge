@@ -205,6 +205,10 @@ export class DeckFilters {
         cloned.cards = cloned.cards.filter(card => card.cardNames.length > 0 && card.cardNames[0].length > 0)
         return cloned
     }
+
+    get isForSaleOrTrade() {
+        return this.forTrade || this.forAuction || this.forSale
+    }
 }
 
 export const prepareDeckFiltersForQueryString = (filters: DeckFilters): DeckFilters => {

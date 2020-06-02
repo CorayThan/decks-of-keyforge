@@ -4,20 +4,22 @@ import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
 import { House, houseValues } from "./House"
 
-export const HouseBanner = (props: { houses: House[], vertical?: boolean, size?: number, style?: React.CSSProperties, expansion?: BackendExpansion }) => {
-    let size = 72
+export const HouseBanner = (props: { houses: House[], size?: number, style?: React.CSSProperties, expansion?: BackendExpansion }) => {
+    const {houses, style, expansion} = props
+    let size = 64
     if (props.size) {
         size = props.size
     }
+
     return (
-        <div style={{display: "flex", flexDirection: props.vertical ? "column" : undefined, justifyContent: "space-evenly", ...props.style}}>
-            {props.houses.map((house) => (
+        <div style={{display: "flex", justifyContent: "space-evenly", ...style}}>
+            {houses.map((house) => (
                 <HouseImage house={house} key={house} size={size}/>
             ))}
-            {props.expansion && (
-                <Tooltip title={expansionInfoMap.get(props.expansion)!.name}>
-                    <div style={{paddingTop: 16}}>
-                        <ExpansionIcon expansion={props.expansion} size={40} white={true}/>
+            {expansion && (
+                <Tooltip title={expansionInfoMap.get(expansion)!.name}>
+                    <div style={{display: "flex", alignItems: "center"}}>
+                        <ExpansionIcon expansion={expansion} size={size - 16} white={true}/>
                     </div>
                 </Tooltip>
             )}

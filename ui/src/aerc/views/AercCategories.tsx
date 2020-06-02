@@ -1,5 +1,4 @@
 import { Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
 import * as React from "react"
 import { CardType } from "../../cards/CardType"
 import { KCard } from "../../cards/KCard"
@@ -16,13 +15,6 @@ import { KeyCheatIcon } from "../../generic/icons/KeyCheatIcon"
 import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { HasAerc } from "../HasAerc"
-
-const useStyles = makeStyles({
-    root: {
-        display: "flex",
-        justifyContent: "center"
-    }
-})
 
 interface AercCatProps {
     deck: DeckSearchResult
@@ -221,7 +213,7 @@ export const AercCategorySpeed = (props: AercScoresCategoryProps) => {
                         info: hasAerc.efficiency,
                         combosTips: {
                             title: "Efficiency (F)",
-                            combos: combos.filter(combo => combo.efficiency != null && combo.efficiency != 0) ,
+                            combos: combos.filter(combo => combo.efficiency != null && combo.efficiency != 0),
                             accessor: (combo: SynergyCombo) => combo.efficiency
                         }
                     },
@@ -303,10 +295,14 @@ export const AercCategoryBoard = (props: AercScoresCategoryProps) => {
 }
 
 const AercCategory = (props: { name: string, small?: boolean, infos: InfoIconValue[] }) => {
-    const classes = useStyles()
     return (
         <div>
-            <div className={classes.root}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center"
+                }}
+            >
                 <Typography variant={"overline"}>
                     {props.name}
                 </Typography>

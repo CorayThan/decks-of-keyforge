@@ -7,16 +7,16 @@ export interface DeckSaleInfo {
     forAuction: boolean
     acceptingOffers: boolean
 
-    forSaleInCountry?: string
+    forSaleInCountry: string
     currencySymbol: string
-    language?: DeckLanguage
+    language: DeckLanguage
 
     highestBid?: number
     highestOffer?: number
     buyItNow?: number
     startingBid?: number
     auctionEndDateTime?: string
-    auctionId?: string
+    auctionId: string
     nextBid?: number
     youAreHighestBidder?: boolean
     yourMaxBid?: number

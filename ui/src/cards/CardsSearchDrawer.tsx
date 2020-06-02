@@ -173,7 +173,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                         </ListItem>
                         <ListItem>
                             <Autocomplete
-                                options={Utils.arrPlus(validTraits, "") as (SynergyTrait | "")[]}
+                                options={Utils.arrPlus(validTraits, ["", SynergyTrait.alpha, SynergyTrait.omega]) as (SynergyTrait | "")[]}
                                 value={filters.trait ?? ""}
                                 renderInput={(params) => <TextField {...params} label={"Trait"}/>}
                                 renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}

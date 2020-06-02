@@ -142,9 +142,9 @@ data class Deck(
                 cardDrawCount = cards?.filter {
                     it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
                             || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
-                }?.size,
-                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size,
-                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size,
+                }?.size ?: 0,
+                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size ?: 0,
+                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size ?: 0,
                 rawAmber = rawAmber,
                 totalArmor = totalArmor,
 

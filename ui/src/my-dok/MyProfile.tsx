@@ -437,7 +437,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 label={"Shipping cost"}
                                                 value={this.shippingCost}
                                                 multiline={true}
-                                                rows={2}
+                                                rows={3}
                                                 onChange={(event: EventValue) => this.shippingCost = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
