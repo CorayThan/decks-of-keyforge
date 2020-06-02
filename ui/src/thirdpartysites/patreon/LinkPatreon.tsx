@@ -29,8 +29,7 @@ export class LinkPatreon extends React.Component<ButtonProps> {
         let patreonLink = userLink()
         if (userStore.email === "coraythan@gmail.com") {
             patreonLink = creatorLink()
-        }
-        if (userStore.patron) {
+        } else if (userStore.patron) {
             return (
                 <KeyButton
                     color={"primary"}

@@ -142,7 +142,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.preferredCountriesLabelWidth = (ReactDOM.findDOMNode(this.buyingCountriesInputLabelRef) as any).offsetWidth
         this.update = undefined
         const {patreonCode, history} = this.props
-        if (patreonCode != null && this.props.profile.patreonTier == null) {
+        if (patreonCode != null) {
             log.debug(`Linking patreon account with access code ${patreonCode}`)
             patreonStore.linkAccount(patreonCode)
             history.replace(Routes.myProfile)

@@ -43,7 +43,7 @@ class PatreonService(
     )
     private var topPatrons = listOf<String>()
 
-    @Scheduled(fixedDelayString = "PT6H")
+    @Scheduled(fixedDelayString = "PT3H")
     fun refreshCreatorAccount() {
         log.info("$scheduledStart refresh patreon creator account.")
         try {
@@ -82,6 +82,7 @@ class PatreonService(
         val patAccount = PatreonAccount.fromToken(patreonClient.getTokens(code))
 
         if (user.email == "coraythan@gmail.com") {
+            log.info("Link creator account")
             saveCreatorAccount(patAccount)
             refreshCampaignInfo(patAccount.accessToken)
         } else {
@@ -137,12 +138,17 @@ class PatreonService(
     }
 
     fun updateCreatorAccount(refreshToken: String): PatreonAccount {
-        log.info("client id: $patreonClientId refresh: $refreshToken")
+        log.info("patreon client id: $patreonClientId refresh: $refreshToken")
         val newAccount = PatreonAccount.fromToken(patreonClient.refreshTokens(refreshToken))
-        return saveCreatorAccount(newAccount)
+        val savedCreatorAccount = saveCreatorAccount(newAccount)
+        refreshCampaignInfo(refreshToken)
+        log.info("updated patreon account with client id: $patreonClientId refresh: $refreshToken")
+        return savedCreatorAccount
     }
 
     fun refreshCampaignInfo(token: String, nextPage: String? = null) {
+
+        log.info("Start refreshing patreon")
 
         val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
@@ -182,5 +188,6 @@ class PatreonService(
             log.info("Next page of patreon campaign members.")
             this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
         }
+        log.info("Done refreshing patreon")
     }
 }

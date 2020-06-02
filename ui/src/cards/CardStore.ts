@@ -185,6 +185,7 @@ export class CardStore {
                 const basisForCards: KCard[] = response.data.slice()
                 basisForCards.forEach(card => {
                     card.winRate = winPercentForCard(card)
+                    card.enhanced = false
                 })
                 this.cardNameLowercaseToCard = new Map()
                 this.cardNameLowercaseToHasAerc = new Map()
