@@ -17,7 +17,11 @@ export const CardWinsDisplay = observer((props: { card: KCard }) => {
         return null
     }
 
-    if (((winRates[0].wins ?? 0) + (winRates[0].losses ?? 0)) < 1000) {
+    const results = winRates.map(winRate => (
+        <IndividualCardWinsDisplay winRates={winRate} key={winRate.expansion ?? "none"}/>
+    ))
+
+    if (results.length === 0) {
         return null
     }
 
@@ -31,9 +35,7 @@ export const CardWinsDisplay = observer((props: { card: KCard }) => {
                     rowGap: "4px"
                 }}
             >
-                {winRates.map(winRate => (
-                    <IndividualCardWinsDisplay winRates={winRate} key={winRate.expansion ?? "none"}/>
-                ))}
+                {results}
             </div>
         </>
     )
@@ -43,6 +45,10 @@ const IndividualCardWinsDisplay = (props: { winRates: CardWinRates }) => {
 
     const {winRates} = props
     const {expansion, winRatePercent, relativeToAveragePercent, wins, losses} = winRates
+
+    if (((wins ?? 0) + (losses ?? 0)) < 1000) {
+        return null
+    }
 
     return (
         <>

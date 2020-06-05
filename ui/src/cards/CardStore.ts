@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios"
+import { get, set } from "idb-keyval"
 import { clone, sortBy } from "lodash"
 import { computed, observable } from "mobx"
 import { HasAerc } from "../aerc/HasAerc"
@@ -17,6 +18,8 @@ export class CardStore {
 
     static readonly CONTEXT = HttpConfig.API + "/cards"
     private nonAlphanumericSpaceRegex = /[^a-zA-Z0-9\s\-,]/g
+    private cardsVersionKey = "cardsVersion"
+    private cardsKey = "cards"
 
     @observable
     cards?: KCard[]
@@ -176,29 +179,58 @@ export class CardStore {
         log.debug(`Changed this.cards to ${this.cards.length}`)
     }
 
-    loadAllCards = () => {
+    /**
+     * Returns new version if there is one.
+     */
+    private checkCardsVersion = async () => {
+        const versionResponse: AxiosResponse<number> = await axios.get(`${CardStore.CONTEXT}-version`)
+        const version = versionResponse.data
+        const preexistingVersion = await get(this.cardsVersionKey)
+        if (version !== preexistingVersion) {
+            log.info(`Cards data versions did not match. New version: ${version} Old: ${preexistingVersion}`)
+            return version
+        }
+        return undefined
+    }
+
+    loadAllCards = async () => {
         this.searchingForCards = true
-        axios.get(`${CardStore.CONTEXT}`)
-            .then((response: AxiosResponse) => {
-                log.debug(`Start load all cards async`)
-                this.searchingForCards = false
-                const basisForCards: KCard[] = response.data.slice()
-                basisForCards.forEach(card => {
-                    card.winRate = winPercentForCard(card)
-                    card.enhanced = false
-                })
-                this.cardNameLowercaseToCard = new Map()
-                this.cardNameLowercaseToHasAerc = new Map()
-                this.cardNames = basisForCards.map(card => {
-                    this.cardNameLowercaseToCard!.set(this.cleanCardName(card.cardTitle.toLowerCase()), card)
-                    this.cardNameLowercaseToHasAerc!.set(this.cleanCardName(card.cardTitle.toLowerCase()), this.hasAercFromCard(card))
-                    return card.cardTitle
-                })
-                this.allCards = basisForCards
-                log.debug(`End load all cards async`)
-                this.cardsLoaded = true
-                this.setupCardWinRates()
-            })
+
+        const newVersion = await this.checkCardsVersion()
+
+        let cardsLoaded: KCard[]
+
+        const msStart = performance.now()
+        if (newVersion == null) {
+            // this version of cards already saved, just load it
+            cardsLoaded = await get(this.cardsKey)
+        } else {
+            const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
+            cardsLoaded = cardsData.data.slice()
+            await set(this.cardsKey, cardsLoaded)
+            await set(this.cardsVersionKey, newVersion)
+        }
+
+        log.debug(`Start load all cards async`)
+        this.searchingForCards = false
+
+        cardsLoaded.forEach(card => {
+            card.winRate = winPercentForCard(card)
+            card.enhanced = false
+        })
+        this.cardNameLowercaseToCard = new Map()
+        this.cardNameLowercaseToHasAerc = new Map()
+        this.cardNames = cardsLoaded.map(card => {
+            this.cardNameLowercaseToCard!.set(this.cleanCardName(card.cardTitle.toLowerCase()), card)
+            this.cardNameLowercaseToHasAerc!.set(this.cleanCardName(card.cardTitle.toLowerCase()), this.hasAercFromCard(card))
+            return card.cardTitle
+        })
+        this.allCards = cardsLoaded
+        log.debug(`End load all cards async`)
+        this.cardsLoaded = true
+        this.setupCardWinRates()
+
+        log.info(`Loaded cards from ${newVersion == null ? "db" : "api"} took ${Math.round(performance.now() - msStart)}ms`)
     }
 
     loadCardFlavors = () => {
@@ -301,9 +333,9 @@ export class CardStore {
     }
 
     findPrevExtraInfoForCard = (cardName: string) => {
-       if (this.previousExtraInfo == null) {
-           return undefined
-       }
+        if (this.previousExtraInfo == null) {
+            return undefined
+        }
         return this.previousExtraInfo[this.cleanCardName(cardName)]
     }
 

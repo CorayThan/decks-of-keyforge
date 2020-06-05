@@ -2,6 +2,7 @@ import { Card } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
+import { cardStore } from "../cards/CardStore"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
@@ -102,6 +103,10 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
 
     render() {
         const {deck, fake} = this.props
+
+        if (!cardStore.cardsLoaded) {
+            return <Loader/>
+        }
 
         const {saleInfo} = deckStore
         let saleInfoComponent = null

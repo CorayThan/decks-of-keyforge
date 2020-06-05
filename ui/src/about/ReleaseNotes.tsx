@@ -44,6 +44,17 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                {/*<ReleaseNote*/}
+                {/*    releaseNumber={"5.6"}*/}
+                {/*    date={"6/??/2020"}*/}
+                {/*    expanded={true}*/}
+                {/*    releaseNotesWithHighlights={[*/}
+                {/*        {*/}
+                {/*            highlight: "Ratings Update",*/}
+                {/*            note: "thank petitbot and fakyr?"*/}
+                {/*        },*/}
+                {/*    ]}*/}
+                {/*/>*/}
                 <ReleaseNote
                     releaseNumber={"5.5"}
                     date={"6/1/2020"}

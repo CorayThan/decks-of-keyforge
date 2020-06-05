@@ -1,5 +1,6 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import { Info } from "@material-ui/icons"
+import { observer } from "mobx-react"
 import * as React from "react"
 import { cardStore } from "../cards/CardStore"
 import { CardAsLine } from "../cards/views/CardAsLine"
@@ -17,6 +18,7 @@ interface DeckSynergiesInfoViewProps {
     synergies: DeckWithSynergyInfo
 }
 
+@observer
 export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoViewProps> {
 
     render() {

@@ -51,10 +51,8 @@ class PatreonService(
             log.info("Found creator account.")
             if (creatorAccount != null) {
                 try {
-                    val updated = updateCreatorAccount(creatorAccount.refreshToken)
+                    updateCreatorAccount(creatorAccount.refreshToken)
                     log.info("updated creator account")
-                    refreshCampaignInfo(updated.accessToken)
-                    log.info("refreshed campaign info")
                 } catch (e: Exception) {
                     if (env == Env.dev) {
                         log.warn("Couldn't get patron info in dev.")
@@ -141,19 +139,21 @@ class PatreonService(
         log.info("patreon client id: $patreonClientId refresh: $refreshToken")
         val newAccount = PatreonAccount.fromToken(patreonClient.refreshTokens(refreshToken))
         val savedCreatorAccount = saveCreatorAccount(newAccount)
-        refreshCampaignInfo(refreshToken)
+        refreshCampaignInfo(savedCreatorAccount.accessToken)
         log.info("updated patreon account with client id: $patreonClientId refresh: $refreshToken")
         return savedCreatorAccount
     }
 
     fun refreshCampaignInfo(token: String, nextPage: String? = null) {
 
-        log.info("Start refreshing patreon")
 
         val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
+        val patreonMembersUrl = "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user$paging"
+        log.info("Start refreshing patreon with $patreonMembersUrl")
+
         val patreonCampaignResponse = restTemplate.exchange(
-                "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user$paging",
+                patreonMembersUrl,
                 HttpMethod.GET,
                 HttpEntity<Unit>(HttpHeaders().apply {
                     setBearerAuth(token)

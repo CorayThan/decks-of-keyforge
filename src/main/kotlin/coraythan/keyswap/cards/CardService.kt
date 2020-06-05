@@ -29,6 +29,7 @@ class CardService(
         private val keyforgeApi: KeyforgeApi,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val cardWinsService: CardWinsService,
+        private val versionService: CardsVersionService,
         private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -67,6 +68,7 @@ class CardService(
 
                 val updated = toPublish.map { it.value }.plus(unpublish)
                 extraCardInfoRepo.saveAll(updated)
+                versionService.revVersion()
                 log.info("Publishing next extra info fully complete. Active aerc version $activeAercVersion published verison $publishedAercVersion " +
                         "done publishing published " +
                         "${toPublish.size} unpublished ${unpublish.size}")
@@ -216,6 +218,7 @@ class CardService(
                     }
                 }
                 reloadCachedCards()
+                versionService.revVersion()
                 log.debug("Loaded cards from deck.")
             }
         }

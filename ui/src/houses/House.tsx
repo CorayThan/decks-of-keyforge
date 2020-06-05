@@ -1,6 +1,5 @@
 import Typography from "@material-ui/core/Typography/Typography"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
 import brobnarImg from "./imgs/brobnar.png"
 import disImg from "./imgs/dis.png"
 import logosImg from "./imgs/logos.png"
@@ -91,7 +90,7 @@ export const HouseLabel = (props: { house: House, title?: boolean, width?: numbe
 
     return (
         <div style={{display: "flex", alignItems: "center"}}>
-            <img alt={props.house} src={value.img} style={{width: houseSize, height: houseSize, marginRight: spacing(1)}}/>
+            <img alt={props.house} src={value.img} style={{width: houseSize, height: houseSize, marginRight: 8}}/>
             <Typography noWrap={false} variant={props.title ? "subtitle1" : "body2"} style={{width: props.width}}>
                 {value.displayName == null ? props.house : value.displayName}
             </Typography>

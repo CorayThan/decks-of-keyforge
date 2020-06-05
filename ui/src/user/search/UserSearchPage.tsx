@@ -95,6 +95,21 @@ export class UserSearchSortStore {
         this.orderBy = property
     }
 
+    handleUsernameUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.username = event.target.value
+        this.page = 0
+    }
+
+    handleWithTeamsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.withTeams = event.target.checked
+        this.page = 0
+    }
+
+    handlePatronsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.patrons = event.target.checked
+        this.page = 0
+    }
+
 }
 
 const UserSearchContainer = observer((props: { filters: UserFilters }) => {
@@ -173,7 +188,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                     <TextField
                         label={"Username"}
                         value={username}
-                        onChange={event => store.username = event.target.value}
+                        onChange={store.handleUsernameUpdate}
                         variant={"outlined"}
                         style={{marginRight: spacing(2)}}
                     />
@@ -217,7 +232,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         control={
                             <Checkbox
                                 checked={withTeams}
-                                onChange={event => store.withTeams = event.target.checked}
+                                onChange={store.handleWithTeamsUpdate}
                             />
                         }
                         label={"Teams Only"}
@@ -226,7 +241,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         control={
                             <Checkbox
                                 checked={patrons}
-                                onChange={event => store.patrons = event.target.checked}
+                                onChange={store.handlePatronsUpdate}
                             />
                         }
                         label={"Patrons"}
