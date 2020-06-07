@@ -139,8 +139,7 @@ class KeyUserService(
                 sellerEmailVerified = sellerEmailVerified,
                 discord = update.discord,
                 storeName = update.storeName,
-                shippingCost = update.shippingCost,
-                displayCrucibleTrackerWins = update.displayCrucibleTrackerWins
+                shippingCost = update.shippingCost
         ))
 
         if (userAllowsTrades != update.allowsTrades) {

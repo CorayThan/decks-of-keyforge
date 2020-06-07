@@ -319,6 +319,7 @@ export class StatsSubPaths {
     static winRates = Routes.stats + "/win-rates"
     static deckStats = Routes.stats + "/deck-stats"
     static aercStats = Routes.stats + "/aerc-stats"
+    static purchaseStats = Routes.stats + "/purchase-stats"
 }
 
 export {

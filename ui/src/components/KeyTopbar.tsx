@@ -110,6 +110,8 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             )
         }
 
+        const topbarNameToDisplay = screenStore.topbarNameShortened(topbarName, topbarShortName)
+
         let menuContents
         if (screenStore.smallScreenTopBar()) {
             menuContents = (
@@ -119,8 +121,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                     </div>
                     <Typography
                         variant={screenStore.screenSizeXs() ? "h5" : "h4"}
-                        color={"inherit"}>
-                        {screenStore.screenWidth < 800 ? topbarShortName : topbarName}
+                        color={"inherit"}
+                        noWrap={true}
+                    >
+                        {topbarNameToDisplay}
                     </Typography>
                     <div style={{flexGrow: 1}}/>
                     <DeckOrCardSearchSuggest placement={"bottom-end"}/>
@@ -165,8 +169,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                     <Typography
                         variant={"h4"}
                         style={{marginLeft: spacing(2)}}
-                        color={"inherit"}>
-                        {screenStore.screenWidth < 1480 ? topbarShortName : topbarName}
+                        color={"inherit"}
+                        noWrap={true}
+                    >
+                        {topbarNameToDisplay}
                     </Typography>
                     {screenStore.screenWidth < 2000 ? null : subheaderNode}
                     <div style={{flexGrow: 1}}/>
@@ -297,6 +303,7 @@ const AppLinks = observer(() => (
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
                 {to: StatsSubPaths.deckStats, text: "Deck Stats", mobileActive: false},
                 {to: StatsSubPaths.aercStats, text: "AERC Stats", mobileActive: false},
+                {to: StatsSubPaths.purchaseStats, text: "Sale Stats", mobileActive: false},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
             linkMenuStore={statsMenuStore}

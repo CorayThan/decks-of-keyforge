@@ -77,6 +77,14 @@ export class ScreenStore {
 
     screenSizeMdPlus = () => this.screenSize >= ScreenSize.md
 
+    topbarNameShortened = (name: string, shortName: string) => {
+        let shortened = name
+        if (this.screenWidth < 1250) {
+            shortened = shortName
+        }
+        return shortened
+    }
+
     private onResize = () => {
         this.screenWidth = window.innerWidth
         if (this.screenWidth < 704) {

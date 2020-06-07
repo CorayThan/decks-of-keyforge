@@ -104,9 +104,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     storeName: string
 
     @observable
-    displayCrucibleTrackerWins: boolean
-
-    @observable
     shippingCost: string
 
     update?: UserProfileUpdate
@@ -118,7 +115,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         super(props)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
-            sellerEmail, discord, storeName, currencySymbol, displayCrucibleTrackerWins, allowsTrades
+            sellerEmail, discord, storeName, currencySymbol, allowsTrades
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
@@ -131,7 +128,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.discord = discord ? discord : ""
         this.storeName = storeName ? storeName : ""
         this.currencySymbol = currencySymbol
-        this.displayCrucibleTrackerWins = displayCrucibleTrackerWins
         uiStore.setTopbarValues(`My DoK`, "My DoK", "")
 
         forSaleNotificationsStore.queries = undefined
@@ -208,7 +204,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
-            displayCrucibleTrackerWins: this.displayCrucibleTrackerWins
         }
 
         if (email == null) {
@@ -363,16 +358,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 }
                                                 label={"Let anyone see my decks and user stats"}
                                             />
-                                            {/*<FormControlLabel*/}
-                                            {/*    control={*/}
-                                            {/*        <Checkbox*/}
-                                            {/*            checked={this.displayCrucibleTrackerWins}*/}
-                                            {/*            onChange={(event) => this.displayCrucibleTrackerWins = event.target.checked}*/}
-                                            {/*            tabIndex={6}*/}
-                                            {/*        />*/}
-                                            {/*    }*/}
-                                            {/*    label={"Display crucible tracker wins and losses"}*/}
-                                            {/*/>*/}
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox

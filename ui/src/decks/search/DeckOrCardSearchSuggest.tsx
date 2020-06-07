@@ -87,7 +87,10 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
     const search = Routes.deckSearch(filters)
     const cardFilters = new CardFilters()
     cardFilters.title = searchDeckNameStore.searchValue
-    const goToCards = cardStore.searchAndReturnCards(cardFilters).length > 0
+    let goToCards = false
+    if (cardFilters.title.length > 0) {
+        goToCards = cardStore.searchAndReturnCards(cardFilters).length > 0
+    }
     return (
         <>
             <div

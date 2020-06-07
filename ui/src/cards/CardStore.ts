@@ -4,6 +4,7 @@ import { clone, sortBy } from "lodash"
 import { computed, observable } from "mobx"
 import { HasAerc } from "../aerc/HasAerc"
 import { HttpConfig } from "../config/HttpConfig"
+import { IdbUtils } from "../config/IdbUtils"
 import { log, prettyJson, roundToHundreds } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
@@ -62,7 +63,7 @@ export class CardStore {
     @observable
     cardWinRatesLoaded = false
 
-    cardWinRates?: Map<string, CardWinRates[]>
+    private cardWinRates?: Map<string, CardWinRates[]>
 
     setupCardWinRates = () => {
         if (!cardStore.cardsLoaded || statsStore.stats == null || this.cardWinRatesLoaded) {
@@ -79,6 +80,8 @@ export class CardStore {
         this.cardWinRatesLoaded = true
     }
 
+    findWinRate = (cardName: string) => this.cardWinRates?.get(this.cleanCardName(cardName))
+
     reset = () => {
         log.debug(`Reset this.cards in card store`)
         if (this.cards) {
@@ -88,14 +91,15 @@ export class CardStore {
 
     searchAndReturnCards = (filtersValue: CardFilters) => {
 
-        if (userStore.contentCreator) {
-            this.findNextExtraInfo()
-            this.loadCardTraits()
-        }
-
         if (filtersValue.aercHistory) {
             this.findPreviousExtraInfo()
         }
+
+        this.allCards.forEach(card => {
+            if (card.cardTitle === "Arise!") {
+                log.info(prettyJson(card))
+            }
+        })
 
         const filters: CardFilters = clone(filtersValue)
         if (filters.sort == null) {
@@ -142,7 +146,10 @@ export class CardStore {
         } else if (filters.sort === "ARTIFACT_CONTROL") {
             filtered = sortBy(filtered, ["extraCardInfo.artifactControl", "cardNumber"])
         } else if (filters.sort === "WIN_RATE") {
-            filtered = sortBy(filtered, ["winRate", "cardNumber"])
+            filtered = sortBy(
+                filtered
+                    .filter(card => ((card.wins ?? 0) + (card.losses ?? 0)) > 1000),
+                ["winRate", "cardNumber"])
         } else if (filters.sort === "RELATIVE_WIN_RATE") {
             filtered = sortBy(filtered, card => CardUtils.cardAverageRelativeWinRate(card))
         } else if (filters.sort === "NAME") {
@@ -196,19 +203,25 @@ export class CardStore {
     loadAllCards = async () => {
         this.searchingForCards = true
 
-        const newVersion = await this.checkCardsVersion()
-
         let cardsLoaded: KCard[]
 
-        const msStart = performance.now()
-        if (newVersion == null) {
-            // this version of cards already saved, just load it
-            cardsLoaded = await get(this.cardsKey)
+        if (await IdbUtils.canUseIdb()) {
+            const newVersion = await this.checkCardsVersion()
+
+            const msStart = performance.now()
+            if (newVersion == null) {
+                // this version of cards already saved, just load it
+                cardsLoaded = await get(this.cardsKey)
+            } else {
+                const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
+                cardsLoaded = cardsData.data.slice()
+                await set(this.cardsKey, cardsLoaded)
+                await set(this.cardsVersionKey, newVersion)
+            }
+            log.info(`Loaded cards from ${newVersion == null ? "db" : "api"} took ${Math.round(performance.now() - msStart)}ms`)
         } else {
             const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
             cardsLoaded = cardsData.data.slice()
-            await set(this.cardsKey, cardsLoaded)
-            await set(this.cardsVersionKey, newVersion)
         }
 
         log.debug(`Start load all cards async`)
@@ -226,11 +239,16 @@ export class CardStore {
             return card.cardTitle
         })
         this.allCards = cardsLoaded
+
+        if (userStore.contentCreator) {
+            this.findNextExtraInfo()
+            this.loadCardTraits()
+        }
+
         log.debug(`End load all cards async`)
         this.cardsLoaded = true
         this.setupCardWinRates()
 
-        log.info(`Loaded cards from ${newVersion == null ? "db" : "api"} took ${Math.round(performance.now() - msStart)}ms`)
     }
 
     loadCardFlavors = () => {
@@ -302,8 +320,10 @@ export class CardStore {
     }
 
     findNextExtraInfo = async () => {
-        const nextInfo = await axios.get(`${CardStore.CONTEXT}/future`)
-        this.nextExtraInfo = nextInfo.data
+        if (this.nextExtraInfo == null) {
+            const nextInfo = await axios.get(`${CardStore.CONTEXT}/future`)
+            this.nextExtraInfo = nextInfo.data
+        }
     }
 
     fullCardFromCardName = (cardTitle: string) => {

@@ -19,6 +19,9 @@ class PurchaseEndpoints(
 
     @GetMapping("/secured")
     fun findPurchases(@RequestHeader(value = "Timezone") offsetMinutes: Int) = purchaseService.findPurchases(offsetMinutes)
+
+    @GetMapping("/stats")
+    fun findPurchaseStats() = purchaseService.findPurchaseStats()
 }
 
 data class CreatePurchaseResult(

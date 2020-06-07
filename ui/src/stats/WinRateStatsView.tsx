@@ -1,9 +1,7 @@
-import { Card } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { spacing } from "../config/MuiConfig"
-import { BarData, StatsBar, StatsBarProps } from "../graphs/StatsBar"
+import { BarData, StatsBar, StatsBarPropsSimplified } from "../graphs/StatsBar"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
 import { statsStore } from "./StatsStore"
@@ -50,7 +48,8 @@ export class WinRateStatsView extends React.Component<{}> {
                 />
                 <WinRateBar name={"Disruption Win Rate"} data={stats.disruptionWinRate} secondary={true} quantities={stats.disruption}/>
                 <WinRateBar name={"Effective Power Win Rate"} data={stats.effectivePowerWinRate} secondary={true} quantities={stats.effectivePower}/>
-                <WinRateBar name={"Creature Protection Win Rate"} data={stats.creatureProtectionWinRate} secondary={true} quantities={stats.creatureProtection}/>
+                <WinRateBar name={"Creature Protection Win Rate"} data={stats.creatureProtectionWinRate} secondary={true}
+                            quantities={stats.creatureProtection}/>
                 <WinRateBar name={"Other Win Rate"} data={stats.otherWinRate} secondary={true} quantities={stats.other}/>
 
                 <WinRateBar name={"Creature Count Win Rate"} data={stats.creatureCountWinRate} quantities={stats.creatures}/>
@@ -65,8 +64,6 @@ export class WinRateStatsView extends React.Component<{}> {
     }
 }
 
-export const WinRateBar = (props: StatsBarProps) => (
-    <Card style={{margin: spacing(2)}}>
-        <StatsBar style={{margin: spacing(2)}} yDomain={[0, 100]} {...props}/>
-    </Card>
+export const WinRateBar = (props: StatsBarPropsSimplified) => (
+    <StatsBar yDomain={[0, 100]} yAxisName={"Win Rate"} filterQuantitiesBelow={100} {...props}/>
 )

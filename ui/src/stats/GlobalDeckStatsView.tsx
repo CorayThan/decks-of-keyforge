@@ -1,8 +1,7 @@
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { spacing } from "../config/MuiConfig"
-import { StatsBar, StatsBarProps } from "../graphs/StatsBar"
+import { StatsBar, StatsBarPropsSimplified } from "../graphs/StatsBar"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
 import { statsStore } from "./StatsStore"
@@ -33,4 +32,5 @@ export class GlobalDeckStatsView extends React.Component<{}> {
     }
 }
 
-const DeckStatsBar = (props: StatsBarProps) => <StatsBar name={props.name} data={props.data} style={{margin: spacing(2)}} hideY={true}/>
+const DeckStatsBar = (props: StatsBarPropsSimplified) =>
+    <StatsBar name={props.name} data={props.data} hideY={true} yAxisName={"Count"} filterQuantitiesBelow={100}/>

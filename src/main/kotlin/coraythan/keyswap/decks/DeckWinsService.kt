@@ -23,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.system.measureTimeMillis
 
+const val onceEverySixHoursLock = "PT6H"
 private const val lockUpdateWinsLosses = "PT72H"
-private const val onceEverySixHoursLock = "PT6H"
 private const val lockUpdatePageOfWinLosses = "PT20S"
 
 @Transactional
@@ -44,23 +44,6 @@ class DeckWinsService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var updatingWinsAndLosses: Boolean? = null
-
-//    var crucibleWins: Map<String, Wins> = mapOf()
-//
-//    // TODO delete the columns
-//    @Scheduled(fixedDelayString = lockCrucibleTrackerUpdateWinsLosses)
-//    fun updateCrucibleTrackerWinsAndLosses() {
-//
-//        log.info("$scheduledStart start crucible tracker deck win loss update")
-//
-//        try {
-//            this.crucibleWins = crucibleTrackerApi.findWins().decks
-//        } catch (exception: Throwable) {
-//            log.warn("$scheduledException Couldn't get crucible tracker wins due to ${exception.message}")
-//        }
-//
-//        log.info("$scheduledStop done crucible tracker deck win loss update.")
-//    }
 
     @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
     @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastFor = lockUpdateWinsLosses, lockAtMostFor = lockUpdateWinsLosses)

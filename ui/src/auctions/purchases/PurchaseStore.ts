@@ -5,6 +5,7 @@ import { messageStore } from "../../ui/MessageStore"
 import { deckListingStore } from "../DeckListingStore"
 import { CreatePurchase } from "./CreatePurchase"
 import { Purchases } from "./Purchases"
+import { PurchaseStats } from "./PurchaseStats"
 
 export class PurchaseStore {
 
@@ -13,6 +14,9 @@ export class PurchaseStore {
 
     @observable
     myPurchases?: Purchases
+
+    @observable
+    purchaseStats?: PurchaseStats
 
     reportPurchase = (deckName: string, createPurchase: CreatePurchase) => {
         axios.post(`${PurchaseStore.SECURE_CONTEXT}`, createPurchase)
@@ -30,6 +34,13 @@ export class PurchaseStore {
         axios.get(`${PurchaseStore.SECURE_CONTEXT}`)
             .then((response: AxiosResponse<Purchases>) => {
                 this.myPurchases = response.data
+            })
+    }
+
+    findPurchaseStats = () => {
+        axios.get(`${PurchaseStore.CONTEXT}/stats`)
+            .then((response: AxiosResponse<PurchaseStats>) => {
+                this.purchaseStats = response.data
             })
     }
 

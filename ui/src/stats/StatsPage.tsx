@@ -8,6 +8,7 @@ import { LinkTab } from "../generic/LinkTab"
 import { screenStore } from "../ui/ScreenStore"
 import { CardStatsView } from "./CardStatsView"
 import { GlobalDeckStatsView } from "./GlobalDeckStatsView"
+import { PurchaseStatsView } from "./PurchaseStatsView"
 import { ToggleStats } from "./ToggleStats"
 import { WinRateStatsView } from "./WinRateStatsView"
 
@@ -26,6 +27,7 @@ export class StatsPage extends React.Component<RouteComponentProps<{}>> {
                         <LinkTab label="Win Rates" to={StatsSubPaths.winRates} value={StatsSubPaths.winRates}/>
                         <LinkTab label="Deck Stats" to={StatsSubPaths.deckStats} value={StatsSubPaths.deckStats}/>
                         <LinkTab label="AERC Stats" to={StatsSubPaths.aercStats} value={StatsSubPaths.aercStats}/>
+                        <LinkTab label="Purchase Stats" to={StatsSubPaths.purchaseStats} value={StatsSubPaths.purchaseStats}/>
                     </Tabs>
                 </AppBar>
                 <ToggleStats style={{position: "fixed", right: theme.spacing(2), bottom: theme.spacing(2), zIndex: screenStore.zindexes.menuPops}}/>
@@ -33,6 +35,7 @@ export class StatsPage extends React.Component<RouteComponentProps<{}>> {
                     <Route path={StatsSubPaths.winRates} component={WinRateStatsView}/>
                     <Route path={StatsSubPaths.deckStats} component={GlobalDeckStatsView}/>
                     <Route path={StatsSubPaths.aercStats} component={CardStatsView}/>
+                    <Route path={StatsSubPaths.purchaseStats} component={PurchaseStatsView}/>
                 </Switch>
             </div>
         )

@@ -15,9 +15,7 @@ export class UiStore {
 
         this.setDocTitleAndDescription(name)
 
-        const maxTopBarLength = 25
-
-        this.topbarName = name.length <= maxTopBarLength ? name : name.slice(0, maxTopBarLength).trim() + "..."
+        this.topbarName = name
         this.topbarShortName = shortName
         this.topbarSubheader = subheader
     }

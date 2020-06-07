@@ -19,6 +19,5 @@ export interface UserProfileUpdate {
     sellerEmail?: string
     discord?: string
     storeName?: string
-    displayCrucibleTrackerWins: boolean
     shippingCost?: string
 }

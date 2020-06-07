@@ -146,11 +146,10 @@ class PatreonService(
 
     fun refreshCampaignInfo(token: String, nextPage: String? = null) {
 
-
         val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
         val patreonMembersUrl = "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user$paging"
-        log.info("Start refreshing patreon with $patreonMembersUrl")
+        // log.info("Start refreshing patreon with $patreonMembersUrl")
 
         val patreonCampaignResponse = restTemplate.exchange(
                 patreonMembersUrl,
@@ -188,6 +187,5 @@ class PatreonService(
             log.info("Next page of patreon campaign members.")
             this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
         }
-        log.info("Done refreshing patreon")
     }
 }

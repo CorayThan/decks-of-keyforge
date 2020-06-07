@@ -3,7 +3,7 @@ import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
-import { Utils } from "../../config/Utils"
+import { log, prettyJson, Utils } from "../../config/Utils"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { cardStore } from "../CardStore"
 import { CardWinRates, KCard } from "../KCard"
@@ -12,7 +12,10 @@ export const CardWinsDisplay = observer((props: { card: KCard }) => {
 
     const {card} = props
 
-    const winRates = cardStore.cardWinRates?.get(card.cardTitle)
+    const winRates = cardStore.findWinRate(card.cardTitle)
+
+    log.info("wins: " + prettyJson(winRates))
+
     if (!cardStore.cardWinRatesLoaded || winRates == null) {
         return null
     }

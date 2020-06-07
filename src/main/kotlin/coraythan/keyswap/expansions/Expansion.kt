@@ -8,7 +8,7 @@ enum class Expansion(val expansionNumber: Int, val readable: String) {
     MASS_MUTATION(479, "MM");
 
     companion object {
-        fun forExpansionNumber(expansionNumber: Int) = values().find { it.expansionNumber == expansionNumber }
+        fun forExpansionNumber(expansionNumber: Int?) = values().find { it.expansionNumber == expansionNumber }
                 ?: throw IllegalStateException("No expansion for number $expansionNumber")
     }
 }

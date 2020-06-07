@@ -83,8 +83,6 @@ data class KeyUser(
         val shippingCost: String? = null,
         val allowsTrades: Boolean = false,
 
-        val displayCrucibleTrackerWins: Boolean? = false,
-
         @JsonIgnoreProperties("seller")
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
         val auctions: List<DeckListing> = listOf(),
@@ -147,7 +145,6 @@ data class KeyUser(
             sellerEmail = sellerEmail,
             discord = discord,
             storeName = storeName,
-            displayCrucibleTrackerWins = displayCrucibleTrackerWins == true,
             auctionCount = auctions.filter { it.status == DeckListingStatus.AUCTION }.count(),
             shippingCost = shippingCost,
             teamName = team?.name
@@ -229,8 +226,6 @@ data class KeyUserDto(
         val storeName: String? = null,
 
         val auctionCount: Int,
-
-        val displayCrucibleTrackerWins: Boolean,
 
         val shippingCost: String? = null,
 

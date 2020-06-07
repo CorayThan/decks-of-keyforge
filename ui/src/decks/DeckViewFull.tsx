@@ -3,6 +3,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { cardStore } from "../cards/CardStore"
+import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
@@ -112,7 +113,7 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
         let saleInfoComponent = null
         if (saleInfo) {
             saleInfoComponent = (
-                <Card>
+                <Card style={{margin: spacing(2)}}>
                     <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId}/>
                 </Card>
             )

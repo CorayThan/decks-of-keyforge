@@ -8,15 +8,13 @@ import { CardFilters } from "../cards/CardFilters"
 import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
-import { BarData, StatsBar } from "../graphs/StatsBar"
+import { BarData } from "../graphs/StatsBar"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { Loader } from "../mui-restyled/Loader"
-import { statsStore } from "../stats/StatsStore"
 import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/DiscordButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.5"
+export const latestVersion = "5.6"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -55,6 +53,24 @@ export class ReleaseNotes extends React.Component {
                 {/*        },*/}
                 {/*    ]}*/}
                 {/*/>*/}
+                <ReleaseNote
+                    releaseNumber={"5.6"}
+                    date={"6/7/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Sale Price Graphs",
+                            note: "You can now see graphs displaying sale prices for decks by SAS! Head over to the stats area to check them out."
+                        },
+                        {
+                            note: <LinkButton to={StatsSubPaths.purchaseStats} variant={"outlined"} color={"primary"}>Sale Stats</LinkButton>
+                        },
+                        {
+                            highlight: "Prettier Emails",
+                            note: "Emails have been restyled to be significantly less painful to the eyes."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.5"}
                     date={"6/1/2020"}
@@ -980,15 +996,7 @@ export class ReleaseNotes extends React.Component {
                     "to be taken with a huge grain of salt. First, they are highly correlated with house win rates. Shadows wins the most, so all its cards " +
                     "rate high, and Mars wins the least, so all its rate low. I've used the range of ratings intra-house more than I've compared across " +
                     "houses.",
-                    "Added a global stats page.",
-                    (
-                        <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
-                            {statsStore.stats == null ? <Loader/> : (
-                                <StatsBar name={"SAS v3 Win Rate"} data={statsStore.stats.sasWinRate} small={true} yDomain={[0, 100]}/>
-                            )}
-                            <StatsBar name={"SAS v2 Win Rate"} data={sasV2BarData} small={true} yDomain={[0, 100]}/>
-                        </div>
-                    )
+                    "Added a global stats page."
                 ]}/>
                 <ReleaseNote releaseNumber={"2.7"} date={"2/20/2019"} releaseNotes={[
                     "More graphs for the deck page. Click the expansion button to see them!",
