@@ -3,9 +3,11 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { purchaseStore } from "../auctions/purchases/PurchaseStore"
 import { log, prettyJson } from "../config/Utils"
+import { expansionToBackendExpansion } from "../expansions/Expansions"
 import { StatsBar, StatsBarPropsSimplified } from "../graphs/StatsBar"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
+import { statsStore } from "./StatsStore"
 
 @observer
 export class PurchaseStatsView extends React.Component<{}> {
@@ -26,10 +28,16 @@ export class PurchaseStatsView extends React.Component<{}> {
             return <Loader/>
         }
 
+        const currentExp = statsStore.currentStatsExpansion
+
+        log.info("expansion" )
+
+        const statsData = stats.data
+            .filter(data => data.expansion == (currentExp == null ? undefined : expansionToBackendExpansion(currentExp)))
+
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                {stats.data
-                    .filter(data => data.expansion == null)
+                {statsData
                     .map(currencyData => {
                         const name = `2 Month Sale Averages for '${currencyData.currency}'`
                         log.debug("sale data: " + prettyJson(currencyData))
