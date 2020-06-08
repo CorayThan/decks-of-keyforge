@@ -78,7 +78,7 @@ class DeckWinsService(
         }
     }
 
-    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses, initialDelayString = SchedulingConfig.recurringWinLossTask)
+    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses, initialDelayString = SchedulingConfig.recurringWinLossTaskInitialDelay)
     @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastFor = lockUpdatePageOfWinLosses, lockAtMostFor = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 

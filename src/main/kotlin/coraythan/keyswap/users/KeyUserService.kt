@@ -34,7 +34,7 @@ class KeyUserService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
 
-    @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatrons)
+    @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay)
     @SchedulerLock(name = "removeManualPatrons", lockAtLeastFor = lockRemoveManualPatrons, lockAtMostFor = lockRemoveManualPatrons)
     fun removeManualPatrons() {
         try {

@@ -27,7 +27,7 @@ class PurchaseService(
 
     private var purchaseStats: PurchaseStats? = null
 
-    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.purchasesDelay)
+    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.purchasesInitialDelay)
     fun calculatePurchaseStats() {
         log.info("$scheduledStart purchase stats update")
 

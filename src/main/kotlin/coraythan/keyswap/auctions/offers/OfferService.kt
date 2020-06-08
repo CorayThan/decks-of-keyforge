@@ -33,7 +33,7 @@ class OfferService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.expireOffers)
+    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.expireOffersInitialDelay)
     fun expireOffers() {
         val toExpire = offerRepo.findByExpiresTimeBeforeAndStatusNot(nowLocal(), OfferStatus.EXPIRED)
         toExpire.forEach { offerRepo.save(it.copy(status = OfferStatus.EXPIRED)) }

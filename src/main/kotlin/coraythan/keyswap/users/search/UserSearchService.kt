@@ -40,7 +40,7 @@ class UserSearchService(
     var allSearchableUsers: List<UserSearchResult> = listOf()
     var lastUserSearchUpdate: Instant = Instant.now()
 
-    @Scheduled(fixedDelayString = lockUpdateUserSearchStatsFor, initialDelayString = SchedulingConfig.updateUserStats)
+    @Scheduled(fixedDelayString = lockUpdateUserSearchStatsFor, initialDelayString = SchedulingConfig.updateUserStatsInitialDelay)
     @SchedulerLock(name = "updateUserStats", lockAtLeastFor = lockUpdateUserSearchStatsFor, lockAtMostFor = lockUpdateUserSearchStatsFor)
     fun updateUserStats() {
         try {

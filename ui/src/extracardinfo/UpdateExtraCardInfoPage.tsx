@@ -195,7 +195,17 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
 
     save = async () => {
 
-        const extraCardInfo: ExtraCardInfo = {
+        const extraCardInfo: ExtraCardInfo = this.createExtraInfo()
+
+        log.info("In save enhancement amber is " + this.enhancementAmber + " saving: " + prettyJson(extraCardInfo))
+
+        await extraCardInfoStore.saveExtraCardInfo(extraCardInfo)
+        const saved = await extraCardInfoStore.findExtraCardInfo(this.infoId)
+        this.reset(saved)
+    }
+
+    private createExtraInfo = (): ExtraCardInfo => {
+        return {
             ...this.props.extraCardInfo,
 
             amberControl: Number(this.amberControl),
@@ -208,15 +218,24 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             disruption: Number(this.disruption),
             other: Number(this.other),
 
-            amberControlMax: Number(this.amberControlMax),
-            expectedAmberMax: Number(this.expectedAmberMax),
-            artifactControlMax: Number(this.artifactControlMax),
-            creatureControlMax: Number(this.creatureControlMax),
-            efficiencyMax: Number(this.efficiencyMax),
-            effectivePowerMax: Number(this.effectivePowerMax),
-            creatureProtectionMax: Number(this.creatureProtectionMax),
-            disruptionMax: Number(this.disruptionMax),
-            otherMax: Number(this.otherMax),
+            // @ts-ignore
+            amberControlMax: Utils.toNumberOrNull(this.amberControlMax),
+            // @ts-ignore
+            expectedAmberMax: Utils.toNumberOrNull(this.expectedAmberMax),
+            // @ts-ignore
+            artifactControlMax: Utils.toNumberOrNull(this.artifactControlMax),
+            // @ts-ignore
+            creatureControlMax: Utils.toNumberOrNull(this.creatureControlMax),
+            // @ts-ignore
+            efficiencyMax: Utils.toNumberOrNull(this.efficiencyMax),
+            // @ts-ignore
+            effectivePowerMax: Utils.toNumberOrNull(this.effectivePowerMax),
+            // @ts-ignore
+            creatureProtectionMax: Utils.toNumberOrNull(this.creatureProtectionMax),
+            // @ts-ignore
+            disruptionMax: Utils.toNumberOrNull(this.disruptionMax),
+            // @ts-ignore
+            otherMax: Utils.toNumberOrNull(this.otherMax),
 
             enhancementAmber: Number(this.enhancementAmber),
             enhancementCapture: Number(this.enhancementCapture),
@@ -226,13 +245,6 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             traits: this.traits,
             synergies: this.synergies
         }
-
-        log.info("In save enhancement amber is " + this.enhancementAmber + " saving: " + prettyJson(extraCardInfo))
-
-
-        await extraCardInfoStore.saveExtraCardInfo(extraCardInfo)
-        const saved = await extraCardInfoStore.findExtraCardInfo(this.infoId)
-        this.reset(saved)
     }
 
     render() {

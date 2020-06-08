@@ -68,7 +68,7 @@ class DeckImporterService(
     private val query = JPAQueryFactory(entityManager)
 
     @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecks)
+    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
@@ -123,7 +123,7 @@ class DeckImporterService(
         deckSearchService.countFilters(DeckFilters())
     }
 
-    @Scheduled(fixedDelayString = lockUpdateCleanUnregistered, initialDelayString = SchedulingConfig.cleanUnregisteredDecks)
+    @Scheduled(fixedDelayString = lockUpdateCleanUnregistered, initialDelayString = SchedulingConfig.cleanUnregisteredDecksInitialDelay)
     @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastFor = lockUpdateCleanUnregistered, lockAtMostFor = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
         try {
@@ -177,7 +177,7 @@ class DeckImporterService(
     }
 
     // Rev publishAercVersion to rerate decks
-    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksDelay)
+    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksInitialDelay)
     fun rateDecks() {
 
         if (env == Env.qa) {

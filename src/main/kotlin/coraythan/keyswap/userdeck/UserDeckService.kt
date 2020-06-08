@@ -3,6 +3,7 @@ package coraythan.keyswap.userdeck
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.scheduledException
@@ -31,7 +32,7 @@ class UserDeckService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     // Don't want this running regularly
-    @Scheduled(fixedDelayString = "PT144H")
+    @Scheduled(fixedDelayString = "PT24H", initialDelayString = SchedulingConfig.correctCountsInitialDelay)
     fun correctCounts() {
         log.info("$scheduledStart correcting counts.")
         try {
