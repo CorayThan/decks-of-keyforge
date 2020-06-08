@@ -511,20 +511,16 @@ class EmailService(
                     <td>${deck.creatureCount}</td>                    
                 </tr>
                 <tr>
-                    <td>Creature Protection (CP)</td>
-                    <td>${deck.creatureProtection?.roundToOneSigDig()}</td>
+                    <td>Artifact Control (R)</td>
+                    <td>${deck.artifactControl.roundToOneSigDig()}</td>
                     <td>Artifacts</td>
                     <td>${deck.artifactCount}</td>                    
                 </tr>
                 <tr>
-                    <td>Artifact Control (R)</td>
-                    <td>${deck.artifactControl.roundToOneSigDig()}</td>
-                    <td>Upgrades</td>
-                    <td>${deck.upgradeCount}</td>                    
-                </tr>
-                <tr>
                     <td>Creature Control (C)</td>
                     <td>${deck.creatureControl.roundToOneSigDig()}</td>
+                    <td>Upgrades</td>
+                    <td>${deck.upgradeCount}</td>                    
                 </tr>
                 <tr>
                     <td>Effective Power (P)</td>
@@ -537,6 +533,10 @@ class EmailService(
                 <tr>
                     <td>Disruption (D)</td>
                     <td>${deck.disruption.roundToOneSigDig()}</td>
+                </tr>
+                <tr>
+                    <td>Creature Protection (CP)</td>
+                    <td>${deck.creatureProtection?.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Other (O)</td>
