@@ -38,15 +38,22 @@ export interface KCard {
     losses?: number
     winRate?: number
 
-    /**
-     * Key is BackendExpansion
-     */
-    expansionWins?: { [key: string]: Wins }
-
     aercScore: number
     aercScoreMax?: number
 
     extraCardInfo: ExtraCardInfo
+
+    cardNumbers?: CardNumberSetPair[]
+
+    /**
+     * Key is BackendExpansion
+     */
+    expansionWins?: { [key: string]: Wins }
+}
+
+export interface CardNumberSetPair {
+    expansion: BackendExpansion
+    cardNumber: string
 }
 
 export const winPercentForCard = (card: KCard): number | undefined => {
@@ -155,7 +162,7 @@ export class CardUtils {
             return [
                 card.cardTitle,
                 card.house,
-                card.extraCardInfo.cardNumbers.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`),
+                card.cardNumbers?.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`),
                 card.cardType,
                 card.rarity,
                 card.aercScore,

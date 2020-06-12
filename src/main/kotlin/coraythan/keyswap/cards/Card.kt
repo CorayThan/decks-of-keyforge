@@ -49,6 +49,9 @@ data class Card(
         var extraCardInfo: ExtraCardInfo?,
 
         @Transient
+        var cardNumbers: List<CardNumberSetPair>? = null,
+
+        @Transient
         var expansionWins: Map<Expansion, Wins>? = null
 ) : Comparable<Card> {
 

@@ -8,7 +8,6 @@ import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SimpleCard } from "../../decks/models/HouseAndCards"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
-import { expansionInfoMap } from "../../expansions/Expansions"
 import { GraySidebar } from "../../generic/GraySidebar"
 import { CardQualityIcon } from "../../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../../generic/UnstyledLink"
@@ -133,10 +132,10 @@ export const CardView = observer((props: CardViewProps) => {
 })
 
 export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
-    const sets = props.card.extraCardInfo.cardNumbers.map(cardNumber => expansionInfoMap.get(cardNumber.expansion)!.backendEnum)
+    const sets = props.card.cardNumbers?.map(cardNumber => cardNumber.expansion)
     return (
         <div style={{display: "flex"}}>
-            {sets.map((backendExpansion) => (
+            {sets?.map((backendExpansion) => (
                 <ExpansionIcon size={16} expansion={backendExpansion} key={backendExpansion} style={{marginLeft: spacing(1)}}/>
             ))}
         </div>

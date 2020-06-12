@@ -167,7 +167,7 @@ const CardLine = observer((props: CardAsLineProps) => {
 
     let cardExpansions
     if (fullCard.extraCardInfo != null) {
-        cardExpansions = fullCard.extraCardInfo.cardNumbers.map(cardNumbers => cardNumbers.expansion)
+        cardExpansions = fullCard.cardNumbers?.map(cardNumbers => cardNumbers.expansion)
     }
 
     const isAnomaly = fullCard.anomaly

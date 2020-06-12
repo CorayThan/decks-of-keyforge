@@ -61,10 +61,6 @@ data class ExtraCardInfo(
         val enhancementDraw: Int = 0,
         val enhancementDamage: Int = 0,
 
-        @JsonIgnoreProperties("info")
-        @OneToMany(mappedBy = "info", cascade = [CascadeType.ALL])
-        val cardNumbers: MutableList<CardIdentifier> = mutableListOf(),
-
         @JsonIgnoreProperties("traitInfo")
         @OneToMany(mappedBy = "traitInfo", cascade = [CascadeType.ALL])
         val traits: List<SynTraitValue> = listOf(),
@@ -78,9 +74,6 @@ data class ExtraCardInfo(
         val created: ZonedDateTime? = now(),
         val updated: ZonedDateTime? = now(),
         var published: ZonedDateTime? = null,
-//
-//        @OneToOne(mappedBy = "info")
-//        val spoiler: Spoiler? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()
@@ -98,7 +91,6 @@ data class ExtraCardInfo(
                 active = false,
                 synergies = mutableListOf(),
                 traits = mutableListOf(),
-                cardNumbers = mutableListOf(),
                 id = UUID.randomUUID()
         )
     }

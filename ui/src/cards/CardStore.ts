@@ -8,12 +8,12 @@ import { IdbUtils } from "../config/IdbUtils"
 import { log, prettyJson, roundToHundreds } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
-import { CardIdentifier, ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
+import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
-import { cardNameToCardNameKey, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
+import { cardNameToCardNameKey, CardNumberSetPair, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
 
@@ -95,12 +95,6 @@ export class CardStore {
             this.findPreviousExtraInfo()
         }
 
-        this.allCards.forEach(card => {
-            if (card.cardTitle === "Arise!") {
-                log.info(prettyJson(card))
-            }
-        })
-
         const filters: CardFilters = clone(filtersValue)
         if (filters.sort == null) {
             filters.sort = CardSort.SET_NUMBER
@@ -129,9 +123,9 @@ export class CardStore {
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&
-                (!filters.thisExpansionOnly || extraInfo.cardNumbers.length === 1)
+                (!filters.thisExpansionOnly || card.cardNumbers?.length === 1)
                 &&
-                (filters.expansion == null || extraInfo.cardNumbers.map((cardNumberSetPair: CardIdentifier) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
+                (filters.expansion == null || card.cardNumbers?.map((cardNumberSetPair: CardNumberSetPair) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
             )
         })
 
@@ -162,7 +156,7 @@ export class CardStore {
             })
         } else if (filters.sort === "SET_NUMBER") {
             filtered = sortBy(filtered, (card: KCard) => {
-                const cardNumbers = card.extraCardInfo.cardNumbers.filter((cardNumber: CardIdentifier) => cardNumber.expansion === filters.expansion)
+                const cardNumbers = card.cardNumbers?.filter((cardNumber: CardNumberSetPair) => cardNumber.expansion === filters.expansion) ?? []
                 if (cardNumbers.length > 0) {
                     return cardNumbers[0].cardNumber
                 } else {
@@ -277,7 +271,7 @@ export class CardStore {
         this.allCards.map(card => {
             this.cardNameLowercaseToCard!.set(this.cleanCardName(card.cardTitle.toLowerCase()), card)
             cardNamesForExpansion.forEach(cardNamesForExpansion => {
-                if (card.extraCardInfo.cardNumbers.map(cardNum => cardNum.expansion).includes(cardNamesForExpansion.expansion)) {
+                if (card.cardNumbers?.map(cardNum => cardNum.expansion).includes(cardNamesForExpansion.expansion)) {
                     cardNamesForExpansion.names.push(card.cardTitle)
                 }
             })

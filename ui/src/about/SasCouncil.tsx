@@ -87,6 +87,17 @@ export class SasCouncil extends React.Component {
                                 </Typography>
                             }
                         />,
+                        <MemberView
+                            key={"petitbot"}
+                            name={`PetitBOT`}
+                            role={"AERC Auditor"}
+                            description={
+                                <Typography variant={"body2"}>
+                                    PetitBOT helps to fine tune SAS and provides feedback to improve the overall system. He is a co-founder of the French
+                                    KeyForge Association (AFK) and creates content around KeyForge for the French community.
+                                </Typography>
+                            }
+                        />,
                     ]}
                 />
             </AboutGridItem>

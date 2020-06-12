@@ -103,7 +103,6 @@ class CardService(
             .map { cardInfo ->
                 cardInfo.synergies.size
                 cardInfo.traits.size
-                cardInfo.cardNumbers.size
                 cardInfo.cardName.cleanCardName() to cardInfo
             }
             .toMap()
@@ -283,6 +282,16 @@ class CardService(
                             synergies = realExtraInfo.synergies.plus(extraSynergies)
                     ))
         }.toMap()
+
+        val cardExpansions = cards.entries
+                .groupBy { it.value.cardTitle }
+                .map { it.key to it.value.map { cardNums -> cardNums.key } }
+                .toMap()
+
+        cards.forEach {
+            it.value.cardNumbers = cardExpansions[it.value.cardTitle]
+        }
+
         nonMaverickCachedCards = cards
         nonMaverickCachedCardsWithNames = cards.map { it.value.cardTitle.cleanCardName() to it.value }.toMap()
         val notNullCards = nonMaverickCachedCards?.values?.toList()?.sorted()

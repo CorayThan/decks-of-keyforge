@@ -1,9 +1,7 @@
-import { BackendExpansion } from "../expansions/Expansions"
 import { SynTraitValue } from "../synergy/SynTraitValue"
 
 export interface ExtraCardInfo {
     cardName: string
-    cardNumbers: CardIdentifier[]
     rating: number
     expectedAmber: number
     expectedAmberMax?: number
@@ -41,11 +39,5 @@ export interface ExtraCardInfo {
     version: number
     active: boolean
 
-    id: string
-}
-
-export interface CardIdentifier {
-    expansion: BackendExpansion
-    cardNumber: string
     id: string
 }

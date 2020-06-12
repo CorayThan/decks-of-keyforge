@@ -1,6 +1,5 @@
 package coraythan.keyswap.cards
 
-import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.SynTraitValueRepo
 import coraythan.keyswap.users.CurrentUserService
@@ -15,7 +14,6 @@ import java.util.*
 class ExtraCardInfoService(
         private val cardService: CardService,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
-        private val cardIdentifierRepo: CardIdentifierRepo,
         private val currentUserService: CurrentUserService,
         private val synTraitValueRepo: SynTraitValueRepo,
         private val spoilerRepo: SpoilerRepo
@@ -36,27 +34,13 @@ class ExtraCardInfoService(
             return preexistingInfo.first()
         }
 
-        val cardIdentifier = CardIdentifier(
-                expansion = Expansion.MASS_MUTATION,
-                cardNumber = spoiler.cardNumber ?: throw IllegalStateException("No making spoilers without card numbers")
-        )
-
-        if (cardIdentifierRepo.findByExpansionAndCardNumber(Expansion.MASS_MUTATION, spoiler.cardNumber).isNotEmpty()) {
-            throw IllegalStateException("Extra card info already exists for ${Expansion.MASS_MUTATION} ${spoiler.cardNumber}")
-        }
-
         val extraInfo = ExtraCardInfo(
                 cardName = spoiler.cardTitle,
                 expectedAmber = spoiler.amber.toDouble(),
                 version = cardService.activeAercVersion + 1,
                 published = null,
-                cardNumbers = mutableListOf(
-                        cardIdentifier
-                ),
                 active = true
         )
-
-        cardIdentifier.info = extraInfo
 
         return extraCardInfoRepo.save(extraInfo)
     }
@@ -102,10 +86,6 @@ class ExtraCardInfoService(
             val infoToSave = info.readyForCreate(nextVersion)
             val saved = extraCardInfoRepo.save(infoToSave)
 
-            info.cardNumbers.forEach { carNum ->
-                log.info("Save card num ${carNum.toNumberSetPair()}")
-                cardIdentifierRepo.save(carNum.copy(info = saved, id = UUID.randomUUID()))
-            }
             info.traits.forEach { trait ->
                 trait.validate()
                 synTraitValueRepo.save(trait.copy(traitInfo = saved, id = UUID.randomUUID()))
@@ -120,11 +100,9 @@ class ExtraCardInfoService(
     }
 
     private fun findNextOrCurrentInfo(info: ExtraCardInfo): ExtraCardInfo {
-        val firstCardNumber = info.cardNumbers.first()
-        val preExistingInfos = cardIdentifierRepo.findByExpansionAndCardNumber(firstCardNumber.expansion, firstCardNumber.cardNumber)
-                .sortedBy { it.info?.version ?: 0 }
-
-        return preExistingInfos.last().info!!
+        val preExistingInfos = extraCardInfoRepo.findByCardName(info.cardName)
+                .sortedBy { it.version }
+        return preExistingInfos.last()
     }
 
 }
