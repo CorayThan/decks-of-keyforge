@@ -9,6 +9,7 @@ export interface Spoiler {
 
     cardTitle: string
     house?: House // anomalies have no house
+    houses?: House[]
     cardType: CardType
     frontImage?: string
     cardText: string

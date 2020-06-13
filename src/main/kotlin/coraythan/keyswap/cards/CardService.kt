@@ -160,7 +160,7 @@ class CardService(
                             cards
                                     .filter { it.house == house }
                                     .sorted()
-                                    .map { it.toSimpleCard() }
+                                    .map { it.toSimpleCard(!(it.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum }?: true) ) }
                     )
                 }
                 .sortedBy { it.house }
@@ -238,7 +238,16 @@ class CardService(
                         .values
                         .map { groupedCards ->
                             groupedCards.let { sameCards ->
-                                sameCards.find { !it.maverick } ?: sameCards.first()
+                                val nonMav = sameCards.filter { !it.maverick && !it.anomaly }
+                                if (nonMav.isEmpty()) {
+                                    val representativeCard = sameCards.first()
+                                    representativeCard.houses = listOf()
+                                    representativeCard
+                                } else {
+                                    val representativeCard = nonMav.first()
+                                    representativeCard.houses = nonMav.map { it.house }.toSet().toList().sorted()
+                                    representativeCard
+                                }
                             }
                         }
         ).map {
@@ -334,7 +343,7 @@ class CardService(
         return cardIds.cardIds.flatMap { entry ->
             entry.value.map {
                 val realCard = realCards[it.toNew()] ?: throw java.lang.IllegalStateException("No card for ${it.toNew()}")
-                realCard.copy(house = entry.key, maverick = entry.key != realCard.house, enhanced = it.enhanced)
+                realCard.copy(house = entry.key, maverick = !realCard.anomaly && !(realCard.houses?.contains(entry.key) ?: true), enhanced = it.enhanced)
             }
         }
     }

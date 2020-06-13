@@ -11,6 +11,7 @@ import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { GraySidebar } from "../../generic/GraySidebar"
 import { CardQualityIcon } from "../../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../../generic/UnstyledLink"
+import { HouseBanner } from "../../houses/HouseBanner"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { SynTraitValue } from "../../synergy/SynTraitValue"
@@ -104,6 +105,9 @@ export const CardView = observer((props: CardViewProps) => {
                     <div style={{flexGrow: 1}}/>
                     <CardSetsFromCard card={card}/>
                 </div>
+                {card.houses.length > 1 && (
+                    <HouseBanner houses={card.houses} size={24} style={{marginBottom: spacing(2), marginTop: spacing(1)}}/>
+                )}
                 <div style={{display: "flex"}}>
                     <Typography color={"textPrimary"} variant={"subtitle2"}>{cardType}</Typography>
                     <div style={{flexGrow: 1}}/>

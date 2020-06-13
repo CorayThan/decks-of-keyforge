@@ -144,7 +144,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                                                                 />
                                                             )
                                                         }
-                                                        return <Deck deckId={entry.deckId!} key={entryIdx} name={entry.deckName!} modal={entry.modal}/>
+                                                        return <ArticleDeck deckId={entry.deckId!} key={entryIdx} name={entry.deckName!} modal={entry.modal}/>
                                                     case EntryType.TABLE:
                                                         if (screenStore.screenSizeXs()) {
                                                             return null
@@ -196,7 +196,7 @@ interface ArticleDeckProps {
 }
 
 @observer
-class Deck extends React.Component<ArticleDeckProps> {
+class ArticleDeck extends React.Component<ArticleDeckProps> {
     @observable
     open = false
 
@@ -296,7 +296,7 @@ const bodyText = (text: string, bold?: boolean, italic?: boolean, color?: MuiCol
                 }
                 pushNode = (
                     <div key={cardName}>
-                        <CardAsLine card={card} cardActualHouse={card.house!} marginTop={1} hideRarity={true}/>
+                        <CardAsLine card={card} cardActualHouse={card.house} marginTop={1} hideRarity={true}/>
                     </div>
                 )
             }

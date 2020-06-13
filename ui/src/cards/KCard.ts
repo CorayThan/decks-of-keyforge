@@ -15,6 +15,7 @@ export interface KCard {
     id: string
     cardTitle: string
     house: House
+    houses: House[]
     frontImage: string
     cardType: CardType
     cardText: string
@@ -104,13 +105,12 @@ export class CardUtils {
     static cardWinRates = (card: KCard): CardWinRates[] => {
         const winRates: CardWinRates[] = []
         const expansionWins = card.expansionWins
-
-        if (expansionWins != null) {
+        if (expansionWins != null && card.houses.length > 0) {
             activeExpansions.forEach(expansion => {
                 const wins = expansionWins[expansion]
                 if (wins != null && (wins.wins + wins.losses > 1000)) {
                     const winRatePercent = CardUtils.calcWinRate(wins.wins, wins.losses)
-                    const expHouseWinPercent = statsStore.winRateForExpansionAndHouse(expansion, card.house)
+                    const expHouseWinPercent = statsStore.winRateForExpansionAndHouse(expansion, card.houses[0])
                     let relativeToAveragePercent
                     if (expHouseWinPercent != null) {
                         relativeToAveragePercent = round(winRatePercent - expHouseWinPercent, 1)
@@ -161,7 +161,7 @@ export class CardUtils {
 
             return [
                 card.cardTitle,
-                card.house,
+                card.houses,
                 card.cardNumbers?.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`),
                 card.cardType,
                 card.rarity,

@@ -160,35 +160,28 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
 }
 
 const CardLine = observer((props: CardAsLineProps) => {
-    const {card, deckExpansion, hideRarity, cardActualHouse} = props
-
-    const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
-    if (fullCard == null) return <Typography>No card {card.cardTitle}</Typography>
-
-    let cardExpansions
-    if (fullCard.extraCardInfo != null) {
-        cardExpansions = fullCard.cardNumbers?.map(cardNumbers => cardNumbers.expansion)
-    }
-
-    const isAnomaly = fullCard.anomaly
-    const isLegacy = !isAnomaly && deckExpansion != null && cardExpansions != null && !cardExpansions.includes(deckExpansion)
-    const isMaverick = fullCard.house !== cardActualHouse && !isAnomaly
+    const {card, hideRarity} = props
 
     return (
         <div
             style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
         >
-            {!hideRarity && fullCard.rarity ? <RarityIcon rarity={fullCard.rarity}/> : null}
+            {!hideRarity && <RarityIcon rarity={card.rarity}/>}
             <Typography
                 variant={"body2"}
                 style={{marginLeft: spacing(1), color: card.enhanced ? blue.A200 : undefined}}
                 noWrap={true}
             >
-                {fullCard.cardTitle}
+                {card.cardTitle}
             </Typography>
-            {isMaverick ? <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div> : null}
-            {isLegacy ? <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div> : null}
-            {isAnomaly ? <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div> : null}
+            {card.anomaly ? (
+                <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div>
+            ) : (
+                <>
+                    {card.maverick && <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div>}
+                    {card.legacy && <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div>}
+                </>
+            )}
         </div>
     )
 })

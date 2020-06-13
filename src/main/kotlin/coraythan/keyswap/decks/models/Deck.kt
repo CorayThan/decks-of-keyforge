@@ -106,6 +106,9 @@ data class Deck(
         val id: Long = -1
 ) {
 
+    val expansionEnum: Expansion
+        get() = Expansion.forExpansionNumber(expansion)
+
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
@@ -122,7 +125,7 @@ data class Deck(
         return DeckSearchResult(
                 id = id,
                 keyforgeId = keyforgeId,
-                expansion = Expansion.forExpansionNumber(expansion),
+                expansion = expansionEnum,
                 name = name,
 
                 powerLevel = powerLevel,

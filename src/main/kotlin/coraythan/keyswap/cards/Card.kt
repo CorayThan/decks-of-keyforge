@@ -52,6 +52,9 @@ data class Card(
         var cardNumbers: List<CardNumberSetPair>? = null,
 
         @Transient
+        var houses: List<House>? = null,
+
+        @Transient
         var expansionWins: Map<Expansion, Wins>? = null
 ) : Comparable<Card> {
 
@@ -125,12 +128,13 @@ data class Card(
             }
         }
 
-    fun toSimpleCard() = SimpleCard(
+    fun toSimpleCard(isLegacy: Boolean) = SimpleCard(
             cardTitle = cardTitle,
             rarity = rarity,
             maverick = maverick,
             anomaly = anomaly,
-            enhanced = enhanced
+            enhanced = enhanced,
+            legacy = isLegacy
     )
 
 }
