@@ -1,45 +1,42 @@
-import { Button, Collapse, FormGroup, IconButton, MenuItem, Tooltip } from "@material-ui/core"
+import { Divider, FormGroup, IconButton, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
-import FormLabel from "@material-ui/core/FormLabel"
 import InputLabel from "@material-ui/core/InputLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { Add, BarChart, Close, Delete, ExpandLess, ExpandMore, ViewList, ViewModule } from "@material-ui/icons"
-import { Autocomplete, ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
+import { BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
-import { computed } from "mobx"
+import { computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { ChangeEvent } from "react"
-import { cardStore } from "../../cards/CardStore"
 import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
+import { SearchDrawerExpansionPanel } from "../../components/SearchDrawerExpansionPanel"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing, theme } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
-import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
+import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../expansions/ExpansionSelectOrExclude"
+import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
-import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
-import { House, houseValuesArray } from "../../houses/House"
 import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
-import { Loader, LoaderSize } from "../../mui-restyled/Loader"
-import { SelectedOptions } from "../../mui-restyled/SelectedOptions"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { deckStore } from "../DeckStore"
+import { DeckUtils } from "../models/DeckSearchResult"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
 import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
+import { DeckCardSelect } from "./DeckCardSelect"
 import { DeckFilters } from "./DeckFilters"
 
 interface DecksSearchDrawerProps {
@@ -50,7 +47,14 @@ interface DecksSearchDrawerProps {
 @observer
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
-    selectedExpansion = new SelectedExpansion(this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
+    @observable
+    displayHouses = false
+    @observable
+    displayConstraints = false
+    @observable
+    displayCards = false
+
+    selectedExpansions = new SelectedOrExcludedExpansions(this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
     selectedHouses = new SelectedOrExcludedHouses(this.props.filters.houses, this.props.filters.excludeHouses)
     selectedSortStore = new DeckSortSelectStore(
         this.props.filters.forTrade || (this.props.filters.forSale === true),
@@ -65,7 +69,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             event.preventDefault()
         }
         const filters = this.props.filters
-        filters.expansions = this.selectedExpansion.expansionsAsNumberArray()
+        filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
         filters.houses = this.selectedHouses.getHousesSelectedTrue()
         filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
 
@@ -94,7 +98,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.selectedSortStore.selectedValue = ""
         this.props.filters.reset()
         this.constraintsStore.reset()
-        this.selectedExpansion.reset()
+        this.selectedExpansions.reset()
     }
 
     updateForSale = (forSale?: boolean) => {
@@ -150,7 +154,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     render() {
         const {
             title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade, forAuction,
-            forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes
+            forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes, completedAuctions, teamDecks, registered, withOwners
         } = this.props.filters
 
         let myCountry: string | undefined
@@ -214,102 +218,99 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             ) : null}
                         </ListItem>
-                        {notes.length > 0 || userStore.loggedIn() ? (
-                            <ListItem>
-                                {notesUser.length === 0 || userStore.username === notesUser ? (
-                                    <div style={{display: "flex", alignItems: "flex-end"}}>
-                                        <TextField
-                                            label={"Search Notes"}
-                                            onChange={handleNotesUpdate}
-                                            value={notes}
-                                            style={{marginRight: spacing(2), width: 128}}
+                        <ListItem style={{marginTop: spacing(2)}}>
+                            <ExpansionSelectOrExclude selectedExpansions={this.selectedExpansions}/>
+                        </ListItem>
+                        <ListItem style={{marginTop: spacing(1)}}>
+                            <div>
+                                <Typography variant={"subtitle1"} color={"textSecondary"}>Options</Typography>
+                                <FormGroup row={true}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.myDecks}
+                                                onChange={handleMyDecksUpdate}
+                                                disabled={!showMyDecks}
+                                            />
+                                        }
+                                        label={<Typography variant={"body2"}>My Decks</Typography>}
+                                        style={{width: 136}}
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.props.filters.forSale === true}
+                                                onChange={(event) => this.updateForSale(event.target.checked ? true : undefined)}
+                                            />
+                                        }
+                                        label={(
+                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                <SellDeckIcon/>
+                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Sale</Typography>
+                                            </div>
+                                        )}
+                                        style={{width: 136}}
+                                    />
+                                    <div style={{display: "flex"}}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={myCountry != null && forSaleInCountry === myCountry}
+                                                    onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
+                                                    disabled={!myCountry}
+                                                />
+                                            }
+                                            label={<Typography variant={"body2"}>In My Country</Typography>}
+                                            style={{width: 136}}
                                         />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    checked={!!keyLocalStorage.genericStorage.viewNotes}
-                                                    onChange={() => {
-                                                        keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
-                                                    }}
-                                                    disabled={!showMyDecks}
+                                                    checked={this.props.filters.forSale === false}
+                                                    onChange={(event) => this.updateForSale(event.target.checked ? false : undefined)}
                                                 />
                                             }
-                                            label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
+                                            label={<Typography variant={"body2"}>Not For Sale</Typography>}
+                                            style={{width: 136}}
                                         />
                                     </div>
-                                ) : (
-                                    <div>
-                                        <div style={{display: "flex", alignItems: "center", marginBottom: theme.spacing(1)}}>
-                                            <InputLabel>
-                                                {notesUser}'s Notes
-                                            </InputLabel>
-                                            <IconButton onClick={removeNotes} size={"small"} style={{marginLeft: theme.spacing(1)}}>
-                                                <Delete/>
-                                            </IconButton>
-                                        </div>
-                                        <Typography variant={"body2"} color={"textSecondary"}>
-                                            "{notes}"
-                                        </Typography>
-                                    </div>
-                                )}
-                            </ListItem>
-                        ) : null}
-                        <ListItem style={{marginTop: spacing(2)}}>
-                            <HouseSelectOrExclude selectedHouses={this.selectedHouses}/>
-                        </ListItem>
-                        <ListItem>
-                            <FormGroup row={true}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.myDecks}
-                                            onChange={handleMyDecksUpdate}
-                                            disabled={!showMyDecks}
-                                        />
-                                    }
-                                    label={<Typography variant={"body2"}>My Decks</Typography>}
-                                    style={{width: 144}}
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.props.filters.forSale === true}
-                                            onChange={(event) => this.updateForSale(event.target.checked ? true : undefined)}
-                                        />
-                                    }
-                                    label={(
+                                    {showDecksOwner && (
                                         <div style={{display: "flex", alignItems: "center"}}>
-                                            <SellDeckIcon/>
-                                            <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Sale</Typography>
+                                            <Typography>Owner: {owner}</Typography>
+                                            <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
                                         </div>
                                     )}
-                                    style={{width: 144}}
-                                />
-                                <div style={{display: "flex"}}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={myCountry != null && forSaleInCountry === myCountry}
-                                                onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
-                                                disabled={!myCountry}
-                                            />
-                                        }
-                                        label={<Typography variant={"body2"}>In My Country</Typography>}
-                                        style={{width: 144}}
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.props.filters.forSale === false}
-                                                onChange={(event) => this.updateForSale(event.target.checked ? false : undefined)}
-                                            />
-                                        }
-                                        label={<Typography variant={"body2"}>Not For Sale</Typography>}
-                                        style={{width: 144}}
-                                    />
-                                </div>
-                                <Collapse in={keyLocalStorage.genericStorage.showMoreDeckSearchOptions}>
-                                    <div style={{display: "flex"}}>
+                                    {showLoginForCountry ? (
+                                        <div style={{display: "flex"}}>
+                                            <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>
+                                                <Typography variant={"body2"}>
+                                                    Select your country
+                                                </Typography>
+                                            </KeyLink>
+                                            <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>
+                                                to filter decks by country
+                                            </Typography>
+                                        </div>
+                                    ) : null}
+                                    {this.props.filters.notForSale ? (
+                                        <div style={{display: "flex", alignItems: "center"}}>
+                                            <Typography>Not for sale</Typography>
+                                            <IconButton onClick={() => this.props.filters.notForSale = false}><Delete fontSize={"small"}/></IconButton>
+                                        </div>
+                                    ) : null}
+                                </FormGroup>
+                            </div>
+                        </ListItem>
+                        <ListItem style={{marginTop: spacing(1)}}>
+                            <div>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={
+                                        forAuction || forTrade || myFavorites || completedAuctions || teamDecks
+                                        || registered != null || withOwners || notesUser.length > 0
+                                    }
+                                    title={"Extra Options"}
+                                >
+                                    <div style={{display: "flex", flexWrap: "wrap", flexGrow: 1}}>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -323,7 +324,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Auctions</Typography>
                                                 </div>
                                             )}
-                                            style={{width: 144}}
+                                            style={{width: 136}}
                                         />
                                         <FormControlLabel
                                             control={
@@ -338,9 +339,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Trade</Typography>
                                                 </div>
                                             )}
+                                            style={{width: 136}}
                                         />
-                                    </div>
-                                    <div style={{display: "flex"}}>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -350,7 +350,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 />
                                             }
                                             label={<Typography variant={"body2"}>My Favorites</Typography>}
-                                            style={{width: 144}}
+                                            style={{width: 136}}
                                         />
                                         <FormControlLabel
                                             control={
@@ -363,10 +363,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 />
                                             }
                                             label={<Typography variant={"body2"}>Past Auctions</Typography>}
-                                            style={{width: 144}}
+                                            style={{width: 136}}
                                         />
-                                    </div>
-                                    <div style={{display: "flex"}}>
                                         {userStore.patron && userStore.hasTeam && (
                                             <FormControlLabel
                                                 control={
@@ -378,7 +376,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     />
                                                 }
                                                 label={<Typography variant={"body2"}>Team Decks</Typography>}
-                                                style={{width: 144}}
+                                                style={{width: 136}}
                                             />
                                         )}
                                         <FormControlLabel
@@ -390,159 +388,117 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             }
                                             label={(
                                                 <div style={{display: "flex", alignItems: "center"}}>
-                                                    <UnregisteredDeckIcon/>
-                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Unregistered</Typography>
+                                                    <Typography variant={"body2"}>Unregistered</Typography>
                                                 </div>
                                             )}
-                                            style={{width: 144}}
+                                            style={{width: 136}}
                                         />
+                                        {userStore.username != null && ["Coraythan", "randomjoe", "dzky", "Zarathustra05"].includes(userStore.username) && (
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.props.filters.withOwners}
+                                                        onChange={(event) => this.props.filters.withOwners = event.target.checked}
+                                                    />
+                                                }
+                                                label={<Typography variant={"body2"}>With Owners</Typography>}
+                                                style={{width: 136}}
+                                            />
+                                        )}
+                                        {userStore.loggedIn() && userStore.username !== notesUser && (
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={!!keyLocalStorage.genericStorage.viewNotes}
+                                                        onChange={() => {
+                                                            keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
+                                                        }}
+                                                        disabled={!showMyDecks}
+                                                    />
+                                                }
+                                                label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
+                                                style={{width: 136}}
+                                            />
+                                        )}
                                     </div>
-                                    {userStore.username != null && ["Coraythan", "randomjoe", "dzky", "Zarathustra05"].includes(userStore.username) && (
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.props.filters.withOwners}
-                                                    onChange={(event) => this.props.filters.withOwners = event.target.checked}
-                                                />
-                                            }
-                                            label={<Typography variant={"body2"}>With Owners</Typography>}
-                                            style={{width: 144}}
-                                        />
-                                    )}
-                                </Collapse>
-                                <IconButton
-                                    onClick={() => keyLocalStorage.updateGenericStorage({showMoreDeckSearchOptions: !keyLocalStorage.genericStorage.showMoreDeckSearchOptions})}>
-                                    {keyLocalStorage.genericStorage.showMoreDeckSearchOptions ? <ExpandLess fontSize={"small"}/> :
-                                        <ExpandMore fontSize={"small"}/>}
-                                </IconButton>
-                                {showDecksOwner && (
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <Typography>Owner: {owner}</Typography>
-                                        <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
-                                    </div>
-                                )}
-                                {showLoginForCountry ? (
-                                    <div style={{display: "flex"}}>
-                                        <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>
-                                            <Typography variant={"body2"}>
-                                                Select your country
-                                            </Typography>
-                                        </KeyLink>
-                                        <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>
-                                            to filter decks by country
-                                        </Typography>
-                                    </div>
-                                ) : null}
-                                {this.props.filters.notForSale ? (
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <Typography>Not for sale</Typography>
-                                        <IconButton onClick={() => this.props.filters.notForSale = false}><Delete fontSize={"small"}/></IconButton>
-                                    </div>
-                                ) : null}
-                            </FormGroup>
-                        </ListItem>
-                        <ListItem>
-                            <ConstraintDropdowns
-                                store={this.constraintsStore}
-                                properties={constraintOptions}
-                                hideMinMax={hideMinMaxConstraintOptions}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <div style={{flexGrow: 1}}>
-                                <div style={{display: "flex", alignItems: "center"}}>
-                                    <FormLabel style={{marginRight: spacing(1)}}>Cards</FormLabel>
-                                    <IconButton onClick={() => cards.push({cardNames: [], quantity: 1})}>
-                                        <Add fontSize={"small"}/>
-                                    </IconButton>
-                                </div>
-                                <div style={{flexGrow: 1}}>
-                                    {cardStore.cardNames.length === 0 && cards.length > 0 ? (
-                                        <Loader size={LoaderSize.SMALL}/>
-                                    ) : (
+                                    {notes.length > 0 || userStore.loggedIn() ? (
                                         <>
-
-                                            {cards.map((card, idx) => {
-                                                const value = card.house ? card.house : card.quantity.toString()
-                                                const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
-                                                return (
-                                                    <div key={idx}>
-
-                                                        <Autocomplete
-                                                            multiple={true}
-                                                            // @ts-ignore
-                                                            options={cardStore.cardNames}
-                                                            value={selected.selectedValues}
-                                                            renderInput={(params) => <TextField {...params} label={"Any of these cards"}/>}
-                                                            onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
-                                                                selected.update(newValue ?? [])
-                                                            }}
-                                                            style={{marginTop: spacing(1)}}
-                                                        />
-                                                        <TextField
-                                                            style={{minWidth: 80, marginTop: spacing(1), marginBottom: spacing(1)}}
-                                                            label={"Copies"}
-                                                            select={true}
-                                                            value={value}
-                                                            onChange={event => {
-                                                                const valueAsNumber = Number(event.target.value)
-                                                                if (isNaN(valueAsNumber)) {
-                                                                    card.house = event.target.value as House
-                                                                    card.quantity = 1
-                                                                } else {
-                                                                    card.quantity = valueAsNumber
-                                                                    card.house = undefined
-                                                                }
-                                                            }}
-                                                        >
-                                                            <MenuItem value={"0"}>None</MenuItem>
-                                                            <MenuItem value={"1"}>1+</MenuItem>
-                                                            <MenuItem value={"2"}>2+</MenuItem>
-                                                            <MenuItem value={"3"}>3+</MenuItem>
-                                                            <MenuItem value={"4"}>4+</MenuItem>
-                                                            <MenuItem value={"5"}>5+</MenuItem>
-                                                            <MenuItem value={"6"}>6+</MenuItem>
-                                                            <MenuItem value={"7"}>7+</MenuItem>
-                                                            {houseValuesArray.map(houseValue => {
-                                                                return (
-                                                                    <MenuItem value={houseValue.house} key={houseValue.house}>
-                                                                        {houseValue.house}
-                                                                    </MenuItem>
-                                                                )
-                                                            })}
-                                                        </TextField>
-                                                        <IconButton
-                                                            onClick={() => cards.splice(idx, 1)}
-                                                            style={{marginTop: spacing(2), marginLeft: spacing(1)}}
-                                                        >
-                                                            <Delete fontSize={"small"}/>
+                                            {notesUser.length === 0 || userStore.username === notesUser ? (
+                                                <TextField
+                                                    label={"Search Notes"}
+                                                    onChange={handleNotesUpdate}
+                                                    multiline={true}
+                                                    value={notes}
+                                                    style={{marginTop: spacing(1)}}
+                                                    fullWidth={true}
+                                                />
+                                            ) : (
+                                                <div>
+                                                    <div style={{display: "flex", alignItems: "center", marginBottom: theme.spacing(1)}}>
+                                                        <InputLabel>
+                                                            {notesUser}'s Notes
+                                                        </InputLabel>
+                                                        <IconButton onClick={removeNotes} size={"small"} style={{marginLeft: theme.spacing(1)}}>
+                                                            <Delete/>
                                                         </IconButton>
-                                                        <Button
-                                                            onClick={() => cards.push({cardNames: [], quantity: 1})}
-                                                            style={{marginLeft: spacing(1), marginTop: spacing(2.5)}}
-                                                        >
-                                                            And Card...
-                                                        </Button>
                                                     </div>
-                                                )
-                                            })}
-
+                                                    <Typography variant={"body2"} color={"textSecondary"}>
+                                                        "{notes}"
+                                                    </Typography>
+                                                </div>
+                                            )}
                                         </>
-                                    )}
-                                </div>
+                                    ) : null}
+                                </SearchDrawerExpansionPanel>
+                                <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()} title={"Houses"}>
+                                    <HouseSelectOrExclude selectedHouses={this.selectedHouses} excludeTitle={true}/>
+                                </SearchDrawerExpansionPanel>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={this.constraintsStore.constraints.length > 0}
+                                    title={"Constraints"}
+                                    onClick={() => {
+                                        if (this.constraintsStore.constraints.length === 0) {
+                                            this.constraintsStore.addDefault()
+                                        }
+                                    }}
+                                >
+                                    <ConstraintDropdowns
+                                        store={this.constraintsStore}
+                                        properties={constraintOptions}
+                                        hideMinMax={hideMinMaxConstraintOptions}
+                                    />
+                                </SearchDrawerExpansionPanel>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={cards.length > 0}
+                                    title={"Cards"}
+                                    onClick={() => {
+                                        if (cards.length === 0) {
+                                            cards.push({cardNames: [], quantity: 1})
+                                        }
+                                    }}
+                                >
+                                    <DeckCardSelect cards={cards}/>
+                                </SearchDrawerExpansionPanel>
+                                <Divider style={{marginBottom: spacing(1)}}/>
                             </div>
                         </ListItem>
                         <ListItem>
-                            <ExpansionSelector
-                                store={this.selectedExpansion}
-                                small={true}
-                                displayNoneOption={true}
-                                style={{marginRight: spacing(2)}}
-                            />
                             <DeckSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={this.props.filters}/>
                             </div>
+                            {!screenStore.smallDeckView() && (
+                                <CsvDownloadButton
+                                    name={"decks"}
+                                    data={DeckUtils.arrayToCSV(
+                                        (deckStore.decksToDisplay ?? [])
+                                            .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
+                                            .filter(deck => deck != null)
+                                    )}
+                                    size={"small"}
+                                    style={{marginLeft: spacing(2), marginTop: "auto"}}
+                                />
+                            )}
                         </ListItem>
                         <ListItem>
                             <div style={{display: "flex", marginTop: spacing(1), marginBottom: spacing(1)}}>

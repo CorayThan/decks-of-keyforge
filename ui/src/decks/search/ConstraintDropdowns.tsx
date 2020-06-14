@@ -1,5 +1,5 @@
-import { FormLabel, IconButton, MenuItem, TextField } from "@material-ui/core"
-import { Add, Delete } from "@material-ui/icons"
+import { Button, IconButton, MenuItem, TextField } from "@material-ui/core"
+import { Delete } from "@material-ui/icons"
 import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -11,12 +11,6 @@ export enum Cap {
     MAX = "MAX",
     EQUALS = "EQUALS",
 }
-
-const makeDefaultConstraint = () => ({
-    property: "",
-    cap: Cap.MIN,
-    value: "0"
-})
 
 export class FiltersConstraintsStore {
 
@@ -30,6 +24,14 @@ export class FiltersConstraintsStore {
     reset = () => this.constraints = []
     cleanConstraints = () => this.constraints.filter(constraint => !!constraint.property)
     removeConstraint = (idx: number) => this.constraints.splice(idx, 1)
+
+    addDefault = () => {
+        this.constraints.push({
+            property: "",
+            cap: Cap.MIN,
+            value: "0"
+        })
+    }
 }
 
 export interface ConstraintDropdownsProps {
@@ -44,12 +46,6 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
         const {store, properties, hideMinMax} = this.props
         return (
             <div style={{width: "100%"}}>
-                <div style={{display: "flex", alignItems: "center"}}>
-                    <FormLabel style={{marginRight: spacing(1)}}>Constraints</FormLabel>
-                    <IconButton onClick={() => store.constraints.push(makeDefaultConstraint())}>
-                        <Add fontSize={"small"}/>
-                    </IconButton>
-                </div>
                 {store.constraints.map((constraint, idx) => (
                     <div key={idx}>
                         <div style={{display: "flex", alignItems: "center"}}>
@@ -57,7 +53,7 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                                 select={true}
                                 value={constraint.property}
                                 onChange={event => constraint.property = event.target.value}
-                                style={{marginRight: spacing(2), width: 192 }}
+                                style={{marginRight: spacing(2), width: 192}}
                             >
                                 {properties.map(property => (
                                     <MenuItem key={property} value={property}>
@@ -96,8 +92,10 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                             />
                         </div>
                     </div>
-                ))
-                }
+                ))}
+                <Button onClick={store.addDefault} style={{marginTop: spacing(1)}}>
+                    Add Constraint
+                </Button>
             </div>
         )
     }

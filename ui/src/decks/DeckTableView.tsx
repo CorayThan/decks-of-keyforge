@@ -8,7 +8,6 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, roundToHundreds, roundToTens } from "../config/Utils"
-import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -217,15 +216,11 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             {property: "losses", hide: keyLocalStorage.smallTableView},
             {
                 titleNode: (
-                    <div style={{display: "flex"}}>
-                        <CsvDownloadButton name={"decks"} data={DeckUtils.arrayToCSV(decks)}/>
-                        <IconButton
-                            onClick={keyLocalStorage.toggleSmallTableView}
-                            style={{marginLeft: spacing(2)}}
-                        >
-                            {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
-                        </IconButton>
-                    </div>
+                    <IconButton
+                        onClick={keyLocalStorage.toggleSmallTableView}
+                    >
+                        {keyLocalStorage.smallTableView ? <ChevronRight/> : <ChevronLeft/>}
+                    </IconButton>
                 ),
                 transform: deck => (
                     <div style={{display: "flex"}}>

@@ -11,6 +11,7 @@ export enum CheckboxState {
 export interface CheckboxThreeStateProps {
     onChange: (state: CheckboxState) => void
     value: CheckboxState
+    disallowExcluded?: boolean
 }
 
 export const CheckboxThreeState = (props: CheckboxThreeStateProps) => {
@@ -22,7 +23,7 @@ export const CheckboxThreeState = (props: CheckboxThreeStateProps) => {
                 let nextState = CheckboxState.OFF
                 switch (previousState) {
                     case CheckboxState.ON:
-                        nextState = CheckboxState.EXCLUDED
+                        nextState = props.disallowExcluded ? CheckboxState.OFF : CheckboxState.EXCLUDED
                         break
                     case CheckboxState.EXCLUDED:
                         nextState = CheckboxState.OFF

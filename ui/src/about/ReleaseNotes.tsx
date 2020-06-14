@@ -13,7 +13,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.6"
+export const latestVersion = "5.7"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -41,17 +41,28 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
-                {/*<ReleaseNote*/}
-                {/*    releaseNumber={"5.6"}*/}
-                {/*    date={"6/??/2020"}*/}
-                {/*    expanded={true}*/}
-                {/*    releaseNotesWithHighlights={[*/}
-                {/*        {*/}
-                {/*            highlight: "Ratings Update",*/}
-                {/*            note: "thank petitbot and fakyr?"*/}
-                {/*        },*/}
-                {/*    ]}*/}
-                {/*/>*/}
+                <ReleaseNote
+                    releaseNumber={"5.7"}
+                    date={"6/14/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Ratings Update",
+                            note: "I've updated a number of cards slightly based win rate analysis of all current sets provided by " +
+                                "PetitBOT, the newest member of the SAS Council. From this point forward I'm going to endeavor to " +
+                                "release SAS changes on a more regular basis, on the 1st of every month. Extra releases will be " +
+                                "performed when new expansions are released."
+                        },
+                        {
+                            highlight: "Deck Search Panel Improvements",
+                            note: "I've worked to improve the appearance and usability of the Deck Search Panel. Less commonly used " +
+                                "features, like the House Select, are now hidden behind an expansion panel by default. The link " +
+                                "to download a CSV of the deck search results has been moved from the deck table view to the search panel. " +
+                                "And an improved expansion selector has been created to make it easier to quickly select expansions, and " +
+                                "to allow selecting multiple expansions."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.6"}
                     date={"6/7/2020"}

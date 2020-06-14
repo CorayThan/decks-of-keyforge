@@ -13,15 +13,18 @@ interface HouseSelectOrExcludeProps {
     selectedHouses: SelectedOrExcludedHouses
     options?: HouseValue[]
     style?: React.CSSProperties
+    excludeTitle?: boolean
 }
 
 @observer
 export class HouseSelectOrExclude extends React.Component<HouseSelectOrExcludeProps> {
     render() {
-        const {selectedHouses, options, style} = this.props
+        const {selectedHouses, options, style, excludeTitle} = this.props
         return (
             <FormControl style={style}>
-                <FormLabel style={{marginBottom: spacing(1)}}>Houses</FormLabel>
+                {!excludeTitle && (
+                    <FormLabel style={{marginBottom: spacing(1)}}>Houses</FormLabel>
+                )}
                 <FormGroup
                     row={true}
                 >
@@ -100,4 +103,6 @@ export class SelectedOrExcludedHouses {
         const excludedCount = this.getHousesExcludedTrue().length
         return totalCount - excludedCount > 2 && (requiredCount < 4 || excludedCount === 0)
     }
+
+    anySelected = () => this.selectedHouses.some(house => house.state !== CheckboxState.OFF)
 }

@@ -1,8 +1,9 @@
 import { Collapse, IconButton } from "@material-ui/core"
-import { ExpandLess, ExpandMore } from "@material-ui/icons"
+import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
+import { rotateIconStyle } from "../components/SearchDrawerExpansionPanel"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { theme } from "../config/MuiConfig"
 import { DeckSearchResult } from "../decks/models/DeckSearchResult"
@@ -112,7 +113,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
                 </Collapse>
                 <div style={{display: "flex", justifyContent: "center"}}>
                     <IconButton onClick={keyLocalStorage.toggleDisplayExtraDeckStats}>
-                        {keyLocalStorage.displayExtraDeckStats ? <ExpandLess/> : <ExpandMore/>}
+                        <ExpandMore style={rotateIconStyle(keyLocalStorage.displayExtraDeckStats)}/>
                     </IconButton>
                 </div>
             </div>

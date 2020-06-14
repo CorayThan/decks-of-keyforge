@@ -70,18 +70,18 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
         <div
             style={{backgroundColor: themeStore.aercViewBackground, padding: spacing(1)}}
         >
-            {deck.previousMajorSasRating != null && deck.previousMajorSasRating > 0 && (
-                <div style={{marginLeft: spacing(1)}}>
-                    <Tooltip title={"SAS Score from before the update to SAS v5."}>
-                        <div style={{display: "flex", alignItems: "flex-end"}}>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
-                                {deck.previousMajorSasRating}
-                            </Typography>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 2}} noWrap={true}>SAS v4</Typography>
-                        </div>
-                    </Tooltip>
-                </div>
-            )}
+            {/*{deck.previousMajorSasRating != null && deck.previousMajorSasRating > 0 && (*/}
+            {/*    <div style={{marginLeft: spacing(1)}}>*/}
+            {/*        <Tooltip title={"SAS Score from before the update to SAS v5."}>*/}
+            {/*            <div style={{display: "flex", alignItems: "flex-end"}}>*/}
+            {/*                <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>*/}
+            {/*                    {deck.previousMajorSasRating}*/}
+            {/*                </Typography>*/}
+            {/*                <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 2}} noWrap={true}>SAS v4</Typography>*/}
+            {/*            </div>*/}
+            {/*        </Tooltip>*/}
+            {/*    </div>*/}
+            {/*)}*/}
             <div
                 style={{
                     display: "grid",

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 17
+val publishedAercVersion = 18
 val majorRevision = false
 
 @Transactional

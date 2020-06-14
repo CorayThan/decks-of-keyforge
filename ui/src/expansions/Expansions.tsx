@@ -1,3 +1,7 @@
+import Typography from "@material-ui/core/Typography/Typography"
+import * as React from "react"
+import { ExpansionIcon } from "./ExpansionIcon"
+
 export interface ExpansionInfo {
     expansionNumber: Expansion
     name: string
@@ -54,3 +58,16 @@ export const expansionInfoMapNumbers: Map<number, ExpansionInfo> = new Map(expan
 )))
 
 export const expansionToBackendExpansion = (expansion: Expansion) => expansionInfoMapNumbers.get(expansion)!.backendEnum
+
+export const ExpansionLabel = (props: { expansion: BackendExpansion, width?: number, iconSize?: number }) => {
+    const {expansion, width, iconSize} = props
+
+    return (
+        <div style={{display: "flex", alignItems: "center"}}>
+            <ExpansionIcon expansion={expansion} size={iconSize ?? 32} style={{marginRight: 8}}/>
+            <Typography noWrap={false} variant={"body2"} style={{width, fontSize: "0.75rem"}}>
+                {expansionInfoMap.get(expansion)!.name}
+            </Typography>
+        </div>
+    )
+}
