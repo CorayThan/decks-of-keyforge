@@ -301,6 +301,7 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: StatsSubPaths.winRates, text: "Stats", mobileActive: true},
+                {to: StatsSubPaths.winRates, text: "Win Rates", mobileActive: false},
                 {to: StatsSubPaths.deckStats, text: "Deck Stats", mobileActive: false},
                 {to: StatsSubPaths.aercStats, text: "AERC Stats", mobileActive: false},
                 {to: StatsSubPaths.purchaseStats, text: "Sale Stats", mobileActive: false},

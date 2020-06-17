@@ -1,4 +1,5 @@
 import { BarData } from "../graphs/StatsBar"
+import { AercData } from "./AercData"
 
 export interface GlobalStatsWithExpansion {
     expansion: number | null
@@ -77,6 +78,8 @@ export interface GlobalStats {
     effectivePowerPercentiles: { [key: number]: number }
     efficiencyPercentiles: { [key: number]: number }
     disruptionPercentiles: { [key: number]: number }
+
+    aercDatas: AercData[]
 }
 
 export interface Wins {

@@ -51,7 +51,9 @@ data class DeckStatistics(
         val upgradeWins: MutableMap<Int, Wins> = mutableMapOf(),
 
         val raresWins: MutableMap<Int, Wins> = mutableMapOf(),
-        val housesWins: MutableMap<House, Wins> = mutableMapOf()
+        val housesWins: MutableMap<House, Wins> = mutableMapOf(),
+
+        var aercDatas: List<AercData> = listOf()
 ) {
     val expectedAmberStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(expectedAmber)
@@ -156,7 +158,9 @@ data class DeckStatistics(
             artifactControlPercentiles = artifactControlStats.percentileForValue,
             effectivePowerPercentiles = effectivePowerStats.percentileForValue,
             efficiencyPercentiles = efficiencyStats.percentileForValue,
-            disruptionPercentiles = disruptionStats.percentileForValue
+            disruptionPercentiles = disruptionStats.percentileForValue,
+
+            aercDatas = aercDatas.map { it.toAverages() }
     )
 
     private fun groupCreaturePowerByTens(): List<BarData> {

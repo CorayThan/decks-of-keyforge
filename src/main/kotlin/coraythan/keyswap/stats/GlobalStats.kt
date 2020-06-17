@@ -75,7 +75,9 @@ data class GlobalStats(
         val artifactControlPercentiles: Map<Int, Double> = mapOf(),
         val effectivePowerPercentiles: Map<Int, Double> = mapOf(),
         val efficiencyPercentiles: Map<Int, Double> = mapOf(),
-        val disruptionPercentiles: Map<Int, Double> = mapOf()
+        val disruptionPercentiles: Map<Int, Double> = mapOf(),
+
+        val aercDatas: List<AercData> = listOf()
 )
 
 data class BarData(

@@ -13,3 +13,4 @@ fun String.tokenize(): List<String> {
 }
 
 fun Double.roundToOneSigDig() = this.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
+fun Double.roundToTwoSigDig() = this.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()

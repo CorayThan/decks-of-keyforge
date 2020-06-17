@@ -12,10 +12,12 @@ import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.now
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.synergy.DeckSynergyService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -174,10 +176,29 @@ class StatsService(
     private fun updateStats(statsEntities: List<DeckStatisticsEntity>, decks: List<Deck>) {
         statsEntities.forEach { statsEntity ->
             val stats = statsEntity.toDeckStatistics()
+
+            if (statsEntity.expansion == null) {
+                val datasToInclude = activeExpansions.map {
+                    AercData(0, it)
+                }.plus(
+                        activeExpansions.flatMap { expansion ->
+                            expansion.houses.map {
+                                AercData(0, expansion, it)
+                            }
+                        }
+                ).associateBy { Pair(it.expansion, it.house) }
+
+                stats.aercDatas = datasToInclude
+                        .plus(stats.aercDatas.associateBy { Pair(it.expansion, it.house) })
+                        .values.toList()
+            }
+
             decks
                     .filter { statsEntity.expansion == null || statsEntity.expansion.expansionNumber == it.expansion }
                     .forEach { ratedDeck ->
                         val cards = cardService.cardsForDeck(ratedDeck)
+                        val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck, cards)
+
                         stats.armorValues.incrementValue(ratedDeck.totalArmor)
                         stats.totalCreaturePower.incrementValue(ratedDeck.totalPower)
                         stats.aerc.incrementValue(ratedDeck.aercScore.roundToInt())
@@ -231,6 +252,32 @@ class StatsService(
                                 stats.housesWins.addWinsLosses(house, wins)
                             }
                         }
+
+                        if (statsEntity.expansion == null) {
+
+                            stats.aercDatas = stats.aercDatas.map { aercData ->
+                                if (ratedDeck.expansionEnum == aercData.expansion && (aercData.house == null || ratedDeck.houses.contains(aercData.house))) {
+
+                                    val relevantCombos = deckWithSyns.synergyCombos.filter { aercData.house == null || aercData.house == it.house }
+
+                                    aercData.copy(
+                                            count = aercData.count + 12,
+                                            amberControl = aercData.amberControl + relevantCombos.sumByDouble { it.amberControl * it.copies },
+                                            expectedAmber = aercData.expectedAmber + relevantCombos.sumByDouble { it.expectedAmber * it.copies },
+                                            artifactControl = aercData.artifactControl + relevantCombos.sumByDouble { it.artifactControl * it.copies },
+                                            creatureControl = aercData.creatureControl + relevantCombos.sumByDouble { it.creatureControl * it.copies },
+                                            effectivePower = aercData.effectivePower + relevantCombos.sumBy { it.effectivePower * it.copies },
+                                            efficiency = aercData.efficiency + relevantCombos.sumByDouble { it.efficiency * it.copies },
+                                            disruption = aercData.disruption + relevantCombos.sumByDouble { it.disruption * it.copies },
+                                            creatureProtection = aercData.creatureProtection + relevantCombos.sumByDouble { it.creatureProtection * it.copies },
+                                            other = aercData.other + relevantCombos.sumByDouble { it.other * it.copies }
+                                    )
+                                } else {
+                                    aercData
+                                }
+                            }
+                        }
+
                     }
 
             deckStatisticsRepo.save(statsEntity.copy(deckStats = DeckStatisticsEntity.fromDeckStatistics(stats).deckStats))
@@ -243,6 +290,9 @@ class StatsService(
         cachedGlobalStats = listOf(GlobalStatsWithExpansion(
                 null,
                 statsToCache.toGlobalStats()
+                        .let {
+                            it.copy(aercDatas = it.aercDatas.sortedBy { it.house })
+                        }
         ))
                 .plus(Expansion.values().map {
                     GlobalStatsWithExpansion(it.expansionNumber,
