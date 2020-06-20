@@ -78,8 +78,8 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                 <Table size={"small"}>
                     <TableHead>
                         <TableRow>
-                            {usableHeaders.map(header => (
-                                <TableCell key={header.property?.toString() ?? header.title?.toString()} style={{width: header.width}}>
+                            {usableHeaders.map((header, idx) => (
+                                <TableCell key={header.property?.toString() ?? header.title?.toString() ?? idx} style={{width: header.width}}>
                                     {(header.property != null || header.sortFunction != null) && header.sortable !== false ? (
                                         <TableSortLabel
                                             active={store.activeTableSort === header.property && store.sortFunctionName === header.title}
@@ -108,7 +108,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                                         value = datum[header.property!]
                                     }
                                     return (
-                                        <TableCell key={header.property?.toString() ?? header.title?.toString()}>
+                                        <TableCell key={header.property?.toString() ?? header.title?.toString() ?? idx}>
                                             <div style={{width: header.width}}>
                                                 {value}
                                             </div>

@@ -31,6 +31,7 @@ import { House } from "../houses/House"
 import { HouseImage } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
 import { Article, ArticleEntry, ArticleSection, EntryType, MuiColors } from "./Article"
 
@@ -57,6 +58,10 @@ export class ArticleView extends React.Component<ArticleViewProps> {
         const {article} = this.props
         const {title, subtitle, urlTitle, date, sections, author} = article
         const link = Routes.articlePage(urlTitle)
+
+        if (!cardStore.cardsLoaded) {
+            return <Loader/>
+        }
 
         return (
             <Card

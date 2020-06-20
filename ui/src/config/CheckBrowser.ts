@@ -1,7 +1,7 @@
 import * as Bowser from "bowser"
 
 export class CheckBrowser {
-    static check = () => {
+    static check = (): boolean => {
         const bowserParser = Bowser.getParser(window.navigator.userAgent)
         const isValidBrowser = bowserParser.satisfies({
             android: ">=81",
@@ -29,5 +29,6 @@ export class CheckBrowser {
                 window.alert(baseMessage)
             }
         }
+        return !!isValidBrowser
     }
 }

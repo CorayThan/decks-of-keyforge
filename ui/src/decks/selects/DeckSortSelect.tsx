@@ -100,7 +100,7 @@ const deckSortOptions: SortOption[] = [
     {value: DeckSorts.powerLevel, name: "Power Level"},
     {value: DeckSorts.chains, name: "Chains"},
     {value: DeckSorts.funniest, name: "Funniest"},
-    {value: DeckSorts.wishlisted, name: "Most Wishlisted"},
+    {value: DeckSorts.wishlisted, name: "Most Favorited"},
     {value: DeckSorts.name, name: "Name"},
 ]
 

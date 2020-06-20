@@ -1,4 +1,4 @@
-import { Button, IconButton, Paper, TableCell, TextField, Typography } from "@material-ui/core"
+import { Button, IconButton, Paper, TextField, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
@@ -46,7 +46,15 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
 
         log.debug("Seller version by props? " + this.props.sellerView)
         const {decks, sellerView} = this.props
-        const displayPrices = !!decks[0].deckSaleInfo
+
+        const firstDeck = decks[0]
+
+        if (firstDeck == null) {
+            log.info("First deck null in table view")
+            return null
+        }
+
+        const displayPrices = !!firstDeck.deckSaleInfo
         if (sellerView && userStore.username == null && !userStore.loginInProgress) {
             return <Typography>Please login to use the sellers view.</Typography>
         } else if (sellerView && userStore.username == null) {
@@ -293,30 +301,28 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
         const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
         if (auctionInfo != null && this.price != null && sellerVersion) {
             return (
-                <TableCell>
-                    <TextField
-                        label={"Price"}
-                        value={this.price}
-                        type={"number"}
-                        onChange={(event) => {
-                            this.price = event.target.value
-                            log.debug(`Price for seller is ${this.price}`)
-                            const asNumber = Number(this.price)
-                            const realPrice = asNumber < 1 ? undefined : asNumber
-                            deckTableViewStore.addPriceChange(auctionInfo.id, realPrice)
-                        }}
-                        style={{width: 64}}
-                    />
-                </TableCell>
+                <TextField
+                    label={"Price"}
+                    value={this.price}
+                    type={"number"}
+                    onChange={(event) => {
+                        this.price = event.target.value
+                        log.debug(`Price for seller is ${this.price}`)
+                        const asNumber = Number(this.price)
+                        const realPrice = asNumber < 1 ? undefined : asNumber
+                        deckTableViewStore.addPriceChange(auctionInfo.id, realPrice)
+                    }}
+                    style={{width: 64}}
+                />
             )
         }
         if (sellerVersion) {
-            return <TableCell/>
+            return <div/>
         }
         return (
-            <TableCell>
+            <div>
                 {this.price == null ? "" : this.price}
-            </TableCell>
+            </div>
         )
     }
 }

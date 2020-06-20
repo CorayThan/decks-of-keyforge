@@ -14,7 +14,9 @@ import { statsStore } from "./stats/StatsStore"
 import { userStore } from "./user/UserStore"
 import { userDeckStore } from "./userdeck/UserDeckStore"
 
-if (!Utils.isDev()) {
+const isValidBrowser = CheckBrowser.check()
+
+if (!Utils.isDev() && isValidBrowser) {
     Sentry.init({
         dsn: "https://a5837898c7064942aeedad8a70803b0f@o394170.ingest.sentry.io/5243978",
         ignoreErrors: [
@@ -22,15 +24,13 @@ if (!Utils.isDev()) {
             "Request failed with status code 404",
             "Non-Error promise rejection captured with keys: message",
             "AbortError: Share canceled",
-            "AbortError: Abort due to cancellation of share "
+            "AbortError: Abort due to cancellation of share ",
         ],
         whitelistUrls: [
             "decksofkeyforge.com"
         ]
     })
 }
-
-CheckBrowser.check()
 
 // Remove eventually
 class Cache {

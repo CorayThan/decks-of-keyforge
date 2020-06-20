@@ -38,6 +38,9 @@ export class CardStatsView extends React.Component<{}> {
             })
             .filter(data => data != null) as unknown as AercData[]
 
+        if (bySetDataReal.length === 0) {
+            return <Typography>Stats not yet calculated</Typography>
+        }
 
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
