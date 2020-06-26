@@ -108,7 +108,7 @@ class CardService(
             .toMap()
 
     fun findByExpansionCardName(expansion: Int, cardName: String) = cardRepo.findByExpansionAndCardTitle(expansion, cardName).firstOrNull()
-    fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!!.get(cardName.cleanCardName())
+    fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!![cardName.cleanCardName()]
 
     fun previousInfo(): Map<String, Card> {
         if (previousInfoWithNames == null) {

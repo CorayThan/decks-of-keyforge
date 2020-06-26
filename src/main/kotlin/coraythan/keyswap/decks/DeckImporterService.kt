@@ -216,11 +216,11 @@ class DeckImporterService(
                     val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
 
                     val rated = deckResults.mapNotNull {
-                        val rated = rateDeck(it, majorRevision)
-                        if (rated == it) {
+                        val rated = rateDeck(it, majorRevision).copy(lastUpdate = ZonedDateTime.now())
+                        if (rated.ratingsEqual(it)) {
                             null
                         } else {
-                            rated.copy(lastUpdate = ZonedDateTime.now())
+                            rated
                         }
                     }
                     quantRerated += rated.size
@@ -244,53 +244,6 @@ class DeckImporterService(
             log.error("$scheduledException rating decks", e)
         }
     }
-
-    // Non repeatable functions
-
-//    var currentPage = 3
-//    var cardsFound = 0
-//
-//    @Scheduled(fixedDelayString = "PT15S")
-//    fun addCardsForExpansion() {
-//        try {
-//            val expansionId = 452
-//            val cardsInExpansion = 515
-//            cardsFound = cardIdentifierRepo.countByExpansion(Expansion.forExpansionNumber(expansionId)).toInt()
-//
-//            if (cardsFound < cardsInExpansion) {
-//                log.info("Looking for more cards with page $currentPage, cards found $cardsFound out of $cardsInExpansion")
-//
-//                try {
-//                    val decks = keyforgeApi.findDecks(currentPage, expansion = expansionId)
-//
-//                    decks?.data?.forEach {
-//                        val deckId = it.id
-//                        val preExistingDeck = deckRepo.findByKeyforgeId(deckId)
-//                        if (preExistingDeck == null) {
-//                            val deck = keyforgeApi.findDeck(deckId)
-//                            if (deck != null) {
-//                                val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
-//                                cardService.importNewCards(deckList)
-//                            }
-//                        }
-//                    }
-//
-//                    log.info("Cards added for $expansionId count: $cardsFound out of $cardsInExpansion")
-//                    currentPage++
-//                } catch (exception: Exception) {
-//                    if (exception.message == "429 Too Many Requests") {
-//                        log.warn("Keyforge api hates me")
-//                    } else {
-//                        log.error("Uh oh, adding new cards didn't work due to ${exception.message}", exception)
-//                    }
-//                }
-//            } else {
-//                log.info("Done adding cards for expansion")
-//            }
-//        } catch (exception: Exception) {
-//            log.error("argh", exception)
-//        }
-//    }
 
     fun importDeck(deckId: String): Long? {
         val preExistingDeck = deckRepo.findByKeyforgeId(deckId)
@@ -379,7 +332,12 @@ class DeckImporterService(
         deck
                 .forEach { keyforgeDeck ->
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
-                        val cardsList = keyforgeDeck.cards?.mapNotNull { cardRepo.findByIdOrNull(it) } ?: listOf()
+                        val cardsList = keyforgeDeck.cards?.map {
+                            val dbCard = cardRepo.findByIdOrNull(it) ?: error("No card in repo for $it")
+                            val cardServiceCard = cardService.findByCardName(dbCard.cardTitle) ?: error("No card in card service for ${dbCard.cardTitle}")
+                            dbCard.extraCardInfo = cardServiceCard.extraCardInfo
+                            dbCard
+                        } ?: listOf()
                         val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                                 ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
                         check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }

@@ -115,10 +115,22 @@ data class Deck(
     val dateAdded: LocalDate?
         get() = this.importDateTime?.toLocalDate()
 
+    fun ratingsEqual(o: Deck) = this.amberControl == o.amberControl &&
+            this.expectedAmber == o.expectedAmber &&
+            this.artifactControl == o.artifactControl &&
+            this.creatureControl == o.creatureControl &&
+            this.effectivePower == o.effectivePower &&
+            this.efficiency == o.efficiency &&
+            this.disruption == o.disruption &&
+            this.creatureProtection == o.creatureProtection &&
+            this.other == o.other &&
+            // TODO Temporary to fix MM, delete
+            this.rawAmber == o.rawAmber
+
+
     fun toDeckSearchResult(
             housesAndCards: List<HouseAndCards>,
             cards: List<Card>? = null,
-//            crucibleWins: Map<String, Wins>? = null,
             stats: DeckStatistics? = null,
             synergies: DeckSynergyInfo? = null
     ): DeckSearchResult {
@@ -235,7 +247,9 @@ data class Deck(
 
         return this.copy(
                 cardNames = cardNames,
-                rawAmber = newCardsList.map { it.amber + (it.extraCardInfo?.enhancementAmber ?: 0) }.sum(),
+                rawAmber = newCardsList.map {
+                    it.amber + (it.extraCardInfo?.enhancementAmber ?: 0)
+                }.sum(),
                 totalPower = newCardsList.map { it.power }.sum(),
                 totalArmor = newCardsList.map { it.armor }.sum(),
                 creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,
