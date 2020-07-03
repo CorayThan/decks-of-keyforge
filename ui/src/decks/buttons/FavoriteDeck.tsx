@@ -10,17 +10,21 @@ import { userDeckStore } from "../../userdeck/UserDeckStore"
 interface WishlistDeckProps {
     deckId: number
     deckName: string
-    wishlistCount: number
+    favoriteCount: number
 }
 
 @observer
-export class WishlistDeck extends React.Component<WishlistDeckProps> {
+export class FavoriteDeck extends React.Component<WishlistDeckProps> {
 
     @observable
-    wishlistCount = 0
+    favoriteCount = 0
 
     componentDidMount(): void {
-        this.wishlistCount = this.props.wishlistCount
+        this.favoriteCount = this.props.favoriteCount
+    }
+
+    componentDidUpdate(): void {
+        this.favoriteCount = this.props.favoriteCount
     }
 
     render() {
@@ -42,7 +46,7 @@ export class WishlistDeck extends React.Component<WishlistDeckProps> {
                         <IconButton
                             onClick={() => {
                                 wishlisted = !wishlisted
-                                this.wishlistCount += (wishlisted ? 1 : -1)
+                                this.favoriteCount += (wishlisted ? 1 : -1)
                                 userDeckStore.wishlist(deckName, deckId, wishlisted)
                             }}
                             disabled={!userDeckStore.userDecksLoaded()}
@@ -52,7 +56,7 @@ export class WishlistDeck extends React.Component<WishlistDeckProps> {
                     </div>
                 </Tooltip>
                 <Tooltip title={"Times favorited"}>
-                    <Typography variant={"body1"}>{this.wishlistCount}</Typography>
+                    <Typography variant={"body1"}>{this.favoriteCount}</Typography>
                 </Tooltip>
             </div>
         )

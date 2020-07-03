@@ -14,6 +14,7 @@ import { UpgradeIcon } from "../../generic/icons/card-types/UpgradeIcon"
 import { KeyCheatIcon } from "../../generic/icons/KeyCheatIcon"
 import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
+import { SynTraitPlayer } from "../../synergy/SynTraitValue"
 import { HasAerc } from "../HasAerc"
 
 interface AercCatProps {
@@ -42,7 +43,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             icon: <AmberIcon width={width}/>,
             info: deck.rawAmber,
             cardsTips: {
-                matches: card => card.amber > 0,
+                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
                 cards,
                 title: "Bonus Aember"
             }
@@ -63,7 +64,9 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             icon: <ArchiveIcon width={width}/>,
             info: deck.cardArchiveCount,
             cardsTips: {
-                matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.archives),
+                matches: card => card.extraCardInfo?.traits?.find(traitValue =>
+                        (traitValue.trait === SynergyTrait.archives && traitValue.player !== SynTraitPlayer.ENEMY)
+                ) != null,
                 cards,
                 title: "Archive Cards"
             }

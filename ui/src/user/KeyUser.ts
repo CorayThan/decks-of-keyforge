@@ -18,6 +18,7 @@ export interface KeyUser {
     forSaleQueries: ForSaleQueryEntity[]
     patreonId?: string
     patreonTier?: PatreonRewardsTier
+    autoRenewListings: boolean
 }
 
 export interface UserLogin {
@@ -64,4 +65,5 @@ export interface KeyUserDto {
     auctionCount: number
     shippingCost?: string
     teamName?: string
+    autoRenewListings: boolean
 }

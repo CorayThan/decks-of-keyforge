@@ -71,6 +71,8 @@ data class DeckListing(
         val forTrade: Boolean = false,
         val acceptingOffers: Boolean = false,
 
+        val hasOwnershipVerification: Boolean = false,
+
         @Id
         val id: UUID = UUID.randomUUID()
 ) {

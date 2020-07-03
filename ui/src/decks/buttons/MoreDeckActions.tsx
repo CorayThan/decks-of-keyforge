@@ -1,6 +1,5 @@
 import { IconButton } from "@material-ui/core"
 import Menu from "@material-ui/core/Menu"
-import MenuItem from "@material-ui/core/MenuItem"
 import { MoreVert } from "@material-ui/icons"
 import * as React from "react"
 import { ReportPurchaseButton } from "../../auctions/purchases/ReportPurchaseButton"
@@ -27,7 +26,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
 
     return (
         <>
-            <IconButton aria-controls="more-deck-actions-menu" aria-haspopup="true" onClick={handleClick}>
+            <IconButton aria-controls="more-deck-actions-menu" aria-haspopup="true" onClick={handleClick} style={{margin: 0}}>
                 <MoreVert/>
             </IconButton>
             <Menu
@@ -41,14 +40,6 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                 <ReportPurchaseButton deckId={deck.id} deckName={deck.name} onClick={handleClose}/>
                 <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
                 <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
-                {deck.registered && (
-                    <MenuItem
-                        component={"a"}
-                        href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
-                    >
-                        Master Vault
-                    </MenuItem>
-                )}
                 {userStore.loggedIn() && deck.registered && (
                     <DeckActionClickable
                         onClick={() => {

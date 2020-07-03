@@ -6,10 +6,10 @@ data class GlobalStatsWithExpansion(
 )
 
 data class GlobalStats(
-        val averageActions: Int = 14,
-        val averageArtifacts: Int = 4,
-        val averageCreatures: Int = 17,
-        val averageUpgrades: Int = 1,
+        val averageActions: Double = 14.0,
+        val averageArtifacts: Double = 4.0,
+        val averageCreatures: Double = 17.0,
+        val averageUpgrades: Double = 1.0,
         val averageExpectedAmber: Int = 0,
         val averageAmberControl: Int = 0,
         val averageCreatureControl: Int = 0,

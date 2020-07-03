@@ -21,6 +21,7 @@ import { sellerStore } from "../../sellers/SellerStore"
 import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
+import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { DeckSaleInfo } from "./DeckSaleInfo"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
@@ -28,13 +29,14 @@ interface SaleInfoViewProps {
     saleInfo: DeckSaleInfo[]
     deckName: string
     keyforgeId: string
+    deckId: number
     height?: number
 }
 
 @observer
 export class SaleInfoView extends React.Component<SaleInfoViewProps> {
     render() {
-        const {saleInfo, deckName, keyforgeId, height} = this.props
+        const {saleInfo, deckName, keyforgeId, deckId, height} = this.props
         if (saleInfo.length === 0) {
             return null
         }
@@ -57,6 +59,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
                             <SingleSaleInfoView
                                 saleInfo={saleInfo}
                                 deckName={deckName}
+                                deckId={deckId}
                                 keyforgeId={keyforgeId}
                             />
                         </div>
@@ -68,18 +71,18 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 }
 
 @observer
-export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
+export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string, deckId: number }> {
     render() {
 
         if (this.props.saleInfo.auctionStatus === DeckListingStatus.COMPLETE) {
             return <SingleSaleInfoViewCompleteAuction {...this.props} />
         }
 
-        const {deckName, saleInfo} = this.props
+        const {deckName, saleInfo, keyforgeId, deckId} = this.props
         const {
             forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
-            startingBid, shippingCost, acceptingOffers, highestOffer
+            startingBid, shippingCost, acceptingOffers, highestOffer, hasOwnershipVerification
         } = saleInfo
 
         const yourUsername = userStore.username
@@ -186,6 +189,23 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                             </KeyLink>
                         </div>
                     )}
+
+                    {hasOwnershipVerification && (
+                        <>
+                            <div style={{display: "flex", margin: spacing(2), alignItems: "center"}}>
+                                <Typography style={{marginRight: spacing(2)}} variant={"subtitle2"}>Archon and Enhanced Cards</Typography>
+                                <DeckOwnershipButton
+                                    deckName={deckName}
+                                    deckId={deckId}
+                                    hasVerification={true}
+                                    forceVerification={true}
+                                    buttonSize={"small"}
+                                />
+                            </div>
+                            <Divider/>
+                        </>
+                    )}
+
                     <InfoBox title={"Listing Details"} info={listingInfo}/>
                     <InfoBox title={"External listing — Be careful using this link!"} info={externalLink}/>
                     <InfoBox title={"Seller Details"} info={publicContactInfo}/>
@@ -207,7 +227,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                             <SendEmailDialog
                                                 deckName={deckName}
                                                 recipientUsername={username}
-                                                keyforgeId={this.props.keyforgeId}
+                                                keyforgeId={keyforgeId}
                                             />
                                         </div>
                                     ) : null}
@@ -237,7 +257,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
     }
 }
 
-const InfoBox = (props: { title: string, info?: string, link?: string }) => {
+const InfoBox = (props: { title: string, info?: React.ReactNode, link?: string }) => {
     if (!props.info && !props.link) {
         return null
     }

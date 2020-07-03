@@ -20,4 +20,5 @@ export interface UserProfileUpdate {
     discord?: string
     storeName?: string
     shippingCost?: string
+    autoRenewListings: boolean
 }

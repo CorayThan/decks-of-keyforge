@@ -61,6 +61,8 @@ data class DeckSearchResult(
         val lastSasUpdate: String = "",
         val sasPercentile: Double = 0.0,
 
+        val hasOwnershipVerification: Boolean = false,
+
         val housesAndCards: List<HouseAndCards> = listOf(),
         val deckSaleInfo: List<DeckSaleInfo>? = null,
         val owners: List<String>? = null,

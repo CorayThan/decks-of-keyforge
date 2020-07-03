@@ -10,6 +10,7 @@ import { HttpConfig } from "./config/HttpConfig"
 import { serverStatusStore } from "./config/ServerStatusStore"
 import { TextConfig } from "./config/TextConfig"
 import { Utils } from "./config/Utils"
+import { deckOwnershipStore } from "./decks/ownership/DeckOwnershipStore"
 import { statsStore } from "./stats/StatsStore"
 import { userStore } from "./user/UserStore"
 import { userDeckStore } from "./userdeck/UserDeckStore"
@@ -57,6 +58,7 @@ HttpConfig.setupAxios()
 serverStatusStore.checkIfUpdating()
 userStore.loadLoggedInUser()
 userDeckStore.findAllForUser()
+deckOwnershipStore.findOwnedDecks()
 deckListingStore.findListingsForUser()
 cardStore.loadAllCards()
 statsStore.findGlobalStats()

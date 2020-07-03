@@ -41,6 +41,8 @@ data class DeckSaleInfo(
         val dateListed: LocalDate,
         val expiresAt: LocalDate?,
 
+        val hasOwnershipVerification: Boolean,
+
         val username: String,
         val publicContactInfo: String?,
         val discord: String?
@@ -79,7 +81,8 @@ data class DeckSaleInfo(
                     bidIncrement = auction.bidIncrement,
                     deckListingStatus = auction.status,
                     boughtBy = auction.boughtWithBuyItNow?.username ?: if (auction.status == DeckListingStatus.COMPLETE) auction.highestBidder()?.username else null,
-                    boughtNowOn = auction.boughtNowOn?.toReadableStringWithOffsetMinutes(offsetMinutes)
+                    boughtNowOn = auction.boughtNowOn?.toReadableStringWithOffsetMinutes(offsetMinutes),
+                    hasOwnershipVerification = auction.hasOwnershipVerification
             )
         }
     }

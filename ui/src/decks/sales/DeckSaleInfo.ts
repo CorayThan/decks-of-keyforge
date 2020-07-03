@@ -33,6 +33,8 @@ export interface DeckSaleInfo {
     dateListed: string
     expiresAt?: string
 
+    hasOwnershipVerification: boolean
+
     username: string
     publicContactInfo?: string
     discord?: string

@@ -25,5 +25,6 @@ data class UserProfileUpdate(
         val sellerEmail: String? = null,
         val discord: String? = null,
         val storeName: String? = null,
-        val shippingCost: String? = null
+        val shippingCost: String? = null,
+        val autoRenewListings: Boolean
 )

@@ -31,7 +31,6 @@ export class DeckSortSelectStore implements SelectedStore {
         } else {
             this.selectedValue = defaultSort.name
         }
-        log.info(`Deck stot store ${forSaleOrTrade} ${forAuctionOnly} ${completedAuctions}`)
         this.forSaleOrTrade = forSaleOrTrade
         this.forAuction = forAuctionOnly
         this.completedAuctions = completedAuctions

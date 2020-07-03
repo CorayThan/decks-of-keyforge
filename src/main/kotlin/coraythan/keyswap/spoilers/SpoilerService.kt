@@ -3,7 +3,7 @@ package coraythan.keyswap.spoilers
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.ExtraCardInfoRepo
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.config.S3Service
+import coraythan.keyswap.thirdpartyservices.S3Service
 import coraythan.keyswap.toUrlFriendlyCardTitle
 import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory

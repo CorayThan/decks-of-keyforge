@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, Grid, Paper } from "@material-ui/core"
+import { Button, Checkbox, FormControlLabel, Paper } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -34,8 +34,8 @@ export class MyOffersView extends React.Component {
         const {offersSent, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
 
         return (
-            <Grid container={true} spacing={2} justify={"center"}>
-                <Grid item={true} xs={12}>
+            <div>
+                <div style={{marginBottom: spacing(2)}}>
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -79,34 +79,28 @@ export class MyOffersView extends React.Component {
                     >
                         Load Archived Offers
                     </Button>
-                </Grid>
-                <Grid item={true} lg={12}>
-                    <OffersList
-                        name={"Offers from me"}
-                        noneMessage={"To see offers you've made, make an offer to an Archon with discriminating tastes"}
-                        offers={myOffers.offersIMade}
-                    />
-                </Grid>
-                <Grid item={true} lg={12}>
-                    <OffersList
-                        name={"Offers to me"}
-                        noneMessage={"To see some offers with numbers in accordance with psychological impulse, list some decks with 'Accepting Offers' checked"}
-                        offers={myOffers.offersToMe}
-                    />
-                </Grid>
-                <Grid item={true} lg={12}>
-                    <div style={{marginTop: spacing(2)}}>
-                        <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic"}}>
-                            We will send you an email when you receive an offer, or when an offer you've made has been accepted or rejected.
-                            You will not receive an email when your offers expire, or an offer made to you is cancelled.
-                        </Typography>
-                        <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic", marginTop: spacing(1)}}>
-                            When a deck is no longer listed for sale its
-                            offers will be removed from this view, for example when you unlist a deck, or accept an offer on it.
-                        </Typography>
-                    </div>
-                </Grid>
-            </Grid>
+                </div>
+                <OffersList
+                    name={"Offers from me"}
+                    noneMessage={"To see offers you've made, make an offer to an Archon with discriminating tastes"}
+                    offers={myOffers.offersIMade}
+                />
+                <OffersList
+                    name={"Offers to me"}
+                    noneMessage={"To see some offers with numbers in accordance with psychological impulse, list some decks with 'Accepting Offers' checked"}
+                    offers={myOffers.offersToMe}
+                />
+                <div style={{marginTop: spacing(2)}}>
+                    <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic"}}>
+                        We will send you an email when you receive an offer, or when an offer you've made has been accepted or rejected.
+                        You will not receive an email when your offers expire, or an offer made to you is cancelled.
+                    </Typography>
+                    <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic", marginTop: spacing(1)}}>
+                        When a deck is no longer listed for sale its
+                        offers will be removed from this view, for example when you unlist a deck, or accept an offer on it.
+                    </Typography>
+                </div>
+            </div>
         )
     }
 }

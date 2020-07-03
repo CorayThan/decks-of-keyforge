@@ -114,7 +114,7 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
         if (saleInfo) {
             saleInfoComponent = (
                 <Card style={{margin: spacing(2)}}>
-                    <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId}/>
+                    <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
                 </Card>
             )
         } else if (!fake) {

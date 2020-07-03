@@ -90,6 +90,8 @@ data class Deck(
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)
         val auctions: List<DeckListing> = listOf(),
 
+        val hasOwnershipVerification: Boolean? = false,
+
         val listedOn: ZonedDateTime? = null,
         val auctionEnd: ZonedDateTime? = null,
         val auctionEndedOn: ZonedDateTime? = null,
@@ -126,7 +128,6 @@ data class Deck(
             this.other == o.other &&
             // TODO Temporary to fix MM, delete
             this.rawAmber == o.rawAmber
-
 
     fun toDeckSearchResult(
             housesAndCards: List<HouseAndCards>,
@@ -193,6 +194,9 @@ data class Deck(
                         ?: if (sasRating < 75) 0.0 else 100.0,
 
                 synergies = synergies,
+
+                hasOwnershipVerification = hasOwnershipVerification == true,
+
                 dateAdded = dateAdded
         )
     }

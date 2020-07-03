@@ -6,7 +6,7 @@ export enum LoaderSize {
     MEDIUM
 }
 
-export const Loader = (props: { show?: boolean, size?: LoaderSize }) => {
+export const Loader = (props: { show?: boolean, size?: LoaderSize, style?: React.CSSProperties }) => {
     const hide = props.show === false
     const size = props.size ?? LoaderSize.MEDIUM
     let sizePx: number | undefined
@@ -17,6 +17,6 @@ export const Loader = (props: { show?: boolean, size?: LoaderSize }) => {
         return null
     }
     return (
-        <div style={{display: "flex", justifyContent: "center"}}><CircularProgress size={sizePx}/></div>
+        <div style={{display: "flex", justifyContent: "center", ...props.style}}><CircularProgress size={sizePx}/></div>
     )
 }

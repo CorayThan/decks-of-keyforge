@@ -6,6 +6,7 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.ownership.DeckOwnershipRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.userdeck.ListingInfo
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZonedDateTime
 import java.util.*
 
 private const val fourteenMin = "PT14M"
@@ -41,7 +43,8 @@ class DeckListingService(
         private val userSearchService: UserSearchService,
         private val purchaseService: PurchaseService,
         private val purchaseRepo: PurchaseRepo,
-        private val userDeckService: UserDeckService
+        private val userDeckService: UserDeckService,
+        private val deckOwnershipRepo: DeckOwnershipRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -54,8 +57,13 @@ class DeckListingService(
             val buyItNowsToComplete = deckListingRepo.findAllByStatusEqualsAndEndDateTimeLessThanEqual(DeckListingStatus.SALE, now())
 
             buyItNowsToComplete.forEach {
-                removeDeckListingStatus(it)
-                deckListingRepo.delete(it)
+
+                if (it.seller.autoRenewListings && it.seller.realPatreonTier() != null) {
+                    deckListingRepo.save(it.copy(endDateTime = ZonedDateTime.now().plusYears(1)))
+                } else {
+                    removeDeckListingStatus(it)
+                    deckListingRepo.delete(it)
+                }
             }
 
             log.info("$scheduledStop unlisting expired for sale decks.")
@@ -110,6 +118,8 @@ class DeckListingService(
         val realEnd = endDateTime.withMinute(endMinutes)
 //        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
+        val hasOwnershipVerification = deckOwnershipRepo.existsByDeckIdAndUserId(deck.id, currentUser.id)
+
         val auction = if (listingInfo.editAuctionId == null) {
             val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId, DeckListingStatus.COMPLETE)
             if (preexistingListing.isNotEmpty()) throw BadRequestException("You've already listed this deck for sale.")
@@ -130,7 +140,8 @@ class DeckListingService(
                     status = status,
                     forTrade = currentUser.allowsTrades,
                     shippingCost = currentUser.shippingCost,
-                    acceptingOffers = listingInfo.acceptingOffers
+                    acceptingOffers = listingInfo.acceptingOffers,
+                    hasOwnershipVerification = hasOwnershipVerification
             )
         } else {
             deckListingRepo.findByIdOrNull(listingInfo.editAuctionId)!!
@@ -151,7 +162,8 @@ class DeckListingService(
                             status = status,
                             forTrade = currentUser.allowsTrades,
                             shippingCost = currentUser.shippingCost,
-                            acceptingOffers = listingInfo.acceptingOffers
+                            acceptingOffers = listingInfo.acceptingOffers,
+                            hasOwnershipVerification = hasOwnershipVerification
                     )
         }
         deckListingRepo.save(auction)

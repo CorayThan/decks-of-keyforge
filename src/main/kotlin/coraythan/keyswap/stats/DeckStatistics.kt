@@ -2,6 +2,7 @@ package coraythan.keyswap.stats
 
 import coraythan.keyswap.House
 import coraythan.keyswap.decks.Wins
+import coraythan.keyswap.roundToOneSigDig
 
 // First is value, second is occurrences for that value in all decks
 data class DeckStatistics(
@@ -89,10 +90,10 @@ data class DeckStatistics(
         get() = IndividalDeckTraitStats.fromValues(upgradeCount)
 
     fun toGlobalStats() = GlobalStats(
-            averageActions = actionCountStats.median,
-            averageArtifacts = artifactCountStats.median,
-            averageCreatures = creatureCountStats.median,
-            averageUpgrades = upgradeCountStats.median,
+            averageActions = actionCountStats.mean.roundToOneSigDig(),
+            averageArtifacts = artifactCountStats.mean.roundToOneSigDig(),
+            averageCreatures = creatureCountStats.mean.roundToOneSigDig(),
+            averageUpgrades = upgradeCountStats.mean.roundToOneSigDig(),
             averageExpectedAmber = expectedAmberStats.median,
             averageAmberControl = amberControlStats.median,
             averageCreatureControl = creatureControlStats.median,
@@ -176,6 +177,7 @@ data class IndividalDeckTraitStats(
         val min: Int,
         val max: Int,
         val median: Int,
+        val mean: Double,
         val top90Percent: Int,
         val bottom10Percent: Int,
         val percentile40: Int,
@@ -184,14 +186,20 @@ data class IndividalDeckTraitStats(
 ) {
     companion object {
 
+        /**
+         * <Int, Int> is Value, Count at Value
+         */
         fun fromValues(values: MutableMap<Int, Int> = mutableMapOf(), reverse: Boolean = false): IndividalDeckTraitStats {
             val keysSorted = if (reverse) values.keys.sortedDescending() else values.keys.sorted()
-            val total = values.values.sum()
-            val medianIndex = total / 2
-            val top90PercentIndex = total * 0.9
-            val bottom10PercentIndex = total * 0.1
-            val percentile40Index = total * 0.4
-            val percentile60Index = total * 0.6
+            val totalCount = values.values.sum()
+            val medianIndex = totalCount / 2
+            val top90PercentIndex = totalCount * 0.9
+            val bottom10PercentIndex = totalCount * 0.1
+            val percentile40Index = totalCount * 0.4
+            val percentile60Index = totalCount * 0.6
+
+            val totalValue = values.entries.sumBy { it.key * it.value }
+            val mean: Double = if (totalCount == 0) 0.0 else totalValue.toDouble() / totalCount
 
             var currentIndex = 0
             var bottom10Percent: Int = -1
@@ -203,7 +211,7 @@ data class IndividalDeckTraitStats(
             val percentileForValue = mutableMapOf<Int, Double>()
             keysSorted.forEach {
                 currentIndex += values[it]!!
-                currentPercentile = (currentIndex.toDouble() * 100.0) / total.toDouble()
+                currentPercentile = (currentIndex.toDouble() * 100.0) / totalCount.toDouble()
                 percentileForValue[it] = currentPercentile
                 if (bottom10Percent == -1 && currentIndex >= bottom10PercentIndex) {
                     bottom10Percent = it
@@ -226,6 +234,7 @@ data class IndividalDeckTraitStats(
                     keysSorted.firstOrNull() ?: 0,
                     keysSorted.lastOrNull() ?: 0,
                     median,
+                    mean,
                     top90Percent,
                     bottom10Percent,
                     percentile40,

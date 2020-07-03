@@ -16,6 +16,7 @@ import {
     MenuItem,
     OutlinedInput,
     Select,
+    Switch,
     TextField
 } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
@@ -106,6 +107,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     shippingCost: string
 
+    @observable
+    autoRenewListings = false
+
     update?: UserProfileUpdate
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,7 +119,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         super(props)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
-            sellerEmail, discord, storeName, currencySymbol, allowsTrades
+            sellerEmail, discord, storeName, currencySymbol, allowsTrades, autoRenewListings
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
@@ -128,6 +132,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.discord = discord ? discord : ""
         this.storeName = storeName ? storeName : ""
         this.currencySymbol = currencySymbol
+        this.autoRenewListings = autoRenewListings
         uiStore.setTopbarValues(`My DoK`, "My DoK", "")
 
         forSaleNotificationsStore.queries = undefined
@@ -204,6 +209,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
+            autoRenewListings: this.autoRenewListings
         }
 
         if (email == null) {
@@ -229,7 +235,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         const profile = this.props.profile
 
         return (
-            <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
+            <div style={{marginLeft: spacing(2), marginRight: spacing(2), display: "flex", justifyContent: "center"}}>
                 <Dialog
                     open={this.confirmOpen}
                     onClose={() => this.confirmOpen = false}
@@ -284,7 +290,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 variant={"outlined"}
                                             />
                                         </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
+                                        <Grid item={true} xs={12}>
                                             <TextField
                                                 select
                                                 label="Country"
@@ -300,7 +306,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 ))}
                                             </TextField>
                                         </Grid>
-                                        <Grid item={true} xs={8} sm={4}>
+                                        <Grid item={true} xs={9}>
                                             <FormControl fullWidth={true} variant={"outlined"}>
                                                 <InputLabel
                                                     htmlFor={"buying-countries-input-id"}
@@ -340,17 +346,17 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 Sale search countries
                                             </FormHelperText>
                                         </Grid>
-                                        <Grid item={true} xs={4} sm={2}>
-                                            <Button
-                                                onClick={this.addEuCountries}
-                                            >
-                                                Add EU
-                                            </Button>
+                                        <Grid item={true} xs={3}>
+                                                <Button
+                                                    onClick={this.addEuCountries}
+                                                >
+                                                    Add EU
+                                                </Button>
                                         </Grid>
                                         <Grid item={true}>
                                             <FormControlLabel
                                                 control={
-                                                    <Checkbox
+                                                    <Switch
                                                         checked={this.allowUsersToSeeDeckOwnership}
                                                         onChange={(event) => this.allowUsersToSeeDeckOwnership = event.target.checked}
                                                         tabIndex={6}
@@ -360,14 +366,35 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             />
                                             <FormControlLabel
                                                 control={
-                                                    <Checkbox
+                                                    <Switch
+                                                        checked={this.allowsTrades}
+                                                        onChange={(event) => this.allowsTrades = event.target.checked}
+                                                        tabIndex={7}
+                                                    />
+                                                }
+                                                label={"Open to trading decks for sale"}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
                                                         checked={themeStore.darkMode}
                                                         onChange={themeStore.toggleMode}
-                                                        tabIndex={7}
+                                                        tabIndex={8}
                                                         disabled={!userStore.patron}
                                                     />
                                                 }
                                                 label={"Dark mode (Patron only)"}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={this.autoRenewListings}
+                                                        onChange={() => this.autoRenewListings = !this.autoRenewListings}
+                                                        tabIndex={9}
+                                                        disabled={!userStore.patron}
+                                                    />
+                                                }
+                                                label={"Autorenew Deck Sales (Patron only)"}
                                             />
                                         </Grid>
                                     </Grid>
@@ -432,7 +459,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 }
                                             />
                                         </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
+                                        <Grid item={true} xs={6}>
                                             <TextField
                                                 label={"Currency Symbol"}
                                                 value={this.currencySymbol}
@@ -440,18 +467,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 fullWidth={true}
                                                 variant={"outlined"}
                                                 helperText={"For selling decks. e.g. $, €"}
-                                            />
-                                        </Grid>
-                                        <Grid item={true} xs={12} sm={6}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.allowsTrades}
-                                                        onChange={(event) => this.allowsTrades = event.target.checked}
-                                                        tabIndex={6}
-                                                    />
-                                                }
-                                                label={"Open to trading decks for sale"}
                                             />
                                         </Grid>
                                     </Grid>
@@ -465,6 +480,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                 <Button
                                     variant={"contained"}
                                     type={"submit"}
+                                    color={"primary"}
                                     style={{marginLeft: spacing(2)}}
                                 >
                                     Save

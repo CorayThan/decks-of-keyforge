@@ -26,11 +26,11 @@ export class AercRadar extends React.Component<AercRadarProps> {
                 deck: Utils.valueFromPercentiles(hasAerc.expectedAmber, stats.expectedAmberPercentiles),
             },
             {
-                aerc: "Aember Ctrl (A)",
+                aerc: "Aember Control (A)",
                 deck: Utils.valueFromPercentiles(hasAerc.amberControl, stats.amberControlPercentiles),
             },
             {
-                aerc: "Artifact Control (R)",
+                aerc: "Artifact Ctrl (R)",
                 deck: Utils.valueFromPercentiles(hasAerc.artifactControl, stats.artifactControlPercentiles),
             },
             {

@@ -28,6 +28,7 @@ import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { DeckLanguage } from "../DeckLanguage"
 import { DeckSearchResult } from "../models/DeckSearchResult"
+import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { SoldButton } from "./SoldButton"
 
 interface ListForSaleViewProps {
@@ -314,7 +315,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         <FormControl fullWidth={true}>
                             <FormLabel>Sale Type</FormLabel>
                             <RadioGroup
-
                                 name="sale type"
                                 value={this.saleType}
                                 onChange={(event) => {
@@ -505,8 +505,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         >
                             {"Save Default"}
                         </KeyButton>
+                        <DeckOwnershipButton deckName={deck.name} deckId={deck.id} hasVerification={deck.hasOwnershipVerification}/>
                         <div style={{flexGrow: 1}}/>
-                        <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
+                        <KeyButton onClick={this.handleClose}>Cancel</KeyButton>
                         <KeyButton
                             style={{marginRight: spacing(1)}}
                             color={"primary"}

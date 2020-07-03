@@ -1650,6 +1650,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/browser-image-compression@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/browser-image-compression/-/browser-image-compression-1.0.1.tgz#af984c2d22c0e3fd1f33ab8bba9bebcf44675b92"
+  integrity sha512-WjmYq0kGKDs1rBNlrb3WG9/03RXnM6/zvmo93r3uoDa8y19tJ04JWZOJmRdjDph0FtU0kNJMhUrnceFynOQxGQ==
+
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -2732,6 +2737,11 @@ brorand@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
+
+browser-image-compression@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/browser-image-compression/-/browser-image-compression-1.0.12.tgz#ab485f89086a1176e61972a1044aa8d132f4ad89"
+  integrity sha512-lmKeY7PLGo4Mk5jFdiEMQ4b7sNefPhYnU6hc37Xy5WhWn9v5rXYKdgM0kvYVTXI84OsCFT1stz+sGeTK0hyHsg==
 
 browser-process-hrtime@^1.0.0:
   version "1.0.0"

@@ -75,6 +75,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "List decks for sale or trade for up to 1 year.",
+                            "Automatically renew expired deck for sale listings with a setting in your profile",
                             "Enable dark mode",
                             "Search team decks",
                             "Create Theoretical Decks",

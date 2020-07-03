@@ -23,6 +23,10 @@ export class FunnyDeck extends React.Component<FunnyDeckProps> {
         this.funnyCount = this.props.funnyCount
     }
 
+    componentDidUpdate(): void {
+        this.funnyCount = this.props.funnyCount
+    }
+
     render() {
         const {deckId, deckName} = this.props
         let title

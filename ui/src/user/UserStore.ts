@@ -6,6 +6,7 @@ import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
+import { deckOwnershipStore } from "../decks/ownership/DeckOwnershipStore"
 import { findPatronRewardLevel, PatreonRewardsTier, patronAuctionLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -115,6 +116,7 @@ export class UserStore {
                 this.loadLoggedInUser()
                 userDeckStore.findAllForUser()
                 deckListingStore.findListingsForUser(false)
+                deckOwnershipStore.findOwnedDecks()
             })
             .catch((error: AxiosError) => {
                 this.loginInProgress = false

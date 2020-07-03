@@ -22,6 +22,13 @@ export class Utils {
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
+    static pseudoUuid = () => {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8)
+            return v.toString(16)
+        })
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]

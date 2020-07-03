@@ -1,9 +1,8 @@
-import { Typography } from "@material-ui/core"
-import Paper from "@material-ui/core/Paper"
-import { Pie } from "@nivo/pie"
+import { ResponsivePie } from "@nivo/pie"
 import * as React from "react"
-import { spacing, themeStore } from "../config/MuiConfig"
+import { themeStore } from "../config/MuiConfig"
 import { GlobalStats } from "../stats/GlobalStats"
+import { DokDeckGraphWrapper } from "./DokRadar"
 
 export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?: number }) =>
     (
@@ -21,13 +20,8 @@ export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?:
 export const CardTypePie = (props: {
     name?: string, creatures: number, actions: number, artifacts: number, upgrades: number, padding?: number, style?: React.CSSProperties
 }) => (
-    <Paper
-        style={{display: "flex", flexDirection: "column", alignItems: "center", margin: spacing(2), padding: spacing(1), ...props.style}}
-    >
-        {props.name ? <Typography variant={"h5"} color={"primary"} noWrap={true}>{props.name}</Typography> : null}
-        <Pie
-            height={200}
-            width={280}
+    <DokDeckGraphWrapper name={props.name} style={props.style}>
+        <ResponsivePie
             radialLabelsLinkHorizontalLength={0}
             radialLabelsLinkDiagonalLength={12}
             innerRadius={0.4}
@@ -59,7 +53,7 @@ export const CardTypePie = (props: {
             ]}
             theme={themeStore.darkMode ? darkTheme : undefined}
         />
-    </Paper>
+    </DokDeckGraphWrapper>
 )
 
 const darkTheme = {

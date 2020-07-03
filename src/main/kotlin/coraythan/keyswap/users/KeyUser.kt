@@ -101,6 +101,8 @@ data class KeyUser(
 
         val updateStats: Boolean = false,
 
+        val autoRenewListings: Boolean = false,
+
         // Stats values
         val deckCount: Int = 0,
         val forSaleCount: Int = 0,
@@ -147,7 +149,8 @@ data class KeyUser(
             storeName = storeName,
             auctionCount = auctions.filter { it.status == DeckListingStatus.AUCTION }.count(),
             shippingCost = shippingCost,
-            teamName = team?.name
+            teamName = team?.name,
+            autoRenewListings = autoRenewListings
     )
 
     fun generateSearchResult(): UserSearchResult {
@@ -229,5 +232,7 @@ data class KeyUserDto(
 
         val shippingCost: String? = null,
 
-        val teamName: String? = null
+        val teamName: String? = null,
+
+        val autoRenewListings: Boolean = false
 )

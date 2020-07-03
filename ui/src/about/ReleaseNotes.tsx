@@ -13,7 +13,7 @@ import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/Di
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.7"
+export const latestVersion = "5.8"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -41,6 +41,37 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.8"}
+                    date={"7/3/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Deck Ownership Verification",
+                            note: "You can now upload an image to verify ownership of a deck! This should help folks in a few ways."
+                        },
+                        {
+                            note: "1. For more valuable decks you can use this to help verify possession of the deck for potential buyers."
+                        },
+                        {
+                            note: "2. You can upload an image with enhanced Mass Mutation cards to verify location of enhancements when selling MM decks."
+                        },
+                        {
+                            note: "3. Can be used to verify ownership publicly for use in online tournaments."
+                        },
+                        {
+                            highlight: "Deck Sale Listing Autorenewal for Patrons",
+                            note: "If you're a patron and sell decks, head to your profile. There you can toggle on auto renewal of your decks for sale " +
+                                "if you so desire. This will automatically relist your decks for 1 year when they expire. This will only " +
+                                "work if you are an active Patron."
+                        },
+                        {
+                            highlight: "Minor SAS Update",
+                            note: "This includes the monthly SAS update, with only a few tweaks to MM. The plan is to hold off until early August before we " +
+                                "do another update."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.7"}
                     date={"6/14/2020"}

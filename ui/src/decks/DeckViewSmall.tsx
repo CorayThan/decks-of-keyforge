@@ -30,14 +30,15 @@ import { screenStore } from "../ui/ScreenStore"
 import { InlineDeckNote } from "../userdeck/DeckNote"
 import { OwnersList } from "../userdeck/OwnersList"
 import { userDeckStore } from "../userdeck/UserDeckStore"
+import { FavoriteDeck } from "./buttons/FavoriteDeck"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
-import { WishlistDeck } from "./buttons/WishlistDeck"
 import { DeckScoreView } from "./DeckScoreView"
 import { DeckSearchResult } from "./models/DeckSearchResult"
 import { SimpleCard } from "./models/HouseAndCards"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
+import { DeckOwnershipButton } from "./ownership/DeckOwnershipButton"
 import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { SaleInfoView } from "./sales/SaleInfoView"
 
@@ -69,7 +70,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 
         let saleInfoView
         if (saleInfo) {
-            saleInfoView = <SaleInfoView saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
+            saleInfoView = <SaleInfoView deckId={id} saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
         }
 
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes
@@ -114,7 +115,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                             href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
                                             color={"primary"}
                                         >
-                                            Master Vault
+                                            MV
                                         </KeyButton>
                                     ) : null}
                                     {!fullVersion ? (
@@ -122,17 +123,18 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                             to={Routes.deckPage(keyforgeId)}
                                             noStyle={true}
                                         >
-                                            <KeyButton color={"primary"}>View Deck</KeyButton>
+                                            <KeyButton color={"primary"}>View</KeyButton>
                                         </KeyLink>
                                     ) : null}
                                     {compact ? null : (<MyDecksButton deck={deck}/>)}
-                                    <div style={{flexGrow: 1}}/>
+                                    <div style={{flexGrow: 1, margin: 0}}/>
                                     <div>
-                                        <WishlistDeck deckName={name} deckId={id} wishlistCount={wishlistCount}/>
+                                        <FavoriteDeck deckName={name} deckId={id} favoriteCount={wishlistCount}/>
                                     </div>
                                     <div>
                                         <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
                                     </div>
+                                    <DeckOwnershipButton deckName={name} deckId={id} hasVerification={deck.hasOwnershipVerification}/>
                                     <MoreDeckActions deck={deck} compact={compact}/>
                                 </CardActions>
                             )}
@@ -140,7 +142,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         {!compact && activeExpansions.includes(deck.expansion) && <AercViewForDeck deck={deck} type={AercViewType.DECK}/>}
                     </div>
                 </KeyCard>
-                {displaySalesSeparately && (
+                {displaySalesSeparately && saleInfo && (
                     <Card
                         style={{
                             width: width > 400 ? 400 : width,

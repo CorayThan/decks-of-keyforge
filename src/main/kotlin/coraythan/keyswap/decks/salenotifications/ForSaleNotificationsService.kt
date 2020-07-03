@@ -6,6 +6,8 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
+import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.patreon.levelAtLeast
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserService
@@ -46,6 +48,7 @@ class ForSaleNotificationsService(
                 val toSend: List<ForSaleQueryEntity> = queries!!
                         .filter { it.active && queryMatchesDeck(it, deckId) }
                         .groupBy { it.user!! }
+                        .filter { it.key.patreonTier.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
                         .values.toList()
                         .map { it.first() }
 

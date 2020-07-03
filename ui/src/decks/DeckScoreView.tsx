@@ -82,7 +82,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         sasInfo = <div style={{width: 36}}/>
     }
 
-    const sasName = expansion === BackendExpansion.MASS_MUTATION ? "WIP" : "SAS"
+    const sasName = "SAS"
     const sasTooltip = expansion === BackendExpansion.MASS_MUTATION ? "This is a work in progress SAS rating. Expect this to change a bunch over the coming days." : "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
 
     return (

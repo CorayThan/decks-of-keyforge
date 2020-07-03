@@ -63,8 +63,8 @@ export interface DeckSearchResult extends HasAerc {
     deckSaleInfo?: DeckSaleInfo[]
     owners?: string[]
     synergies?: DeckSynergyInfo
+    hasOwnershipVerification: boolean
     dateAdded?: string
-
 }
 
 export class DeckUtils {
