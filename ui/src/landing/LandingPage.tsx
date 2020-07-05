@@ -190,8 +190,8 @@ export class LandingPage extends React.Component<{}> {
                                 way.
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}}>
-                                DoK is owned and operated by Graylake LLC. For questions or comments check out the
-                                <Link to={AboutSubPaths.contact}>contact me page</Link>!
+                                DoK is owned and operated by Graylake LLC. For questions or comments check out
+                                the <Link to={AboutSubPaths.contact}>contact me page</Link>!
                             </Typography>
                             <Typography>
                                 When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of

@@ -8,7 +8,6 @@ import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.UpdatePrice
-import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -25,8 +24,7 @@ data class SellerDetailsWithFullDate(val mostRecent: ZonedDateTime?, val sellerD
 @Service
 class SellerService(
         private val userRepo: KeyUserRepo,
-        private val currentUserService: CurrentUserService,
-        private val deckListingRepo: DeckListingRepo
+         private val deckListingRepo: DeckListingRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -51,6 +49,7 @@ class SellerService(
                             SellerDetailsWithFullDate(
                                     user.mostRecentDeckListing,
                                     SellerDetails(
+                                            sellerId = user.id,
                                             storeName = user.storeName ?: "${user.username}'s Store",
                                             username = user.username,
                                             decksAvailable = user.forSaleCount,

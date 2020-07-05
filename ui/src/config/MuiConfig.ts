@@ -4,10 +4,6 @@ import { computed, observable } from "mobx"
 import { screenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
 
-export const spacing = (spacingValue = 1) => spacingValue * 8 * (screenStore.screenSizeXs() ? 0.5 : 1)
-export const marginSpacing = (topBottom: number, leftRight = 0) => `${spacing(topBottom)}px ${spacing(leftRight)}px`
-export const marginSpacing3 = (top: number, leftRight: number, bottom: number) => `${spacing(top)}px ${spacing(leftRight)}px ${spacing(bottom)}px`
-
 export const darkModeKey = "DARK_MODE"
 
 export class ThemeStore {
@@ -107,3 +103,6 @@ export let theme = makeTheme()
 export const updateTheme = () => {
     theme = makeTheme()
 }
+
+export const spacing = theme.spacing
+

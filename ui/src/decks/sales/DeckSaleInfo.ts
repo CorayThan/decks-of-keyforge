@@ -35,6 +35,7 @@ export interface DeckSaleInfo {
 
     hasOwnershipVerification: boolean
 
+    sellerId: string
     username: string
     publicContactInfo?: string
     discord?: string

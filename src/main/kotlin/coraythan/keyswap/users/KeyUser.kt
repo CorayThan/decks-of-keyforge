@@ -70,6 +70,8 @@ data class KeyUser(
         @Enumerated(EnumType.STRING)
         val patreonTier: PatreonRewardsTier? = null,
 
+        val lifetimeSupportCents: Int = 0,
+
         @Enumerated(EnumType.STRING)
         val manualPatreonTier: PatreonRewardsTier? = null,
         val removeManualPatreonTier: ZonedDateTime? = null,
@@ -150,7 +152,8 @@ data class KeyUser(
             auctionCount = auctions.filter { it.status == DeckListingStatus.AUCTION }.count(),
             shippingCost = shippingCost,
             teamName = team?.name,
-            autoRenewListings = autoRenewListings
+            autoRenewListings = autoRenewListings,
+            contributedOrManual = contributedOrManual()
     )
 
     fun generateSearchResult(): UserSearchResult {
@@ -184,6 +187,12 @@ data class KeyUser(
         } else {
             manualPatreonTier
         }
+    }
+
+    fun contributedOrManual(): Boolean {
+        return username == "Coraythan"
+                || manualPatreonTier != null
+                || lifetimeSupportCents > 99
     }
 
     override fun equals(other: Any?): Boolean {
@@ -234,5 +243,7 @@ data class KeyUserDto(
 
         val teamName: String? = null,
 
-        val autoRenewListings: Boolean = false
+        val autoRenewListings: Boolean = false,
+
+        val contributedOrManual: Boolean = false
 )

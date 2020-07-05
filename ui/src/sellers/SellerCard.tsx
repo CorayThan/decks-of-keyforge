@@ -1,10 +1,11 @@
 import { Card, CardActions, CardContent, Divider, Typography } from "@material-ui/core"
 import { startCase } from "lodash"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, theme } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { SellerRatingView } from "../sellerratings/SellerRatingView"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import { SellerImg } from "./imgs/SellerImgs"
 import { SellerDetails } from "./SellerDetails"
@@ -16,29 +17,31 @@ interface SellerCardProps {
 
 export class SellerCard extends React.Component<SellerCardProps> {
     render() {
-        const {storeName, username, storeDescription, discord, email} = this.props.sellerDetails
+        const {storeName, username, storeDescription, discord, email, sellerId} = this.props.sellerDetails
         
         const storeLink = Routes.userDecksForSale(username)
 
         return (
             <div style={this.props.style}>
-                <Card style={{display: "flex", flexDirection: "column", width: 344, height: 416, margin: spacing(2)}}>
-                    <CardContent>
-                        <div style={{display: "flex", alignItems: "flex-end"}}>
-                            <SellerImg sellerUsername={username}/>
-                            <KeyLink to={storeLink} noStyle={true}>
-                                <Typography variant={"h5"}>{storeName}</Typography>
-                            </KeyLink>
-                        </div>
-                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
-                        <SellerCardSecondaryInfo sellerDetails={this.props.sellerDetails}/>
-                        <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                <Card style={{display: "flex", flexDirection: "column", width: 344, margin: theme.spacing(2)}}>
+                    <CardContent style={{display: "flex", flexDirection: "column", height: 400, padding: theme.spacing(2, 2, 0, 2)}}>
+                            <div style={{display: "flex", alignItems: "flex-end"}}>
+                                <SellerImg sellerUsername={username}/>
+                                <KeyLink to={storeLink} noStyle={true}>
+                                    <Typography variant={"h5"}>{storeName}</Typography>
+                                </KeyLink>
+                            </div>
+                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                            <SellerRatingView sellerId={sellerId} sellerName={storeName}/>
+                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
+                            <SellerCardSecondaryInfo sellerDetails={this.props.sellerDetails}/>
+                            <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
 
-                        <DiscordUser discord={discord} style={{marginBottom: spacing(2)}}/>
+                            <DiscordUser discord={discord} style={{marginBottom: spacing(2)}}/>
 
-                        <div style={{overflowY: "auto", maxHeight: 104 + (discord ? 0 : 48)}}>
-                            <Typography variant={"body1"}>{storeDescription}</Typography>
-                        </div>
+                            <div style={{overflowY: "auto", flexGrow: 1}}>
+                                <Typography variant={"body1"}>{storeDescription}</Typography>
+                            </div>
                     </CardContent>
                     <div style={{flexGrow: 1}}/>
                     <CardActions>

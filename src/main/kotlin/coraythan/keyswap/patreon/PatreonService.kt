@@ -148,7 +148,7 @@ class PatreonService(
 
         val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
-        val patreonMembersUrl = "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user$paging"
+        val patreonMembersUrl = "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user&fields[member]=lifetime_support_cents$paging"
         // log.info("Start refreshing patreon with $patreonMembersUrl")
 
         val patreonCampaignResponse = restTemplate.exchange(
@@ -166,6 +166,7 @@ class PatreonService(
 
             val patreonId = member.relationships.user.data.id
             val tierIds = member.relationships.currentlyEntitledTiers.data.map { tier -> tier.id }
+            val lifetimeSupportCents = member.attributes.lifetimeSupportCents
 
             val bestTier = when {
                 tierIds.any { PatreonRewardsTier.ALWAYS_GENEROUS.tierIds.contains(it) } -> PatreonRewardsTier.ALWAYS_GENEROUS
@@ -178,9 +179,9 @@ class PatreonService(
                 }
             }
             val user = userRepo.findByPatreonId(patreonId)
-            if (user != null && user.patreonTier != bestTier) {
-                log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier.")
-                userRepo.updatePatronTier(bestTier, user.id)
+            if (user != null && (user.patreonTier != bestTier || user.lifetimeSupportCents != lifetimeSupportCents)) {
+                log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier and contribution to $lifetimeSupportCents.")
+                userRepo.updatePatronTierAndLifetimeSupportCents(bestTier, lifetimeSupportCents, user.id)
             }
         }
         if (patreonCampaign.meta.pagination.cursors != null) {

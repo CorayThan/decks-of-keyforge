@@ -1,4 +1,5 @@
 export interface SellerDetails {
+    sellerId: string
     storeName: string
     username: string
     decksAvailable: number

@@ -125,9 +125,7 @@ data class Deck(
             this.efficiency == o.efficiency &&
             this.disruption == o.disruption &&
             this.creatureProtection == o.creatureProtection &&
-            this.other == o.other &&
-            // TODO Temporary to fix MM, delete
-            this.rawAmber == o.rawAmber
+            this.other == o.other
 
     fun toDeckSearchResult(
             housesAndCards: List<HouseAndCards>,

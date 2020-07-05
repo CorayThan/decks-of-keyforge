@@ -66,4 +66,5 @@ export interface KeyUserDto {
     shippingCost?: string
     teamName?: string
     autoRenewListings: boolean
+    contributedOrManual: boolean
 }

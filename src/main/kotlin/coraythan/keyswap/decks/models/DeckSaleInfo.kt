@@ -43,6 +43,7 @@ data class DeckSaleInfo(
 
         val hasOwnershipVerification: Boolean,
 
+        val sellerId: UUID,
         val username: String,
         val publicContactInfo: String?,
         val discord: String?
@@ -64,6 +65,7 @@ data class DeckSaleInfo(
                     condition = auction.condition,
                     dateListed = auction.dateListed.toLocalDateWithOffsetMinutes(offsetMinutes),
                     expiresAt = auction.endDateTime.toLocalDateWithOffsetMinutes(offsetMinutes),
+                    sellerId = auction.seller.id,
                     username = auction.seller.username,
                     publicContactInfo = auction.seller.publicContactInfo,
                     discord = auction.seller.discord,

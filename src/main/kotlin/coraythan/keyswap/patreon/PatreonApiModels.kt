@@ -29,7 +29,13 @@ data class PatreonNext(
 
 data class PatreonCampaignMember(
         val id: String,
+        val attributes: PatreonMemberAttributes,
         val relationships: PatreonMemberRelationships
+)
+
+data class PatreonMemberAttributes(
+        @JsonProperty("lifetime_support_cents")
+        val lifetimeSupportCents: Int
 )
 
 data class PatreonMemberRelationships(

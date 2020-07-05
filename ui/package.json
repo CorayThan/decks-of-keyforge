@@ -1,13 +1,13 @@
 {
   "name": "ui",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@craco/craco": "^5.6.4",
-    "@material-ui/core": "^4.10.0",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@nivo/bar": "^0.62.0",
     "@nivo/pie": "^0.62.0",
     "@nivo/radar": "^0.62.0",
@@ -21,7 +21,7 @@
     "loglevel": "^1.6.8",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
-    "query-string": "^6.12.1",
+    "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
@@ -29,8 +29,7 @@
     "react-router-hash-link": "^1.2.2",
     "react-scripts": "3.4.1",
     "recharts": "^1.8.5",
-    "uuid": "^8.1.0",
-    "victory": "^34.3.6",
+    "victory": "^34.3.12",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -43,22 +42,21 @@
   },
   "devDependencies": {
     "@types/browser-image-compression": "^1.0.1",
-    "@types/lodash": "^4.14.152",
-    "@types/node": "^14.0.4",
-    "@types/react": "^16.9.35",
+    "@types/lodash": "^4.14.157",
+    "@types/node": "^14.0.14",
+    "@types/react": "^16.9.41",
     "@types/react-csv": "^1.1.1",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-router-hash-link": "^1.2.1",
-    "@types/recharts": "^1.8.10",
-    "@types/uuid": "^8.0.0",
+    "@types/recharts": "^1.8.13",
     "@types/victory": "^33.1.4",
-    "@types/webfontloader": "^1.6.30",
+    "@types/webfontloader": "^1.6.32",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "eslint-plugin-only-warn": "^1.0.2",
-    "eslint-plugin-react": "^7.20.0",
-    "typescript": "^3.9.3"
+    "eslint-plugin-react": "^7.20.3",
+    "typescript": "^3.9.6"
   },
   "browserslist": {
     "production": [

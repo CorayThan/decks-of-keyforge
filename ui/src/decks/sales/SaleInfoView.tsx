@@ -1,4 +1,4 @@
-import { Link } from "@material-ui/core"
+import { Box, Link } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import { startCase } from "lodash"
@@ -9,13 +9,15 @@ import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { DeckListingStatus } from "../../auctions/DeckListingDto"
 import { OfferButton } from "../../auctions/offers/OfferButton"
-import { marginSpacing3, spacing, themeStore } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendEmailDialog } from "../../emails/SendEmailDialog"
 import { countryToLabel } from "../../generic/Country"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyLink } from "../../mui-restyled/KeyLink"
+import { WhiteSpaceTypography } from "../../mui-restyled/WhiteSpaceTypography"
+import { SellerRatingView } from "../../sellerratings/SellerRatingView"
 import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
@@ -82,7 +84,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const {
             forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
-            startingBid, shippingCost, acceptingOffers, highestOffer, hasOwnershipVerification
+            startingBid, shippingCost, acceptingOffers, highestOffer, hasOwnershipVerification, sellerId
         } = saleInfo
 
         const yourUsername = userStore.username
@@ -182,13 +184,18 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         </div>
                     )}
                     {sellerDetails == null ? null : (
-                        <div style={{display: "flex", alignItems: "center", margin: marginSpacing3(0, 2, 2)}}>
+                        <div style={{display: "flex", alignItems: "center", margin: spacing(2)}}>
                             <SellerImg sellerUsername={username}/>
                             <KeyLink to={Routes.userDecksForSale(username)} noStyle={true}>
                                 <Typography variant={"h5"}>{sellerDetails.storeName}</Typography>
                             </KeyLink>
                         </div>
                     )}
+
+                    <Box m={2}>
+                        <SellerRatingView sellerId={sellerId} sellerName={sellerDetails?.storeName ?? username}/>
+                    </Box>
+                    <Divider/>
 
                     {hasOwnershipVerification && (
                         <>
@@ -212,7 +219,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                     <InfoBox title={"Shipping Cost"} info={shippingCost}/>
                     {discord || (allowEmail && !forAuction) ? (
                         <>
-                            <div style={{margin: marginSpacing3(0, 2, 2)}}>
+                            <div style={{margin: spacing(0, 2, 2)}}>
                                 <div style={{display: "flex", flexWrap: "wrap"}}>
                                     {discord ? (
                                         <>
@@ -237,15 +244,15 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                         </>
                     ) : null}
                     <div>
-                        <Typography style={{margin: marginSpacing3(2, 2, 0)}} variant={"subtitle2"}>
+                        <Typography style={{margin: spacing(2, 2, 0)}} variant={"subtitle2"}>
                             {countryToLabel(forSaleInCountry)} – {startCase(language.toString().toLowerCase())} – {deckConditionReadableValue(condition)}
                         </Typography>
                     </div>
-                    <Typography style={{margin: marginSpacing3(1, 2, 0)}} variant={"subtitle2"}>
+                    <Typography style={{margin: spacing(1, 2, 0)}} variant={"subtitle2"}>
                         Listed {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
                     {expiresAt != null && !forAuction ? (
-                        <Typography style={{margin: marginSpacing3(1, 2, 2)}} variant={"subtitle2"}>
+                        <Typography style={{margin: spacing(1, 2, 2)}} variant={"subtitle2"}>
                             Expires {Utils.formatDate(expiresAt)}
                         </Typography>
                     ) : null}
@@ -263,10 +270,10 @@ const InfoBox = (props: { title: string, info?: React.ReactNode, link?: string }
     }
     return (
         <>
-            <div style={{margin: marginSpacing3(2, 2, 0)}}>
+            <div style={{margin: spacing(2, 2, 0)}}>
                 <Typography variant={"subtitle2"} style={{marginBottom: spacing(0.5)}}>{props.title}</Typography>
                 {props.info ? (
-                    <Typography variant={"body2"} style={{whiteSpace: "pre-wrap"}}>{props.info}</Typography>
+                    <WhiteSpaceTypography variant={"body2"}>{props.info}</WhiteSpaceTypography>
                 ) : (
                     <a href={props.link} target={"_blank"} rel={"noopener noreferrer"}><Typography>{props.link}</Typography></a>
                 )}

@@ -11,6 +11,7 @@ import { serverStatusStore } from "./config/ServerStatusStore"
 import { TextConfig } from "./config/TextConfig"
 import { Utils } from "./config/Utils"
 import { deckOwnershipStore } from "./decks/ownership/DeckOwnershipStore"
+import { sellerRatingsStore } from "./sellerratings/SellerRatingsStore"
 import { statsStore } from "./stats/StatsStore"
 import { userStore } from "./user/UserStore"
 import { userDeckStore } from "./userdeck/UserDeckStore"
@@ -62,5 +63,6 @@ deckOwnershipStore.findOwnedDecks()
 deckListingStore.findListingsForUser()
 cardStore.loadAllCards()
 statsStore.findGlobalStats()
+sellerRatingsStore.findSellerRatings()
 
 ReactDOM.render(<App/>, document.getElementById("root"))

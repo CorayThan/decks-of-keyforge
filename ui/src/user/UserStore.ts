@@ -397,6 +397,11 @@ export class UserStore {
     }
 
     @computed
+    get contributedOrManual(): boolean {
+        return this.user?.contributedOrManual === true
+    }
+
+    @computed
     get contentCreator(): boolean {
         if (this.user) {
             return this.user.type === UserType.ADMIN || this.user.type === UserType.CONTENT_CREATOR
