@@ -24,7 +24,7 @@ import java.time.Instant
 import javax.persistence.EntityManager
 import kotlin.system.measureTimeMillis
 
-const val lockUpdateUserSearchStatsFor = "PT5M"
+const val lockUpdateUserSearchStatsFor = "PT1M"
 
 @Service
 @Transactional

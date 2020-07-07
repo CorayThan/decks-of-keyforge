@@ -405,7 +405,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 style={{width: 136}}
                                             />
                                         )}
-                                        {userStore.loggedIn() && userStore.username !== notesUser && (
+                                        {userStore.loggedIn() && (
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox

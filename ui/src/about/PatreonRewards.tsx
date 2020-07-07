@@ -70,55 +70,55 @@ export class PatreonRewards extends React.Component {
                     <InfoListCard
                         title={"It that Fastidiously Notices Bargains"}
                         titleVariant={"h5"}
-                        subtitle={"$1 or more per month"}
+                        subtitle={"$3 or more per month"}
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "List decks for sale or trade for up to 1 year.",
+                            "Remove ads from the site",
+                            "Dark mode",
+                            "List decks for sale or trade for up to 1 year",
+                            "List up to 250 decks for sale. (Free maximum is 100.)",
                             "Automatically renew expired deck for sale listings with a setting in your profile",
-                            "Enable dark mode",
                             "Search team decks",
                             "Create Theoretical Decks",
-                            "That warm and fuzzy feeling that comes from supporting something cool.",
+                            "That warm and fuzzy feeling that comes from supporting something cool",
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard
                         title={"The Archon that Purchases the Paradigm"}
                         titleVariant={"h5"}
-                        subtitle={"$5 or more per month"}
+                        subtitle={"$6 or more per month"}
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Up to 25 deck sale notifications: Set up to be notified whe never decks that match certain search criteria are listed for sale or trade.",
+                            "List up to 1000 decks for sale",
                             "Form a team and manage members",
-                            "List up to five simultaneous auctions. (By default you are only allowed one.)",
-                            "See your full purchase and sale history."
+                            "See your full purchase and sale history"
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard
                         title={"Merchant Æmbermaker"}
                         titleVariant={"h5"}
-                        subtitle={"$10 or more per month"}
+                        subtitle={"$12 or more per month"}
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
+                            "List any number of decks for sale.",
                             `Get your store listed on the landing page of the site!`,
                             "Your listings will show your store icon and name, and they will link to your decks for sale.",
-                            "List up to ten simultaneous auctions."
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard
-                        title={"The Speedily Super Hooligan"}
+                        title={"The Charitable Champion"}
                         titleVariant={"h5"}
                         subtitle={"$25 or more per month"}
                         noDivider={true}
                         infos={[
-                            "This is a limited quantity tier.",
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "Unlimited simultaneous auctions.",
                             "Up to 50 deck sale notifications.",
                             "Credit on the contact me about page as a major contributor to the site.",
                             "Join a special major contributor channel on the discord."
@@ -126,7 +126,7 @@ export class PatreonRewards extends React.Component {
                     />
                     <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard
-                        title={"Butterfield the Always Generous"}
+                        title={"The Generous Patron of Agajoll"}
                         titleVariant={"h5"}
                         subtitle={"$50 or more per month"}
                         noDivider={true}

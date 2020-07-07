@@ -20,7 +20,7 @@ export const findPatronRewardLevel = (tier?: PatreonRewardsTier) => {
     }
 }
 
-export const patronRewardLevelName =  (tier?: PatreonRewardsTier) => {
+export const patronRewardLevelName = (tier?: PatreonRewardsTier) => {
     switch (tier) {
         case PatreonRewardsTier.NOTICE_BARGAINS:
             return "It that Fastidiously Notices Bargains"
@@ -35,7 +35,7 @@ export const patronRewardLevelName =  (tier?: PatreonRewardsTier) => {
     }
 }
 
-export const patronRewardLevelDescription =  (tier?: PatreonRewardsTier) => {
+export const patronRewardLevelDescription = (tier?: PatreonRewardsTier) => {
     switch (tier) {
         case PatreonRewardsTier.NOTICE_BARGAINS:
             return "Notices Bargains – $1"
@@ -50,20 +50,22 @@ export const patronRewardLevelDescription =  (tier?: PatreonRewardsTier) => {
     }
 }
 
-export const patronAuctionLimit =  (tier?: PatreonRewardsTier) => {
+export const patronForSaleLimit = (tier?: PatreonRewardsTier) => {
     switch (tier) {
+        case PatreonRewardsTier.NOTICE_BARGAINS:
+            return 250
         case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
-            return 5
+            return 1000
         case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
-            return 10
+            return undefined
         case PatreonRewardsTier.ALWAYS_GENEROUS:
             return undefined
         default:
-            return 1
+            return 100
     }
 }
 
-export const patronNotificationLimit =  (tier?: PatreonRewardsTier) => {
+export const patronNotificationLimit = (tier?: PatreonRewardsTier) => {
     switch (tier) {
         case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
             return 25

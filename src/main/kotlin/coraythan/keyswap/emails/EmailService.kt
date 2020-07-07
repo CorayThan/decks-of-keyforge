@@ -479,7 +479,6 @@ class EmailService(
         helper.setFrom(fromAddress)
         helper.setFrom(fromAddress)
         if (replyTo != null) helper.setReplyTo(replyTo)
-        mimeMessage.addFrom(listOf(fromAddress).toTypedArray())
         helper.setTo(if (env == Env.dev) "decksofkeyforge@gmail.com" else email)
         if (ccEmail != null) helper.setCc(if (env == Env.dev) "decksofkeyforge@gmail.com" else ccEmail)
         helper.setSubject(if (env == Env.dev) "Dok Dev Email: $subject" else subject)

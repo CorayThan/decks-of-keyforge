@@ -7,7 +7,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
 import { deckOwnershipStore } from "../decks/ownership/DeckOwnershipStore"
-import { findPatronRewardLevel, PatreonRewardsTier, patronAuctionLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
+import { findPatronRewardLevel, PatreonRewardsTier, patronForSaleLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { KeyUserDto, UserLogin, UserRegistration, UserType } from "./KeyUser"
@@ -295,7 +295,7 @@ export class UserStore {
 
     @computed
     get canListForSale(): boolean {
-        return this.emailIsVerified && this.hasCountryAndShippingCost
+        return this.emailIsVerified && this.hasCountryAndShippingCost && this.canListMoreSales
     }
 
     @computed
@@ -365,27 +365,24 @@ export class UserStore {
     }
 
     @computed
-    get auctionsListed(): number {
+    get forSaleCount(): number {
         if (this.user) {
-            return this.user.auctionCount
+            return this.user.forSaleCount
         }
         return 0
     }
 
     @computed
-    get auctionsAllowed(): number | undefined {
+    get forSaleAllowed(): number | undefined {
         if (this.user) {
-            return patronAuctionLimit(this.user.patreonTier)
+            return patronForSaleLimit(this.user.patreonTier)
         }
         return 0
     }
 
     @computed
-    get canListMoreAuctions(): boolean {
-        if (this.email === "coraythan@gmail.com") {
-            return true
-        }
-        return this.auctionsAllowed == null || this.auctionsAllowed > this.auctionsListed
+    get canListMoreSales(): boolean {
+        return this.forSaleAllowed == null || this.forSaleAllowed > this.forSaleCount
     }
 
     @computed

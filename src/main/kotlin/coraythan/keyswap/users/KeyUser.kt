@@ -3,7 +3,6 @@ package coraythan.keyswap.users
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.auctions.DeckListing
-import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.purchases.Purchase
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generic.Country
@@ -149,7 +148,7 @@ data class KeyUser(
             sellerEmail = sellerEmail,
             discord = discord,
             storeName = storeName,
-            auctionCount = auctions.filter { it.status == DeckListingStatus.AUCTION }.count(),
+            forSaleCount = forSaleCount,
             shippingCost = shippingCost,
             teamName = team?.name,
             autoRenewListings = autoRenewListings,
@@ -237,7 +236,7 @@ data class KeyUserDto(
         val discord: String? = null,
         val storeName: String? = null,
 
-        val auctionCount: Int,
+        val forSaleCount: Int,
 
         val shippingCost: String? = null,
 

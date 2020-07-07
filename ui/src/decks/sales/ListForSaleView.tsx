@@ -101,7 +101,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
         this.editAuctionId = undefined
 
-        if (!userStore.canListMoreAuctions && userStore.auctionsListed > 0) {
+        if (!userStore.canListForSale) {
             // Check if their auctions have expired.
             userStore.loadLoggedInUser()
         }
@@ -304,10 +304,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </Typography>
                             </div>
                         ) : null}
-                        {!auction || userStore.canListMoreAuctions ? null : (
+                        {!userStore.canListMoreSales && (
                             <div style={{marginBottom: spacing(2)}}>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
-                                    Upgrade your patron level to list more auctions. You can have {userStore.auctionsAllowed} simultaneous auctions.
+                                    Upgrade your patron level to list more decks for sale. You can have {userStore.forSaleAllowed} decks listed.
                                 </Typography>
                                 <PatronButton/>
                             </div>
@@ -501,7 +501,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         <KeyButton
                             style={{marginLeft: spacing(1)}}
                             onClick={() => this.list(true)}
-                            disabled={!userStore.emailIsVerified || !forSaleInCountry || (auction && !userStore.canListMoreAuctions)}
+                            disabled={!userStore.emailIsVerified || !forSaleInCountry || !userStore.canListForSale}
                         >
                             {"Save Default"}
                         </KeyButton>
@@ -512,7 +512,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             style={{marginRight: spacing(1)}}
                             color={"primary"}
                             onClick={() => this.list()}
-                            disabled={!userStore.canListForSale || (auction && !userStore.canListMoreAuctions)}
+                            disabled={!userStore.canListForSale}
                         >
                             {this.editAuctionId != null ? "Update Listing" : "List"}
                         </KeyButton>

@@ -10,10 +10,11 @@ import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/DiscordButton"
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.8"
+export const latestVersion = "5.9"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -41,6 +42,28 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.9"}
+                    date={"7/5/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Ratings and Reviews!",
+                            note: "Patrons with a lifetime contribution of at least $1 can now leave ratings and reviews for sellers! " +
+                                "Sellers on the site have been remarkably honest on the whole, but hopefully this can help forestall abuse " +
+                                "by any unscrupulous individuals, and help buyers evaluate what sellers are worth the time to communicate with."
+                        },
+                        {
+                            highlight: "Patreon Mutations Incoming!",
+                            note: "New funding goals are headed for the DoK Patreon! I'm also revising the tier pricing and rewards. " +
+                                "Check out my post about it on Patreon for more details, or to lock in a Patron level at the current rates! Please " +
+                                "consider becoming a Patron or upgrading your level to support the site and help me "
+                        },
+                        {
+                            note: <PatronButton link={"https://www.patreon.com/posts/mutations-39046523"}/>
+                        }
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.8"}
                     date={"7/3/2020"}

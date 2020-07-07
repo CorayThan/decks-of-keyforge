@@ -62,7 +62,7 @@ export interface KeyUserDto {
     sellerEmail?: string
     discord?: string
     storeName?: string
-    auctionCount: number
+    forSaleCount: number
     shippingCost?: string
     teamName?: string
     autoRenewListings: boolean

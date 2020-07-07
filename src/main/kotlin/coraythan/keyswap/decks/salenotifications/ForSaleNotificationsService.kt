@@ -48,7 +48,7 @@ class ForSaleNotificationsService(
                 val toSend: List<ForSaleQueryEntity> = queries!!
                         .filter { it.active && queryMatchesDeck(it, deckId) }
                         .groupBy { it.user!! }
-                        .filter { it.key.patreonTier.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
+                        .filter { it.key.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
                         .values.toList()
                         .map { it.first() }
 
