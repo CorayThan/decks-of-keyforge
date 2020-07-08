@@ -1,3 +1,5 @@
+import { UserSearchResult } from "./search/UserSearchResult"
+
 export interface UserProfile {
     id: string
     username: string
@@ -6,6 +8,7 @@ export interface UserProfile {
     allowUsersToSeeDeckOwnership: boolean
     country?: string
     preferredCountries?: string[]
+    searchResult?: UserSearchResult
 }
 
 export interface UserProfileUpdate {

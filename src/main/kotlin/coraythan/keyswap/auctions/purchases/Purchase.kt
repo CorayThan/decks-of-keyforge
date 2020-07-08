@@ -58,6 +58,7 @@ data class Purchase(
                 sellerCountry = sellerCountry,
                 buyerCountry = buyerCountry,
                 sellerUsername = seller?.username,
+                sellerId = seller?.id,
                 buyerUsername = buyer?.username
         )
 }

@@ -8,7 +8,7 @@ import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing, theme } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log, Utils } from "../config/Utils"
+import { Utils } from "../config/Utils"
 import { HelperText } from "../generic/CustomTypographies"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -91,6 +91,8 @@ class UserRatingStore {
 interface UserRatingProps {
     sellerId: string
     sellerName: string
+    countOnly?: boolean
+    style?: React.CSSProperties
 }
 
 interface UserRatingDialogProps extends UserRatingProps {
@@ -100,20 +102,26 @@ interface UserRatingDialogProps extends UserRatingProps {
 }
 
 export const SellerRatingView = observer((props: UserRatingProps) => {
-    const {sellerId} = props
+    const {sellerId, countOnly, style} = props
     const ratingForSeller = sellerRatingsStore.ratings.find(rating => rating.sellerId === sellerId)
     const rating = ratingForSeller?.rating ?? 0
     const reviewsCount = ratingForSeller?.reviews ?? 0
     const [store] = useState(new UserRatingStore())
     let reviewsText = `${reviewsCount} review`
-    if (reviewsCount !== 1) {
+    if (countOnly) {
+        reviewsText = `(${reviewsCount})`
+    } else if (reviewsCount !== 1) {
         reviewsText += "s"
     }
 
-    log.info(`Contributed or manual: `)
     return (
-        <div>
-            <Box display={"flex"} alignItems={"flex-end"}>
+        <div style={style}>
+            <Box
+                display={"flex"}
+                alignItems={"flex-end"}
+                onClick={() => store.openReviews(sellerId)}
+                style={{cursor: "pointer"}}
+            >
                 <Rating
                     name={"seller ratings"}
                     value={rating}
@@ -124,8 +132,6 @@ export const SellerRatingView = observer((props: UserRatingProps) => {
                 />
                 <Link
                     variant={"subtitle2"}
-                    component={"button"}
-                    onClick={() => store.openReviews(sellerId)}
                     style={{height: 18, paddingTop: 1, fontSize: "0.812rem"}}
                 >
                     {reviewsText}
@@ -192,7 +198,7 @@ const DisplayReviewsDialog = observer((props: UserRatingDialogProps) => {
                             return (
                                 <div key={review.reviewerUsername}>
                                     <Divider style={{margin: spacing(2, 0)}}/>
-                                    <Typography variant={"h6"} style={{marginBottom: spacing(1)}}>Best Seller Evah</Typography>
+                                    <Typography variant={"h6"} style={{marginBottom: spacing(1)}}>{review.title}</Typography>
                                     <Rating
                                         name={"seller ratings"}
                                         value={review.rating}

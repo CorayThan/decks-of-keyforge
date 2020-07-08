@@ -54,6 +54,17 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     @Modifying
     @Query("""
         UPDATE KeyUser keyUser 
+            SET keyUser.rating = :rating
+            WHERE keyUser.id = :id
+        """)
+    fun updateRating(
+            @Param("id") id: UUID,
+            @Param("rating") rating: Double
+    )
+
+    @Modifying
+    @Query("""
+        UPDATE KeyUser keyUser 
             SET keyUser.deckCount = :deckCount,
                 keyUser.forSaleCount = :forSaleCount,
                 keyUser.topSasAverage = :topSasAverage,

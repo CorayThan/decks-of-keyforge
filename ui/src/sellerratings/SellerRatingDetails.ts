@@ -3,6 +3,7 @@ export interface SellerRatingDetails {
     deckKeyForgeId?: string
     deckName?: string
     review: string
+    title: string
     rating: number
     created: string
 }

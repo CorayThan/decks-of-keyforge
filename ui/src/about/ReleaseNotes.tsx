@@ -57,7 +57,8 @@ export class ReleaseNotes extends React.Component {
                             highlight: "Patreon Mutations Incoming!",
                             note: "New funding goals are headed for the DoK Patreon! I'm also revising the tier pricing and rewards. " +
                                 "Check out my post about it on Patreon for more details, or to lock in a Patron level at the current rates! Please " +
-                                "consider becoming a Patron or upgrading your level to support the site and help me "
+                                "consider becoming a Patron or upgrading your level to support the site and help me continue maintaining and " +
+                                "improving it!"
                         },
                         {
                             note: <PatronButton link={"https://www.patreon.com/posts/mutations-39046523"}/>

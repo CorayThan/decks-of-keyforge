@@ -12,6 +12,7 @@ export interface PurchaseSearchResult {
     sellerCountry?: string
     buyerCountry?: string
     sellerUsername?: string
+    sellerId?: string
     buyerUsername?: string
 }
 

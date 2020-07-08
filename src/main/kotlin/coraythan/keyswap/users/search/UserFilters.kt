@@ -10,6 +10,7 @@ data class UserFilters(
 
 enum class UserSort {
     USER_NAME,
+    RATING,
     DECK_COUNT,
     PATRON_LEVEL,
     SAS_AVERAGE,

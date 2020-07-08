@@ -1,14 +1,14 @@
-import { Card, Divider } from "@material-ui/core"
+import { Box, Card, Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { log } from "../config/Utils"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
+import { SellerRatingView } from "../sellerratings/SellerRatingView"
 import { uiStore } from "../ui/UiStore"
 import { UserProfile } from "./UserProfile"
 import { userStore } from "./UserStore"
@@ -18,8 +18,7 @@ interface ProfilePageProps extends RouteComponentProps<{ username: string }> {
 
 export class ProfilePage extends React.Component<ProfilePageProps> {
     render() {
-        log.info(`Rendering profile page with user name ${this.props.match.params.username}`)
-        return <ProfileContainer username={this.props.match.params.username} />
+        return <ProfileContainer username={this.props.match.params.username}/>
     }
 }
 
@@ -83,7 +82,34 @@ export class ProfileView extends React.Component<ProfileViewProps> {
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
                 <Card style={{padding: spacing(2), maxWidth: 400}}>
-                    <Typography variant={"h4"} color={"primary"} style={{marginBottom: spacing(2)}}>{profile.username}</Typography>
+                    <Box display={"flex"} mb={2} alignItems={"flex-end"} justifyContent={"space-between"}>
+                        <Typography variant={"h4"} color={"primary"} style={{margin: spacing(0, 2, 0, 0)}}>{profile.username}</Typography>
+                        <SellerRatingView sellerId={profile.id} sellerName={profile.username} style={{marginBottom: 8}}/>
+                    </Box>
+
+                    {profile.searchResult != null && (
+                        <>
+                            <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
+                            <Box
+                                display={"grid"}
+                                gridGap={spacing(1)}
+                                gridTemplateRows={"1fr 1fr 1fr 1fr"}
+                                gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+                                alignItems={"center"}
+                            >
+                                <Count name={"Decks"} count={profile.searchResult.deckCount}/>
+                                <Count name={"For Sale"} count={profile.searchResult.forSaleCount}/>
+                                <Count name={"Top 10 SAS"} count={profile.searchResult.topSasAverage}/>
+                                <Count name={"High SAS"} count={profile.searchResult.highSas}/>
+                                <Count name={"Power"} count={profile.searchResult.totalPower}/>
+                                <Count name={"Chains"} count={profile.searchResult.totalChains}/>
+                                <Count name={"Mavericks"} count={profile.searchResult.mavericks}/>
+                                <Count name={"Anomalies"} count={profile.searchResult.anomalies}/>
+                            </Box>
+                        </>
+                    )}
+
+                    <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                     {
                         profile.publicContactInfo ? (
                             <Typography style={{whiteSpace: "pre-wrap"}}>{profile.publicContactInfo}</Typography>
@@ -92,6 +118,7 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                         )
                     }
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
+
                     {profile.allowUsersToSeeDeckOwnership && (
                         <LinkButton color={"primary"} to={decksLink}>
                             {profile.username}'s Decks
@@ -105,3 +132,10 @@ export class ProfileView extends React.Component<ProfileViewProps> {
         )
     }
 }
+
+const Count = (props: { name: string, count: number }) => (
+    <>
+        <Typography variant={"overline"}>{props.name}</Typography>
+        <Typography variant={"body2"}>{props.count}</Typography>
+    </>
+)

@@ -14,5 +14,6 @@ data class PurchaseSearchResult(
         val sellerCountry: Country? = null,
         val buyerCountry: Country? = null,
         val sellerUsername: String? = null,
+        val sellerId: UUID? = null,
         val buyerUsername: String? = null
 )

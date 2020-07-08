@@ -9,13 +9,14 @@ import { HelperText } from "../../generic/CustomTypographies"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
+import { SellerRatingView } from "../../sellerratings/SellerRatingView"
 import { PatreonRewardsTier } from "../../thirdpartysites/patreon/PatreonRewardsTier"
 import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../../user/UserStore"
 import { PurchaseSearchResult, PurchaseUtils } from "./PurchaseSearchResult"
 import { purchaseStore } from "./PurchaseStore"
 
-export const ViewPurchases = observer(() => {
+export const BoughtAndSoldView = observer(() => {
 
     useEffect(() => {
         purchaseStore.findMyPurchases()
@@ -33,7 +34,7 @@ export const ViewPurchases = observer(() => {
                 <div style={{marginBottom: spacing(4)}}>
                     <Typography style={{marginBottom: spacing(1)}}>
                         Become a $5+ patron to see more than your 10 most recent purchases or sales!
-                     </Typography>
+                    </Typography>
                     <PatronButton/>
                 </div>
             )}
@@ -67,6 +68,7 @@ export const ViewPurchases = observer(() => {
 
 const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseSearchResult>[] => {
     let buyerOrSeller: SortableTableHeaderInfo<PurchaseSearchResult>
+    let reviews: SortableTableHeaderInfo<PurchaseSearchResult> | undefined
     if (buyer) {
         buyerOrSeller = {
             property: "sellerUsername",
@@ -75,6 +77,19 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             transform: (purchase) => (
                 <Link href={Routes.userProfilePage(purchase.sellerUsername)}>{purchase.sellerUsername}</Link>
             )
+        }
+        reviews = {
+            title: "Reviews",
+            sortable: false,
+            transform: (purchase) => {
+                if (purchase.sellerId == null) {
+                    return null
+                } else {
+                    return (
+                        <SellerRatingView sellerId={purchase.sellerId} sellerName={purchase.sellerUsername ?? "Unknown"} countOnly={true}/>
+                    )
+                }
+            }
         }
     } else {
         buyerOrSeller = {
@@ -86,7 +101,7 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             )
         }
     }
-    return [
+    const values: SortableTableHeaderInfo<PurchaseSearchResult>[] = [
         {
             property: "deckName",
             title: "Deck",
@@ -107,6 +122,12 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
         {property: "purchasedOn", title: "Sale Date", sortable: true},
         buyerOrSeller
     ]
+
+    if (reviews != null) {
+        values.push(reviews)
+    }
+
+    return values
 }
 
 const PurchasesList = (props: { name: string, noneMessage: string, buyer: boolean, purchases: PurchaseSearchResult[] }) => {

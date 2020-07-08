@@ -30,7 +30,6 @@ export class UserSearchStore {
                 this.results = response.data
             })
     }
-
 }
 
 export const userSearchStore = new UserSearchStore()

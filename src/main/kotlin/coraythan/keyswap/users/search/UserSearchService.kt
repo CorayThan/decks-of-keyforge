@@ -104,6 +104,8 @@ class UserSearchService(
         val predicate = userFilterPredicate(filters, withHidden)
 
         val sort = when (filters.sort) {
+            UserSort.RATING ->
+                userQ.rating.desc()
             UserSort.DECK_COUNT ->
                 userQ.deckCount.desc()
             UserSort.SAS_AVERAGE ->
@@ -127,7 +129,7 @@ class UserSearchService(
         return query
                 .select(
                         Projections.constructor(UserSearchResult::class.java,
-                                userQ.username, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas, userQ.lowSas, userQ.totalPower,
+                                userQ.id, userQ.username, userQ.rating, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas, userQ.lowSas, userQ.totalPower,
                                 userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier, userQ.team
                         )
                 )

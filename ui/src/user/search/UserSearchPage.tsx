@@ -36,6 +36,7 @@ import { Routes } from "../../config/Routes"
 import { log, SortOrder } from "../../config/Utils"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
+import { SellerRatingView } from "../../sellerratings/SellerRatingView"
 import { PatreonRewardsTier, patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
@@ -290,6 +291,9 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                                 {user.username}
                                             </KeyLink>
                                         </TableCell>
+                                        <TableCell>
+                                            <SellerRatingView sellerId={user.id} sellerName={user.username} countOnly={true}/>
+                                        </TableCell>
                                         {patrons && (
                                             <TableCell>
                                                 {patronRewardLevelDescription(user.patreonTier)}
@@ -407,6 +411,7 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
     {id: "username", label: "Username"},
+    {id: "rating", label: "Rating"},
     {id: "teamName", label: "Team Name"},
     {id: "deckCount", label: "Decks Owned", numeric: true},
     {id: "forSaleCount", label: "For Sale", numeric: true},

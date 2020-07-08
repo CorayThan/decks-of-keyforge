@@ -28,7 +28,7 @@ import * as React from "react"
 import ReactDOM from "react-dom"
 import { RouteComponentProps } from "react-router"
 import { spacing, themeStore } from "../config/MuiConfig"
-import { AboutSubPaths, Routes } from "../config/Routes"
+import { AboutSubPaths, MyDokSubPaths, Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { countries, countryToLabel, euCountries } from "../generic/Country"
@@ -476,7 +476,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                 style={{paddingLeft: 0, marginTop: spacing(2)}}
                             >
                                 <div style={{flexGrow: 1}}/>
-                                <LinkPatreon/>
+                                <LinkPatreon returnPath={MyDokSubPaths.profile}/>
                                 <Button
                                     variant={"contained"}
                                     type={"submit"}

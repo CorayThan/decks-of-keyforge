@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.teams.Team
 import coraythan.keyswap.users.UserType
+import java.util.*
 
 data class UserSearchResult(
+        val id: UUID,
         val username: String,
+        val rating: Double,
         val deckCount: Int,
         val forSaleCount: Int,
         val topSasAverage: Int,

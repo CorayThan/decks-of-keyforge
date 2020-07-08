@@ -1,6 +1,7 @@
 package coraythan.keyswap.users
 
 import coraythan.keyswap.generic.Country
+import coraythan.keyswap.users.search.UserSearchResult
 import java.util.*
 
 data class UserProfile(
@@ -11,7 +12,8 @@ data class UserProfile(
         val allowUsersToSeeDeckOwnership: Boolean,
         val country: Country?,
         val preferredCountries: List<Country>? = null,
-        val lastVersionSeen: String?
+        val lastVersionSeen: String?,
+        val searchResult: UserSearchResult?
 )
 
 data class UserProfileUpdate(

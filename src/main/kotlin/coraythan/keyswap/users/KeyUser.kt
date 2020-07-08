@@ -105,6 +105,7 @@ data class KeyUser(
         val autoRenewListings: Boolean = false,
 
         // Stats values
+        val rating: Double = 0.0,
         val deckCount: Int = 0,
         val forSaleCount: Int = 0,
         val topSasAverage: Int = 0,
@@ -126,7 +127,8 @@ data class KeyUser(
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             country = country,
             preferredCountries = preferredCountries,
-            lastVersionSeen = lastVersionSeen
+            lastVersionSeen = lastVersionSeen,
+            searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult() else null
     )
 
     fun toDto() = KeyUserDto(
@@ -159,7 +161,9 @@ data class KeyUser(
         val owned = this.decks.filter { userDeck -> userDeck.ownedBy != null }.map { it.deck }
         val sasRatings = owned.map { deck -> deck.sasRating }.sortedDescending()
         return UserSearchResult(
+                this.id,
                 this.username,
+                this.rating,
                 owned.count(),
                 this.auctions.count { listing -> listing.isActive },
                 if (owned.size < 10) 0 else sasRatings.take(10).average().roundToInt(),

@@ -6,10 +6,11 @@ import { LinkButton } from "../../mui-restyled/LinkButton"
 import { userStore } from "../../user/UserStore"
 
 @observer
-export class PatronButton extends React.Component<{ size?: "small" | "medium" | "large", link?: string }> {
+export class PatronButton extends React.Component<{ size?: "small" | "medium" | "large", link?: string, style?: React.CSSProperties }> {
     render() {
         return (
             <LinkButton
+                style={this.props.style}
                 color={"primary"}
                 variant={"contained"}
                 href={this.props.link ?? "https://www.patreon.com/decksofkeyforge"}

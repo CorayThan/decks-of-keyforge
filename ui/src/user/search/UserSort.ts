@@ -1,5 +1,6 @@
 export enum UserSort {
     USER_NAME = "USER_NAME",
+    RATING = "RATING",
     DECK_COUNT = "DECK_COUNT",
     PATRON_LEVEL = "PATRON_LEVEL",
     SAS_AVERAGE = "SAS_AVERAGE",

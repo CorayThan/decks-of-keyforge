@@ -240,11 +240,13 @@ class CardService(
                             groupedCards.let { sameCards ->
                                 val nonMav = sameCards.filter { !it.maverick && !it.anomaly }
                                 if (nonMav.isEmpty()) {
-                                    val representativeCard = sameCards.first()
+                                    val first = sameCards.first()
+                                    val representativeCard = if (first.big == true) sameCards.first { it.power > 0 } else first
                                     representativeCard.houses = listOf()
                                     representativeCard
                                 } else {
-                                    val representativeCard = nonMav.first()
+                                    val first = nonMav.first()
+                                    val representativeCard = if (first.big == true) sameCards.first { it.power > 0 } else first
                                     representativeCard.houses = nonMav.map { it.house }.toSet().toList().sorted()
                                     representativeCard
                                 }

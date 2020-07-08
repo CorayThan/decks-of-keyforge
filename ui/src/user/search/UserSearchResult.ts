@@ -2,7 +2,9 @@ import { PatreonRewardsTier } from "../../thirdpartysites/patreon/PatreonRewards
 import { UserType } from "../KeyUser"
 
 export interface UserSearchResult {
+    id: string
     username: string
+    rating: number
     deckCount: number
     forSaleCount: number
     patreonTier?: PatreonRewardsTier

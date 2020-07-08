@@ -2,8 +2,9 @@ import { Link, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
+import { AboutSubPaths, Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
+import { LinkPatreon } from "../thirdpartysites/patreon/LinkPatreon"
 import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
@@ -37,10 +38,12 @@ export class PatreonRewards extends React.Component {
                         <InfoListCard
                             title={"Become a Patron"}
                             infos={[
-                                "Become a patron with Patreon to support the site and gain rewards!",
+                                "Become a patron with Patreon to support the site and gain rewards! After becoming a Patron link your Patreon account to " +
+                                "get your benefits.",
                                 "All tiers have the benefits of all lower tiers.",
                                 <div style={{paddingTop: spacing(1), display: "flex", justifyContent: "center"}}>
-                                    <PatronButton/>
+                                    <PatronButton style={{marginRight: spacing(2)}}/>
+                                    <LinkPatreon returnPath={AboutSubPaths.patreon}/>
                                 </div>
                             ]}
                         />
@@ -50,7 +53,7 @@ export class PatreonRewards extends React.Component {
                         title={"Accessing your rewards"}
                         infos={[
                             <Typography style={{marginRight: spacing(2)}}>
-                                After becoming a patron link your account from your <Link href={Routes.myProfile}>profile</Link>.
+                                After becoming a patron link your account with the above "Link Patreon" button.
                             </Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Dark Mode – $1+</Typography>,
                             <Typography>Go to your <Link href={Routes.myProfile}>profile</Link> to toggle on dark mode.</Typography>,
@@ -61,7 +64,7 @@ export class PatreonRewards extends React.Component {
                             </Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Store listing on the landing page – $10+</Typography>,
                             `You must have 10 or more decks listed for sale or trade for your store to show. You can change your store name from your ` +
-                            `profile. To have an icon send me a 48px high image, ideally in png format with transparancy. The more like an icon it is, ` +
+                            `profile. To have an icon send me a 48px high image, ideally in png format with transparency. The more like an icon it is, ` +
                             `and the less like a picture, the better.`,
                         ]}
                     />
@@ -131,7 +134,11 @@ export class PatreonRewards extends React.Component {
                         noDivider={true}
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
-                            "Request a feature to be added or moved up in my TODO list!",
+                            "One hour of online KeyForge coaching per month from me, CorayThan!",
+                            "This can be playing a game with open hands where we discuss the best lines to take, or I can do a bit of collection " +
+                            "evaluation if you prefer.",
+                            "I am a two-time #1 ranked player on the Vault Tour leaderboard, and currently ranked #3. I have won two vault tours: " +
+                            "the Denver Survival and Indianapolis sealed WC. I am also the creator of Decks of KeyForge and the SAS and AERC rating systems."
                         ]}
                     />
                 </AboutGridItem>

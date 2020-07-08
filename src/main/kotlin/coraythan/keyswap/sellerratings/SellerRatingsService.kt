@@ -4,6 +4,7 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUserRepo
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -16,7 +17,8 @@ import java.util.*
 class SellerRatingsService(
         private val repo: SellerRatingRepo,
         private val deckRepo: DeckRepo,
-        private val currentUserService: CurrentUserService
+        private val currentUserService: CurrentUserService,
+        private val keyUserRepo: KeyUserRepo
 ) {
 
     var allRatings = listOf<SellerRatingSummary>()
@@ -38,12 +40,14 @@ class SellerRatingsService(
         return repo.findBySellerId(sellerId)
                 .sortedByDescending { it.created }
                 .map {
-                    val deck = if (it.deckPurchasedId != null) (deckRepo.findByIdOrNull(it.deckPurchasedId) ?: throw IllegalStateException("No deck for id ${it.deckPurchasedId}")) else null
+                    val deck = if (it.deckPurchasedId != null) (deckRepo.findByIdOrNull(it.deckPurchasedId)
+                            ?: throw IllegalStateException("No deck for id ${it.deckPurchasedId}")) else null
                     SellerRatingDetails(
                             it.reviewer.username,
                             deck?.keyforgeId,
                             deck?.name,
                             it.review,
+                            it.title,
                             it.rating,
                             it.created.toLocalDate()
                     )
@@ -63,13 +67,21 @@ class SellerRatingsService(
                 currentUser,
                 save.deckPurchasedId
         ))
-        this.refreshRatings()
+        this.updateCachedAndUser(save.sellerId)
     }
 
     fun deleteRating(sellerId: UUID) {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         repo.deleteByReviewerIdAndSellerId(currentUser.id, sellerId)
+        this.updateCachedAndUser(sellerId)
+    }
+
+    private fun updateCachedAndUser(sellerId: UUID) {
         this.refreshRatings()
+        val ratingUpdatedTo = allRatings.find { it.sellerId == sellerId }
+        if (ratingUpdatedTo != null) {
+            keyUserRepo.updateRating(sellerId, ratingUpdatedTo.rating)
+        }
     }
 }
 
@@ -84,6 +96,7 @@ data class SellerRatingDetails(
         val deckKeyForgeId: String?,
         val deckName: String?,
         val review: String,
+        val title: String,
         val rating: Int,
         val created: LocalDate
 )
