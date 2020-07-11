@@ -93,7 +93,7 @@ export const TeamInvitesPage = observer((props: { invites: TeamInviteInfo[] }) =
                             </div>
                         ) : (
                             <BecomeAPatron>
-                                Become a $5 a month patron to form a team!
+                                Become a $6 a month patron to form a team!
                             </BecomeAPatron>
                         )}
                     </Paper>

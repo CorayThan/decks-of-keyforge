@@ -67,7 +67,7 @@ export const CreateTheoreticalDeck = observer(() => {
     }
 
     if (!userStore.loginInProgress && !userStore.theoreticalDecksAllowed) {
-        return <Typography>Please become a $1 a month or more patron to create theoretical decks!</Typography>
+        return <Typography>Please become a $3 a month or more patron to create theoretical decks!</Typography>
     }
 
     const savedDeckId = theoreticalDeckStore.savedDeckId

@@ -86,7 +86,7 @@ export class SellersAndDevs extends React.Component {
                         "1. Please do not spam requests. Use the all decks CSV above when appropriate. The site has been brought down " +
                         "due to improper use of these APIs.",
                         "2. You can make a maximum of 25 requests per minute. If you need more, please become a patron! Patrons have " +
-                        "increased request limits. $5 a month = 50 per min, $10 a month = 100 per min, and $25+ a month = 250 per min.",
+                        "increased request limits. $6 a month = 50 per min, $12 a month = 100 per min, and $25+ a month = 250 per min.",
                         "3. If you use these endpoints for your project or website please give credit and provide a link to " +
                         "decksofkeyforge.com",
                         "4. Please only use the APIs specified here from this site. If you have an idea for a cool feature of the site " +

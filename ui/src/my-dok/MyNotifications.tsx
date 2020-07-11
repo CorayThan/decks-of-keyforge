@@ -26,7 +26,7 @@ export class MyNotifications extends React.Component {
         if (!notifsAllowed) {
             return (
                 <BecomeAPatron>
-                    Become a $5 a month patron to create notifications when decks you want are listed for sale!
+                    Become a $6 a month patron to create notifications when decks you want are listed for sale!
                 </BecomeAPatron>
             )
         }

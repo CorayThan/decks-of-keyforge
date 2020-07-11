@@ -177,7 +177,7 @@ export class RegistrationPage extends React.Component {
                                         ))}
                                     </TextField>
                                 </Grid>
-                                <Grid item={true} xs={6}>
+                                <Grid item={true} xs={12}>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
@@ -188,8 +188,6 @@ export class RegistrationPage extends React.Component {
                                         }
                                         label={"Let anyone see my decks"}
                                     />
-                                </Grid>
-                                <Grid item={true} xs={6}>
                                     <FormControlLabel
                                         control={
                                             <Checkbox

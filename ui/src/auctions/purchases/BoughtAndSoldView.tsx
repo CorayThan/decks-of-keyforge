@@ -33,7 +33,7 @@ export const BoughtAndSoldView = observer(() => {
             {!userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
                 <div style={{marginBottom: spacing(4)}}>
                     <Typography style={{marginBottom: spacing(1)}}>
-                        Become a $5+ patron to see more than your 10 most recent purchases or sales!
+                        Become a $6+ patron to see more than your 10 most recent purchases or sales!
                     </Typography>
                     <PatronButton/>
                 </div>

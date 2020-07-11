@@ -1,7 +1,7 @@
 export enum PatreonRewardsTier {
-    NOTICE_BARGAINS = "NOTICE_BARGAINS", // $1
-    SUPPORT_SOPHISTICATION = "SUPPORT_SOPHISTICATION", // $5
-    MERCHANT_AEMBERMAKER = "MERCHANT_AEMBERMAKER", // $10
+    NOTICE_BARGAINS = "NOTICE_BARGAINS", // $3
+    SUPPORT_SOPHISTICATION = "SUPPORT_SOPHISTICATION", // $6
+    MERCHANT_AEMBERMAKER = "MERCHANT_AEMBERMAKER", // $12
     ALWAYS_GENEROUS = "ALWAYS_GENEROUS" // $25 Exclusive tier or $50
 }
 
@@ -38,11 +38,11 @@ export const patronRewardLevelName = (tier?: PatreonRewardsTier) => {
 export const patronRewardLevelDescription = (tier?: PatreonRewardsTier) => {
     switch (tier) {
         case PatreonRewardsTier.NOTICE_BARGAINS:
-            return "Notices Bargains – $1"
+            return "Notices Bargains – $3"
         case PatreonRewardsTier.SUPPORT_SOPHISTICATION:
-            return "Purchases the Paradigm – $5"
+            return "Purchases the Paradigm – $6"
         case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
-            return "Merchant Æmbermaker – $10"
+            return "Merchant Æmbermaker – $12"
         case PatreonRewardsTier.ALWAYS_GENEROUS:
             return "Always Generous – $25+"
         default:

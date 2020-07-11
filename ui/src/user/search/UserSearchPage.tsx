@@ -82,6 +82,9 @@ export class UserSearchSortStore {
     withTeams = false
 
     @observable
+    hasRatings = false
+
+    @observable
     patrons = false
 
     filters: UserFilters
@@ -103,6 +106,11 @@ export class UserSearchSortStore {
 
     handleWithTeamsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.withTeams = event.target.checked
+        this.page = 0
+    }
+
+    handleHasRatingsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.hasRatings = event.target.checked
         this.page = 0
     }
 
@@ -139,7 +147,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         updatedMessage = "Updated 1 minute ago"
     }
 
-    const {order, orderBy, page, username, role, manualPatreonTier, withTeams, patrons, createSortHandler} = store
+    const {order, orderBy, page, username, role, manualPatreonTier, withTeams, hasRatings, patrons, createSortHandler} = store
 
     let filteredUsers = users
 
@@ -148,6 +156,9 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
     }
     if (withTeams) {
         filteredUsers = filteredUsers.filter(user => user.teamName != null)
+    }
+    if (hasRatings) {
+        filteredUsers = filteredUsers.filter(user => user.rating > 0)
     }
     if (patrons) {
         filteredUsers = filteredUsers.filter(user => user.patreonTier != null)
@@ -229,6 +240,15 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                             </FormControl>
                         </>
                     )}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={hasRatings}
+                                onChange={store.handleHasRatingsUpdate}
+                            />
+                        }
+                        label={"Has Ratings"}
+                    />
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -459,11 +479,18 @@ const AddPatreon = observer((props: { username: string }) => {
                             value={store.tier}
                             onChange={event => store.tier = event.target.value as PatreonRewardsTier}
                         >
-                            <MenuItem value={""}>Remove</MenuItem>
-                            <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains $1</MenuItem>
-                            <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>Purchases the Paradigm $5</MenuItem>
-                            <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>Merchant Aembermaker $10</MenuItem>
-                            <MenuItem value={PatreonRewardsTier.ALWAYS_GENEROUS}>Always Generous $25</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>
+                                {patronRewardLevelDescription(PatreonRewardsTier.NOTICE_BARGAINS)}
+                            </MenuItem>
+                            <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>
+                                {patronRewardLevelDescription(PatreonRewardsTier.SUPPORT_SOPHISTICATION)}
+                            </MenuItem>
+                            <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>
+                                {patronRewardLevelDescription(PatreonRewardsTier.MERCHANT_AEMBERMAKER)}
+                            </MenuItem>
+                            <MenuItem value={PatreonRewardsTier.ALWAYS_GENEROUS}>
+                                {patronRewardLevelDescription(PatreonRewardsTier.ALWAYS_GENEROUS)}
+                            </MenuItem>
                         </Select>
                     </FormControl>
                     <TextField

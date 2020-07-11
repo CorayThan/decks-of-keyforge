@@ -70,7 +70,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 
         let saleInfoView
         if (saleInfo) {
-            saleInfoView = <SaleInfoView deckId={id} saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
+            saleInfoView =
+                <SaleInfoView deckId={id} saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
         }
 
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes

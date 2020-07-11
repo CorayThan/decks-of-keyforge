@@ -1,10 +1,15 @@
-import { Tooltip, Typography } from "@material-ui/core"
+import { Box, Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
 import { DeckSearchResult, DeckUtils } from "../../decks/models/DeckSearchResult"
+import { BackendExpansion } from "../../expansions/Expansions"
+import { EnhancedAmberIcon } from "../../generic/icons/enhancements/EnhancedAmberIcon"
+import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCaptureIcon"
+import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
+import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawIcon"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
 
 export enum AercViewType {
@@ -66,6 +71,19 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
         )
     }
 
+    let enhancedAmber = 0
+    let enhancedCapture = 0
+    let enhancedDamage = 0
+    let enhancedDraw = 0
+    if (deck.expansion === BackendExpansion.MASS_MUTATION) {
+        cards.forEach(card => {
+            enhancedAmber += card.extraCardInfo.enhancementAmber
+            enhancedCapture += card.extraCardInfo.enhancementCapture
+            enhancedDamage += card.extraCardInfo.enhancementDamage
+            enhancedDraw += card.extraCardInfo.enhancementDraw
+        })
+    }
+
     return (
         <div
             style={{backgroundColor: themeStore.aercViewBackground, padding: spacing(1)}}
@@ -82,6 +100,32 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*        </Tooltip>*/}
             {/*    </div>*/}
             {/*)}*/}
+            {deck.expansion === BackendExpansion.MASS_MUTATION && (
+                <Box
+                    display={"grid"}
+                    gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+                    mt={1}
+                    mb={1}
+                    gridGap={4}
+                >
+                    <Box display={"flex"}>
+                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedAmber}</Typography>
+                        <EnhancedAmberIcon/>
+                    </Box>
+                    <Box display={"flex"}>
+                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedCapture}</Typography>
+                        <EnhancedCaptureIcon/>
+                    </Box>
+                    <Box display={"flex"}>
+                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDamage}</Typography>
+                        <EnhancedDamageIcon/>
+                    </Box>
+                    <Box display={"flex"}>
+                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDraw}</Typography>
+                        <EnhancedDrawIcon/>
+                    </Box>
+                </Box>
+            )}
             <div
                 style={{
                     display: "grid",

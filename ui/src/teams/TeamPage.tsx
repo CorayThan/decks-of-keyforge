@@ -29,7 +29,7 @@ export const TeamPage = observer(() => {
                 <MyTeamPage team={team}/>
             )}
             <Typography variant={"body2"} style={{marginTop: spacing(4)}}>
-                Being part of a team allows you to search decks owned by your team if you are a $1+ a
+                Being part of a team allows you to search decks owned by your team if you are a $3+ a
                 month <Link href={AboutSubPaths.patreon}>Patron</Link>,
                 and shows your team on the <Link href={Routes.users}>user search page</Link>.
             </Typography>

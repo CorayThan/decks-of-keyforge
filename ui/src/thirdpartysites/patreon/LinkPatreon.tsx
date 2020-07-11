@@ -22,18 +22,23 @@ const userLink = (returnPath: string) => basePatLink(returnPath) + "&scope=ident
 
 const creatorLink = (returnPath: string) => basePatLink(returnPath) + "&scope=campaigns.members%5Bemail%5D"
 
+interface LinkPatreonProps extends ButtonProps {
+    redirectPath: string
+}
+
 @observer
-export class LinkPatreon extends React.Component<ButtonProps & { returnPath: string }> {
+export class LinkPatreon extends React.Component<LinkPatreonProps> {
     render() {
-        let patreonLink = userLink(this.props.returnPath)
+        const {redirectPath, ...rest} = this.props
+        let patreonLink = userLink(redirectPath)
         if (userStore.email === "coraythan@gmail.com") {
-            patreonLink = creatorLink(this.props.returnPath)
+            patreonLink = creatorLink(redirectPath)
         } else if (userStore.patron) {
             return (
                 <KeyButton
                     color={"primary"}
                     variant={"outlined"}
-                    {...this.props}
+                    {...rest}
                     onClick={patreonStore.unlinkAccount}
                 >
                     <PatreonIcon primary={true}/>
@@ -47,7 +52,7 @@ export class LinkPatreon extends React.Component<ButtonProps & { returnPath: str
                 color={"primary"}
                 variant={"outlined"}
                 href={patreonLink}
-                {...this.props}
+                {...rest}
             >
                 <PatreonIcon primary={true}/>
                 <div style={{marginRight: spacing(1)}}/>

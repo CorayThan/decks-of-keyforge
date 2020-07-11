@@ -143,6 +143,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                     }}
                     disableAutoFocus={true}
                     disableRestoreFocus={true}
+                    disableScrollLock={true}
                 >
                     <CardView card={fullCard} combo={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
                 </Popover>

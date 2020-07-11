@@ -11,6 +11,7 @@ import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { BackendExpansion, Expansion } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
+import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
 import { statsStore } from "../stats/StatsStore"
@@ -193,10 +194,13 @@ export class LandingPage extends React.Component<{}> {
                                 DoK is owned and operated by Graylake LLC. For questions or comments check out
                                 the <Link to={AboutSubPaths.contact}>contact me page</Link>!
                             </Typography>
-                            <Typography>
+                            <Typography style={{marginBottom: spacing(1)}} >
                                 When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
                                 any transactions.
                             </Typography>
+                            <LinkButton size={"small"} to={Routes.privacyPolicy}>
+                                Privacy Policy
+                            </LinkButton>
                         </div>
                     </div>
                 </div>

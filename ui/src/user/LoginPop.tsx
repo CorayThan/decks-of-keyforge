@@ -1,4 +1,5 @@
-import { Button, Popover, TextField } from "@material-ui/core"
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Popover, TextField } from "@material-ui/core"
+import { Visibility, VisibilityOff } from "@material-ui/icons"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -18,6 +19,8 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
     anchorElement?: HTMLButtonElement
 
     @observable
+    showPassword = false
+    @observable
     email = Utils.isDev() ? "coraythan@gmail.com" : ""
     @observable
     password = Utils.isDev() ? "stuffstuff" : ""
@@ -27,7 +30,8 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
         this.popOpen = false
     }
 
-    login = () => {
+    login = (submitEvent: React.FormEvent) => {
+        submitEvent.preventDefault()
         userStore.login({email: this.email, password: this.password})
     }
 
@@ -69,9 +73,13 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                     }}
                     style={{zIndex: screenStore.zindexes.menuPops}}
                 >
-                    <div style={{padding: spacing(2), display: "flex", flexDirection: "column"}}>
+                    <form
+                        style={{padding: spacing(2), display: "flex", flexDirection: "column"}}
+                        onSubmit={this.login}
+                    >
                         <TextField
                             id={"dok-email"}
+                            name={"dok-email"}
                             variant={"outlined"}
                             label={"Email"}
                             value={this.email}
@@ -79,15 +87,30 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                             style={{marginBottom: spacing(2)}}
                             autoFocus={true}
                         />
-                        <TextField
-                            id={"dok-password"}
+                        <FormControl
                             variant={"outlined"}
-                            label={"Password"}
-                            type={"password"}
-                            value={this.password}
-                            onChange={(event) => this.password = event.target.value}
                             style={{marginBottom: spacing(2)}}
-                        />
+                        >
+                            <InputLabel htmlFor="dok-password">Password</InputLabel>
+                            <OutlinedInput
+                                id={"dok-password"}
+                                name={"dok-password"}
+                                type={this.showPassword ? "text" : "password"}
+                                value={this.password}
+                                onChange={(event) => this.password = event.target.value}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => this.showPassword = !this.showPassword}
+                                            onMouseDown={(event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault()}
+                                        >
+                                            {this.showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                labelWidth={70}
+                            />
+                        </FormControl>
                         <div style={{display: "flex"}}>
                             <Button
                                 variant={"outlined"}
@@ -100,7 +123,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                             <KeyButton
                                 variant={"contained"}
                                 color={"primary"}
-                                onClick={this.login}
+                                type={"submit"}
                                 loading={userStore.loginInProgress}
                             >
                                 Login
@@ -112,10 +135,10 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                                 size={"small"}
                                 onClick={this.handlePopoverClose}
                             >
-                                Forgot Password?
+                                Reset Password
                             </LinkButton>
                         </div>
-                    </div>
+                    </form>
                 </Popover>
             </>
         )

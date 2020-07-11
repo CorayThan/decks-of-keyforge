@@ -1,6 +1,7 @@
 import {
     Button,
     CardActions,
+    CardContent,
     Checkbox,
     Dialog,
     DialogActions,
@@ -269,7 +270,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                         )}
                         style={{maxWidth: 880, margin: 0}}
                     >
-                        <div style={{padding: spacing(2)}}>
+                        <CardContent>
                             <Grid container={true} spacing={2}>
                                 <Grid item={true} sm={12} md={6}>
                                     <Grid container={true} spacing={2}>
@@ -347,11 +348,11 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             </FormHelperText>
                                         </Grid>
                                         <Grid item={true} xs={3}>
-                                                <Button
-                                                    onClick={this.addEuCountries}
-                                                >
-                                                    Add EU
-                                                </Button>
+                                            <Button
+                                                onClick={this.addEuCountries}
+                                            >
+                                                Add EU
+                                            </Button>
                                         </Grid>
                                         <Grid item={true}>
                                             <FormControlLabel
@@ -472,21 +473,20 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <CardActions
-                                style={{paddingLeft: 0, marginTop: spacing(2)}}
+                        </CardContent>
+                        <CardActions>
+                            <LinkButton href={Routes.userProfilePage(profile.username)}>Public Profile</LinkButton>
+                            <div style={{flexGrow: 1}}/>
+                            <LinkPatreon redirectPath={MyDokSubPaths.profile}/>
+                            <Button
+                                variant={"contained"}
+                                type={"submit"}
+                                color={"primary"}
+                                style={{marginLeft: spacing(2)}}
                             >
-                                <div style={{flexGrow: 1}}/>
-                                <LinkPatreon returnPath={MyDokSubPaths.profile}/>
-                                <Button
-                                    variant={"contained"}
-                                    type={"submit"}
-                                    color={"primary"}
-                                    style={{marginLeft: spacing(2)}}
-                                >
-                                    Save
-                                </Button>
-                            </CardActions>
-                        </div>
+                                Save
+                            </Button>
+                        </CardActions>
                     </KeyCard>
                 </form>
             </div>

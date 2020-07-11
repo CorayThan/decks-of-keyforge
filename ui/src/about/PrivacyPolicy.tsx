@@ -7,11 +7,11 @@ export class PrivacyPolicy extends React.Component {
         return (
             <div style={{display: "flex", justifyContent: "center"}}>
                 <div style={{maxWidth: 800}}>
-                    <Typography variant={"h4"} style={{marginBottom: spacing(1), marginLeft: spacing(4), marginTop: spacing(4)}}>
-                        Privacy Policy
-                    </Typography>
                     <Paper style={{margin: spacing(4), marginTop: spacing(2), padding: spacing(4)}}>
 
+                        <Typography variant={"h5"} style={{marginBottom: spacing(1)}}>
+                            Privacy Policy
+                        </Typography>
                         <Typography style={{marginBottom: spacing(1)}}>
                             This Privacy Policy describes how your personal information is collected, used, and shared when you visit
                             https://decksofkeyforge.com

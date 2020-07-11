@@ -90,7 +90,7 @@ class ForSaleNotificationsService(
         } else {
             user.realPatreonTier()?.maxNotifications ?: 0
         }
-        check(maxNotifs > 0) { "You must be a $5 patron to save for sale queries." }
+        check(maxNotifs > 0) { "You must be a $6 patron to save for sale queries." }
         val currentNotificationCount = forSaleQueryRepo.countByUserId(user.id)
         check(maxNotifs > currentNotificationCount) { "You have too many for sale notifications created. Please delete one to add one." }
 

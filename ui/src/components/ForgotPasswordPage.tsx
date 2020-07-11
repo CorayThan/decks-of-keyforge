@@ -1,4 +1,4 @@
-import { Paper, TextField, Typography } from "@material-ui/core"
+import { Card, CardActions, CardContent, TextField, Typography } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -30,46 +30,44 @@ export class ForgotPasswordPage extends React.Component {
         return (
             <div style={{display: "flex", justifyContent: "center"}}>
                 <div>
-                    <Typography
-                        variant={"h4"}
-                        style={{margin: spacing(2), marginTop: spacing(4)}}
-                    >
-                        Forgot your password?
-                    </Typography>
-                    <Paper style={{maxWidth: 400, margin: spacing(2), padding: spacing(2)}}>
-                        <Typography style={{marginBottom: spacing(1)}}>
-                            You can use this form to reset your password.
-                        </Typography>
-                        <Typography style={{marginBottom: spacing(1)}}>
-                            It will send an email to your email address with a reset link.
-                        </Typography>
-                        <Typography style={{marginBottom: spacing(1)}}>
-                            If there is a typo in your email address and you forgot your password it will not be possible to recover your account,
-                            but you can create a new one and still add your decks.
-                        </Typography>
-                        <Typography style={{marginBottom: spacing(2)}}>
-                            If you do not receive a reset email, try whitelisting the Decks of KeyForge email address by adding "noreply@decksofkeyforge.com" to
-                            your email contacts.
-                        </Typography>
-                        <TextField
-                            variant={"outlined"}
-                            label={"Email"}
-                            value={this.email}
-                            onChange={(event) => this.email = event.target.value}
-                            style={{marginBottom: spacing(2)}}
-                            autoFocus={true}
-                            fullWidth={true}
-                            error={this.error}
-                        />
-                        <KeyButton
-                            color={"primary"}
-                            variant={"contained"}
-                            onClick={this.sendReset}
-                            loading={emailStore.sendingReset}
-                        >
-                            Send Reset Email
-                        </KeyButton>
-                    </Paper>
+                    <Card style={{maxWidth: 400, margin: spacing(2)}}>
+                        <CardContent>
+                            <Typography variant={"h6"} gutterBottom={true}>
+                                Reset Password
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(1)}}>
+                                Use this form to reset your password. It will send an email to your email address with a reset link.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(1)}}>
+                                If there is a typo in your email address and you forgot your password it will not be possible to recover your account,
+                                but you can create a new one and still add your decks.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(2)}}>
+                                If you do not receive a reset email, try whitelisting the Decks of KeyForge email address by adding "noreply@decksofkeyforge.com" to
+                                your email contacts.
+                            </Typography>
+                            <TextField
+                                variant={"outlined"}
+                                label={"Email"}
+                                value={this.email}
+                                onChange={(event) => this.email = event.target.value}
+                                autoFocus={true}
+                                fullWidth={true}
+                                error={this.error}
+                            />
+                        </CardContent>
+                        <CardActions>
+                            <div style={{flexGrow: 1}}/>
+                            <KeyButton
+                                color={"primary"}
+                                variant={"contained"}
+                                onClick={this.sendReset}
+                                loading={emailStore.sendingReset}
+                            >
+                                Send Reset Email
+                            </KeyButton>
+                        </CardActions>
+                    </Card>
                 </div>
             </div>
         )

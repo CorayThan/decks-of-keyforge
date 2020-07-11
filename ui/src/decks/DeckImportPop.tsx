@@ -122,7 +122,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             style={{marginBottom: spacing(2), display: "flex"}}
                         >
                             <Tooltip
-                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $1 a month patron to create theoretical decks!"}
+                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $3 a month patron to create theoretical decks!"}
                                 style={{zIndex: screenStore.zindexes.tooltip}}
                             >
                                 <div>
@@ -141,7 +141,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                 </div>
                             </Tooltip>
                             <Tooltip
-                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $1 a month patron to import unregistered decks!"}
+                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $3 a month patron to import unregistered decks!"}
                                 style={{zIndex: screenStore.zindexes.tooltip}}
                             >
                                 <div>
