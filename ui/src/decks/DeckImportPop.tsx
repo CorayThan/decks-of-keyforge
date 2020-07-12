@@ -140,23 +140,6 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                                     </LinkButton>
                                 </div>
                             </Tooltip>
-                            <Tooltip
-                                title={userStore.theoreticalDecksAllowed ? "" : "Become a $3 a month patron to import unregistered decks!"}
-                                style={{zIndex: screenStore.zindexes.tooltip}}
-                            >
-                                <div>
-                                    <LinkButton
-                                        to={Routes.importUnregisteredDeck}
-                                        onClick={() => {
-                                            closeAllMenuStoresExcept()
-                                            deckImportPopStore.popOpen = false
-                                        }}
-                                        disabled={!userStore.theoreticalDecksAllowed}
-                                    >
-                                        Import Unregistered Deck
-                                    </LinkButton>
-                                </div>
-                            </Tooltip>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
                             <Button

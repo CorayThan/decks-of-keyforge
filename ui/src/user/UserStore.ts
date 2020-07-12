@@ -36,39 +36,37 @@ export class UserStore {
     @observable
     emailVerificationSuccessful?: boolean
 
-    loadLoggedInUser = () => {
+    loadLoggedInUser = async () => {
         if (!keyLocalStorage.hasAuthKey()) {
             return
         }
         HttpConfig.setupAxios()
         this.loginInProgress = true
-        axiosWithoutErrors
-            .get(UserStore.SECURE_CONTEXT + "/your-user")
-            .then((response: AxiosResponse) => {
-                // log.debug(`Got logged in user: ${prettyJson(response.data)}`)
-                this.setUser(response.data)
-                this.loginInProgress = false
-                this.checkLastSeenVersion()
-            })
-            .catch((error: AxiosError) => {
-                let logout = true
-                if (
-                    // 401 or 403 means there is no logged in user
-                    (error.response && (error.response.status === 401 || error.response.status === 403)) ||
-                    (error.message && error.message.includes("JWT signature does not match "))
-                ) {
-                    log.info("Logging user out and displaying warning message to log back in.")
-                    messageStore.setWarningMessage("Please log back in to the DoK.")
-                } else {
-                    logout = false
-                    log.error(`Error loading logged in user ${error}`)
-                    messageStore.setRequestErrorMessage()
-                }
-                if (logout) {
-                    this.logout()
-                }
-                this.loginInProgress = false
-            })
+
+        try {
+            const userResponse = await axiosWithoutErrors.get(UserStore.SECURE_CONTEXT + "/your-user")
+            this.setUser(userResponse.data)
+            this.loginInProgress = false
+            this.checkLastSeenVersion()
+        } catch (error) {
+            let logout = true
+            if (
+                // 401 or 403 means there is no logged in user
+                (error.response && (error.response.status === 401 || error.response.status === 403)) ||
+                (error.message && error.message.includes("JWT signature does not match "))
+            ) {
+                log.info("Logging user out and displaying warning message to log back in.")
+                messageStore.setWarningMessage("Please log back in to the DoK.")
+            } else {
+                logout = false
+                log.error(`Error loading logged in user ${error}`)
+                messageStore.setRequestErrorMessage()
+            }
+            if (logout) {
+                this.logout()
+            }
+            this.loginInProgress = false
+        }
     }
 
     checkLastSeenVersion = () => {

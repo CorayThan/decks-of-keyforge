@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.9"
+export const latestVersion = "5.10"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,25 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.10"}
+                    date={"7/11/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Bonus Icon Fixes",
+                            note: "Minor update to SAS. Mostly Mass Mutation, although there are a couple small tweaks to cards " +
+                                "from other expansions."
+                        },
+                        {
+                            highlight: "Removing Unregistered Deck Imports",
+                            note: "I'm removing the link to import unregistered decks. You can still create theoretical decks. " +
+                                "The unregistered deck option is being used at about half the rate of theoretical decks, and " +
+                                "I'd rather spend the time and effort I would maintaining that on more relevant new features! " +
+                                "I will also plan on removing all pre-existing unregistered decks at some point in the future."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.9"}
                     date={"7/5/2020"}
@@ -1103,7 +1122,7 @@ export class ReleaseNotes extends React.Component {
                     "Added password reset.",
                     "Created a Patreon page with some donation options to help support the site!"
                 ]}/>
-                <ReleaseNote releaseNumber={"2.0"} date={"2/27/2019"} releaseNotes={[
+                <ReleaseNote releaseNumber={"2.0"} date={"1/27/2019"} releaseNotes={[
                     "Updated SAS Ratings.",
                     "The ratings of card + card synergies has been reduced in many instances. People felt that the system was over weighting " +
                     "the increased value of how cards work together when often they don't both appear in the same game, or at the wrong time.",

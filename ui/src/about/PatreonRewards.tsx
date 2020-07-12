@@ -135,8 +135,6 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "One hour of online KeyForge coaching per month from me, CorayThan!",
-                            "This can be playing a game with open hands where we discuss the best lines to take, or I can do a bit of collection " +
-                            "evaluation if you prefer.",
                             "I am a two-time #1 ranked player on the Vault Tour leaderboard, and currently ranked #3. I have won two vault tours: " +
                             "the Denver Survival and Indianapolis sealed WC. I am also the creator of Decks of KeyForge and the SAS and AERC rating systems."
                         ]}

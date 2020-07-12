@@ -84,8 +84,10 @@ class PatreonService(
             saveCreatorAccount(patAccount)
             refreshCampaignInfo(patAccount.accessToken)
         } else {
+            log.info("Link new patreon account for ${user.username}")
             savePatUser(patAccount, user)
             refreshCreatorAccount()
+            log.info("Linked new patreon account for ${user.username}")
         }
     }
 

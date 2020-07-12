@@ -217,13 +217,12 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    marginLeft: spacing(2),
                     marginRight: spacing(2),
                 }}
             >
-                <div style={{display: "grid", gap: spacing(4)}}>
+                <div style={{display: "grid", gap: spacing(2)}}>
                     {saleIcons && (
-                        <div style={{display: "grid", gap: spacing(2), gridAutoFlow: "column", alignItems: "end"}}>
+                        <div style={{display: "grid", gap: spacing(1), gridAutoFlow: "column", alignItems: "end"}}>
                             {saleIcons}
                         </div>
                     )}

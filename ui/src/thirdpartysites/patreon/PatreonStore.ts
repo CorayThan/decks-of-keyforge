@@ -11,12 +11,19 @@ export class PatreonStore {
     @observable
     topPatrons: string[] = []
 
-    linkAccount = (code: string) => {
-        axios.post(`${PatreonStore.SECURE_CONTEXT}/link/${code}`)
-            .then(() => {
-                messageStore.setSuccessMessage("You've linked your Patreon account!")
-                userStore.loadLoggedInUser()
-            })
+    @observable
+    linkingPatreon = false
+
+    linkAccount = async (code: string) => {
+        this.linkingPatreon = true
+        try {
+            await axios.post(`${PatreonStore.SECURE_CONTEXT}/link/${code}`)
+            await userStore.loadLoggedInUser()
+            messageStore.setSuccessMessage("You've linked your Patreon account!")
+        } catch (e) {
+            messageStore.setWarningMessage("We couldn't link your Patreon account.")
+        }
+        this.linkingPatreon = false
     }
 
     unlinkAccount = () => {

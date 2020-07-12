@@ -44,12 +44,56 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
         )
     }
 
+    const mobile = type === AercViewType.MOBILE_DECK
+
     const cards = deck.housesAndCards
         .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
         .filter(card => card != null) as KCard[]
 
+    let enhancedIcons = null
 
-    if (type === AercViewType.MOBILE_DECK) {
+    let enhancedAmber = 0
+    let enhancedCapture = 0
+    let enhancedDamage = 0
+    let enhancedDraw = 0
+    if (deck.expansion === BackendExpansion.MASS_MUTATION) {
+        cards.forEach(card => {
+            enhancedAmber += card.extraCardInfo.enhancementAmber
+            enhancedCapture += card.extraCardInfo.enhancementCapture
+            enhancedDamage += card.extraCardInfo.enhancementDamage
+            enhancedDraw += card.extraCardInfo.enhancementDraw
+        })
+
+        enhancedIcons = (
+            <Box
+                display={"grid"}
+                gridTemplateColumns={mobile ? "1fr" : "1fr 1fr 1fr 1fr"}
+                my={1}
+                px={mobile ? 1 : 0}
+                gridGap={4}
+            >
+                <Box display={"flex"}>
+                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedAmber}</Typography>
+                    <EnhancedAmberIcon/>
+                </Box>
+                <Box display={"flex"}>
+                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedCapture}</Typography>
+                    <EnhancedCaptureIcon/>
+                </Box>
+                <Box display={"flex"}>
+                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDamage}</Typography>
+                    <EnhancedDamageIcon/>
+                </Box>
+                <Box display={"flex"}>
+                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDraw}</Typography>
+                    <EnhancedDrawIcon/>
+                </Box>
+            </Box>
+        )
+    }
+
+
+    if (mobile) {
         return (
             <div
                 style={{
@@ -67,21 +111,9 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
                 <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
                 <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                {enhancedIcons}
             </div>
         )
-    }
-
-    let enhancedAmber = 0
-    let enhancedCapture = 0
-    let enhancedDamage = 0
-    let enhancedDraw = 0
-    if (deck.expansion === BackendExpansion.MASS_MUTATION) {
-        cards.forEach(card => {
-            enhancedAmber += card.extraCardInfo.enhancementAmber
-            enhancedCapture += card.extraCardInfo.enhancementCapture
-            enhancedDamage += card.extraCardInfo.enhancementDamage
-            enhancedDraw += card.extraCardInfo.enhancementDraw
-        })
     }
 
     return (
@@ -100,32 +132,7 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*        </Tooltip>*/}
             {/*    </div>*/}
             {/*)}*/}
-            {deck.expansion === BackendExpansion.MASS_MUTATION && (
-                <Box
-                    display={"grid"}
-                    gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-                    mt={1}
-                    mb={1}
-                    gridGap={4}
-                >
-                    <Box display={"flex"}>
-                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedAmber}</Typography>
-                        <EnhancedAmberIcon/>
-                    </Box>
-                    <Box display={"flex"}>
-                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedCapture}</Typography>
-                        <EnhancedCaptureIcon/>
-                    </Box>
-                    <Box display={"flex"}>
-                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDamage}</Typography>
-                        <EnhancedDamageIcon/>
-                    </Box>
-                    <Box display={"flex"}>
-                        <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDraw}</Typography>
-                        <EnhancedDrawIcon/>
-                    </Box>
-                </Box>
-            )}
+            {enhancedIcons}
             <div
                 style={{
                     display: "grid",

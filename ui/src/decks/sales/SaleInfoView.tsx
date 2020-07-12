@@ -285,7 +285,7 @@ const InfoBox = (props: { title: string, info?: React.ReactNode, link?: string }
 
 export const BuyingDisclaimer = (props: { style?: React.CSSProperties }) => (
     <HelperText style={props.style}>
-        DoK does not verify the authenticity or trustworthiness of any deck sales. Purchase and trade decks at your own risk.
+        DoK does not verify the authenticity of deck sales. Purchase decks at your own risk.
     </HelperText>
 )
 

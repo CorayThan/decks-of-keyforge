@@ -32,7 +32,6 @@ object TsGenerator {
             val name = kClazz.simpleName ?: throw IllegalStateException("No class for clazz  ")
             if (kClazz.isSubclassOf(Enum::class)) {
                 val enumValues = clazz.enumConstants.map { it.toString() }
-                println("Found enum: $enumValues")
                 writeEnum(name, enumValues)
             } else {
                 val tsProps = kClazz.declaredMemberProperties
@@ -50,7 +49,7 @@ object TsGenerator {
                             }
                         }
 
-                println("Class props: $tsProps")
+                writeInterface(name, tsProps)
             }
         }
     }
@@ -60,6 +59,30 @@ object TsGenerator {
         val contents = """
 export enum $name {
     ${constants.joinToString("\n    ") { "$it = \"$it\"," }}
+}
+
+export class ${name}Utils {
+    static readonly values = [${constants.joinToString(", ") { "$name.$it" }}]
+    static valueOf = (value: string) => ${name}Utils.values.find(enumValue => enumValue === value)
+}
+        """.trimIndent()
+
+        File("$location$name.ts").writeText(contents)
+    }
+
+    private fun writeInterface(name: String, fields: List<TsField>) {
+
+        val contents = """
+${fields
+                .filter { !listOf("boolean", "string", "number").contains(it.type) }
+                .distinctBy { it.type }
+                .joinToString("\n") { "import { ${it.type} } from \"./${it.type}\"" }
+        }
+            
+export interface $name {
+    ${fields.joinToString("\n    ") {
+            "${it.name}${if (it.nullable) "?" else ""}: ${it.type}${if (it.isArray) "[]" else ""}"
+        }}
 }
 
         """.trimIndent()

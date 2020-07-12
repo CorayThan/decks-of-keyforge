@@ -37,7 +37,7 @@ import { EventValue } from "../generic/EventValue"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { Loader } from "../mui-restyled/Loader"
+import { Loader, LoaderSize } from "../mui-restyled/Loader"
 import { LinkPatreon } from "../thirdpartysites/patreon/LinkPatreon"
 import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
@@ -237,6 +237,21 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
         return (
             <div style={{marginLeft: spacing(2), marginRight: spacing(2), display: "flex", justifyContent: "center"}}>
+                {patreonStore.linkingPatreon && (
+                    <Dialog
+                        open={patreonStore.linkingPatreon}
+                    >
+                        <DialogTitle style={{display: "flex", justifyContent: "center"}}>
+                            <PatreonIcon height={40} style={{marginRight: spacing(2)}} primary={true}/>
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                We're linking your Patreon Account. Please be patient.
+                            </DialogContentText>
+                            <Loader size={LoaderSize.MEDIUM} style={{margin: spacing(2, 0)}}/>
+                        </DialogContent>
+                    </Dialog>
+                )}
                 <Dialog
                     open={this.confirmOpen}
                     onClose={() => this.confirmOpen = false}
