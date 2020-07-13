@@ -5,6 +5,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import java.time.ZonedDateTime
 import javax.persistence.*
@@ -200,6 +201,7 @@ fun KeyForgeCardType.toCardType() = when (this) {
     KeyForgeCardType.Upgrade -> CardType.Upgrade
 }
 
+@GenerateTs
 enum class Rarity {
     Common,
     Uncommon,

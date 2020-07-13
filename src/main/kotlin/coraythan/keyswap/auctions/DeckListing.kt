@@ -5,6 +5,7 @@ import coraythan.keyswap.auctions.offers.Offer
 import coraythan.keyswap.auctions.purchases.SaleType
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckLanguage
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.userdeck.DeckCondition
@@ -167,6 +168,7 @@ data class DeckListing(
     }
 }
 
+@GenerateTs
 data class DeckListingDto(
         val dateListed: ZonedDateTime,
         val durationDays: Int = 7,
@@ -195,6 +197,7 @@ data class DeckListingDto(
         get() = this.endDateTime.toLocalDate()
 }
 
+@GenerateTs
 data class UserDeckListingInfo(
         val status: DeckListingStatus,
         val forTrade: Boolean,
@@ -203,6 +206,7 @@ data class UserDeckListingInfo(
         val id: UUID
 )
 
+@GenerateTs
 enum class DeckListingStatus {
     SALE,
     AUCTION,

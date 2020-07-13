@@ -18,6 +18,7 @@ import { Utils } from "../config/Utils"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "../decks/search/ConstraintDropdowns"
 import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
 import { SynergyTrait, validSynergies, validTraits } from "../extracardinfo/SynergyTrait"
+import { Rarity } from "../generated-src/Rarity"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -28,7 +29,6 @@ import { CardFilters, CardSort } from "./CardFilters"
 import { cardStore } from "./CardStore"
 import { CardType } from "./CardType"
 import { CardUtils } from "./KCard"
-import { Rarity } from "./rarity/Rarity"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
 import { PublishDateSelect, SelectedPublishDate } from "./selects/PublishDateSelect"
 
@@ -144,7 +144,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                         Rarity.Common,
                                         Rarity.Uncommon,
                                         Rarity.Rare,
-                                        "Special",
+                                        Rarity.Special,
                                     ]}
                                 />
                             </div>

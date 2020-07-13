@@ -2,6 +2,7 @@ package coraythan.keyswap.auctions
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.TimeUtils
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.KeyUser
 import java.time.ZonedDateTime
@@ -42,6 +43,7 @@ data class AuctionBid(
     )
 }
 
+@GenerateTs
 data class AuctionBidDto(
         val bidderUsername: String,
         val bidTime: String,

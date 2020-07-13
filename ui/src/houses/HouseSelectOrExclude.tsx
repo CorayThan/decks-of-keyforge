@@ -6,8 +6,9 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { House } from "../generated-src/House"
 import { CheckboxState, CheckboxThreeState } from "../mui-restyled/CheckboxThreeState"
-import { House, HouseLabel, HouseValue, houseValuesArray } from "./House"
+import { HouseLabel, HouseValue, houseValuesArray } from "./HouseUtils"
 
 interface HouseSelectOrExcludeProps {
     selectedHouses: SelectedOrExcludedHouses

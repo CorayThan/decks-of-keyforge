@@ -3,6 +3,7 @@ package coraythan.keyswap.userdeck
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckLanguage
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
@@ -82,6 +83,7 @@ data class UserDeck(
     )
 }
 
+@GenerateTs
 enum class DeckCondition {
     NEW_IN_PLASTIC,
     NEAR_MINT,

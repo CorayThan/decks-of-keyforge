@@ -1,4 +1,5 @@
 import { ForSaleQueryEntity } from "../decks/salenotifications/ForSaleQuery"
+import { Country } from "../generated-src/Country"
 import { PatreonRewardsTier } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { UserDeck } from "../userdeck/UserDeck"
 
@@ -54,7 +55,7 @@ export interface KeyUserDto {
     allowsTrades: boolean
     allowUsersToSeeDeckOwnership: boolean
     currencySymbol: string
-    country?: string
+    country?: Country
     preferredCountries?: string[]
     lastVersionSeen: string
     patreonId?: string

@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography/Typography"
 import * as React from "react"
+import { House } from "../generated-src/House"
 import brobnarImg from "./imgs/brobnar.png"
 import disImg from "./imgs/dis.png"
 import logosImg from "./imgs/logos.png"
@@ -9,18 +10,6 @@ import saurianRepublicImg from "./imgs/saurian.png"
 import shadowsImg from "./imgs/shadows.png"
 import starAllianceImg from "./imgs/star-alliance.png"
 import untamedImg from "./imgs/untamed.png"
-
-export enum House {
-    Brobnar = "Brobnar",
-    Dis = "Dis",
-    Logos = "Logos",
-    Mars = "Mars",
-    Sanctum = "Sanctum",
-    Shadows = "Shadows",
-    Untamed = "Untamed",
-    StarAlliance = "StarAlliance",
-    Saurian = "Saurian"
-}
 
 export interface HouseValue {
     house: House

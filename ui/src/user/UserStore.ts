@@ -7,6 +7,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
 import { deckOwnershipStore } from "../decks/ownership/DeckOwnershipStore"
+import { Country } from "../generated-src/Country"
 import { findPatronRewardLevel, PatreonRewardsTier, patronForSaleLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -278,7 +279,7 @@ export class UserStore {
     }
 
     @computed
-    get country(): string | undefined {
+    get country(): Country | undefined {
         if (this.user && this.user.country) {
             return this.user.country
         }

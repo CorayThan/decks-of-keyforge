@@ -1,5 +1,5 @@
 import { observable } from "mobx"
-import { ListingInfo } from "../userdeck/ListingInfo"
+import { ListingInfo } from "../generated-src/ListingInfo"
 import { log } from "./Utils"
 
 enum Keys {

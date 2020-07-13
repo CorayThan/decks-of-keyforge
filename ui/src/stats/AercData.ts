@@ -1,5 +1,5 @@
 import { BackendExpansion } from "../expansions/Expansions"
-import { House } from "../houses/House"
+import { House } from "../generated-src/House"
 
 export interface AercData {
     count: number

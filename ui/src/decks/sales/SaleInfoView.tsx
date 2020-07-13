@@ -7,13 +7,14 @@ import * as React from "react"
 import { BidButton } from "../../auctions/BidButton"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { BuyItNowButton } from "../../auctions/BuyItNowButton"
-import { DeckListingStatus } from "../../auctions/DeckListingDto"
 import { OfferButton } from "../../auctions/offers/OfferButton"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendEmailDialog } from "../../emails/SendEmailDialog"
-import { countryToLabel } from "../../generic/Country"
+import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
+import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
+import { countryToLabel } from "../../generic/CountryUtils"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { WhiteSpaceTypography } from "../../mui-restyled/WhiteSpaceTypography"
@@ -24,7 +25,6 @@ import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
-import { DeckSaleInfo } from "./DeckSaleInfo"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
 interface SaleInfoViewProps {
@@ -76,7 +76,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string, deckId: number }> {
     render() {
 
-        if (this.props.saleInfo.auctionStatus === DeckListingStatus.COMPLETE) {
+        if (this.props.saleInfo.deckListingStatus === DeckListingStatus.COMPLETE) {
             return <SingleSaleInfoViewCompleteAuction {...this.props} />
         }
 

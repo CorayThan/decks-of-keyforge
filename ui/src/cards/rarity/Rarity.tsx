@@ -2,6 +2,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { memo } from "react"
 import { themeStore } from "../../config/MuiConfig"
+import { Rarity } from "../../generated-src/Rarity"
 import anomalyDark from "../imgs/anomaly-dark.svg"
 import anomaly from "../imgs/anomaly.svg"
 import commonDark from "../imgs/common-dark.svg"
@@ -16,15 +17,6 @@ import specialDark from "../imgs/special-dark.svg"
 import special from "../imgs/special.svg"
 import uncommonDark from "../imgs/uncommon-dark.svg"
 import uncommon from "../imgs/uncommon.svg"
-
-export enum Rarity {
-    Common = "Common",
-    Uncommon = "Uncommon",
-    Rare = "Rare",
-    FIXED = "FIXED",
-    Variant = "Variant",
-    Special = "Special",
-}
 
 export interface RarityValue {
     rarity: Rarity

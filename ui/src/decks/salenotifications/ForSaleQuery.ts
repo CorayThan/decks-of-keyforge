@@ -1,5 +1,5 @@
 import { Utils } from "../../config/Utils"
-import { House } from "../../houses/House"
+import { House } from "../../generated-src/House"
 import { KeyUser } from "../../user/KeyUser"
 import { Constraint } from "../search/ConstraintDropdowns"
 import { DeckCardQuantity, prepareDeckFiltersForQueryString } from "../search/DeckFilters"

@@ -1,5 +1,6 @@
-import { DeckLanguage } from "../decks/DeckLanguage"
 import { DeckSearchResult } from "../decks/models/DeckSearchResult"
+import { DeckCondition } from "../generated-src/DeckCondition"
+import { DeckLanguage } from "../generated-src/DeckLanguage"
 import { KeyUser } from "../user/KeyUser"
 
 export interface UserDeck {
@@ -30,13 +31,6 @@ export interface UserDeck {
 
     dateListedLocalDate?: string
     expiresAtLocalDate?: string
-}
-
-export enum DeckCondition {
-    NEW_IN_PLASTIC = "NEW_IN_PLASTIC",
-    NEAR_MINT = "NEAR_MINT",
-    PLAYED = "PLAYED",
-    HEAVILY_PLAYED = "HEAVILY_PLAYED",
 }
 
 export const deckConditionReadableValue = (condition: DeckCondition) => {

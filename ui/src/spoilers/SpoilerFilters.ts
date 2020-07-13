@@ -1,8 +1,8 @@
 import { observable } from "mobx"
 import * as React from "react"
 import { CardType } from "../cards/CardType"
-import { Rarity } from "../cards/rarity/Rarity"
-import { House } from "../houses/House"
+import { House } from "../generated-src/House"
+import { Rarity } from "../generated-src/Rarity"
 
 export class SpoilerFilters {
     @observable

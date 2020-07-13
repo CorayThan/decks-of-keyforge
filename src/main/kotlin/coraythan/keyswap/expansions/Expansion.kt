@@ -1,9 +1,7 @@
 package coraythan.keyswap.expansions
 
 import coraythan.keyswap.House
-import coraythan.keyswap.generatets.GenerateTs
 
-@GenerateTs
 enum class Expansion(val expansionNumber: Int, val readable: String, val houses: Set<House>) {
     CALL_OF_THE_ARCHONS(341, "CotA", setOf(House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed)),
     AGE_OF_ASCENSION(435, "AoA", setOf(House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed)),

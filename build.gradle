@@ -32,7 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '378'
+version = '379'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
@@ -60,6 +60,11 @@ repositories {
 
 springBoot {
     mainClassName = "coraythan.keyswap.KeyswapApplicationKt"
+}
+
+task genTs(type: JavaExec) {
+    main = "coraythan.keyswap.generatets.TsGenerator"
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 dependencies {

@@ -1,5 +1,8 @@
 package coraythan.keyswap
 
+import coraythan.keyswap.generatets.GenerateTs
+
+@GenerateTs
 enum class House(val masterVaultValue: String) {
     Brobnar("Brobnar"),
     Dis("Dis"),

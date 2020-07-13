@@ -2,6 +2,7 @@ package coraythan.keyswap.decks.models
 
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.auctions.DeckListingStatus
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
@@ -10,14 +11,15 @@ import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
 import java.util.*
 
+@GenerateTs
 data class DeckSaleInfo(
         val forTrade: Boolean,
         val forAuction: Boolean,
         val acceptingOffers: Boolean,
 
-        val forSaleInCountry: Country?,
+        val forSaleInCountry: Country,
         val currencySymbol: String,
-        val language: DeckLanguage? = null,
+        val language: DeckLanguage,
 
         val highestBid: Int? = null,
         val highestOffer: Int? = null,

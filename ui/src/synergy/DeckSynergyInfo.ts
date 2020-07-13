@@ -1,4 +1,4 @@
-import { House } from "../houses/House"
+import { House } from "../generated-src/House"
 import { SynTraitValue } from "./SynTraitValue"
 
 export interface DeckSynergyInfo {

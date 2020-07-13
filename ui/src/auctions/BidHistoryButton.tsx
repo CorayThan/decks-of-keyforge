@@ -18,8 +18,8 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { AuctionBidDto } from "../generated-src/AuctionBidDto"
 import { Loader } from "../mui-restyled/Loader"
-import { AuctionBidDto } from "./AuctionBidDto"
 import { deckListingStore } from "./DeckListingStore"
 
 interface BidHistoryButtonProps {

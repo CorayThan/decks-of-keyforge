@@ -25,4 +25,4 @@ application-nocommit.yml
 restore-cards/load-cards*.cmd
 *.dump
 
-/ui/generated-src
+/ui/src/generated-src

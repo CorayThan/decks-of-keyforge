@@ -1,15 +1,15 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
-import { SimpleCard } from "../decks/models/HouseAndCards"
 import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
+import { House } from "../generated-src/House"
+import { Rarity } from "../generated-src/Rarity"
+import { SimpleCard } from "../generated-src/SimpleCard"
 import { CsvData } from "../generic/CsvDownloadButton"
-import { House } from "../houses/House"
 import { Wins } from "../stats/GlobalStats"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { CardType } from "./CardType"
-import { Rarity } from "./rarity/Rarity"
 
 export interface KCard {
     id: string

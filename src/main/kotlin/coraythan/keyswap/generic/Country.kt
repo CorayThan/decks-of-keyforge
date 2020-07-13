@@ -1,5 +1,8 @@
 package coraythan.keyswap.generic
 
+import coraythan.keyswap.generatets.GenerateTs
+
+@GenerateTs
 enum class Country {
     Afghanistan,
     Albania,

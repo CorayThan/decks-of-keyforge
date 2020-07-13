@@ -8,7 +8,8 @@ import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
-import { countryToLabel } from "../../generic/Country"
+import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
+import { countryToLabel } from "../../generic/CountryUtils"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { KeyCard } from "../../generic/KeyCard"
 import { UnstyledLink } from "../../generic/UnstyledLink"
@@ -17,7 +18,6 @@ import { sellerStore } from "../../sellers/SellerStore"
 import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/UserDeck"
-import { DeckSaleInfo } from "./DeckSaleInfo"
 
 @observer
 export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {

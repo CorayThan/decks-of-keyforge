@@ -2,7 +2,8 @@ import { Tooltip } from "@material-ui/core"
 import * as React from "react"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
-import { House, houseValues } from "./House"
+import { House } from "../generated-src/House"
+import { houseValues } from "./HouseUtils"
 
 export const HouseBanner = (props: { houses: House[], size?: number, style?: React.CSSProperties, expansion?: BackendExpansion }) => {
     const {houses, style, expansion} = props

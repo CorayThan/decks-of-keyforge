@@ -1,27 +1,40 @@
+@file:JvmName("TsGenerator")
+
 package coraythan.keyswap.generatets
 
-import coraythan.keyswap.expansions.Expansion
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import java.io.File
-import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.temporal.Temporal
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSuperclassOf
+import kotlin.reflect.full.memberProperties
 
 @Target(AnnotationTarget.CLASS)
 annotation class GenerateTs
 
+@Target(AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
+annotation class TsOptional
+
+@ExperimentalStdlibApi
 fun main(args: Array<String>) {
-    TsGenerator.generate()
+    println("Starting TS generation")
+    TsGeneratorObj.generate()
+    println("Finished generating TS")
 }
 
-object TsGenerator {
-    val location = "ui/generated-src/"
+object TsGeneratorObj {
+    val location = "ui/src/generated-src/"
 
+    @ExperimentalStdlibApi
     fun generate() {
+
+        File(location).listFiles()?.forEach { it.delete() } ?: error("No directory to generate in: $location")
+
         val scanner = ClassPathScanningCandidateComponentProvider(false)
         scanner.addIncludeFilter(AnnotationTypeFilter(GenerateTs::class.java))
         val toConvert = scanner.findCandidateComponents("coraythan.keyswap")
@@ -34,17 +47,17 @@ object TsGenerator {
                 val enumValues = clazz.enumConstants.map { it.toString() }
                 writeEnum(name, enumValues)
             } else {
-                val tsProps = kClazz.declaredMemberProperties
-                        .mapNotNull {
-                            val type = TsDataType.fromKType(it.returnType)
+                val tsProps = kClazz.memberProperties
+                        .mapNotNull { kProperty1 ->
+                            val type = TsDataType.fromKType(kProperty1.returnType)
                             if (type == null) {
                                 null
                             } else {
                                 TsField(
-                                        name = it.name,
+                                        name = kProperty1.name,
                                         type = type,
-                                        nullable = it.returnType.isMarkedNullable,
-                                        isArray = TsDataType.isArray(it.returnType)
+                                        nullable = kProperty1.returnType.isMarkedNullable || kProperty1.hasAnnotation<TsOptional>(),
+                                        isArray = TsDataType.isArray(kProperty1.returnType)
                                 )
                             }
                         }
@@ -72,17 +85,19 @@ export class ${name}Utils {
 
     private fun writeInterface(name: String, fields: List<TsField>) {
 
-        val contents = """
-${fields
+        val imports = fields
                 .filter { !listOf("boolean", "string", "number").contains(it.type) }
                 .distinctBy { it.type }
                 .joinToString("\n") { "import { ${it.type} } from \"./${it.type}\"" }
-        }
-            
-export interface $name {
-    ${fields.joinToString("\n    ") {
+                .let { if (it.isBlank()) "" else it + "\n\n" }
+
+        val tsFields = fields.joinToString("\n    ") {
             "${it.name}${if (it.nullable) "?" else ""}: ${it.type}${if (it.isArray) "[]" else ""}"
-        }}
+        }
+
+        val contents = """
+${imports}export interface $name {
+    $tsFields
 }
 
         """.trimIndent()
@@ -101,12 +116,13 @@ data class TsField(
 
 object TsDataType {
     fun fromKType(type: KType) = when {
-        type.classifier == String::class || type.classifier == LocalDate::class
-                || type.classifier == LocalDateTime::class ->
+        type.classifier == String::class || Temporal::class.isSuperclassOf(type.classifier as KClass<*>)
+                || type.classifier == UUID::class ->
             "string"
         type.classifier == Boolean::class ->
             "boolean"
-        type.classifier == Int::class || type.classifier == Double::class ->
+        type.classifier == Int::class || type.classifier == Double::class
+                || type.classifier == Long::class ->
             "number"
         type.classifier == List::class -> {
             val kClass = type.arguments.first().type?.classifier
@@ -128,24 +144,4 @@ object TsDataType {
     }
 
     fun isArray(type: KType) = type.classifier == List::class
-}
-
-@GenerateTs
-data class TestConvert(
-        val stuff: String,
-        val numz: Int,
-        val expansion: Expansion,
-        val sub: SubConvert,
-        val subList: List<SubConvert>
-)
-
-@GenerateTs
-data class SubConvert(
-        val littleStuff: String
-)
-
-@GenerateTs
-enum class TestEnunn {
-    TEST,
-    STUFF;
 }

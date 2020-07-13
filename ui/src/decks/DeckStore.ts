@@ -5,10 +5,10 @@ import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopba
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
+import { DeckSaleInfo } from "../generated-src/DeckSaleInfo"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
-import { DeckSaleInfo } from "./sales/DeckSaleInfo"
 import { DeckFilters } from "./search/DeckFilters"
 
 export class DeckStore {

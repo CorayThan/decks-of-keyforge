@@ -3,7 +3,7 @@ import { observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
 import { HttpConfig } from "../config/HttpConfig"
 import { BackendExpansion, Expansion, expansionToBackendExpansion } from "../expansions/Expansions"
-import { House } from "../houses/House"
+import { House } from "../generated-src/House"
 import { GlobalStats, GlobalStatsWithExpansion } from "./GlobalStats"
 
 export class StatsStore {

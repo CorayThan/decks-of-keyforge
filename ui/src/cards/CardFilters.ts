@@ -6,10 +6,10 @@ import { Constraint } from "../decks/search/ConstraintDropdowns"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
 import { BackendExpansion } from "../expansions/Expansions"
 import { SynergyTrait } from "../extracardinfo/SynergyTrait"
+import { House } from "../generated-src/House"
+import { Rarity } from "../generated-src/Rarity"
 import { SortDirection } from "../generic/SortDirection"
-import { House } from "../houses/House"
 import { CardType } from "./CardType"
-import { Rarity } from "./rarity/Rarity"
 
 export class CardFilters {
 

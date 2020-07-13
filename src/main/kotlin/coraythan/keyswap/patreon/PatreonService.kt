@@ -110,8 +110,8 @@ class PatreonService(
         val patreonId = patreonUser.data.id
         val preExistingPatreonUser = userRepo.findByPatreonId(patreonId)
 
-        if (preExistingPatreonUser != null) {
-            log.info("Removing patreon from ${user.email} due to another user using it.")
+        if (preExistingPatreonUser != null && user.id != preExistingPatreonUser.id) {
+            log.info("Removing patreon from ${preExistingPatreonUser.username} due to another user: ${user.username} linking it.")
             userRepo.removePatreon(preExistingPatreonUser.id)
         }
 

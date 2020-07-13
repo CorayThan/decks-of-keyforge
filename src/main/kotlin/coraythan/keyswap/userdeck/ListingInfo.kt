@@ -1,10 +1,13 @@
 package coraythan.keyswap.userdeck
 
 import coraythan.keyswap.decks.models.DeckLanguage
+import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.generatets.TsOptional
 import coraythan.keyswap.generic.Country
 import java.time.LocalTime
 import java.util.*
 
+@GenerateTs
 data class ListingInfo(
         val deckId: Long,
         val acceptingOffers: Boolean,
@@ -23,10 +26,13 @@ data class ListingInfo(
 
         val editAuctionId: UUID? = null
 ) {
+    @TsOptional
     val endTimeLocalTime = if (this.endTime.isNullOrBlank()) null else LocalTime.parse(this.endTime)
+    @TsOptional
     val auction = startingBid != null
 }
 
+@GenerateTs
 data class UpdatePrice(
         val auctionId: UUID,
         val askingPrice: Int?

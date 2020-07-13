@@ -7,7 +7,8 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { House, HouseLabel, HouseValue, houseValuesArray } from "./House"
+import { House } from "../generated-src/House"
+import { HouseLabel, HouseValue, houseValuesArray } from "./HouseUtils"
 
 interface HouseSelectProps {
     selectedHouses: SelectedHouses

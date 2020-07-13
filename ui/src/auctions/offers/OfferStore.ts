@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { log, prettyJson } from "../../config/Utils"
+import { DeckListingDto } from "../../generated-src/DeckListingDto"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
-import { DeckListingDto } from "../DeckListingDto"
 import { MakeOffer, MyOffers, OfferDto } from "./Offer"
 
 export class OfferStore {

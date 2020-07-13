@@ -1,8 +1,8 @@
 import { CardType } from "../cards/CardType"
-import { Rarity } from "../cards/rarity/Rarity"
 import { Expansion } from "../expansions/Expansions"
+import { House } from "../generated-src/House"
+import { Rarity } from "../generated-src/Rarity"
 import { CsvData } from "../generic/CsvDownloadButton"
-import { House } from "../houses/House"
 import { makeFullSpoilerUrl } from "./SpoilerView"
 
 export interface Spoiler {

@@ -3,11 +3,12 @@ import { computed, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
+import { DeckListingDto } from "../generated-src/DeckListingDto"
+import { ListingInfo } from "../generated-src/ListingInfo"
+import { UserDeckListingInfo } from "../generated-src/UserDeckListingInfo"
 import { messageStore } from "../ui/MessageStore"
-import { ListingInfo } from "../userdeck/ListingInfo"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { BidPlacementResult } from "./BidPlacementResult"
-import { DeckListingDto, UserDeckListingInfo } from "./DeckListingDto"
 
 export class DeckListingStore {
 
