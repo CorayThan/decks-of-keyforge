@@ -7,7 +7,9 @@ import { SasTip } from "../mui-restyled/SasTip"
 
 export interface CardsMatchSasTipProps {
     title: string
+    title2?: string
     matches: (card: KCard) => boolean
+    matches2?: (card: KCard) => boolean
     cards: KCard[]
     children: React.ReactNode
 }
@@ -16,7 +18,7 @@ export interface CardsMatchSasTipProps {
 export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
 
     render() {
-        const {title, cards, matches, children} = this.props
+        const {title, title2, cards, matches, matches2, children} = this.props
 
         if (!cardStore.cardsLoaded) {
             return null
@@ -26,16 +28,39 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
             .map(card => cardStore.fullCardFromCardName(card.cardTitle))
             .filter(card => card != null && matches(card as KCard))
 
+        const matchedCards2 = matches2 == null ? [] : cards
+            .map(card => cardStore.fullCardFromCardName(card.cardTitle))
+            .filter(card => card != null && matches(card as KCard))
+
+        const firstContent = (matchedCards.length > 0 &&
+            <div>
+                {matchedCards.map((card, idx) => (
+                    <Typography variant={"body2"} key={idx}>
+                        {card!.cardTitle}
+                    </Typography>
+                ))}
+            </div>
+        )
+        const firstTitle = title2 == null ? null : title
+        const secondContent = (matchedCards2.length > 0 &&
+            <div>
+                {matchedCards.map((card, idx) => (
+                    <Typography variant={"body2"} key={idx}>
+                        {card!.cardTitle}
+                    </Typography>
+                ))}
+            </div>
+        )
+
         return (
             <SasTip
-                title={<Typography variant={"subtitle1"}>{title}</Typography>}
-                contents={(matchedCards.length > 0 &&
+                title={<Typography variant={"subtitle1"}>{title}{title2 == null ? "" : ` / ${title2}`}</Typography>}
+                contents={(
                     <div>
-                        {matchedCards.map((card, idx) => (
-                            <Typography variant={"body2"} key={idx}>
-                                {card!.cardTitle}
-                            </Typography>
-                        ))}
+                        {firstTitle}
+                        {firstContent}
+                        {title2}
+                        {secondContent}
                     </div>
                 )}
             >

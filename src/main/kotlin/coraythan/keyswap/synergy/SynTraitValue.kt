@@ -30,6 +30,7 @@ data class SynTraitValue(
          */
         var powersString: String = "",
         var cardTraitsString: String = "",
+        val notCardTraits: Boolean = false,
 
         /**
          * Changes the starting base match strength. For example, starts at -50 for Grumpy Buggy. This means you need

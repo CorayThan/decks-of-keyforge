@@ -12,6 +12,7 @@ export interface SynTraitValue {
     powersString: string
     baseSynPercent: number
     cardTraits: string[]
+    notCardTraits: boolean
     cardName?: string
     synergyGroup?: string
     synergyGroupMax?: number
