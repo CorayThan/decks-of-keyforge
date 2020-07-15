@@ -58,7 +58,7 @@ object DeckSynergyService {
                     .groupBy { it.cardTitle }
                     .flatMap {
                         if (it.value.first().big == true) {
-                            it.value.drop( it.value.size / 2)
+                            it.value.drop(it.value.size / 2)
                         } else {
                             it.value
                         }
@@ -480,11 +480,11 @@ data class SynTraitValuesForTrait(
         val matchedTraits = traitValues
                 .filter {
                     val traitsCard = it.card
-                    val typeMatch = typesMatch(it.value.trait, synergyValue.cardTypes, traitsCard?.cardType, it.value.cardTypes)
+                    val typeMatch = typesMatch(it.value.trait, synergyValue.cardTypes, traitsCard?.allTypes(), it.value.cardTypes)
                     val playerMatch = playersMatch(synergyValue.player, it.value.player)
                     val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
                     val powerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
-                    val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits)
+                    val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits, synergyValue.notCardTraits)
                     val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
 
                     // log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
@@ -508,9 +508,9 @@ data class SynTraitValuesForTrait(
         return SynMatchInfo(strength, cardNames)
     }
 
-    private fun typesMatch(traitTrait: SynergyTrait, synTypes: List<CardType>, cardType: CardType?, traitTypes: List<CardType>): Boolean {
+    private fun typesMatch(traitTrait: SynergyTrait, synTypes: List<CardType>, cardTypes: Set<CardType>?, traitTypes: List<CardType>): Boolean {
         return if (traitTrait == SynergyTrait.any) {
-            synTypes.isEmpty() || synTypes.contains(cardType)
+            synTypes.isEmpty() || synTypes.any { cardTypes?.contains(it) ?: false }
         } else {
             synTypes.isEmpty() || traitTypes.isEmpty() || synTypes.any { type1Type -> traitTypes.any { type1Type == it } }
         }
@@ -520,9 +520,12 @@ data class SynTraitValuesForTrait(
         return player1 == SynTraitPlayer.ANY || player2 == SynTraitPlayer.ANY || player1 == player2
     }
 
-    private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?): Boolean {
+    private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?, nonMatchOnly: Boolean): Boolean {
         // log.info("In traits match syn traits $synergyTraits cardTraits $cardTraits")
-        return synergyTraits.isEmpty() || (cardTraits != null && synergyTraits.all { cardTraits.contains(it) })
+        return synergyTraits.isEmpty() || (cardTraits != null && synergyTraits.all {
+            val hasMatch = cardTraits.contains(it)
+            if (nonMatchOnly) !hasMatch else hasMatch
+        })
     }
 
     private fun housesMatch(synHouse: SynTraitHouse, house1: House, traitHouse: SynTraitHouse, house2: House?, deckTrait: Boolean = false): Boolean {

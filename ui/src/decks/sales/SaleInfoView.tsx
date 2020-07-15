@@ -54,9 +54,12 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
                     return (
                         <div key={saleInfo.auctionId}>
                             {idx > 0 && (
-                                <div style={{margin: spacing(2)}}>
-                                    <Typography variant={"h6"}>{idx + 1} Deck Sale Info</Typography>
-                                </div>
+                                <>
+                                    <Divider style={{height: 2}}/>
+                                    <div style={{margin: spacing(2)}}>
+                                        <Typography variant={"h6"}>Deck Sale Info #{idx + 1}</Typography>
+                                    </div>
+                                </>
                             )}
                             <SingleSaleInfoView
                                 saleInfo={saleInfo}

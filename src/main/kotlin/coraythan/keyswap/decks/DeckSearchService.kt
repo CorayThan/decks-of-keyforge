@@ -146,7 +146,7 @@ class DeckSearchService(
                     synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
 
-            if (filters.forSale == true || filters.forTrade || filters.forAuction) {
+            if (filters.forSale == true || filters.forTrade || filters.forAuction || filters.completedAuctions) {
                 searchResult = searchResult.copy(deckSaleInfo = saleInfoForDeck(
                         searchResult.keyforgeId,
                         timezoneOffsetMinutes,

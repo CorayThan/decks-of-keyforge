@@ -91,6 +91,7 @@ dependencies {
     runtime("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtime("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
+    implementation("com.vladmihalcea:hibernate-types-52:2.9.12")
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion")
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jpa")

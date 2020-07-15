@@ -62,13 +62,21 @@ export const AercCategoryExtras = (props: AercCatProps) => {
         },
         {
             icon: <ArchiveIcon width={width}/>,
-            info: deck.cardArchiveCount,
+            info: `${deck.cardArchiveCount}/${cards.filter(
+                card => card.extraCardInfo?.traits?.find(traitValue =>
+                    (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
+                ) != null
+            ).length}`,
             cardsTips: {
                 matches: card => card.extraCardInfo?.traits?.find(traitValue =>
                         (traitValue.trait === SynergyTrait.archives && traitValue.player !== SynTraitPlayer.ENEMY)
                 ) != null,
+                matches2: card => card.extraCardInfo?.traits?.find(traitValue =>
+                    (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
+                ) != null,
                 cards,
-                title: "Archive Cards"
+                title: "Archives Cards",
+                title2: "Randomly Archives Cards"
             }
         }
     ]

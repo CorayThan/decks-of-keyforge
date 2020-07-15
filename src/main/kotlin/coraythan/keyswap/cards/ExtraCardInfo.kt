@@ -2,16 +2,17 @@ package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.vladmihalcea.hibernate.type.array.ListArrayType
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValue
+import org.hibernate.annotations.Parameter
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 data class CardNumberSetPairOld(
         val expansion: Int,
@@ -25,6 +26,10 @@ data class CardNumberSetPairOld(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
+@TypeDef(
+        name = "list-array",
+        typeClass = ListArrayType::class
+)
 data class ExtraCardInfo(
 
         var cardName: String = "",
@@ -60,6 +65,13 @@ data class ExtraCardInfo(
         val enhancementCapture: Int = 0,
         val enhancementDraw: Int = 0,
         val enhancementDamage: Int = 0,
+
+        @Type(
+                type = "com.vladmihalcea.hibernate.type.array.ListArrayType",
+                parameters = [Parameter(value = "CARD_TYPE", name = ListArrayType.SQL_ARRAY_TYPE)]
+        )
+        @Column(columnDefinition = "CARD_TYPE[]")
+        val extraCardTypes: List<CardType>? = null,
 
         @JsonIgnoreProperties("traitInfo")
         @OneToMany(mappedBy = "traitInfo", cascade = [CascadeType.ALL])

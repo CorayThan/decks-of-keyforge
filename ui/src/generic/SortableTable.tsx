@@ -8,7 +8,7 @@ import { sortBy, startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { SortOrder } from "../config/Utils"
+import { log, SortOrder } from "../config/Utils"
 
 
 export interface SortableTableHeaderInfo<T> {
@@ -50,6 +50,7 @@ interface SortableTableProps<T> {
     data: T[]
     defaultSort: keyof T
     defaultSortFunction?: TransformTableData<T>
+    noInitialSort?: boolean
 }
 
 @observer
@@ -59,12 +60,12 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 
     constructor(props: SortableTableProps<T>) {
         super(props)
-        this.store = new SortableTableStore<T>(props.defaultSort, props.data, this.props.defaultSortFunction)
+        this.store = new SortableTableStore<T>(props.defaultSort, props.data, props.defaultSortFunction, props.noInitialSort)
     }
 
     componentDidUpdate(prevProps: SortableTableProps<T>) {
         if (prevProps.data !== this.props.data) {
-            this.store.update(this.props.defaultSort, this.props.data, this.props.defaultSortFunction)
+            this.store.update(this.props.defaultSort, this.props.data, this.props.defaultSortFunction, undefined, this.props.noInitialSort)
         }
     }
 
@@ -125,7 +126,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TransformTableData <T> = (data: T) => any
+type TransformTableData<T> = (data: T) => any
 
 class SortableTableStore<T> {
 
@@ -142,16 +143,19 @@ class SortableTableStore<T> {
         // @ts-ignore
     sortedItems: T[]
 
-    constructor(private defaultSort: keyof T, private data: T[], private defaultSortFunction?: TransformTableData<T>, private defaultSortFunctionName?: string) {
-        this.update(defaultSort, data, defaultSortFunction, defaultSortFunctionName)
+    constructor(private defaultSort: keyof T, private data: T[], private defaultSortFunction?: TransformTableData<T>, private noInitialSort?: boolean) {
+        this.update(defaultSort, data, defaultSortFunction, undefined, noInitialSort)
     }
 
-    update = (sort: keyof T, data: T[], sortFunction?: TransformTableData<T>, sortFunctionName?: string) => {
+    update = (sort: keyof T, data: T[], sortFunction?: TransformTableData<T>, sortFunctionName?: string, noResort?: boolean) => {
         this.activeTableSort = sort
         this.sortedItems = data
         this.sortFunction = sortFunction
         this.sortFunctionName = sortFunctionName
-        this.resort()
+        if (noResort !== true) {
+            log.info("resort the table")
+            this.resort()
+        }
     }
 
     resort = () => {

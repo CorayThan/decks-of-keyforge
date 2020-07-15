@@ -30,7 +30,7 @@ export type SynTraitRatingValues = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4
 export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.house}`
 
 export const synTraitName = (traitValue: SynTraitValue) => {
-    const {trait, player, cardTypes, powersString, cardTraits, cardName, house, synergyGroup, synergyGroupMax} = traitValue
+    const {trait, player, cardTypes, powersString, cardTraits, cardName, house, synergyGroup, synergyGroupMax, notCardTraits} = traitValue
     let name: string = trait == SynergyTrait.any ? "" : trait
 
     if (cardName != null) {
@@ -44,7 +44,7 @@ export const synTraitName = (traitValue: SynTraitValue) => {
         nameEnhancer += ` ${startCase(player.toLowerCase())}`
     }
     if (cardTraits.length > 0) {
-        nameEnhancer += ` ${startCase(cardTraits.join(", ").toLowerCase())}`
+        nameEnhancer += ` ${notCardTraits ? "Non-" : ""}${startCase(cardTraits.join(", ").toLowerCase())}`
     }
     if (cardTypes && cardTypes.length > 0) {
         if (cardTypes.length === 1) {

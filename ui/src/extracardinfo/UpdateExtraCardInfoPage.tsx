@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Card,
     CardActions,
@@ -9,9 +10,11 @@ import {
     FormLabel,
     Grid,
     IconButton,
+    InputLabel,
     MenuItem,
     Radio,
     RadioGroup,
+    Select,
     TextField,
     Typography
 } from "@material-ui/core"
@@ -143,6 +146,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     @observable
     synergies: SynTraitValue[] = []
 
+    @observable
+    extraCardTypes: CardType[] = []
+
     // eslint-disable-next-line
     // @ts-ignore
     infoId: string
@@ -187,6 +193,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.enhancementDraw = extraCardInfo.enhancementDraw.toString()
         this.enhancementDamage = extraCardInfo.enhancementDamage.toString()
 
+        this.extraCardTypes = extraCardInfo.extraCardTypes ?? []
         this.traits = extraCardInfo.traits
         this.synergies = extraCardInfo.synergies
 
@@ -242,6 +249,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             enhancementDraw: Number(this.enhancementDraw),
             enhancementDamage: Number(this.enhancementDamage),
 
+            extraCardTypes: this.extraCardTypes.length === 0 ? undefined : this.extraCardTypes,
             traits: this.traits,
             synergies: this.synergies
         }
@@ -432,6 +440,22 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 value={this.enhancementDamage}
                                 update={(event: EventValue) => this.enhancementDamage = event.target.value}
                             />
+                            <Grid item={true} xs={6} sm={4}>
+                                <FormControl fullWidth={true}>
+                                    <InputLabel>Extra Card Types</InputLabel>
+                                    <Select
+                                        multiple={true}
+                                        value={this.extraCardTypes}
+                                        onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                                            this.extraCardTypes = event.target.value as CardType[]
+                                        }}
+                                    >
+                                        {(Utils.enumValues(CardType) as CardType[]).map(type => (
+                                            <MenuItem key={type} value={type}>{type}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
                             <Grid item={true} xs={12}>
                                 <AddTrait traits={this.traits} synergies={this.synergies} reset={this.reset} extraCardId={this.infoId}/>
                             </Grid>
@@ -504,6 +528,9 @@ class AddTrait extends React.Component<AddTraitProps> {
     cardTypes: CardType[] = []
 
     @observable
+    notCardTraits = false
+
+    @observable
     powersString = ""
 
     @observable
@@ -548,6 +575,7 @@ class AddTrait extends React.Component<AddTraitProps> {
             house: this.house,
             player: this.player,
             cardTypes: this.cardTypes.slice(),
+            notCardTraits: this.notCardTraits,
             cardTraits: this.cardTraitsStore.selectedValues.slice(),
             powersString: this.powersString.trim(),
             baseSynPercent: Number(this.baseSynPercent.trim()),
@@ -800,17 +828,30 @@ class AddTrait extends React.Component<AddTraitProps> {
                         fullWidth={true}
                     />
 
-                    <Autocomplete
-                        multiple={true}
-                        // @ts-ignore
-                        options={cardStore.cardTraits}
-                        value={this.cardTraitsStore.selectedValues}
-                        renderInput={(params) => <TextField {...params} label={"Card Traits"}/>}
-                        onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
-                            this.cardTraitsStore.update(newValue ?? [])
-                        }}
-                        size={"small"}
-                    />
+                    <Box display={"flex"}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.notCardTraits}
+                                    onChange={() => this.notCardTraits = !this.notCardTraits}
+                                />
+                            }
+                            label="Non"
+                        />
+                        <Autocomplete
+                            multiple={true}
+                            // @ts-ignore
+                            options={cardStore.cardTraits}
+                            value={this.cardTraitsStore.selectedValues}
+                            renderInput={(params) => <TextField {...params} label={"Card Traits"}/>}
+                            onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
+                                this.cardTraitsStore.update(newValue ?? [])
+                            }}
+                            size={"small"}
+                            fullWidth={true}
+                            style={{marginLeft: spacing(1)}}
+                        />
+                    </Box>
 
                     <Autocomplete
                         options={cardNames}

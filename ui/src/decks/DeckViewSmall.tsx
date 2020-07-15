@@ -14,6 +14,7 @@ import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { log } from "../config/Utils"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { DeckListingStatus } from "../generated-src/DeckListingStatus"
@@ -74,6 +75,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             saleInfoView =
                 <SaleInfoView deckId={id} saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
         }
+        log.info("Has sale info? " + saleInfo)
 
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes
 

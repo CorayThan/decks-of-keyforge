@@ -68,6 +68,8 @@ data class Card(
         return cardTitle.compareTo(other.cardTitle)
     }
 
+    fun allTypes() = extraCardInfo?.extraCardTypes?.toSet()?.plus(cardType) ?: setOf(cardType)
+
     val effectivePower: Int
         get() = if (extraCardInfo?.effectivePower != 0) {
             extraCardInfo?.effectivePower ?: 0

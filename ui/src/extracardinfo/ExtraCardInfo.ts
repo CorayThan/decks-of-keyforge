@@ -1,3 +1,4 @@
+import { CardType } from "../cards/CardType"
 import { SynTraitValue } from "../synergy/SynTraitValue"
 
 export interface ExtraCardInfo {
@@ -33,6 +34,7 @@ export interface ExtraCardInfo {
     published: string
     publishedDate: string
 
+    extraCardTypes?: CardType[]
     traits: SynTraitValue[]
     synergies: SynTraitValue[]
 

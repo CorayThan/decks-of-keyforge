@@ -3,6 +3,7 @@ import { observer } from "mobx-react"
 import React from "react"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
+import { spacing } from "../config/MuiConfig"
 import { SasTip } from "../mui-restyled/SasTip"
 
 export interface CardsMatchSasTipProps {
@@ -30,7 +31,7 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
 
         const matchedCards2 = matches2 == null ? [] : cards
             .map(card => cardStore.fullCardFromCardName(card.cardTitle))
-            .filter(card => card != null && matches(card as KCard))
+            .filter(card => card != null && matches2(card as KCard))
 
         const firstContent = (matchedCards.length > 0 &&
             <div>
@@ -41,10 +42,14 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
                 ))}
             </div>
         )
-        const firstTitle = title2 == null ? null : title
+        const firstTitle = title2 == null ? null : (
+            <Typography variant={"overline"} style={{fontWeight: 575}}>
+                {title}
+            </Typography>
+            )
         const secondContent = (matchedCards2.length > 0 &&
             <div>
-                {matchedCards.map((card, idx) => (
+                {matchedCards2.map((card, idx) => (
                     <Typography variant={"body2"} key={idx}>
                         {card!.cardTitle}
                     </Typography>
@@ -54,12 +59,16 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
 
         return (
             <SasTip
-                title={<Typography variant={"subtitle1"}>{title}{title2 == null ? "" : ` / ${title2}`}</Typography>}
+                title={<Typography variant={"subtitle1"}>{title}</Typography>}
                 contents={(
                     <div>
-                        {firstTitle}
+                        {matchedCards2.length > 0 &&  firstTitle}
                         {firstContent}
-                        {title2}
+                        {title2 && matchedCards2.length > 0 && (
+                            <Typography variant={"overline"} style={{marginTop: spacing(2)}}>
+                                {title2}
+                            </Typography>
+                        )}
                         {secondContent}
                     </div>
                 )}
