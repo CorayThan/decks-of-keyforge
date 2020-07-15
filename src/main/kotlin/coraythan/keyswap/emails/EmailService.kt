@@ -328,12 +328,13 @@ class EmailService(
         }
     }
 
-    fun sendOfferReceivedEmail(deck: Deck, amount: Int, seller: KeyUser) {
+    fun sendOfferReceivedEmail(deck: Deck, amount: Int, seller: KeyUser, offerer: KeyUser) {
         val currencySymbol = seller.currencySymbol
         val message = """
                     <div>
                         <div>
                             You've received an offer of ${currencySymbol}${amount} for ${links.deckLink(deck)}! 
+                            This offer was made by ${offerer.username}. 
                             View your ${links.offersLink()} on DoK to accept or reject this offer.
                         </div>
                     </div>

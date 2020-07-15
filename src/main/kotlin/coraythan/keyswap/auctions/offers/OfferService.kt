@@ -57,7 +57,7 @@ class OfferService(
         }
         val offer = Offer(amount, auction, auction.seller, user, message, user.country, expiresTime = nowLocal().plusDays(expiresInDays.toLong()))
         offerRepo.save(offer)
-        emailService.sendOfferReceivedEmail(auction.deck, amount, auction.seller)
+        emailService.sendOfferReceivedEmail(auction.deck, amount, auction.seller, user)
         return OfferPlacementResult(true, "Your offer has been placed.")
     }
 
