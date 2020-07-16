@@ -17,7 +17,7 @@
     "browser-image-compression": "^1.0.12",
     "date-fns": "^2.14.0",
     "idb-keyval": "^3.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "loglevel": "^1.6.8",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
