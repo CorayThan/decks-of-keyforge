@@ -1,5 +1,7 @@
 package coraythan.keyswap.synergy
 
+import coraythan.keyswap.generatets.GenerateTs
+
 enum class TraitStrength(val value: Int) {
     STRONG(4),
     NORMAL(3),
@@ -7,14 +9,13 @@ enum class TraitStrength(val value: Int) {
     EXTRA_WEAK(1)
 }
 
-val traitsSortedStrongToWeak = TraitStrength.values().sortedByDescending { it.value }
-
 fun Set<String>.toSynergies(): List<SynergyTrait> {
     return this.mapNotNull {
         SynergyTrait.fromTrait(it)
     }
 }
 
+@GenerateTs
 enum class SynergyTrait {
 
     any,
@@ -43,6 +44,7 @@ enum class SynergyTrait {
     replays,
 
     discardsCards,
+    discardsFromDeck,
 
     reduces_R_HandSize,
 

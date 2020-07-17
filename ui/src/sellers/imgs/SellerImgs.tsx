@@ -6,6 +6,7 @@ import coraythan from "./dok.png"
 import fifthPlanet from "./fifth-planet.jpg"
 import justiceBlinded from "./jb-logo.png"
 import keysader from "./keysader.png"
+import lucabell from "./lucabell.png"
 import musicgal from "./musicgal.jpg"
 import neverOutGamed from "./never-out-gamed.png"
 import tiggerClone from "./protoman.jpg"
@@ -29,6 +30,7 @@ sellerImgs.set("JusticeBlinded".toLowerCase(), justiceBlinded)
 sellerImgs.set("musicgal", musicgal)
 sellerImgs.set("robotrob3", robotrob3)
 sellerImgs.set("septumus", septumus)
+sellerImgs.set("lucabell", lucabell)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

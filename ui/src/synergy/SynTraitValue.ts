@@ -1,6 +1,6 @@
 import { startCase } from "lodash"
 import { CardType } from "../cards/CardType"
-import { SynergyTrait } from "../extracardinfo/SynergyTrait"
+import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { SynTraitHouse } from "./SynTraitHouse"
 
 export interface SynTraitValue {

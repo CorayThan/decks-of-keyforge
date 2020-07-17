@@ -32,6 +32,7 @@ import { CardView } from "../cards/views/CardSimpleView"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
+import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { EventValue } from "../generic/EventValue"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -47,7 +48,7 @@ import { TraitBubble } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
-import { synergyOptions, SynergyTrait, traitOptions, validSynergies, validTraits } from "./SynergyTrait"
+import { synergyOptions, traitOptions, validSynergies, validTraits } from "./SynergyTrait"
 
 interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
 }

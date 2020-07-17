@@ -1,6 +1,7 @@
 package coraythan.keyswap.config
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
@@ -17,7 +18,8 @@ import java.nio.charset.StandardCharsets
 @Configuration
 class WebConfiguration(
         private val userSearchService: UserSearchService,
-        private val deckSearchService: DeckSearchService
+        private val deckSearchService: DeckSearchService,
+        private val cardService: CardService
 ) : WebMvcConfigurer {
 
     private val oneYearSeconds = 60 * 60 * 24 * 356
@@ -115,6 +117,31 @@ class WebConfiguration(
                             )
                         }
 
+                    } else if (uri.contains("/cards/[a-z0-9\\-]+".toRegex())) {
+
+                        val questionIdx = uri.indexOf("?")
+                        val cardName = if (questionIdx == -1) {
+                            uri.substring(7)
+                        } else {
+                            uri.substring(7, questionIdx + 1)
+                        }
+
+                        val card = cardService.findByCardUrlName(cardName)
+
+                        if (card == null) {
+                            transformIndexPage(
+                                    resource,
+                                    "Cards of KeyForge, Card Not Found",
+                                    "Search KeyForge cards. View their ratings in the SAS and AERC rating systems."
+                            )
+                        } else {
+                            transformIndexPage(
+                                    resource,
+                                    card.cardTitle,
+                                    card.printValues(),
+                                    "https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/$cardName.png"
+                            )
+                        }
                     } else if (uri.contains("/cards")) {
                         transformIndexPage(
                                 resource,
@@ -167,15 +194,15 @@ class WebConfiguration(
     private fun transformIndexPage(
             page: Resource,
             title: String = "Decks of KeyForge",
-            description: String = "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies with the SAS and AERC rating systems."
-//            image: String = "https://dok-imgs.s3.us-west-2.amazonaws.com/dok-square.png"
+            description: String = "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies with the SAS and AERC rating systems.",
+            image: String = "https://dok-imgs.s3.us-west-2.amazonaws.com/dok-square.png"
     ): TransformedResource {
         val bytes = FileCopyUtils.copyToByteArray(page.inputStream)
         val content = String(bytes, StandardCharsets.UTF_8)
         val modified = content
                 .replace("~~title~~", "$title – DoK")
                 .replace("~~description~~", description)
-//                .replace("~~image~~", image)
+                .replace("~~image~~", image)
                 .toByteArray(StandardCharsets.UTF_8)
 
         return TransformedResource(page, modified)

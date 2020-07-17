@@ -7,6 +7,8 @@ import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
+import coraythan.keyswap.roundToTwoSigDig
+import coraythan.keyswap.synergy.SynTraitValue
 import java.time.ZonedDateTime
 import javax.persistence.*
 
@@ -140,6 +142,41 @@ data class Card(
             legacy = isLegacy
     )
 
+    fun printValues(): String {
+        val info = extraCardInfo
+        return if (info == null) {
+            "unknown"
+        } else {
+            listOfNotNull(
+                    printValue("AERC", aercScore, aercScoreMax),
+                    printValue("A", info.amberControl, info.amberControlMax),
+                    printValue("E", info.expectedAmber, info.expectedAmberMax),
+                    printValue("R", info.artifactControl, info.artifactControlMax),
+                    printValue("C", info.creatureControl, info.creatureControlMax),
+                    printValue("P", this.effectivePower.toDouble() / 10, if (info.effectivePowerMax != null && info.effectivePowerMax != 0.0) info.effectivePowerMax / 10 else null),
+                    printValue("F", info.efficiency, info.efficiencyMax),
+                    printValue("D", info.disruption, info.disruptionMax),
+                    printValue("CP", info.creatureProtection, info.creatureProtectionMax),
+                    printValue("O", info.other, info.otherMax)
+            )
+                    .joinToString(" • ") +
+                    printTraits("Traits", info.traits) +
+                    printTraits("Syns", info.synergies)
+
+        }
+    }
+
+    private fun printValue(name: String, min: Double, max: Double?) = if (min == 0.0 && (max == 0.0 || max == null)) {
+        null
+    } else {
+        "$name: ${min.roundToTwoSigDig()}${if (max == null || max == 0.0) "" else " to ${max.roundToTwoSigDig()}"}"
+    }
+
+    private fun printTraits(name: String, traits: List<SynTraitValue>) = if (traits.isEmpty()) {
+        ""
+    } else {
+        "\n$name: ${traits.joinToString(" • ") { it.print() }}"
+    }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)

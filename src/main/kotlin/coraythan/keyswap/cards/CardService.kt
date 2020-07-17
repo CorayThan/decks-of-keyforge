@@ -34,10 +34,14 @@ class CardService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    private val cardNameReplacementRegex = "[^\\d\\w\\s]".toRegex()
+    private val spaceRegex = "\\s".toRegex()
+
     private var previousInfoWithNames: Map<String, Card>? = null
     private var nextInfoWithNames: Map<String, Card>? = null
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsWithNames: Map<String, Card>? = null
+    private var nonMaverickCachedCardsWithUrlNames: Map<String, Card>? = null
     private var nonMaverickCachedCardsList: List<Card>? = null
     private var nonMaverickCachedCardsListNoDups: List<Card>? = null
     lateinit var previousExtraInfo: Map<String, ExtraCardInfo>
@@ -109,6 +113,7 @@ class CardService(
 
     fun findByExpansionCardName(expansion: Int, cardName: String) = cardRepo.findByExpansionAndCardTitle(expansion, cardName).firstOrNull()
     fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!![cardName.cleanCardName()]
+    fun findByCardUrlName(cardUrlName: String) = nonMaverickCachedCardsWithUrlNames!![cardUrlName]
 
     fun previousInfo(): Map<String, Card> {
         if (previousInfoWithNames == null) {
@@ -305,6 +310,7 @@ class CardService(
 
         nonMaverickCachedCards = cards
         nonMaverickCachedCardsWithNames = cards.map { it.value.cardTitle.cleanCardName() to it.value }.toMap()
+        nonMaverickCachedCardsWithUrlNames = cards.map { cardNameToCardImageUrl(it.value.cardTitle) to it.value }.toMap()
         val notNullCards = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsList = notNullCards
         if (notNullCards != null) cardWinsService.addWinsToCards(notNullCards)
@@ -348,6 +354,13 @@ class CardService(
                 realCard.copy(house = entry.key, maverick = !realCard.anomaly && !(realCard.houses?.contains(entry.key) ?: true), enhanced = it.enhanced)
             }
         }
+    }
+
+    private fun cardNameToCardImageUrl(cardName: String): String {
+        return cardName
+                .replace(cardNameReplacementRegex, "")
+                .replace(spaceRegex, "-")
+                .toLowerCase()
     }
 }
 

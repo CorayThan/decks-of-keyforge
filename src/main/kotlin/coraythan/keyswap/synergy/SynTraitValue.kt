@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
+import coraythan.keyswap.startCase
 import java.util.*
 import javax.persistence.*
 
@@ -132,6 +133,55 @@ data class SynTraitValue(
 
     fun validate() {
         powerMatch(1)
+    }
+
+    fun print(): String {
+        var name = if (trait == SynergyTrait.any) "" else trait.toString()
+        if (cardName != null) {
+            name = cardName
+        }
+        var nameEnhancer = ""
+        if (powersString.isNotBlank()) {
+            nameEnhancer += " $powersString Power"
+        }
+        if (player != SynTraitPlayer.ANY) {
+            nameEnhancer += " ${player.toString().toLowerCase().capitalize()}"
+        }
+        if (cardTraits.isNotEmpty()) {
+            nameEnhancer += " ${if (notCardTraits) "Non-" else ""}${cardTraits.joinToString(", ") { it.toLowerCase().capitalize() }}"
+        }
+        if (cardTypes.isNotEmpty()) {
+            if (cardTypes.size == 1) {
+                nameEnhancer += " ${cardTypes[0]}s"
+            } else {
+                nameEnhancer += " ${cardTypes.joinToString(" ") { "${it}s" }}"
+            }
+        }
+        if (name.contains("_R_")) {
+            name = name.startCase().replace("_ R_", nameEnhancer)
+        } else {
+            name = "${name.startCase()} $nameEnhancer"
+        }
+        name = when (house) {
+            SynTraitHouse.anyHouse -> ""
+            SynTraitHouse.continuous -> "Omni: "
+            SynTraitHouse.outOfHouse -> "Out of House: "
+            SynTraitHouse.house -> "In House: "
+        } + name
+
+        name += when (rating) {
+            1 -> " +"
+            2 -> " ++"
+            3 -> " +++"
+            4 -> " ++++"
+            -1 -> " -"
+            -2 -> " --"
+            -3 -> " ---"
+            -4 -> " ----"
+            else -> ""
+        }
+
+        return name
     }
 
 }

@@ -70,6 +70,8 @@ object TsGeneratorObj {
     private fun writeEnum(name: String, constants: List<String>) {
 
         val contents = """
+/* eslint-disable */
+
 export enum $name {
     ${constants.joinToString("\n    ") { "$it = \"$it\"," }}
 }
@@ -96,6 +98,8 @@ export class ${name}Utils {
         }
 
         val contents = """
+/* eslint-disable */
+
 ${imports}export interface $name {
     $tsFields
 }
