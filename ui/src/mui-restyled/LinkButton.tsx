@@ -34,7 +34,7 @@ export const ListItemLink = (props: ListItemLinkProps) => {
         <ListItem
             {...rest}
         >
-            <Link href={to} underline={"none"} noWrap={true}>
+            <Link href={to} underline={"none"} noWrap={true} color={"inherit"}>
                 {icon ? <div style={{marginRight: spacing(2)}}>{icon}</div> : null}
                 <ListItemText primary={primary}/>
             </Link>
