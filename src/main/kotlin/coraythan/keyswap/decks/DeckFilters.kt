@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.House
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import org.springframework.data.domain.Sort
 
@@ -63,10 +64,12 @@ data class DeckFilters(
     fun clean() = if (this.pageSize < 20) this.copy(pageSize = 20) else this
 }
 
+@GenerateTs
 data class  DeckCardQuantity(
         val cardNames: List<String>,
         val quantity: Int,
-        val house: House? = null
+        val house: House? = null,
+        val mav: Boolean? = null
 )
 
 enum class DeckSortOptions {

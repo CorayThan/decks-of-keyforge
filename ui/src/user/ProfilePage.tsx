@@ -120,11 +120,11 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
 
                     {profile.allowUsersToSeeDeckOwnership && (
-                        <LinkButton color={"primary"} to={decksLink}>
+                        <LinkButton color={"primary"} href={decksLink}>
                             {profile.username}'s Decks
                         </LinkButton>
                     )}
-                    <LinkButton color={"primary"} to={forSaleLink}>
+                    <LinkButton color={"primary"} href={forSaleLink}>
                         {profile.username}'s Decks for Sale
                     </LinkButton>
                 </Card>

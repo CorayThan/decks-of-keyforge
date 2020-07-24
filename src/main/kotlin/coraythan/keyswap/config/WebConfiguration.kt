@@ -139,7 +139,9 @@ class WebConfiguration(
                                     resource,
                                     card.cardTitle,
                                     card.printValues(),
-                                    "https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/$cardName.png"
+                                    "https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/$cardName.png",
+                                    300,
+                                    420
                             )
                         }
                     } else if (uri.contains("/cards")) {
@@ -195,7 +197,9 @@ class WebConfiguration(
             page: Resource,
             title: String = "Decks of KeyForge",
             description: String = "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies with the SAS and AERC rating systems.",
-            image: String = "https://dok-imgs.s3.us-west-2.amazonaws.com/dok-square.png"
+            image: String = "https://dok-imgs.s3.us-west-2.amazonaws.com/dok-square.png",
+            imageWidth: Int = 256,
+            imageHeight: Int = 256
     ): TransformedResource {
         val bytes = FileCopyUtils.copyToByteArray(page.inputStream)
         val content = String(bytes, StandardCharsets.UTF_8)
@@ -203,6 +207,8 @@ class WebConfiguration(
                 .replace("~~title~~", "$title – DoK")
                 .replace("~~description~~", description)
                 .replace("~~image~~", image)
+                .replace("~~image-width~~", imageWidth.toString())
+                .replace("~~image-height~~", imageHeight.toString())
                 .toByteArray(StandardCharsets.UTF_8)
 
         return TransformedResource(page, modified)

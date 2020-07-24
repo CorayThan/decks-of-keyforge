@@ -29,7 +29,7 @@ export class ForSaleNotificationsStore {
                     "Success",
                     <LinkButton
                         color={"secondary"}
-                        to={Routes.myProfile}
+                        href={Routes.myProfile}
                         key={"profile"}
                     >
                         Profile

@@ -460,13 +460,13 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
                         </Grid>
                         <div style={{marginTop: spacing(2), display: "flex"}}>
                             <LinkButton
-                                to={Routes.spoilers}
+                                href={Routes.spoilers}
                                 style={{marginRight: spacing(2)}}
                             >
                                 Spoilers
                             </LinkButton>
                             <LinkButton
-                                to={Routes.createSpoiler}
+                                href={Routes.createSpoiler}
                                 style={{marginRight: spacing(2)}}
                             >
                                 {this.spoilerId == null ? "Reset" : "Make new Spoiler"}

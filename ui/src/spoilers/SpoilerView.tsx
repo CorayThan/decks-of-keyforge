@@ -140,13 +140,13 @@ export const SpoilerView = observer((props: { spoiler: Spoiler, noLink?: boolean
                             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
                             <div style={{display: "flex"}}>
                                 <LinkButton
-                                    to={Routes.editSpoiler(id)}
+                                    href={Routes.editSpoiler(id)}
                                     style={{marginRight: spacing(2)}}
                                 >
                                     Edit
                                 </LinkButton>
                                 <LinkButton
-                                    to={reprint ? Routes.editExtraCardInfo(extraInfoId) : Routes.editSpoilerAerc(id)}
+                                    href={reprint ? Routes.editExtraCardInfo(extraInfoId) : Routes.editSpoilerAerc(id)}
                                 >
                                     Edit AERC
                                 </LinkButton>

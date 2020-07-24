@@ -14,7 +14,7 @@ export const BecomeAPatron = (props: {children: string}) => {
                 <PatronButton/>
                 <LinkButton
                     color={"inherit"}
-                    to={AboutSubPaths.patreon}
+                    href={AboutSubPaths.patreon}
                     style={{marginLeft: spacing(2)}}
                 >
                     <PatreonIcon style={{marginRight: spacing(1)}} primary={true}/>

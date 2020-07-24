@@ -48,14 +48,14 @@ export class SellerCard extends React.Component<SellerCardProps> {
                         {email ? (
                             <LinkButton
                                 href={`mailto:${email}`}
-                                target={"_blank"} rel={"noopener noreferrer"}
+                                newWindow={true}
                                 color={"primary"}
                             >
                                 Send Email
                             </LinkButton>
                         ) : null}
                         <div style={{flexGrow: 1}}/>
-                        <LinkButton color="primary" to={storeLink}>
+                        <LinkButton color="primary" href={storeLink}>
                             View Store
                         </LinkButton>
                     </CardActions>

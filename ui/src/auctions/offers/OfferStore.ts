@@ -3,9 +3,11 @@ import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { log, prettyJson } from "../../config/Utils"
 import { DeckListingDto } from "../../generated-src/DeckListingDto"
+import { MakeOffer } from "../../generated-src/MakeOffer"
+import { MyOffers } from "../../generated-src/MyOffers"
+import { OfferDto } from "../../generated-src/OfferDto"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
-import { MakeOffer, MyOffers, OfferDto } from "./Offer"
 
 export class OfferStore {
 

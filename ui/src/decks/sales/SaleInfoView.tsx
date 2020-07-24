@@ -98,7 +98,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
         const sellerDetails = sellerStore.findSellerWithUsername(username)
 
         return (
-            <div style={{marginTop: spacing(2), marginBottom: spacing(2)}}>
+            <div style={{marginTop: spacing(2), marginBottom: spacing(2), maxWidth: 600}}>
                 {(buyItNow != null || highestOffer != null || startingBid != null) && (
                     <>
                         <div style={{marginLeft: spacing(2), marginRight: spacing(2), display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -120,7 +120,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
                                 {forAuction && (
                                     <TwoPricesDisplay
                                         currencySymbol={currencySymbol}
-                                        priceOneName={"High Bid:"}
+                                        priceOneName={highestBid ? "High Bid:" : "Min Bid:"}
                                         priceOneValue={highestBid ? highestBid : startingBid}
                                         priceTwoName={"Buy it Now:"}
                                         priceTwoValue={buyItNow}

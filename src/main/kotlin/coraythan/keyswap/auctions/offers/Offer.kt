@@ -3,6 +3,7 @@ package coraythan.keyswap.auctions.offers
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.TimeUtils.localDateTimeFormatterWithYear
 import coraythan.keyswap.auctions.DeckListing
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
@@ -48,7 +49,8 @@ data class Offer(
 
     fun offerDetailsReadable() = "${auction.currencySymbol}${amount}"
 
-    fun toDto(offsetMinutes: Int): OfferDto {
+    fun toDto(currentUser: KeyUser?, offsetMinutes: Int): OfferDto {
+        val displaySentBy = currentUser?.id == this.sender.id || currentUser?.id == this.recipient.id
         return OfferDto(
                 deckListingId = this.auction.id,
                 deckId = this.auction.deck.keyforgeId,
@@ -57,6 +59,8 @@ data class Offer(
                 status = this.status,
                 recipientArchived = recipientArchived,
                 senderArchived = senderArchived,
+                sentBy = if (displaySentBy) this.sender.username else null,
+                receivedBy = this.recipient.username,
                 expired = this.expiresTime.isBefore(LocalDateTime.now()),
                 sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
                 expiresOn = this.expiresTime.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
@@ -75,7 +79,7 @@ data class Offer(
     }
 }
 
-fun List<Offer>.toOffersForDeck(offsetMinutes: Int): OffersForDeck {
+fun List<Offer>.toOffersForDeck(currentUser: KeyUser, offsetMinutes: Int): OffersForDeck {
     val firstOffer = this.first()
     val auction = firstOffer.auction
     val deck = auction.deck
@@ -86,10 +90,11 @@ fun List<Offer>.toOffersForDeck(offsetMinutes: Int): OffersForDeck {
                     auction.currencySymbol,
                     deck.sasRating
             ),
-            this.sortedDescending().map { it.toDto(offsetMinutes) }
+            this.sortedDescending().map { it.toDto(currentUser, offsetMinutes) }
     )
 }
 
+@GenerateTs
 enum class OfferStatus {
     SENT,
     ACCEPTED,
@@ -98,6 +103,7 @@ enum class OfferStatus {
     EXPIRED
 }
 
+@GenerateTs
 data class MakeOffer(
         val deckListingId: UUID,
         val amount: Int,
@@ -105,6 +111,7 @@ data class MakeOffer(
         val expireInDays: Int
 )
 
+@GenerateTs
 data class OfferDto(
         val deckListingId: UUID,
         val deckId: String,
@@ -116,17 +123,21 @@ data class OfferDto(
         val expired: Boolean,
         val country: Country,
         val sentTime: String,
+        val receivedBy: String,
+        val sentBy: String?,
         val expiresOn: String,
         val viewedTime: String?,
         val resolvedTime: String?,
         val id: UUID
 )
 
+@GenerateTs
 data class OffersForDeck(
         val deck: OfferDeckData,
         val offers: List<OfferDto>
 )
 
+@GenerateTs
 data class OfferDeckData(
         val id: String,
         val name: String,
@@ -134,6 +145,7 @@ data class OfferDeckData(
         val sas: Int
 )
 
+@GenerateTs
 data class MyOffers(
         val offersToMe: List<OffersForDeck>,
         val offersIMade: List<OffersForDeck>

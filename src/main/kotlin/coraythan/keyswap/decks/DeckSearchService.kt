@@ -368,6 +368,17 @@ class DeckSearchService(
 
         filters.cards.forEach {
             when {
+                it.mav == true -> {
+                    predicate.andAnyOf(
+                            *it.cardNames.flatMap { cardName ->
+                                House.values().toSet().minus(cardService.findByCardName(cardName)!!.house)
+                                        .map { otherHouse ->
+                                            deckQ.cardNames.like("%~$cardName${otherHouse}~%")
+                                        }
+
+                            }.toTypedArray()
+                    )
+                }
                 it.house != null -> predicate.andAnyOf(
                         *it.cardNames.map { cardName ->
                             deckQ.cardNames.like("%~$cardName${it.house}~%")

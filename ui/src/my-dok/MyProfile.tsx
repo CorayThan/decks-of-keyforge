@@ -519,7 +519,7 @@ const PatreonSupporter = (props: { profile: KeyUserDto }) => {
             <div>
                 <Typography style={{marginBottom: spacing(2)}}>Patreon tier: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
                 <LinkButton
-                    to={AboutSubPaths.patreon}
+                    href={AboutSubPaths.patreon}
                     variant={"contained"}
                     color={"primary"}
                 >

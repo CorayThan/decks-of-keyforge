@@ -291,7 +291,7 @@ const AppLinks = observer(() => (
             <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
         ) : (
             <LinkButton
-                to={Routes.users}
+                href={Routes.users}
                 color={"inherit"}
             >
                 Users
@@ -426,7 +426,7 @@ class UserLinks extends React.Component {
                     <LinkButton
                         color={"secondary"}
                         variant={"contained"}
-                        to={Routes.registration}
+                        href={Routes.registration}
                         style={{margin: spacing(1)}}
                         onClick={rightMenuStore.close}
                     >
@@ -458,7 +458,7 @@ class UserLinksDesktop extends React.Component {
                     <MyDokDropdown/>
                     <LinkButton
                         color={"inherit"}
-                        to={AboutSubPaths.patreon}
+                        href={AboutSubPaths.patreon}
                         onClick={rightMenuStore.close}
                     >
                         <PatreonIcon style={{marginRight: spacing(1)}} primary={screenStore.smallScreenTopBar()}/>
@@ -483,7 +483,7 @@ class UserLinksDesktop extends React.Component {
                     <LinkButton
                         color={"secondary"}
                         variant={"contained"}
-                        to={Routes.registration}
+                        href={Routes.registration}
                         onClick={rightMenuStore.close}
                         style={{marginLeft: spacing(2)}}
                     >

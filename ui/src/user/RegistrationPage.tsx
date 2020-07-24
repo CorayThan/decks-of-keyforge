@@ -201,7 +201,7 @@ export class RegistrationPage extends React.Component {
                                 </Grid>
                             </Grid>
                             <div style={{marginTop: spacing(2), display: "flex", justifyContent: "center"}}>
-                                <LinkButton size={"small"} to={Routes.privacyPolicy}>Privacy Policy</LinkButton>
+                                <LinkButton size={"small"} href={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                             </div>
                             <KeyButton
                                 style={{marginTop: spacing(2)}}

@@ -42,7 +42,7 @@ coraythan
 ## Export deck data to CSV
 
 ```
-cd 'C:\Program Files\PostgreSQL\11\scripts\'
+cd 'C:\Program Files\PostgreSQL\12\scripts\'
 .\runpsql.bat
 // server click enter
 // database enter: keyswap
@@ -113,3 +113,4 @@ set PGPASSWORD=postgres
 pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\restore-cards\full-db.dump
 ```
 
+To update passwords run: `update key_user set password = '$2a$10$tfqUiFMI9ck0DmvWLtL/durPIv5BuLCu.M0ZyyGr2p3WhRqHeIAh2';`

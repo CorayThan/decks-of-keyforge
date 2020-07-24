@@ -56,7 +56,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                 <TableRow key={id}>
                                     <TableCell>
                                         <LinkButton
-                                            to={Routes.deckSearchForSaleQuery(queryWithoutId)}
+                                            href={Routes.deckSearchForSaleQuery(queryWithoutId)}
                                             color={"primary"}
                                         >
                                             {query.queryName.length === 0 ? "Unnamed" : query.queryName}

@@ -2,6 +2,7 @@ import { clone, isEqual } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
 import { log, prettyJson, Utils } from "../../config/Utils"
+import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
 import { SortDirection } from "../../generic/SortDirection"
 import { userStore } from "../../user/UserStore"
@@ -42,13 +43,19 @@ export class DeckFilters {
                 const secondPart = forQuery.substring(lastIndexOf + 1)
                 const quantity = isNaN(Number(secondPart)) ? undefined : Number(secondPart)
                 let house
+                let mav = undefined
                 if (quantity == null) {
-                    house = secondPart as House
+                    if (secondPart === "Maverick") {
+                        mav = true
+                    } else {
+                        house = secondPart as House
+                    }
                 }
                 return {
                     cardNames: forQuery.substring(0, lastIndexOf).split(cardSeparator),
                     quantity,
-                    house
+                    house,
+                    mav
                 }
             })
         }
@@ -239,16 +246,10 @@ export const constraintsAsParam = (constraints: Constraint[]) => (
 )
 
 const cardsAsParam = (cards: DeckCardQuantity[]) => (
-    cards.map(card => `${card.cardNames.join(cardSeparator)}-${card.house ? card.house : card.quantity}`)
+    cards.map(card => `${card.cardNames.join(cardSeparator)}-${card.house ? card.house : (card.mav ? "Maverick" : card.quantity)}`)
 )
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DefaultDeckFilters: any = new DeckFilters()
-
-export interface DeckCardQuantity {
-    cardNames: string[]
-    quantity: number
-    house?: House
-}
 
 export const cardSeparator = "~or~"

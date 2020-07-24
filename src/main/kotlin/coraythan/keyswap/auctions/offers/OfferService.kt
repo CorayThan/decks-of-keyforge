@@ -149,7 +149,8 @@ class OfferService(
             offerRepo.existsByRecipientIdAndViewedTimeIsNull(currentUserService.loggedInUserOrUnauthorized().id)
 
     fun findOffer(offsetMinutes: Int, id: UUID): OfferDto {
-        return offerRepo.findByIdOrNull(id)?.toDto(offsetMinutes) ?: throw BadRequestException("No offer for id $id")
+        val user = currentUserService.loggedInUser()
+        return offerRepo.findByIdOrNull(id)?.toDto(user, offsetMinutes) ?: throw BadRequestException("No offer for id $id")
     }
 
     fun findMyOffers(offsetMinutes: Int, includeArchived: Boolean): MyOffers {
@@ -157,14 +158,15 @@ class OfferService(
         return MyOffers(
                 offersToMe = (if (includeArchived) offerRepo.findByRecipientId(user.id) else offerRepo.findByRecipientIdAndRecipientArchivedFalse(user.id))
                         .sortedDescending().groupBy { it.auction.id }.values
-                        .map { it.toOffersForDeck(offsetMinutes) },
+                        .map { it.toOffersForDeck(user, offsetMinutes) },
                 offersIMade = (if (includeArchived) offerRepo.findBySenderId(user.id) else offerRepo.findBySenderIdAndSenderArchivedFalse(user.id))
                         .sortedDescending().groupBy { it.auction.id }.values
-                        .map { it.toOffersForDeck(offsetMinutes) }
+                        .map { it.toOffersForDeck(user, offsetMinutes) }
         )
     }
 
     fun offersForDeckListing(offsetMinutes: Int, deckListingId: UUID): List<OfferDto> {
-        return offerRepo.findByAuctionId(deckListingId).sorted().map { it.copy(message = "").toDto(offsetMinutes) }
+        val user = currentUserService.loggedInUser()
+        return offerRepo.findByAuctionId(deckListingId).sorted().map { it.copy(message = "").toDto(user, offsetMinutes) }
     }
 }

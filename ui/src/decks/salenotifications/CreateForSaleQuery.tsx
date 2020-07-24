@@ -120,7 +120,7 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
                                     You can view and delete your notifications from your
                                 </Typography>
                                 <LinkButton
-                                    to={Routes.myProfile}
+                                    href={Routes.myProfile}
                                     style={{marginBottom: spacing(2)}}
                                 >
                                     Profile

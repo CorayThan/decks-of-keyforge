@@ -2,7 +2,8 @@ import { Button, ButtonGroup } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { SendEmailDialog, SendEmailDialogStore } from "../../emails/SendEmailDialog"
-import { OfferDto, OfferStatus } from "./Offer"
+import { OfferDto } from "../../generated-src/OfferDto"
+import { OfferStatus } from "../../generated-src/OfferStatus"
 import { offerStore } from "./OfferStore"
 
 interface OfferActionProps {

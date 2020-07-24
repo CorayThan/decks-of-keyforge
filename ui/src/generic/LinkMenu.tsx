@@ -100,7 +100,7 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                                         // @ts-ignore
                                         component={linkInfo.component}
                                     >
-                                        <ListItemText primary={linkInfo.text}/>
+                                        <ListItemText primary={linkInfo.text} primaryTypographyProps={{noWrap: true}}/>
                                     </ListItem>
                                 )
                             }
@@ -132,7 +132,7 @@ export class LinkMenu extends React.Component<LinkMenuProps> {
                     <div>
                         <LinkButton
                             color={"inherit"}
-                            to={firstLink.to}
+                            href={firstLink.to}
                             style={{...style, marginRight: 0}}
                             onClick={() => {
                                 if (genericOnClick) {

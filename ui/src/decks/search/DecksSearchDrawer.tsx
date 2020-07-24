@@ -473,7 +473,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     title={"Cards"}
                                     onClick={() => {
                                         if (cards.length === 0) {
-                                            cards.push({cardNames: [], quantity: 1})
+                                            cards.push({cardNames: [], quantity: 1, mav: false})
                                         }
                                     }}
                                 >

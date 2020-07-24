@@ -1,8 +1,9 @@
 import { Utils } from "../../config/Utils"
+import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
 import { KeyUser } from "../../user/KeyUser"
 import { Constraint } from "../search/ConstraintDropdowns"
-import { DeckCardQuantity, prepareDeckFiltersForQueryString } from "../search/DeckFilters"
+import { prepareDeckFiltersForQueryString } from "../search/DeckFilters"
 
 export interface ForSaleQuery {
     queryName: string

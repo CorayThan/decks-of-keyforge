@@ -463,7 +463,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                         </Grid>
                         <CardActions>
                             <LinkButton
-                                to={Routes.cards}
+                                href={Routes.cards}
                                 style={{marginRight: spacing(2)}}
                             >
                                 Cards

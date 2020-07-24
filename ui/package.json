@@ -11,7 +11,7 @@
     "@nivo/bar": "^0.62.0",
     "@nivo/pie": "^0.62.0",
     "@nivo/radar": "^0.62.0",
-    "@sentry/browser": "^5.15.5",
+    "@sentry/browser": "^5.19.2",
     "axios": "^0.19.2",
     "bowser": "^2.9.0",
     "browser-image-compression": "^1.0.12",

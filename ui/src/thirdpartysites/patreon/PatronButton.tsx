@@ -14,8 +14,7 @@ export class PatronButton extends React.Component<{ size?: "small" | "medium" | 
                 color={"primary"}
                 variant={"contained"}
                 href={this.props.link ?? "https://www.patreon.com/decksofkeyforge"}
-                target={"_blank"}
-                rel={"noopener noreferrer"}
+                newWindow={true}
                 size={this.props.size}
             >
                 <PatreonIcon primary={false}/>

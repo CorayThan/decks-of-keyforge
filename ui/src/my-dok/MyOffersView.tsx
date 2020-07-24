@@ -2,12 +2,13 @@ import { Button, Checkbox, FormControlLabel, Paper } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { OffersForDeck, OfferStatus } from "../auctions/offers/Offer"
 import { offerStore } from "../auctions/offers/OfferStore"
 import { OffersForDeckTableFull } from "../auctions/offers/ViewOffersForDeck"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { OffersForDeck } from "../generated-src/OffersForDeck"
+import { OfferStatus } from "../generated-src/OfferStatus"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { Loader } from "../mui-restyled/Loader"
 import { userStore } from "../user/UserStore"
@@ -81,14 +82,16 @@ export class MyOffersView extends React.Component {
                     </Button>
                 </div>
                 <OffersList
-                    name={"Offers from me"}
+                    name={"Offers I made"}
                     noneMessage={"To see offers you've made, make an offer to an Archon with discriminating tastes"}
                     offers={myOffers.offersIMade}
+                    offersToMe={false}
                 />
                 <OffersList
                     name={"Offers to me"}
                     noneMessage={"To see some offers with numbers in accordance with psychological impulse, list some decks with 'Accepting Offers' checked"}
                     offers={myOffers.offersToMe}
+                    offersToMe={true}
                 />
                 <div style={{marginTop: spacing(2)}}>
                     <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic"}}>
@@ -105,8 +108,8 @@ export class MyOffersView extends React.Component {
     }
 }
 
-const OffersList = (props: { name: string, noneMessage: string, offers: OffersForDeck[] }) => {
-    const {name, noneMessage, offers} = props
+const OffersList = (props: { name: string, noneMessage: string, offersToMe: boolean, offers: OffersForDeck[] }) => {
+    const {name, noneMessage, offersToMe, offers} = props
     const {offersSent, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
     return (
         <div style={{maxWidth: 1200, overflowX: "auto"}}>
@@ -123,33 +126,39 @@ const OffersList = (props: { name: string, noneMessage: string, offers: OffersFo
                         || (offersCanceled && offersForDeck.offers.map(offer => offer.status).includes(OfferStatus.CANCELED))
                         || (includeExpiredOffers || offersForDeck.offers.find(offer => !offer.expired) != null)
                     ))
-                    .map(offersForDeck => (
-                        <Paper key={offersForDeck.deck.id} style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "flexEnd",
-                                    marginLeft: spacing(2),
-                                    marginRight: spacing(2),
-                                    paddingTop: spacing(2)
-                                }}
-                            >
-                                <UnstyledLink to={Routes.deckPage(offersForDeck.deck.id)} target={"_blank"} rel={"noopener noreferrer"}>
-                                    <Typography variant={"h6"}>
-                                        {offersForDeck.deck.name}
+                    .map(offersForDeck => {
+                        return (
+                            <Paper key={offersForDeck.deck.id} style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "flexEnd",
+                                        marginLeft: spacing(2),
+                                        marginRight: spacing(2),
+                                        paddingTop: spacing(2)
+                                    }}
+                                >
+                                    <UnstyledLink to={Routes.deckPage(offersForDeck.deck.id)} target={"_blank"} rel={"noopener noreferrer"}>
+                                        <Typography variant={"h6"}>
+                                            {offersForDeck.deck.name}
+                                        </Typography>
+                                    </UnstyledLink>
+                                    <div style={{flexGrow: 1}}/>
+                                    <Typography color={"primary"} variant={"h5"} style={{marginRight: 4}}>
+                                        {offersForDeck.deck.sas}
                                     </Typography>
-                                </UnstyledLink>
-                                <div style={{flexGrow: 1}}/>
-                                <Typography color={"primary"} variant={"h5"} style={{marginRight: 4}}>
-                                    {offersForDeck.deck.sas}
-                                </Typography>
-                                <Typography color={"primary"} variant={"h5"} style={{fontSize: "1.25rem", paddingTop: 5}}>
-                                    SAS
-                                </Typography>
-                            </div>
-                            <OffersForDeckTableFull offers={offersForDeck.offers} currency={offersForDeck.deck.currency}/>
-                        </Paper>
-                    ))
+                                    <Typography color={"primary"} variant={"h5"} style={{fontSize: "1.25rem", paddingTop: 5}}>
+                                        SAS
+                                    </Typography>
+                                </div>
+                                <OffersForDeckTableFull
+                                    offers={offersForDeck.offers}
+                                    currency={offersForDeck.deck.currency}
+                                    offerToMe={offersToMe}
+                                />
+                            </Paper>
+                        )
+                    })
             )}
         </div>
     )

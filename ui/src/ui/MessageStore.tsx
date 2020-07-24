@@ -39,7 +39,7 @@ export class MessageStore {
         messageStore.setMessage(`Version ${version} has been released!`, "Success", (
             <LinkButton
                 color={"inherit"}
-                to={AboutSubPaths.releaseNotes}
+                href={AboutSubPaths.releaseNotes}
                 key={"release-notes"}
                 onClick={() => this.open = false}
             >

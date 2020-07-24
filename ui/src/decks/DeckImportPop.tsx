@@ -127,7 +127,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             >
                                 <div>
                                     <LinkButton
-                                        to={Routes.createTheoreticalDeck}
+                                        href={Routes.createTheoreticalDeck}
                                         color={"primary"}
                                         onClick={() => {
                                             closeAllMenuStoresExcept()

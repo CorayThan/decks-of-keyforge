@@ -1,4 +1,4 @@
-import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Paper, Typography } from "@material-ui/core"
+import { Accordion, AccordionDetails, AccordionSummary, Paper, Typography } from "@material-ui/core"
 import Link from "@material-ui/core/Link"
 import { ExpandMore } from "@material-ui/icons"
 import { observer } from "mobx-react"
@@ -14,14 +14,14 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.10"
+export const latestVersion = "5.11"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
 decFirstUpdateCards.aercHistoryDate = "2019-12-01"
 
 const NotesLink = (props: { to: string, children: string, style?: React.CSSProperties }) => {
-    return <LinkButton style={props.style} to={props.to} variant={"outlined"} color={"primary"}>{props.children}</LinkButton>
+    return <LinkButton style={props.style} href={props.to} variant={"outlined"} color={"primary"}>{props.children}</LinkButton>
 }
 
 @observer
@@ -42,6 +42,22 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.11"}
+                    date={"7/22/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Mass Mutation SAS Improvements",
+                            note: "I've tweaked a number of cards that seemed poorly scored. I've also added the ability for cards to be " +
+                                "of more than one type (for the Star Alliance Creature / Upgrade cards) and Non-Mutant synergies."
+                        },
+                        {
+                            highlight: "See who sent Offer",
+                            note: "You can now see who sent you offers from your offers page."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.10"}
                     date={"7/11/2020"}
@@ -147,7 +163,7 @@ export class ReleaseNotes extends React.Component {
                             note: "You can now see graphs displaying sale prices for decks by SAS! Head over to the stats area to check them out."
                         },
                         {
-                            note: <LinkButton to={StatsSubPaths.purchaseStats} variant={"outlined"} color={"primary"}>Sale Stats</LinkButton>
+                            note: <LinkButton href={StatsSubPaths.purchaseStats} variant={"outlined"} color={"primary"}>Sale Stats</LinkButton>
                         },
                         {
                             highlight: "Prettier Emails",
@@ -585,12 +601,12 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             note: (
-                                <div style={{display: "flex"}}>
-                                    <NotesLink to={Routes.cardPage("Drummernaut")} style={{marginRight: spacing(2)}}>Drummernaut</NotesLink>
-                                    <NotesLink to={Routes.cardPage("Sic Semper Tyrannosaurus")} style={{marginRight: spacing(2)}}>
+                                <div style={{display: "flex", flexWrap: "wrap"}}>
+                                    <NotesLink to={Routes.cardPage("Drummernaut")} style={{margin: spacing(2, 2, 0, 0)}}>Drummernaut</NotesLink>
+                                    <NotesLink to={Routes.cardPage("Sic Semper Tyrannosaurus")} style={{margin: spacing(2, 2, 0, 0)}}>
                                         Sic Semper Tyrannosaurus
                                     </NotesLink>
-                                    <NotesLink to={Routes.cardPage("Cincinnatus Rex")}>Cincinnatus Rex</NotesLink>
+                                    <NotesLink to={Routes.cardPage("Cincinnatus Rex")} style={{margin: spacing(2, 2, 0, 0)}}>Cincinnatus Rex</NotesLink>
                                 </div>
                             )
                         },
@@ -1176,16 +1192,16 @@ export const ReleaseNote = (props: {
     expanded?: boolean,
     date: string
 }) => (
-    <ExpansionPanel defaultExpanded={true}>
-        <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+    <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandMore/>}>
             <div style={{display: "flex", alignItems: "flex-end", width: "100%"}}>
                 <Typography color={"primary"} style={{flexGrow: 1}} variant={"h6"}>{props.releaseNumber}</Typography>
                 {props.date ? (
                     <Typography color={"primary"} variant={"subtitle1"}>{props.date}</Typography>
                 ) : null}
             </div>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
             <div style={{width: "100%"}}>
                 {props.releaseNotesWithHighlights && props.releaseNotesWithHighlights.map((noteAndHighlight, idx) => {
                     let note
@@ -1227,6 +1243,6 @@ export const ReleaseNote = (props: {
                     }
                 })}
             </div>
-        </ExpansionPanelDetails>
-    </ExpansionPanel>
+        </AccordionDetails>
+    </Accordion>
 )

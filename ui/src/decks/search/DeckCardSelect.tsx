@@ -7,11 +7,11 @@ import * as React from "react"
 import { ChangeEvent } from "react"
 import { cardStore } from "../../cards/CardStore"
 import { spacing } from "../../config/MuiConfig"
+import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
 import { houseValuesArray } from "../../houses/HouseUtils"
 import { Loader, LoaderSize } from "../../mui-restyled/Loader"
 import { SelectedOptions } from "../../mui-restyled/SelectedOptions"
-import { DeckCardQuantity } from "./DeckFilters"
 
 interface DeckCardSelectProps {
     cards: DeckCardQuantity[]
@@ -28,7 +28,7 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                 <>
 
                     {cards.map((card, idx) => {
-                        const value = card.house ? card.house : card.quantity.toString()
+                        const value = card.mav ? "Maverick" : (card.house ? card.house : card.quantity.toString())
                         const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
                         return (
                             <div key={idx}>
@@ -50,7 +50,11 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                                     onChange={event => {
                                         const valueAsNumber = Number(event.target.value)
                                         if (isNaN(valueAsNumber)) {
-                                            card.house = event.target.value as House
+                                            if (event.target.value === "maverick") {
+                                                card.mav = true
+                                            } else {
+                                                card.house = event.target.value as House
+                                            }
                                             card.quantity = 1
                                         } else {
                                             card.quantity = valueAsNumber
@@ -66,6 +70,7 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                                     <MenuItem value={"5"}>5+</MenuItem>
                                     <MenuItem value={"6"}>6+</MenuItem>
                                     <MenuItem value={"7"}>7+</MenuItem>
+                                    <MenuItem value={"Maverick"}>Maverick</MenuItem>
                                     {houseValuesArray.map(houseValue => {
                                         return (
                                             <MenuItem value={houseValue.house} key={houseValue.house}>
@@ -83,7 +88,7 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                             </div>
                         )
                     })}
-                    <Button style={{marginTop: spacing(1)}} onClick={() => cards.push({cardNames: [], quantity: 1})}>
+                    <Button style={{marginTop: spacing(1)}} onClick={() => cards.push({cardNames: [], quantity: 1, mav: false})}>
                         Add Card
                     </Button>
                 </>

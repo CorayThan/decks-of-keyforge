@@ -128,13 +128,10 @@ object TsDataType {
         type.classifier == Int::class || type.classifier == Double::class
                 || type.classifier == Long::class ->
             "number"
-        type.classifier == List::class -> {
-            val kClass = type.arguments.first().type?.classifier
-            if (kClass is KClass<*>) {
-                kClass.simpleName
-            } else {
-                throw IllegalStateException("No generic type for collection.")
-            }
+        type.classifier == List::class -> when (val kClass = type.arguments.first().type?.classifier) {
+            String::class -> "string"
+            is KClass<*> -> kClass.simpleName
+            else -> throw IllegalStateException("No generic type for collection.")
         }
         else -> {
             val kClass = type.classifier

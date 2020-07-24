@@ -14,7 +14,7 @@ export const DeckSearchLink = (props: { name: React.ReactNode, filters: DeckFilt
                 variant={"contained"}
                 size={"large"}
                 color={color ? color : "primary"}
-                to={Routes.deckSearch(filters)}
+                href={Routes.deckSearch(filters)}
                 onClick={() => {
                     if (dontSearch) {
                         deckStore.reset()
@@ -38,7 +38,7 @@ export const CardSearchLink = (props: { name: React.ReactNode, to?: string, colo
                 variant={"contained"}
                 size={"large"}
                 color={color ? color : "primary"}
-                to={to == null ? Routes.cards : to}
+                href={to == null ? Routes.cards : to}
                 style={{marginLeft: spacing(2)}}
             >
                 {name}

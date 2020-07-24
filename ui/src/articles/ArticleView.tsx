@@ -84,7 +84,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
                         ))}
                     </DialogContent>
                     <DialogActions>
-                        <LinkButton color="primary" to={Routes.userProfilePage(author.username)}>
+                        <LinkButton color="primary" href={Routes.userProfilePage(author.username)}>
                             {author.name}'s Profile
                         </LinkButton>
                         <div style={{flexGrow: 1}}/>
@@ -257,7 +257,7 @@ const ArticleExternalLink = (props: { externalLink: string, text: string }) => (
 export const ArticleInternalLink = (props: { internalLink: string, text: string }) => (
     <LinkButton
         color={"primary"}
-        to={props.internalLink!}
+        href={props.internalLink!}
         style={{marginBottom: spacing(2)}}
     >
         {props.text}

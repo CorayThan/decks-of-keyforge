@@ -131,7 +131,7 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
                         </div>
                         <div style={{display: "flex", marginTop: spacing(2)}}>
                             <LinkButton
-                                to={Routes.forgotPassword}
+                                href={Routes.forgotPassword}
                                 size={"small"}
                                 onClick={this.handlePopoverClose}
                             >
