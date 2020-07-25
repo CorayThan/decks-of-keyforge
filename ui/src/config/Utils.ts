@@ -30,6 +30,11 @@ export class Utils {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static equals = (first: any, second: any): boolean => {
+        return JSON.stringify(first) === JSON.stringify(second)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static enumValues<T extends EnumType>(enunn: any): T[] {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]
     }

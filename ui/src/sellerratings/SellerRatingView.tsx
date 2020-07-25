@@ -6,7 +6,7 @@ import { Rating } from "@material-ui/lab"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
-import { spacing, theme } from "../config/MuiConfig"
+import { spacing, theme, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { HelperText } from "../generic/CustomTypographies"
@@ -193,39 +193,42 @@ const DisplayReviewsDialog = observer((props: UserRatingDialogProps) => {
                     <Typography>This seller has not yet been reviewed.</Typography>
                 )}
                 {sellersReviews == null ? <Loader/> : (
-                    <div>
-                        {sellersReviews.map(review => {
-                            return (
-                                <div key={review.reviewerUsername}>
-                                    <Divider style={{margin: spacing(2, 0)}}/>
-                                    <Typography variant={"h6"} style={{marginBottom: spacing(1)}}>{review.title}</Typography>
-                                    <Rating
-                                        name={"seller ratings"}
-                                        value={review.rating}
-                                        readOnly={true}
-                                        precision={0.1}
-                                    />
-                                    <WhiteSpaceTypography style={{marginTop: spacing(1)}}>{review.review}</WhiteSpaceTypography>
-                                    <HelperText style={{margin: spacing(1, 0)}}>
-                                        Reviewed by <Link href={Routes.userProfilePage(review.reviewerUsername)}>
-                                        {review.reviewerUsername}</Link> on {Utils.formatDate(review.created)}
-                                    </HelperText>
-                                    {review.reviewerUsername === userStore.username && (
-                                        <Box display={"flex"}>
-                                            <Typography variant={"body2"} style={{margin: spacing(0.5, 1, 0, 0)}}>You wrote this review</Typography>
-                                            <KeyButton
-                                                size={"small"}
-                                                onClick={() => store.deleteReview(sellerId)}
-                                                loading={store.saving}
-                                            >
-                                                {store.maybeDelete ? "Really delete it?" : "Delete"}
-                                            </KeyButton>
-                                        </Box>
-                                    )}
-                                </div>
-                            )
-                        })}
-                    </div>
+                    <>
+                        <Typography variant={"subtitle1"}>Reviews</Typography>
+                        <Box p={2} mt={1} style={{maxHeight: 400, overflowY: "auto", backgroundColor: themeStore.extraLightBackgroundColor}}>
+                            {sellersReviews.map((review, idx) => {
+                                return (
+                                    <div key={review.reviewerUsername}>
+                                        {idx !== 0 && <Divider style={{margin: spacing(2, 0)}}/>}
+                                        <Typography variant={"h6"} style={{marginBottom: spacing(1)}}>{review.title}</Typography>
+                                        <Rating
+                                            name={"seller ratings"}
+                                            value={review.rating}
+                                            readOnly={true}
+                                            precision={0.1}
+                                        />
+                                        <WhiteSpaceTypography style={{marginTop: spacing(1)}}>{review.review}</WhiteSpaceTypography>
+                                        <HelperText style={{margin: spacing(1, 0)}}>
+                                            Reviewed by <Link href={Routes.userProfilePage(review.reviewerUsername)}>
+                                            {review.reviewerUsername}</Link> on {Utils.formatDate(review.created)}
+                                        </HelperText>
+                                        {review.reviewerUsername === userStore.username && (
+                                            <Box display={"flex"}>
+                                                <Typography variant={"body2"} style={{margin: spacing(0.5, 1, 0, 0)}}>You wrote this review</Typography>
+                                                <KeyButton
+                                                    size={"small"}
+                                                    onClick={() => store.deleteReview(sellerId)}
+                                                    loading={store.saving}
+                                                >
+                                                    {store.maybeDelete ? "Really delete it?" : "Delete"}
+                                                </KeyButton>
+                                            </Box>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </Box>
+                    </>
                 )}
             </DialogContent>
             <DialogActions>

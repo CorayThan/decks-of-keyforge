@@ -27,10 +27,6 @@ export const keyDrawerStore = new KeyDrawerStoreImpl()
 @observer
 export class KeyDrawer extends React.Component<{ children: React.ReactNode, width?: number, hamburgerMenu?: boolean, deckVersion?: boolean }> {
 
-    componentDidMount() {
-        keyDrawerStore.open = !deckStore.autoSearch
-    }
-
     render() {
         const {width, hamburgerMenu, deckVersion} = this.props
         const panelWidth = width ? width : standardPanelWidth

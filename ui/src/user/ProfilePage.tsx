@@ -82,9 +82,9 @@ export class ProfileView extends React.Component<ProfileViewProps> {
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
                 <Card style={{padding: spacing(2), maxWidth: 400}}>
-                    <Box display={"flex"} mb={2} alignItems={"flex-end"} justifyContent={"space-between"}>
-                        <Typography variant={"h4"} color={"primary"} style={{margin: spacing(0, 2, 0, 0)}}>{profile.username}</Typography>
-                        <SellerRatingView sellerId={profile.id} sellerName={profile.username} style={{marginBottom: 8}}/>
+                    <Box mb={2}>
+                        <Typography variant={"h4"} color={"primary"} style={{margin: spacing(0, 0, 2, 0)}}>{profile.username}</Typography>
+                        <SellerRatingView sellerId={profile.id} sellerName={profile.username}/>
                     </Box>
 
                     {profile.searchResult != null && (

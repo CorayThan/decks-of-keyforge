@@ -62,9 +62,6 @@ export class DeckStore {
     importingAndAddingDeck = false
 
     @observable
-    autoSearch = true
-
-    @observable
     randomDeckId?: string
 
     @observable

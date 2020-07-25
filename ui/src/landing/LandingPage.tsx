@@ -78,7 +78,6 @@ export class LandingPage extends React.Component<{}> {
                                 <DeckSearchLink
                                     name={"Search Decks"}
                                     filters={topSas}
-                                    dontSearch={true}
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <DeckSearchLink
@@ -149,7 +148,7 @@ export class LandingPage extends React.Component<{}> {
                     <div style={{flexGrow: 1}}>
                         {screenStore.screenSizeSm() ? (
                             <div style={{marginTop: spacing(4), display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                                <DeckSearchLink name={"Search"} filters={topSas} dontSearch={true} style={{margin: spacing(2)}}/>
+                                <DeckSearchLink name={"Search"} filters={topSas} style={{margin: spacing(2)}}/>
                                 <DeckSearchLink name={"For Sale"} filters={forSale} style={{margin: spacing(2)}}/>
                                 <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(2)}}/>
                             </div>

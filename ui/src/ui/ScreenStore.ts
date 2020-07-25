@@ -27,6 +27,7 @@ export class ScreenStore {
         topBarRegistration: 10000,
         rightMenu: 11000,
         menuPops: 12000,
+        modals: 12500,
         cardsDisplay: 13000,
         tooltip: 14000
     }

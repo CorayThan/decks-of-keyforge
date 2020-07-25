@@ -8,7 +8,7 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
-import { log } from "../../config/Utils"
+import { log, prettyJson, Utils } from "../../config/Utils"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerDetails } from "../../sellers/SellerDetails"
@@ -25,7 +25,9 @@ import { DecksSearchDrawer } from "./DecksSearchDrawer"
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     componentDidMount(): void {
-        this.search(this.makeFilters(this.props).cleaned())
+        if (this.props.location.search !== "" && this.props.location.search !== "?forSale=true") {
+            this.search(this.makeFilters(this.props).cleaned())
+        }
     }
 
     componentDidUpdate(prevProps: RouteComponentProps<{}>): void {
@@ -48,11 +50,14 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     search = (filters: DeckFilters) => {
         // log.debug(`Search with filters ${prettyJson(this.makeFilters(props).cleaned())}`)
-        if (deckStore.autoSearch) {
-            deckStore.searchDecks(filters)
-        } else {
-            deckStore.autoSearch = true
-        }
+        const defaultForSaleSearch = new DeckFilters()
+        defaultForSaleSearch.forSale = true
+        const defaultSearch = new DeckFilters()
+        defaultSearch.reset()
+        log.info("Check equal: " + prettyJson(filters))
+        log.info("Check equal 2: " + prettyJson(defaultSearch))
+        log.info("is equal: " + Utils.equals(filters, defaultSearch))
+        deckStore.searchDecks(filters)
     }
 
     render() {

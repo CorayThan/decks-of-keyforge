@@ -42,6 +42,11 @@ export class ThemeStore {
     }
 
     @computed
+    get extraLightBackgroundColor() {
+        return this.darkMode ? "#555555" : "#F9F9F9"
+    }
+
+    @computed
     get cardBackground() {
         return this.darkMode ? "#424242" : "#FFFFFF"
     }
@@ -94,7 +99,8 @@ const makeTheme = () => createMuiTheme({
         },
     },
     zIndex: {
-        tooltip: screenStore.zindexes.tooltip
+        tooltip: screenStore.zindexes.tooltip,
+        modal: screenStore.zindexes.modals
     }
 })
 
