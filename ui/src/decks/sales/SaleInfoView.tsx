@@ -101,7 +101,7 @@ export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo
             <div style={{marginTop: spacing(2), marginBottom: spacing(2), maxWidth: 600}}>
                 {(buyItNow != null || highestOffer != null || startingBid != null) && (
                     <>
-                        <div style={{marginLeft: spacing(2), marginRight: spacing(2), display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <div style={{marginLeft: spacing(1), marginRight: spacing(1), display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                             <div style={{display: "grid", gridTemplateColumns: "152px 1fr"}}>
                                 {!acceptingOffers && !forAuction && buyItNow != null && (
                                     <Typography variant={"h4"} style={{marginLeft: spacing(1), marginRight: spacing(1)}}>

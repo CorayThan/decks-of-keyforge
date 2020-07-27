@@ -1,5 +1,8 @@
 package coraythan.keyswap.patreon
 
+import coraythan.keyswap.generatets.GenerateTs
+
+@GenerateTs
 enum class PatreonRewardsTier(val tierIds: List<String>, val maxNotifications: Int = 0, val maxApiRequests: Int = coraythan.keyswap.publicapis.maxApiRequests) {
     NOTICE_BARGAINS(listOf("3351357", "5546595")), // $3
     SUPPORT_SOPHISTICATION(listOf("3281536", "5546600"), 25, 50), // $6

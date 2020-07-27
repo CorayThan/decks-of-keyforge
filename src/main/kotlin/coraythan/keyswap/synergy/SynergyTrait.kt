@@ -55,7 +55,6 @@ enum class SynergyTrait {
     putsAmberOnTarget,
     exalt,
     removesCapturedAmber,
-    spendsCapturedAmber,
 
     stealsAmber,
     increasesKeyCost,

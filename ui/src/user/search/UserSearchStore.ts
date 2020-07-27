@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
-import { UserSearchResults } from "./UserSearchResults"
+import { UserSearchResults } from "../../generated-src/UserSearchResults"
 
 export class UserSearchStore {
 

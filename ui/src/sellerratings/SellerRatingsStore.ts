@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { CreateRating } from "../generated-src/CreateRating"
+import { SellerRatingDetails } from "../generated-src/SellerRatingDetails"
+import { SellerRatingSummary } from "../generated-src/SellerRatingSummary"
 import { messageStore } from "../ui/MessageStore"
-import { CreateRating } from "./CreateRating"
-import { SellerRatingDetails } from "./SellerRatingDetails"
-import { SellerRatingSummary } from "./SellerRatingSummary"
 
 
 export class SellerRatingsStore {

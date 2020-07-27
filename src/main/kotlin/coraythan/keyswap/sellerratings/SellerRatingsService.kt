@@ -2,6 +2,7 @@ package coraythan.keyswap.sellerratings
 
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
@@ -85,12 +86,14 @@ class SellerRatingsService(
     }
 }
 
+@GenerateTs
 data class SellerRatingSummary(
         val sellerId: UUID,
         val rating: Double,
         val reviews: Int
 )
 
+@GenerateTs
 data class SellerRatingDetails(
         val reviewerUsername: String,
         val deckKeyForgeId: String?,
@@ -101,6 +104,7 @@ data class SellerRatingDetails(
         val created: LocalDate
 )
 
+@GenerateTs
 data class CreateRating(
         val rating: Int,
         val title: String,

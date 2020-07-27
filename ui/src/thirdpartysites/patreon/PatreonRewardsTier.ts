@@ -1,9 +1,4 @@
-export enum PatreonRewardsTier {
-    NOTICE_BARGAINS = "NOTICE_BARGAINS", // $3
-    SUPPORT_SOPHISTICATION = "SUPPORT_SOPHISTICATION", // $6
-    MERCHANT_AEMBERMAKER = "MERCHANT_AEMBERMAKER", // $12
-    ALWAYS_GENEROUS = "ALWAYS_GENEROUS" // $25 Exclusive tier or $50
-}
+import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
 
 export const findPatronRewardLevel = (tier?: PatreonRewardsTier) => {
     switch (tier) {

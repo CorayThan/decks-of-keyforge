@@ -74,8 +74,6 @@ class FixSynergies(
         allTraits.forEach {
             val updated = when (it.trait) {
 
-                SynergyTrait.spendsCapturedAmber ->
-                    it.copy(trait = SynergyTrait.removesCapturedAmber)
                 SynergyTrait.goodPlay ->
                     if (it.cardTypes.isEmpty()) {
                         it.copy(cardTypesInitial = listOf(CardType.Creature))

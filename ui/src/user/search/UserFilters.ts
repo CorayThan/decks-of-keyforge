@@ -1,7 +1,7 @@
 import { isEqual } from "lodash"
 import { observable } from "mobx"
 import { Utils } from "../../config/Utils"
-import { UserSort } from "./UserSort"
+import { UserSort } from "../../generated-src/UserSort"
 
 export class UserFilters {
     @observable

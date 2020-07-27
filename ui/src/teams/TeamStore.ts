@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { TeamOrInvites } from "../generated-src/TeamOrInvites"
 import { messageStore } from "../ui/MessageStore"
-import { TeamOrInvites } from "./TeamOrInvites"
 
 export class TeamStore {
 

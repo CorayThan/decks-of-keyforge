@@ -4,8 +4,8 @@ import { MoreVert } from "@material-ui/icons"
 import * as React from "react"
 import { ReportPurchaseButton } from "../../auctions/purchases/ReportPurchaseButton"
 import { CardsForDeck } from "../../cards/CardsForDeck"
+import { ToggleDeckNotesMenuItem } from "../../notes/DeckNote"
 import { userStore } from "../../user/UserStore"
-import { DeckNote } from "../../userdeck/DeckNote"
 import { deckStore } from "../DeckStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckActionClickable } from "./DeckActionClickable"
@@ -39,7 +39,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
                 <ReportPurchaseButton deckId={deck.id} deckName={deck.name} onClick={handleClose}/>
                 <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
-                <DeckNote id={deck.id} name={deck.name} onClick={handleClose}/>
+                <ToggleDeckNotesMenuItem onClick={handleClose}/>
                 {userStore.loggedIn() && deck.registered && (
                     <DeckActionClickable
                         onClick={() => {

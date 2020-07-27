@@ -1,11 +1,14 @@
 package coraythan.keyswap.users.search
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.generatets.TsIgnore
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.teams.Team
 import coraythan.keyswap.users.UserType
 import java.util.*
 
+@GenerateTs
 data class UserSearchResult(
         val id: UUID,
         val username: String,
@@ -23,6 +26,7 @@ data class UserSearchResult(
         val patreonTier: PatreonRewardsTier?,
         val manualPatreonTier: PatreonRewardsTier?,
 
+        @TsIgnore
         @JsonIgnore
         val team: Team?
 ) {

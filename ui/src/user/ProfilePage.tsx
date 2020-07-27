@@ -1,4 +1,4 @@
-import { Box, Card, Divider } from "@material-ui/core"
+import { Box, Card, Divider, Link } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -6,11 +6,12 @@ import { RouteComponentProps } from "react-router"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
+import { UserProfile } from "../generated-src/UserProfile"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SellerRatingView } from "../sellerratings/SellerRatingView"
+import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import { uiStore } from "../ui/UiStore"
-import { UserProfile } from "./UserProfile"
 import { userStore } from "./UserStore"
 
 interface ProfilePageProps extends RouteComponentProps<{ username: string }> {
@@ -110,13 +111,23 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                     )}
 
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
-                    {
-                        profile.publicContactInfo ? (
-                            <Typography style={{whiteSpace: "pre-wrap"}}>{profile.publicContactInfo}</Typography>
-                        ) : (
-                            <Typography>{profile.username} doesn't have any public info.</Typography>
-                        )
-                    }
+                    <Typography color={"textSecondary"} variant={"subtitle2"}>Public Contact Info</Typography>
+
+                    {!profile.publicContactInfo && !profile.sellerEmail && !profile.discord && (
+                        <Typography style={{marginTop: spacing(1)}}>None available</Typography>
+                    )}
+
+                    {profile.publicContactInfo && (
+                        <Typography style={{whiteSpace: "pre-wrap", marginTop: spacing(1)}}>{profile.publicContactInfo}</Typography>
+                    )}
+                    {profile.sellerEmail && (
+                        <Box mt={2}>
+                            <Link href={`mailto:${profile.sellerEmail}`}>{profile.sellerEmail}</Link>
+                        </Box>
+                    )}
+                    {profile.discord && (
+                        <DiscordUser style={{marginTop: spacing(2)}} discord={profile.discord}/>
+                    )}
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
 
                     {profile.allowUsersToSeeDeckOwnership && (

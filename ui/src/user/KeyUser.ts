@@ -1,6 +1,6 @@
 import { ForSaleQueryEntity } from "../decks/salenotifications/ForSaleQuery"
-import { Country } from "../generated-src/Country"
-import { PatreonRewardsTier } from "../thirdpartysites/patreon/PatreonRewardsTier"
+import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
+import { UserType } from "../generated-src/UserType"
 import { UserDeck } from "../userdeck/UserDeck"
 
 export interface KeyUser {
@@ -22,50 +22,3 @@ export interface KeyUser {
     autoRenewListings: boolean
 }
 
-export interface UserLogin {
-    email: string
-    password: string
-}
-
-export interface UserRegistration {
-    username: string
-    email: string
-    password: string
-    publicContactInfo?: string
-    allowUsersToSeeDeckOwnership: boolean
-    acceptsTrades: boolean
-    country?: string
-    lastVersionSeen: string
-}
-
-export enum UserType {
-    USER = "USER",
-    ADMIN = "ADMIN",
-    CONTENT_CREATOR = "CONTENT_CREATOR",
-}
-
-export interface KeyUserDto {
-    id: string
-    username: string
-    email: string
-    emailVerified: boolean
-    sellerEmailVerified: boolean
-    type: UserType
-    publicContactInfo?: string
-    allowsTrades: boolean
-    allowUsersToSeeDeckOwnership: boolean
-    currencySymbol: string
-    country?: Country
-    preferredCountries?: string[]
-    lastVersionSeen: string
-    patreonId?: string
-    patreonTier?: PatreonRewardsTier
-    sellerEmail?: string
-    discord?: string
-    storeName?: string
-    forSaleCount: number
-    shippingCost?: string
-    teamName?: string
-    autoRenewListings: boolean
-    contributedOrManual: boolean
-}

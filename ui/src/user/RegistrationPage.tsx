@@ -8,7 +8,8 @@ import { KeyTopbarRegistration } from "../components/KeyTopbarRegistration"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
-import { countries, countryToLabel } from "../generic/CountryUtils"
+import { Country, CountryUtils } from "../generated-src/Country"
+import { countryToLabel } from "../generic/CountryUtils"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -36,7 +37,7 @@ export class RegistrationPage extends React.Component {
     @observable
     acceptsTrades = false
     @observable
-    country = ""
+    country: Country | "" = ""
 
     signUp = (submitEvent: React.FormEvent) => {
         submitEvent.preventDefault()
@@ -165,12 +166,12 @@ export class RegistrationPage extends React.Component {
                                         select
                                         label="Country"
                                         value={this.country}
-                                        onChange={event => this.country = event.target.value}
+                                        onChange={event => this.country = event.target.value as Country}
                                         helperText="For searching decks for sale"
                                         variant="outlined"
                                         fullWidth={true}
                                     >
-                                        {countries.map(country => (
+                                        {CountryUtils.values.map(country => (
                                             <MenuItem key={country} value={country}>
                                                 {countryToLabel(country)}
                                             </MenuItem>

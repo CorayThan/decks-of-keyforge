@@ -20,6 +20,9 @@ annotation class GenerateTs
 @Target(AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 annotation class TsOptional
 
+@Target(AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
+annotation class TsIgnore
+
 @ExperimentalStdlibApi
 fun main(args: Array<String>) {
     println("Starting TS generation")
@@ -50,7 +53,7 @@ object TsGeneratorObj {
                 val tsProps = kClazz.memberProperties
                         .mapNotNull { kProperty1 ->
                             val type = TsDataType.fromKType(kProperty1.returnType)
-                            if (type == null) {
+                            if (type == null || kProperty1.hasAnnotation<TsIgnore>()) {
                                 null
                             } else {
                                 TsField(

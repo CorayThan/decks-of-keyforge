@@ -3,11 +3,11 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing } from "../config/MuiConfig"
+import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
+import { TeamInviteInfo } from "../generated-src/TeamInviteInfo"
 import { HelperText } from "../generic/CustomTypographies"
 import { BecomeAPatron } from "../thirdpartysites/patreon/BecomeAPatron"
-import { PatreonRewardsTier } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { userStore } from "../user/UserStore"
-import { TeamInviteInfo } from "./TeamOrInvites"
 import { teamStore } from "./TeamStore"
 
 class CreateTeamStore {

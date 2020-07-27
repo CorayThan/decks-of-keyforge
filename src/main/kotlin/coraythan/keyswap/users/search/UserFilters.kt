@@ -1,5 +1,7 @@
 package coraythan.keyswap.users.search
 
+import coraythan.keyswap.generatets.GenerateTs
+
 data class UserFilters(
 
         val favorites: Boolean = false,
@@ -8,6 +10,7 @@ data class UserFilters(
         val username: String = ""
 )
 
+@GenerateTs
 enum class UserSort {
     USER_NAME,
     RATING,

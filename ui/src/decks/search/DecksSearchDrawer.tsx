@@ -1,7 +1,6 @@
 import { Divider, FormGroup, IconButton, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
-import InputLabel from "@material-ui/core/InputLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
@@ -16,7 +15,7 @@ import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
 import { SearchDrawerExpansionPanel } from "../../components/SearchDrawerExpansionPanel"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing, theme } from "../../config/MuiConfig"
+import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
@@ -28,6 +27,7 @@ import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
+import { NotesAndTagsSearch } from "../../notes/NotesAndTagsSearch"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
@@ -306,7 +306,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <SearchDrawerExpansionPanel
                                     initiallyOpen={
                                         forAuction || forTrade || myFavorites || completedAuctions || teamDecks
-                                        || registered != null || withOwners || notesUser.length > 0
+                                        || registered != null || withOwners
                                     }
                                     title={"Extra Options"}
                                 >
@@ -405,50 +405,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 style={{width: 136}}
                                             />
                                         )}
-                                        {userStore.loggedIn() && (
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={!!keyLocalStorage.genericStorage.viewNotes}
-                                                        onChange={() => {
-                                                            keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
-                                                        }}
-                                                        disabled={!showMyDecks}
-                                                    />
-                                                }
-                                                label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
-                                                style={{width: 136}}
-                                            />
-                                        )}
                                     </div>
-                                    {notes.length > 0 || userStore.loggedIn() ? (
-                                        <>
-                                            {notesUser.length === 0 || userStore.username === notesUser ? (
-                                                <TextField
-                                                    label={"Search Notes"}
-                                                    onChange={handleNotesUpdate}
-                                                    multiline={true}
-                                                    value={notes}
-                                                    style={{marginTop: spacing(1)}}
-                                                    fullWidth={true}
-                                                />
-                                            ) : (
-                                                <div>
-                                                    <div style={{display: "flex", alignItems: "center", marginBottom: theme.spacing(1)}}>
-                                                        <InputLabel>
-                                                            {notesUser}'s Notes
-                                                        </InputLabel>
-                                                        <IconButton onClick={removeNotes} size={"small"} style={{marginLeft: theme.spacing(1)}}>
-                                                            <Delete/>
-                                                        </IconButton>
-                                                    </div>
-                                                    <Typography variant={"body2"} color={"textSecondary"}>
-                                                        "{notes}"
-                                                    </Typography>
-                                                </div>
-                                            )}
-                                        </>
-                                    ) : null}
+                                </SearchDrawerExpansionPanel>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={notesUser.length > 0 || notes.length > 0 || !!keyLocalStorage.genericStorage.viewNotes}
+                                    title={"Notes"}
+                                >
+                                    <NotesAndTagsSearch
+                                        notesUser={notesUser}
+                                        notes={notes}
+                                        handleNotesUpdate={handleNotesUpdate}
+                                        removeNotes={removeNotes}
+                                    />
                                 </SearchDrawerExpansionPanel>
                                 <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()} title={"Houses"}>
                                     <HouseSelectOrExclude selectedHouses={this.selectedHouses} excludeTitle={true}/>

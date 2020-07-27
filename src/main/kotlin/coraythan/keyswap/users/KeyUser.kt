@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.auctions.purchases.Purchase
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.teams.Team
@@ -123,6 +124,8 @@ data class KeyUser(
             id = id,
             username = username,
             email = if (isUser) email else null,
+            sellerEmail = sellerEmail,
+            discord = discord,
             publicContactInfo = publicContactInfo,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             country = country,
@@ -210,6 +213,7 @@ data class KeyUser(
     }
 }
 
+@GenerateTs
 data class KeyUserDto(
         val id: UUID,
 

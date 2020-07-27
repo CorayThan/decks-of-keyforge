@@ -32,7 +32,10 @@ import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, MyDokSubPaths, Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
-import { countries, countryToLabel, euCountries } from "../generic/CountryUtils"
+import { Country, CountryUtils } from "../generated-src/Country"
+import { KeyUserDto } from "../generated-src/KeyUserDto"
+import { UserProfileUpdate } from "../generated-src/UserProfileUpdate"
+import { countryToLabel, euCountries } from "../generic/CountryUtils"
 import { EventValue } from "../generic/EventValue"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyCard } from "../generic/KeyCard"
@@ -43,8 +46,6 @@ import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewards
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { messageStore } from "../ui/MessageStore"
 import { uiStore } from "../ui/UiStore"
-import { KeyUserDto } from "../user/KeyUser"
-import { UserProfileUpdate } from "../user/UserProfile"
 import { userStore } from "../user/UserStore"
 
 interface MyProfileProps extends RouteComponentProps<{}> {
@@ -83,12 +84,12 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     allowsTrades: boolean
     @observable
-    country: string
+    country: Country | ""
 
     @observable
     currencySymbol = "$"
     @observable
-    preferredCountries: string[]
+    preferredCountries: Country[]
 
     @observable
     preferredCountriesLabelWidth = 0
@@ -208,7 +209,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             currencySymbol: currencySymbolTrimmed,
             allowsTrades: this.allowsTrades,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
-            country: this.country.length === 0 ? undefined : this.country,
+            country: this.country.length === 0 ? undefined : this.country as Country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
             autoRenewListings: this.autoRenewListings
         }
@@ -311,11 +312,11 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 select
                                                 label="Country"
                                                 value={this.country}
-                                                onChange={(event: EventValue) => this.country = event.target.value}
+                                                onChange={(event: EventValue) => this.country = event.target.value as Country}
                                                 variant="outlined"
                                                 fullWidth={true}
                                             >
-                                                {countries.map(country => (
+                                                {CountryUtils.values.map(country => (
                                                     <MenuItem key={country} value={country}>
                                                         {countryToLabel(country)}
                                                     </MenuItem>
@@ -350,7 +351,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     }
                                                     variant={"outlined"}
                                                 >
-                                                    {countries.map(country => (
+                                                    {CountryUtils.values.map(country => (
                                                         <MenuItem key={country} value={country}>
                                                             <Checkbox checked={this.preferredCountries.indexOf(country) > -1}/>
                                                             <ListItemText primary={countryToLabel(country)}/>
