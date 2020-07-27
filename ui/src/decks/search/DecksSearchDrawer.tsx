@@ -1,4 +1,4 @@
-import { Divider, FormGroup, IconButton, Tooltip } from "@material-ui/core"
+import { Divider, FormGroup, IconButton, Link, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -276,7 +276,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     </div>
                                     {showDecksOwner && (
                                         <div style={{display: "flex", alignItems: "center"}}>
-                                            <Typography>Owner: {owner}</Typography>
+                                            <Typography>
+                                                Owner: <Link href={Routes.userProfilePage(owner)} target={"_blank"}>{owner}</Link>
+                                            </Typography>
                                             <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
                                         </div>
                                     )}
