@@ -183,7 +183,8 @@ class PatreonService(
             val user = userRepo.findByPatreonId(patreonId)
             if (user != null && (user.patreonTier != bestTier || user.lifetimeSupportCents != lifetimeSupportCents)) {
                 log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier and contribution to $lifetimeSupportCents.")
-                userRepo.updatePatronTierAndLifetimeSupportCents(bestTier, lifetimeSupportCents, user.id)
+                val storeName = if (bestTier.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION)) user.storeName else null
+                userRepo.updatePatronTierAndLifetimeSupportCents(bestTier, lifetimeSupportCents, storeName, user.id)
             }
         }
         if (patreonCampaign.meta.pagination.cursors != null) {

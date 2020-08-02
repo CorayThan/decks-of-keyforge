@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField, Typography } from "@material-ui/core"
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -6,6 +6,7 @@ import { spacing } from "../../config/MuiConfig"
 import { BuyingDisclaimer } from "../../decks/sales/SaleInfoView"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
 import { MakeOffer } from "../../generated-src/MakeOffer"
+import { HelperText } from "../../generic/CustomTypographies"
 import { Loader } from "../../mui-restyled/Loader"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
@@ -138,11 +139,11 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                                     onChange={event => this.message = event.target.value}
                                     style={{marginBottom: spacing(2)}}
                                 />
-                                <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
+                                <HelperText style={{marginBottom: spacing(1)}}>
                                     By making an offer on this deck you agree to pay the seller the that amount + the listed shipping amount if they accept your
                                     offer.
                                     You can cancel your offer at any time. We will provide the seller with your email.
-                                </Typography>
+                                </HelperText>
                                 <BuyingDisclaimer/>
                             </>
                         )}

@@ -1,4 +1,4 @@
-import { Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Typography } from "@material-ui/core"
+import { Box, Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -16,6 +16,7 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
+import { BackendExpansion } from "../../expansions/Expansions"
 import { DeckCondition } from "../../generated-src/DeckCondition"
 import { DeckLanguage } from "../../generated-src/DeckLanguage"
 import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
@@ -497,6 +498,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </HelperText>
                             </>
                         ) : null}
+                        {deck.expansion === BackendExpansion.MASS_MUTATION &&  !deck.hasOwnershipVerification && (
+                            <Box mt={2}>
+                                <Typography variant={"subtitle2"} color={"error"}>
+                                    You can add a deck picture with enhanced cards. Use the image button below!
+                                </Typography>
+                            </Box>
+                        )}
                     </DialogContent>
                     <DialogActions>
                         <KeyButton

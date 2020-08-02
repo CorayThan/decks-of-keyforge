@@ -43,6 +43,24 @@ export class ReleaseNotes extends React.Component {
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
+                    releaseNumber={"5.12"}
+                    date={"7/27/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS Changes",
+                            note: "I spent some time inspecting the house win rates on a per expansion basis, comparing them to the total AERC score for " +
+                                "each house on a per expansion basis. It seemed like the two biggest outliers were CotA Dis, and WC Saurian, as being " +
+                                "worth more AERC than you would expect based on the house's win rate. As such, I went through each house and lowered " +
+                                "a few cards that seemed overrated. I also found some bad synergies in Saurian which I fixed. "
+                        },
+                        {
+                            highlight: "Improved Notes",
+                            note: "Notes now save automatically. Less clicking more fun!"
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"5.11"}
                     date={"7/22/2020"}
                     expanded={true}

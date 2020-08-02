@@ -276,7 +276,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     </div>
                                     {showDecksOwner && (
                                         <div style={{display: "flex", alignItems: "center"}}>
-                                            <Typography>
+                                            <Typography variant={"body2"}>
                                                 Owner: <Link href={Routes.userProfilePage(owner)} target={"_blank"}>{owner}</Link>
                                             </Typography>
                                             <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
