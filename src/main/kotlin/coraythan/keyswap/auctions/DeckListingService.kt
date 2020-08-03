@@ -119,8 +119,9 @@ class DeckListingService(
 //        log.info("End minutes: ${endDateTime.minute} end minutes mod: ${endMinutesMod} end minutes mod rounded: ${endMinutes}")
 
         val hasOwnershipVerification = deckOwnershipRepo.existsByDeckIdAndUserId(deck.id, currentUser.id)
+        val newListing = listingInfo.editAuctionId == null
 
-        val auction = if (listingInfo.editAuctionId == null) {
+        val auction = if (newListing) {
             val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId, DeckListingStatus.COMPLETE)
             if (preexistingListing.isNotEmpty()) throw BadRequestException("You've already listed this deck for sale.")
             DeckListing(
@@ -144,7 +145,7 @@ class DeckListingService(
                     hasOwnershipVerification = hasOwnershipVerification
             )
         } else {
-            deckListingRepo.findByIdOrNull(listingInfo.editAuctionId)!!
+            deckListingRepo.findByIdOrNull(listingInfo.editAuctionId!!)!!
                     .copy(
                             durationDays = listingInfo.expireInDays,
                             endDateTime = realEnd,
@@ -174,7 +175,7 @@ class DeckListingService(
             deckRepo.save(deck.copy(forSale = true, forTrade = currentUser.allowsTrades))
         }
         userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate, updateStats = true))
-        forSaleNotificationsService.sendNotifications(listingInfo)
+        if (newListing) forSaleNotificationsService.sendNotifications(listingInfo)
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {
