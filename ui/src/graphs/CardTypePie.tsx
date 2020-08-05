@@ -4,7 +4,7 @@ import { themeStore } from "../config/MuiConfig"
 import { GlobalStats } from "../stats/GlobalStats"
 import { DokDeckGraphWrapper } from "./DokRadar"
 
-export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?: number }) =>
+export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?: number, style?: React.CSSProperties }) =>
     (
         <CardTypePie
             name={"Global Average"}
@@ -13,7 +13,7 @@ export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?:
             actions={props.stats.averageActions}
             artifacts={props.stats.averageArtifacts}
             upgrades={props.stats.averageUpgrades}
-            style={{marginTop: 0}}
+            style={{marginTop: 0, ...props.style}}
         />
     )
 

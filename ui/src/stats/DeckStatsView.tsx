@@ -46,11 +46,11 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                     actions={actionCount}
                     artifacts={artifactCount}
                     upgrades={upgradeCount}
-                    style={{marginTop: 0}}
+                    style={{marginTop: 0, alignSelf: "flex-start"}}
                 />
-                {!compact && <CardTypePieGlobalAverages stats={stats}/>}
-                <AercRadar deck={deck}/>
-                <CardTypeRadar deck={deck}/>
+                {!compact && <CardTypePieGlobalAverages stats={stats} style={{alignSelf: "flex-start"}}/>}
+                <AercRadar deck={deck}  style={{alignSelf: "flex-start"}}/>
+                {!compact && <CardTypeRadar deck={deck} style={{alignSelf: "flex-start"}}/>}
             </>
         )
 

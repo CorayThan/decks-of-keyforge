@@ -39,7 +39,7 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
 
         return (
             <>
-                {forSale ? null :
+                {forSale && owned ? null :
                     (
                         <DeckActionClickable
                             onClick={() => {

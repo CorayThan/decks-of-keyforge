@@ -13,7 +13,7 @@ import { deckImportPopStore } from "./DeckImportPop"
 import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { DeckWithSynergyInfo } from "./models/DeckSearchResult"
-import { SaleInfoView } from "./sales/SaleInfoView"
+import { ForSaleView } from "./sales/ForSaleView"
 
 interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string }> {
 }
@@ -114,7 +114,7 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
         if (saleInfo) {
             saleInfoComponent = (
                 <Card style={{margin: spacing(2)}}>
-                    <SaleInfoView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
+                    <ForSaleView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
                 </Card>
             )
         } else if (!fake) {

@@ -46,7 +46,7 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode, widt
                     <Drawer
                         style={{width: panelWidth}}
                         anchor={"left"}
-                        open={keyDrawerStore.open}
+                        open={keyDrawerStore.open || (deckVersion && !deckStore.searchingOrLoaded)}
                         onClose={() => keyDrawerStore.open = false}
                         PaperProps={{style: {width: panelWidth}}}
                     >

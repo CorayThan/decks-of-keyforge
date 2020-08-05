@@ -5,6 +5,7 @@ import { spacing, theme } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { SellerRatingView } from "../sellerratings/SellerRatingView"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import { SellerImg } from "./imgs/SellerImgs"
@@ -40,7 +41,7 @@ export class SellerCard extends React.Component<SellerCardProps> {
                             <DiscordUser discord={discord} style={{marginBottom: spacing(2)}}/>
 
                             <div style={{overflowY: "auto", flexGrow: 1}}>
-                                <Typography variant={"body1"}>{storeDescription}</Typography>
+                                <WhiteSpaceTypography variant={"body1"} >{storeDescription}</WhiteSpaceTypography>
                             </div>
                     </CardContent>
                     <div style={{flexGrow: 1}}/>

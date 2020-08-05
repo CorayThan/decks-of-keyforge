@@ -78,7 +78,7 @@ class UserDeckService(
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val team = user.team
-        if (deckListingRepo.existsBySellerIdAndDeckIdAndStatusNot(user.id, deckId, DeckListingStatus.COMPLETE)) {
+        if (!mark && deckListingRepo.existsBySellerIdAndDeckIdAndStatusNot(user.id, deckId, DeckListingStatus.COMPLETE)) {
             throw BadRequestException("Please unlist the deck for sale before removing it from your decks.")
         }
         modOrCreateUserDeck(deckId, user, null) {

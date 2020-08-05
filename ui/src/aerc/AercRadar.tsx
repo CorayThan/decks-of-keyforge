@@ -8,12 +8,13 @@ import { statsStore } from "../stats/StatsStore"
 
 interface AercRadarProps {
     deck: DeckSearchResult
+    style?: React.CSSProperties
 }
 
 @observer
 export class AercRadar extends React.Component<AercRadarProps> {
     render() {
-        const {deck} = this.props
+        const {deck, style} = this.props
         const {synergies} = deck
         const stats = statsStore.stats
         if (stats == null) {
@@ -62,6 +63,7 @@ export class AercRadar extends React.Component<AercRadarProps> {
                 indexBy={"aerc"}
                 name={"AERC Percentile Rankings"}
                 maxValue={100}
+                style={style}
             />
         )
     }

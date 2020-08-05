@@ -27,7 +27,7 @@ import { deckConditionReadableValue } from "../../userdeck/UserDeck"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
-interface SaleInfoViewProps {
+interface ForSaleViewProps {
     saleInfo: DeckSaleInfo[]
     deckName: string
     keyforgeId: string
@@ -36,7 +36,7 @@ interface SaleInfoViewProps {
 }
 
 @observer
-export class SaleInfoView extends React.Component<SaleInfoViewProps> {
+export class ForSaleView extends React.Component<ForSaleViewProps> {
     render() {
         const {saleInfo, deckName, keyforgeId, deckId, height} = this.props
         if (saleInfo.length === 0) {
@@ -47,7 +47,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
                 style={{
                     backgroundColor: themeStore.cardBackground,
                     overflowY: "auto",
-                    height
+                    height: height == null ? 800 : height
                 }}
             >
                 {this.props.saleInfo.map((saleInfo, idx) => {
@@ -61,7 +61,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
                                     </div>
                                 </>
                             )}
-                            <SingleSaleInfoView
+                            <SingleForSaleView
                                 saleInfo={saleInfo}
                                 deckName={deckName}
                                 deckId={deckId}
@@ -76,7 +76,7 @@ export class SaleInfoView extends React.Component<SaleInfoViewProps> {
 }
 
 @observer
-export class SingleSaleInfoView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string, deckId: number }> {
+export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string, deckId: number }> {
     render() {
 
         if (this.props.saleInfo.deckListingStatus === DeckListingStatus.COMPLETE) {

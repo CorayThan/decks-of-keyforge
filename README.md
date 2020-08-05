@@ -91,6 +91,12 @@ Go to profile for coraythan
 
 Unlink and relink with buttons.
 
+## Make patreon request with postman
+
+Go to: https://www.patreon.com/portal/registration/register-clients
+
+Copy Creator's Access Token into the auth header
+
 ## Make reduced size card images
 
 Delete `*.png` in `/card-imgs/`. Uncomment line in RunOnStart. Run app. In `/card-imgs/` run:

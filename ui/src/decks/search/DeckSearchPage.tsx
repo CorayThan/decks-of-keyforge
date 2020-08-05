@@ -25,7 +25,7 @@ import { DecksSearchDrawer } from "./DecksSearchDrawer"
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     componentDidMount(): void {
-        if (this.props.location.search !== "" && this.props.location.search !== "?forSale=true") {
+        if (this.props.location.search !== "") {
             this.search(this.makeFilters(this.props).cleaned())
         }
     }
@@ -54,9 +54,6 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
         defaultForSaleSearch.forSale = true
         const defaultSearch = new DeckFilters()
         defaultSearch.reset()
-        log.info("Check equal: " + prettyJson(filters))
-        log.info("Check equal 2: " + prettyJson(defaultSearch))
-        log.info("is equal: " + Utils.equals(filters, defaultSearch))
         deckStore.searchDecks(filters)
     }
 

@@ -41,7 +41,7 @@ import { DeckScoreView } from "./DeckScoreView"
 import { DeckSearchResult } from "./models/DeckSearchResult"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 import { DeckOwnershipButton } from "./ownership/DeckOwnershipButton"
-import { SaleInfoView } from "./sales/SaleInfoView"
+import { ForSaleView } from "./sales/ForSaleView"
 
 interface DeckViewSmallProps {
     deck: DeckSearchResult
@@ -72,7 +72,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         let saleInfoView
         if (saleInfo) {
             saleInfoView =
-                <SaleInfoView deckId={id} saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
+                <ForSaleView deckId={id} saleInfo={saleInfo} deckName={name} keyforgeId={keyforgeId} height={displaySalesSeparately ? undefined : height}/>
         }
 
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes

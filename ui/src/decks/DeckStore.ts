@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, CancelTokenSource } from "axios"
 import { clone } from "lodash"
-import { observable } from "mobx"
+import { computed, observable } from "mobx"
 import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopbar"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -212,6 +212,24 @@ export class DeckStore {
         }
     }
 
+    showMoreDecks = async () => {
+        if (this.deckPage && this.nextDeckPage && this.decksCount) {
+            // log.debug(`Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
+            this.addNewDecksToDecks(this.nextDeckPage)
+            this.nextDeckPage = undefined
+            this.findNextDecks()
+            // log.debug(`Done finding decks. Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
+        }
+    }
+
+    moreDecksAvailable = () => (this.deckPage && this.decksCount && this.deckPage.page + 1 < this.decksCount.pages)
+        || (this.deckPage && !this.decksCount && this.deckPage.decks.length % DeckStore.DECK_PAGE_SIZE === 0)
+
+    @computed
+    get searchingOrLoaded(): boolean {
+        return this.searchingForDecks || this.decksToDisplay != null
+    }
+
     private addNewDecksToDecks = (decks: DeckPage) => {
         this.deckPage = decks
         if (this.deckIdToDeck == null) {
@@ -228,18 +246,6 @@ export class DeckStore {
         this.currentDeckPage = decks.page
     }
 
-    showMoreDecks = async () => {
-        if (this.deckPage && this.nextDeckPage && this.decksCount) {
-            // log.debug(`Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
-            this.addNewDecksToDecks(this.nextDeckPage)
-            this.nextDeckPage = undefined
-            this.findNextDecks()
-            // log.debug(`Done finding decks. Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
-        }
-    }
-
-    moreDecksAvailable = () => (this.deckPage && this.decksCount && this.deckPage.page + 1 < this.decksCount.pages)
-        || (this.deckPage && !this.decksCount && this.deckPage.decks.length % DeckStore.DECK_PAGE_SIZE === 0)
 
     private findDecks = async (filters: DeckFilters) => new Promise<DeckPage>(resolve => {
         axios.post(`${DeckStore.CONTEXT}/filter`, filters)
