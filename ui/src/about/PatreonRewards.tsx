@@ -80,6 +80,7 @@ export class PatreonRewards extends React.Component {
                             "Dark mode",
                             "List decks for sale or trade for up to 1 year",
                             "List up to 250 decks for sale. (Free maximum is 100.)",
+                            "Create auctions or public offer-based sale listings",
                             "Automatically renew expired deck for sale listings with a setting in your profile",
                             "Search team decks",
                             "Create Theoretical Decks",

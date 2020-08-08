@@ -1,4 +1,4 @@
-import { Box, Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Typography } from "@material-ui/core"
+import { Box, Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Tooltip, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -340,17 +340,22 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                         control={<Radio/>}
                                         label="Standard"
                                     />
-                                    <FormControlLabel
-                                        value={SaleType.ACCEPTING_OFFERS}
-                                        control={<Radio/>}
-                                        label="Accepting Offers"
-                                    />
-                                    <FormControlLabel
-                                        value={SaleType.AUCTION}
-                                        control={<Radio/>}
-                                        label="Auction"
-                                        disabled={!!this.editAuctionId}
-                                    />
+                                    <Tooltip title={userStore.patron ? "" : "Please become a patron to list decks for offer."}>
+                                        <FormControlLabel
+                                            value={SaleType.ACCEPTING_OFFERS}
+                                            control={<Radio/>}
+                                            label="Accepting Offers"
+                                            disabled={!userStore.patron}
+                                        />
+                                    </Tooltip>
+                                    <Tooltip title={userStore.patron ? "" : "Pleaes become a patron to list decks for auction."}>
+                                        <FormControlLabel
+                                            value={SaleType.AUCTION}
+                                            control={<Radio/>}
+                                            label="Auction"
+                                            disabled={!!this.editAuctionId || !userStore.patron}
+                                        />
+                                    </Tooltip>
                                 </div>
                             </RadioGroup>
                         </FormControl>
@@ -359,7 +364,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             label={auction ? "Duration" : "Expires In"}
                             value={this.expireInDays}
                             onChange={this.handleChangeDays}
-                            style={marginTopRight}
+                            style={{minWidth: 80, ...marginTopRight}}
                         >
                             <MenuItem value={"1"}>
                                 1 day
@@ -411,7 +416,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             label={"Language"}
                             value={this.language}
                             onChange={(event) => this.language = event.target.value as DeckLanguage}
-                            style={marginTopRight}
+                            style={{minWidth: 80, ...marginTopRight}}
                         >
                             {Utils.enumValues(DeckLanguage).map(language => {
                                 return (
@@ -498,7 +503,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </HelperText>
                             </>
                         ) : null}
-                        {deck.expansion === BackendExpansion.MASS_MUTATION &&  !deck.hasOwnershipVerification && (
+                        {deck.expansion === BackendExpansion.MASS_MUTATION && !deck.hasOwnershipVerification && (
                             <Box mt={2}>
                                 <Typography variant={"subtitle2"} color={"error"}>
                                     You can add a deck picture with enhanced cards. Use the image button below!

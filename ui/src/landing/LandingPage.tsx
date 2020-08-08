@@ -197,7 +197,13 @@ export class LandingPage extends React.Component<{}> {
                                 When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
                                 any transactions.
                             </Typography>
-                            <LinkButton size={"small"} href={Routes.privacyPolicy}>
+                            <LinkButton size={"small"} href={Routes.codeOfConduct} newWindow={true} style={{marginRight: spacing(2)}}>
+                                Code of Conduct
+                            </LinkButton>
+                            <LinkButton size={"small"} href={Routes.termsOfUse} newWindow={true} style={{marginRight: spacing(2)}}>
+                                Terms of Use
+                            </LinkButton>
+                            <LinkButton size={"small"} href={Routes.privacyPolicy} newWindow={true}>
                                 Privacy Policy
                             </LinkButton>
                         </div>

@@ -31,9 +31,11 @@ import { SpoilerPage } from "../spoilers/SpoilerPage"
 import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
 import { SnackMessage } from "../ui/MessageStore"
+import { CodeOfConduct } from "../user/CodeOfConduct"
 import { ProfilePage } from "../user/ProfilePage"
 import { RegistrationPage } from "../user/RegistrationPage"
 import { UserSearchPage } from "../user/search/UserSearchPage"
+import { AgreeToTerms, TermsOfUse } from "../user/TermsOfUse"
 import { userStore } from "../user/UserStore"
 import { KeyLoaderBar } from "./KeyLoaderBar"
 import { LoggedInRoute } from "./LoggedInRoute"
@@ -75,6 +77,8 @@ class Routes {
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
     static privacyPolicy = "/privacy-policy"
+    static termsOfUse = "/terms-of-use"
+    static codeOfConduct = "/code-of-conduct"
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
@@ -255,6 +259,16 @@ const KeyRouter = observer(() => {
                     />
                     <Route
                         exact={true}
+                        path={Routes.termsOfUse}
+                        component={TermsOfUse}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.codeOfConduct}
+                        component={CodeOfConduct}
+                    />
+                    <Route
+                        exact={true}
                         path={Routes.changePasswordPage()}
                         component={ChangePasswordPage}
                     />
@@ -299,6 +313,7 @@ const KeyRouter = observer(() => {
                 </Switch>
                 <SnackMessage/>
                 <KeyLoaderBar/>
+                <AgreeToTerms/>
             </div>
         </BrowserRouter>
     )

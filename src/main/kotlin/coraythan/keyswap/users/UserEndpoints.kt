@@ -30,6 +30,9 @@ class UserEndpoints(
     @PostMapping("/secured/update")
     fun updateProfile(@RequestBody userProfile: UserProfileUpdate) = userService.updateUserProfile(userProfile)
 
+    @PostMapping("/secured/agree-to-terms")
+    fun agreeToTerms() = userService.agreeToTerms()
+
     @PostMapping("/secured/version/{version}")
     fun updateLatestVersion(@PathVariable version: String) = userService.updateLatestUserVersion(version)
 

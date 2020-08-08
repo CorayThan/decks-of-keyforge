@@ -5,7 +5,7 @@ import * as React from "react"
 import { AercRadar } from "../aerc/AercRadar"
 import { rotateIconStyle } from "../components/SearchDrawerExpansionPanel"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { theme } from "../config/MuiConfig"
+import { spacing, theme } from "../config/MuiConfig"
 import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { CardTypePie, CardTypePieGlobalAverages } from "../graphs/CardTypePie"
 import { ComparisonBar, ComparisonBarProps } from "../graphs/ComparisonBar"
@@ -46,9 +46,9 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                     actions={actionCount}
                     artifacts={artifactCount}
                     upgrades={upgradeCount}
-                    style={{marginTop: 0, alignSelf: "flex-start"}}
+                    style={{marginTop: spacing(2), alignSelf: "flex-start"}}
                 />
-                {!compact && <CardTypePieGlobalAverages stats={stats} style={{alignSelf: "flex-start"}}/>}
+                {!compact && <CardTypePieGlobalAverages stats={stats} style={{marginTop: spacing(2), alignSelf: "flex-start"}}/>}
                 <AercRadar deck={deck}  style={{alignSelf: "flex-start"}}/>
                 {!compact && <CardTypeRadar deck={deck} style={{alignSelf: "flex-start"}}/>}
             </>

@@ -42,6 +42,9 @@ export class UserStore {
     @observable
     emailVerificationSuccessful?: boolean
 
+    @observable
+    agreeingToTerms = false
+
     loadLoggedInUser = async () => {
         if (!keyLocalStorage.hasAuthKey()) {
             return
@@ -130,6 +133,17 @@ export class UserStore {
                 } else {
                     log.error(`Error loggin in ${error}`)
                     messageStore.setRequestErrorMessage()
+                }
+            })
+    }
+
+    agreedToTerms = () => {
+        this.agreeingToTerms = true
+        axios.post(`${UserStore.SECURE_CONTEXT}/agree-to-terms`)
+            .then((response: AxiosResponse) => {
+                this.agreeingToTerms = false
+                if (this.user) {
+                    this.user.agreedToTerms = true
                 }
             })
     }

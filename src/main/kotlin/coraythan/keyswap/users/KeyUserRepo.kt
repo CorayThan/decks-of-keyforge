@@ -32,6 +32,10 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun updateSellerEmailVerified(id: UUID)
 
     @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.agreedToTermsOfService = true WHERE keyUser.id = ?1")
+    fun setAgreedToTerms(id: UUID)
+
+    @Modifying
     @Query("UPDATE KeyUser keyUser SET keyUser.type = ?1 WHERE keyUser.username = ?2")
     fun setUserType(role: UserType, username: String)
 

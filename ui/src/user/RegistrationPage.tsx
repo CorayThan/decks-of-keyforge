@@ -1,4 +1,4 @@
-import { Card, Checkbox, FormControlLabel, Grid, MenuItem, TextField, Typography } from "@material-ui/core"
+import { Box, Card, Checkbox, FormControlLabel, Grid, MenuItem, TextField, Typography } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -36,6 +36,8 @@ export class RegistrationPage extends React.Component {
     allowUsersToSeeDeckOwnership = false
     @observable
     acceptsTrades = false
+    @observable
+    agreesToTerms = false
     @observable
     country: Country | "" = ""
 
@@ -199,19 +201,50 @@ export class RegistrationPage extends React.Component {
                                         }
                                         label={"Accept trades on decks for sale"}
                                     />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.agreesToTerms}
+                                                onChange={(event) => this.agreesToTerms = event.target.checked}
+                                                tabIndex={8}
+                                            />
+                                        }
+                                        label={"I agree to the Code of Conduct, Terms of Use and Privacy Policy"}
+                                    />
                                 </Grid>
                             </Grid>
-                            <div style={{marginTop: spacing(2), display: "flex", justifyContent: "center"}}>
-                                <LinkButton size={"small"} href={Routes.privacyPolicy}>Privacy Policy</LinkButton>
-                            </div>
+                            <Box mt={1} display={"flex"} justifyContent={"space-between"}>
+                                <LinkButton
+                                    size={"small"}
+                                    href={Routes.codeOfConduct}
+                                    newWindow={true}
+                                >
+                                    Code of Conduct
+                                </LinkButton>
+                                <LinkButton
+                                    size={"small"}
+                                    href={Routes.termsOfUse}
+                                    newWindow={true}
+                                >
+                                    Terms of Use
+                                </LinkButton>
+                                <LinkButton
+                                    size={"small"}
+                                    href={Routes.privacyPolicy}
+                                    newWindow={true}
+                                >
+                                    Privacy Policy
+                                </LinkButton>
+                            </Box>
                             <KeyButton
                                 style={{marginTop: spacing(2)}}
                                 variant={"contained"}
-                                color={"secondary"}
+                                color={"primary"}
                                 type={"submit"}
                                 fullWidth={true}
-                                tabIndex={8}
+                                tabIndex={9}
                                 loading={loginInProgress}
+                                disabled={!this.agreesToTerms}
                             >
                                 Create Account
                             </KeyButton>

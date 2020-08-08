@@ -71,7 +71,7 @@ export class ContactMe extends React.Component {
                         "like to help make it better or collaborate! But please don't steal the system, obviously.",
                         "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
                         "or real loss of value due to changes to the system.",
-                        <LinkButton size={"small"} href={Routes.privacyPolicy}>Privacy Policy</LinkButton>
+                        <LinkButton variant={"outlined"} size={"small"} href={Routes.privacyPolicy}>Privacy Policy</LinkButton>
                     ]}/>
                 </AboutGridItem>
             </>

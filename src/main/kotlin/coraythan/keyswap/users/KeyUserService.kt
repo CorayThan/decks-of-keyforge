@@ -34,6 +34,10 @@ class KeyUserService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
 
+    companion object {
+        val termsVersion = 1
+    }
+
     @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay)
     @SchedulerLock(name = "removeManualPatrons", lockAtLeastFor = lockRemoveManualPatrons, lockAtMostFor = lockRemoveManualPatrons)
     fun removeManualPatrons() {
@@ -93,6 +97,11 @@ class KeyUserService(
     fun findUserByUsername(username: String) = userRepo.findByUsernameIgnoreCase(username)
 
     fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
+
+    fun agreeToTerms() {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        userRepo.setAgreedToTerms(user.id)
+    }
 
     fun updateUserProfile(update: UserProfileUpdate) {
         val user = currentUserService.loggedInUserOrUnauthorized()

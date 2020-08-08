@@ -7,10 +7,12 @@ import coraythan.keyswap.auctions.purchases.Purchase
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
+import coraythan.keyswap.nowLocal
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.teams.Team
 import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.users.search.UserSearchResult
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
@@ -105,6 +107,10 @@ data class KeyUser(
 
         val autoRenewListings: Boolean = false,
 
+        val created: LocalDateTime? = nowLocal(),
+
+        val agreedToTermsOfService: Boolean = true,
+
         // Stats values
         val rating: Double = 0.0,
         val deckCount: Int = 0,
@@ -157,7 +163,8 @@ data class KeyUser(
             shippingCost = shippingCost,
             teamName = team?.name,
             autoRenewListings = autoRenewListings,
-            contributedOrManual = contributedOrManual()
+            contributedOrManual = contributedOrManual(),
+            agreedToTerms = agreedToTermsOfService
     )
 
     fun generateSearchResult(): UserSearchResult {
@@ -225,6 +232,8 @@ data class KeyUserDto(
         val sellerEmailVerified: Boolean,
 
         val type: UserType,
+
+        val agreedToTerms: Boolean,
 
         val publicContactInfo: String? = null,
         val allowsTrades: Boolean,

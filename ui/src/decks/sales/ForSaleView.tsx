@@ -47,7 +47,8 @@ export class ForSaleView extends React.Component<ForSaleViewProps> {
                 style={{
                     backgroundColor: themeStore.cardBackground,
                     overflowY: "auto",
-                    height: height == null ? 800 : height
+                    height,
+                    maxHeight: height == null ? 800 : height
                 }}
             >
                 {this.props.saleInfo.map((saleInfo, idx) => {
