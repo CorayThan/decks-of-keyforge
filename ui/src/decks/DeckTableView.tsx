@@ -28,6 +28,7 @@ class DeckTableViewStore {
     priceChanges: UpdatePrice[] = []
 
     addPriceChange = (auctionId: string, askingPrice?: number) => {
+        log.debug("Add price change for " + auctionId + " change: " + askingPrice)
         this.priceChanges = this.priceChanges.filter(priceChange => priceChange.auctionId !== auctionId)
         this.priceChanges.push({auctionId, askingPrice})
     }
@@ -248,7 +249,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
 
         return (
             <div>
-                <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>
+                <Paper style={{margin: spacing(2)}}>
                     <SortableTable
                         headers={deckTableHeaders}
                         data={decks}
@@ -265,6 +266,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             sellerStore.updatePrices(deckTableViewStore.priceChanges)
                             deckTableViewStore.priceChanges = []
                         }}
+                        style={{marginLeft: spacing(2)}}
                     >
                         Save Prices
                     </Button>
@@ -288,10 +290,6 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
         this.setPriceForSeller(this.props)
     }
 
-    componentDidUpdate() {
-        this.setPriceForSeller(this.props)
-    }
-
     setPriceForSeller = (props: SellerViewCellProps) => {
         const {deck, sellerVersion} = props
         this.price = DeckUtils.findPrice(deck, sellerVersion)?.toString()
@@ -299,6 +297,7 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
 
     render() {
         const {deck, sellerVersion} = this.props
+        log.info("For deck: " + deck.name + " price: " + this.price)
         const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
         if (auctionInfo != null && this.price != null && sellerVersion) {
             return (

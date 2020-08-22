@@ -2,19 +2,21 @@ import { Button, Link, ListItem, ListItemText } from "@material-ui/core"
 import { ButtonProps } from "@material-ui/core/Button"
 import { ListItemProps } from "@material-ui/core/ListItem"
 import * as React from "react"
-import { Link as RRLink } from "react-router-dom"
 import { spacing } from "../config/MuiConfig"
 
 export const LinkButton = (props: ButtonProps & { newWindow?: boolean }) => {
     const {href, newWindow, style, ...rest} = props
+    if (href == null) {
+        return null
+    }
     return (
+        // @ts-ignore
         <Button
             {...rest}
-            // @ts-ignore
-            to={href}
+            href={href}
             target={newWindow ? "_blank" : undefined}
             rel={newWindow ? "noopener noreferrer" : undefined}
-            component={RRLink}
+            component={"a"}
             style={{whiteSpace: "nowrap", ...style}}
         />
     )

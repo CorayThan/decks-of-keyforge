@@ -126,7 +126,7 @@ class EmailService(
                     <br>
                     <div>
                         You can reply to this email to contact the seller, or use any listed seller contact information on the
-                        ${links.deckCompletedAuctions(deck.name)}
+                        ${links.deckCompletedAuctions(deck.name)}. They may also have contact info on their profile: ${links.userLink(seller.username)}.
                     </div>
                 """.trimIndent(),
                     "Auction Won",
@@ -181,7 +181,8 @@ class EmailService(
                     <br>
                     <br>
                     <div>
-                        You can reply to this email to contact the seller.
+                        You can reply to this email to contact the seller. 
+                        They may also have contact info on their profile: ${links.userLink(seller.username)}.
                     </div>
                 """.trimIndent(),
                     "Deck Purchased",
@@ -320,7 +321,7 @@ class EmailService(
         if (!ccSender) {
             sendEmail(
                     senderEmail,
-                    "We sent this email to the seller of $deckName",
+                    "We sent this email to ${sellerMessage.username}, the seller of $deckName",
                     emailContents,
                     "Message Sent",
                     bottomContent = bottomContent
@@ -409,7 +410,7 @@ class EmailService(
                     <div>
                         <div>
                             Your offer for ${links.deckLink(deck)} has been accepted! 
-                            You have agreed to pay ${currencySymbol}${amount} plus shipping.
+                            You have agreed to pay ${currencySymbol}${amount} plus shipping to ${links.userLink(seller.username)}.
                             Reply to this email to arrange payment and shipment of your deck.
                         </div>
                         <br>

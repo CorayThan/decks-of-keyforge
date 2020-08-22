@@ -21,6 +21,7 @@ class AppLinks(
     fun resetPassword(resetCode: String) = makeLink("/reset-password/$resetCode", "Reset Password")
     fun deckCompletedAuctions(name: String) = makeLink("/decks?completedAuctions=true&forAuction=true&title=${name}", "auction")
     fun deckLink(deck: Deck) = makeLink("/decks/${deck.keyforgeId}", deck.name)
+    fun userLink(username: String) = makeLink("/users/$username", username)
     fun deckLink(keyforgeId: String, name: String) = makeLink("/decks/$keyforgeId", name)
     fun offersLink() = makeLink("/my-dok/offers", "Offers Page")
 
