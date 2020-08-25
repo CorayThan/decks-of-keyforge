@@ -101,7 +101,11 @@ class Routes {
      */
     static deckSearch = (filters: DeckFilters) => {
         const cleaned = prepareDeckFiltersForQueryString(filters)
-        return `${Routes.decks}?${QueryString.stringify(cleaned)}`
+        const stringified = QueryString.stringify(cleaned)
+        if (stringified === "") {
+            return Routes.decks
+        }
+        return `${Routes.decks}?${stringified}`
     }
 
     static decksForUser = (username: string) => {

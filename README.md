@@ -60,11 +60,11 @@ Run the `load-cards.cmd` with the Reload Cards run config.
 
 ```
 set PGPASSWORD=password
-pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan -F c -a -t card_traits -t card_identifier -t extra_card_info -t card -t spoiler -t syn_trait_value -f .\restore-cards\extra-info.dump keyswap
+pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan -F c -a -t card_traits -t card_identifier -t extra_card_info -t card -t spoiler -t syn_trait_value -f .\scripts\extra-info.dump keyswap
 
 set PGPASSWORD=postgres
-psql -U postgres -d keyswap -f .\restore-cards\truncate-card-tables.sql
-pg_restore -h localhost -U postgres -d keyswap .\restore-cards\extra-info.dump
+psql -U postgres -d keyswap -f .\scripts\truncate-card-tables.sql
+pg_restore -h localhost -U postgres -d keyswap .\scripts\extra-info.dump
 
 ```
 
@@ -113,10 +113,10 @@ Change `ddl-auto` in `application.yml` to `update`. `show-sql` to true. Run. Cop
 
 ```
 set PGPASSWORD=password
-pg_dump --host keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com --username coraythan --format c --no-unlogged-table-data --file .\restore-cards\full-db.dump keyswap
+pg_dump --host keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com --username coraythan --format c --no-unlogged-table-data --file .\scripts\full-db.dump keyswap
 
 set PGPASSWORD=postgres
-pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\restore-cards\full-db.dump
+pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\scripts\full-db.dump
 ```
 
 To update passwords run: `update key_user set password = '$2a$10$tfqUiFMI9ck0DmvWLtL/durPIv5BuLCu.M0ZyyGr2p3WhRqHeIAh2';`

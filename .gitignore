@@ -22,7 +22,7 @@
 /card-imgs/*.png
 
 application-nocommit.yml
-restore-cards/load-cards*.cmd
+scripts/*
 *.dump
 
 /ui/src/generated-src
