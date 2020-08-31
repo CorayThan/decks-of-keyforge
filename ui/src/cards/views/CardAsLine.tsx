@@ -8,7 +8,7 @@ import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
 import { spacing } from "../../config/MuiConfig"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
-import { BackendExpansion } from "../../expansions/Expansions"
+import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
 import { SimpleCard } from "../../generated-src/SimpleCard"
 import { KeyButton } from "../../mui-restyled/KeyButton"
@@ -21,7 +21,7 @@ import { CardSimpleView, CardView } from "./CardSimpleView"
 interface CardAsLineProps {
     card: SimpleCard
     cardActualHouse: House
-    deckExpansion?: BackendExpansion
+    deckExpansion?: Expansion
     width?: number
     marginTop?: number
     hideRarity?: boolean

@@ -5,6 +5,8 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { Area, Bar, CartesianGrid, ComposedChart, Label, Tooltip, XAxis, YAxis } from "recharts"
 import { spacing } from "../config/MuiConfig"
+import { roundToTens } from "../config/Utils"
+import { BarData } from "../generated-src/BarData"
 import { screenStore } from "../ui/ScreenStore"
 
 export type StatsBarPropsSimplified = Omit<StatsBarProps, "yAxisName" | "filterQuantitiesBelow">
@@ -23,12 +25,13 @@ export interface StatsBarProps {
     xTickValues?: number[]
     xTickFormat?: (tick: number) => number
     quantities?: BarData[]
+    includePercent?: boolean
 }
 
 @observer
 export class StatsBar extends React.Component<StatsBarProps> {
     render() {
-        const {secondary, data, quantities, yDomain, yAxisName, xAxisName, small, style, name, hideY, filterQuantitiesBelow} = this.props
+        const {secondary, data, quantities, yDomain, yAxisName, xAxisName, small, style, name, hideY, filterQuantitiesBelow, includePercent} = this.props
         const smallStyle = {
             width: 300,
             height: 220,
@@ -50,13 +53,16 @@ export class StatsBar extends React.Component<StatsBarProps> {
         const quantitiesMapped = quantities == null ? undefined : new Map(
             quantities.map(quantity => [quantity.x, quantity.y] as [string | number, number])
         )
+        
+        const total = includePercent ? data.map(data => data.y).reduce((sum, current) => sum + current) : 1
 
         const improvedData = sortBy(data, value => value.x)
             .map(data => {
+                const quantity = quantitiesMapped == null ? undefined : quantitiesMapped.get(data.x)
                 return {
                     x: data.x,
                     y: data.y,
-                    quantity: quantitiesMapped == null ? undefined : quantitiesMapped.get(data.x)
+                    quantity
                 }
             })
 
@@ -97,7 +103,13 @@ export class StatsBar extends React.Component<StatsBarProps> {
                                 <Label value={yAxisName} angle={-90} position={"insideLeft"} offset={16}/>
                             </YAxis>
                         )}
-                        <Tooltip/>
+                        {includePercent ? (
+                            <Tooltip
+                                formatter={(value, name) => `${roundToTens((value as number) * 100 / (total as number))}%`}
+                            />
+                        ) : (
+                            <Tooltip/>
+                        )}
                         {quantities == null ? null : (
                             <YAxis yAxisId={"right"} orientation={"right"}/>
                         )}
@@ -122,9 +134,3 @@ export class StatsBar extends React.Component<StatsBarProps> {
         )
     }
 }
-
-export interface BarData {
-    x: string | number
-    y: number
-}
-

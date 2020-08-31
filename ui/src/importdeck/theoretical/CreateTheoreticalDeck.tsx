@@ -7,8 +7,9 @@ import { cardStore } from "../../cards/CardStore"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
-import { activeExpansions, BackendExpansion } from "../../expansions/Expansions"
+import { activeExpansions } from "../../expansions/Expansions"
 import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
+import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyCard } from "../../generic/KeyCard"
@@ -120,7 +121,7 @@ export const CreateTheoreticalDeck = observer(() => {
     )
 })
 
-const CreateTheoreticalDeckBuilder = observer((props: { expansion: BackendExpansion, houses: House[] }) => {
+const CreateTheoreticalDeckBuilder = observer((props: { expansion: Expansion, houses: House[] }) => {
 
     const {expansion} = props
 

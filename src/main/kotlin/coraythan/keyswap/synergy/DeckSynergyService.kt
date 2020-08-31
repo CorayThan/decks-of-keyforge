@@ -420,17 +420,17 @@ object DeckSynergyService {
             else -> 1
         })
 
-        if (deck.creatureCount > 16) traits.addDeckTrait(SynergyTrait.highCreatureCount, when {
-            deck.creatureCount > 20 -> 4
-            deck.creatureCount > 18 -> 3
-            deck.creatureCount > 17 -> 2
+        if (deck.creatureCount > 18) traits.addDeckTrait(SynergyTrait.highCreatureCount, when {
+            deck.creatureCount > 21 -> 4
+            deck.creatureCount > 20 -> 3
+            deck.creatureCount > 19 -> 2
             else -> 1
         })
 
-        if (deck.creatureCount < 15) traits.addDeckTrait(SynergyTrait.lowCreatureCount, when {
-            deck.creatureCount < 12 -> 4
-            deck.creatureCount < 13 -> 3
-            deck.creatureCount < 14 -> 2
+        if (deck.creatureCount < 17) traits.addDeckTrait(SynergyTrait.lowCreatureCount, when {
+            deck.creatureCount < 14 -> 4
+            deck.creatureCount < 15 -> 3
+            deck.creatureCount < 16 -> 2
             else -> 1
         })
     }

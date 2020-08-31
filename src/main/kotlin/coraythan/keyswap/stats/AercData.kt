@@ -2,8 +2,10 @@ package coraythan.keyswap.stats
 
 import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.roundToTwoSigDig
 
+@GenerateTs
 data class AercData(
 
         // Card count

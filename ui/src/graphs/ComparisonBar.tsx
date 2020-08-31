@@ -3,7 +3,7 @@ import { amber, blue } from "@material-ui/core/colors"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryContainer, VictoryTheme } from "victory"
 import { spacing, themeStore } from "../config/MuiConfig"
-import { BarData } from "./StatsBar"
+import { BarData } from "../generated-src/BarData"
 
 export interface ComparisonBarProps {
     name: string

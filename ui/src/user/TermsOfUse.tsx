@@ -1,15 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link, Paper, Typography } from "@material-ui/core"
-import { observable } from "mobx"
 import { observer } from "mobx-react"
-import React, { useState } from "react"
-import { spacing, themeStore } from "../config/MuiConfig"
+import React from "react"
+import { useLocation } from "react-router-dom"
+import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { userStore } from "./UserStore"
-import { useRouteMatch, useLocation } from "react-router-dom"
 
 export const AgreeToTerms = observer(() => {
 

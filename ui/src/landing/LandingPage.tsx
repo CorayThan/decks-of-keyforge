@@ -9,7 +9,8 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { BackendExpansion, Expansion } from "../expansions/Expansions"
+import { ExpansionNumber } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -25,13 +26,13 @@ import { CardSearchLink, DeckSearchLink } from "./DeckSearchLink"
 
 const topSas = new DeckFilters()
 const cota = new DeckFilters()
-cota.expansions = [Expansion.COTA]
+cota.expansions = [ExpansionNumber.COTA]
 const aoa = new DeckFilters()
-aoa.expansions = [Expansion.AOA]
+aoa.expansions = [ExpansionNumber.AOA]
 const wc = new DeckFilters()
-wc.expansions = [Expansion.WC]
+wc.expansions = [ExpansionNumber.WC]
 const mm = new DeckFilters()
-mm.expansions = [Expansion.MM]
+mm.expansions = [ExpansionNumber.MM]
 const topAerc = new DeckFilters()
 topAerc.sort = DeckSorts.aerc
 const topChains = new DeckFilters()
@@ -81,19 +82,19 @@ export class LandingPage extends React.Component<{}> {
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <DeckSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.MASS_MUTATION} white={true}/>} filters={mm}
+                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={true}/>} filters={mm}
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <DeckSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.CALL_OF_THE_ARCHONS} white={true}/>} filters={cota}
+                                    name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={true}/>} filters={cota}
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <DeckSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.AGE_OF_ASCENSION} white={true}/>} filters={aoa}
+                                    name={<ExpansionIcon expansion={Expansion.AGE_OF_ASCENSION} white={true}/>} filters={aoa}
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <DeckSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.WORLDS_COLLIDE} white={true}/>} filters={wc}
+                                    name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={true}/>} filters={wc}
                                     style={{marginBottom: spacing(2)}}
                                 />
                             </div>
@@ -121,19 +122,19 @@ export class LandingPage extends React.Component<{}> {
                             <div style={{display: "flex", flexWrap: "wrap", paddingRight: spacing(1)}}>
                                 <CardSearchLink name={"Search Cards"} color={"secondary"} style={{marginBottom: spacing(2)}}/>
                                 <CardSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.MASS_MUTATION} white={false}/>} color={"secondary"}
+                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={false}/>} color={"secondary"}
                                     to={Routes.mmCards} style={{marginBottom: spacing(2)}}
                                 />
                                 <CardSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
+                                    name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
                                     to={Routes.cotaCards} style={{marginBottom: spacing(2)}}
                                 />
                                 <CardSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.AGE_OF_ASCENSION} white={false}/>} color={"secondary"}
+                                    name={<ExpansionIcon expansion={Expansion.AGE_OF_ASCENSION} white={false}/>} color={"secondary"}
                                     to={Routes.aoaCards} style={{marginBottom: spacing(2)}}
                                 />
                                 <CardSearchLink
-                                    name={<ExpansionIcon expansion={BackendExpansion.WORLDS_COLLIDE} white={false}/>} color={"secondary"}
+                                    name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={false}/>} color={"secondary"}
                                     to={Routes.wcCards} style={{marginBottom: spacing(2)}}
                                 />
                             </div>

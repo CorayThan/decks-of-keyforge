@@ -12,7 +12,8 @@ import { CardAsLine } from "../cards/views/CardAsLine"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
-import { BackendExpansion, expansionInfoMap, possibleCardExpansionsForExpansion } from "../expansions/Expansions"
+import { expansionInfoMap, possibleCardExpansionsForExpansion } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { KeyCard } from "../generic/KeyCard"
 import { HouseLabel } from "../houses/HouseUtils"
@@ -23,7 +24,7 @@ import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
 
 interface CreateUnregisteredDeckProps {
     initialDeck: SaveUnregisteredDeck
-    expansion: BackendExpansion
+    expansion: Expansion
 }
 
 class SaveUnregisteredDeckStore {
@@ -192,7 +193,7 @@ export class CreateUnregisteredDeck extends React.Component<CreateUnregisteredDe
 }
 
 @observer
-export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: string[], expansion: BackendExpansion }> {
+export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: string[], expansion: Expansion }> {
     render() {
         const cards = this.props.cards.map(cardName => cardStore.fullCardFromCardName(cardName) as KCard)
         const searchSuggestCardNames = Array.from(new Set(cardStore.findCardNamesForExpansion().flatMap(forExp => {

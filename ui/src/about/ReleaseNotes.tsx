@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.12"
+export const latestVersion = "5.13"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,27 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.13"}
+                    date={"8/31/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Draw Enhanced",
+                            note: "Drawing one card was previously rated at 0.5 F. That seemed to underrate an ability that lets you play " +
+                                "an extra card 1/3rd of the time, and improves future hand quality the rest of the time. 1 draw is now worth " +
+                                "0.75 F."
+                        },
+                        {
+                            highlight: "MM updates",
+                            note: "Still refining MM card scores based on feedback and the slowly slowly very slowly increasing OP game stats."
+                        },
+                        {
+                            highlight: "Improved Improved Notes",
+                            note: "Notes now save automatically still. Now with fewer bugs! (Please let me know if this is false advertising.)"
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.12"}
                     date={"8/3/2020"}

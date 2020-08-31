@@ -5,10 +5,11 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { aercProperties } from "../aerc/AercUtils"
 import { spacing } from "../config/MuiConfig"
-import { activeExpansions, BackendExpansion, expansionInfoMap } from "../expansions/Expansions"
+import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { AercData } from "../generated-src/AercData"
+import { Expansion } from "../generated-src/Expansion"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
-import { AercData } from "./AercData"
 import { statsStore } from "./StatsStore"
 
 @observer
@@ -28,7 +29,7 @@ export class CardStatsView extends React.Component<{}> {
         }
 
         const bySetDataReal = activeExpansions
-            .map((expansion: BackendExpansion) => {
+            .map((expansion: Expansion) => {
 
                 if (datas == null) {
                     return undefined
@@ -59,7 +60,7 @@ export class CardStatsView extends React.Component<{}> {
                     width={64 + (104 * activeExpansions.length)}
                 />
 
-                {activeExpansions.map((expansion: BackendExpansion) => {
+                {activeExpansions.map((expansion: Expansion) => {
 
                     const expansionDatas = datas?.filter(data => data.expansion === expansion && data.house != null)
 

@@ -7,8 +7,9 @@ import { HttpConfig } from "../config/HttpConfig"
 import { IdbUtils } from "../config/IdbUtils"
 import { log, prettyJson, roundToHundreds } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
-import { BackendExpansion, expansionInfos } from "../expansions/Expansions"
+import { expansionInfos } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
+import { Expansion } from "../generated-src/Expansion"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
 import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
@@ -265,7 +266,7 @@ export class CardStore {
 
     findCardNamesForExpansion = () => {
         const cardNamesForExpansion: {
-            expansion: BackendExpansion,
+            expansion: Expansion,
             names: string[]
         }[] = expansionInfos.map(info => ({expansion: info.backendEnum, names: []}))
         this.allCards.map(card => {

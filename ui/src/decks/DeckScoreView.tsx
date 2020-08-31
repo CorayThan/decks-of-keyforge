@@ -7,7 +7,8 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { roundToThousands } from "../config/Utils"
-import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
+import { activeExpansions } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
 
@@ -26,7 +27,7 @@ interface DeckScoreViewProps {
         antisynergyRating: number,
         previousSasRating?: number,
         sasPercentile?: number,
-        expansion?: BackendExpansion
+        expansion?: Expansion
     }
     style?: React.CSSProperties
     small?: boolean
@@ -83,7 +84,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     }
 
     const sasName = "SAS"
-    const sasTooltip = expansion === BackendExpansion.MASS_MUTATION ? "This is a work in progress SAS rating. Expect this to change a bunch over the coming days." : "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
+    const sasTooltip = expansion === Expansion.MASS_MUTATION ? "This is a work in progress SAS rating. Expect this to change a bunch over the coming days." : "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
 
     return (
         <div style={{display: "flex"}}>

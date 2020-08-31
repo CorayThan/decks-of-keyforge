@@ -1,7 +1,7 @@
 import { ResponsivePie } from "@nivo/pie"
 import * as React from "react"
 import { themeStore } from "../config/MuiConfig"
-import { GlobalStats } from "../stats/GlobalStats"
+import { GlobalStats } from "../generated-src/GlobalStats"
 import { DokDeckGraphWrapper } from "./DokRadar"
 
 export const CardTypePieGlobalAverages = (props: { stats: GlobalStats, padding?: number, style?: React.CSSProperties }) =>

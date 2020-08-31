@@ -1,4 +1,4 @@
-import { BackendExpansion } from "../../expansions/Expansions"
+import { Expansion } from "../../generated-src/Expansion"
 
 export interface PurchaseStats {
     standardCount: number
@@ -10,7 +10,7 @@ export interface PurchaseStats {
 
 export interface PurchaseCurrencyData {
     currency: string
-    expansion?: BackendExpansion
+    expansion?: Expansion
     data: PurchaseAmountData[]
 }
 

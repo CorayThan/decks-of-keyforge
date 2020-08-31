@@ -6,8 +6,9 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Expansion } from "../generated-src/Expansion"
 import { CheckboxState, CheckboxThreeState } from "../mui-restyled/CheckboxThreeState"
-import { activeExpansions, BackendExpansion, expansionInfoMap, ExpansionLabel } from "./Expansions"
+import { activeExpansions, expansionInfoMap, ExpansionLabel } from "./Expansions"
 
 interface ExpansionSelectOrExcludeProps {
     selectedExpansions: SelectedOrExcludedExpansions
@@ -73,7 +74,7 @@ export class ExpansionCheckbox extends React.Component<ExpansionCheckboxProps> {
 }
 
 export interface SelectedOrExcludedExpansion {
-    expansion: BackendExpansion
+    expansion: Expansion
     state: CheckboxState
 }
 
@@ -82,7 +83,7 @@ export class SelectedOrExcludedExpansions {
     @observable
     selectedExpansions: SelectedOrExcludedExpansion[]
 
-    constructor(initialExpansionsSelected: BackendExpansion[], initialExpansionsExcluded?: BackendExpansion[]) {
+    constructor(initialExpansionsSelected: Expansion[], initialExpansionsExcluded?: Expansion[]) {
         this.selectedExpansions = activeExpansions.map(expansionValue => {
             const isSelected = initialExpansionsSelected.indexOf(expansionValue) !== -1
             const isExcluded = initialExpansionsExcluded == null ? false : (initialExpansionsExcluded?.indexOf(expansionValue) !== -1)
@@ -93,7 +94,7 @@ export class SelectedOrExcludedExpansions {
         })
     }
 
-    onExpansionStateChange = (expansion: BackendExpansion, state: CheckboxState) => {
+    onExpansionStateChange = (expansion: Expansion, state: CheckboxState) => {
         const toUpdate = this.selectedExpansions.find(selectedExpansion => selectedExpansion.expansion === expansion)!
         toUpdate.state = state
     }

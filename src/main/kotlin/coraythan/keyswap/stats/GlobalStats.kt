@@ -1,10 +1,14 @@
 package coraythan.keyswap.stats
 
+import coraythan.keyswap.generatets.GenerateTs
+
+@GenerateTs
 data class GlobalStatsWithExpansion(
         val expansion: Int?,
         val stats: GlobalStats
 )
 
+@GenerateTs
 data class GlobalStats(
         val averageActions: Double = 14.0,
         val averageArtifacts: Double = 4.0,
@@ -80,6 +84,7 @@ data class GlobalStats(
         val aercDatas: List<AercData> = listOf()
 )
 
+@GenerateTs
 data class BarData(
         val x: Any,
         val y: Any

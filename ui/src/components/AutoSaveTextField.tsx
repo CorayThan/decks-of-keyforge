@@ -3,15 +3,14 @@ import TextField, { TextFieldProps } from "@material-ui/core/TextField"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent } from "react"
 import { log } from "../config/Utils"
 
 interface AutoSaveTextFieldProps {
-    value: string
-    onSave: (toSave: string) => void
+    store: AutoSaveTextFieldStore
 }
 
-class AutoSaveTextFieldStore {
+export class AutoSaveTextFieldStore {
     @observable
     savePending = false
 
@@ -35,9 +34,7 @@ class AutoSaveTextFieldStore {
     }
 
     private updateSave = () => {
-        log.info("Update save")
         if (this.savePending) {
-            log.info("Update clear timeout")
             window.clearTimeout(this.currentPendingSave)
         }
         this.savePending = true
@@ -54,9 +51,7 @@ class AutoSaveTextFieldStore {
 
 export const AutoSaveTextField = observer((props: AutoSaveTextFieldProps & Omit<TextFieldProps, "onChange">) => {
 
-    const {onSave, value, ...rest} = props
-
-    const [store] = useState(new AutoSaveTextFieldStore(value, onSave))
+    const {store, ...rest} = props
 
     return (
         <Box width={1} mr={1}>

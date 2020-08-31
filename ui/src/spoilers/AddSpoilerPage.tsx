@@ -25,7 +25,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, Utils } from "../config/Utils"
-import { Expansion } from "../expansions/Expansions"
+import { ExpansionNumber } from "../expansions/Expansions"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { EventValue } from "../generic/EventValue"
@@ -216,7 +216,7 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
             rarity,
             house,
             traitsString: traits,
-            expansion: Expansion.MM,
+            expansion: ExpansionNumber.MM,
             amber: this.amber === "" ? 0 : Number(this.amber),
             powerString: this.power,
             armorString: this.armor,

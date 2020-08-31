@@ -1,5 +1,6 @@
 package coraythan.keyswap.decks
 
+import coraythan.keyswap.generatets.GenerateTs
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -7,6 +8,7 @@ private val roundWinRate = DecimalFormat("#.##").apply {
     roundingMode = RoundingMode.HALF_UP
 }
 
+@GenerateTs
 data class Wins(
         val wins: Int = 0,
         val losses: Int = 0

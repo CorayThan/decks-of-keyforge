@@ -1,5 +1,5 @@
 import { CardType } from "../cards/CardType"
-import { Expansion } from "../expansions/Expansions"
+import { ExpansionNumber } from "../expansions/Expansions"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { CsvData } from "../generic/CsvDownloadButton"
@@ -18,7 +18,7 @@ export interface Spoiler {
     armorString: string
     rarity?: Rarity
     cardNumber?: string
-    expansion: Expansion
+    expansion: ExpansionNumber
 
     traitsString?: string
 

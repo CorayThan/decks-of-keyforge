@@ -4,7 +4,7 @@ import { observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
 import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { log, prettyJson } from "../config/Utils"
-import { BackendExpansion } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
 import { messageStore } from "../ui/MessageStore"
 import { SaveUnregisteredDeck } from "./SaveUnregisteredDeck"
 
@@ -58,7 +58,7 @@ class DeckImportStore {
 
     stopMessages = () => window.clearInterval(this.messageIntervalId)
 
-    readImageIntoDeck = async (deckImage: File, expansion: BackendExpansion) => {
+    readImageIntoDeck = async (deckImage: File, expansion: Expansion) => {
         this.readingDeckImage = true
 
         const imageData = new FormData()

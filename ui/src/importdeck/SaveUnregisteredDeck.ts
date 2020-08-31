@@ -1,9 +1,9 @@
-import { BackendExpansion } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
 
 export interface SaveUnregisteredDeck {
     name: string
     cards: CardsInHouses
-    expansion: BackendExpansion
+    expansion: Expansion
 }
 
 export interface CardsInHouses {

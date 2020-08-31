@@ -27,10 +27,12 @@ export class GlobalDeckStatsView extends React.Component<{}> {
                 <DeckStatsBar name={"Actions"} data={stats.actions}/>
                 <DeckStatsBar name={"Artifacts"} data={stats.artifacts}/>
                 <DeckStatsBar name={"Upgrades"} data={stats.upgrades}/>
+                <DeckStatsBar name={"Total Power"} data={stats.totalCreaturePower}/>
+                <DeckStatsBar name={"Total Armor"} data={stats.totalArmor}/>
             </div>
         )
     }
 }
 
 const DeckStatsBar = (props: StatsBarPropsSimplified) =>
-    <StatsBar name={props.name} data={props.data} hideY={true} yAxisName={"Count"} filterQuantitiesBelow={100}/>
+    <StatsBar name={props.name} data={props.data} hideY={true} yAxisName={"Count"} filterQuantitiesBelow={100} includePercent={true}/>

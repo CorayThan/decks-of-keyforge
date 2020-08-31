@@ -2,16 +2,17 @@ import { MenuItem, TextField } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { BackendExpansion, expansionInfoMap, expansionInfos } from "./Expansions"
+import { Expansion } from "../generated-src/Expansion"
+import { expansionInfoMap, expansionInfos } from "./Expansions"
 
 export class SelectedExpansion {
     @observable
-    expansion: "" | BackendExpansion = ""
+    expansion: "" | Expansion = ""
 
     @observable
     onlyThisExpansion = false
 
-    constructor(expansions?: BackendExpansion[], selectFinal?: boolean) {
+    constructor(expansions?: Expansion[], selectFinal?: boolean) {
         if (expansions && expansions.length > 0) {
             this.expansion = expansions[selectFinal ? (expansions.length - 1) : 0]
         }
@@ -28,7 +29,7 @@ export class SelectedExpansion {
             expansion = expansionAndOnly
         }
 
-        this.expansion = expansion as "" | BackendExpansion
+        this.expansion = expansion as "" | Expansion
     }
 
     currentExpansion = () => {
@@ -39,7 +40,7 @@ export class SelectedExpansion {
     }
 
     currentExpansionOrDefault = () => {
-        return this.currentExpansion() ?? BackendExpansion.CALL_OF_THE_ARCHONS
+        return this.currentExpansion() ?? Expansion.CALL_OF_THE_ARCHONS
     }
 
     expansionsAsNumberArray = (): number[] => {
@@ -80,14 +81,14 @@ export class ExpansionSelector extends React.Component<ExpansionSelectorProps> {
                     </MenuItem>
                 ) : null}
                 {expansionInfos
-                    .filter(info => displayAnomaly ? true : info.backendEnum !== BackendExpansion.ANOMALY_EXPANSION)
+                    .filter(info => displayAnomaly ? true : info.backendEnum !== Expansion.ANOMALY_EXPANSION)
                     .map(info => (
                         <MenuItem key={info.backendEnum} value={info.backendEnum}>
                             {small ? info.abbreviation : info.name}
                         </MenuItem>
                     ))}
                 {includeOnlys && expansionInfos
-                    .filter(info => info.backendEnum !== BackendExpansion.ANOMALY_EXPANSION)
+                    .filter(info => info.backendEnum !== Expansion.ANOMALY_EXPANSION)
                     .map(info => (
                         <MenuItem key={"only" + info.backendEnum} value={"only" + info.backendEnum}>
                             {small ? info.abbreviation : info.name} Only

@@ -16,10 +16,10 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
-import { BackendExpansion } from "../../expansions/Expansions"
 import { DeckCondition } from "../../generated-src/DeckCondition"
 import { DeckLanguage } from "../../generated-src/DeckLanguage"
 import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
+import { Expansion } from "../../generated-src/Expansion"
 import { ListingInfo } from "../../generated-src/ListingInfo"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyButton } from "../../mui-restyled/KeyButton"
@@ -503,7 +503,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </HelperText>
                             </>
                         ) : null}
-                        {deck.expansion === BackendExpansion.MASS_MUTATION && !deck.hasOwnershipVerification && (
+                        {deck.expansion === Expansion.MASS_MUTATION && !deck.hasOwnershipVerification && (
                             <Box mt={2}>
                                 <Typography variant={"subtitle2"} color={"error"}>
                                     You can add a deck picture with enhanced cards. Use the image button below!

@@ -4,7 +4,7 @@ import * as React from "react"
 import { Utils } from "../config/Utils"
 import { Constraint } from "../decks/search/ConstraintDropdowns"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
-import { BackendExpansion } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
@@ -86,7 +86,7 @@ export class CardFilters {
     trait?: SynergyTrait
     @observable
     synergy?: SynergyTrait
-    expansion?: BackendExpansion
+    expansion?: Expansion
     thisExpansionOnly?: boolean
     constraints: Constraint[] = []
 

@@ -1,12 +1,13 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
-import { activeExpansions, BackendExpansion } from "../expansions/Expansions"
+import { activeExpansions } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
+import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SimpleCard } from "../generated-src/SimpleCard"
+import { Wins } from "../generated-src/Wins"
 import { CsvData } from "../generic/CsvDownloadButton"
-import { Wins } from "../stats/GlobalStats"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
 import { CardType } from "./CardType"
@@ -53,7 +54,7 @@ export interface KCard {
 }
 
 export interface CardNumberSetPair {
-    expansion: BackendExpansion
+    expansion: Expansion
     cardNumber: string
 }
 
@@ -77,7 +78,7 @@ export const findCardImageUrl = (card: SimpleCard) => {
 }
 
 export interface CardWinRates {
-    expansion?: BackendExpansion
+    expansion?: Expansion
     winRatePercent?: number
     relativeToAveragePercent?: number
     wins?: number

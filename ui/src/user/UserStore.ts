@@ -140,7 +140,7 @@ export class UserStore {
     agreedToTerms = () => {
         this.agreeingToTerms = true
         axios.post(`${UserStore.SECURE_CONTEXT}/agree-to-terms`)
-            .then((response: AxiosResponse) => {
+            .then(() => {
                 this.agreeingToTerms = false
                 if (this.user) {
                     this.user.agreedToTerms = true

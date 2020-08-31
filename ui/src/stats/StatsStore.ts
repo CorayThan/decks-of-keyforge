@@ -2,9 +2,11 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
 import { HttpConfig } from "../config/HttpConfig"
-import { BackendExpansion, Expansion, expansionToBackendExpansion } from "../expansions/Expansions"
+import { ExpansionNumber, expansionToBackendExpansion } from "../expansions/Expansions"
+import { Expansion } from "../generated-src/Expansion"
+import { GlobalStats } from "../generated-src/GlobalStats"
+import { GlobalStatsWithExpansion } from "../generated-src/GlobalStatsWithExpansion"
 import { House } from "../generated-src/House"
-import { GlobalStats, GlobalStatsWithExpansion } from "./GlobalStats"
 
 export class StatsStore {
 
@@ -14,7 +16,7 @@ export class StatsStore {
     stats?: GlobalStats
 
     @observable
-    currentStatsExpansion?: Expansion
+    currentStatsExpansion?: ExpansionNumber
 
     statsBySetNum?: Map<number | null, GlobalStats>
 
@@ -32,7 +34,7 @@ export class StatsStore {
                             this.winsByExpansionAndHouse[`${expansionToBackendExpansion(stats.expansion!)}-${houseWinRate.x}`] = houseWinRate.y
                         })
                     }
-                    this.statsBySetNum!.set(stats.expansion, stats.stats)
+                    this.statsBySetNum!.set(stats.expansion == null ? null : stats.expansion, stats.stats)
                 })
                 this.stats = this.statsBySetNum!.get(null)
 
@@ -40,7 +42,7 @@ export class StatsStore {
             })
     }
 
-    changeStats = (expansion?: Expansion) => {
+    changeStats = (expansion?: ExpansionNumber) => {
         if (this.statsBySetNum != null) {
             if (expansion == null) {
                 this.stats = this.statsBySetNum!.get(null)
@@ -51,7 +53,7 @@ export class StatsStore {
         }
     }
 
-    winRateForExpansionAndHouse = (expansion: BackendExpansion, house: House): number | undefined => {
+    winRateForExpansionAndHouse = (expansion: Expansion, house: House): number | undefined => {
         const wins = this.winsByExpansionAndHouse
         if (wins != null) {
             return wins[`${expansion}-${house}`]

@@ -1,7 +1,7 @@
 import { HasAerc } from "../../aerc/HasAerc"
 import { log, roundToHundreds } from "../../config/Utils"
-import { BackendExpansion } from "../../expansions/Expansions"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
+import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
 import { HouseAndCards } from "../../generated-src/HouseAndCards"
 import { CsvData } from "../../generic/CsvDownloadButton"
@@ -20,7 +20,7 @@ export interface DeckSearchResult extends HasAerc {
 
     id: number
     keyforgeId: string
-    expansion: BackendExpansion
+    expansion: Expansion
 
     name: string
 

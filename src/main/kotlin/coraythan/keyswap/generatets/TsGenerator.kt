@@ -8,6 +8,7 @@ import java.io.File
 import java.time.temporal.Temporal
 import java.util.*
 import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
 import kotlin.reflect.KType
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.isSubclassOf
@@ -52,15 +53,18 @@ object TsGeneratorObj {
             } else {
                 val tsProps = kClazz.memberProperties
                         .mapNotNull { kProperty1 ->
-                            val type = TsDataType.fromKType(kProperty1.returnType)
+                            val type = kProperty1.returnType.toTSType()
                             if (type == null || kProperty1.hasAnnotation<TsIgnore>()) {
                                 null
                             } else {
+                                val isMap = TsDataType.isMap(kProperty1.returnType)
                                 TsField(
                                         name = kProperty1.name,
                                         type = type,
                                         nullable = kProperty1.returnType.isMarkedNullable || kProperty1.hasAnnotation<TsOptional>(),
-                                        isArray = TsDataType.isArray(kProperty1.returnType)
+                                        isArray = TsDataType.isArray(kProperty1.returnType),
+                                        isMap = isMap,
+                                        type2 = if (isMap) TsDataType.secondKType(kProperty1.returnType) else null
                                 )
                             }
                         }
@@ -91,13 +95,18 @@ export class ${name}Utils {
     private fun writeInterface(name: String, fields: List<TsField>) {
 
         val imports = fields
-                .filter { !listOf("boolean", "string", "number").contains(it.type) }
+                .filter { !listOf("boolean", "string", "number", "any").contains(it.type) }
                 .distinctBy { it.type }
                 .joinToString("\n") { "import { ${it.type} } from \"./${it.type}\"" }
                 .let { if (it.isBlank()) "" else it + "\n\n" }
 
         val tsFields = fields.joinToString("\n    ") {
-            "${it.name}${if (it.nullable) "?" else ""}: ${it.type}${if (it.isArray) "[]" else ""}"
+            val fieldName = "${it.name}${if (it.nullable) "?" else ""}: "
+            if (it.isMap) {
+                "$fieldName{ [key: ${it.type}]: ${it.type2} }"
+            } else {
+                "$fieldName${it.type}${if (it.isArray) "[]" else ""}"
+            }
         }
 
         val contents = """
@@ -118,34 +127,30 @@ data class TsField(
         val name: String,
         val type: String,
         val nullable: Boolean,
-        val isArray: Boolean = false
+        val isArray: Boolean = false,
+        val isMap: Boolean = false,
+        val type2: String? = null
 )
 
 object TsDataType {
-    fun fromKType(type: KType) = when {
-        type.classifier == String::class || Temporal::class.isSuperclassOf(type.classifier as KClass<*>)
-                || type.classifier == UUID::class ->
-            "string"
-        type.classifier == Boolean::class ->
-            "boolean"
-        type.classifier == Int::class || type.classifier == Double::class
-                || type.classifier == Long::class ->
-            "number"
-        type.classifier == List::class -> when (val kClass = type.arguments.first().type?.classifier) {
-            String::class -> "string"
-            is KClass<*> -> kClass.simpleName
-            else -> throw IllegalStateException("No generic type for collection.")
-        }
-        else -> {
-            val kClass = type.classifier
-            if (kClass is KClass<*>) {
-                kClass.simpleName
-            } else {
-                null
-            }
-        }
 
-    }
+    fun secondKType(type: KType): String? = type.arguments.getOrNull(1)?.type?.classifier.toTSType()
 
     fun isArray(type: KType) = type.classifier == List::class
+    fun isMap(type: KType) = type.classifier == Map::class
+}
+
+fun KType.toTSType(): String? {
+    val toConvert = if (this.classifier == List::class || this.classifier == Map::class) this.arguments.first().type?.classifier else this.classifier
+    return toConvert.toTSType()
+}
+
+fun KClassifier?.toTSType() = when {
+    this == null -> null
+    this == Any::class -> "any"
+    this == String::class || Temporal::class.isSuperclassOf(this as KClass<*>) || this == UUID::class ->
+        "string"
+    this == Boolean::class -> "boolean"
+    this == Int::class || this == Double::class || this == Long::class -> "number"
+    else -> this.simpleName
 }

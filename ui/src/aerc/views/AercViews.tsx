@@ -5,7 +5,7 @@ import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
 import { DeckSearchResult, DeckUtils } from "../../decks/models/DeckSearchResult"
-import { BackendExpansion } from "../../expansions/Expansions"
+import { Expansion } from "../../generated-src/Expansion"
 import { EnhancedAmberIcon } from "../../generic/icons/enhancements/EnhancedAmberIcon"
 import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCaptureIcon"
 import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
@@ -56,7 +56,7 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
     let enhancedCapture = 0
     let enhancedDamage = 0
     let enhancedDraw = 0
-    if (deck.expansion === BackendExpansion.MASS_MUTATION) {
+    if (deck.expansion === Expansion.MASS_MUTATION) {
         cards.forEach(card => {
             enhancedAmber += card.extraCardInfo.enhancementAmber
             enhancedCapture += card.extraCardInfo.enhancementCapture
