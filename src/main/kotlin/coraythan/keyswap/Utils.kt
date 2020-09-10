@@ -20,3 +20,23 @@ val capFinder = "(?=\\p{Upper})".toRegex()
 fun String.startCase(): String {
     return this.split(capFinder).joinToString(" ") { it.capitalize() }
 }
+
+fun Int?.zeroToNull(): Int? {
+    if (this == 0) return null
+    return this
+}
+
+fun Double?.zeroToNull(): Double? {
+    if (this == 0.0) return null
+    return this
+}
+
+fun String?.emptyToNull(): String? {
+    if (this.isNullOrBlank()) return null
+    return this
+}
+
+fun Boolean?.falseToNull(): Boolean? {
+    if (this == false) return null
+    return this
+}

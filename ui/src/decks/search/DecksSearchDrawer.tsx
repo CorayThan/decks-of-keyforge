@@ -154,7 +154,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     render() {
         const {
             title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade, forAuction,
-            forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes, completedAuctions, teamDecks, registered, withOwners
+            forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes, completedAuctions, teamDecks, withOwners
         } = this.props.filters
 
         let myCountry: string | undefined
@@ -173,7 +173,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "creatureControl",
             "efficiency",
             "disruption",
-            "creatureProtection",
             "effectivePower",
             "rawAmber",
             "aercScore",
@@ -184,10 +183,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "actionCount",
             "artifactCount",
             "upgradeCount",
+            "bonusDraw",
+            "bonusCapture",
             "powerLevel",
             "chains",
             "maverickCount",
-            "anomalyCount",
         ]
         const hideMinMaxConstraintOptions = [
             "listedWithinDays"
@@ -308,7 +308,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <SearchDrawerExpansionPanel
                                     initiallyOpen={
                                         forAuction || forTrade || myFavorites || completedAuctions || teamDecks
-                                        || registered != null || withOwners
+                                        || withOwners
                                     }
                                     title={"Extra Options"}
                                 >
@@ -381,20 +381,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 style={{width: 136}}
                                             />
                                         )}
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.props.filters.registered === false}
-                                                    onChange={(event) => this.props.filters.registered = event.target.checked ? false : undefined}
-                                                />
-                                            }
-                                            label={(
-                                                <div style={{display: "flex", alignItems: "center"}}>
-                                                    <Typography variant={"body2"}>Unregistered</Typography>
-                                                </div>
-                                            )}
-                                            style={{width: 136}}
-                                        />
                                         {userStore.username != null && ["Coraythan", "randomjoe", "dzky", "Zarathustra05"].includes(userStore.username) && (
                                             <FormControlLabel
                                                 control={

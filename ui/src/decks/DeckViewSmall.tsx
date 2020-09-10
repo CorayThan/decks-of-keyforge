@@ -131,10 +131,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     {compact ? null : (<MyDecksButton deck={deck}/>)}
                                     <div style={{flexGrow: 1, margin: 0}}/>
                                     <div>
-                                        <FavoriteDeck deckName={name} deckId={id} favoriteCount={wishlistCount}/>
+                                        <FavoriteDeck deckName={name} deckId={id} favoriteCount={wishlistCount ?? 0}/>
                                     </div>
                                     <div>
-                                        <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount}/>
+                                        <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount ?? 0}/>
                                     </div>
                                     <DeckOwnershipButton deckName={name} deckId={id} hasVerification={deck.hasOwnershipVerification}/>
                                     <MoreDeckActions deck={deck} compact={compact}/>
@@ -178,10 +178,10 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
             }
         }
     } else {
-        displayForAuction = forAuction
+        displayForAuction = forAuction == true
         if (!displayForAuction) {
-            displayForSale = forSale
-            displayForTrade = forTrade
+            displayForSale = forSale == true
+            displayForTrade = forTrade == true
         }
     }
     const displaySaleIcons = (displayForAuction || displayForSale || displayForTrade)

@@ -20,19 +20,19 @@ export class CardTypeRadar extends React.Component<CardTypeRadarProps> {
         const data = [
             {
                 cardType: "Actions",
-                deck: Utils.valueFromPercentiles(deck.actionCount, stats.actionCountPercentiles),
+                deck: Utils.valueFromPercentiles(deck.actionCount ?? 0, stats.actionCountPercentiles),
             },
             {
                 cardType: "Creatures",
-                deck: Utils.valueFromPercentiles(deck.creatureCount, stats.creatureCountPercentiles),
+                deck: Utils.valueFromPercentiles(deck.creatureCount ?? 0, stats.creatureCountPercentiles),
             },
             {
                 cardType: "Artifacts",
-                deck: Utils.valueFromPercentiles(deck.artifactCount, stats.artifactCountPercentiles),
+                deck: Utils.valueFromPercentiles(deck.artifactCount ?? 0, stats.artifactCountPercentiles),
             },
             {
                 cardType: "Upgrades",
-                deck: Utils.valueFromPercentiles(deck.upgradeCount, stats.upgradeCountPercentiles),
+                deck: Utils.valueFromPercentiles(deck.upgradeCount ?? 0, stats.upgradeCountPercentiles),
             },
         ]
 

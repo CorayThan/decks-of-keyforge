@@ -32,7 +32,7 @@ export class AercRadar extends React.Component<AercRadarProps> {
             },
             {
                 aerc: "Artifact Ctrl (R)",
-                deck: Utils.valueFromPercentiles(hasAerc.artifactControl, stats.artifactControlPercentiles),
+                deck: Utils.valueFromPercentiles(hasAerc.artifactControl ?? 0, stats.artifactControlPercentiles),
             },
             {
                 aerc: "Creature Control (C)",
@@ -44,15 +44,15 @@ export class AercRadar extends React.Component<AercRadarProps> {
             },
             {
                 aerc: "Creature Protection",
-                deck: Utils.valueFromPercentiles(hasAerc.creatureProtection, stats.creatureProtectionPercentiles),
+                deck: Utils.valueFromPercentiles(hasAerc.creatureProtection ?? 0, stats.creatureProtectionPercentiles),
             },
             {
                 aerc: "Disruption (D)",
-                deck: Utils.valueFromPercentiles(hasAerc.disruption, stats.disruptionPercentiles),
+                deck: Utils.valueFromPercentiles(hasAerc.disruption ?? 0, stats.disruptionPercentiles),
             },
             {
                 aerc: "Efficiency (F)",
-                deck: Utils.valueFromPercentiles(hasAerc.efficiency, stats.efficiencyPercentiles),
+                deck: Utils.valueFromPercentiles(hasAerc.efficiency ?? 0, stats.efficiencyPercentiles),
             },
         ]
 

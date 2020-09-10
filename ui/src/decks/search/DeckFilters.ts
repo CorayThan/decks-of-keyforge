@@ -143,8 +143,6 @@ export class DeckFilters {
     @observable
     forSaleInCountry?: string
     @observable
-    registered?: boolean
-    @observable
     myFavorites = false
     constraints: Constraint[] = []
     expansions: number[] = []
@@ -167,7 +165,6 @@ export class DeckFilters {
         this.completedAuctions = false
         this.forSaleInCountry = undefined
         this.myFavorites = false
-        this.registered = undefined
         this.cards = []
         this.expansions = []
         this.constraints = []

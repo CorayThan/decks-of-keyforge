@@ -15,27 +15,27 @@ data class DeckSearchResult(
 
         val name: String = "",
 
-        val creatureCount: Int = 0,
-        val actionCount: Int = 0,
-        val artifactCount: Int = 0,
-        val upgradeCount: Int = 0,
+        val creatureCount: Int? = null,
+        val actionCount: Int? = null,
+        val artifactCount: Int? = null,
+        val upgradeCount: Int? = null,
 
         val registered: Boolean = true,
 
-        val powerLevel: Int = 0,
-        val chains: Int = 0,
-        val wins: Int = 0,
-        val losses: Int = 0,
+        val powerLevel: Int? = null,
+        val chains: Int? = null,
+        val wins: Int? = null,
+        val losses: Int? = null,
 
         val expectedAmber: Double = 0.0,
         val amberControl: Double = 0.0,
         val creatureControl: Double = 0.0,
-        val artifactControl: Double = 0.0,
-        val efficiency: Double = 0.0,
+        val artifactControl: Double? = null,
+        val efficiency: Double? = null,
         val effectivePower: Int = 0,
-        val creatureProtection: Double = 0.0,
-        val disruption: Double = 0.0,
-        val other: Double = 0.0,
+        val creatureProtection: Double? = null,
+        val disruption: Double? = null,
+        val other: Double? = null,
 
         val aercScore: Double = 0.0,
         val previousSasRating: Int = 0,
@@ -46,22 +46,22 @@ data class DeckSearchResult(
         val antisynergyRating: Int = 0,
 
         val totalPower: Int = 0,
-        val cardDrawCount: Int = 0,
-        val cardArchiveCount: Int = 0,
-        val keyCheatCount: Int = 0,
+        val cardDrawCount: Int? = null,
+        val cardArchiveCount: Int? = null,
+        val keyCheatCount: Int? = null,
         val rawAmber: Int = 0,
-        val totalArmor: Int = 0,
+        val totalArmor: Int? = null,
 
-        val forSale: Boolean = false,
-        val forTrade: Boolean = false,
-        val forAuction: Boolean = false,
-        val wishlistCount: Int = 0,
-        val funnyCount: Int = 0,
+        val forSale: Boolean? = null,
+        val forTrade: Boolean? = null,
+        val forAuction: Boolean? = null,
+        val wishlistCount: Int? = null,
+        val funnyCount: Int? = null,
 
-        val lastSasUpdate: String = "",
+        val lastSasUpdate: String? = null,
         val sasPercentile: Double = 0.0,
 
-        val hasOwnershipVerification: Boolean = false,
+        val hasOwnershipVerification: Boolean? = null,
 
         val housesAndCards: List<HouseAndCards> = listOf(),
         val deckSaleInfo: List<DeckSaleInfo>? = null,
@@ -72,20 +72,20 @@ data class DeckSearchResult(
 
     fun printDeckSimple(): String {
         return "$sasRating SAS • ${expansion.readable} • ${housesAndCards.map { it.house }.joinToString(" – ") { it.masterVaultValue }}" +
-                if (forSale || forAuction || forTrade) " • For sale" else ""
+                if (forSale == true || forAuction == true || forTrade == true) " • For sale" else ""
     }
 
     fun printDeck(): String {
         return """
             ${printDeckSimple()}
             
-            ${if (powerLevel > 0 || chains > 0 || wins > 0 || losses > 0) "Power Level $powerLevel • $chains Chains • $wins / $losses OP Wins / Losses\n" else ""}
+            ${if ((powerLevel ?: 0) > 0 || (chains ?: 0) > 0 || (wins ?: 0) > 0 || (losses ?: 0) > 0) "Power Level ${powerLevel ?: 0} • ${chains ?: 0} Chains • ${wins ?: 0} / ${losses ?: 0} OP Wins / Losses\n" else ""}
             ${amberControl.roundToOneSigDig()} Aember Control (A)
             ${expectedAmber.roundToOneSigDig()} Expected Aember (E)
-            ${artifactControl.roundToOneSigDig()} Artifact Control (R)
+            ${(artifactControl ?: 0.0).roundToOneSigDig()} Artifact Control (R)
             ${creatureControl.roundToOneSigDig()} Creature Control (C)
-            ${efficiency.roundToOneSigDig()} Efficiency (F)
-            ${disruption.roundToOneSigDig()} Disruption (D)
+            ${(efficiency ?: 0.0).roundToOneSigDig()} Efficiency (F)
+            ${(disruption ?: 0.0).roundToOneSigDig()} Disruption (D)
             
             $actionCount Actions
             $creatureCount Creatures

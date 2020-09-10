@@ -93,7 +93,6 @@ class DeckSearchService(
         val deckQ = QDeck.deck
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
-            DeckSortOptions.AERC_SCORE -> deckQ.aercScore
             DeckSortOptions.POWER_LEVEL -> deckQ.powerLevel
             DeckSortOptions.CHAINS -> deckQ.chains
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
@@ -216,11 +215,7 @@ class DeckSearchService(
             predicate.and(deckQ.chains.gt(0))
         }
 
-        if (filters.registered == false) {
-            predicate.and(deckQ.registered.isFalse)
-        } else {
-            predicate.and(deckQ.registered.isTrue)
-        }
+        predicate.and(deckQ.registered.isTrue)
 
         if (filters.expansions.isNotEmpty()) {
             predicate.andAnyOf(*filters.expansions.map { deckQ.expansion.eq(it) }.toTypedArray())

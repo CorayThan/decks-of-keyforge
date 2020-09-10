@@ -397,8 +397,12 @@ class DeckImporterService(
     fun rateDeck(deck: Deck, majorRevision: Boolean = false): Deck {
         val cards = cardService.cardsForDeck(deck)
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards)
-
+        val bonusDraw = cards.mapNotNull { it.extraCardInfo?.enhancementDraw }.sum()
+        val bonusCapture = cards.mapNotNull { it.extraCardInfo?.enhancementCapture }.sum()
         return deck.copy(
+
+                bonusDraw = if (bonusDraw == 0) null else bonusDraw,
+                bonusCapture = if (bonusCapture == 0) null else bonusCapture,
 
                 creatureCount = cards.filter { it.cardType == CardType.Creature }.size,
                 actionCount = cards.filter { it.cardType == CardType.Action }.size,

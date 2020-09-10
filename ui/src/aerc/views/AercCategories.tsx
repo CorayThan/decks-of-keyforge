@@ -53,7 +53,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
     const secondTwo: InfoIconValue[] = [
         {
             icon: <KeyCheatIcon width={width}/>,
-            info: deck.keyCheatCount,
+            info: deck.keyCheatCount ?? 0,
             cardsTips: {
                 matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
                 cards,
@@ -112,7 +112,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
     const firstTwo: InfoIconValue[] = [
         {
             icon: <ActionIcon width={width}/>,
-            info: deck.actionCount,
+            info: deck.actionCount ?? 0,
             cardsTips: {
                 matches: card => card.cardType === CardType.Action,
                 cards,
@@ -121,7 +121,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
         },
         {
             icon: <CreatureIcon width={width}/>,
-            info: deck.creatureCount,
+            info: deck.creatureCount ?? 0,
             cardsTips: {
                 matches: card => card.cardType === CardType.Creature,
                 cards,
@@ -133,7 +133,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
     const secondTwo: InfoIconValue[] = [
         {
             icon: <ArtifactIcon width={width}/>,
-            info: deck.artifactCount,
+            info: deck.artifactCount ?? 0,
             cardsTips: {
                 matches: card => card.cardType === CardType.Artifact,
                 cards,
@@ -142,7 +142,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
         },
         {
             icon: <UpgradeIcon width={width}/>,
-            info: deck.upgradeCount,
+            info: deck.upgradeCount ?? 0,
             cardsTips: {
                 matches: card => card.cardType === CardType.Upgrade,
                 cards,

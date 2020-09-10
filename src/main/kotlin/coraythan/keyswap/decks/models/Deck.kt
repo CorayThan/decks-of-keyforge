@@ -1,19 +1,17 @@
 package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.House
+import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
-import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import java.time.LocalDate
@@ -43,6 +41,8 @@ data class Deck(
 
         val rawAmber: Int = 0,
         val totalPower: Int = 0,
+        val bonusDraw: Int? = 0,
+        val bonusCapture: Int? = 0,
         val creatureCount: Int = 0,
         val actionCount: Int = 0,
         val artifactCount: Int = 0,
@@ -139,38 +139,36 @@ data class Deck(
                 expansion = expansionEnum,
                 name = name,
 
-                powerLevel = powerLevel,
-                chains = chains,
-                wins = wins,
-                losses = losses,
-//                crucibleTrackerWins = crucibleWins?.get(keyforgeId)?.wins,
-//                crucibleTrackerLosses = crucibleWins?.get(keyforgeId)?.losses,
+                powerLevel = powerLevel.zeroToNull(),
+                chains = chains.zeroToNull(),
+                wins = wins.zeroToNull(),
+                losses = losses.zeroToNull(),
 
                 registered = registered,
 
-                creatureCount = creatureCount,
-                actionCount = actionCount,
-                artifactCount = artifactCount,
-                upgradeCount = upgradeCount,
+                creatureCount = creatureCount.zeroToNull(),
+                actionCount = actionCount.zeroToNull(),
+                artifactCount = artifactCount.zeroToNull(),
+                upgradeCount = upgradeCount.zeroToNull(),
 
-                cardDrawCount = cards?.filter {
+                cardDrawCount = (cards?.filter {
                     it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
                             || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
-                }?.size ?: 0,
-                cardArchiveCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size ?: 0,
-                keyCheatCount = cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size ?: 0,
+                }?.size ?: 0).zeroToNull(),
+                cardArchiveCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size ?: 0).zeroToNull(),
+                keyCheatCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size ?: 0).zeroToNull(),
                 rawAmber = rawAmber,
-                totalArmor = totalArmor,
+                totalArmor = totalArmor.zeroToNull(),
 
                 expectedAmber = expectedAmber,
                 amberControl = amberControl,
                 creatureControl = creatureControl,
-                artifactControl = artifactControl,
-                efficiency = efficiency,
+                artifactControl = artifactControl.zeroToNull(),
+                efficiency = efficiency.zeroToNull(),
                 effectivePower = effectivePower,
-                creatureProtection = creatureProtection ?: 0.0,
-                disruption = disruption,
-                other = other,
+                creatureProtection = creatureProtection.zeroToNull(),
+                disruption = disruption.zeroToNull(),
+                other = other.zeroToNull(),
                 aercScore = aercScore,
                 previousSasRating = previousSasRating ?: sasRating,
                 previousMajorSasRating = previousMajorSasRating,
@@ -179,21 +177,21 @@ data class Deck(
                 synergyRating = synergyRating,
                 antisynergyRating = antisynergyRating,
                 totalPower = totalPower,
-                forSale = forSale,
-                forTrade = forTrade,
-                forAuction = forAuction,
-                wishlistCount = wishlistCount,
-                funnyCount = funnyCount,
+                forSale = forSale.falseToNull(),
+                forTrade = forTrade.falseToNull(),
+                forAuction = forAuction.falseToNull(),
+                wishlistCount = wishlistCount.zeroToNull(),
+                funnyCount = funnyCount.zeroToNull(),
                 housesAndCards = housesAndCards,
 
-                lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString() ?: "",
+                lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString().emptyToNull(),
 
                 sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
                         ?: if (sasRating < 75) 0.0 else 100.0,
 
                 synergies = synergies,
 
-                hasOwnershipVerification = hasOwnershipVerification == true,
+                hasOwnershipVerification = hasOwnershipVerification.falseToNull(),
 
                 dateAdded = dateAdded
         )

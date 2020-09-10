@@ -27,8 +27,8 @@ export const OrganizedPlayStats = observer((props: { deck: DeckSearchResult, sty
                 <div
                     style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: spacing(2)}}
                 >
-                    <OpStat value={powerLevel} icon={<PowerIcon/>} tooltip={"Power Level"} style={{marginRight: spacing(2)}}/>
-                    <OpStat value={chains} icon={<ChainIcon/>} tooltip={"Chains"} style={{marginRight: spacing(2)}}/>
+                    <OpStat value={powerLevel ?? 0} icon={<PowerIcon/>} tooltip={"Power Level"} style={{marginRight: spacing(2)}}/>
+                    <OpStat value={chains ?? 0} icon={<ChainIcon/>} tooltip={"Chains"} style={{marginRight: spacing(2)}}/>
                     <OpStat
                         value={`${wins} / ${losses}`}
                         tooltip={"Organized Play Wins / Losses"}

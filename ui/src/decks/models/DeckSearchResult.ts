@@ -1,5 +1,5 @@
 import { HasAerc } from "../../aerc/HasAerc"
-import { log, roundToHundreds } from "../../config/Utils"
+import { roundToHundreds } from "../../config/Utils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
@@ -16,7 +16,7 @@ export interface DeckWithSynergyInfo {
     antisynergyPercentile: number
 }
 
-export interface DeckSearchResult extends HasAerc {
+export interface DeckSearchResult {
 
     id: number
     keyforgeId: string
@@ -24,17 +24,17 @@ export interface DeckSearchResult extends HasAerc {
 
     name: string
 
-    creatureCount: number
-    actionCount: number
-    artifactCount: number
-    upgradeCount: number
+    creatureCount?: number
+    actionCount?: number
+    artifactCount?: number
+    upgradeCount?: number
 
     registered: boolean
 
-    powerLevel: number
-    chains: number
-    wins: number
-    losses: number
+    powerLevel?: number
+    chains?: number
+    wins?: number
+    losses?: number
 
     aercScore: number
     previousSasRating: number
@@ -44,17 +44,17 @@ export interface DeckSearchResult extends HasAerc {
     antisynergyRating: number
 
     totalPower: number
-    cardDrawCount: number
-    cardArchiveCount: number
-    keyCheatCount: number
+    cardDrawCount?: number
+    cardArchiveCount?: number
+    keyCheatCount?: number
     rawAmber: number
-    totalArmor: number
+    totalArmor?: number
 
-    forSale: boolean
-    forTrade: boolean
-    forAuction: boolean
-    wishlistCount: number
-    funnyCount: number
+    forSale?: boolean
+    forTrade?: boolean
+    forAuction?: boolean
+    wishlistCount?: number
+    funnyCount?: number
 
     lastSasUpdate: string
     sasPercentile: number
@@ -65,6 +65,17 @@ export interface DeckSearchResult extends HasAerc {
     synergies?: DeckSynergyInfo
     hasOwnershipVerification: boolean
     dateAdded?: string
+
+    amberControl: number
+    expectedAmber: number
+    artifactControl?: number
+    creatureControl: number
+    efficiency?: number
+    effectivePower: number
+    creatureProtection?: number
+    disruption?: number
+    other?: number
+
 }
 
 export class DeckUtils {
@@ -95,8 +106,7 @@ export class DeckUtils {
 
     static hasAercFromDeck = (deck: DeckSearchResult): HasAerc => {
         if (deck.synergies == null) {
-            log.warn("Synergies shouldnt' be null!")
-            return deck
+            throw Error("Synergies shouldnt' be null!")
         }
         return {
             aercScore: deck.synergies.rawAerc,

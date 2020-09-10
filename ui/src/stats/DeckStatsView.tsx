@@ -42,10 +42,10 @@ export class DeckStatsView extends React.Component<DeckStatsViewProps> {
                 )}
                 <CardTypePie
                     name={"This Deck"}
-                    creatures={creatureCount}
-                    actions={actionCount}
-                    artifacts={artifactCount}
-                    upgrades={upgradeCount}
+                    creatures={creatureCount ?? 0}
+                    actions={actionCount ?? 0}
+                    artifacts={artifactCount ?? 0}
+                    upgrades={upgradeCount ?? 0}
                     style={{marginTop: spacing(2), alignSelf: "flex-start"}}
                 />
                 {!compact && <CardTypePieGlobalAverages stats={stats} style={{marginTop: spacing(2), alignSelf: "flex-start"}}/>}
@@ -90,12 +90,12 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
             {name: "Raw AERC", data: stats.aerc, comparison: Math.round(aercScore)},
             {name: "Aember Control", data: stats.amberControl, comparison: Math.round(amberControl)},
             {name: "Expected Aember", data: stats.expectedAmber, comparison: Math.round(expectedAmber)},
-            {name: "Creature Protection", data: stats.creatureProtection, comparison: Math.round(creatureProtection)},
-            {name: "Artifact Control", data: stats.artifactControl, comparison: Math.round(artifactControl)},
+            {name: "Creature Protection", data: stats.creatureProtection, comparison: Math.round(creatureProtection ?? 0)},
+            {name: "Artifact Control", data: stats.artifactControl, comparison: Math.round(artifactControl ?? 0)},
             {name: "Creature Control", data: stats.creatureControl, comparison: Math.round(creatureControl)},
             {name: "Effective Power", data: stats.effectivePower, comparison: effectiveCreaturePowerCompareValue},
-            {name: "Efficiency", data: stats.efficiency, comparison: Math.round(efficiency)},
-            {name: "Disruption", data: stats.disruption, comparison: Math.round(disruption)},
+            {name: "Efficiency", data: stats.efficiency, comparison: Math.round(efficiency ?? 0)},
+            {name: "Disruption", data: stats.disruption, comparison: Math.round(disruption ?? 0)},
         ]
 
         const firstRowProps = barProps.slice(0, rowSize)

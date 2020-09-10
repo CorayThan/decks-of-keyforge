@@ -80,7 +80,6 @@ export interface SortOption {
 
 export const DeckSorts = {
     sas: "SAS_RATING",
-    aerc: "AERC_SCORE",
     powerLevel: "POWER_LEVEL",
     chains: "CHAINS",
     funniest: "FUNNIEST",
@@ -95,7 +94,6 @@ export const DeckSorts = {
 const deckSortOptions: SortOption[] = [
     {value: DeckSorts.addedDate, name: "Date Added"},
     {value: DeckSorts.sas, name: "SAS Rating"},
-    {value: DeckSorts.aerc, name: "AERC Score"},
     {value: DeckSorts.powerLevel, name: "Power Level"},
     {value: DeckSorts.chains, name: "Chains"},
     {value: DeckSorts.funniest, name: "Funniest"},
