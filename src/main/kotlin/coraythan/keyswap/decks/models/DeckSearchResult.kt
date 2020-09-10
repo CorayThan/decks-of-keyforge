@@ -3,7 +3,7 @@ package coraythan.keyswap.decks.models
 import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.roundToOneSigDig
-import coraythan.keyswap.synergy.DeckSynergyInfo
+import coraythan.keyswap.synergy.SynergyCombo
 import java.time.LocalDate
 
 // It takes a long time to load all the crap in hibernate, so avoid that.
@@ -37,7 +37,7 @@ data class DeckSearchResult(
         val disruption: Double? = null,
         val other: Double? = null,
 
-        val aercScore: Double = 0.0,
+        val aercScore: Int = 0,
         val previousSasRating: Int = 0,
         val previousMajorSasRating: Int? = null,
         val aercVersion: Int = 12,
@@ -66,7 +66,7 @@ data class DeckSearchResult(
         val housesAndCards: List<HouseAndCards> = listOf(),
         val deckSaleInfo: List<DeckSaleInfo>? = null,
         val owners: List<String>? = null,
-        val synergies: DeckSynergyInfo? = null,
+        val synergyDetails: List<SynergyCombo>? = null,
         val dateAdded: LocalDate? = null
 ) {
 

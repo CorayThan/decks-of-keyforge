@@ -233,7 +233,7 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                         </div>
                     </Tooltip>
                 </div>
-                <DeckScoreView deck={{...deck, ...deck.synergies!}} style={{marginLeft: spacing(4)}}/>
+                <DeckScoreView deck={deck} style={{marginLeft: spacing(4)}}/>
             </div>
         )
     } else {
@@ -249,7 +249,7 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                     <HouseBanner houses={houses} expansion={deck.expansion}/>
                     <OrganizedPlayStats deck={deck}/>
                 </div>
-                <DeckScoreView deck={{...deck, ...deck.synergies!}}/>
+                <DeckScoreView deck={deck}/>
             </div>
         )
     }
@@ -286,7 +286,7 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
     const deckExpansion = deck.expansion
     return (
         <List>
-            <AercForCombos combos={deck.synergies?.synergyCombos.filter(combo => combo.house === house)}>
+            <AercForCombos combos={deck.synergyDetails?.filter(combo => combo.house === house)}>
                 <HouseLabel house={house} title={true}/>
             </AercForCombos>
             <Divider style={{marginTop: 4}}/>

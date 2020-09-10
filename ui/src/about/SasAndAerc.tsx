@@ -4,6 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { DeckScorePill } from "../decks/DeckScoreView"
+import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { AercIcon, AercType } from "../generic/icons/aerc/AercIcon"
 import { CardQualityIcon } from "../generic/icons/CardQualityIcon"
 import { InfoListCard } from "../generic/InfoListCard"
@@ -185,12 +186,12 @@ export class SasAndAerc extends React.Component {
                         <Typography variant={"h6"}>SAS (Synergy and AntiSynergy Rating)</Typography>,
                         <DeckScorePill
                             deck={{
-                                rawAerc: 60,
+                                aercScore: 60,
                                 sasRating: 63,
                                 synergyRating: 5,
                                 antisynergyRating: -2 ,
                                 sasPercentile: 50.0
-                            }}
+                            } as DeckSearchResult}
                         />,
                         "I add together the base AERC total for each card, synergies, and antisynergies of a deck to create its SAS rating.",
                         "The system isn't perfect, but it gives a reasonable approximation of the relative quality of decks, and can help you " +

@@ -154,10 +154,10 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
 
 const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, deck?: DeckSearchResult) => {
     const name = card.cardTitle
-    if (name == null || deck == null || deck.synergies == null) {
+    if (name == null || deck == null || deck.synergyDetails == null) {
         return
     }
-    return deck.synergies.synergyCombos.find(combo => combo.cardName === name && (house == null || combo.house === house))
+    return deck.synergyDetails.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
 const CardLine = observer((props: CardAsLineProps) => {

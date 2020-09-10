@@ -1,6 +1,9 @@
 
 server:
   port: 5000
+  compression:
+    enabled: true
+    mime-types: application/json
 
 spring:
   application:

@@ -105,7 +105,7 @@ export class StatsBar extends React.Component<StatsBarProps> {
                         )}
                         {includePercent ? (
                             <Tooltip
-                                formatter={(value, name) => `${roundToTens((value as number) * 100 / (total as number))}%`}
+                                formatter={(value) => `${roundToTens((value as number) * 100 / (total as number))}%`}
                             />
                         ) : (
                             <Tooltip/>

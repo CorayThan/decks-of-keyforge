@@ -32,7 +32,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
     const firstTwo: InfoIconValue[] = [
         {
             icon: <AercIcon type={AercType.O} width={width}/>,
-            info: hasAerc.other,
+            info: hasAerc.other ?? 0,
             combosTips: {
                 title: "Other",
                 combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? [],
@@ -62,7 +62,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
         },
         {
             icon: <ArchiveIcon width={width}/>,
-            info: `${deck.cardArchiveCount}/${cards.filter(
+            info: `${deck.cardArchiveCount ?? 0}/${cards.filter(
                 card => card.extraCardInfo?.traits?.find(traitValue =>
                     (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
                 ) != null
@@ -221,7 +221,7 @@ export const AercCategorySpeed = (props: AercScoresCategoryProps) => {
                 [
                     {
                         icon: <AercIcon type={AercType.F}/>,
-                        info: hasAerc.efficiency,
+                        info: hasAerc.efficiency ?? 0,
                         combosTips: {
                             title: "Efficiency (F)",
                             combos: combos.filter(combo => combo.efficiency != null && combo.efficiency != 0),
@@ -230,7 +230,7 @@ export const AercCategorySpeed = (props: AercScoresCategoryProps) => {
                     },
                     {
                         icon: <AercIcon type={AercType.D}/>,
-                        info: hasAerc.disruption,
+                        info: hasAerc.disruption ?? 0,
                         combosTips: {
                             title: "Disruption (D)",
                             combos: combos.filter(combo => combo.disruption != null && combo.disruption != 0),
@@ -252,7 +252,7 @@ export const AercCategoryControl = (props: AercScoresCategoryProps) => {
                 [
                     {
                         icon: <AercIcon type={AercType.R}/>,
-                        info: hasAerc.artifactControl,
+                        info: hasAerc.artifactControl ?? 0,
                         combosTips: {
                             title: "Artifact Control (R)",
                             combos: combos.filter(combo => combo.artifactControl != null && combo.artifactControl != 0),
@@ -261,7 +261,7 @@ export const AercCategoryControl = (props: AercScoresCategoryProps) => {
                     },
                     {
                         icon: <AercIcon type={AercType.C}/>,
-                        info: hasAerc.creatureControl,
+                        info: hasAerc.creatureControl ?? 0,
                         combosTips: {
                             title: "Creature Control (C)",
                             combos: combos.filter(combo => combo.creatureControl != null && combo.creatureControl != 0),
@@ -292,7 +292,7 @@ export const AercCategoryBoard = (props: AercScoresCategoryProps) => {
                     },
                     {
                         icon: <AercIcon type={AercType.S}/>,
-                        info: hasAerc.creatureProtection,
+                        info: hasAerc.creatureProtection ?? 0,
                         combosTips: {
                             title: "Creature Protection",
                             combos: combos.filter(combo => combo.creatureProtection != null && combo.creatureProtection != 0),

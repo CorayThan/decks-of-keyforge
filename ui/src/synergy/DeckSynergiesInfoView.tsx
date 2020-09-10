@@ -32,8 +32,7 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
 
         const sasPercentile = this.props.synergies.deck.sasPercentile
         const {deck, antisynergyPercentile, synergyPercentile} = this.props.synergies
-        const deckSynergyInfo = deck.synergies!
-        const {synergyCombos} = deckSynergyInfo
+        const synergyCombos = deck.synergyDetails!
         return (
             <KeyCard
                 topContents={(

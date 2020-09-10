@@ -15,44 +15,42 @@ interface AercRadarProps {
 export class AercRadar extends React.Component<AercRadarProps> {
     render() {
         const {deck, style} = this.props
-        const {synergies} = deck
         const stats = statsStore.stats
         if (stats == null) {
             return <Loader/>
         }
-        const hasAerc = synergies ?? deck
         const data = [
             {
                 aerc: "Expected Aember (E)",
-                deck: Utils.valueFromPercentiles(hasAerc.expectedAmber, stats.expectedAmberPercentiles),
+                deck: Utils.valueFromPercentiles(deck.expectedAmber, stats.expectedAmberPercentiles),
             },
             {
                 aerc: "Aember Control (A)",
-                deck: Utils.valueFromPercentiles(hasAerc.amberControl, stats.amberControlPercentiles),
+                deck: Utils.valueFromPercentiles(deck.amberControl, stats.amberControlPercentiles),
             },
             {
                 aerc: "Artifact Ctrl (R)",
-                deck: Utils.valueFromPercentiles(hasAerc.artifactControl ?? 0, stats.artifactControlPercentiles),
+                deck: Utils.valueFromPercentiles(deck.artifactControl ?? 0, stats.artifactControlPercentiles),
             },
             {
                 aerc: "Creature Control (C)",
-                deck: Utils.valueFromPercentiles(hasAerc.creatureControl, stats.creatureControlPercentiles),
+                deck: Utils.valueFromPercentiles(deck.creatureControl, stats.creatureControlPercentiles),
             },
             {
                 aerc: "Effective Power (P)",
-                deck: Utils.valueFromPercentiles(hasAerc.effectivePower, stats.effectivePowerPercentiles),
+                deck: Utils.valueFromPercentiles(deck.effectivePower, stats.effectivePowerPercentiles),
             },
             {
                 aerc: "Creature Protection",
-                deck: Utils.valueFromPercentiles(hasAerc.creatureProtection ?? 0, stats.creatureProtectionPercentiles),
+                deck: Utils.valueFromPercentiles(deck.creatureProtection ?? 0, stats.creatureProtectionPercentiles),
             },
             {
                 aerc: "Disruption (D)",
-                deck: Utils.valueFromPercentiles(hasAerc.disruption ?? 0, stats.disruptionPercentiles),
+                deck: Utils.valueFromPercentiles(deck.disruption ?? 0, stats.disruptionPercentiles),
             },
             {
                 aerc: "Efficiency (F)",
-                deck: Utils.valueFromPercentiles(hasAerc.efficiency ?? 0, stats.efficiencyPercentiles),
+                deck: Utils.valueFromPercentiles(deck.efficiency ?? 0, stats.efficiencyPercentiles),
             },
         ]
 

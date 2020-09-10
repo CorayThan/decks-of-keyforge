@@ -11,6 +11,7 @@ import { activeExpansions } from "../expansions/Expansions"
 import { Expansion } from "../generated-src/Expansion"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
+import { DeckSearchResult } from "./models/DeckSearchResult"
 
 export enum DeckScoreSize {
     SMALL,
@@ -20,15 +21,7 @@ export enum DeckScoreSize {
 }
 
 interface DeckScoreViewProps {
-    deck: {
-        rawAerc: number,
-        sasRating: number,
-        synergyRating: number,
-        antisynergyRating: number,
-        previousSasRating?: number,
-        sasPercentile?: number,
-        expansion?: Expansion
-    }
+    deck: DeckSearchResult
     style?: React.CSSProperties
     small?: boolean
     noLinks?: boolean
@@ -55,7 +48,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     const {small, deck, noLinks} = props
     const {
-        rawAerc,
+        aercScore,
         previousSasRating,
         sasRating,
         synergyRating,
@@ -91,7 +84,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
             <div style={props.style}>
                 <Tooltip title={"Total SAS / AERC score without synergies and antisynergies."}>
                     <div>
-                        <RatingRow value={rawAerc} name={"BASE AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                        <RatingRow value={aercScore} name={"BASE AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                     </div>
                 </Tooltip>
                 <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>

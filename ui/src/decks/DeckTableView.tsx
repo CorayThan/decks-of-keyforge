@@ -103,8 +103,8 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
 
             {
                 title: "SAS",
-                transform: deck => deck.synergies?.sasRating,
-                sortFunction: deck => deck.synergies?.sasRating
+                transform: deck => deck.sasRating,
+                sortFunction: deck => deck.sasRating
             },
             {
                 title: "SAStars",
@@ -124,7 +124,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                         noPercent={true}
                     />
                 ),
-                sortFunction: deck => deck.synergies?.sasRating,
+                sortFunction: deck => deck.sasRating,
                 hide: keyLocalStorage.smallTableView
             },
             {
@@ -134,20 +134,20 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             },
             {
                 title: "Synergy",
-                transform: deck => roundToHundreds(deck.synergies?.synergyRating),
-                sortFunction: deck => roundToHundreds(deck.synergies?.synergyRating),
+                transform: deck => roundToHundreds(deck.synergyRating),
+                sortFunction: deck => roundToHundreds(deck.synergyRating),
                 hide: keyLocalStorage.smallTableView
             },
             {
                 title: "Antisyn",
-                transform: deck => roundToHundreds(deck.synergies?.antisynergyRating),
-                sortFunction: deck => roundToHundreds(deck.synergies?.antisynergyRating),
+                transform: deck => roundToHundreds(deck.antisynergyRating),
+                sortFunction: deck => roundToHundreds(deck.antisynergyRating),
                 hide: keyLocalStorage.smallTableView
             },
             {
                 title: "Raw AERC",
-                transform: deck => roundToHundreds(deck.synergies?.rawAerc),
-                sortFunction: deck => roundToHundreds(deck.synergies?.rawAerc),
+                transform: deck => roundToHundreds(deck.aercScore),
+                sortFunction: deck => roundToHundreds(deck.aercScore),
                 hide: keyLocalStorage.smallTableView
             },
             {
@@ -161,49 +161,49 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             },
             {
                 title: "A",
-                transform: deck => roundToHundreds(deck.synergies?.amberControl),
-                sortFunction: deck => roundToHundreds(deck.synergies?.amberControl)
+                transform: deck => roundToHundreds(deck.amberControl),
+                sortFunction: deck => roundToHundreds(deck.amberControl)
             },
             {
                 title: "E",
-                transform: deck => roundToHundreds(deck.synergies?.expectedAmber),
-                sortFunction: deck => roundToHundreds(deck.synergies?.expectedAmber)
+                transform: deck => roundToHundreds(deck.expectedAmber),
+                sortFunction: deck => roundToHundreds(deck.expectedAmber)
             },
             {
                 title: "R",
-                transform: deck => roundToHundreds(deck.synergies?.artifactControl),
-                sortFunction: deck => roundToHundreds(deck.synergies?.artifactControl)
+                transform: deck => roundToHundreds(deck.artifactControl),
+                sortFunction: deck => roundToHundreds(deck.artifactControl)
             },
             {
                 title: "C",
-                transform: deck => roundToHundreds(deck.synergies?.creatureControl),
-                sortFunction: deck => roundToHundreds(deck.synergies?.creatureControl)
+                transform: deck => roundToHundreds(deck.creatureControl),
+                sortFunction: deck => roundToHundreds(deck.creatureControl)
             },
             {
                 title: "P",
-                transform: deck => roundToHundreds(deck.synergies?.effectivePower),
-                sortFunction: deck => roundToHundreds(deck.synergies?.effectivePower)
+                transform: deck => roundToHundreds(deck.effectivePower),
+                sortFunction: deck => roundToHundreds(deck.effectivePower)
             },
             {
                 title: "F",
-                transform: deck => roundToHundreds(deck.synergies?.efficiency),
-                sortFunction: deck => roundToHundreds(deck.synergies?.efficiency)
+                transform: deck => roundToHundreds(deck.efficiency),
+                sortFunction: deck => roundToHundreds(deck.efficiency)
             },
             {
                 title: "D",
-                transform: deck => roundToHundreds(deck.synergies?.disruption),
-                sortFunction: deck => roundToHundreds(deck.synergies?.disruption)
+                transform: deck => roundToHundreds(deck.disruption),
+                sortFunction: deck => roundToHundreds(deck.disruption)
             },
             {
                 title: "CP",
-                transform: deck => roundToHundreds(deck.synergies?.creatureProtection),
-                sortFunction: deck => roundToHundreds(deck.synergies?.creatureProtection),
+                transform: deck => roundToHundreds(deck.creatureProtection),
+                sortFunction: deck => roundToHundreds(deck.creatureProtection),
                 hide: keyLocalStorage.smallTableView
             },
             {
                 title: "O",
-                transform: deck => roundToHundreds(deck.synergies?.other),
-                sortFunction: deck => roundToHundreds(deck.synergies?.other),
+                transform: deck => roundToHundreds(deck.other),
+                sortFunction: deck => roundToHundreds(deck.other),
                 hide: keyLocalStorage.smallTableView
             },
             {

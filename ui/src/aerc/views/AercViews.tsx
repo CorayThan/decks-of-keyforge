@@ -4,12 +4,13 @@ import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
-import { DeckSearchResult, DeckUtils } from "../../decks/models/DeckSearchResult"
+import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
 import { EnhancedAmberIcon } from "../../generic/icons/enhancements/EnhancedAmberIcon"
 import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCaptureIcon"
 import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
 import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawIcon"
+import { HasAerc } from "../HasAerc"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
 
 export enum AercViewType {
@@ -20,7 +21,7 @@ export enum AercViewType {
 
 export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewType }) => {
     const {deck, type} = props
-    const combos = deck.synergies?.synergyCombos
+    const combos = deck.synergyDetails
 
     if (combos == null) {
         return null
@@ -29,7 +30,7 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
         return null
     }
 
-    const hasAerc = DeckUtils.hasAercFromDeck(deck)
+    const hasAerc = deck as HasAerc
 
     if (type === AercViewType.MINI_DECK) {
         return (

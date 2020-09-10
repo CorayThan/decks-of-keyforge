@@ -125,13 +125,16 @@ data class Deck(
             this.efficiency == o.efficiency &&
             this.disruption == o.disruption &&
             this.creatureProtection == o.creatureProtection &&
-            this.other == o.other
+            this.other == o.other &&
+            this.bonusCapture == o.bonusCapture &&
+            this.bonusDraw == o.bonusDraw
 
     fun toDeckSearchResult(
             housesAndCards: List<HouseAndCards>,
             cards: List<Card>? = null,
             stats: DeckStatistics? = null,
-            synergies: DeckSynergyInfo? = null
+            synergies: DeckSynergyInfo? = null,
+            includeDetails: Boolean = false
     ): DeckSearchResult {
         return DeckSearchResult(
                 id = id,
@@ -160,22 +163,22 @@ data class Deck(
                 rawAmber = rawAmber,
                 totalArmor = totalArmor.zeroToNull(),
 
-                expectedAmber = expectedAmber,
-                amberControl = amberControl,
-                creatureControl = creatureControl,
-                artifactControl = artifactControl.zeroToNull(),
-                efficiency = efficiency.zeroToNull(),
-                effectivePower = effectivePower,
-                creatureProtection = creatureProtection.zeroToNull(),
-                disruption = disruption.zeroToNull(),
-                other = other.zeroToNull(),
-                aercScore = aercScore,
+                expectedAmber = synergies?.expectedAmber ?: expectedAmber,
+                amberControl = synergies?.amberControl ?: amberControl,
+                creatureControl = synergies?.creatureControl ?: creatureControl,
+                artifactControl = (synergies?.artifactControl ?: artifactControl).zeroToNull(),
+                efficiency = (synergies?.efficiency ?: efficiency).zeroToNull(),
+                effectivePower = synergies?.effectivePower ?: effectivePower,
+                creatureProtection = (synergies?.creatureProtection ?: creatureProtection).zeroToNull(),
+                disruption = (synergies?.disruption ?: disruption).zeroToNull(),
+                other = (synergies?.other ?: other).zeroToNull(),
+                aercScore = synergies?.rawAerc ?: aercScore.toInt(),
                 previousSasRating = previousSasRating ?: sasRating,
                 previousMajorSasRating = previousMajorSasRating,
                 aercVersion = aercVersion ?: 12,
-                sasRating = sasRating,
-                synergyRating = synergyRating,
-                antisynergyRating = antisynergyRating,
+                sasRating = synergies?.sasRating ?: sasRating,
+                synergyRating = synergies?.synergyRating ?: synergyRating,
+                antisynergyRating = synergies?.antisynergyRating ?: antisynergyRating,
                 totalPower = totalPower,
                 forSale = forSale.falseToNull(),
                 forTrade = forTrade.falseToNull(),
@@ -189,7 +192,7 @@ data class Deck(
                 sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
                         ?: if (sasRating < 75) 0.0 else 100.0,
 
-                synergies = synergies,
+                synergyDetails = if (includeDetails) synergies?.synergyCombos else synergies?.synergyCombos?.map { it.copy(synergies = listOf()) },
 
                 hasOwnershipVerification = hasOwnershipVerification.falseToNull(),
 

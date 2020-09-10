@@ -1,11 +1,10 @@
-import { HasAerc } from "../../aerc/HasAerc"
 import { roundToHundreds } from "../../config/Utils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
 import { HouseAndCards } from "../../generated-src/HouseAndCards"
 import { CsvData } from "../../generic/CsvDownloadButton"
-import { DeckSynergyInfo, SynergyCombo } from "../../synergy/DeckSynergyInfo"
+import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 
@@ -62,7 +61,7 @@ export interface DeckSearchResult {
     housesAndCards: HouseAndCards[]
     deckSaleInfo?: DeckSaleInfo[]
     owners?: string[]
-    synergies?: DeckSynergyInfo
+    synergyDetails?: SynergyCombo[]
     hasOwnershipVerification: boolean
     dateAdded?: string
 
@@ -104,16 +103,6 @@ export class DeckUtils {
         return undefined
     }
 
-    static hasAercFromDeck = (deck: DeckSearchResult): HasAerc => {
-        if (deck.synergies == null) {
-            throw Error("Synergies shouldnt' be null!")
-        }
-        return {
-            aercScore: deck.synergies.rawAerc,
-            ...deck.synergies
-        }
-    }
-
     static sasForHouse = (combos: SynergyCombo[], accessor?: (combo: SynergyCombo) => number, house?: House): number => {
         let filteredCombos = combos
         if (house != null) {
@@ -124,7 +113,7 @@ export class DeckUtils {
             .reduce((prev, next) => prev + next)
     }
 
-    static synergiesRounded = (synergies: DeckSynergyInfo) => {
+    static synergiesRounded = (synergies: DeckSearchResult) => {
         const {
             amberControl,
             expectedAmber,
@@ -153,7 +142,7 @@ export class DeckUtils {
 
     static arrayToCSV = (decks: DeckSearchResult[]): CsvData => {
         const data = decks.map(deck => {
-            const synergies = DeckUtils.synergiesRounded(deck.synergies!)
+            const synergies = DeckUtils.synergiesRounded(deck)
             return [
                 deck.name,
                 deck.housesAndCards.map(houseAndCards => houseAndCards.house),
@@ -162,7 +151,7 @@ export class DeckUtils {
                 synergies.synergyRating,
                 synergies.antisynergyRating,
                 deck.sasPercentile,
-                synergies.rawAerc,
+                synergies.aercScore,
                 synergies.amberControl,
                 synergies.expectedAmber,
                 synergies.creatureProtection,
@@ -173,9 +162,9 @@ export class DeckUtils {
                 synergies.disruption,
                 synergies.other,
 
-                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.housesAndCards[0].house),
-                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.housesAndCards[1].house),
-                DeckUtils.sasForHouse(synergies.synergyCombos, undefined, deck.housesAndCards[2].house),
+                DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, deck.housesAndCards[0].house),
+                DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, deck.housesAndCards[1].house),
+                DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, deck.housesAndCards[2].house),
 
                 deck.creatureCount,
                 deck.actionCount,

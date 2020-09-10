@@ -30,7 +30,7 @@ export const OrganizedPlayStats = observer((props: { deck: DeckSearchResult, sty
                     <OpStat value={powerLevel ?? 0} icon={<PowerIcon/>} tooltip={"Power Level"} style={{marginRight: spacing(2)}}/>
                     <OpStat value={chains ?? 0} icon={<ChainIcon/>} tooltip={"Chains"} style={{marginRight: spacing(2)}}/>
                     <OpStat
-                        value={`${wins} / ${losses}`}
+                        value={`${wins ?? 0} / ${losses ?? 0}`}
                         tooltip={"Organized Play Wins / Losses"}
                     />
                 </div>
