@@ -10,6 +10,7 @@ import coraythan.keyswap.decks.SimpleDeckResponse
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -24,7 +25,8 @@ class PublicApiEndpoints(
         private val publicApiService: PublicApiService,
         private val statsService: StatsService,
         private val cardService: CardService,
-        private val keyUserRepo: KeyUserRepo
+        private val keyUserRepo: KeyUserRepo,
+        private val currentUserService: CurrentUserService,
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
@@ -84,6 +86,13 @@ class PublicApiEndpoints(
         val user = publicApiService.userForApiKey(apiKey)
 
         return publicApiService.findMyDecks(user)
+    }
+
+    // Non documented, for library access extension
+    @GetMapping("/v1/my-deck-ids")
+    fun findMyDeckIds(): List<String> {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        return publicApiService.findMyDeckIds(user)
     }
 
     private fun rateLimit(apiKey: String) {

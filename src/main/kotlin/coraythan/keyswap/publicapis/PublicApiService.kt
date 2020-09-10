@@ -27,6 +27,11 @@ class PublicApiService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    fun findMyDeckIds(user: KeyUser): List<String> {
+        return userDeckRepo.findByOwnedBy(user.username)
+                .map { it.deck.keyforgeId }
+    }
+
     fun findMyDecks(user: KeyUser): List<PublicMyDeckInfo> {
         return userDeckRepo.findByUserId(user.id)
                 .map {
