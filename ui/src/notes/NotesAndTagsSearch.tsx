@@ -15,27 +15,40 @@ interface NotesAndTagsSearchProps {
     notes: string
     notesUser: string
     handleNotesUpdate: (event: React.ChangeEvent<HTMLInputElement>) => void
+    notesNotLike: boolean
+    handleNotesNotLikeUpdate: (event: React.ChangeEvent<HTMLInputElement>) => void
     removeNotes: () => void
 }
 
 @observer
 export class NotesAndTagsSearch extends React.Component<NotesAndTagsSearchProps> {
     render() {
-        const {notes, notesUser, handleNotesUpdate, removeNotes} = this.props
+        const {notes, notesUser, handleNotesUpdate, removeNotes, notesNotLike, handleNotesNotLikeUpdate} = this.props
         return (
             <div>
                 {userStore.loggedIn() && (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={!!keyLocalStorage.genericStorage.viewNotes}
-                                onChange={() => {
-                                    keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
-                                }}
-                            />
-                        }
-                        label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
-                    />
+                    <>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={!!keyLocalStorage.genericStorage.viewNotes}
+                                    onChange={() => {
+                                        keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
+                                    }}
+                                />
+                            }
+                            label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={notesNotLike}
+                                    onChange={handleNotesNotLikeUpdate}
+                                />
+                            }
+                            label={<Typography variant={"body2"} noWrap={true}>Does Not Contain</Typography>}
+                        />
+                    </>
                 )}
                 {notes.length > 0 || userStore.loggedIn() ? (
                     <>

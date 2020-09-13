@@ -69,4 +69,6 @@ data class ForSaleQuery(
                 get() = false
         override val teamDecks: Boolean
                 get() = false
+        override val notNotes: Boolean
+                get() = false
 }

@@ -83,6 +83,9 @@ export class DeckFilters {
         if (queryObject.forSale != null) {
             queryObject.forSale = queryObject.forSale === "true"
         }
+        if (queryObject.notNotes != null) {
+            queryObject.notNotes = queryObject.notNotes === "true"
+        }
         if (queryObject.notForSale != null) {
             queryObject.notForSale = queryObject.notForSale === "true"
         }
@@ -122,6 +125,8 @@ export class DeckFilters {
     @observable
     notes = ""
     @observable
+    notNotes = false
+    @observable
     notesUser = ""
     page = 0
     @observable
@@ -157,6 +162,7 @@ export class DeckFilters {
     reset = () => {
         this.title = ""
         this.notes = ""
+        this.notNotes = false
         this.notesUser = ""
         this.forSale = undefined
         this.notForSale = false

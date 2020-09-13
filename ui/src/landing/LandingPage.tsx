@@ -2,7 +2,6 @@ import { Divider, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
-import { ChangeOrgNotice } from "../ChangeOrgNotice"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
@@ -152,7 +151,6 @@ export class LandingPage extends React.Component<{}> {
                                 <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(2)}}/>
                             </div>
                         ) : null}
-                        <ChangeOrgNotice/>
                         <FeaturedSellersView/>
                         <div style={{marginLeft: spacing(2)}}>
                             <div style={{marginLeft: spacing(2)}}>

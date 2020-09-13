@@ -404,6 +404,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         notes={notes}
                                         handleNotesUpdate={handleNotesUpdate}
                                         removeNotes={removeNotes}
+                                        notesNotLike={this.props.filters.notNotes}
+                                        handleNotesNotLikeUpdate={() => this.props.filters.notNotes = !this.props.filters.notNotes}
+
                                     />
                                 </SearchDrawerExpansionPanel>
                                 <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()} title={"Houses"}>

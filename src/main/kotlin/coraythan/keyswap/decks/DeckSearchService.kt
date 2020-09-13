@@ -260,7 +260,7 @@ class DeckSearchService(
                             JPAExpressions.selectFrom(userDeckQ)
                                     .where(
                                             userDeckQ.user.username.eq(username),
-                                            userDeckQ.notes.containsIgnoreCase(trimmed)
+                                            if (filters.notNotes) userDeckQ.notes.toLowerCase().notLike("%$trimmed%") else userDeckQ.notes.containsIgnoreCase(trimmed)
                                     )
                     )
             )

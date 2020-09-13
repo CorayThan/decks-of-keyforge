@@ -10,6 +10,7 @@ interface DeckQuery {
     val excludeHouses: Set<House>?
     val title: String
     val notes: String
+    val notNotes: Boolean
     val notesUser: String
 
     val notForSale: Boolean
@@ -34,6 +35,7 @@ data class DeckFilters(
         override val excludeHouses: Set<House> = setOf(),
         override val title: String = "",
         override val notes: String = "",
+        override val notNotes: Boolean = false,
         override val notesUser: String = "",
 
         val page: Long = 0,
