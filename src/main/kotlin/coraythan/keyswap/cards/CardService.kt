@@ -54,7 +54,7 @@ class CardService(
 
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
-            this.activeAercVersion = currentInfo.maxBy { it.value.version }?.value?.version ?: 0
+            this.activeAercVersion = currentInfo.maxByOrNull { it.value.version }?.value?.version ?: 0
 
             log.info("Active aerc version $activeAercVersion published version $publishedAercVersion")
             if (activeAercVersion < publishedAercVersion) {
@@ -88,12 +88,12 @@ class CardService(
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
-            this.activeAercVersion = this.extraInfo.maxBy { it.value.version }?.value?.version ?: 0
+            this.activeAercVersion = this.extraInfo.maxByOrNull { it.value.version }?.value?.version ?: 0
             this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
             val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(this.activeAercVersion)
                     .filter { it.version < this.activeAercVersion }
                     .groupBy { it.cardName }
-                    .mapNotNull { it.value.maxBy { infos -> infos.version } }
+                    .mapNotNull { it.value.maxByOrNull { infos -> infos.version } }
             this.previousExtraInfo = mapInfos(previousOnes)
 
         } catch (exception: Exception) {

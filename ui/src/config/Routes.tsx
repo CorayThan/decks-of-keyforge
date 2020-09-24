@@ -5,6 +5,7 @@ import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { AboutPage } from "../about/AboutPage"
 import { PrivacyPolicy } from "../about/PrivacyPolicy"
+import { AdminPanelView } from "../admin/AdminPanelView"
 import { ArticlesPage } from "../articles/ArticlesPage"
 import { CardFilters, prepareCardFiltersForQueryString } from "../cards/CardFilters"
 import { CardSearchPage } from "../cards/CardSearchPage"
@@ -55,6 +56,7 @@ class Routes {
 
     static landing = ""
     static users = "/users"
+    static adminPanel = "/admin-panel"
     static myProfile = MyDokSubPaths.profile
     static cards = "/cards"
     static cotaCards = "/cards?expansion=CALL_OF_THE_ARCHONS"
@@ -181,6 +183,11 @@ const KeyRouter = observer(() => {
                 <KeyTopbar/>
                 <div style={{marginBottom: spacing(2)}}/>
                 <Switch>
+                    <LoggedInRoute
+                        exact={true}
+                        path={Routes.adminPanel}
+                        component={AdminPanelView}
+                    />
                     <LoggedInRoute
                         exact={true}
                         path={Routes.importUnregisteredDeck}

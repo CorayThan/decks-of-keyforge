@@ -495,20 +495,29 @@ class UserLinksDesktop extends React.Component {
     }
 }
 
-const MyDokDropdown = () => (
-    <LinkMenu
-        genericOnClick={rightMenuStore.close}
-        links={[
-            {to: Routes.myProfile, text: "My DoK", mobileActive: true},
-            {to: Routes.myProfile, text: "Profile", mobileActive: false},
-            {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
-            {to: MyDokSubPaths.purchases, text: "Bought / Sold", mobileActive: false},
-            {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
-            {to: MyDokSubPaths.team, text: "My Team", mobileActive: false},
-        ]}
-        dropdownOnly={true}
-        linkMenuStore={myDokMenuStore}
-    />
-)
+const MyDokDropdown = () => {
+
+    const links = [
+        {to: Routes.myProfile, text: "My DoK", mobileActive: true},
+        {to: Routes.myProfile, text: "Profile", mobileActive: false},
+        {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
+        {to: MyDokSubPaths.purchases, text: "Bought / Sold", mobileActive: false},
+        {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},
+        {to: MyDokSubPaths.team, text: "My Team", mobileActive: false},
+    ]
+
+    if (userStore.isAdmin) {
+        links.push({to: Routes.adminPanel, text: "Admin Panel", mobileActive: true})
+    }
+
+    return (
+        <LinkMenu
+            genericOnClick={rightMenuStore.close}
+            links={links}
+            dropdownOnly={true}
+            linkMenuStore={myDokMenuStore}
+        />
+    )
+}
 
 export const KeyTopbar = withRouter(KeyTopbarPlain)
