@@ -128,7 +128,7 @@ class StatsService(
 
     }
 
-    @Scheduled(fixedDelayString = lockUpdateStats)
+    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatistics", lockAtLeastFor = lockUpdateStats, lockAtMostFor = lockUpdateStats)
     fun updateStatsForDecks() {
         try {

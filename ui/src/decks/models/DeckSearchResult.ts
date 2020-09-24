@@ -1,3 +1,4 @@
+import { cardStore } from "../../cards/CardStore"
 import { roundToHundreds } from "../../config/Utils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { Expansion } from "../../generated-src/Expansion"
@@ -41,6 +42,7 @@ export interface DeckSearchResult {
     sasRating: number
     synergyRating: number
     antisynergyRating: number
+    adaptiveScore: number
 
     totalPower: number
     cardDrawCount?: number
@@ -78,6 +80,13 @@ export interface DeckSearchResult {
 }
 
 export class DeckUtils {
+
+    static calculateAdaptiveScore = (deck: DeckSearchResult) => {
+        return deck.housesAndCards
+            .flatMap(houseWithCards => houseWithCards.cards)
+            .map(card =>  cardStore.nextAdaptiveScore(card.cardTitle))
+            .reduce((adaptiveScore, nextAdaptiveScore) => adaptiveScore + nextAdaptiveScore)
+    }
 
     static findPrice = (deck: DeckSearchResult, myPriceOnly?: boolean): number | undefined => {
         const saleInfo = deck.deckSaleInfo

@@ -16,6 +16,7 @@ export interface SynTraitValue {
     cardName?: string
     synergyGroup?: string
     synergyGroupMax?: number
+    primaryGroup: boolean
     id?: string
 }
 

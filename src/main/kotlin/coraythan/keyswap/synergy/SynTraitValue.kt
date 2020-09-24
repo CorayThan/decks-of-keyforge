@@ -68,6 +68,7 @@ data class SynTraitValue(
 
         val synergyGroup: String? = null,
         val synergyGroupMax: Int? = null,
+        val primaryGroup: Boolean = false,
 
         @Id
         val id: UUID = UUID.randomUUID()

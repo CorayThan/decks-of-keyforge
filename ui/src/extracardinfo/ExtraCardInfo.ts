@@ -23,6 +23,8 @@ export interface ExtraCardInfo {
     other: number
     otherMax?: number
 
+    adaptiveScore: number
+
     enhancementAmber: number
     enhancementCapture: number
     enhancementDraw: number

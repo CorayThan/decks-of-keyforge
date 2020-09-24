@@ -4,12 +4,13 @@ import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
-import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
+import { DeckSearchResult, DeckUtils } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
 import { EnhancedAmberIcon } from "../../generic/icons/enhancements/EnhancedAmberIcon"
 import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCaptureIcon"
 import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
 import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawIcon"
+import { userStore } from "../../user/UserStore"
 import { HasAerc } from "../HasAerc"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
 
@@ -133,6 +134,18 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*        </Tooltip>*/}
             {/*    </div>*/}
             {/*)}*/}
+            {userStore.contentCreator && (
+                <div style={{marginLeft: spacing(1)}}>
+                    <Tooltip title={"Adaptive Score"}>
+                        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
+                                {DeckUtils.calculateAdaptiveScore(deck)}
+                            </Typography>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 4}} noWrap={true}>ADAPT</Typography>
+                        </div>
+                    </Tooltip>
+                </div>
+            )}
             {enhancedIcons}
             <div
                 style={{

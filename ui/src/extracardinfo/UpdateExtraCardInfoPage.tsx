@@ -134,6 +134,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     otherMax = "0"
 
     @observable
+    adaptiveScore = "0"
+
+    @observable
     enhancementAmber = "0"
     @observable
     enhancementCapture = "0"
@@ -188,6 +191,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.creatureProtectionMax = extraCardInfo.creatureProtectionMax == null ? "0" : extraCardInfo.creatureProtectionMax.toString()
         this.disruptionMax = extraCardInfo.disruptionMax == null ? "0" : extraCardInfo.disruptionMax.toString()
         this.otherMax = extraCardInfo.otherMax == null ? "0" : extraCardInfo.otherMax.toString()
+
+        this.adaptiveScore = extraCardInfo.adaptiveScore.toString()
 
         this.enhancementAmber = extraCardInfo.enhancementAmber.toString()
         this.enhancementCapture = extraCardInfo.enhancementCapture.toString()
@@ -244,6 +249,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             disruptionMax: Utils.toNumberOrNull(this.disruptionMax),
             // @ts-ignore
             otherMax: Utils.toNumberOrNull(this.otherMax),
+
+            adaptiveScore: Number(this.adaptiveScore),
 
             enhancementAmber: Number(this.enhancementAmber),
             enhancementCapture: Number(this.enhancementCapture),
@@ -422,6 +429,11 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 update={(event: EventValue) => this.otherMax = event.target.value}
                             />
                             <InfoInput
+                                name={"adaptive score"}
+                                value={this.adaptiveScore}
+                                update={(event: EventValue) => this.adaptiveScore = event.target.value}
+                            />
+                            <InfoInput
                                 name={"bonus amber"}
                                 value={this.enhancementAmber}
                                 update={(event: EventValue) => this.enhancementAmber = event.target.value}
@@ -441,9 +453,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 value={this.enhancementDamage}
                                 update={(event: EventValue) => this.enhancementDamage = event.target.value}
                             />
-                            <Grid item={true} xs={6} sm={4}>
+                            <Grid item={true} xs={6} sm={2}>
                                 <FormControl fullWidth={true}>
-                                    <InputLabel>Extra Card Types</InputLabel>
+                                    <InputLabel>Card Types</InputLabel>
                                     <Select
                                         multiple={true}
                                         value={this.extraCardTypes}
@@ -552,6 +564,9 @@ class AddTrait extends React.Component<AddTraitProps> {
     @observable
     groupMax = ""
 
+    @observable
+    primaryGroup = false
+
     addTraitOrSyn = (trait?: SynergyTrait) => {
         const {traits, synergies} = this.props
         let isSynergy = this.traitOrSynergy === "synergy"
@@ -581,7 +596,8 @@ class AddTrait extends React.Component<AddTraitProps> {
             powersString: this.powersString.trim(),
             baseSynPercent: Number(this.baseSynPercent.trim()),
             synergyGroup: this.group === "" ? undefined : this.group,
-            synergyGroupMax: this.groupMax === "" ? undefined : Number(this.groupMax)
+            synergyGroupMax: this.groupMax === "" ? undefined : Number(this.groupMax),
+            primaryGroup: this.primaryGroup
         }
         addTo.push(toAdd)
     }
@@ -758,6 +774,15 @@ class AddTrait extends React.Component<AddTraitProps> {
                                 style={{width: 64}}
                             />
                         </div>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.primaryGroup}
+                                    onChange={() => this.primaryGroup = !this.primaryGroup}
+                                />
+                            }
+                            label="Primary"
+                        />
                     </div>
                 </Grid>
                 <Grid item={true}>

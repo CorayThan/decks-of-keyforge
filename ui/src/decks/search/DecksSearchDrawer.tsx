@@ -175,6 +175,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             "disruption",
             "effectivePower",
             "rawAmber",
+            "bonusCapture",
+            "bonusDraw",
             "aercScore",
             "synergyRating",
             "antisynergyRating",

@@ -61,6 +61,8 @@ data class ExtraCardInfo(
         val other: Double = 0.0,
         val otherMax: Double? = null,
 
+        val adaptiveScore: Int = 0,
+
         val enhancementAmber: Int = 0,
         val enhancementCapture: Int = 0,
         val enhancementDraw: Int = 0,

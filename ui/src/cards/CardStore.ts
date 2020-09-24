@@ -66,6 +66,13 @@ export class CardStore {
 
     private cardWinRates?: Map<string, CardWinRates[]>
 
+    nextAdaptiveScore = (cardName: string) => {
+        if (this.nextExtraInfo == null) {
+            return 0
+        }
+        return this.nextExtraInfo[cardName]?.extraCardInfo?.adaptiveScore ?? 0
+    }
+
     setupCardWinRates = () => {
         if (!cardStore.cardsLoaded || statsStore.stats == null || this.cardWinRatesLoaded) {
             return

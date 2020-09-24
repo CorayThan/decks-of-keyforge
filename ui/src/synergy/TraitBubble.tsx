@@ -16,7 +16,7 @@ interface TraitBubbleProps {
 
 export const TraitBubble = (props: TraitBubbleProps) => {
     const {traitValue, trait, synergyWith} = props
-    const {rating, house, synergyGroup, synergyGroupMax} = traitValue
+    const {rating, house, synergyGroup, synergyGroupMax, primaryGroup} = traitValue
     const positive = rating > 0
     const color = positive && !props.trait ? "#FFFFFF" : undefined
     let title
@@ -62,6 +62,9 @@ export const TraitBubble = (props: TraitBubbleProps) => {
                 title={(
                     <div style={{display: "flex", flexDirection: "column"}}>
                         <Typography variant={"body2"}>{synergyGroup ? `Synergy Group ${synergyGroup}` : title}</Typography>
+                        {primaryGroup && (
+                            <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>Primary Group</Typography>
+                        )}
                         {synergyGroupMax && (
                             <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>Group Max: {synergyGroupMax}%</Typography>
                         )}

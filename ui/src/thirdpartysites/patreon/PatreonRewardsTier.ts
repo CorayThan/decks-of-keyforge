@@ -24,7 +24,7 @@ export const patronRewardLevelName = (tier?: PatreonRewardsTier) => {
         case PatreonRewardsTier.MERCHANT_AEMBERMAKER:
             return "Merchant Æmbermaker"
         case PatreonRewardsTier.ALWAYS_GENEROUS:
-            return "Butterfield the Always Generous"
+            return "The Charitable Champion"
         default:
             return ""
     }

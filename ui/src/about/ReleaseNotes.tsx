@@ -43,6 +43,18 @@ export class ReleaseNotes extends React.Component {
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
+                    releaseNumber={"5.14"}
+                    date={"9/23/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Bonus Capture + Draw Search Constraints!",
+                            note: "You can now filter decks based on the amount of bonus capture or draw they contain. I also removed a couple lesser " +
+                                "used constraints to make room for these."
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"5.13"}
                     date={"8/31/2020"}
                     expanded={true}
@@ -59,7 +71,7 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             highlight: "Improved Improved Notes",
-                            note: "Notes now save automatically still. Now with fewer bugs! (Please let me know if this is false advertising.)"
+                            note: "Notes now save automatically still. Now with fewer bugs!"
                         },
                     ]}
                 />

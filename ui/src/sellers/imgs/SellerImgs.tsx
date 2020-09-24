@@ -2,6 +2,7 @@ import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import bigz from "../../user/imgs/big-z.png"
 import abtabdn from "./abtabdn.png"
+import clint from "./clint-icon.jpg"
 import coraythan from "./dok.png"
 import fifthPlanet from "./fifth-planet.jpg"
 import justiceBlinded from "./jb-logo.png"
@@ -31,6 +32,7 @@ sellerImgs.set("musicgal", musicgal)
 sellerImgs.set("robotrob3", robotrob3)
 sellerImgs.set("septumus", septumus)
 sellerImgs.set("lucabell", lucabell)
+sellerImgs.set("Hida2230", clint)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

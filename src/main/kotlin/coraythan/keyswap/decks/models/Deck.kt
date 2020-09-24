@@ -65,6 +65,7 @@ data class Deck(
         val sasRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,
+        val adaptiveScore: Int? = 0,
 
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
@@ -127,7 +128,8 @@ data class Deck(
             this.creatureProtection == o.creatureProtection &&
             this.other == o.other &&
             this.bonusCapture == o.bonusCapture &&
-            this.bonusDraw == o.bonusDraw
+            this.bonusDraw == o.bonusDraw &&
+            this.adaptiveScore == o.adaptiveScore
 
     fun toDeckSearchResult(
             housesAndCards: List<HouseAndCards>,
@@ -196,7 +198,9 @@ data class Deck(
 
                 hasOwnershipVerification = hasOwnershipVerification.falseToNull(),
 
-                dateAdded = dateAdded
+                dateAdded = dateAdded,
+
+                adaptiveScore = adaptiveScore ?: 0
         )
     }
 
