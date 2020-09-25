@@ -125,6 +125,8 @@ export class CardStore {
                     }
                 }))
                 &&
+                (filters.minAdaptiveScore == null || filters.minAdaptiveScore <= this.nextAdaptiveScore(card.cardTitle))
+                &&
                 (filters.trait == null || extraInfo.traits.some(infoTrait => infoTrait.trait === filters.trait))
                 &&
                 (filters.synergy == null || extraInfo.synergies.some(infoTrait => infoTrait.trait === filters.synergy))

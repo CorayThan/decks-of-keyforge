@@ -219,6 +219,16 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 <PublishDateSelect selected={this.selectedPublishDate}/>
                             )}
                         </ListItem>
+                        {userStore.contentCreator && (
+                            <ListItem>
+                                <TextField
+                                    label={"Min Adaptive Score"}
+                                    value={filters.minAdaptiveScore?.toString() ?? ""}
+                                    type={"number"}
+                                    onChange={event => filters.minAdaptiveScore = Utils.toNumberOrUndefined(event.target.value)}
+                                />
+                            </ListItem>
+                        )}
                         <ListItem>
                             <ExpansionSelector
                                 store={this.selectedExpansion}

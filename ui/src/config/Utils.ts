@@ -78,7 +78,7 @@ export class Utils {
         return setMinutes(startOfMinute(date), roundedMinutes)
     }
 
-    static toNumberOrNull = (num?: number | string) => num == null || num === 0 || num === "" || num === "0" ? null : Number(num)
+    static toNumberOrUndefined = (num?: number | string) => num == null || num === 0 || num === "" || num === "0" ? undefined : Number(num)
 
     static isDev = () => process.env.NODE_ENV === "development"
 

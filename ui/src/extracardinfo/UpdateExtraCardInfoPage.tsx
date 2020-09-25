@@ -232,23 +232,23 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             other: Number(this.other),
 
             // @ts-ignore
-            amberControlMax: Utils.toNumberOrNull(this.amberControlMax),
+            amberControlMax: Utils.toNumberOrUndefined(this.amberControlMax),
             // @ts-ignore
-            expectedAmberMax: Utils.toNumberOrNull(this.expectedAmberMax),
+            expectedAmberMax: Utils.toNumberOrUndefined(this.expectedAmberMax),
             // @ts-ignore
-            artifactControlMax: Utils.toNumberOrNull(this.artifactControlMax),
+            artifactControlMax: Utils.toNumberOrUndefined(this.artifactControlMax),
             // @ts-ignore
-            creatureControlMax: Utils.toNumberOrNull(this.creatureControlMax),
+            creatureControlMax: Utils.toNumberOrUndefined(this.creatureControlMax),
             // @ts-ignore
-            efficiencyMax: Utils.toNumberOrNull(this.efficiencyMax),
+            efficiencyMax: Utils.toNumberOrUndefined(this.efficiencyMax),
             // @ts-ignore
-            effectivePowerMax: Utils.toNumberOrNull(this.effectivePowerMax),
+            effectivePowerMax: Utils.toNumberOrUndefined(this.effectivePowerMax),
             // @ts-ignore
-            creatureProtectionMax: Utils.toNumberOrNull(this.creatureProtectionMax),
+            creatureProtectionMax: Utils.toNumberOrUndefined(this.creatureProtectionMax),
             // @ts-ignore
-            disruptionMax: Utils.toNumberOrNull(this.disruptionMax),
+            disruptionMax: Utils.toNumberOrUndefined(this.disruptionMax),
             // @ts-ignore
-            otherMax: Utils.toNumberOrNull(this.otherMax),
+            otherMax: Utils.toNumberOrUndefined(this.otherMax),
 
             adaptiveScore: Number(this.adaptiveScore),
 

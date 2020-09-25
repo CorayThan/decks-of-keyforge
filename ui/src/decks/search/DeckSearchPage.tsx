@@ -19,7 +19,9 @@ import { userStore } from "../../user/UserStore"
 import { DeckListView } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { DeckTableView } from "../DeckTableView"
+import { DeckUtils } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
+import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
@@ -131,7 +133,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     && keyLocalStorage.deckListViewType === "table"
                 const decks = decksToDisplay
                     .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
-                    .filter(deck => deck != null)
+                    .filter(deck => deck != null && (deckSearchFiltersStore.adaptiveScoreFilter == null || DeckUtils.calculateAdaptiveScore(deck) >= deckSearchFiltersStore.adaptiveScoreFilter))
                 decksView = keyLocalStorage.deckListViewType === "table" ?
                     <DeckTableView decks={decks} sellerView={sellerView}/> :
                     <DeckListView decks={decks}/>

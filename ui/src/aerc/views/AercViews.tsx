@@ -136,7 +136,8 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*)}*/}
             {userStore.contentCreator && (
                 <div style={{marginLeft: spacing(1)}}>
-                    <Tooltip title={"Adaptive Score"}>
+                    <Tooltip
+                        title={DeckUtils.calculateAdaptiveScoreContributions(deck)}>
                         <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
                             <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
                                 {DeckUtils.calculateAdaptiveScore(deck)}

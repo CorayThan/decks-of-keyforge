@@ -17,7 +17,7 @@ import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { log } from "../../config/Utils"
+import { log, Utils } from "../../config/Utils"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../expansions/ExpansionSelectOrExclude"
 import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
@@ -38,6 +38,7 @@ import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../selects/DeckS
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
 import { DeckCardSelect } from "./DeckCardSelect"
 import { DeckFilters } from "./DeckFilters"
+import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
 
 interface DecksSearchDrawerProps {
     history: History.History
@@ -99,6 +100,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.props.filters.reset()
         this.constraintsStore.reset()
         this.selectedExpansions.reset()
+        deckSearchFiltersStore.reset()
     }
 
     updateForSale = (forSale?: boolean) => {
@@ -428,6 +430,14 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         properties={constraintOptions}
                                         hideMinMax={hideMinMaxConstraintOptions}
                                     />
+                                    {userStore.contentCreator && (
+                                        <TextField
+                                            label={"Min Adaptive Score"}
+                                            value={deckSearchFiltersStore.adaptiveScoreFilter?.toString() ?? ""}
+                                            type={"number"}
+                                            onChange={event => deckSearchFiltersStore.adaptiveScoreFilter = Utils.toNumberOrUndefined(event.target.value)}
+                                        />
+                                    )}
                                 </SearchDrawerExpansionPanel>
                                 <SearchDrawerExpansionPanel
                                     initiallyOpen={cards.length > 0}

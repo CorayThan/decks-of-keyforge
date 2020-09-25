@@ -84,8 +84,16 @@ export class DeckUtils {
     static calculateAdaptiveScore = (deck: DeckSearchResult) => {
         return deck.housesAndCards
             .flatMap(houseWithCards => houseWithCards.cards)
-            .map(card =>  cardStore.nextAdaptiveScore(card.cardTitle))
+            .map(card => cardStore.nextAdaptiveScore(card.cardTitle))
             .reduce((adaptiveScore, nextAdaptiveScore) => adaptiveScore + nextAdaptiveScore)
+    }
+
+    static calculateAdaptiveScoreContributions = (deck: DeckSearchResult) => {
+        return deck.housesAndCards
+            .flatMap(houseWithCards => houseWithCards.cards)
+            .filter(card => cardStore.nextAdaptiveScore(card.cardTitle) !== 0)
+            .map(card => `${card.cardTitle} = ${cardStore.nextAdaptiveScore(card.cardTitle)}`)
+            .join("\n")
     }
 
     static findPrice = (deck: DeckSearchResult, myPriceOnly?: boolean): number | undefined => {

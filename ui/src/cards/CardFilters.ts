@@ -25,6 +25,9 @@ export class CardFilters {
         if (typeof queryObject.rarities === "string") {
             queryObject.rarities = [queryObject.rarities]
         }
+        if (typeof queryObject.minAdaptiveScore === "string") {
+            queryObject.minAdaptiveScore = Number(queryObject.minAdaptiveScore)
+        }
         if (typeof queryObject.powers === "string") {
             queryObject.powers = [Number(queryObject.powers)]
         } else if (queryObject.powers != null) {
@@ -83,6 +86,8 @@ export class CardFilters {
     powers: number[] = []
     ambers: number[] = []
     @observable
+    minAdaptiveScore?: number
+    @observable
     trait?: SynergyTrait
     @observable
     synergy?: SynergyTrait
@@ -107,6 +112,7 @@ export class CardFilters {
         this.houses = []
         this.powers = []
         this.ambers = []
+        this.minAdaptiveScore = undefined
         this.trait = undefined
         this.constraints = []
         this.synergy = undefined
