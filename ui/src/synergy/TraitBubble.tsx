@@ -63,7 +63,7 @@ export const TraitBubble = (props: TraitBubbleProps) => {
                     <div style={{display: "flex", flexDirection: "column"}}>
                         <Typography variant={"body2"}>{synergyGroup ? `Synergy Group ${synergyGroup}` : title}</Typography>
                         {primaryGroup && (
-                            <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>Primary Group</Typography>
+                            <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>Primary Group (Other groups cannot exceed this one's value)</Typography>
                         )}
                         {synergyGroupMax && (
                             <Typography variant={"body2"} style={{marginBottom: spacing(1)}}>Group Max: {synergyGroupMax}%</Typography>

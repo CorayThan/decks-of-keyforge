@@ -86,6 +86,8 @@ export interface CardWinRates {
 
 }
 
+export const minCardWinsToDisplay = 250
+
 export class CardUtils {
 
     static cardAverageRelativeWinRate = (card: KCard): number => {
@@ -109,7 +111,7 @@ export class CardUtils {
         if (expansionWins != null && card.houses.length > 0) {
             activeExpansions.forEach(expansion => {
                 const wins = expansionWins[expansion]
-                if (wins != null && (wins.wins + wins.losses > 1000)) {
+                if (wins != null && (wins.wins + wins.losses > minCardWinsToDisplay)) {
                     const winRatePercent = CardUtils.calcWinRate(wins.wins, wins.losses)
                     const expHouseWinPercent = statsStore.winRateForExpansionAndHouse(expansion, card.houses[0])
                     let relativeToAveragePercent

@@ -139,19 +139,31 @@ object DeckSynergyService {
                         SynergyMatch(synergy, synPercent, cardNames)
                     }.groupBy { it.trait.synergyGroup }
 
+                    var generalGroupMax = 1000
+
                     val groupSynPercents = matchedTraits.map { groupSyns ->
+                        val isPrimary = groupSyns.value.any { it.trait.primaryGroup }
                         val groupMax = groupSyns.value.find { it.trait.synergyGroupMax != 0 }?.trait?.synergyGroupMax
                         val groupSynergy = groupSyns.value.map { it.percentSynergized + it.trait.baseSynPercent }.sum()
+                        if (isPrimary) {
+                            generalGroupMax = groupSynergy
+                        }
                         if (groupMax == null) {
                             groupSynergy
-                        } else if ((groupMax > 0 && groupSynergy > groupMax) || (groupMax < 0 && groupSynergy < groupMax)) {
+                        } else if ((groupMax in 1 until groupSynergy) || (groupMax in (groupSynergy + 1)..-1)) {
                             groupMax
                         } else {
                             groupSynergy
                         }
                     }
 
-                    val totalSynPercent = groupSynPercents.sum()
+                    val groupSynPercentsMaxReduced = if (generalGroupMax == 1000) {
+                        groupSynPercents
+                    } else {
+                        groupSynPercents.map { if (it > generalGroupMax) generalGroupMax else it }
+                    }
+
+                    val totalSynPercent = groupSynPercentsMaxReduced.sum()
 
                     val hasPositive = cardInfo.synergies.find { it.rating > 0 } != null
                     val hasNegative = cardInfo.synergies.find { it.rating < 0 } != null

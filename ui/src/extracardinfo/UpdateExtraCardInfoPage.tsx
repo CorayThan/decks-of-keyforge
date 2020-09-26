@@ -603,8 +603,7 @@ class AddTrait extends React.Component<AddTraitProps> {
     }
 
     setTraitTo = (value: SynTraitValue, synergy: boolean) => {
-
-        this.cardName = ""
+        this.cardName = value.cardName ?? ""
         this.powersString = value.powersString
         this.player = value.player
         this.house = value.house
@@ -616,6 +615,8 @@ class AddTrait extends React.Component<AddTraitProps> {
         this.baseSynPercent = value.baseSynPercent.toString()
         this.group = value.synergyGroup as SynGroup
         this.groupMax = value.synergyGroupMax?.toString() ?? ""
+        this.primaryGroup = value.primaryGroup
+        this.notCardTraits = value.notCardTraits
     }
 
     render() {
@@ -910,6 +911,10 @@ class AddTrait extends React.Component<AddTraitProps> {
                                 this.trait = SynergyTrait.any
                                 this.cardTraitsStore.reset()
                                 this.baseSynPercent = ""
+                                this.group = ""
+                                this.groupMax = ""
+                                this.primaryGroup = false
+                                this.notCardTraits = false
                             }}
                         >
                             <Close/>

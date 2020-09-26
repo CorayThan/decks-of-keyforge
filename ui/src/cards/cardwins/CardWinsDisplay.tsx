@@ -47,9 +47,7 @@ const IndividualCardWinsDisplay = (props: { winRates: CardWinRates }) => {
     const {winRates} = props
     const {expansion, winRatePercent, relativeToAveragePercent, wins, losses} = winRates
 
-    if (((wins ?? 0) + (losses ?? 0)) < 1000) {
-        return null
-    }
+    const totalGames = ((wins ?? 0) + (losses ?? 0))
 
     return (
         <>
@@ -88,7 +86,7 @@ const IndividualCardWinsDisplay = (props: { winRates: CardWinRates }) => {
                             variant={"body2"}
                             style={{marginLeft: spacing(1)}}
                         >
-                            {Utils.roundToKs(wins + losses)}
+                            {totalGames > 999 ? Utils.roundToKs(totalGames) : totalGames}
                         </Typography>
                     </Tooltip>
                 </div>
