@@ -37,7 +37,6 @@ class DeckSearchService(
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
         private val userDeckRepo: UserDeckRepo,
-        private val deckWinsService: DeckWinsService,
         private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -260,11 +259,12 @@ class DeckSearchService(
                             JPAExpressions.selectFrom(userDeckQ)
                                     .where(
                                             userDeckQ.user.username.eq(username),
-                                            if (filters.notNotes) userDeckQ.notes.toLowerCase().notLike("%$trimmed%") else userDeckQ.notes.containsIgnoreCase(trimmed)
+                                            userDeckQ.notes.containsIgnoreCase(trimmed)
                                     )
                     )
             )
         }
+
         if (filters.owner.isNotBlank()) {
             val username = userHolder.user?.username
             if (username == filters.owner) {

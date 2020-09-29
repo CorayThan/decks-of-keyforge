@@ -37,8 +37,9 @@ data class DeckSynergyInfo(
         val effectivePower: Int,
         val creatureProtection: Double,
         val disruption: Double,
-        val other: Double
+        val other: Double,
 
+        val metaScores: Map<String, Double>,
 )
 
 data class SynergyMatch(

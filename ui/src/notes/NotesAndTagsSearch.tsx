@@ -39,15 +39,15 @@ export class NotesAndTagsSearch extends React.Component<NotesAndTagsSearchProps>
                             }
                             label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={notesNotLike}
-                                    onChange={handleNotesNotLikeUpdate}
-                                />
-                            }
-                            label={<Typography variant={"body2"} noWrap={true}>Does Not Contain</Typography>}
-                        />
+                        {/*<FormControlLabel*/}
+                        {/*    control={*/}
+                        {/*        <Checkbox*/}
+                        {/*            checked={notesNotLike}*/}
+                        {/*            onChange={handleNotesNotLikeUpdate}*/}
+                        {/*        />*/}
+                        {/*    }*/}
+                        {/*    label={<Typography variant={"body2"} noWrap={true}>Does Not Contain</Typography>}*/}
+                        {/*/>*/}
                     </>
                 )}
                 {notes.length > 0 || userStore.loggedIn() ? (

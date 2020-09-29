@@ -17,6 +17,8 @@ export interface DeckSynergyInfo {
     creatureProtection: number,
     disruption: number,
     other: number,
+
+    metaScores: { [key: string]: number }
 }
 
 export interface SynergyCombo {

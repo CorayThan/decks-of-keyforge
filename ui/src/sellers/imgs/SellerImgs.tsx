@@ -5,6 +5,7 @@ import abtabdn from "./abtabdn.png"
 import clint from "./clint-icon.jpg"
 import coraythan from "./dok.png"
 import fifthPlanet from "./fifth-planet.jpg"
+import hana from "./hana.png"
 import justiceBlinded from "./jb-logo.png"
 import keysader from "./keysader.png"
 import lucabell from "./lucabell.png"
@@ -33,6 +34,7 @@ sellerImgs.set("robotrob3", robotrob3)
 sellerImgs.set("septumus", septumus)
 sellerImgs.set("lucabell", lucabell)
 sellerImgs.set("Hida2230", clint)
+sellerImgs.set("Hana666", hana)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

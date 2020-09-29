@@ -10,6 +10,7 @@ import { EnhancedAmberIcon } from "../../generic/icons/enhancements/EnhancedAmbe
 import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCaptureIcon"
 import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
 import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawIcon"
+import { SasTip } from "../../mui-restyled/SasTip"
 import { userStore } from "../../user/UserStore"
 import { HasAerc } from "../HasAerc"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
@@ -134,6 +135,31 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*        </Tooltip>*/}
             {/*    </div>*/}
             {/*)}*/}
+            {userStore.contentCreator && (
+                <div style={{marginLeft: spacing(1)}}>
+                    <SasTip
+                        title={<Typography variant={"subtitle1"}>META Score</Typography>}
+                        contents={(
+                            <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
+                                {Object.entries(deck.metaScores ?? {})
+                                    .map(meta => (
+                                        <>
+                                            <Typography variant={"body2"}>{meta[0]}</Typography>
+                                            <Typography variant={"body2"}>{meta[1]}</Typography>
+                                        </>
+                                    ))}
+                            </Box>
+                        )}
+                    >
+                        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
+                                {DeckUtils.calculateMetaScore(deck)}
+                            </Typography>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 4}} noWrap={true}>META</Typography>
+                        </div>
+                    </SasTip>
+                </div>
+            )}
             {userStore.contentCreator && (
                 <div style={{marginLeft: spacing(1)}}>
                     <Tooltip

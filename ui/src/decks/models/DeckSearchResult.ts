@@ -64,6 +64,7 @@ export interface DeckSearchResult {
     deckSaleInfo?: DeckSaleInfo[]
     owners?: string[]
     synergyDetails?: SynergyCombo[]
+    metaScores?: { [key: string]: number }
     hasOwnershipVerification: boolean
     dateAdded?: string
 
@@ -80,6 +81,12 @@ export interface DeckSearchResult {
 }
 
 export class DeckUtils {
+
+    static calculateMetaScore = (deck: DeckSearchResult) => {
+        return Object.entries(deck.metaScores ?? {})
+            .map(meta => meta[1])
+            .reduce((metaScore, nextMetaScore) => metaScore + nextMetaScore, 0)
+    }
 
     static calculateAdaptiveScore = (deck: DeckSearchResult) => {
         return deck.housesAndCards

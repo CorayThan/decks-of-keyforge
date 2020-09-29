@@ -60,10 +60,11 @@ enum class SynergyTrait {
     increasesKeyCost,
     scalingAmberControl,
 
-    // Damage
+    // Damage and wipes
     distributableDamage, // eg sack of coins, cooperative hunting
     dealsDamage,
     preventsDamage,
+    boardClear,
 
     // Creatures
     stuns,
