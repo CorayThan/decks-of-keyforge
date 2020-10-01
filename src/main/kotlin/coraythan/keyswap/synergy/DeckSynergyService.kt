@@ -243,59 +243,26 @@ object DeckSynergyService {
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
-        val bounceAndPurgeCreatureValue = (traitsMap[SynergyTrait.purges]?.traitValues ?: listOf())
-                .plus(traitsMap[SynergyTrait.returns_R_ToHand]?.traitValues ?: listOf())
-                .map { if (it.value.player != SynTraitPlayer.FRIENDLY && it.value.cardTypes.any { it == CardType.Creature }) it.value.strength().value else 0 }
-                .sum()
-
-        val combosByHouse = synergyCombos.groupBy { it.house }
-
-
-        val metaScores = mapOf<String, Double>(
-                "Scaling Aember Control" to when (traitsMap[SynergyTrait.scalingAmberControl]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
-                    0 -> 0.0
-                    in 1..2 -> 0.5
-                    else -> 1.0
+        val metaScores = mapOf<String, Int>(
+                "Aember Control" to when {
+                    a < 2 -> -4
+                    a < 3 -> -3
+                    a < 4 -> -2
+                    a < 5 -> -1
+                    else -> 0
                 },
-                "Board Clears" to when (traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
-                    2 -> 0.5
-                    in 3..5 -> 1.0
-                    in 6..8 -> 2.0
-                    in 9..10 -> 1.0
-                    11 -> 0.5
-                    else -> 0.0
+                "Creature Control" to when {
+                    c < 2 -> -3
+                    c < 4 -> -2
+                    c < 6 -> -1
+                    else -> 0
                 },
-                "Bounce/Purge Creature Control" to when (bounceAndPurgeCreatureValue) {
-                    0 -> 0.0
-                    in 1..2 -> 0.5
-                    else -> 1.0
-                },
-                "Artifact Control" to when (traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
-                    in 1..2 -> 0.5
-                    in 3..8 -> 1.0
-                    in 9..10 -> 0.5
-                    else -> 0.0
+                "Artifact Control" to when {
+                    r in 1.25..3.5 -> 1
+                    r > 5.0 -> -1
+                    else -> 0
                 },
         )
-                .plus(
-                        deck.houses.map { house ->
-                            val houseA = combosByHouse[house]?.sumByDouble { it.amberControl * it.copies } ?: 0.0
-                            "${house.masterVaultValue} Aember Control" to when {
-                                houseA >= 3.0 -> 1.0
-                                houseA >= 1.5 -> 0.5
-                                else -> 0.0
-                            }
-                        }
-                )
-                .plus(
-                        deck.houses.map { house ->
-                            val houseC = combosByHouse[house]?.sumByDouble { it.creatureControl * it.copies } ?: 0.0
-                            "${house.masterVaultValue} Creature Control" to when {
-                                houseC >= 2.0 -> 0.5
-                                else -> 0.0
-                            }
-                        }
-                )
 
         return DeckSynergyInfo(
                 synergyRating = synergy,

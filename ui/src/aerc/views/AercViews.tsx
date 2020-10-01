@@ -152,25 +152,12 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
                         )}
                     >
                         <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 18, marginRight: spacing(1)}}>
                                 {DeckUtils.calculateMetaScore(deck)}
                             </Typography>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 4}} noWrap={true}>META</Typography>
+                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 14, marginBottom: 2}} noWrap={true}>META</Typography>
                         </div>
                     </SasTip>
-                </div>
-            )}
-            {userStore.contentCreator && (
-                <div style={{marginLeft: spacing(1)}}>
-                    <Tooltip
-                        title={DeckUtils.calculateAdaptiveScoreContributions(deck)}>
-                        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 30, marginRight: spacing(1)}}>
-                                {DeckUtils.calculateAdaptiveScore(deck)}
-                            </Typography>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 20, marginBottom: 4}} noWrap={true}>ADAPT</Typography>
-                        </div>
-                    </Tooltip>
                 </div>
             )}
             {enhancedIcons}

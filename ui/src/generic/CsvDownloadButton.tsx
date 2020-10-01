@@ -6,8 +6,8 @@ import { CSVLink } from "react-csv"
 import { Utils } from "../config/Utils"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const CsvDownloadButton = observer((props: { name: string, data?: CsvData, size?: "small" | "medium", style?: React.CSSProperties }) => {
-    const {data, name, size, style} = props
+export const CsvDownloadButton = observer((props: { name: string, button?: React.ReactNode, data?: CsvData, size?: "small" | "medium", style?: React.CSSProperties }) => {
+    const {data, name, size, style, button} = props
     if (data == null || data.length === 0) {
         return (
             <IconButton disabled={true}>
@@ -32,11 +32,14 @@ export const CsvDownloadButton = observer((props: { name: string, data?: CsvData
             data={dataEncoded}
             target={"_blank"} rel={"noopener noreferrer"}
             filename={`dok-${name}-${Utils.nowDateString()}.csv`}
-            style={style}
+            style={{textDecoration: "none", ...style}}
         >
-            <IconButton size={size}>
-                <GetApp/>
-            </IconButton>
+            {button}
+            {!button && (
+                <IconButton size={size}>
+                    <GetApp/>
+                </IconButton>
+            )}
         </CSVLink>
     )
 })

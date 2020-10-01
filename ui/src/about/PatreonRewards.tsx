@@ -97,6 +97,7 @@ export class PatreonRewards extends React.Component {
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Up to 25 deck sale notifications: Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
                             "List up to 1000 decks for sale",
+                            "Download deck search result spreadsheets with 1,000 or 5,000 results",
                             "Form a team and manage members",
                             "See your full purchase and sale history"
                         ]}

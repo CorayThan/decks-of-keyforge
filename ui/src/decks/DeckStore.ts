@@ -67,6 +67,12 @@ export class DeckStore {
     @observable
     deckNameSearchResults: DeckSearchResult[] = []
 
+    @observable
+    decksToDownload?: DeckSearchResult[]
+
+    @observable
+    downloadingDecks = false
+
     deckNameSearchCancel: CancelTokenSource | undefined
 
     reset = () => {
@@ -225,6 +231,18 @@ export class DeckStore {
     moreDecksAvailable = () => (this.deckPage && this.decksCount && this.deckPage.page + 1 < this.decksCount.pages)
         || (this.deckPage && !this.decksCount && this.deckPage.decks.length % DeckStore.DECK_PAGE_SIZE === 0)
 
+    findDecksToDownload = async (filters: DeckFilters, num: number) => {
+        this.downloadingDecks = true
+        this.decksToDownload = undefined
+        const copiedFilters = {...filters}
+        copiedFilters.pageSize = num
+        copiedFilters.page = 0
+        const deckResults: AxiosResponse<DeckPage> = await axios.post(`${DeckStore.CONTEXT}/filter`, copiedFilters)
+        this.decksToDownload = deckResults.data.decks
+        log.info("Found deck count " + this.decksToDownload.length)
+        this.downloadingDecks = false
+    }
+
     @computed
     get searchingOrLoaded(): boolean {
         return this.searchingForDecks || this.decksToDisplay != null
@@ -245,7 +263,6 @@ export class DeckStore {
         this.decksToDisplay = this.decksToDisplay.concat(decksToAdd)
         this.currentDeckPage = decks.page
     }
-
 
     private findDecks = async (filters: DeckFilters) => new Promise<DeckPage>(resolve => {
         axios.post(`${DeckStore.CONTEXT}/filter`, filters)

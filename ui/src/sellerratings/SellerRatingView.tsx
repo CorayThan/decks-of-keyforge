@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Divider, Link, TextField, Tooltip, Typography } from "@material-ui/core"
+import { Box, Button, Dialog, Divider, Link, TextField, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -13,6 +13,7 @@ import { HelperText } from "../generic/CustomTypographies"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
 import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../user/UserStore"
 import { sellerRatingsStore } from "./SellerRatingsStore"
 
@@ -232,25 +233,19 @@ const DisplayReviewsDialog = observer((props: UserRatingDialogProps) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Tooltip
-                    title={userStore.contributedOrManual ? "" : "You must have contributed at least $1 as a Patron to leave reviews. Patrons are charged on the 1st of the month."}
+                <Button
+                    component={"button"}
+                    onClick={store.beginReview}
+                    variant={"outlined"}
+                    color={"primary"}
+                    size={"small"}
+                    disabled={
+                        !(sellerId != userStore.userId && userStore.loggedIn() && sellersReviews != null
+                            && sellersReviews.find(review => review.reviewerUsername === userStore.username) == null)
+                    }
                 >
-                    <div>
-                        <Button
-                            component={"button"}
-                            onClick={store.beginReview}
-                            variant={"outlined"}
-                            color={"primary"}
-                            size={"small"}
-                            disabled={
-                                !(sellerId != userStore.userId && userStore.contributedOrManual && sellersReviews != null
-                                    && sellersReviews.find(review => review.reviewerUsername === userStore.username) == null)
-                            }
-                        >
-                            Write Review
-                        </Button>
-                    </div>
-                </Tooltip>
+                    Write Review
+                </Button>
                 <Box flexGrow={1}/>
                 <KeyButton onClick={store.closeReviews}>Close</KeyButton>
             </DialogActions>
@@ -260,57 +255,85 @@ const DisplayReviewsDialog = observer((props: UserRatingDialogProps) => {
 
 const CreateReviewDialog = observer((props: UserRatingDialogProps) => {
     const {sellerName, sellerId, store} = props
+
+    const canReview = userStore.contributedOrManual
+
     return (
         <>
             <DialogTitle>
                 Write Review for {sellerName}
             </DialogTitle>
             <DialogContent>
-                <TextField
-                    label={"Title"}
-                    fullWidth={true}
-                    variant={"outlined"}
-                    onChange={event => store.title = event.target.value}
-                />
-                <Box display={"flex"} alignItems={"flex-end"} mt={2}>
-                    <Rating
-                        name={"seller ratings make"}
-                        value={store.rating}
-                        size={"large"}
-                        onChange={(event, newValue) => {
-                            store.rating = newValue as RatingValue
-                        }}
-                    />
-                </Box>
-                <HelperText style={{margin: theme.spacing(1, 0, 2, 0)}}>
-                    {sellerRatingsStore.summaryMessageForRating(store.rating)}
-                </HelperText>
-                <TextField
-                    label={"Review"}
-                    fullWidth={true}
-                    multiline={true}
-                    rows={5}
-                    rowsMax={20}
-                    variant={"outlined"}
-                    onChange={event => store.review = event.target.value}
-                />
-                <HelperText style={{margin: theme.spacing(2, 0, 0, 0)}}>
-                    You must include a rating and review. Please include
-                    information like the seller's responsiveness, shipping speed, and whether you successfully bought a deck from them.
-                </HelperText>
+                {canReview ? (
+                    <>
+                        <TextField
+                            label={"Title"}
+                            fullWidth={true}
+                            variant={"outlined"}
+                            onChange={event => store.title = event.target.value}
+                            disabled={!canReview}
+                        />
+                        <Box display={"flex"} alignItems={"flex-end"} mt={2}>
+                            <Rating
+                                name={"seller ratings make"}
+                                value={store.rating}
+                                size={"large"}
+                                onChange={(event, newValue) => {
+                                    store.rating = newValue as RatingValue
+                                }}
+                                disabled={!canReview}
+                            />
+                        </Box>
+                        <HelperText style={{margin: theme.spacing(1, 0, 2, 0)}}>
+                            {sellerRatingsStore.summaryMessageForRating(store.rating)}
+                        </HelperText>
+                        <TextField
+                            label={"Review"}
+                            fullWidth={true}
+                            multiline={true}
+                            rows={5}
+                            rowsMax={20}
+                            variant={"outlined"}
+                            onChange={event => store.review = event.target.value}
+                            disabled={!canReview}
+                        />
+                        <HelperText style={{margin: theme.spacing(2, 0, 0, 0)}}>
+                            You must include a rating and review. Please include
+                            information like the seller's responsiveness, shipping speed, and whether you successfully bought a deck from them.
+                        </HelperText>
+                    </>
+                ) : (
+                    <>
+                        <Typography
+                            variant={"subtitle1"}
+                            color={"error"}
+                        >
+                            To prevent false reviews, you must be a Patron who has paid at least $1 to
+                            leave a review. Patrons are charged on the 1st of the month.
+                        </Typography>
+                        <Typography
+                            variant={"body2"}
+                        >
+                            Please consider becoming a patron to support the site and the sellers of KeyForge!
+                        </Typography>
+                        <PatronButton/>
+                    </>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={store.cancelReview}>Cancel</Button>
-                <KeyButton
-                    component={"button"}
-                    onClick={() => store.submitReview(sellerId)}
-                    variant={"contained"}
-                    color={"primary"}
-                    disabled={!store.reviewIsValid() || store.saving}
-                    loading={store.saving}
-                >
-                    Submit
-                </KeyButton>
+                {canReview && (
+                    <KeyButton
+                        component={"button"}
+                        onClick={() => store.submitReview(sellerId)}
+                        variant={"contained"}
+                        color={"primary"}
+                        disabled={!store.reviewIsValid() || store.saving}
+                        loading={store.saving}
+                    >
+                        Submit
+                    </KeyButton>
+                )}
             </DialogActions>
         </>
     )

@@ -18,6 +18,7 @@ import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
+import { PleaseBecomeAPatron } from "../thirdpartysites/patreon/PleaseBecomeAPatron"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
@@ -145,13 +146,14 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>
                         {screenStore.screenSizeSm() ? (
-                            <div style={{marginTop: spacing(4), display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                                <DeckSearchLink name={"Search"} filters={topSas} style={{margin: spacing(2)}}/>
-                                <DeckSearchLink name={"For Sale"} filters={forSale} style={{margin: spacing(2)}}/>
-                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(2)}}/>
+                            <div style={{marginTop: spacing(1), display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                                <DeckSearchLink name={"Search"} filters={topSas} style={{margin: spacing(1)}}/>
+                                <DeckSearchLink name={"For Sale"} filters={forSale} style={{margin: spacing(1)}}/>
+                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(1)}}/>
                             </div>
                         ) : null}
                         <FeaturedSellersView/>
+                        <PleaseBecomeAPatron/>
                         <div style={{marginLeft: spacing(2)}}>
                             <div style={{marginLeft: spacing(2)}}>
                                 {/*<LastTwoArticles/>*/}

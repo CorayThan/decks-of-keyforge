@@ -1,5 +1,5 @@
 import { cardStore } from "../../cards/CardStore"
-import { roundToHundreds } from "../../config/Utils"
+import { log, roundToHundreds } from "../../config/Utils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
@@ -165,6 +165,7 @@ export class DeckUtils {
     }
 
     static arrayToCSV = (decks: DeckSearchResult[]): CsvData => {
+        log.debug("Perform deck array to csv")
         const data = decks.map(deck => {
             const synergies = DeckUtils.synergiesRounded(deck)
             return [

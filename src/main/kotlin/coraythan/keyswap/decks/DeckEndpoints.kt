@@ -2,6 +2,7 @@ package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
 import coraythan.keyswap.cards.publishedAercVersion
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.thirdpartyservices.AzureOcr
@@ -30,12 +31,17 @@ class DeckEndpoints(
     fun decks(@RequestBody deckFilters: DeckFilters, @RequestHeader(value = "Timezone") offsetMinutes: Int): DecksPage {
         try {
             val cleanFilters = deckFilters.clean()
+
+            if (cleanFilters.pageSize > 5000) {
+                throw BadRequestException("Cannot request more than 5,000 decks.")
+            }
+
             var decks: DecksPage? = null
             val decksFilterTime = measureTimeMillis {
                 decks = deckSearchService.filterDecks(cleanFilters, offsetMinutes)
             }
 
-            if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $cleanFilters")
+            if (decksFilterTime > 500) log.warn("Decks filtering took $decksFilterTime ms with filters $cleanFilters found ${decks?.decks?.size} decks")
             return decks!!
         } catch (ex: Exception) {
             throw RuntimeException("Couldn't filter decks with filters $deckFilters", ex)

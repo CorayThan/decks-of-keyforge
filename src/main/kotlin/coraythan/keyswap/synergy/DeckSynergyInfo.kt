@@ -39,7 +39,7 @@ data class DeckSynergyInfo(
         val disruption: Double,
         val other: Double,
 
-        val metaScores: Map<String, Double>,
+        val metaScores: Map<String, Int>,
 )
 
 data class SynergyMatch(

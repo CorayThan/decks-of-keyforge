@@ -20,7 +20,6 @@ import { Routes } from "../../config/Routes"
 import { log, Utils } from "../../config/Utils"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../expansions/ExpansionSelectOrExclude"
-import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -32,13 +31,13 @@ import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { deckStore } from "../DeckStore"
-import { DeckUtils } from "../models/DeckSearchResult"
 import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
 import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
 import { DeckCardSelect } from "./DeckCardSelect"
 import { DeckFilters } from "./DeckFilters"
 import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
+import { DownloadDeckResults } from "./DownloadDeckResults"
 
 interface DecksSearchDrawerProps {
     history: History.History
@@ -459,16 +458,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <SortDirectionView hasSort={this.props.filters}/>
                             </div>
                             {!screenStore.smallDeckView() && (
-                                <CsvDownloadButton
-                                    name={"decks"}
-                                    data={DeckUtils.arrayToCSV(
-                                        (deckStore.decksToDisplay ?? [])
-                                            .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
-                                            .filter(deck => deck != null)
-                                    )}
-                                    size={"small"}
-                                    style={{marginLeft: spacing(2), marginTop: "auto"}}
-                                />
+                                <DownloadDeckResults filters={this.props.filters}/>
                             )}
                         </ListItem>
                         <ListItem>
