@@ -262,6 +262,10 @@ object DeckSynergyService {
                     r > 5.0 -> -1
                     else -> 0
                 },
+                "Board Clears" to when (traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
+                    in 3..10 -> 1
+                    else -> 0
+                },
         )
 
         return DeckSynergyInfo(

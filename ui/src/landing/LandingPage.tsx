@@ -18,7 +18,6 @@ import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
-import { PleaseBecomeAPatron } from "../thirdpartysites/patreon/PleaseBecomeAPatron"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
@@ -153,7 +152,6 @@ export class LandingPage extends React.Component<{}> {
                             </div>
                         ) : null}
                         <FeaturedSellersView/>
-                        <PleaseBecomeAPatron/>
                         <div style={{marginLeft: spacing(2)}}>
                             <div style={{marginLeft: spacing(2)}}>
                                 {/*<LastTwoArticles/>*/}

@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.13"
+export const latestVersion = "5.14"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,13 +44,31 @@ export class ReleaseNotes extends React.Component {
                 </Paper>
                 <ReleaseNote
                     releaseNumber={"5.14"}
-                    date={"9/23/2020"}
+                    date={"10/2/2020"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
-                            highlight: "Bonus Capture + Draw Search Constraints!",
+                            highlight: "META Score",
+                            note: "In addition to the regular SAS updates, I've added a new META Score. At this time it is entirely separate from SAS, but " +
+                                "the plan is to incorporate it into the SAS total in next month's update. I tested many permutations of this score, " +
+                                "and in the end I decided the most simple and obvious version was best. Decks get negative meta score for too little " +
+                                "aember control and creature control, they get a bonus for a medium amount of artifact control, and a bonus for about 1 to 3 " +
+                                "board wipes."
+                        },
+                        {
+                            highlight: "Improved Deck CSV Downloads",
+                            note: "$6+ Patrons can now load the first 1,000 or 5,000 deck search results to download as a spreadsheet!"
+                        },
+                        {
+                            highlight: "Primary Synergies",
+                            note: "Synergy groups can now be marked as primary. This means no synergy not in the primary synergy group can have a synergy " +
+                                "value higher than the primary group. For example, Praefectus Ludo now has a synergy with capture and creature protection, " +
+                                "but his synergy value from creature protection cannot be higher than his synergy from capture."
+                        },
+                        {
+                            highlight: "Bonus Capture + Draw Search Constraints",
                             note: "You can now filter decks based on the amount of bonus capture or draw they contain. I also removed a couple lesser " +
-                                "used constraints to make room for these."
+                                "used constraints to make room for these. Note these values will be filling out as the SAS update runs."
                         },
                     ]}
                 />

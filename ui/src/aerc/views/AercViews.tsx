@@ -11,7 +11,6 @@ import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCa
 import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
 import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawIcon"
 import { SasTip } from "../../mui-restyled/SasTip"
-import { userStore } from "../../user/UserStore"
 import { HasAerc } from "../HasAerc"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
 
@@ -135,31 +134,29 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*        </Tooltip>*/}
             {/*    </div>*/}
             {/*)}*/}
-            {userStore.contentCreator && (
-                <div style={{marginLeft: spacing(1)}}>
-                    <SasTip
-                        title={<Typography variant={"subtitle1"}>META Score</Typography>}
-                        contents={(
-                            <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
-                                {Object.entries(deck.metaScores ?? {})
-                                    .map(meta => (
-                                        <>
-                                            <Typography variant={"body2"}>{meta[0]}</Typography>
-                                            <Typography variant={"body2"}>{meta[1]}</Typography>
-                                        </>
-                                    ))}
-                            </Box>
-                        )}
-                    >
-                        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 18, marginRight: spacing(1)}}>
-                                {DeckUtils.calculateMetaScore(deck)}
-                            </Typography>
-                            <Typography variant={"h5"} color={"primary"} style={{fontSize: 14, marginBottom: 2}} noWrap={true}>META</Typography>
-                        </div>
-                    </SasTip>
-                </div>
-            )}
+            <div style={{marginLeft: spacing(1)}}>
+                <SasTip
+                    title={<Typography variant={"subtitle1"}>META Score</Typography>}
+                    contents={(
+                        <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
+                            {Object.entries(deck.metaScores ?? {})
+                                .map(meta => (
+                                    <>
+                                        <Typography variant={"body2"}>{meta[0]}</Typography>
+                                        <Typography variant={"body2"}>{meta[1]}</Typography>
+                                    </>
+                                ))}
+                        </Box>
+                    )}
+                >
+                    <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
+                        <Typography variant={"h5"} color={"primary"} style={{fontSize: 18, marginRight: spacing(1)}}>
+                            {DeckUtils.calculateMetaScore(deck)}
+                        </Typography>
+                        <Typography variant={"h5"} color={"primary"} style={{fontSize: 14, marginBottom: 2}} noWrap={true}>META</Typography>
+                    </div>
+                </SasTip>
+            </div>
             {enhancedIcons}
             <div
                 style={{
@@ -178,7 +175,7 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {deck.dateAdded != null && (
                 <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>
                     <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
-                        <Typography variant={"body2"} color={"textSecondary"}>
+                        <Typography variant={"body2"} color={"textSecondary"} style={{fontSize: "0.75rem"}}>
                             {Utils.formatDate(deck.dateAdded)}
                         </Typography>
                     </div>
