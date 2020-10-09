@@ -1,30 +1,23 @@
-import Typography from "@material-ui/core/Typography"
-import * as History from "history"
 import { isEqual } from "lodash"
 import { autorun, IReactionDisposer } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing } from "../../config/MuiConfig"
 import { log } from "../../config/Utils"
-import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerDetails } from "../../sellers/SellerDetails"
 import { sellerStore } from "../../sellers/SellerStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
-import { DeckListView } from "../DeckListView"
+import { CollectionStatsView } from "../collectionstats/CollectionStatsView"
 import { deckStore } from "../DeckStore"
-import { DeckTableView } from "../DeckTableView"
-import { DeckUtils } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
-import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
+import { DeckSearchContainerProps } from "./DeckSearchPage"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
-export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
+export class CollectionStatsSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     componentDidMount(): void {
         if (this.props.location.search !== "") {
@@ -56,26 +49,20 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
         defaultForSaleSearch.forSale = true
         const defaultSearch = new DeckFilters()
         defaultSearch.reset()
-        deckStore.searchDecks(filters)
+        deckStore.calculateCollectionStats(filters)
     }
 
     render() {
         const filters = this.makeFilters(this.props)
         return (
-            <DeckSearchContainer history={this.props.history} location={this.props.location} filters={filters} queryParams={this.props.location.search}/>
+            <CollectionStatsSearchContainer history={this.props.history} location={this.props.location} filters={filters}
+                                            queryParams={this.props.location.search}/>
         )
     }
 }
 
-export interface DeckSearchContainerProps {
-    history: History.History
-    location: History.Location
-    filters: DeckFilters
-    queryParams: string
-}
-
 @observer
-class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
+class CollectionStatsSearchContainer extends React.Component<DeckSearchContainerProps> {
 
     titleUpdateDisposer?: IReactionDisposer
 
@@ -93,7 +80,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
     }
 
     setTitle = () => {
-        const {filters, queryParams} = this.props
+        const {filters, queryParams, location} = this.props
 
         let owner: string | undefined
         let sellerDetails: SellerDetails | undefined
@@ -106,52 +93,15 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
         }
 
         if (userStore.username != null && owner === userStore.username) {
-            uiStore.setTopbarValues("My Decks", "My Decks", "Manage your collection")
-        } else if (sellerDetails && (filters.forSale || filters.forTrade)) {
-            uiStore.setTopbarValues(sellerDetails.storeName, sellerDetails.storeName, "")
+            uiStore.setTopbarValues("My Stats", "My Stats", "Analyze your collection stats")
         } else {
-            uiStore.setTopbarValues("Decks of KeyForge", "Decks", "Search, evaluate, buy and sell")
+            uiStore.setTopbarValues("Deck Statistics", "Deck Stats", "Analyze deck statistics")
         }
     }
 
     render() {
-        const {decksToDisplay, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
+        const {collectionStats, calculatingStats} = deckStore
         const {filters, history, location} = this.props
-
-        let decksView
-
-        if (decksToDisplay != null) {
-            if (decksToDisplay.length === 0) {
-                decksView = (
-                    <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
-                        Sorry, no decks match your search criteria.
-                    </Typography>
-                )
-            } else {
-                const sellerView = location.search.includes("forSale=true")
-                    && location.search.includes(`owner=${userStore.username}`)
-                    && keyLocalStorage.deckListViewType === "table"
-                const decks = decksToDisplay
-                    .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
-                    .filter(deck => deck != null && (deckSearchFiltersStore.adaptiveScoreFilter == null || DeckUtils.calculateAdaptiveScore(deck) >= deckSearchFiltersStore.adaptiveScoreFilter))
-                decksView = keyLocalStorage.deckListViewType === "table" ?
-                    <DeckTableView decks={decks} sellerView={sellerView}/> :
-                    <DeckListView decks={decks}/>
-            }
-        }
-
-        let showMoreButton = null
-        if (moreDecksAvailable()) {
-            showMoreButton = (
-                <KeyButton
-                    disabled={addingMoreDecks || countingDecks}
-                    loading={addingMoreDecks || countingDecks}
-                    onClick={showMoreDecks}
-                >
-                    Show more
-                </KeyButton>
-            )
-        }
 
         return (
             <div style={{display: "flex"}}>
@@ -162,9 +112,10 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     }}
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
-                        {decksView}
-                        {showMoreButton}
+                        {screenStore.screenSizeXs() ? <Loader show={collectionStats == null || calculatingStats}/> : null}
+                        {collectionStats != null && (
+                            <CollectionStatsView stats={collectionStats}/>
+                        )}
                     </div>
                 </div>
             </div>

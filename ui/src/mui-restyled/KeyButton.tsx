@@ -7,13 +7,16 @@ import { spacing } from "../config/MuiConfig"
 interface KeyButtonProps extends ButtonProps {
     loading?: boolean
     component?: string
+    icon?: boolean
 }
 
 export const KeyButton = (props: KeyButtonProps) => {
-    const {loading, children, color, ...rest} = props
+    const {loading, children, icon, color, style, ...rest} = props
     return (
         <Button
             color={color}
+            size={icon ? "small" : undefined}
+            style={{width: icon ? 32 : undefined, height: icon ? 32 : undefined, minWidth: icon ? 32 : undefined, minHeight: icon ? 32 : undefined, ...style}}
             {...rest}
         >
             {children}

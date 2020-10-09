@@ -16,7 +16,7 @@ data class HouseAndCards(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class SimpleCard(
         val cardTitle: String,
-        val rarity: Rarity,
+        val rarity: Rarity? = null,
         val legacy: Boolean? = null,
         val maverick: Boolean? = null,
         val anomaly: Boolean? = null,

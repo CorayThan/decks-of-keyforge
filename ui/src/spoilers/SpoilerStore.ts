@@ -5,6 +5,7 @@ import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
 import { BadRequestException } from "../config/Exceptions"
 import { HttpConfig } from "../config/HttpConfig"
+import { log, Utils } from "../config/Utils"
 import { Rarity } from "../generated-src/Rarity"
 import { messageStore } from "../ui/MessageStore"
 import { Spoiler } from "./Spoiler"
@@ -141,7 +142,7 @@ export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card
     const cardRarity = card.rarity == Rarity.Special || card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
     const filtersRarities = filters.rarities.map(rarity => (rarity as Rarity | "Special") === "Special" ? Rarity.Variant : rarity)
 
-    return (!filters.title || card.cardTitle.toLowerCase().includes(filters.title.toLowerCase().trim()))
+    return (!filters.title || Utils.cardNameIncludes(card.cardTitle, filters.title))
         &&
         (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
         &&

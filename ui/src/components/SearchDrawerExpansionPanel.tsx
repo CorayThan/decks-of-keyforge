@@ -54,7 +54,6 @@ export class SearchDrawerExpansionPanel extends React.Component<SearchDrawerExpa
 
 export const rotateIconStyle = (rotatedUp: boolean): React.CSSProperties => {
     return {
-        color: "rgba(0, 0, 0, 0.54)",
         transform: `rotate(${rotatedUp ? 0 : 180}deg)`,
         transition: theme.transitions.create("transform", transition)
     }

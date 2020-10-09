@@ -126,7 +126,34 @@ export class Utils {
         }
         return round(toRound / 1000, 0) + "k"
     }
-}
+
+    static cardNameIncludes = (cardName: string, search: string) => {
+        if (search.trim().length < 3) {
+            return true
+        }
+        let cardNameClean = cardName
+            .toLowerCase()
+            .replaceAll("æ", "ae")
+            .replaceAll(/\W+/g, "")
+
+        const searchTokenized = Utils.tokenizeCardSearch(search)
+
+        let match = true
+        searchTokenized.forEach(searchToken => {
+            if (!cardNameClean.includes(searchToken)) {
+                match = false
+            }
+        })
+        return match
+    }
+
+    static tokenizeCardSearch = (search: string) => {
+        return search
+            .toLowerCase()
+            .replaceAll(/\W+/g, " ")
+            .split(" ")
+            .filter(token => token.length > 2)
+    }}
 
 type EnumType = string | number
 

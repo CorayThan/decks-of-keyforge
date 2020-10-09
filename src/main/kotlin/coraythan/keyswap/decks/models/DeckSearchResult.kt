@@ -1,7 +1,9 @@
 package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import coraythan.keyswap.House
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.synergy.SynergyCombo
 import java.time.LocalDate
@@ -95,4 +97,19 @@ data class DeckSearchResult(
             $upgradeCount Upgrades
         """.trimIndent()
     }
+
+    fun toSimpleResult() = SimpleDeckSearchResult(
+            name,
+            keyforgeId,
+            housesAndCards.map { it.house },
+            sasRating
+    )
 }
+
+@GenerateTs
+data class SimpleDeckSearchResult(
+        val name: String,
+        val keyforgeId: String,
+        val houses: List<House>,
+        val sas: Int,
+)

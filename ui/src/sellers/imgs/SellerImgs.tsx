@@ -1,5 +1,6 @@
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
+import { log } from "../../config/Utils"
 import bigz from "../../user/imgs/big-z.png"
 import abtabdn from "./abtabdn.png"
 import clint from "./clint-icon.jpg"
@@ -22,19 +23,19 @@ export const sellerImgs: Map<string, string> = new Map()
 sellerImgs.set("coraythan".toLowerCase(), coraythan)
 sellerImgs.set("wyzman".toLowerCase(), reapout)
 sellerImgs.set("zarathustra05".toLowerCase(), bigz)
-sellerImgs.set("TiggerClone".toLowerCase(), tiggerClone)
-sellerImgs.set("NeveroutGamed".toLowerCase(), neverOutGamed)
-sellerImgs.set("Jupiter".toLowerCase(), fifthPlanet)
-sellerImgs.set("Keysader".toLowerCase(), keysader)
-sellerImgs.set("TTC".toLowerCase(), ttc)
+sellerImgs.set("tiggerclone".toLowerCase(), tiggerClone)
+sellerImgs.set("neveroutgamed".toLowerCase(), neverOutGamed)
+sellerImgs.set("jupiter".toLowerCase(), fifthPlanet)
+sellerImgs.set("keysader".toLowerCase(), keysader)
+sellerImgs.set("ttc".toLowerCase(), ttc)
 sellerImgs.set("abtabdn".toLowerCase(), abtabdn)
-sellerImgs.set("JusticeBlinded".toLowerCase(), justiceBlinded)
-sellerImgs.set("musicgal", musicgal)
-sellerImgs.set("robotrob3", robotrob3)
-sellerImgs.set("septumus", septumus)
-sellerImgs.set("lucabell", lucabell)
-sellerImgs.set("Hida2230", clint)
-sellerImgs.set("Hana666", hana)
+sellerImgs.set("justiceblinded".toLowerCase(), justiceBlinded)
+sellerImgs.set("musicgal".toLowerCase(), musicgal)
+sellerImgs.set("robotrob3".toLowerCase(), robotrob3)
+sellerImgs.set("septumus".toLowerCase(), septumus)
+sellerImgs.set("lucabell".toLowerCase(), lucabell)
+sellerImgs.set("hida2230".toLowerCase(), clint)
+sellerImgs.set("hana666".toLowerCase(), hana)
 
 export const SellerImg = (props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const sellerImg = sellerImgs.get(props.sellerUsername.toLowerCase())

@@ -78,6 +78,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Dark mode",
+                            "Analyze collections of decks up to 500",
                             "List decks for sale or trade for up to 1 year",
                             "List up to 250 decks for sale. (Free maximum is 100.)",
                             "Create auctions or public offer-based sale listings",
@@ -99,7 +100,8 @@ export class PatreonRewards extends React.Component {
                             "List up to 1000 decks for sale",
                             "Download deck search result spreadsheets with 1,000 or 5,000 results",
                             "Form a team and manage members",
-                            "See your full purchase and sale history"
+                            "See your full purchase and sale history",
+                            "Analyze collections of decks up to 1,000",
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
@@ -113,6 +115,7 @@ export class PatreonRewards extends React.Component {
                             "List any number of decks for sale.",
                             `Get your store listed on the landing page of the site!`,
                             "Your listings will show your store icon and name, and they will link to your decks for sale.",
+                            "Analyze collections of decks up to 2,500",
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>

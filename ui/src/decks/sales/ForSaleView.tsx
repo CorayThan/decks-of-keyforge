@@ -94,7 +94,7 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
         const yourUsername = userStore.username
         const yourEmail = userStore.email
 
-        const allowEmail = yourEmail && yourUsername
+        const allowEmail = yourEmail && yourUsername && !forAuction
 
         const sellerDetails = sellerStore.findSellerWithUsername(username)
 
@@ -221,32 +221,23 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                     <InfoBox title={"External listing — Be careful using this link!"} info={externalLink}/>
                     <InfoBox title={"Seller Details"} info={publicContactInfo}/>
                     <InfoBox title={"Shipping Cost"} info={shippingCost}/>
-                    {discord || (allowEmail && !forAuction) ? (
-                        <>
-                            <div style={{margin: spacing(0, 2, 2)}}>
-                                <div style={{display: "flex", flexWrap: "wrap"}}>
-                                    {discord ? (
-                                        <>
-                                            <DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>
-                                            <div style={{flexGrow: 1}}/>
-                                        </>
-                                    ) : null}
-                                    {allowEmail ? (
-                                        <div
-                                            style={{marginTop: spacing(2)}}
-                                        >
-                                            <SendEmailDialog
-                                                deckName={deckName}
-                                                recipientUsername={username}
-                                                keyforgeId={keyforgeId}
-                                            />
-                                        </div>
-                                    ) : null}
-                                </div>
-                            </div>
-                            <Divider style={{marginTop: spacing(2)}}/>
-                        </>
-                    ) : null}
+                    <Box mx={2} mb={2}>
+                        {discord && (<DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>)}
+                        {allowEmail ? (
+                            <SendEmailDialog
+                                deckName={deckName}
+                                recipientUsername={username}
+                                keyforgeId={keyforgeId}
+                            />
+                        ) : (
+                            <>
+                                {!forAuction && (
+                                    <Typography>Please login to send an email</Typography>
+                                )}
+                            </>
+                        )}
+                        {discord || allowEmail && (<Divider style={{marginTop: spacing(2)}}/>)}
+                    </Box>
                     <div>
                         <Typography style={{margin: spacing(2, 2, 0)}} variant={"subtitle2"}>
                             {countryToLabel(forSaleInCountry)} – {startCase(language.toString().toLowerCase())} – {deckConditionReadableValue(condition)}

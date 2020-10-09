@@ -243,6 +243,8 @@ object DeckSynergyService {
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
+        val scalingAemberControlTraits = traitsMap[SynergyTrait.scalingAmberControl]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0
+
         val metaScores = mapOf<String, Int>(
                 "Aember Control" to when {
                     a < 2 -> -4
@@ -264,6 +266,10 @@ object DeckSynergyService {
                 },
                 "Board Clears" to when (traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
                     in 3..10 -> 1
+                    else -> 0
+                },
+                "Scaling Aember Control" to when {
+                    scalingAemberControlTraits > 3 -> 1
                     else -> 0
                 },
         )

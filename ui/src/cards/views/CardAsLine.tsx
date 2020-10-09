@@ -20,7 +20,7 @@ import { CardSimpleView, CardView } from "./CardSimpleView"
 
 interface CardAsLineProps {
     card: SimpleCard
-    cardActualHouse: House
+    cardActualHouse?: House
     deckExpansion?: Expansion
     width?: number
     marginTop?: number
@@ -65,7 +65,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
         return (
             <div>
                 <div onClick={this.handleOpen}>
-                    <CardLine {...this.props} card={card}/>
+                    <CardLine {...this.props} card={card} fullCard={fullCard}/>
                 </div>
                 <Dialog
                     open={this.open}
@@ -127,7 +127,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine  {...this.props} card={this.props.card}/>
+                <CardLine  {...this.props} card={this.props.card} fullCard={fullCard}/>
                 <Popover
                     style={{pointerEvents: "none"}}
                     open={this.popOpen}
@@ -160,14 +160,14 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
     return deck.synergyDetails.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
-const CardLine = observer((props: CardAsLineProps) => {
-    const {card, hideRarity} = props
+const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
+    const {card, fullCard, hideRarity} = props
 
     return (
         <div
             style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
         >
-            {!hideRarity && <RarityIcon rarity={card.rarity}/>}
+            {!hideRarity && <RarityIcon rarity={fullCard.rarity}/>}
             <Typography
                 variant={"body2"}
                 style={{marginLeft: spacing(1), color: card.enhanced ? blue.A200 : undefined}}

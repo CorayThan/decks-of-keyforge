@@ -35,7 +35,7 @@ export class DokRadar extends React.Component<DokRadarProps> {
                     margin={{top: margin, right: marginLeftRight, bottom: margin, left: marginLeftRight}}
                     legends={[]}
                     // @ts-ignore
-                    theme={themeStore.darkMode ? darkTheme : undefined}/>
+                    theme={themeStore.nivoTheme}/>
             </DokDeckGraphWrapper>
         )
     }
@@ -57,29 +57,3 @@ export const radarStyles = () => {
     return {height: pixelSize + 32 * 2, width: pixelSize + 104 * 2}
 }
 
-const darkTheme = {
-    axis: {
-        ticks: {
-            text: {
-                fill: "#EEEEEE"
-            }
-        },
-    },
-    grid: {
-        line: {
-            stroke: "#EEEEEE"
-        }
-    },
-    dots: {
-        text: {
-            fill: "#EEEEEE"
-        }
-    },
-    tooltip: {
-        container: {
-            background: "#2d374d",
-            color: "inherit",
-            boxShadow: "0 3px 9px rgba(0, 0, 0, 0.5)",
-        }
-    }
-}

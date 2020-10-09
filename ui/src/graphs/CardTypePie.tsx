@@ -51,22 +51,7 @@ export const CardTypePie = (props: {
                     value: props.upgrades,
                 },
             ]}
-            theme={themeStore.darkMode ? darkTheme : undefined}
+            theme={themeStore.nivoTheme}
         />
     </DokDeckGraphWrapper>
 )
-
-const darkTheme = {
-    labels: {
-        text: {
-            fill: "#EEEEEE"
-        }
-    },
-    tooltip: {
-        container: {
-            background: "#2d374d",
-            color: "inherit",
-            boxShadow: "0 3px 9px rgba(0, 0, 0, 0.5)",
-        }
-    }
-}

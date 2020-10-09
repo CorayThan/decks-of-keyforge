@@ -1,6 +1,7 @@
 import { ArrowUpward } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { themeStore } from "../config/MuiConfig"
 import { SortDirection } from "../generic/SortDirection"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { rotateIconStyle } from "./SearchDrawerExpansionPanel"
@@ -12,9 +13,8 @@ export class SortDirectionView extends React.Component<{ hasSort: { sortDirectio
         return (
             <KeyButton
                 onClick={() => this.props.hasSort.sortDirection = sortDirection === "ASC" ? "DESC" : "ASC"}
-                size={"small"}
+                icon={true}
                 variant={"outlined"}
-                style={{width: 32, height: 32, minWidth: 32, minHeight: 32}}
             >
                 <ArrowUpward fontSize={"small"} style={rotateIconStyle(sortDirection === "ASC")}/>
             </KeyButton>

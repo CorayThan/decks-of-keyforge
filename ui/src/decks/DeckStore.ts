@@ -5,6 +5,7 @@ import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopba
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
+import { CollectionStats } from "../generated-src/CollectionStats"
 import { DeckSaleInfo } from "../generated-src/DeckSaleInfo"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -74,6 +75,12 @@ export class DeckStore {
     downloadingDecks = false
 
     deckNameSearchCancel: CancelTokenSource | undefined
+
+    @observable
+    collectionStats?: CollectionStats
+
+    @observable
+    calculatingStats = false
 
     reset = () => {
         this.currentDeckPage = 0
@@ -182,6 +189,17 @@ export class DeckStore {
         if (this.currentFilters) {
             return this.searchDecks(this.currentFilters)
         }
+    }
+
+    calculateCollectionStats = async (filters: DeckFilters) => {
+        this.calculatingStats = true
+        this.collectionStats = undefined
+        const modFilters = {...filters}
+        modFilters.page = 0
+        modFilters.pageSize = keyLocalStorage.findAnalyzeCount()
+        const statResults: AxiosResponse<CollectionStats> = await axios.post(`${DeckStore.CONTEXT}/stats`, modFilters)
+        this.collectionStats = statResults.data
+        this.calculatingStats = false
     }
 
     searchDecks = async (filters: DeckFilters) => {

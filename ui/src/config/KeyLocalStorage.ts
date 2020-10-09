@@ -1,5 +1,7 @@
 import { observable } from "mobx"
 import { ListingInfo } from "../generated-src/ListingInfo"
+import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
+import { userStore } from "../user/UserStore"
 import { log } from "./Utils"
 
 enum Keys {
@@ -29,6 +31,7 @@ interface GenericStorage {
     offersRejected?: boolean
     offersCanceled?: boolean
     includeExpiredOffers?: boolean
+    analyzeCount?: number
 }
 
 class KeyLocalStorage {
@@ -137,6 +140,15 @@ class KeyLocalStorage {
         this.genericStorage = updated
         const asJson = JSON.stringify(updated)
         this.localStorage.setItem(Keys.GENERIC_STORAGE, asJson)
+    }
+
+    findAnalyzeCount = () => {
+        const fromGeneric = this.genericStorage.analyzeCount
+        if (fromGeneric == null) {
+            return 500
+        } else {
+            return fromGeneric
+        }
     }
 
     clear = () => {

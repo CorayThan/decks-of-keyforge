@@ -90,6 +90,7 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
     let goToCards = false
     if (cardFilters.title.length > 0) {
         goToCards = cardStore.searchAndReturnCards(cardFilters).length > 0
+
     }
     return (
         <>
@@ -102,7 +103,7 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
                     marginLeft: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     marginRight: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     alignItems: "center",
-                    width: screenStore.screenSizeXs() ? 124 : 224
+                    width: screenStore.screenSizeXs() ? 104 : 224
                 }}
             >
                 <Search style={{color: "#FFFFFF", marginLeft: spacing(1), marginRight: spacing(1)}}/>

@@ -41,17 +41,29 @@ export const keyTopbarStore = new KeyTopbarStore()
 interface KeyTopbarProps extends RouteComponentProps<{}> {
 }
 
-const myDeckLinks = () => [
-    {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-    {to: Routes.usersCota(), text: "My COTA"},
-    {to: Routes.usersAoa(), text: "My AOA"},
-    {to: Routes.usersWc(), text: "My WC"},
-    {to: Routes.usersMm(), text: "My MM"},
-    {to: Routes.usersFavorites(), text: "My Favorites"},
-    {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
-    {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
-    {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
-]
+const myDeckLinks = () => {
+    const links = [
+        {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
+        {to: Routes.usersCota(), text: "My COTA"},
+        {to: Routes.usersAoa(), text: "My AOA"},
+        {to: Routes.usersWc(), text: "My WC"},
+        {to: Routes.usersMm(), text: "My MM"},
+        {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
+        {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
+        {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
+    ]
+    if (userStore.hasTeam) {
+        links.push(
+            {to: Routes.teamDecks(), text: "My Team"}
+        )
+    }
+    if (userStore.patron) {
+        links.push(
+            {to: Routes.analyzeUsersDecks(), text: "Analyze"}
+        )
+    }
+    return links
+}
 
 export enum MenuStoreName {
     DECKS,
@@ -346,11 +358,6 @@ const AppLinks = observer(() => (
                             primary={"Team SAS-LP"}
                         />
                         <ListItemLink
-                            to={AboutSubPaths.sasCouncil}
-                            onClick={rightMenuStore.close}
-                            primary={"SAS Council"}
-                        />
-                        <ListItemLink
                             to={AboutSubPaths.thirdPartyIntegrations}
                             onClick={rightMenuStore.close}
                             primary={"3rd Party Tools"}
@@ -369,7 +376,6 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
                     {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
                     {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
-                    {to: AboutSubPaths.sasCouncil, text: "SAS Council"},
                     {to: AboutSubPaths.thirdPartyIntegrations, text: "3rd Party Tools"},
                 ]}
                 linkMenuStore={aboutMenuStore}

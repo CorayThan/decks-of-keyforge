@@ -5,7 +5,7 @@ import { computed, observable } from "mobx"
 import { HasAerc } from "../aerc/HasAerc"
 import { HttpConfig } from "../config/HttpConfig"
 import { IdbUtils } from "../config/IdbUtils"
-import { log, prettyJson, roundToHundreds } from "../config/Utils"
+import { log, prettyJson, roundToHundreds, Utils } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { expansionInfos } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
@@ -182,6 +182,7 @@ export class CardStore {
         } else if (filters.sortDirection === "DESC") {
             filtered.reverse()
         }
+
         return filtered.slice()
     }
 
@@ -292,18 +293,10 @@ export class CardStore {
     }
 
     findCardsByName = (searchValue: string) => {
-        const tokenized = this.cardSearchTokenized(searchValue)
-        if (tokenized.length === 0) {
+        if (Utils.tokenizeCardSearch(searchValue).length === 0) {
             this.cardNameSearchResults = []
         } else {
-            this.cardNameSearchResults = this.allCards.slice().filter(card => {
-                for (let x = 0; x < tokenized.length; x++) {
-                    if (!this.cleanCardName(card.cardTitle.toLowerCase()).includes(tokenized[x])) {
-                        return false
-                    }
-                }
-                return true
-            })
+            this.cardNameSearchResults = this.allCards.slice().filter(card => Utils.cardNameIncludes(card.cardTitle, searchValue))
             if (this.cardNameSearchResults.length > 5) {
                 this.cardNameSearchResults = this.cardNameSearchResults.slice(0, 5)
             }
@@ -388,12 +381,6 @@ export class CardStore {
         }
         return undefined
     }
-
-    private cardSearchTokenized = (searchValue: string) => this.cleanCardName(searchValue)
-        .trim()
-        .toLowerCase()
-        .split(/\W+/)
-        .filter(token => token.length > 2)
 
     /**
      * Don't use on the fly

@@ -1,6 +1,8 @@
 import { createMuiTheme } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
+import { assign } from "lodash"
 import { computed, observable } from "mobx"
+import { VictoryTheme } from "victory"
 import { screenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
 
@@ -69,6 +71,57 @@ export class ThemeStore {
     @computed
     get iconColor() {
         return this.darkMode ? "#FFFFFF" : undefined
+    }
+
+    @computed
+    get victoryTheme() {
+        if (this.darkMode) {
+            const copiedTheme = {...VictoryTheme.grayscale}
+
+            copiedTheme.axis!.style!.axis!.stroke = "white"
+            copiedTheme.axis!.style!.tickLabels!.fill = "white"
+
+            return copiedTheme
+        }
+        return VictoryTheme.grayscale
+    }
+
+    @computed
+    get nivoTheme() {
+        if (this.darkMode) {
+            return {
+                labels: {
+                    text: {
+                        fill: "#EEEEEE"
+                    }
+                },
+                axis: {
+                    ticks: {
+                        text: {
+                            fill: "#EEEEEE"
+                        }
+                    },
+                },
+                grid: {
+                    line: {
+                        stroke: "#EEEEEE"
+                    }
+                },
+                dots: {
+                    text: {
+                        fill: "#EEEEEE"
+                    }
+                },
+                tooltip: {
+                    container: {
+                        background: "#2d374d",
+                        color: "inherit",
+                        boxShadow: "0 3px 9px rgba(0, 0, 0, 0.5)",
+                    }
+                }
+            }
+        }
+        return undefined
     }
 }
 

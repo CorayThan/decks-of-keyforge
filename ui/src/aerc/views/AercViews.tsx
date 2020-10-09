@@ -13,6 +13,7 @@ import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawI
 import { SasTip } from "../../mui-restyled/SasTip"
 import { HasAerc } from "../HasAerc"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
+import { Fragment } from "react"
 
 export enum AercViewType {
     DECK,
@@ -141,10 +142,10 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
                         <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
                             {Object.entries(deck.metaScores ?? {})
                                 .map(meta => (
-                                    <>
+                                    <Fragment key={meta[0]}>
                                         <Typography variant={"body2"}>{meta[0]}</Typography>
                                         <Typography variant={"body2"}>{meta[1]}</Typography>
-                                    </>
+                                    </Fragment>
                                 ))}
                         </Box>
                     )}

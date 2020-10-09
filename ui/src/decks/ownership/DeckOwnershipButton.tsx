@@ -19,6 +19,7 @@ import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader, LoaderSize } from "../../mui-restyled/Loader"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
+import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { deckOwnershipStore } from "./DeckOwnershipStore"
 
@@ -103,7 +104,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                                 <Typography variant={"subtitle1"}>{detail.username}</Typography>
                                             </KeyLink>
                                             <Typography variant={"subtitle1"}>{Utils.formatDate(detail.uploadDate)}</Typography>
-                                            {deckOwnershipStore.ownedDecks.includes(deckId) && (
+                                            {detail.username === userStore.username && (
                                                 <IconButton
                                                     size={"small"}
                                                     style={{marginLeft: spacing(2)}}

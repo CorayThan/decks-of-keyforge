@@ -346,9 +346,6 @@ export class ReleaseNotes extends React.Component {
                                 "and Dan of Team SAS-LP, as well as Dave Cordiero and Aurore from the community at large."
                         },
                         {
-                            note: (<NotesLink style={{marginRight: spacing(2)}} to={AboutSubPaths.sasCouncil}>SAS Council</NotesLink>)
-                        },
-                        {
                             highlight: "Card Search Improvements",
                             note: "I've been gradually improving the card search mechanism. You can now search by synergy traits and synergies."
                         },

@@ -1,4 +1,4 @@
-import { Divider, FormGroup, IconButton, Link, Tooltip } from "@material-ui/core"
+import { Box, Divider, FormGroup, IconButton, Link, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -11,7 +11,7 @@ import * as History from "history"
 import { computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { KeyDrawer, keyDrawerStore } from "../../components/KeyDrawer"
+import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../../components/KeyDrawer"
 import { SearchDrawerExpansionPanel } from "../../components/SearchDrawerExpansionPanel"
 import { SortDirectionView } from "../../components/SortDirectionView"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
@@ -20,12 +20,14 @@ import { Routes } from "../../config/Routes"
 import { log, Utils } from "../../config/Utils"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../expansions/ExpansionSelectOrExclude"
+import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { NotesAndTagsSearch } from "../../notes/NotesAndTagsSearch"
 import { messageStore } from "../../ui/MessageStore"
 import { screenStore } from "../../ui/ScreenStore"
@@ -40,6 +42,7 @@ import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
 import { DownloadDeckResults } from "./DownloadDeckResults"
 
 interface DecksSearchDrawerProps {
+    location: History.Location
     history: History.History
     filters: DeckFilters
 }
@@ -64,7 +67,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     )
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
 
-    search = (event?: React.FormEvent) => {
+    search = (event?: React.FormEvent, analyze?: boolean) => {
         if (event) {
             event.preventDefault()
         }
@@ -89,7 +92,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             }
         }
 
-        this.props.history.push(Routes.deckSearch(filters))
+        if (analyze) {
+            this.props.history.push(Routes.analyzeDeckSearch(filters))
+        } else {
+            this.props.history.push(Routes.deckSearch(filters))
+        }
         keyDrawerStore.closeIfSmall()
     }
 
@@ -158,6 +165,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes, completedAuctions, teamDecks, withOwners
         } = this.props.filters
 
+        const analyze = this.props.location.pathname.includes(Routes.collectionStats)
+
         let myCountry: string | undefined
         if (!!(userStore.country
             && (forSale || forTrade || forAuction))) {
@@ -203,8 +212,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             constraintOptions.unshift("listedWithinDays")
         }
 
+        const count = deckStore.decksCount?.count
+        const analyzedCount = deckStore.collectionStats?.deckCount
+
         return (
-            <KeyDrawer deckVersion={true}>
+            <KeyDrawer version={analyze ? KeyDrawerVersion.ANALYSIS : KeyDrawerVersion.DECK}>
                 <form onSubmit={this.search}>
                     <List dense={true}>
                         <ListItem>
@@ -457,7 +469,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={this.props.filters}/>
                             </div>
-                            {!screenStore.smallDeckView() && (
+                            {!screenStore.smallDeckView() && !analyze && (
                                 <DownloadDeckResults filters={this.props.filters}/>
                             )}
                         </ListItem>
@@ -475,73 +487,141 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     houses={this.selectedHouses}
                                     constraints={this.constraintsStore}
                                 />
-                                <KeyButton
-                                    variant={"contained"}
-                                    color={"secondary"}
-                                    type={"submit"}
-                                    loading={deckStore.searchingForDecks}
-                                    disabled={deckStore.searchingForDecks}
-                                >
-                                    Search
-                                </KeyButton>
+                                {analyze ? (
+                                    <KeyButton
+                                        onClick={() => this.search(undefined, true)}
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        loading={deckStore.calculatingStats}
+                                        disabled={deckStore.searchingForDecks || deckStore.calculatingStats}
+                                        style={{marginRight: spacing(2)}}
+                                    >
+                                        Analyze
+                                    </KeyButton>
+                                ) : (
+                                    <KeyButton
+                                        variant={"contained"}
+                                        color={"secondary"}
+                                        type={"submit"}
+                                        loading={deckStore.searchingForDecks}
+                                        disabled={deckStore.searchingForDecks || deckStore.calculatingStats}
+                                    >
+                                        Search
+                                    </KeyButton>
+                                )}
                             </div>
                         </ListItem>
-                        {deckStore.decksCount ? (
+                        {count && !analyze && (
                             <ListItem>
                                 <Typography variant={"subtitle2"} style={{marginBottom: spacing(1)}}>
-                                    You
-                                    found {deckStore.decksCount.count}{deckStore.decksCount.count === 1000 || deckStore.decksCount.count === 10000 ? "+ " : ""} decks
+                                    {`You found ${count}${count === 1000 || count === 10000 ? "+ " : ""} decks`}
                                 </Typography>
                             </ListItem>
-                        ) : null}
+                        )}
+                        {analyzedCount && analyze && (
+                            <ListItem>
+                                <Typography variant={"subtitle2"} style={{marginBottom: spacing(1)}}>
+                                    {analyzedCount == keyLocalStorage.findAnalyzeCount()
+                                        ? `You analyzed the first ${analyzedCount} decks found` : `You analyzed ${analyzedCount} decks`}
+                                </Typography>
+                            </ListItem>
+                        )}
                         {deckStore.countingDecks ? (
                             <ListItem>
                                 <Typography variant={"subtitle2"}>Counting ...</Typography>
                             </ListItem>
                         ) : null}
-                        <ListItem>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <Tooltip title={"View type"}>
-                                    <ToggleButtonGroup
-                                        value={keyLocalStorage.deckListViewType}
-                                        exclusive={true}
-                                        onChange={(event, viewType) => {
-                                            keyLocalStorage.setDeckListViewType(viewType)
-                                        }}
-                                        style={{marginRight: spacing(2)}}
-                                        size={"small"}
-                                    >
-                                        <ToggleButton value={"grid"}>
-                                            <ViewModule/>
-                                        </ToggleButton>
-                                        <ToggleButton value={"graphs"}>
-                                            <BarChart/>
-                                        </ToggleButton>
-                                        <ToggleButton value={"table"}>
-                                            <ViewList/>
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
-                                </Tooltip>
-                                <Tooltip title={"Page size"}>
-                                    <ToggleButtonGroup
-                                        value={keyLocalStorage.deckPageSize}
-                                        exclusive={true}
-                                        onChange={(event, size) => {
-                                            keyLocalStorage.setDeckPageSize(size)
-                                            this.search()
-                                        }}
-                                        size={"small"}
-                                    >
-                                        <ToggleButton value={20}>
-                                            20
-                                        </ToggleButton>
-                                        <ToggleButton value={100}>
-                                            100
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
-                                </Tooltip>
-                            </div>
-                        </ListItem>
+                            <ListItem>
+                                <Box display={"flex"} alignItems={"center"}>
+                                    {userStore.loggedIn() && (
+                                        <Tooltip title={userStore.patron ? "" : "Become a patron to analyze decks!"}>
+                                            <div>
+                                                <LinkButton
+                                                    size={"small"}
+                                                    variant={"outlined"}
+                                                    href={analyze ? Routes.deckSearch(this.props.filters) : Routes.analyzeDeckSearch(this.props.filters)}
+                                                    disabled={!userStore.patron}
+                                                    style={{marginRight: spacing(2)}}
+                                                >
+                                                    {analyze ? "Search" : "Analyze"}
+                                                </LinkButton>
+                                            </div>
+                                        </Tooltip>
+                                    )}
+                                    {analyze ? (
+                                        <Tooltip title={"Max decks to analyze"}>
+                                            <ToggleButtonGroup
+                                                value={keyLocalStorage.findAnalyzeCount()}
+                                                exclusive={true}
+                                                onChange={(event, size) => {
+                                                    keyLocalStorage.updateGenericStorage({analyzeCount: size})
+                                                    this.search(undefined, true)
+                                                }}
+                                                size={"small"}
+                                            >
+                                                <ToggleButton value={100}>
+                                                    100
+                                                </ToggleButton>
+                                                <ToggleButton value={500}>
+                                                    500
+                                                </ToggleButton>
+                                                {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
+                                                    <ToggleButton value={1000}>
+                                                        1000
+                                                    </ToggleButton>
+                                                )}
+                                                {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.MERCHANT_AEMBERMAKER) && (
+                                                    <ToggleButton value={2500}>
+                                                        2500
+                                                    </ToggleButton>
+                                                )}
+                                            </ToggleButtonGroup>
+                                        </Tooltip>
+                                    ) : (
+                                        <>
+                                            <Tooltip title={"View type"}>
+                                                <ToggleButtonGroup
+                                                    value={keyLocalStorage.deckListViewType}
+                                                    exclusive={true}
+                                                    onChange={(event, viewType) => {
+                                                        keyLocalStorage.setDeckListViewType(viewType)
+                                                    }}
+                                                    style={{marginRight: spacing(2)}}
+                                                    size={"small"}
+                                                >
+                                                    <ToggleButton value={"grid"}>
+                                                        <ViewModule/>
+                                                    </ToggleButton>
+                                                    <ToggleButton value={"graphs"}>
+                                                        <BarChart/>
+                                                    </ToggleButton>
+                                                    <ToggleButton value={"table"}>
+                                                        <ViewList/>
+                                                    </ToggleButton>
+                                                </ToggleButtonGroup>
+                                            </Tooltip>
+                                            <Tooltip title={"Page size"}>
+                                                <ToggleButtonGroup
+                                                    value={keyLocalStorage.deckPageSize}
+                                                    exclusive={true}
+                                                    onChange={(event, size) => {
+                                                        keyLocalStorage.setDeckPageSize(size)
+                                                        this.search()
+                                                    }}
+                                                    size={"small"}
+                                                >
+                                                    <ToggleButton value={20}>
+                                                        20
+                                                    </ToggleButton>
+                                                    <ToggleButton value={100}>
+                                                        100
+                                                    </ToggleButton>
+                                                </ToggleButtonGroup>
+                                            </Tooltip>
+                                        </>
+                                    )}
+                                </Box>
+                            </ListItem>
                     </List>
                 </form>
             </KeyDrawer>

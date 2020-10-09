@@ -9,7 +9,7 @@ import { range, startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { ChangeEvent } from "react"
-import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
+import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../components/KeyDrawer"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
@@ -101,7 +101,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         ].flatMap(value => [value, `${value}Max`])
 
         return (
-            <KeyDrawer>
+            <KeyDrawer version={KeyDrawerVersion.CARD}>
                 <form onSubmit={this.search}>
                     <List dense={true}>
                         <ListItem>

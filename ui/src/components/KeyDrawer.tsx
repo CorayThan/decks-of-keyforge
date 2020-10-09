@@ -11,6 +11,13 @@ import { screenStore } from "../ui/ScreenStore"
 
 const standardPanelWidth = 344
 
+export enum KeyDrawerVersion {
+    CARD,
+    DECK,
+    ANALYSIS,
+    OTHER
+}
+
 class KeyDrawerStoreImpl {
     @observable
     open = false
@@ -25,14 +32,17 @@ class KeyDrawerStoreImpl {
 export const keyDrawerStore = new KeyDrawerStoreImpl()
 
 @observer
-export class KeyDrawer extends React.Component<{ children: React.ReactNode, width?: number, hamburgerMenu?: boolean, deckVersion?: boolean }> {
+export class KeyDrawer extends React.Component<{ children: React.ReactNode, width?: number, hamburgerMenu?: boolean, version?: KeyDrawerVersion }> {
 
     render() {
-        const {width, hamburgerMenu, deckVersion} = this.props
+        const {width, hamburgerMenu, version} = this.props
         const panelWidth = width ? width : standardPanelWidth
         let small = screenStore.screenSizeSm()
-        if (deckVersion) {
+        if (version === KeyDrawerVersion.DECK) {
             small = (screenStore.screenWidth - screenStore.deckWidth(!!deckStore.currentFilters?.isForSaleOrTrade) - panelWidth) < 64
+        }
+        if (version === KeyDrawerVersion.ANALYSIS) {
+            small = screenStore.screenWidth < 1324
         }
         if (small) {
             if (hamburgerMenu) {
@@ -46,11 +56,10 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode, widt
                     <Drawer
                         style={{width: panelWidth}}
                         anchor={"left"}
-                        open={keyDrawerStore.open || (deckVersion && !deckStore.searchingOrLoaded)}
+                        open={keyDrawerStore.open || (version === KeyDrawerVersion.DECK && !deckStore.searchingOrLoaded)}
                         onClose={() => keyDrawerStore.open = false}
                         PaperProps={{style: {width: panelWidth}}}
                     >
-                        <ToolbarSpacer/>
                         {this.props.children}
                     </Drawer>
                 </div>

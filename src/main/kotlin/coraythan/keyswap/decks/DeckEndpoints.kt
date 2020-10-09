@@ -3,6 +3,7 @@ package coraythan.keyswap.decks
 import coraythan.keyswap.Api
 import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.decks.collectionstats.CollectionStats
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.thirdpartyservices.AzureOcr
@@ -36,7 +37,7 @@ class DeckEndpoints(
                 throw BadRequestException("Cannot request more than 5,000 decks.")
             }
 
-            var decks: DecksPage? = null
+            var decks: DecksPage?
             val decksFilterTime = measureTimeMillis {
                 decks = deckSearchService.filterDecks(cleanFilters, offsetMinutes)
             }
@@ -52,7 +53,7 @@ class DeckEndpoints(
     @PostMapping("/filter-count")
     fun decksCount(@RequestBody deckFilters: DeckFilters): DeckCount {
         try {
-            var decks: DeckCount? = null
+            var decks: DeckCount?
             val cleanFilters = deckFilters.clean()
             val decksFilterTime = measureTimeMillis {
                 decks = deckSearchService.countFilters(cleanFilters)
@@ -63,6 +64,12 @@ class DeckEndpoints(
         } catch (ex: Exception) {
             throw RuntimeException("Couldn't count decks with filters $deckFilters", ex)
         }
+    }
+
+    @PostMapping("/stats")
+    fun decksStats(@RequestBody deckFilters: DeckFilters, @RequestHeader(value = "Timezone") offsetMinutes: Int): CollectionStats {
+        val decks = decks(deckFilters, offsetMinutes)
+        return CollectionStats.makeStats(decks.decks)
     }
 
     @GetMapping("/random")
@@ -107,9 +114,6 @@ class DeckEndpoints(
 
     @GetMapping("/updating")
     fun updating() = !doneRatingDecks
-
-//    @GetMapping("/update-crucible-tracker-wins")
-//    fun updateCrucibleTrackerWins() = deckWinsService.updateCrucibleTrackerWinsAndLosses()
 
     @PostMapping("/secured/{id}/refresh-deck-scores")
     fun refreshDeckScores(@PathVariable id: String) = deckWinsService.updateSingleDeck(id)

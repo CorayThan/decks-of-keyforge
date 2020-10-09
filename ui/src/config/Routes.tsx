@@ -17,6 +17,7 @@ import { KeyTopbar } from "../components/KeyTopbar"
 import { VerifyEmailPage } from "../components/VerifyEmailPage"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleQuery"
+import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
@@ -71,6 +72,7 @@ class Routes {
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
+    static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static stats = "/stats"
@@ -89,6 +91,8 @@ class Routes {
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
     static usersDecks = () => `/decks?owner=${userStore.username}`
+    static analyzeUsersDecks = () => `/analyze-collection?owner=${userStore.username}`
+    static teamDecks = () => `/decks?teamDecks=true`
     static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&forSale=false`
     static usersFavorites = () => `/decks?myFavorites=true`
     static usersCota = () => `/decks?owner=${userStore.username}&expansions=341`
@@ -96,6 +100,19 @@ class Routes {
     static usersWc = () => `/decks?owner=${userStore.username}&expansions=452`
     static usersMm = () => `/decks?owner=${userStore.username}&expansions=479`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
+
+    /**
+     * Deck filters should be cleaned.
+     * @param filters
+     */
+    static analyzeDeckSearch = (filters: DeckFilters) => {
+        const cleaned = prepareDeckFiltersForQueryString(filters)
+        const stringified = QueryString.stringify(cleaned)
+        if (stringified === "") {
+            return Routes.collectionStats
+        }
+        return `${Routes.collectionStats}?${stringified}`
+    }
 
     /**
      * Deck filters should be cleaned.
@@ -202,6 +219,10 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.theoreticalDeckPage()}
                         component={ViewTheoreticalDeck}
+                    />
+                    <Route
+                        path={Routes.collectionStats}
+                        component={CollectionStatsSearchPage}
                     />
                     <Route
                         exact={true}
@@ -337,7 +358,6 @@ export class AboutSubPaths {
     static releaseNotes = Routes.about + "/release-notes"
     static sellersAndDevs = Routes.about + "/sellers-and-devs"
     static teamSas = Routes.about + "/team-sas"
-    static sasCouncil = Routes.about + "/sas-council"
     static thirdPartyIntegrations = Routes.about + "/third-party-integrations"
 }
 

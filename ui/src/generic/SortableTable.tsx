@@ -51,6 +51,8 @@ interface SortableTableProps<T> {
     defaultSort: keyof T
     defaultSortFunction?: TransformTableData<T>
     noInitialSort?: boolean
+    noOverflow?: boolean
+    limit?: number
 }
 
 @observer
@@ -71,11 +73,11 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 
     render() {
         const store = this.store
-        const {headers} = this.props
+        const {headers, noOverflow, limit} = this.props
         const usableHeaders = headers.filter(header => header.hide !== true)
 
         return (
-            <div style={{overflowX: "auto"}}>
+            <div style={{overflowX: noOverflow ? undefined : "auto"}}>
                 <Table size={"small"}>
                     <TableHead>
                         <TableRow>
@@ -97,7 +99,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {store.sortedItems.map((datum, idx) => (
+                        {(limit == null ? store.sortedItems : store.sortedItems.slice(0, limit)).map((datum, idx) => (
                             <TableRow key={idx}>
                                 {usableHeaders.map(header => {
                                     let value

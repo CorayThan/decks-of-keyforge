@@ -127,52 +127,25 @@ class DeckImporterService(
     @SchedulerLock(name = "lockUpdateCleanUnregistered", lockAtLeastFor = lockUpdateCleanUnregistered, lockAtMostFor = lockUpdateCleanUnregistered)
     fun cleanOutUnregisteredDecks() {
         try {
-            log.info("$scheduledStart clean out unregistered decks.")
-            var unregDeckCount = 0
+            log.info("$scheduledStart delete all unregistered decks.")
+            var unregDeckCount: Int
             var cleanedOut = 0
             val msToCleanUnreg = measureTimeMillis {
                 val allUnregDecks = deckRepo.findAllByRegisteredFalse()
                 unregDeckCount = allUnregDecks.size
                 allUnregDecks.forEach { unreg ->
                     try {
-                        val decksLike = deckRepo.findByNameIgnoreCase(unreg.name.trim().dropLastWhile { it == '\\' })
-                                .filter { it.id != unreg.id }
-                        when {
-                            decksLike.isNotEmpty() -> {
-                                log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it matches deck ${decksLike[0].keyforgeId}")
-                                deleteUnreg(unreg)
-                                cleanedOut++
-                            }
-                            deckSearchService.countFilters(DeckFilters(
-                                    cards = cardService.cardsForDeck(unreg)
-                                            .groupBy { it.cardTitle }
-                                            .map {
-                                                DeckCardQuantity(listOf(it.key), it.value.size)
-                                            }
-                            )).count > 0
-                            -> {
-                                // Eventually use this:
-                                // val identicalRegistered = deckRepo.findByRegisteredTrueAndCardNames(unreg.cardNames)
-
-                                log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it has a duplicate")
-                                deleteUnreg(unreg)
-                                cleanedOut++
-                            }
-                            userDeckRepo.findByDeckIdAndOwnedByNotNull(unreg.id).isEmpty() -> {
-                                log.info("Deleting unreg deck with name ${unreg.name} id ${unreg.keyforgeId} because it is unowned")
-                                deleteUnreg(unreg)
-                                cleanedOut++
-                            }
-                        }
+                        deleteUnreg(unreg)
+                        cleanedOut++
                     } catch (e: Exception) {
                         log.warn("Exception trying to clean unreg deck: ${unreg.name} with id ${unreg.keyforgeId}", e)
                     }
                 }
             }
 
-            log.info("$scheduledStop clean out unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
+            log.info("$scheduledStop deleted all unregistered decks. Pre-existing total: $unregDeckCount cleaned out: $cleanedOut seconds taken: ${msToCleanUnreg / 1000}")
         } catch (e: Throwable) {
-            log.error("$scheduledException Cleaning out unregistered decks", e)
+            log.error("$scheduledException deleting unregistered decks", e)
         }
     }
 
