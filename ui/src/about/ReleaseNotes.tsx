@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.14"
+export const latestVersion = "5.15"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -54,9 +54,9 @@ export class ReleaseNotes extends React.Component {
                                 "in the collection of decks. Higher tier patrons can analyze larger quantities of decks."
                         },
                         {
-                            highlight: "Minor SAS Update Pending",
+                            highlight: "Minor SAS Update",
                             note: "I'm trying to stick to beginning of the month updates, but Interdimensional Graft and Binate Rupture got overrated " +
-                                "enough that I wanted to do a mid-month correction. This should be released separately very soon."
+                                "enough that I wanted to do a mid-month correction."
                         },
                         {
                             highlight: "Store banners for Merchant Æmbermakers!",

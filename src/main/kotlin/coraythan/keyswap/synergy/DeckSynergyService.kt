@@ -51,7 +51,7 @@ object DeckSynergyService {
                 else -> uncappedValue
             }
             val cappedStartPoint = if (startingPoint > max) max else if (startingPoint < min) min else startingPoint
-            log.info("Starting point: $startingPoint total percent: $totalSynPercent base $baseSynPercent min $min max $max syn value: $value range $range capped start $cappedStartPoint")
+//            log.info("Starting point: $startingPoint total percent: $totalSynPercent base $baseSynPercent min $min max $max syn value: $value range $range capped start $cappedStartPoint")
             SynergizedValue(value, value - cappedStartPoint)
         }
     }
