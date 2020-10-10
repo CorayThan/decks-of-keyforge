@@ -34,10 +34,12 @@ object DeckSynergyService {
         } else {
             val range = max!! - min
 
-            // Divide by 200 if positive + negative so that 100% positive 0% negative maxes out synergy
-            val synValue = (totalSynPercent * range) / (if (hasPositive && hasNegative) 200 else 100)
+            val divideBy = if (hasPositive && hasNegative && baseSynPercent == null) 200 else 100
+
+            // Divide by 200 if positive + negative and no starting so that 100% positive 0% negative maxes out synergy
+            val synValue = (totalSynPercent * range) / divideBy
             val startingPoint = when {
-                baseSynPercent != null -> (range * (baseSynPercent.toDouble() / 100.0)) + min
+                baseSynPercent != null -> (range * (baseSynPercent.toDouble() / divideBy.toDouble())) + min
                 hasPositive && hasNegative -> (range / 2) + min
                 hasPositive -> min
                 else -> max
@@ -48,7 +50,9 @@ object DeckSynergyService {
                 uncappedValue > max -> max
                 else -> uncappedValue
             }
-            SynergizedValue(value, value - startingPoint)
+            val cappedStartPoint = if (startingPoint > max) max else if (startingPoint < min) min else startingPoint
+            log.info("Starting point: $startingPoint total percent: $totalSynPercent base $baseSynPercent min $min max $max syn value: $value range $range capped start $cappedStartPoint")
+            SynergizedValue(value, value - cappedStartPoint)
         }
     }
 
