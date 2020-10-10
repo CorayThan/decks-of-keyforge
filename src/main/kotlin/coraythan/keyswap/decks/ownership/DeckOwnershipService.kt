@@ -22,7 +22,7 @@ class DeckOwnershipService(
         private val deckListingRepo: DeckListingRepo
 ) {
 
-    fun addDeckOwnership(deckImage: MultipartFile, deckId: Long) {
+    fun addDeckOwnership(deckImage: MultipartFile, deckId: Long, extension: String) {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val deck = deckRepo.findByIdOrNull(deckId) ?: throw IllegalStateException("No deck with id $deckId")
 
@@ -32,7 +32,7 @@ class DeckOwnershipService(
 
         deleteDeckOwnership(deckId)
 
-        val key = s3Service.addDeckImage(deckImage, deckId, currentUser.id)
+        val key = s3Service.addDeckImage(deckImage, deckId, currentUser.id, extension)
 
         val deckOwnership = DeckOwnership(deckId, currentUser, key)
         deckOwnershipRepo.save(deckOwnership)

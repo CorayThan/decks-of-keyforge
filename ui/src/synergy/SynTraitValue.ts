@@ -10,7 +10,6 @@ export interface SynTraitValue {
     player: SynTraitPlayer
     cardTypes: CardType[]
     powersString: string
-    baseSynPercent: number
     cardTraits: string[]
     notCardTraits: boolean
     cardName?: string

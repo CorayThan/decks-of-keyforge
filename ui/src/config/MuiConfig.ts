@@ -1,6 +1,5 @@
 import { createMuiTheme } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
-import { assign } from "lodash"
 import { computed, observable } from "mobx"
 import { VictoryTheme } from "victory"
 import { screenStore } from "../ui/ScreenStore"

@@ -3,13 +3,13 @@ import { startCase } from "lodash"
 import * as React from "react"
 import { spacing, theme } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { SellerDetails } from "../generated-src/SellerDetails"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { SellerRatingView } from "../sellerratings/SellerRatingView"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import { SellerImg } from "./imgs/SellerImgs"
-import { SellerDetails } from "./SellerDetails"
 
 interface SellerCardProps {
     sellerDetails: SellerDetails

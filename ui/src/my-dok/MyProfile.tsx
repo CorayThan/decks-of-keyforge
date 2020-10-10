@@ -1,4 +1,6 @@
 import {
+    Box,
+    BoxProps,
     Button,
     CardActions,
     CardContent,
@@ -45,8 +47,10 @@ import { LinkPatreon } from "../thirdpartysites/patreon/LinkPatreon"
 import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { messageStore } from "../ui/MessageStore"
+import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { userStore } from "../user/UserStore"
+import { UploadStoreImage } from "./UploadStoreImage"
 
 interface MyProfileProps extends RouteComponentProps<{}> {
 
@@ -236,8 +240,23 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     render() {
         const profile = this.props.profile
 
+        let boxProps: BoxProps = {
+            display: "grid",
+            justifyContent: "center",
+            gridAutoFlow: "column",
+            gridGap: spacing(4),
+        }
+
+        if (screenStore.screenWidth < 1500) {
+            boxProps = {
+                display: "grid",
+                alignItems: "center",
+                gridGap: spacing(4),
+            }
+        }
+
         return (
-            <div style={{marginLeft: spacing(2), marginRight: spacing(2), display: "flex", justifyContent: "center"}}>
+            <Box {...boxProps}>
                 {patreonStore.linkingPatreon && (
                     <Dialog
                         open={patreonStore.linkingPatreon}
@@ -280,9 +299,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                 <form onSubmit={this.updateProfile}>
                     <KeyCard
                         topContents={(
-                            <div>
-                                <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
-                            </div>
+                            <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
                         )}
                         style={{maxWidth: 880, margin: 0}}
                     >
@@ -421,17 +438,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                         <Grid item={true} xs={12}>
                                             <Typography variant={"h6"}>Seller Settings</Typography>
                                         </Grid>
-                                        {userStore.featuredSeller ? (
-                                            <Grid item={true} xs={12}>
-                                                <TextField
-                                                    label={"store name"}
-                                                    value={this.storeName}
-                                                    onChange={(event: EventValue) => this.storeName = event.target.value}
-                                                    fullWidth={true}
-                                                    variant={"outlined"}
-                                                />
-                                            </Grid>
-                                        ) : null}
                                         <Grid item={true} xs={12} sm={6}>
                                             <TextField
                                                 label={"public contact email"}
@@ -505,7 +511,39 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                         </CardActions>
                     </KeyCard>
                 </form>
-            </div>
+                {userStore.featuredSeller && (
+                    <Box maxWidth={560}>
+                        <KeyCard
+                            topContents={<Typography variant={"h4"} style={{color: "#FFFFFF"}}>Store Details</Typography>}
+                            style={{margin: 0}}
+                        >
+                            <Box p={2}>
+                                <TextField
+                                    label={"store name"}
+                                    value={this.storeName}
+                                    onChange={(event: EventValue) => this.storeName = event.target.value}
+                                    fullWidth={true}
+                                    variant={"outlined"}
+                                />
+                                <Box mt={4}/>
+                                <Typography>
+                                    It can take up to 15 minutes for your changes to images to be reflected on the site.
+                                </Typography>
+                                <Box mt={4}/>
+                                <UploadStoreImage
+                                    icon={true}
+                                    imageKey={userStore.user?.storeIconKey}
+                                />
+                                <Box mt={4}/>
+                                <UploadStoreImage
+                                    icon={false}
+                                    imageKey={userStore.user?.storeBannerKey}
+                                />
+                            </Box>
+                        </KeyCard>
+                    </Box>
+                )}
+            </Box>
         )
     }
 }

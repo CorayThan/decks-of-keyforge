@@ -6,8 +6,6 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { log } from "../../config/Utils"
 import { Loader } from "../../mui-restyled/Loader"
-import { SellerDetails } from "../../sellers/SellerDetails"
-import { sellerStore } from "../../sellers/SellerStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
@@ -17,7 +15,7 @@ import { DeckFilters } from "./DeckFilters"
 import { DeckSearchContainerProps } from "./DeckSearchPage"
 import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
-export class CollectionStatsSearchPage extends React.Component<RouteComponentProps<{}>> {
+export class CollectionStatsSearchPage extends React.Component<RouteComponentProps> {
 
     componentDidMount(): void {
         if (this.props.location.search !== "") {
@@ -25,7 +23,7 @@ export class CollectionStatsSearchPage extends React.Component<RouteComponentPro
         }
     }
 
-    componentDidUpdate(prevProps: RouteComponentProps<{}>): void {
+    componentDidUpdate(prevProps: RouteComponentProps): void {
         const filters = this.makeFilters(this.props).cleaned()
         const prevFilters = this.makeFilters(prevProps).cleaned()
         if (!isEqual(filters, prevFilters)) {
@@ -37,7 +35,7 @@ export class CollectionStatsSearchPage extends React.Component<RouteComponentPro
         deckStore.reset()
     }
 
-    makeFilters = (props: Readonly<RouteComponentProps<{}>>): DeckFilters => {
+    makeFilters = (props: Readonly<RouteComponentProps>): DeckFilters => {
         log.debug(`Location search is ${props.location.search}`)
         const queryValues = QueryString.parse(props.location.search)
         return DeckFilters.rehydrateFromQuery(queryValues)
@@ -80,16 +78,12 @@ class CollectionStatsSearchContainer extends React.Component<DeckSearchContainer
     }
 
     setTitle = () => {
-        const {filters, queryParams, location} = this.props
+        const {queryParams} = this.props
 
         let owner: string | undefined
-        let sellerDetails: SellerDetails | undefined
         if (queryParams) {
             const queryValues = QueryString.parse(queryParams)
             owner = queryValues.owner as (string | undefined)
-            if (owner) {
-                sellerDetails = sellerStore.findSellerWithUsername(owner)
-            }
         }
 
         if (userStore.username != null && owner === userStore.username) {

@@ -4,7 +4,7 @@ import { Utils } from "../config/Utils"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 
 const allSynergyTraits = Utils.enumValues(SynergyTrait) as SynergyTrait[]
-const firstSpecialIndex = allSynergyTraits.indexOf(SynergyTrait.alpha)
+const firstSpecialIndex = allSynergyTraits.indexOf(SynergyTrait.bonusAmber)
 export const specialTraits = allSynergyTraits.slice(firstSpecialIndex, allSynergyTraits.length)
 
 export const noSynTraits = [SynergyTrait.card]

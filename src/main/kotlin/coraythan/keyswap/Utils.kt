@@ -1,5 +1,6 @@
 package coraythan.keyswap
 
+import org.springframework.web.multipart.MultipartFile
 import java.math.RoundingMode
 
 fun String.tokenize(): List<String> {

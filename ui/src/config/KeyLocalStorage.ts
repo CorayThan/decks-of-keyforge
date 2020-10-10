@@ -1,7 +1,5 @@
 import { observable } from "mobx"
 import { ListingInfo } from "../generated-src/ListingInfo"
-import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
-import { userStore } from "../user/UserStore"
 import { log } from "./Utils"
 
 enum Keys {

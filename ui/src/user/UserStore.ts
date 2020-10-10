@@ -406,7 +406,7 @@ export class UserStore {
     @computed
     get featuredSeller(): boolean {
         if (this.user) {
-            return findPatronRewardLevel(this.user.patreonTier) > 1
+            return this.patronLevelEqualToOrHigher(PatreonRewardsTier.MERCHANT_AEMBERMAKER)
         }
         return false
     }

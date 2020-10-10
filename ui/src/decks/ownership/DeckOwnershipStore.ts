@@ -18,7 +18,7 @@ export class DeckOwnershipStore {
     @observable
     addingDeckVerificationImage = false
 
-    saveDeckVerificationImage = async (deckImage: File | Blob, deckId: number) => {
+    saveDeckVerificationImage = async (deckImage: File | Blob, deckId: number, extension: string) => {
         this.addingDeckVerificationImage = true
 
         const imageData = new FormData()
@@ -29,7 +29,8 @@ export class DeckOwnershipStore {
             imageData,
             {
                 headers: {
-                    "content-type": "multipart/form-data"
+                    "Content-Type": "multipart/form-data",
+                    "Extension": extension
                 }
             }
         )

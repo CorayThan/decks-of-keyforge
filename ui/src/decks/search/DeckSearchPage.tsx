@@ -8,10 +8,10 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
-import { log } from "../../config/Utils"
+import { SellerDetails } from "../../generated-src/SellerDetails"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
-import { SellerDetails } from "../../sellers/SellerDetails"
+import { SellerBanner } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
@@ -45,7 +45,6 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     }
 
     makeFilters = (props: Readonly<RouteComponentProps<{}>>): DeckFilters => {
-        log.debug(`Location search is ${props.location.search}`)
         const queryValues = QueryString.parse(props.location.search)
         return DeckFilters.rehydrateFromQuery(queryValues)
     }
@@ -128,8 +127,8 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     </Typography>
                 )
             } else {
-                const sellerView = location.search.includes("forSale=true")
-                    && location.search.includes(`owner=${userStore.username}`)
+                const sellerView = (filters.forSale || filters.forAuction)
+                    && filters.owner == userStore.username
                     && keyLocalStorage.deckListViewType === "table"
                 const decks = decksToDisplay
                     .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
@@ -163,6 +162,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                 >
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
                         {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
+                        {filters.isForSaleOrTrade && filters.owner != null && <SellerBanner sellerUsername={filters.owner}/>}
                         {decksView}
                         {showMoreButton}
                     </div>

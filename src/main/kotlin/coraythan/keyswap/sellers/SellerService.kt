@@ -1,19 +1,24 @@
 package coraythan.keyswap.sellers
 
 import coraythan.keyswap.auctions.DeckListingRepo
+import coraythan.keyswap.config.UnauthorizedException
+import coraythan.keyswap.decks.ownership.DeckOwnership
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.thirdpartyservices.S3Service
 import coraythan.keyswap.toLocalDateWithOffsetMinutes
 import coraythan.keyswap.userdeck.UpdatePrice
+import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import kotlin.system.measureTimeMillis
@@ -23,8 +28,10 @@ data class SellerDetailsWithFullDate(val mostRecent: ZonedDateTime?, val sellerD
 @Transactional
 @Service
 class SellerService(
+        private val s3Service: S3Service,
+        private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
-         private val deckListingRepo: DeckListingRepo
+        private val deckListingRepo: DeckListingRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -57,7 +64,9 @@ class SellerService(
                                             mostRecentListing = placeholderDate,
                                             storeDescription = user.publicContactInfo,
                                             discord = user.discord,
-                                            email = user.sellerEmail
+                                            email = user.sellerEmail,
+                                            storeIconKey = user.storeIconKey,
+                                            storeBannerKey = user.storeBannerKey
                                     )
                             )
                         }
@@ -82,6 +91,40 @@ class SellerService(
         prices.forEach {
             val auction = deckListingRepo.findByIdOrNull(it.auctionId)
             if (auction != null) deckListingRepo.save(auction.copy(buyItNow = it.askingPrice))
+        }
+    }
+
+    fun addStoreIcon(storeIcon: MultipartFile, extension: String) {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        if (currentUser.storeIconKey != null) {
+            s3Service.deleteUserContent(currentUser.storeIconKey)
+        }
+        val key = s3Service.addStoreIcon(storeIcon, currentUser.id, extension)
+        userRepo.setStoreIconKey(key, currentUser.id)
+    }
+
+    fun addStoreBanner(storeBanner: MultipartFile, extension: String) {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        if (currentUser.storeBannerKey != null) {
+            s3Service.deleteUserContent(currentUser.storeBannerKey)
+        }
+        val key = s3Service.addStoreBanner(storeBanner, currentUser.id, extension)
+        userRepo.setStoreBannerKey(key, currentUser.id)
+    }
+
+    fun deleteStoreIcon() {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        if (currentUser.storeIconKey != null) {
+            s3Service.deleteUserContent(currentUser.storeIconKey)
+            userRepo.setStoreIconKey(null, currentUser.id)
+        }
+    }
+
+    fun deleteStoreBanner() {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        if (currentUser.storeBannerKey != null) {
+            s3Service.deleteUserContent(currentUser.storeBannerKey)
+            userRepo.setStoreBannerKey(null, currentUser.id)
         }
     }
 }

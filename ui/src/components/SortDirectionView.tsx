@@ -1,7 +1,6 @@
 import { ArrowUpward } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { themeStore } from "../config/MuiConfig"
 import { SortDirection } from "../generic/SortDirection"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { rotateIconStyle } from "./SearchDrawerExpansionPanel"

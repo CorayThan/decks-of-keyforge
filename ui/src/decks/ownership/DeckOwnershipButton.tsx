@@ -140,6 +140,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                         <Tooltip title={ownedByMe ? "" : "Mark a deck as owned to add an ownership verification image."}>
                             <div>
                                 <FileUploadButton
+                                    id={deckId.toString()}
                                     fileType={FileUploadType.IMAGE}
                                     disabled={deckOwnershipStore.addingDeckVerificationImage || !ownedByMe}
                                     handleUpload={async (event) => {
@@ -153,7 +154,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                                     maxWidthOrHeight: 2048,
                                                     useWebWorker: true
                                                 })
-                                                deckOwnershipStore.saveDeckVerificationImage(compressedImg, deckId)
+                                                deckOwnershipStore.saveDeckVerificationImage(compressedImg, deckId, Utils.filenameExtension(imgFile))
                                             } catch (e) {
 
                                                 messageStore.setWarningMessage("Couldn't upload image.")

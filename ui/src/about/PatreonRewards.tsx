@@ -63,9 +63,10 @@ export class PatreonRewards extends React.Component {
                                 the "Search" button. Use that to save a custom search and get notified when someone lists a match.
                             </Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Store listing on the landing page – $12+</Typography>,
-                            `You must have 10 or more decks listed for sale or trade for your store to show. You can change your store name from your ` +
-                            `profile. To have an icon send me a 48px high image, ideally in png format with transparency. The more like an icon it is, ` +
-                            `and the less like a picture, the better.`,
+                            <Typography>
+                                You must have 10 or more decks listed for sale or trade for your store to show. You can change your store name,
+                                icon and banner from your <Link href={Routes.myProfile}>profile</Link>.
+                            </Typography>,
                         ]}
                     />
                 </AboutGridItem>
@@ -114,6 +115,8 @@ export class PatreonRewards extends React.Component {
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "List any number of decks for sale.",
                             `Get your store listed on the landing page of the site!`,
+                            "Add a name and icon for your store. These will show on your deck listings and landing page store card.",
+                            "Add a banner for your store! This will show across the top of the page when users view your decks for sale.",
                             "Your listings will show your store icon and name, and they will link to your decks for sale.",
                             "Analyze collections of decks up to 2,500",
                         ]}

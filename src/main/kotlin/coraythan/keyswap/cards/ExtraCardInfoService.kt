@@ -55,7 +55,7 @@ class ExtraCardInfoService(
 
         val latestExtraInfo = findNextOrCurrentInfo(info)
         val latestPreexistingVersion = latestExtraInfo.version
-        log.info("Current version $currentVersion latest extra info version ${latestPreexistingVersion}")
+        log.info("Current version $currentVersion latest extra info version ${latestPreexistingVersion} prev base syn = ${latestExtraInfo.baseSynPercent} new ${sourceInfo.baseSynPercent}")
 
         check(nextVersion >= latestPreexistingVersion) { "latest pre existing version can't be more than next version!" }
 

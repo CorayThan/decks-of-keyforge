@@ -86,6 +86,8 @@ data class KeyUser(
         val storeName: String? = null,
         val shippingCost: String? = null,
         val allowsTrades: Boolean = false,
+        val storeIconKey: String? = null,
+        val storeBannerKey: String? = null,
 
         @JsonIgnoreProperties("seller")
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
@@ -159,6 +161,8 @@ data class KeyUser(
             sellerEmail = sellerEmail,
             discord = discord,
             storeName = storeName,
+            storeIconKey = storeIconKey,
+            storeBannerKey = storeBannerKey,
             forSaleCount = forSaleCount,
             shippingCost = shippingCost,
             teamName = team?.name,
@@ -252,6 +256,8 @@ data class KeyUserDto(
         val sellerEmail: String? = null,
         val discord: String? = null,
         val storeName: String? = null,
+        val storeIconKey: String? = null,
+        val storeBannerKey: String? = null,
 
         val forSaleCount: Int,
 

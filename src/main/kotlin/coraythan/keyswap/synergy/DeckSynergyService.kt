@@ -28,7 +28,7 @@ object DeckSynergyService {
         }
     }
 
-    private fun synergizedValue(totalSynPercent: Int, min: Double, max: Double?, hasPositive: Boolean, hasNegative: Boolean): SynergizedValue {
+    private fun synergizedValue(totalSynPercent: Int, min: Double, max: Double?, hasPositive: Boolean, hasNegative: Boolean, baseSynPercent: Int?): SynergizedValue {
         return if (max.isZeroOrNull()) {
             SynergizedValue(min, 0.0)
         } else {
@@ -37,6 +37,7 @@ object DeckSynergyService {
             // Divide by 200 if positive + negative so that 100% positive 0% negative maxes out synergy
             val synValue = (totalSynPercent * range) / (if (hasPositive && hasNegative) 200 else 100)
             val startingPoint = when {
+                baseSynPercent != null -> (range * (baseSynPercent.toDouble() / 100.0)) + min
                 hasPositive && hasNegative -> (range / 2) + min
                 hasPositive -> min
                 else -> max
@@ -145,7 +146,7 @@ object DeckSynergyService {
                     val groupSynPercents = matchedTraits.map { groupSyns ->
                         val isPrimary = groupSyns.value.any { it.trait.primaryGroup }
                         val groupMax = groupSyns.value.find { it.trait.synergyGroupMax != 0 }?.trait?.synergyGroupMax
-                        val groupSynergy = groupSyns.value.map { it.percentSynergized + it.trait.baseSynPercent }.sum()
+                        val groupSynergy = groupSyns.value.map { it.percentSynergized }.sum()
                         if (isPrimary) {
                             generalGroupMax = groupSynergy
                         }
@@ -169,20 +170,20 @@ object DeckSynergyService {
                     val hasPositive = cardInfo.synergies.find { it.rating > 0 } != null
                     val hasNegative = cardInfo.synergies.find { it.rating < 0 } != null
 
-                    val aValue = synergizedValue(totalSynPercent, cardInfo.amberControl, cardInfo.amberControlMax, hasPositive, hasNegative)
-                    val eValue = synergizedValue(totalSynPercent, cardInfo.expectedAmber, cardInfo.expectedAmberMax, hasPositive, hasNegative)
+                    val aValue = synergizedValue(totalSynPercent, cardInfo.amberControl, cardInfo.amberControlMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
+                    val eValue = synergizedValue(totalSynPercent, cardInfo.expectedAmber, cardInfo.expectedAmberMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
                     // log.info("For card ${card.cardTitle} e value is $eValue expected aember ${cardInfo.expectedAmber}")
-                    val rValue = synergizedValue(totalSynPercent, cardInfo.artifactControl, cardInfo.artifactControlMax, hasPositive, hasNegative)
-                    val cValue = synergizedValue(totalSynPercent, cardInfo.creatureControl, cardInfo.creatureControlMax, hasPositive, hasNegative)
-                    val fValue = synergizedValue(totalSynPercent, cardInfo.efficiency, cardInfo.efficiencyMax, hasPositive, hasNegative)
+                    val rValue = synergizedValue(totalSynPercent, cardInfo.artifactControl, cardInfo.artifactControlMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
+                    val cValue = synergizedValue(totalSynPercent, cardInfo.creatureControl, cardInfo.creatureControlMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
+                    val fValue = synergizedValue(totalSynPercent, cardInfo.efficiency, cardInfo.efficiencyMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
                     val pValue = if (cardInfo.effectivePower == 0 && (cardInfo.effectivePowerMax == null || cardInfo.effectivePowerMax == 0.0)) {
                         SynergizedValue(card.effectivePower.toDouble(), 0.0)
                     } else {
-                        synergizedValue(totalSynPercent, cardInfo.effectivePower.toDouble(), cardInfo.effectivePowerMax, hasPositive, hasNegative)
+                        synergizedValue(totalSynPercent, cardInfo.effectivePower.toDouble(), cardInfo.effectivePowerMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
                     }
-                    val dValue = synergizedValue(totalSynPercent, cardInfo.disruption, cardInfo.disruptionMax, hasPositive, hasNegative)
-                    val apValue = synergizedValue(totalSynPercent, cardInfo.creatureProtection, cardInfo.creatureProtectionMax, hasPositive, hasNegative)
-                    val oValue = synergizedValue(totalSynPercent, cardInfo.other, cardInfo.otherMax, hasPositive, hasNegative)
+                    val dValue = synergizedValue(totalSynPercent, cardInfo.disruption, cardInfo.disruptionMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
+                    val apValue = synergizedValue(totalSynPercent, cardInfo.creatureProtection, cardInfo.creatureProtectionMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
+                    val oValue = synergizedValue(totalSynPercent, cardInfo.other, cardInfo.otherMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
 
                     val synergizedValues = listOf(
                             aValue,

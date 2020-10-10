@@ -6,6 +6,7 @@ import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -16,8 +17,10 @@ import java.util.*
 @Service
 class S3Service(
         @Value("\${aws-secret-key}")
-        private val awsSecretkey: String
+        private val awsSecretkey: String,
 ) {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     companion object {
         private const val userContentBucket = "dok-user-content"
@@ -47,14 +50,34 @@ class S3Service(
         )
     }
 
-    fun addDeckImage(deckImage: MultipartFile, deckId: Long, userId: UUID): String {
+    fun addDeckImage(deckImage: MultipartFile, deckId: Long, userId: UUID, extension: String): String {
+        return addImage(deckImage, "deck-ownership", "$deckId-$userId", extension)
+    }
 
-        val key = "deck-ownership/$deckId-$userId-${UUID.randomUUID()}.jpg"
+    fun addStoreIcon(storeIcon: MultipartFile, userId: UUID, extension: String): String {
+        return addImage(storeIcon, "stores", "$userId-icon", extension)
+    }
+
+    fun addStoreBanner(storeBanner: MultipartFile, userId: UUID, extension: String): String {
+        return addImage(storeBanner, "stores", "$userId-banner", extension)
+    }
+
+    fun deleteUserContent(key: String) {
+        s3client.deleteObject(
+                userContentBucket,
+                key
+        )
+    }
+
+    private fun addImage(image: MultipartFile, folderName: String, details: String, extension: String? = null): String {
+
+        val key = "$folderName/$details-${UUID.randomUUID()}${if (extension.isNullOrBlank()) "" else ".$extension"}"
+
         s3client.putObject(
                 PutObjectRequest(
                         userContentBucket,
                         key,
-                        deckImage.inputStream,
+                        image.inputStream,
                         ObjectMetadata()
                                 .apply {
                                     this.cacheControl = "max-age=31536000"
@@ -63,12 +86,5 @@ class S3Service(
                 )
         )
         return key
-    }
-
-    fun deleteUserContent(key: String) {
-        s3client.deleteObject(
-                userContentBucket,
-                key
-        )
     }
 }

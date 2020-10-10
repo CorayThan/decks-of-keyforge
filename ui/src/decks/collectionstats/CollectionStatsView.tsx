@@ -29,12 +29,6 @@ export interface CollectionStatsViewProps {
     stats: CollectionStats
 }
 
-enum CollectionViewSize {
-    SMALL,
-    MEDIUM,
-    LARGE
-}
-
 @observer
 export class CollectionStatsView extends React.Component<CollectionStatsViewProps> {
 
@@ -63,13 +57,6 @@ export class CollectionStatsView extends React.Component<CollectionStatsViewProp
                     </Paper>
                 </Box>
             )
-        }
-
-        let size = CollectionViewSize.SMALL
-        if (screenStore.screenWidth > 1600) {
-            size = CollectionViewSize.LARGE
-        } else if (screenStore.screenWidth > 1336) {
-            size = CollectionViewSize.MEDIUM
         }
 
         const {stats} = this.props
@@ -206,13 +193,13 @@ const HouseCombosGraph = (props: { houseDeckCounts: ThreeHousesCount[] }) => {
 class CardsGraph extends React.Component<{ cards: CardCounts[] }> {
 
     @observable
-    cardFilter: string = ""
+    cardFilter = ""
 
     @observable
-    unownedCardsOnly: boolean = false
+    unownedCardsOnly = false
 
     @observable
-    displayAllCards: boolean = false
+    displayAllCards = false
 
     render() {
 

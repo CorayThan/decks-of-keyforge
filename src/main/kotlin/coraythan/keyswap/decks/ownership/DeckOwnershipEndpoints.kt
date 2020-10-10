@@ -22,9 +22,10 @@ class DeckOwnershipEndpoints(
     @PostMapping("/secured/{deckId}")
     fun addDeckVerificationImage(
             @RequestParam("deckImage") deckImage: MultipartFile,
-            @PathVariable deckId: Long
+            @PathVariable deckId: Long,
+            @RequestHeader("Extension") extension: String
     ) {
-        return deckOwnershipService.addDeckOwnership(deckImage, deckId)
+        return deckOwnershipService.addDeckOwnership(deckImage, deckId, extension)
     }
 
     @DeleteMapping("/secured/{deckId}")

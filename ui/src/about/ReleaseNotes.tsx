@@ -43,6 +43,29 @@ export class ReleaseNotes extends React.Component {
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
+                    releaseNumber={"5.15"}
+                    date={"10/10/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Collection Analysis!",
+                            note: "Patrons can now see an analysis of collections of decks. From the bottom of the deck search drawer or the \"My Decks\" " +
+                                "menu just click analyze. You can see house distributions, SAS score counts, and information about the cards " +
+                                "in the collection of decks. Higher tier patrons can analyze larger quantities of decks."
+                        },
+                        {
+                            highlight: "Minor SAS Update Pending",
+                            note: "I'm trying to stick to beginning of the month updates, but Interdimensional Graft and Binate Rupture got overrated " +
+                                "enough that I wanted to do a mid-month correction. This should be released separately very soon."
+                        },
+                        {
+                            highlight: "Store banners for Merchant Æmbermakers!",
+                            note: "I've improved the store icons so you can upload them yourself. Additionally, you can now add a banner across the top " +
+                                "of the search page when anyone searches your decks for sale. Check these out in your profile under \"My DoK\"!"
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"5.14"}
                     date={"10/2/2020"}
                     expanded={true}

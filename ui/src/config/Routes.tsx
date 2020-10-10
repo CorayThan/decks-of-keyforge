@@ -100,6 +100,7 @@ class Routes {
     static usersWc = () => `/decks?owner=${userStore.username}&expansions=452`
     static usersMm = () => `/decks?owner=${userStore.username}&expansions=479`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
+    static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
 
     /**
      * Deck filters should be cleaned.

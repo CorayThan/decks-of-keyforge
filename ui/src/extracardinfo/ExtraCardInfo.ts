@@ -23,6 +23,7 @@ export interface ExtraCardInfo {
     other: number
     otherMax?: number
 
+    baseSynPercent?: number
     adaptiveScore: number
 
     enhancementAmber: number

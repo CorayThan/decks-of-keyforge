@@ -40,6 +40,14 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun setUserType(role: UserType, username: String)
 
     @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.storeIconKey = ?1 WHERE keyUser.id = ?2")
+    fun setStoreIconKey(storeIconKey: String?, userId: UUID)
+
+    @Modifying
+    @Query("UPDATE KeyUser keyUser SET keyUser.storeBannerKey = ?1 WHERE keyUser.id = ?2")
+    fun setStoreBannerKey(storeBannerKey: String?, userId: UUID)
+
+    @Modifying
     @Query("UPDATE KeyUser keyUser SET keyUser.patreonTier = ?1, keyUser.lifetimeSupportCents = ?2, keyUser.storeName = ?3 WHERE keyUser.id = ?4")
     fun updatePatronTierAndLifetimeSupportCents(tier: PatreonRewardsTier?, lifetimeSupportCents: Int, storeName: String?, userId: UUID)
 

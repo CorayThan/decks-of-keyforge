@@ -2,7 +2,7 @@ import { Divider, List, ListItem, ListItemText, ListSubheader } from "@material-
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../components/KeyDrawer"
+import { KeyDrawer, keyDrawerStore } from "../components/KeyDrawer"
 import { keyTopbarStore } from "../components/KeyTopbar"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"

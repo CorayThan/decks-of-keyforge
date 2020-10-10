@@ -4,6 +4,7 @@ import React, { ChangeEvent } from "react"
 interface FileUploadButtonProps extends ButtonProps {
     fileType: FileUploadType
     handleUpload: (event: ChangeEvent<HTMLInputElement>) => void
+    id: string
 }
 
 export enum FileUploadType {
@@ -11,14 +12,16 @@ export enum FileUploadType {
 }
 
 export const FileUploadButton = (props: FileUploadButtonProps) => {
-    const {disabled, children, fileType, handleUpload, ...buttonProps} = props
+    const {disabled, children, fileType, id, handleUpload, ...buttonProps} = props
 
     let accept
     switch (fileType) {
         case FileUploadType.IMAGE:
-            accept = "image/jpeg"
+            accept = "image/jpeg;image/png"
             break
     }
+
+    const inputId = "file-upload-" + id
 
     return (
         <>
@@ -27,10 +30,10 @@ export const FileUploadButton = (props: FileUploadButtonProps) => {
                 accept={accept}
                 style={{display: "none"}}
                 onChange={handleUpload}
-                id={"file-upload"}
+                id={inputId}
                 disabled={disabled}
             />
-            <label htmlFor={"file-upload"}>
+            <label htmlFor={inputId}>
                 <Button {...buttonProps} component={"span"} disabled={disabled}>
                     {children}
                 </Button>

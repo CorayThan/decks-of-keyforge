@@ -1,6 +1,7 @@
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Utils } from "../config/Utils"
 import { landingPageDrawerWidth, LandingPageTitle } from "../landing/LandingPage"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"
@@ -9,10 +10,6 @@ import { sellerStore } from "./SellerStore"
 
 @observer
 export class FeaturedSellersView extends React.Component<{}> {
-
-    componentDidMount(): void {
-        sellerStore.findFeaturedSellers()
-    }
 
     render() {
         const sellers = sellerStore.featuredSellers
@@ -35,7 +32,9 @@ export class FeaturedSellersView extends React.Component<{}> {
                 </div>
                 <div style={{display: "flex", overflowX: "auto", maxWidth: availableWidth}}>
                     <div style={{marginLeft: spacing(2)}}/>
-                    {sellers.map(seller => <SellerCard sellerDetails={seller} style={{flex: "0 0 auto"}} key={seller.username}/>)}
+                    {sellers
+                        .map(seller => <SellerCard sellerDetails={seller} style={{flex: "0 0 auto"}} key={seller.username}/>)
+                    }
                     <div style={{paddingLeft: spacing(2)}}/>
                 </div>
             </>

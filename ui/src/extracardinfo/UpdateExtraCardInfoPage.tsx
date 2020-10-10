@@ -137,6 +137,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     adaptiveScore = "0"
 
     @observable
+    baseSynPercent = ""
+
+    @observable
     enhancementAmber = "0"
     @observable
     enhancementCapture = "0"
@@ -192,6 +195,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.disruptionMax = extraCardInfo.disruptionMax == null ? "0" : extraCardInfo.disruptionMax.toString()
         this.otherMax = extraCardInfo.otherMax == null ? "0" : extraCardInfo.otherMax.toString()
 
+        this.baseSynPercent = extraCardInfo.baseSynPercent?.toString() ?? ""
         this.adaptiveScore = extraCardInfo.adaptiveScore.toString()
 
         this.enhancementAmber = extraCardInfo.enhancementAmber.toString()
@@ -210,7 +214,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
 
         const extraCardInfo: ExtraCardInfo = this.createExtraInfo()
 
-        log.info("In save enhancement amber is " + this.enhancementAmber + " saving: " + prettyJson(extraCardInfo))
+        log.info("In save base syn percent is " + this.baseSynPercent + " saving: " + prettyJson(extraCardInfo))
 
         await extraCardInfoStore.saveExtraCardInfo(extraCardInfo)
         const saved = await extraCardInfoStore.findExtraCardInfo(this.infoId)
@@ -250,6 +254,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             // @ts-ignore
             otherMax: Utils.toNumberOrUndefined(this.otherMax),
 
+            // @ts-ignore
+            baseSynPercent: this.baseSynPercent === "" ? undefined : Number(this.baseSynPercent),
             adaptiveScore: Number(this.adaptiveScore),
 
             enhancementAmber: Number(this.enhancementAmber),
@@ -429,9 +435,9 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 update={(event: EventValue) => this.otherMax = event.target.value}
                             />
                             <InfoInput
-                                name={"adaptive score"}
-                                value={this.adaptiveScore}
-                                update={(event: EventValue) => this.adaptiveScore = event.target.value}
+                                name={"syn start %"}
+                                value={this.baseSynPercent}
+                                update={(event: EventValue) => this.baseSynPercent = event.target.value}
                             />
                             <InfoInput
                                 name={"bonus amber"}
@@ -547,9 +553,6 @@ class AddTrait extends React.Component<AddTraitProps> {
     powersString = ""
 
     @observable
-    baseSynPercent = ""
-
-    @observable
     player: SynTraitPlayer = SynTraitPlayer.ANY
 
     @observable
@@ -594,7 +597,6 @@ class AddTrait extends React.Component<AddTraitProps> {
             notCardTraits: this.notCardTraits,
             cardTraits: this.cardTraitsStore.selectedValues.slice(),
             powersString: this.powersString.trim(),
-            baseSynPercent: Number(this.baseSynPercent.trim()),
             synergyGroup: this.group === "" ? undefined : this.group,
             synergyGroupMax: this.groupMax === "" ? undefined : Number(this.groupMax),
             primaryGroup: this.primaryGroup
@@ -612,7 +614,6 @@ class AddTrait extends React.Component<AddTraitProps> {
         this.rating = value.rating
         this.trait = value.trait
         this.cardTraitsStore.update(value.cardTraits)
-        this.baseSynPercent = value.baseSynPercent.toString()
         this.group = value.synergyGroup as SynGroup
         this.groupMax = value.synergyGroupMax?.toString() ?? ""
         this.primaryGroup = value.primaryGroup
@@ -687,7 +688,7 @@ class AddTrait extends React.Component<AddTraitProps> {
                         ))}
                     </div>
                 </Grid>
-                <Grid item={true} xs={9}>
+                <Grid item={true} xs={12}>
                     <FormControl>
                         <FormLabel>Rating</FormLabel>
                         <RadioGroup
@@ -707,14 +708,6 @@ class AddTrait extends React.Component<AddTraitProps> {
                             </div>
                         </RadioGroup>
                     </FormControl>
-                </Grid>
-                <Grid item={true} xs={3}>
-                    <TextField
-                        label={"Base Syn Percent"}
-                        value={this.baseSynPercent}
-                        type={"numeric"}
-                        onChange={event => this.baseSynPercent = event.target.value}
-                    />
                 </Grid>
                 <Grid item={true}>
                     <div>
@@ -910,7 +903,6 @@ class AddTrait extends React.Component<AddTraitProps> {
                                 this.rating = 3
                                 this.trait = SynergyTrait.any
                                 this.cardTraitsStore.reset()
-                                this.baseSynPercent = ""
                                 this.group = ""
                                 this.groupMax = ""
                                 this.primaryGroup = false

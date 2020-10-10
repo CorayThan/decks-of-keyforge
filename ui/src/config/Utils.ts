@@ -131,7 +131,7 @@ export class Utils {
         if (search.trim().length < 3) {
             return true
         }
-        let cardNameClean = cardName
+        const cardNameClean = cardName
             .toLowerCase()
             .replaceAll("æ", "ae")
             .replaceAll(/\W+/g, "")
@@ -153,7 +153,16 @@ export class Utils {
             .replaceAll(/\W+/g, " ")
             .split(" ")
             .filter(token => token.length > 2)
-    }}
+    }
+
+    static filenameExtension = (file: File) => {
+        const filename = file.name
+        if (!filename.includes(".")) {
+            return ""
+        }
+        return filename.split(".").pop() ?? ""
+    }
+}
 
 type EnumType = string | number
 
