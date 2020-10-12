@@ -8,22 +8,6 @@ import coraythan.keyswap.startCase
 import java.util.*
 import javax.persistence.*
 
-data class SynTraitValueSearchResult(
-//        val trait: SynergyTrait,
-        val rating: Int
-//        val house: SynTraitHouse,
-//        val player: SynTraitPlayer,
-//        val cardTypes: List<CardType>,
-//        val powersString: String,
-//        val baseSynPercent: Int,
-//        val cardTraits: List<String>,
-//        val notCardTraits: Boolean,
-//        val cardName: String?,
-//        val synergyGroup: String?,
-//        val synergyGroupMax: Int?,
-//        val id: String
-)
-
 @Entity
 data class SynTraitValue(
         @Enumerated(EnumType.STRING)

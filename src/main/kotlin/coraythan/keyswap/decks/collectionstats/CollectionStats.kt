@@ -6,7 +6,6 @@ import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.decks.models.SimpleDeckSearchResult
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
-import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.stats.BarData
 import kotlin.math.roundToInt
 
@@ -101,6 +100,7 @@ data class CollectionStats(
                                 CardCounts(
                                         name = decksForCard.key,
                                         count = cards.size,
+//                                        count = cardDecks.sumBy { it.housesAndCards.sumBy { it.cards.count { it.cardTitle == decksForCard.key } } },
                                         setCounts = cardDecks
                                                 .groupBy { it.expansion }
                                                 .map { SetCount(it.key, it.value.size, it.value.maxByOrNull { deck -> deck.sasRating }!!.toSimpleResult()) }

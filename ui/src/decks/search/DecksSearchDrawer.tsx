@@ -511,7 +511,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 )}
                             </div>
                         </ListItem>
-                        {count && !analyze && (
+                        {count != null && !analyze && (
                             <ListItem>
                                 <Typography variant={"subtitle2"} style={{marginBottom: spacing(1)}}>
                                     {`You found ${count}${count === 1000 || count === 10000 ? "+ " : ""} decks`}

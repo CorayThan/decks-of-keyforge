@@ -86,7 +86,9 @@ object DeckSynergyService {
                 val trait = SynergyTrait.fromTrait(it)
                 if (trait == null) null else SynTraitValue(trait)
             }
-            val cardAllTraits = cardInfo.traits.plus(cardSpecialTraits)
+            val cardAllTraits = cardInfo.traits
+                    .plus(cardSpecialTraits)
+                    .let { if (card.enhanced == true) it.plus(SynTraitValue(SynergyTrait.enhanced, rating = 3)) else it }
             cardAllTraits
                     .forEach { traitValue ->
                         traitsMap.addTrait(traitValue, card, card.house)
@@ -105,6 +107,42 @@ object DeckSynergyService {
         addDeckTraits(deck, traitsMap, cards)
         addHouseTraits(deck.houses, cards, traitsMap)
         addOutOfHouseTraits(deck.houses, cards, traitsMap)
+
+        val selfEnhancedCombos: List<SynergyCombo> = cards
+                .mapNotNull { card ->
+                    var selfEnhancedCombo: SynergyCombo? = null
+                    if (card.enhanced == true) {
+                        val syn = card.extraCardInfo?.synergies?.firstOrNull { it.trait == SynergyTrait.selfEnhanced }
+                        if (syn != null) {
+                            val value = when (syn.strength()) {
+                                TraitStrength.EXTRA_WEAK -> 0.25
+                                TraitStrength.WEAK -> 0.5
+                                TraitStrength.NORMAL -> 1.0
+                                TraitStrength.STRONG -> 1.5
+                            }
+                            selfEnhancedCombo = SynergyCombo(
+                                    house = card.house,
+                                    cardName = card.cardTitle,
+                                    synergies = listOf(SynergyMatch(syn, 100, setOf())),
+                                    netSynergy = value,
+                                    aercScore = value,
+
+                                    amberControl = 0.0,
+                                    expectedAmber = 0.0,
+                                    artifactControl = 0.0,
+                                    creatureControl = 0.0,
+                                    efficiency = 0.0,
+                                    effectivePower = 0,
+
+                                    disruption = 0.0,
+                                    creatureProtection = 0.0,
+                                    other = value,
+                                    copies = 1
+                            )
+                        }
+                    }
+                    selfEnhancedCombo
+                }
 
         val synergyCombos: List<SynergyCombo> = cards
                 .groupBy { Pair(it.cardTitle, it.house) }
@@ -226,6 +264,7 @@ object DeckSynergyService {
                             copies = count
                     )
                 }
+                .plus(selfEnhancedCombos)
 
         val a = synergyCombos.map { it.amberControl * it.copies }.sum()
         val e = synergyCombos.map { it.expectedAmber * it.copies }.sum()
@@ -274,7 +313,7 @@ object DeckSynergyService {
                     else -> 0
                 },
                 "Scaling Aember Control" to when {
-                    scalingAemberControlTraits > 3 -> 1
+                    scalingAemberControlTraits > 2 -> 1
                     else -> 0
                 },
         )

@@ -62,6 +62,10 @@ export class CollectionStatsView extends React.Component<CollectionStatsViewProp
         const {stats} = this.props
         const {houseCounts, houseDeckCounts, cardCounts, sasValues} = stats
 
+        if (stats.deckCount === 0) {
+            return <Typography variant={"subtitle1"}>Sorry, no decks matched your search!</Typography>
+        }
+
         if (screenStore.screenWidth > 1820) {
             return (
                 <Box m={4} display={"flex"}>
@@ -144,6 +148,9 @@ const HousesGraph = (props: { houseCounts: HouseCount[] }) => {
 }
 
 const SasGraph = (props: { sasValues: BarData[], height?: number }) => {
+    if (props.sasValues.length < 2) {
+        return null
+    }
     return (
         <Paper style={{display: "flex", flexDirection: "column", alignItems: "center", height: props.height}}>
             <Typography style={{marginTop: spacing(1)}} variant={"h5"} color={"primary"}>SAS Values</Typography>

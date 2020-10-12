@@ -132,6 +132,10 @@ enum class SynergyTrait {
     alpha,
     omega,
 
+    // Automatically applied traits below here
+
+    enhanced,
+    selfEnhanced,
     bonusAmber,
     bonusDraw,
     bonusDamage,
