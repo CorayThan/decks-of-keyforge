@@ -1,7 +1,6 @@
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Utils } from "../config/Utils"
 import { landingPageDrawerWidth, LandingPageTitle } from "../landing/LandingPage"
 import { Loader } from "../mui-restyled/Loader"
 import { screenStore } from "../ui/ScreenStore"

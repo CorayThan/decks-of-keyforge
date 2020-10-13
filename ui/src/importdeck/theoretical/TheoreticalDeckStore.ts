@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { DeckWithSynergyInfo } from "../../decks/models/DeckSearchResult"
-import { SaveUnregisteredDeck } from "../SaveUnregisteredDeck"
+import { DeckBuilderData } from "../DeckBuilderData"
 
 export class TheoreticalDeckStore {
 
@@ -24,7 +24,7 @@ export class TheoreticalDeckStore {
             })
     }
 
-    saveTheoreticalDeck = (deck: SaveUnregisteredDeck) => {
+    saveTheoreticalDeck = (deck: DeckBuilderData) => {
         this.savingDeck = true
         axios.post(`${TheoreticalDeckStore.CONTEXT}`, deck)
             .then((response: AxiosResponse<string>) => {

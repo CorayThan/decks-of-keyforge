@@ -1,9 +1,12 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { messageStore } from "../ui/MessageStore"
 import { keyLocalStorage } from "./KeyLocalStorage"
+import { monitoring } from "./Monitoring"
 import { log } from "./Utils"
 
 export let axiosWithoutErrors = axios.create()
+
+let apiVersion: string | undefined
 
 export class HttpConfig {
 
@@ -33,6 +36,13 @@ export class HttpConfig {
             keyLocalStorage.saveAuthKey(authHeader)
             HttpConfig.setupAxios()
         }
+        const newApiVersion = response.headers["api-version"]
+        if (newApiVersion != null && newApiVersion != apiVersion) {
+            log.info("new api version " + newApiVersion)
+            apiVersion = newApiVersion
+            monitoring.setApiVersionTag(newApiVersion)
+        }
+
         return response
     }
 
@@ -48,8 +58,6 @@ export class HttpConfig {
             return
         } else if (code === 401) {
             messageStore.setErrorMessage("You are unauthorized to make this request.")
-        } else if (code === 413 && error.config.url?.includes("read-deck-image")) {
-            messageStore.setErrorMessage("Your image is too large, please reduce its size.")
         } else if (code === 417) {
             const message = error.response && error.response.data && error.response.data.message
             messageStore.setErrorMessage(message)

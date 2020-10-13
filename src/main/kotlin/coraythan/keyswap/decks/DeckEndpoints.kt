@@ -4,13 +4,13 @@ import coraythan.keyswap.Api
 import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.collectionstats.CollectionStats
-import coraythan.keyswap.decks.models.*
-import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.thirdpartyservices.AzureOcr
+import coraythan.keyswap.decks.models.DeckCount
+import coraythan.keyswap.decks.models.DeckSaleInfo
+import coraythan.keyswap.decks.models.DecksPage
+import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.userdeck.UserDeckService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import kotlin.system.measureTimeMillis
 
 @RestController
@@ -18,7 +18,6 @@ import kotlin.system.measureTimeMillis
 class DeckEndpoints(
         private val deckSearchService: DeckSearchService,
         private val deckImporterService: DeckImporterService,
-        private val azureOcr: AzureOcr,
         private val userDeckService: UserDeckService,
         private val deckWinsService: DeckWinsService
 ) {
@@ -100,16 +99,6 @@ class DeckEndpoints(
     @GetMapping("/{id}/sale-info")
     fun findDeckSaleInfo(@PathVariable id: String, @RequestHeader(value = "Timezone") offsetMinutes: Int): List<DeckSaleInfo> {
         return deckSearchService.saleInfoForDeck(id, offsetMinutes)
-    }
-
-    @PostMapping("/secured/read-deck-image/{expansion}")
-    fun readDeckImage(@RequestParam("deckImage") deckImage: MultipartFile, @PathVariable expansion: Expansion): SaveUnregisteredDeck? {
-        return azureOcr.readDeckInfoFromImage(deckImage, expansion)
-    }
-
-    @PostMapping("/secured/add-unregistered")
-    fun addUnregistered(@RequestBody deck: SaveUnregisteredDeck): String {
-        return deckImporterService.addUnregisteredDeck(deck)
     }
 
     @GetMapping("/updating")

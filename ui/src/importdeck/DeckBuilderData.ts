@@ -1,6 +1,6 @@
 import { Expansion } from "../generated-src/Expansion"
 
-export interface SaveUnregisteredDeck {
+export interface DeckBuilderData {
     name: string
     cards: CardsInHouses
     expansion: Expansion

@@ -23,7 +23,6 @@ import { SimpleCard } from "../generated-src/SimpleCard"
 import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
-import { UnregisteredDeckIcon } from "../generic/icons/UnregisteredDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { HouseBanner } from "../houses/HouseBanner"
 import { HouseLabel } from "../houses/HouseUtils"
@@ -112,7 +111,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardContent>
                             {hideActions ? null : (
                                 <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                                    {fullVersion && !compact && deck.registered ? (
+                                    {fullVersion && !compact ? (
                                         <KeyButton
                                             href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
                                             color={"primary"}
@@ -161,7 +160,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 
 const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props
-    const {housesAndCards, id, forAuction, forSale, forTrade, registered, expansion} = deck
+    const {housesAndCards, id, forAuction, forSale, forTrade, expansion} = deck
     const houses = housesAndCards.map(house => house.house)
 
     let displayForAuction = false
@@ -189,11 +188,6 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
     if (displaySaleIcons) {
         saleIcons = (
             <>
-                {!registered && (
-                    <Tooltip title={"Unregistered Deck"}>
-                        <div style={{display: "flex", justifyContent: "center"}}><UnregisteredDeckIcon height={40}/></div>
-                    </Tooltip>
-                )}
                 {displayForAuction && (
                     <Tooltip title={"On auction"}>
                         <div style={{display: "flex", justifyContent: "center"}}><AuctionDeckIcon height={40}/></div>

@@ -4,6 +4,7 @@ import { latestVersion } from "../about/ReleaseNotes"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { monitoring } from "../config/Monitoring"
 import { log, prettyJson } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
 import { deckOwnershipStore } from "../decks/ownership/DeckOwnershipStore"
@@ -236,6 +237,9 @@ export class UserStore {
 
     setUser = (user?: KeyUserDto) => {
         this.user = user
+        if (user != null) {
+            monitoring.setUser(user)
+        }
     }
 
     @computed

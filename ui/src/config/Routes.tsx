@@ -23,7 +23,6 @@ import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
 import { UpdateSpoilerAerc } from "../extracardinfo/UpdateSpoilerAerc"
 import { DokIcon } from "../generic/icons/DokIcon"
-import { DeckImportView } from "../importdeck/DeckImportView"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { LandingPage } from "../landing/LandingPage"
@@ -77,7 +76,6 @@ class Routes {
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static stats = "/stats"
     static articles = "/articles"
-    static importUnregisteredDeck = `${Routes.decks}/import`
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
     static privacyPolicy = "/privacy-policy"
@@ -205,11 +203,6 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.adminPanel}
                         component={AdminPanelView}
-                    />
-                    <LoggedInRoute
-                        exact={true}
-                        path={Routes.importUnregisteredDeck}
-                        component={DeckImportView}
                     />
                     <Route
                         exact={true}

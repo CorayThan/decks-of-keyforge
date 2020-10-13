@@ -40,7 +40,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                 <ReportPurchaseButton deckId={deck.id} deckName={deck.name} onClick={handleClose}/>
                 <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
                 <ToggleDeckNotesMenuItem onClick={handleClose}/>
-                {userStore.loggedIn() && deck.registered && (
+                {userStore.loggedIn() && (
                     <DeckActionClickable
                         onClick={() => {
                             handleClose()

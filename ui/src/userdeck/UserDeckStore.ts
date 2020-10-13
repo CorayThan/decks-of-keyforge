@@ -4,8 +4,8 @@ import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
+import { UserDeckDto } from "../generated-src/UserDeckDto"
 import { messageStore } from "../ui/MessageStore"
-import { UserDeckDto } from "./UserDeck"
 
 export class UserDeckStore {
 

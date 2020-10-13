@@ -14,8 +14,6 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     @Query("SELECT d from Deck d where LOWER(name) LIKE ?1")
     fun findByNameIgnoreCase(@Param("name") name: String): List<Deck>
 
-    fun findAllByRegisteredFalse(): List<Deck>
-
     fun findByWinsGreaterThanOrLossesGreaterThan(wins: Int, losses: Int): List<Deck>
 
     @Query(
@@ -24,5 +22,4 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     )
     fun estimateRowCount(): Long
 
-    fun countByRegisteredTrue(): Long
 }

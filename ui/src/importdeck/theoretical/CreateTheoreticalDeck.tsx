@@ -17,8 +17,8 @@ import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { userStore } from "../../user/UserStore"
-import { DisplayCardsInHouseEditable, saveUnregisteredDeckStore } from "../CreateUnregisteredDeck"
-import { CardsInHouses } from "../SaveUnregisteredDeck"
+import { deckBuilderStore, DisplayCardsInHouseEditable } from "../DeckBuilder"
+import { CardsInHouses } from "../DeckBuilderData"
 import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 
 export const CreateTheoreticalDeck = observer(() => {
@@ -29,7 +29,7 @@ export const CreateTheoreticalDeck = observer(() => {
     const resetDeck = () => {
         const cards: CardsInHouses = {}
         housesStore.getHousesSelectedTrue().forEach(house => cards[house] = [])
-        saveUnregisteredDeckStore.currentDeck = {
+        deckBuilderStore.currentDeck = {
             name: "The One that Theoretically Exists",
             cards,
             expansion: expansionStore.currentExpansionOrDefault()
@@ -46,7 +46,7 @@ export const CreateTheoreticalDeck = observer(() => {
     }, [expansionStore.currentExpansionOrDefault()])
 
     useEffect(() => {
-        const oldCards: CardsInHouses = saveUnregisteredDeckStore.currentDeck?.cards!
+        const oldCards: CardsInHouses = deckBuilderStore.currentDeck?.cards!
         const cards: CardsInHouses = {}
         const houses = housesStore.getHousesSelectedTrue()
         houses.forEach(house => {
@@ -56,7 +56,7 @@ export const CreateTheoreticalDeck = observer(() => {
                 cards[house] = oldCards[house]
             }
         })
-        saveUnregisteredDeckStore.currentDeck = {
+        deckBuilderStore.currentDeck = {
             name: "The One that Theoretically Exists",
             cards,
             expansion: expansionStore.currentExpansionOrDefault()
@@ -93,10 +93,10 @@ export const CreateTheoreticalDeck = observer(() => {
                     variant={"contained"}
                     color={"primary"}
                     style={{marginRight: spacing(2)}}
-                    disabled={!saveUnregisteredDeckStore.deckIsValid}
+                    disabled={!deckBuilderStore.deckIsValid}
                     loading={theoreticalDeckStore.savingDeck}
                     onClick={() => {
-                        theoreticalDeckStore.saveTheoreticalDeck(saveUnregisteredDeckStore.currentDeck!)
+                        theoreticalDeckStore.saveTheoreticalDeck(deckBuilderStore.currentDeck!)
                     }}
                 >
                     View
@@ -104,9 +104,9 @@ export const CreateTheoreticalDeck = observer(() => {
                 {Utils.isDev() && (
                     <KeyButton
                         onClick={() => {
-                            saveUnregisteredDeckStore.currentDeck!.cards["Shadows"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
-                            saveUnregisteredDeckStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
-                            saveUnregisteredDeckStore.currentDeck!.cards["Logos"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
+                            deckBuilderStore.currentDeck!.cards["Shadows"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
+                            deckBuilderStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
+                            deckBuilderStore.currentDeck!.cards["Logos"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
                         }}
                     >
                         Add test cards
@@ -125,16 +125,16 @@ const CreateTheoreticalDeckBuilder = observer((props: { expansion: Expansion, ho
 
     const {expansion} = props
 
-    if (saveUnregisteredDeckStore.currentDeck == null) {
+    if (deckBuilderStore.currentDeck == null) {
         return null
     }
 
-    const deckCards = Object.entries(saveUnregisteredDeckStore.currentDeck?.cards)
+    const deckCards = Object.entries(deckBuilderStore.currentDeck?.cards)
 
     return (
         <KeyCard
             topContents={
-                <Typography variant={"h4"}>{saveUnregisteredDeckStore.currentDeck?.name}</Typography>
+                <Typography variant={"h4"}>{deckBuilderStore.currentDeck?.name}</Typography>
             }
             light={true}
             style={{overflow: "visible", width: 784}}

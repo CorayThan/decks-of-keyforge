@@ -97,7 +97,7 @@ data class DeckListing(
 
     val highestOffer: Int?
         get() {
-            return offers.map { it.amount }.max()
+            return offers.map { it.amount }.maxOrNull()
         }
 
     val highestBid: Int?

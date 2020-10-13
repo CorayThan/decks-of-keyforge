@@ -14,7 +14,6 @@ import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
-import { UnregisteredDeckIcon } from "../../generic/icons/UnregisteredDeckIcon"
 import { HouseBanner } from "../../houses/HouseBanner"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { screenStore } from "../../ui/ScreenStore"
@@ -66,7 +65,6 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                         {query.forSale ? <SellDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                         {query.forTrade ? <TradeDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                         {query.forAuction ? <AuctionDeckIcon style={{marginRight: spacing(1)}}/> : null}
-                                        {query.includeUnregistered ? <UnregisteredDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                     </TableCell>
                                     {small ? null : (
                                         <>

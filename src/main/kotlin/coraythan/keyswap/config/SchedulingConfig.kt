@@ -11,6 +11,5 @@ object SchedulingConfig {
     const val winsLossesInitialDelay = "PT10M"
     const val newDeckStatsInitialDelay = "PT15M"
     const val removeManualPatronsInitialDelay = "PT1H"
-    const val cleanUnregisteredDecksInitialDelay = "PT2H"
     const val correctCountsInitialDelay = "PT6H"
 }

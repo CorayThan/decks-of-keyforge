@@ -35,6 +35,10 @@ class ForSaleNotificationsService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private var queries: List<ForSaleQueryEntity>? = null
 
+    fun clean() {
+
+    }
+
     fun sendNotifications(listingInfo: ListingInfo) {
         GlobalScope.launch {
             // Delay 30 seconds to make sure DB is finished saving the user deck

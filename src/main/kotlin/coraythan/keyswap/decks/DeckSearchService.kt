@@ -60,7 +60,7 @@ class DeckSearchService(
 
             if (filtersAreEqualForCount(filters) && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL) {
 
-                count = deckRepo.countByRegisteredTrue()
+                count = deckRepo.count()
                 deckCount = count
 
             } else {
@@ -213,8 +213,6 @@ class DeckSearchService(
         if (sortOptions == DeckSortOptions.CHAINS) {
             predicate.and(deckQ.chains.gt(0))
         }
-
-        predicate.and(deckQ.registered.isTrue)
 
         if (filters.expansions.isNotEmpty()) {
             predicate.andAnyOf(*filters.expansions.map { deckQ.expansion.eq(it) }.toTypedArray())
@@ -399,7 +397,7 @@ class DeckSearchService(
         return query
                 .select(deckQ.keyforgeId)
                 .from(deckQ)
-                .where(BooleanBuilder().and(deckQ.registered.isTrue).and(deckQ.id.gt(deckOffset)))
+                .where(BooleanBuilder().and(deckQ.id.gt(deckOffset)))
                 .limit(1)
                 .orderBy(deckQ.id.asc())
                 .fetchFirst()

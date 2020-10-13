@@ -46,14 +46,3 @@ export const deckConditionReadableValue = (condition: DeckCondition) => {
         throw new Error(`Unexpected deck condition: ${condition}`)
     }
 }
-
-export interface UserDeckDto {
-    id: string
-    wishlist: boolean
-    funny: boolean
-    ownedBy: string
-
-    // On DTO version only
-    deckId: number
-    notes?: string
-}

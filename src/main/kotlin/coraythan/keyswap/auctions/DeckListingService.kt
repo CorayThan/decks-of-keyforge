@@ -105,7 +105,6 @@ class DeckListingService(
 
         val deck = deckRepo.findByIdOrNull(listingInfo.deckId) ?: throw IllegalStateException("No deck with id ${listingInfo.deckId}")
 
-        if (!deck.registered) throw BadRequestException("Unregistered decks cannot be listed for sale.")
         if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
 
         val listingDate = now()
@@ -393,7 +392,7 @@ class DeckListingService(
             // reporting a purchase
             val preexisting = purchaseRepo.findByDeckId(createPurchase.deckId)
                     .filter { it.buyer == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
-                    .minBy { it.purchasedOn }
+                    .minByOrNull { it.purchasedOn }
             if (preexisting != null) {
                 purchaseRepo.save(preexisting.copy(buyer = buyer, buyerCountry = buyer?.country))
                 return CreatePurchaseResult(
@@ -407,7 +406,7 @@ class DeckListingService(
             userDeckService.markAsOwned(deck.id, false)
             val preexisting = purchaseRepo.findByDeckId(createPurchase.deckId)
                     .filter { it.seller == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
-                    .minBy { it.purchasedOn }
+                    .minByOrNull { it.purchasedOn }
             if (preexisting != null) {
                 purchaseRepo.save(preexisting.copy(seller = seller, sellerCountry = seller.country, currencySymbol = seller.currencySymbol))
                 return CreatePurchaseResult(

@@ -98,9 +98,6 @@ export class DeckFilters {
         if (queryObject.completedAuctions != null) {
             queryObject.completedAuctions = queryObject.completedAuctions === "true"
         }
-        if (queryObject.registered != null) {
-            queryObject.registered = queryObject.registered === "true"
-        }
         if (queryObject.myFavorites != null) {
             queryObject.myFavorites = queryObject.myFavorites === "true"
         }

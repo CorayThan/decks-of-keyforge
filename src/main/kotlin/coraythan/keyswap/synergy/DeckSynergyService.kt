@@ -114,15 +114,20 @@ object DeckSynergyService {
                     if (card.enhanced == true) {
                         val syn = card.extraCardInfo?.synergies?.firstOrNull { it.trait == SynergyTrait.selfEnhanced }
                         if (syn != null) {
-                            val value = when (syn.strength()) {
-                                TraitStrength.EXTRA_WEAK -> 0.25
-                                TraitStrength.WEAK -> 0.5
-                                TraitStrength.NORMAL -> 1.0
-                                TraitStrength.STRONG -> 1.5
+                            val value = when (syn.rating) {
+                                -4 -> -1.5
+                                -3 -> -1.0
+                                -2 -> -0.5
+                                -1 -> -0.25
+                                1 -> 0.25
+                                2 -> 0.5
+                                3 -> 1.0
+                                4 -> 1.5
+                                else -> throw IllegalStateException("Unexpected syn rating: ${syn.rating}")
                             }
                             selfEnhancedCombo = SynergyCombo(
                                     house = card.house,
-                                    cardName = card.cardTitle,
+                                    cardName = card.cardTitle + " Enhanced",
                                     synergies = listOf(SynergyMatch(syn, 100, setOf())),
                                     netSynergy = value,
                                     aercScore = value,
@@ -151,37 +156,38 @@ object DeckSynergyService {
                     val card = cardsById.value[0]
                     val cardInfo = card.extraCardInfo ?: error("Oh no, ${card.cardTitle} had null extra info! $card")
 
-                    val matchedTraits: Map<String?, List<SynergyMatch>> = cardInfo.synergies.map { synergy ->
+                    val matchedTraits: Map<String?, List<SynergyMatch>> = cardInfo.synergies
+                            .map { synergy ->
 
-                        val synergyTrait = synergy.trait
-                        val cardNames = mutableSetOf<String>()
-                        val synPercent = TraitStrength.values().map { strength ->
-                            val matches = if (synergy.cardName == null) {
-                                traitsMap[synergyTrait]?.matches(card, synergy)
-                            } else {
-                                val cardCount = when (synergy.house) {
-                                    SynTraitHouse.anyHouse -> cardsMap.map { it.value.getOrDefault(synergy.cardName, 0) }.sum()
-                                    SynTraitHouse.house -> cardsMap[card.house]?.get(synergy.cardName) ?: 0
-                                    else -> cardsMap.entries.filter { it.key != card.house }.map { it.value.getOrDefault(synergy.cardName, 0) }.sum()
-                                }
-                                if (cardCount != 0) {
-                                    SynMatchInfo(mapOf(TraitStrength.NORMAL to if (card.cardTitle == synergy.cardName) cardCount - 1 else cardCount))
-                                } else {
-                                    null
-                                }
-                            }
-                            if (matches == null) {
-                                0
-                            } else {
-                                cardNames.addAll(matches.cardNames)
-                                val matchesAtStrength = matches.matches[strength] ?: 0
-                                // log.info("${card.cardTitle}: $synergyTrait syn rating: ${synergy.rating} $strength = $matchesAtStrength")
-                                matchesAtStrength * ratingsToPercent(synergy.rating, strength)
-                            }
-                        }.sum()
+                                val synergyTrait = synergy.trait
+                                val cardNames = mutableSetOf<String>()
+                                val synPercent = TraitStrength.values().map { strength ->
+                                    val matches = if (synergy.cardName == null) {
+                                        traitsMap[synergyTrait]?.matches(card, synergy)
+                                    } else {
+                                        val cardCount = when (synergy.house) {
+                                            SynTraitHouse.anyHouse -> cardsMap.map { it.value.getOrDefault(synergy.cardName, 0) }.sum()
+                                            SynTraitHouse.house -> cardsMap[card.house]?.get(synergy.cardName) ?: 0
+                                            else -> cardsMap.entries.filter { it.key != card.house }.map { it.value.getOrDefault(synergy.cardName, 0) }.sum()
+                                        }
+                                        if (cardCount != 0) {
+                                            SynMatchInfo(mapOf(TraitStrength.NORMAL to if (card.cardTitle == synergy.cardName) cardCount - 1 else cardCount))
+                                        } else {
+                                            null
+                                        }
+                                    }
+                                    if (matches == null) {
+                                        0
+                                    } else {
+                                        cardNames.addAll(matches.cardNames)
+                                        val matchesAtStrength = matches.matches[strength] ?: 0
+                                        // log.info("${card.cardTitle}: $synergyTrait syn rating: ${synergy.rating} $strength = $matchesAtStrength")
+                                        matchesAtStrength * ratingsToPercent(synergy.rating, strength)
+                                    }
+                                }.sum()
 
-                        SynergyMatch(synergy, synPercent, cardNames)
-                    }.groupBy { it.trait.synergyGroup }
+                                SynergyMatch(synergy, synPercent, cardNames)
+                            }.groupBy { it.trait.synergyGroup }
 
                     var generalGroupMax = 1000
 
@@ -367,6 +373,10 @@ object DeckSynergyService {
             val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
             val artifactCount = cardsForHouse.filter { it.cardType == CardType.Artifact }.size
             val upgradeCount = cardsForHouse.filter { it.cardType == CardType.Upgrade }.size
+
+            val bonusAmber = cards.map { it.amber }.sum()
+            traits.addDeckTrait(SynergyTrait.bonusAmber, bonusAmber, house, SynTraitHouse.house, strength = TraitStrength.EXTRA_WEAK)
+
             val totalExpectedAmber = cardsForHouse.map {
                 val max = it.extraCardInfo?.expectedAmberMax ?: 0.0
                 val min = it.extraCardInfo?.expectedAmber ?: 0.0

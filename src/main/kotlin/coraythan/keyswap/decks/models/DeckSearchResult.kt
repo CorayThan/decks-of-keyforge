@@ -22,8 +22,6 @@ data class DeckSearchResult(
         val artifactCount: Int? = null,
         val upgradeCount: Int? = null,
 
-        val registered: Boolean = true,
-
         val powerLevel: Int? = null,
         val chains: Int? = null,
         val wins: Int? = null,

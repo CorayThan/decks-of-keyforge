@@ -63,7 +63,6 @@ class DeckPageService(
         log.info("Deck $type id start $idStart end $idEnd")
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
-                .and(deckQ.registered.isTrue)
                 .and(deckQ.id.between(idStart, idEnd))
         return query.selectFrom(deckQ)
                 .where(predicate)

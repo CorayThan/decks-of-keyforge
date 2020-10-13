@@ -5,8 +5,8 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckImporterService
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckBuildingData
 import coraythan.keyswap.decks.models.DeckWithSynergyInfo
-import coraythan.keyswap.decks.models.SaveUnregisteredDeck
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -19,7 +19,7 @@ class TheoreticalDeckService(
         private val cardService: CardService
 ) {
 
-    fun saveTheoreticalDeck(toSave: SaveUnregisteredDeck): UUID {
+    fun saveTheoreticalDeck(toSave: DeckBuildingData): UUID {
         val deck = deckImporterService.viewTheoreticalDeck(toSave)
         val makeBelieveDeck = TheoreticalDeck(
                 expansion = deck.expansion,

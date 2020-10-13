@@ -29,8 +29,6 @@ export interface DeckSearchResult {
     artifactCount?: number
     upgradeCount?: number
 
-    registered: boolean
-
     powerLevel?: number
     chains?: number
     wins?: number

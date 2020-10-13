@@ -31,8 +31,6 @@ data class Deck(
         val wins: Int = 0,
         val losses: Int = 0,
 
-        val registered: Boolean = true,
-
         val anomalyCount: Int? = 0,
         val maverickCount: Int = 0,
         val specialsCount: Int = 0,
@@ -148,8 +146,6 @@ data class Deck(
                 chains = chains.zeroToNull(),
                 wins = wins.zeroToNull(),
                 losses = losses.zeroToNull(),
-
-                registered = registered,
 
                 creatureCount = creatureCount.zeroToNull(),
                 actionCount = actionCount.zeroToNull(),

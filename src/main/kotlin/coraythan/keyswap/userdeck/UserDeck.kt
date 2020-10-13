@@ -27,11 +27,6 @@ data class UserDeck(
 
         val teamId: UUID? = null,
 
-        /**
-         * Only for unregistered decks
-         */
-        val creator: Boolean = false,
-
         // Deck selling info below
         val forSale: Boolean = false,
         val forTrade: Boolean = false,
@@ -74,7 +69,6 @@ data class UserDeck(
             wishlist = wishlist,
             funny = funny,
             ownedBy = ownedBy,
-            creator = creator,
             id = id,
             deckId = deck.id,
             notes = notes,
@@ -91,13 +85,12 @@ enum class DeckCondition {
     HEAVILY_PLAYED
 }
 
+@GenerateTs
 data class UserDeckDto(
 
         val wishlist: Boolean = false,
         val funny: Boolean = false,
         val ownedBy: String? = null,
-
-        val creator: Boolean = false,
 
         val id: UUID = UUID.randomUUID(),
 

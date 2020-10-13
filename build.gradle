@@ -32,7 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '407'
+version = '406'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
@@ -65,6 +65,14 @@ springBoot {
 task genTs(type: JavaExec) {
     main = "coraythan.keyswap.generatets.TsGenerator"
     classpath = sourceSets.main.runtimeClasspath
+}
+
+task genSrc {
+    dependsOn genTs
+    doLast {
+        new File("$projectDir/src/main/resources", "application-generated.yml").text = "api-version: $version"
+        new File("$projectDir/ui/src/config", "ClientVersion.ts").text = "export const clientVersion = $version"
+    }
 }
 
 dependencies {
