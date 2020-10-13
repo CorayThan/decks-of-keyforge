@@ -221,23 +221,28 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                     <InfoBox title={"External listing — Be careful using this link!"} info={externalLink}/>
                     <InfoBox title={"Seller Details"} info={publicContactInfo}/>
                     <InfoBox title={"Shipping Cost"} info={shippingCost}/>
-                    <Box mx={2} mb={2}>
-                        {discord && (<DiscordUser discord={discord} style={{marginTop: spacing(2)}}/>)}
-                        {allowEmail ? (
-                            <SendEmailDialog
-                                deckName={deckName}
-                                recipientUsername={username}
-                                keyforgeId={keyforgeId}
-                            />
-                        ) : (
-                            <>
-                                {!forAuction && (
-                                    <Typography>Please login to send an email</Typography>
-                                )}
-                            </>
-                        )}
-                        {discord || allowEmail && (<Divider style={{marginTop: spacing(2)}}/>)}
+
+                    <Box mb={2} mx={2} display={"flex"} flexWrap={"wrap"} alignItems={"center"}>
+
+                        <DiscordUser discord={discord} style={{marginRight: spacing(2), marginTop: spacing(2)}}/>
+                        <Box mt={2}>
+                            {allowEmail ? (
+                                <SendEmailDialog
+                                    deckName={deckName}
+                                    recipientUsername={username}
+                                    keyforgeId={keyforgeId}
+                                />
+                            ) : (
+                                <>
+                                    {!forAuction && (
+                                        <Typography>Please login to send an email</Typography>
+                                    )}
+                                </>
+                            )}
+                        </Box>
                     </Box>
+
+                    <Divider/>
                     <div>
                         <Typography style={{margin: spacing(2, 2, 0)}} variant={"subtitle2"}>
                             {countryToLabel(forSaleInCountry)} – {startCase(language.toString().toLowerCase())} – {deckConditionReadableValue(condition)}
