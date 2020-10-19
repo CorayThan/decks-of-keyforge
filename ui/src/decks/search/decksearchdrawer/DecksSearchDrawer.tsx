@@ -11,35 +11,38 @@ import * as History from "history"
 import { computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../../components/KeyDrawer"
-import { SearchDrawerExpansionPanel } from "../../components/SearchDrawerExpansionPanel"
-import { SortDirectionView } from "../../components/SortDirectionView"
-import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
-import { log, Utils } from "../../config/Utils"
-import { expansionInfoMapNumbers } from "../../expansions/Expansions"
-import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../expansions/ExpansionSelectOrExclude"
-import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
-import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
-import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
-import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
-import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
-import { KeyButton } from "../../mui-restyled/KeyButton"
-import { KeyLink } from "../../mui-restyled/KeyLink"
-import { LinkButton } from "../../mui-restyled/LinkButton"
-import { NotesAndTagsSearch } from "../../notes/NotesAndTagsSearch"
-import { messageStore } from "../../ui/MessageStore"
-import { screenStore } from "../../ui/ScreenStore"
-import { userStore } from "../../user/UserStore"
-import { deckStore } from "../DeckStore"
-import { CreateForSaleQuery } from "../salenotifications/CreateForSaleQuery"
-import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../selects/DeckSortSelect"
-import { ConstraintDropdowns, FiltersConstraintsStore } from "./ConstraintDropdowns"
-import { DeckCardSelect } from "./DeckCardSelect"
-import { DeckFilters } from "./DeckFilters"
-import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
-import { DownloadDeckResults } from "./DownloadDeckResults"
+import { cardStore } from "../../../cards/CardStore"
+import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../../../components/KeyDrawer"
+import { SearchDrawerExpansionPanel } from "../../../components/SearchDrawerExpansionPanel"
+import { SortDirectionView } from "../../../components/SortDirectionView"
+import { keyLocalStorage } from "../../../config/KeyLocalStorage"
+import { spacing } from "../../../config/MuiConfig"
+import { Routes } from "../../../config/Routes"
+import { log } from "../../../config/Utils"
+import { expansionInfoMapNumbers } from "../../../expansions/Expansions"
+import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../../expansions/ExpansionSelectOrExclude"
+import { PatreonRewardsTier } from "../../../generated-src/PatreonRewardsTier"
+import { AuctionDeckIcon } from "../../../generic/icons/AuctionDeckIcon"
+import { SellDeckIcon } from "../../../generic/icons/SellDeckIcon"
+import { TradeDeckIcon } from "../../../generic/icons/TradeDeckIcon"
+import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../../houses/HouseSelectOrExclude"
+import { KeyButton } from "../../../mui-restyled/KeyButton"
+import { KeyLink } from "../../../mui-restyled/KeyLink"
+import { LinkButton } from "../../../mui-restyled/LinkButton"
+import { messageStore } from "../../../ui/MessageStore"
+import { screenStore } from "../../../ui/ScreenStore"
+import { userStore } from "../../../user/UserStore"
+import { deckStore } from "../../DeckStore"
+import { CreateForSaleQuery } from "../../salenotifications/CreateForSaleQuery"
+import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../../selects/DeckSortSelect"
+import { FiltersConstraintsStore } from "../ConstraintDropdowns"
+import { DeckCardSelectStore } from "../DeckCardSelect"
+import { DeckFilters } from "../DeckFilters"
+import { deckSearchFiltersStore } from "../DeckSearchFiltersStore"
+import { DownloadDeckResults } from "../DownloadDeckResults"
+import { DeckSearchDrawerCards } from "./DeckSearchDrawerCards"
+import { DeckSearchDrawerConstraints } from "./DeckSearchDrawerConstraints"
+import { DeckSearchDrawerTagsAndNotes } from "./DeckSearchDrawerTagsAndNotes"
 
 interface DecksSearchDrawerProps {
     location: History.Location
@@ -66,6 +69,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.props.filters.sort
     )
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
+    deckCardsStore = new DeckCardSelectStore(this.props.filters.cards)
 
     search = (event?: React.FormEvent, analyze?: boolean) => {
         if (event) {
@@ -75,6 +79,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
         filters.houses = this.selectedHouses.getHousesSelectedTrue()
         filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
+        filters.cards = this.deckCardsStore.cards
 
         if (!this.selectedHouses.validHouseSelection()) {
             messageStore.setWarningMessage("You may select up to 3 houses with houses excluded, and exclude all but 3.")
@@ -106,6 +111,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.props.filters.reset()
         this.constraintsStore.reset()
         this.selectedExpansions.reset()
+        this.deckCardsStore.reset()
         deckSearchFiltersStore.reset()
     }
 
@@ -137,6 +143,23 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.handleOtherValuesForSaleOrTrade()
     }
 
+    handleTagsUpdate = (tagIds: number[]) => {
+        this.props.filters.tags = tagIds
+    }
+
+    handleNotTagsUpdate = (tagIds: number[]) => {
+        this.props.filters.notTags = tagIds
+    }
+
+    handleNotesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.filters.notes = event.target.value
+        this.props.filters.notesUser = userStore.username == null ? "" : userStore.username
+    }
+    removeNotes = () => {
+        this.props.filters.notesUser = ""
+        this.props.filters.notes = ""
+    }
+
     private handleOtherValuesForSaleOrTrade = () => {
         const filters = this.props.filters
         if (!(filters.forSale || filters.forTrade || filters.forAuction)) {
@@ -162,7 +185,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     render() {
         const {
             title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade, forAuction,
-            forSaleInCountry, handleNotesUpdate, notes, notesUser, removeNotes, completedAuctions, teamDecks, withOwners
+            forSaleInCountry, notes, notesUser, completedAuctions, teamDecks, withOwners, handleMyPreviouslyOwnedDecksUpdate,
+            tags, notTags
         } = this.props.filters
 
         const analyze = this.props.location.pathname.includes(Routes.collectionStats)
@@ -176,44 +200,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const showMyDecks = userStore.loggedIn()
         const showDecksOwner = !!owner && owner !== userStore.username
 
-        const constraintOptions = [
-            "amberControl",
-            "expectedAmber",
-            "artifactControl",
-            "creatureControl",
-            "efficiency",
-            "disruption",
-            "effectivePower",
-            "rawAmber",
-            "bonusCapture",
-            "bonusDraw",
-            "aercScore",
-            "synergyRating",
-            "antisynergyRating",
-            "sasRating",
-            "creatureCount",
-            "actionCount",
-            "artifactCount",
-            "upgradeCount",
-            // "bonusDraw",
-            // "bonusCapture",
-            "powerLevel",
-            "chains",
-            "maverickCount",
-        ]
-        const hideMinMaxConstraintOptions = [
-            "listedWithinDays"
-        ]
-
-        if (forSale) {
-            constraintOptions.unshift("buyItNow")
-        }
-        if (forSale || forTrade) {
-            constraintOptions.unshift("listedWithinDays")
-        }
-
         const count = deckStore.decksCount?.count
         const analyzedCount = deckStore.collectionStats?.deckCount
+
+        log.debug("Rerender deck search drawer")
 
         return (
             <KeyDrawer version={analyze ? KeyDrawerVersion.ANALYSIS : KeyDrawerVersion.DECK}>
@@ -396,7 +386,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 style={{width: 136}}
                                             />
                                         )}
-                                        {userStore.username != null && ["Coraythan", "randomjoe", "dzky", "Zarathustra05"].includes(userStore.username) && (
+                                        {userStore.username != null && ["Coraythan", "Zarathustra05"].includes(userStore.username) && (
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
@@ -408,59 +398,45 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 style={{width: 136}}
                                             />
                                         )}
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.previousOwner === userStore.username}
+                                                    onChange={handleMyPreviouslyOwnedDecksUpdate}
+                                                    disabled={!showMyDecks}
+                                                />
+                                            }
+                                            label={<Typography variant={"body2"}>Previously Owned</Typography>}
+                                            style={{width: 136}}
+                                        />
                                     </div>
                                 </SearchDrawerExpansionPanel>
-                                <SearchDrawerExpansionPanel
+                                <DeckSearchDrawerTagsAndNotes
                                     initiallyOpen={notesUser.length > 0 || notes.length > 0 || !!keyLocalStorage.genericStorage.viewNotes}
-                                    title={"Notes"}
-                                >
-                                    <NotesAndTagsSearch
-                                        notesUser={notesUser}
-                                        notes={notes}
-                                        handleNotesUpdate={handleNotesUpdate}
-                                        removeNotes={removeNotes}
-                                        notesNotLike={this.props.filters.notNotes}
-                                        handleNotesNotLikeUpdate={() => this.props.filters.notNotes = !this.props.filters.notNotes}
-
-                                    />
-                                </SearchDrawerExpansionPanel>
+                                    viewNotes={!!keyLocalStorage.genericStorage.viewNotes}
+                                    loggedIn={userStore.loggedIn()}
+                                    updateViewNotes={keyLocalStorage.toggleViewNotes}
+                                    selectedTagIds={tags}
+                                    updateTagIds={this.handleTagsUpdate}
+                                    selectedNotTagIds={notTags}
+                                    updateNotTagIds={this.handleNotTagsUpdate}
+                                    notes={notes}
+                                    notesUser={notesUser}
+                                    handleNotesUpdate={this.handleNotesUpdate}
+                                    removeNotes={this.removeNotes}
+                                />
                                 <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()} title={"Houses"}>
                                     <HouseSelectOrExclude selectedHouses={this.selectedHouses} excludeTitle={true}/>
                                 </SearchDrawerExpansionPanel>
-                                <SearchDrawerExpansionPanel
-                                    initiallyOpen={this.constraintsStore.constraints.length > 0}
-                                    title={"Constraints"}
-                                    onClick={() => {
-                                        if (this.constraintsStore.constraints.length === 0) {
-                                            this.constraintsStore.addDefault()
-                                        }
-                                    }}
-                                >
-                                    <ConstraintDropdowns
-                                        store={this.constraintsStore}
-                                        properties={constraintOptions}
-                                        hideMinMax={hideMinMaxConstraintOptions}
-                                    />
-                                    {userStore.contentCreator && (
-                                        <TextField
-                                            label={"Min Adaptive Score"}
-                                            value={deckSearchFiltersStore.adaptiveScoreFilter?.toString() ?? ""}
-                                            type={"number"}
-                                            onChange={event => deckSearchFiltersStore.adaptiveScoreFilter = Utils.toNumberOrUndefined(event.target.value)}
-                                        />
-                                    )}
-                                </SearchDrawerExpansionPanel>
-                                <SearchDrawerExpansionPanel
-                                    initiallyOpen={cards.length > 0}
-                                    title={"Cards"}
-                                    onClick={() => {
-                                        if (cards.length === 0) {
-                                            cards.push({cardNames: [], quantity: 1, mav: false})
-                                        }
-                                    }}
-                                >
-                                    <DeckCardSelect cards={cards}/>
-                                </SearchDrawerExpansionPanel>
+                                <DeckSearchDrawerConstraints
+                                    store={this.constraintsStore}
+                                    forSale={!!forSale}
+                                    forTrade={forTrade}
+                                />
+                                <DeckSearchDrawerCards
+                                    store={this.deckCardsStore}
+                                    loading={cardStore.cardNames.length === 0}
+                                />
                                 <Divider style={{marginBottom: spacing(1)}}/>
                             </div>
                         </ListItem>
@@ -531,97 +507,97 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <Typography variant={"subtitle2"}>Counting ...</Typography>
                             </ListItem>
                         ) : null}
-                            <ListItem>
-                                <Box display={"flex"} alignItems={"center"}>
-                                    {userStore.loggedIn() && (
-                                        <Tooltip title={userStore.patron ? "" : "Become a patron to analyze decks!"}>
-                                            <div>
-                                                <LinkButton
-                                                    size={"small"}
-                                                    variant={"outlined"}
-                                                    href={analyze ? Routes.deckSearch(this.props.filters) : Routes.analyzeDeckSearch(this.props.filters)}
-                                                    disabled={!userStore.patron}
-                                                    style={{marginRight: spacing(2)}}
-                                                >
-                                                    {analyze ? "Search" : "Analyze"}
-                                                </LinkButton>
-                                            </div>
-                                        </Tooltip>
-                                    )}
-                                    {analyze ? (
-                                        <Tooltip title={"Max decks to analyze"}>
+                        <ListItem>
+                            <Box display={"flex"} alignItems={"center"}>
+                                {userStore.loggedIn() && (
+                                    <Tooltip title={userStore.patron ? "" : "Become a patron to analyze decks!"}>
+                                        <div>
+                                            <LinkButton
+                                                size={"small"}
+                                                variant={"outlined"}
+                                                href={analyze ? Routes.deckSearch(this.props.filters) : Routes.analyzeDeckSearch(this.props.filters)}
+                                                disabled={!userStore.patron}
+                                                style={{marginRight: spacing(2)}}
+                                            >
+                                                {analyze ? "Search" : "Analyze"}
+                                            </LinkButton>
+                                        </div>
+                                    </Tooltip>
+                                )}
+                                {analyze ? (
+                                    <Tooltip title={"Max decks to analyze"}>
+                                        <ToggleButtonGroup
+                                            value={keyLocalStorage.findAnalyzeCount()}
+                                            exclusive={true}
+                                            onChange={(event, size) => {
+                                                keyLocalStorage.updateGenericStorage({analyzeCount: size})
+                                                this.search(undefined, true)
+                                            }}
+                                            size={"small"}
+                                        >
+                                            <ToggleButton value={100}>
+                                                100
+                                            </ToggleButton>
+                                            <ToggleButton value={500}>
+                                                500
+                                            </ToggleButton>
+                                            {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
+                                                <ToggleButton value={1000}>
+                                                    1000
+                                                </ToggleButton>
+                                            )}
+                                            {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.MERCHANT_AEMBERMAKER) && (
+                                                <ToggleButton value={2500}>
+                                                    2500
+                                                </ToggleButton>
+                                            )}
+                                        </ToggleButtonGroup>
+                                    </Tooltip>
+                                ) : (
+                                    <>
+                                        <Tooltip title={"View type"}>
                                             <ToggleButtonGroup
-                                                value={keyLocalStorage.findAnalyzeCount()}
+                                                value={keyLocalStorage.deckListViewType}
+                                                exclusive={true}
+                                                onChange={(event, viewType) => {
+                                                    keyLocalStorage.setDeckListViewType(viewType)
+                                                }}
+                                                style={{marginRight: spacing(2)}}
+                                                size={"small"}
+                                            >
+                                                <ToggleButton value={"grid"}>
+                                                    <ViewModule/>
+                                                </ToggleButton>
+                                                <ToggleButton value={"graphs"}>
+                                                    <BarChart/>
+                                                </ToggleButton>
+                                                <ToggleButton value={"table"}>
+                                                    <ViewList/>
+                                                </ToggleButton>
+                                            </ToggleButtonGroup>
+                                        </Tooltip>
+                                        <Tooltip title={"Page size"}>
+                                            <ToggleButtonGroup
+                                                value={keyLocalStorage.deckPageSize}
                                                 exclusive={true}
                                                 onChange={(event, size) => {
-                                                    keyLocalStorage.updateGenericStorage({analyzeCount: size})
-                                                    this.search(undefined, true)
+                                                    keyLocalStorage.setDeckPageSize(size)
+                                                    this.search()
                                                 }}
                                                 size={"small"}
                                             >
+                                                <ToggleButton value={20}>
+                                                    20
+                                                </ToggleButton>
                                                 <ToggleButton value={100}>
                                                     100
                                                 </ToggleButton>
-                                                <ToggleButton value={500}>
-                                                    500
-                                                </ToggleButton>
-                                                {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
-                                                    <ToggleButton value={1000}>
-                                                        1000
-                                                    </ToggleButton>
-                                                )}
-                                                {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.MERCHANT_AEMBERMAKER) && (
-                                                    <ToggleButton value={2500}>
-                                                        2500
-                                                    </ToggleButton>
-                                                )}
                                             </ToggleButtonGroup>
                                         </Tooltip>
-                                    ) : (
-                                        <>
-                                            <Tooltip title={"View type"}>
-                                                <ToggleButtonGroup
-                                                    value={keyLocalStorage.deckListViewType}
-                                                    exclusive={true}
-                                                    onChange={(event, viewType) => {
-                                                        keyLocalStorage.setDeckListViewType(viewType)
-                                                    }}
-                                                    style={{marginRight: spacing(2)}}
-                                                    size={"small"}
-                                                >
-                                                    <ToggleButton value={"grid"}>
-                                                        <ViewModule/>
-                                                    </ToggleButton>
-                                                    <ToggleButton value={"graphs"}>
-                                                        <BarChart/>
-                                                    </ToggleButton>
-                                                    <ToggleButton value={"table"}>
-                                                        <ViewList/>
-                                                    </ToggleButton>
-                                                </ToggleButtonGroup>
-                                            </Tooltip>
-                                            <Tooltip title={"Page size"}>
-                                                <ToggleButtonGroup
-                                                    value={keyLocalStorage.deckPageSize}
-                                                    exclusive={true}
-                                                    onChange={(event, size) => {
-                                                        keyLocalStorage.setDeckPageSize(size)
-                                                        this.search()
-                                                    }}
-                                                    size={"small"}
-                                                >
-                                                    <ToggleButton value={20}>
-                                                        20
-                                                    </ToggleButton>
-                                                    <ToggleButton value={100}>
-                                                        100
-                                                    </ToggleButton>
-                                                </ToggleButtonGroup>
-                                            </Tooltip>
-                                        </>
-                                    )}
-                                </Box>
-                            </ListItem>
+                                    </>
+                                )}
+                            </Box>
+                        </ListItem>
                     </List>
                 </form>
             </KeyDrawer>

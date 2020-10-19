@@ -1,6 +1,8 @@
 package coraythan.keyswap.users
 
 import coraythan.keyswap.config.UnauthorizedException
+import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.patreon.levelAtLeast
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -28,6 +30,20 @@ class CurrentUserService(
         val userType = loggedInUser()?.type
         log.info("User type is $userType")
         return userType == UserType.ADMIN || userType == UserType.CONTENT_CREATOR
+    }
+
+    fun hasPatronLevelOrUnauthorized(tier: PatreonRewardsTier): KeyUser {
+        val user = loggedInUserOrUnauthorized()
+        check(user.realPatreonTier()?.levelAtLeast(tier) == true) {
+            throw UnauthorizedException("Insufficient patreon tier.")
+        }
+        return user
+    }
+
+    fun hasContributed() {
+        check(loggedInUser()?.contributedOrManual() == true) {
+            throw UnauthorizedException("Must have contributed to Patreon.")
+        }
     }
 
     fun contentCreatorOrUnauthorized() {

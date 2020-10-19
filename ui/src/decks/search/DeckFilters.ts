@@ -34,6 +34,22 @@ export class DeckFilters {
                 queryObject.expansions = [expansionAsNumber]
             }
         }
+        if (queryObject.tags != null) {
+            if (queryObject.tags.constructor === Array) {
+                queryObject.tags = queryObject.tags.map((expansion: string) => Number(expansion))
+            } else {
+                const asNumber = Number(queryObject.tags)
+                queryObject.tags = [asNumber]
+            }
+        }
+        if (queryObject.notTags != null) {
+            if (queryObject.notTags.constructor === Array) {
+                queryObject.notTags = queryObject.notTags.map((expansion: string) => Number(expansion))
+            } else {
+                const asNumber = Number(queryObject.notTags)
+                queryObject.notTags = [asNumber]
+            }
+        }
         if (queryObject.cards) {
             if (typeof queryObject.cards === "string") {
                 queryObject.cards = [queryObject.cards]
@@ -83,9 +99,6 @@ export class DeckFilters {
         if (queryObject.forSale != null) {
             queryObject.forSale = queryObject.forSale === "true"
         }
-        if (queryObject.notNotes != null) {
-            queryObject.notNotes = queryObject.notNotes === "true"
-        }
         if (queryObject.notForSale != null) {
             queryObject.notForSale = queryObject.notForSale === "true"
         }
@@ -122,7 +135,9 @@ export class DeckFilters {
     @observable
     notes = ""
     @observable
-    notNotes = false
+    tags: number[] = []
+    @observable
+    notTags: number[] = []
     @observable
     notesUser = ""
     page = 0
@@ -148,18 +163,18 @@ export class DeckFilters {
     myFavorites = false
     constraints: Constraint[] = []
     expansions: number[] = []
-    @observable
     cards: DeckCardQuantity[] = []
     @observable
     sortDirection: SortDirection = "DESC"
     @observable
     owner = ""
+    @observable
+    previousOwner = ""
     pageSize = 20
 
     reset = () => {
         this.title = ""
         this.notes = ""
-        this.notNotes = false
         this.notesUser = ""
         this.forSale = undefined
         this.notForSale = false
@@ -173,27 +188,30 @@ export class DeckFilters {
         this.constraints = []
         this.houses = []
         this.excludeHouses = []
+        this.tags = []
+        this.notTags = []
         this.sortDirection = "DESC"
         this.owner = ""
+        this.previousOwner = ""
         this.withOwners = false
         this.teamDecks = false
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
-    handleNotesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.notes = event.target.value
-        this.notesUser = userStore.username == null ? "" : userStore.username
-    }
-    removeNotes = () => {
-        this.notesUser = ""
-        this.notes = ""
-    }
     handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             const username = userStore.username
             this.owner = username ? username : ""
         } else {
             this.owner = ""
+        }
+    }
+    handleMyPreviouslyOwnedDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            const username = userStore.username
+            this.previousOwner = username ? username : ""
+        } else {
+            this.previousOwner = ""
         }
     }
     handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {

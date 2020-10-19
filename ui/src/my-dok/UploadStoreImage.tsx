@@ -3,8 +3,8 @@ import Typography from "@material-ui/core/Typography"
 import imageCompression from "browser-image-compression"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import { useState } from "react"
 import * as React from "react"
+import { useState } from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, Utils } from "../config/Utils"
@@ -83,6 +83,7 @@ export const UploadStoreImage = observer((props: UploadStoreImageProps) => {
                             }}
                             src={Routes.userContent(imageKey)}
                             style={{height: icon ? 48 : undefined, maxWidth: 400}}
+                            alt={icon ? "Store Icon" : "Store Banner"}
                         />
                     </Link>
                 </Box>
@@ -105,30 +106,6 @@ export const UploadStoreImage = observer((props: UploadStoreImageProps) => {
                                 sellerStore.addingStoreBanner = true
                             }
                             const imgFile = event.target.files[0]
-                            if (!icon) {
-                                const validateSize = async (file: File) => {
-                                    let img = new Image()
-                                    img.src = window.URL.createObjectURL(file)
-                                    img.onload = () => {
-                                        if (img.width === 100 && img.height === 100) {
-                                            alert("Correct size")
-                                            return true
-                                        }
-                                        alert("Incorrect size")
-                                        return true
-                                    }
-
-                                }
-
-
-                                const height = event.target.height
-                                const width = event.target.width
-                                log.info(`Found img height: ${height} width: ${width}`)
-                                if (width / height < 3) {
-                                    messageStore.setWarningMessage("Image is too tall for a banner. Please reduce height.")
-                                    return
-                                }
-                            }
 
                             try {
                                 const compressedImg = await imageCompression(imgFile, {

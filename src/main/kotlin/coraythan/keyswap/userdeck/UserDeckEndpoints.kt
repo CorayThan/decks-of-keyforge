@@ -30,6 +30,9 @@ class UserDeckEndpoints(
     @PostMapping("/{id}/unowned")
     fun unowned(@PathVariable id: Long) = userDeckService.markAsOwned(id, false)
 
+    @PostMapping("/{id}/not-previously-owned")
+    fun removePreviuslyOwned(@PathVariable id: Long) = userDeckService.removePreviouslyOwned(id)
+
     @GetMapping("/for-user")
     fun findAllForUser() = userDeckService.findAllForUser()
 

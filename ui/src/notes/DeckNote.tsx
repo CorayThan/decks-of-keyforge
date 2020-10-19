@@ -12,15 +12,17 @@ import { userDeckStore } from "../userdeck/UserDeckStore"
 @observer
 export class ToggleDeckNotesMenuItem extends React.Component<{ onClick: () => void }> {
 
+    updateViewNotes = () => {
+        keyLocalStorage.toggleViewNotes()
+        this.props.onClick()
+    }
+
     render() {
         const notesVisible = keyLocalStorage.genericStorage.viewNotes
         return (
             <>
                 <MenuItem
-                    onClick={() => {
-                        keyLocalStorage.updateGenericStorage({viewNotes: !notesVisible})
-                        this.props.onClick()
-                    }}
+                    onClick={this.updateViewNotes}
                 >
                     {notesVisible ? "Hide Notes" : "Show Notes"}
                 </MenuItem>

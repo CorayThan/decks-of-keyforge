@@ -133,8 +133,8 @@ export class Utils {
         }
         const cardNameClean = cardName
             .toLowerCase()
-            .replaceAll("æ", "ae")
-            .replaceAll(/\W+/g, "")
+            .replace(/æ/g, "ae")
+            .replace(/\W+/g, "")
 
         const searchTokenized = Utils.tokenizeCardSearch(search)
 
@@ -150,7 +150,7 @@ export class Utils {
     static tokenizeCardSearch = (search: string) => {
         return search
             .toLowerCase()
-            .replaceAll(/\W+/g, " ")
+            .replace(/\W+/g, " ")
             .split(" ")
             .filter(token => token.length > 2)
     }

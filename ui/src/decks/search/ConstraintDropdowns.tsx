@@ -5,6 +5,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
+import { Utils } from "../../config/Utils"
 
 export enum Cap {
     MIN = "MIN",
@@ -19,6 +20,9 @@ export class FiltersConstraintsStore {
 
     constructor(initialConstraints?: Constraint[]) {
         this.constraints = initialConstraints ? initialConstraints : []
+        if (initialConstraints == null || initialConstraints.length === 0) {
+            this.addDefault()
+        }
     }
 
     reset = () => this.constraints = []
@@ -32,6 +36,16 @@ export class FiltersConstraintsStore {
             value: "0"
         })
     }
+
+    isDefaultConstraints = () => {
+        return Utils.equals(this.constraints, this.defaultConstraints())
+    }
+
+    private defaultConstraints = () => [{
+        property: "",
+        cap: Cap.MIN,
+        value: "0"
+    }]
 }
 
 export interface ConstraintDropdownsProps {

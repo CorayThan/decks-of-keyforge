@@ -55,20 +55,24 @@ data class ForSaleQuery(
         val id: UUID? = null
 
 ) : DeckQuery {
-        override val notes: String
-                get() = ""
-        override val notesUser: String
-                get() = ""
-        override val notForSale: Boolean
-                get() = false
-        override val myFavorites: Boolean
-                get() = false
-        override val completedAuctions: Boolean
-                get() = false
-        override val withOwners: Boolean
-                get() = false
-        override val teamDecks: Boolean
-                get() = false
-        override val notNotes: Boolean
-                get() = false
+    override val notes: String
+        get() = ""
+    override val notesUser: String
+        get() = ""
+    override val notForSale: Boolean
+        get() = false
+    override val myFavorites: Boolean
+        get() = false
+    override val completedAuctions: Boolean
+        get() = false
+    override val withOwners: Boolean
+        get() = false
+    override val teamDecks: Boolean
+        get() = false
+    override val previousOwner: String
+        get() = ""
+    override val tags: List<Long>
+        get() = listOf()
+    override val notTags: List<Long>
+        get() = listOf()
 }

@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.15"
+export const latestVersion = "5.16"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,23 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.16"}
+                    date={"10/16/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Custom Deck Tags",
+                            note: "Patrons can now create tags on their decks to filter decks by custom tags. Paid Patrons can also create public " +
+                                "collections of decks that anyone can look at, to help the community track tournament winning decks, etc."
+                        },
+                        {
+                            highlight: "Previously Owned Decks",
+                            note: "DoK now tracks your previously owned decks. For a deck to be included, it just needs to be marked as owned, " +
+                                "then unmarked as owned."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.15"}
                     date={"10/10/2020"}

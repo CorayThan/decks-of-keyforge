@@ -12,6 +12,8 @@ import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
+import coraythan.keyswap.tags.DeckTag
+import coraythan.keyswap.userdeck.PreviouslyOwnedDeck
 import coraythan.keyswap.userdeck.UserDeck
 import org.hibernate.annotations.Type
 import java.time.LocalDate
@@ -84,6 +86,14 @@ data class Deck(
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         val userDecks: List<UserDeck> = listOf(),
+
+        @JsonIgnoreProperties("deck")
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        val previouslyOwnedDecks: List<PreviouslyOwnedDeck> = listOf(),
+
+        @JsonIgnoreProperties("deck")
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        val tags: List<DeckTag> = listOf(),
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY)

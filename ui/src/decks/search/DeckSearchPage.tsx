@@ -21,8 +21,8 @@ import { deckStore } from "../DeckStore"
 import { DeckTableView } from "../DeckTableView"
 import { DeckUtils } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
+import { DecksSearchDrawer } from "./decksearchdrawer/DecksSearchDrawer"
 import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
-import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 

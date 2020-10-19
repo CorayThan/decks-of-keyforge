@@ -14,6 +14,7 @@ import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,7 +27,8 @@ class UserDeckService(
         private val deckRepo: DeckRepo,
         private val userSearchService: UserSearchService,
         private val userDeckRepo: UserDeckRepo,
-        private val deckListingRepo: DeckListingRepo
+        private val deckListingRepo: DeckListingRepo,
+        private val previouslyOwnedDeckRepo: PreviouslyOwnedDeckRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -87,7 +89,24 @@ class UserDeckService(
                     teamId = if (mark && team != null) team.id else null
             )
         }
+        if (mark) {
+            if (previouslyOwnedDeckRepo.existsByDeckIdAndPreviousOwnerId(deckId, user.id)) {
+                previouslyOwnedDeckRepo.deleteByDeckIdAndPreviousOwnerId(deckId, user.id)
+            }
+        } else {
+            val deck = deckRepo.findByIdOrNull(deckId)
+            if (deck != null) {
+                previouslyOwnedDeckRepo.save(PreviouslyOwnedDeck(user, deck))
+            }
+        }
         userSearchService.scheduleUserForUpdate(user)
+    }
+
+    fun removePreviouslyOwned(deckId: Long) {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        if (previouslyOwnedDeckRepo.existsByDeckIdAndPreviousOwnerId(deckId, user.id)) {
+            previouslyOwnedDeckRepo.deleteByDeckIdAndPreviousOwnerId(deckId, user.id)
+        }
     }
 
     private fun modOrCreateUserDeck(

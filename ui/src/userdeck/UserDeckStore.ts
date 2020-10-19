@@ -43,6 +43,13 @@ export class UserDeckStore {
             })
     }
 
+    notPreviouslyOwned = (deckName: string, deckId: number) => {
+        axios.post(`${UserDeckStore.CONTEXT}/${deckId}/not-previously-owned`)
+            .then(() => {
+                messageStore.setSuccessMessage(`Removed ${deckName} from your previously owned decks.`)
+            })
+    }
+
     updateNotes = (notes: string, deckId: number, deckName?: string) => {
         return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
             .then(() => {

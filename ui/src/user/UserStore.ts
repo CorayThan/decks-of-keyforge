@@ -16,6 +16,7 @@ import { UserProfile } from "../generated-src/UserProfile"
 import { UserProfileUpdate } from "../generated-src/UserProfileUpdate"
 import { UserRegistration } from "../generated-src/UserRegistration"
 import { UserType } from "../generated-src/UserType"
+import { tagStore } from "../tags/TagStore"
 import { findPatronRewardLevel, patronForSaleLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -115,16 +116,15 @@ export class UserStore {
     }
 
     login = (userLogin: UserLogin) => {
+        log.info("user store login")
+        log.info("user store login")
         this.loginInProgress = true
         axiosWithoutErrors
             .post(UserStore.CONTEXT + "/login", userLogin)
             .then((response: AxiosResponse) => {
                 log.info("Logged in!")
                 keyLocalStorage.saveAuthKey(response.headers.authorization)
-                this.loadLoggedInUser()
-                userDeckStore.findAllForUser()
-                deckListingStore.findListingsForUser(false)
-                deckOwnershipStore.findOwnedDecks()
+                this.loadUserInfo()
             })
             .catch((error: AxiosError) => {
                 this.loginInProgress = false
@@ -136,6 +136,16 @@ export class UserStore {
                     messageStore.setRequestErrorMessage()
                 }
             })
+    }
+
+    loadUserInfo = async () => {
+        userDeckStore.findAllForUser()
+        deckListingStore.findListingsForUser(false)
+        deckOwnershipStore.findOwnedDecks()
+        await this.loadLoggedInUser()
+        if (this.patron) {
+            tagStore.findMyTags()
+        }
     }
 
     agreedToTerms = () => {
@@ -370,7 +380,7 @@ export class UserStore {
     @computed
     get deckNotificationsAllowed(): boolean {
         if (this.user) {
-            return findPatronRewardLevel(this.user.patreonTier) > 1
+            return this.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION)
         }
         return false
     }

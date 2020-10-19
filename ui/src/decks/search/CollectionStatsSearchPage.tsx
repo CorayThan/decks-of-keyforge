@@ -12,8 +12,8 @@ import { userStore } from "../../user/UserStore"
 import { CollectionStatsView } from "../collectionstats/CollectionStatsView"
 import { deckStore } from "../DeckStore"
 import { DeckFilters } from "./DeckFilters"
+import { DecksSearchDrawer } from "./decksearchdrawer/DecksSearchDrawer"
 import { DeckSearchContainerProps } from "./DeckSearchPage"
-import { DecksSearchDrawer } from "./DecksSearchDrawer"
 
 export class CollectionStatsSearchPage extends React.Component<RouteComponentProps> {
 

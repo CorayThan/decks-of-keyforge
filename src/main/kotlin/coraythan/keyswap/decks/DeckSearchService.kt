@@ -16,6 +16,8 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.tags.KTagRepo
+import coraythan.keyswap.tags.PublicityType
 import coraythan.keyswap.tokenize
 import coraythan.keyswap.userdeck.QUserDeck
 import coraythan.keyswap.userdeck.UserDeckRepo
@@ -37,12 +39,13 @@ class DeckSearchService(
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
         private val userDeckRepo: UserDeckRepo,
+        private val tagRepo: KTagRepo,
         private val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
     private val query = JPAQueryFactory(entityManager)
-    private val specialUsers = setOf("coraythan", "randomjoe", "dzky", "zarathustra05").map { it.toLowerCase() }
+    private val specialUsers = setOf("coraythan", "zarathustra05").map { it.toLowerCase() }
 
     var deckCount: Long? = null
 
@@ -243,6 +246,15 @@ class DeckSearchService(
             }
         }
 
+        filters.tags.forEach {
+            canAccessTag(it, userHolder.user?.id)
+            predicate.and(deckQ.tags.any().tag.id.eq(it))
+        }
+        filters.notTags.forEach {
+            canAccessTag(it, userHolder.user?.id)
+            predicate.andNot(deckQ.tags.any().tag.id.eq(it))
+        }
+
         if (filters.notes.isNotBlank()) {
             val username = if (filters.notesUser.isNotBlank()) {
                 filters.notesUser
@@ -261,6 +273,16 @@ class DeckSearchService(
                                     )
                     )
             )
+        }
+
+        if (filters.previousOwner.isNotBlank()) {
+            val user = userHolder.user
+            if (userHolder.user?.username == filters.previousOwner && user != null) {
+                // it's me
+                predicate.and(deckQ.previouslyOwnedDecks.any().previousOwner.eq(user))
+            } else {
+                throw UnauthorizedException("You cannot view other users' previously owned decks.")
+            }
         }
 
         if (filters.owner.isNotBlank()) {
@@ -485,6 +507,17 @@ class DeckSearchService(
                             synergies = DeckSynergyService.fromDeckWithCards(it, cards)
                     )
                 }
+    }
+
+    private fun canAccessTag(tagId: Long, userId: UUID?) {
+        val canAccess = if (userId == null) {
+            tagRepo.existsByIdAndPublicityTypeNot(tagId, PublicityType.PRIVATE)
+        } else {
+            tagRepo.existsByIdAndNotPrivateOrCreatorId(tagId, userId)
+        }
+        if (!canAccess) {
+            throw BadRequestException("You do not have permission to view decks with this tag.")
+        }
     }
 
 }

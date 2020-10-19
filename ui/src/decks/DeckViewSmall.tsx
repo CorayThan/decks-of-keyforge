@@ -29,6 +29,7 @@ import { HouseLabel } from "../houses/HouseUtils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { InlineDeckNote } from "../notes/DeckNote"
+import { DeckTagsView } from "../tags/DeckTagsView"
 import { screenStore } from "../ui/ScreenStore"
 import { OwnersList } from "../userdeck/OwnersList"
 import { userDeckStore } from "../userdeck/UserDeckStore"
@@ -106,6 +107,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 <DisplayAllCardsByHouse deck={deck} compact={compact}/>
                                 <OwnersList owners={owners}/>
                                 <Collapse in={viewNotes}>
+                                    {viewNotes && <DeckTagsView deckId={deck.id}/>}
                                     <InlineDeckNote id={deck.id}/>
                                 </Collapse>
                             </CardContent>

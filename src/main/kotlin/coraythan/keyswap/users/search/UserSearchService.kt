@@ -45,14 +45,14 @@ class UserSearchService(
     fun updateUserStats() {
         try {
             log.info("$scheduledStart update user stats.")
-            var count = 0
+            var count: Int
             var generationTime: Long = 0
             val userUpdateTime = measureTimeMillis {
                 val users = userRepo.findTop100ByUpdateStatsTrue()
                 count = users.size
                 users
                         .forEach {
-                            var dataNullable: UserSearchResult? = null
+                            var dataNullable: UserSearchResult?
                             val singleGenTime = measureTimeMillis {
                                 dataNullable = it.generateSearchResult()
                             }

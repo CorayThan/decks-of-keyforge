@@ -6,7 +6,7 @@ import { spacing } from "../config/MuiConfig"
 import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
 import { TeamInviteInfo } from "../generated-src/TeamInviteInfo"
 import { HelperText } from "../generic/CustomTypographies"
-import { BecomeAPatron } from "../thirdpartysites/patreon/BecomeAPatron"
+import { PatreonRequired } from "../thirdpartysites/patreon/PatreonRequired"
 import { userStore } from "../user/UserStore"
 import { teamStore } from "./TeamStore"
 
@@ -92,9 +92,10 @@ export const TeamInvitesPage = observer((props: { invites: TeamInviteInfo[] }) =
                                 </div>
                             </div>
                         ) : (
-                            <BecomeAPatron>
-                                Become a $6 a month patron to form a team!
-                            </BecomeAPatron>
+                            <PatreonRequired
+                                requiredLevel={PatreonRewardsTier.SUPPORT_SOPHISTICATION}
+                                message={"Become a $6 a month patron to form a team!"}
+                            />
                         )}
                     </Paper>
                 </Grid>

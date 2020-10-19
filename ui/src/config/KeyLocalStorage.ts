@@ -149,6 +149,10 @@ class KeyLocalStorage {
         }
     }
 
+    toggleViewNotes = () => {
+        keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
+    }
+
     clear = () => {
         log.debug("Clearing auth related local storage")
         this.localStorage.removeItem(Keys.AUTH)

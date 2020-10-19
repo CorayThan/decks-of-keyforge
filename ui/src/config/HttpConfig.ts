@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { messageStore } from "../ui/MessageStore"
+import { clientVersion } from "./ClientVersion"
 import { keyLocalStorage } from "./KeyLocalStorage"
 import { monitoring } from "./Monitoring"
 import { log } from "./Utils"
@@ -38,7 +39,8 @@ export class HttpConfig {
         }
         const newApiVersion = response.headers["api-version"]
         if (newApiVersion != null && newApiVersion != apiVersion) {
-            log.info("new api version " + newApiVersion)
+            log.info("client version " + clientVersion)
+            log.info("api version " + newApiVersion)
             apiVersion = newApiVersion
             monitoring.setApiVersionTag(newApiVersion)
         }

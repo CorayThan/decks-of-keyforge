@@ -3,8 +3,9 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { ForSaleQueryTable } from "../decks/salenotifications/ForSaleQueryTable"
+import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
 import { Loader } from "../mui-restyled/Loader"
-import { BecomeAPatron } from "../thirdpartysites/patreon/BecomeAPatron"
+import { PatreonRequired } from "../thirdpartysites/patreon/PatreonRequired"
 import { userStore } from "../user/UserStore"
 
 @observer
@@ -17,17 +18,15 @@ export class MyNotifications extends React.Component {
     render() {
         const forSaleQueries = forSaleNotificationsStore.queries
 
-        const notifsAllowed = userStore.deckNotificationsAllowed
-
         if (forSaleQueries == null || userStore.loginInProgress) {
             return <Loader/>
         }
 
-        if (!notifsAllowed) {
+        if (!userStore.deckNotificationsAllowed) {
             return (
-                <BecomeAPatron>
-                    Become a $6 a month patron to create notifications when decks you want are listed for sale!
-                </BecomeAPatron>
+                <PatreonRequired
+                    requiredLevel={PatreonRewardsTier.SUPPORT_SOPHISTICATION}
+                />
             )
         }
 

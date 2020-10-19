@@ -10,8 +10,9 @@ interface DeckQuery {
     val excludeHouses: Set<House>?
     val title: String
     val notes: String
-    val notNotes: Boolean
     val notesUser: String
+    val tags: List<Long>
+    val notTags: List<Long>
 
     val notForSale: Boolean
     val forSale: Boolean?
@@ -28,6 +29,7 @@ interface DeckQuery {
     val cards: List<DeckCardQuantity>
 
     val owner: String
+    val previousOwner: String
 }
 
 data class DeckFilters(
@@ -35,8 +37,9 @@ data class DeckFilters(
         override val excludeHouses: Set<House> = setOf(),
         override val title: String = "",
         override val notes: String = "",
-        override val notNotes: Boolean = false,
         override val notesUser: String = "",
+        override val tags: List<Long> = listOf(),
+        override val notTags: List<Long> = listOf(),
 
         val page: Long = 0,
 
@@ -56,6 +59,7 @@ data class DeckFilters(
         override val cards: List<DeckCardQuantity> = listOf(),
 
         override val owner: String = "",
+        override val previousOwner: String = "",
         val pageSize: Long = 20,
 
         val sort: DeckSortOptions = DeckSortOptions.SAS_RATING,
@@ -65,7 +69,7 @@ data class DeckFilters(
 }
 
 @GenerateTs
-data class  DeckCardQuantity(
+data class DeckCardQuantity(
         val cardNames: List<String>,
         val quantity: Int,
         val house: House? = null,

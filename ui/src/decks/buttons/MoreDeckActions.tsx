@@ -1,11 +1,14 @@
 import { IconButton } from "@material-ui/core"
 import Menu from "@material-ui/core/Menu"
+import MenuItem from "@material-ui/core/MenuItem"
 import { MoreVert } from "@material-ui/icons"
 import * as React from "react"
+import { useLocation } from "react-router-dom"
 import { ReportPurchaseButton } from "../../auctions/purchases/ReportPurchaseButton"
 import { CardsForDeck } from "../../cards/CardsForDeck"
 import { ToggleDeckNotesMenuItem } from "../../notes/DeckNote"
 import { userStore } from "../../user/UserStore"
+import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { deckStore } from "../DeckStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckActionClickable } from "./DeckActionClickable"
@@ -23,6 +26,9 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
     const handleClose = () => {
         setAnchorEl(null)
     }
+
+    const location = useLocation()
+    const username = userStore.username
 
     return (
         <>
@@ -50,6 +56,16 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                     >
                         Refresh MV Wins
                     </DeckActionClickable>
+                )}
+                {username != null && location.search.includes(`previousOwner=${username}`) && (
+                    <MenuItem
+                        onClick={() => {
+                            userDeckStore.notPreviouslyOwned(deck.name, deck.id)
+                            handleClose()
+                        }}
+                    >
+                        Not Previously Owned
+                    </MenuItem>
                 )}
             </Menu>
         </>

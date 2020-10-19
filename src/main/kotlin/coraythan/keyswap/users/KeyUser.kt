@@ -9,6 +9,7 @@ import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.tags.KTag
 import coraythan.keyswap.teams.Team
 import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.users.search.UserSearchResult
@@ -53,6 +54,10 @@ data class KeyUser(
         @JsonIgnoreProperties("user")
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val decks: List<UserDeck> = listOf(),
+
+        @JsonIgnoreProperties("creator")
+        @OneToMany(mappedBy = "creator", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        val tags: List<KTag> = listOf(),
 
         @JsonIgnoreProperties("user")
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
