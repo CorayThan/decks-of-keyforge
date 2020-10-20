@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.16"
+export const latestVersion = "5.19"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -44,13 +44,13 @@ export class ReleaseNotes extends React.Component {
                 </Paper>
                 <ReleaseNote
                     releaseNumber={"5.16"}
-                    date={"10/16/2020"}
+                    date={"10/19/2020"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
                             highlight: "Custom Deck Tags",
                             note: "Patrons can now create tags on their decks to filter decks by custom tags. Paid Patrons can also create public " +
-                                "collections of decks that anyone can look at, to help the community track tournament winning decks, etc."
+                                "collections of decks that anyone can look at to help the community track tournament winning decks, etc."
                         },
                         {
                             highlight: "Previously Owned Decks",

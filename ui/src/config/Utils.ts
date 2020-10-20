@@ -20,6 +20,7 @@ export class Utils {
     private static readonly readableDateFormat = "MMM d, yyyy"
     static readonly localDateFormat = "yyyy-MM-dd"
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
+    static readonly dateTimeFormat = "yyyy-MM-dd'T'HH:mm"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
     static pseudoUuid = () => {
@@ -59,6 +60,10 @@ export class Utils {
         return format(Utils.parseZonedDateTime(date), Utils.readableDateFormat)
     }
 
+    static formatDateTimeToDate = (date: string) => {
+        return format(Utils.parseDateTime(date), Utils.readableDateFormat)
+    }
+
     static formatDate = (date: string) => {
         try {
             return format(Utils.parseLocalDate(date), Utils.readableDateFormat)
@@ -70,6 +75,7 @@ export class Utils {
 
     static parseLocalDate = (date: string) => parse(date, Utils.localDateFormat, new Date())
     static parseZonedDateTime = (date: string) => parse(date, Utils.zonedDateTimeFormat, new Date())
+    static parseDateTime = (date: string) => parse(date, Utils.dateTimeFormat, new Date())
 
     static nowDateString = () => format(new Date(), Utils.localDateFormat)
 

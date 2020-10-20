@@ -76,6 +76,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         }
 
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes
+        const viewTags = !hideActions && keyLocalStorage.genericStorage.viewTags
 
         return (
             <div>
@@ -106,8 +107,10 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 </KeyLink>
                                 <DisplayAllCardsByHouse deck={deck} compact={compact}/>
                                 <OwnersList owners={owners}/>
+                                <Collapse in={viewTags}>
+                                    <DeckTagsView deckId={deck.id}/>
+                                </Collapse>
                                 <Collapse in={viewNotes}>
-                                    {viewNotes && <DeckTagsView deckId={deck.id}/>}
                                     <InlineDeckNote id={deck.id}/>
                                 </Collapse>
                             </CardContent>

@@ -31,6 +31,7 @@ import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
 import { SpoilerPage } from "../spoilers/SpoilerPage"
 import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
+import { TagSearchPage } from "../tags/TagSearchPage"
 import { SnackMessage } from "../ui/MessageStore"
 import { CodeOfConduct } from "../user/CodeOfConduct"
 import { ProfilePage } from "../user/ProfilePage"
@@ -71,6 +72,7 @@ class Routes {
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
+    static tags = "/tags"
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
@@ -249,6 +251,10 @@ const KeyRouter = observer(() => {
                     <Route
                         path={Routes.decks}
                         component={DeckSearchPage}
+                    />
+                    <Route
+                        path={Routes.tags}
+                        component={TagSearchPage}
                     />
                     <Route
                         path={Routes.users}

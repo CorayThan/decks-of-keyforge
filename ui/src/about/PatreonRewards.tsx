@@ -80,6 +80,7 @@ export class PatreonRewards extends React.Component {
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Dark mode",
                             "Analyze collections of decks up to 500",
+                            "Create tags for decks and search those tags",
                             "List decks for sale or trade for up to 1 year",
                             "List up to 250 decks for sale. (Free maximum is 100.)",
                             "Create auctions or public offer-based sale listings",

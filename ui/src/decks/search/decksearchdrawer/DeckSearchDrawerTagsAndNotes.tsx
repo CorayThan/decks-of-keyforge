@@ -19,8 +19,10 @@ import { tagStore } from "../../../tags/TagStore"
 interface DeckSearchDrawerTagsAndNotesProps {
     initiallyOpen: boolean
     viewNotes: boolean
+    viewTags: boolean
     loggedIn: boolean
     updateViewNotes: () => void
+    updateViewTags: () => void
     selectedTagIds: number[]
     updateTagIds: (tagIds: number[]) => void
     selectedNotTagIds: number[]
@@ -34,6 +36,7 @@ interface DeckSearchDrawerTagsAndNotesProps {
 const checkEquality = (prevProps: DeckSearchDrawerTagsAndNotesProps, nextProps: DeckSearchDrawerTagsAndNotesProps) => {
     return prevProps.initiallyOpen === nextProps.initiallyOpen &&
         prevProps.viewNotes === nextProps.viewNotes &&
+        prevProps.viewTags === nextProps.viewTags &&
         prevProps.loggedIn === nextProps.loggedIn &&
         isEqual(prevProps.selectedTagIds, nextProps.selectedTagIds) &&
         isEqual(prevProps.selectedNotTagIds, nextProps.selectedNotTagIds) &&
@@ -43,7 +46,7 @@ const checkEquality = (prevProps: DeckSearchDrawerTagsAndNotesProps, nextProps: 
 
 export const DeckSearchDrawerTagsAndNotes = memo((props: DeckSearchDrawerTagsAndNotesProps) => {
     const {
-        initiallyOpen, viewNotes, loggedIn, updateViewNotes, selectedTagIds, updateTagIds, selectedNotTagIds,
+        initiallyOpen, viewNotes, viewTags, loggedIn, updateViewNotes, updateViewTags, selectedTagIds, updateTagIds, selectedNotTagIds,
         updateNotTagIds, notes, notesUser, handleNotesUpdate, removeNotes
     } = props
 
@@ -60,15 +63,24 @@ export const DeckSearchDrawerTagsAndNotes = memo((props: DeckSearchDrawerTagsAnd
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={viewNotes}
-                                    onChange={updateViewNotes}
+                                    checked={viewTags}
+                                    onChange={updateViewTags}
                                 />
                             }
-                            label={<Typography variant={"body2"} noWrap={true}>View Tags & Notes</Typography>}
+                            label={<Typography variant={"body2"} noWrap={true}>View Tags</Typography>}
                             style={{flexGrow: 1}}
                         />
                         <ManageTagsButton/>
                     </Box>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={viewNotes}
+                                onChange={updateViewNotes}
+                            />
+                        }
+                        label={<Typography variant={"body2"} noWrap={true}>View Notes</Typography>}
+                    />
                     <SelectTags
                         selectedTagIds={selectedTagIds}
                         handleTagsUpdate={updateTagIds}
@@ -104,9 +116,7 @@ const PublicTagsSearched = observer((props: { tags: number[], notTags: number[] 
 
     const {tags, notTags} = props
 
-    log.info("Search public tags render")
     useEffect(() => {
-        log.info("Search public tags")
         tagStore.findSearchTags(tags.concat(notTags))
     }, [tags, notTags])
 

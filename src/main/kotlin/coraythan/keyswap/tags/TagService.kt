@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
 
+@Transactional
 @Service
 class TagService(
         private val currentUserService: CurrentUserService,
@@ -38,9 +40,12 @@ class TagService(
     }
 
     fun viewedTag(id: Long) {
-        val tag = tagRepo.findByIdOrNull(id)
-        if (tag != null) {
-            tagRepo.save(tag.copy(views = tag.views + 1, viewsThisMonth = tag.viewsThisMonth + 1, lastSeen = nowLocal()))
+        val user = currentUserService.loggedInUser()
+        if (user != null) {
+            val tag = tagRepo.findByIdOrNull(id)
+            if (tag != null && tag.creator.id != user.id) {
+                tagRepo.save(tag.copy(views = tag.views + 1, viewsThisMonth = tag.viewsThisMonth + 1, lastSeen = nowLocal()))
+            }
         }
     }
 

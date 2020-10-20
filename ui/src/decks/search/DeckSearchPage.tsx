@@ -8,11 +8,13 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
+import { log, Utils } from "../../config/Utils"
 import { SellerDetails } from "../../generated-src/SellerDetails"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerBanner } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
+import { tagStore } from "../../tags/TagStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
@@ -56,6 +58,15 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
         const defaultSearch = new DeckFilters()
         defaultSearch.reset()
         deckStore.searchDecks(filters)
+
+        if (keyLocalStorage.hasAuthKey() && filters.tags.length === 1) {
+            const filtersOnlyTag = new DeckFilters()
+            filtersOnlyTag.tags = filters.tags
+            if (Utils.equals(filters, filtersOnlyTag)) {
+                log.info("Tag viewed")
+                tagStore.viewedTag(filters.tags[0])
+            }
+        }
     }
 
     render() {

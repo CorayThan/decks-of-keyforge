@@ -17,10 +17,21 @@ export class ToggleDeckNotesMenuItem extends React.Component<{ onClick: () => vo
         this.props.onClick()
     }
 
+    updateViewTags = () => {
+        keyLocalStorage.toggleViewTags()
+        this.props.onClick()
+    }
+
     render() {
         const notesVisible = keyLocalStorage.genericStorage.viewNotes
+        const tagsVisible = keyLocalStorage.genericStorage.viewTags
         return (
             <>
+                <MenuItem
+                    onClick={this.updateViewTags}
+                >
+                    {tagsVisible ? "Hide Tags" : "Show Tags"}
+                </MenuItem>
                 <MenuItem
                     onClick={this.updateViewNotes}
                 >

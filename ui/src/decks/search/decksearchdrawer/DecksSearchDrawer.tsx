@@ -203,8 +203,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const count = deckStore.decksCount?.count
         const analyzedCount = deckStore.collectionStats?.deckCount
 
-        log.debug("Rerender deck search drawer")
-
         return (
             <KeyDrawer version={analyze ? KeyDrawerVersion.ANALYSIS : KeyDrawerVersion.DECK}>
                 <form onSubmit={this.search}>
@@ -414,8 +412,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <DeckSearchDrawerTagsAndNotes
                                     initiallyOpen={notesUser.length > 0 || notes.length > 0 || !!keyLocalStorage.genericStorage.viewNotes}
                                     viewNotes={!!keyLocalStorage.genericStorage.viewNotes}
+                                    viewTags={!!keyLocalStorage.genericStorage.viewTags}
                                     loggedIn={userStore.loggedIn()}
                                     updateViewNotes={keyLocalStorage.toggleViewNotes}
+                                    updateViewTags={keyLocalStorage.toggleViewTags}
                                     selectedTagIds={tags}
                                     updateTagIds={this.handleTagsUpdate}
                                     selectedNotTagIds={notTags}

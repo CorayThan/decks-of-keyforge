@@ -12,6 +12,7 @@ object TimeUtils {
     val nonreadableLocalDateFormatterWithYear = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val localDateTimeFormatterWithYear = DateTimeFormatter.ofPattern("MMM d, YYYY, h:mm a")
     val zonedDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'")
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
 
     init {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))

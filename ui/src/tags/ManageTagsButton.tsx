@@ -77,11 +77,15 @@ export class ManageTagsButton extends React.Component {
                     >
                         <DialogTitle>Manage Tags</DialogTitle>
                         <DialogContent>
-                            <Typography variant={"subtitle1"} style={{marginBottom: spacing(1)}}>Delete Tags</Typography>
+                            <Typography variant={"subtitle1"}>Delete Tags</Typography>
                             <Box display={"flex"} flexWrap={"wrap"}>
                                 {tagStore.myTags?.map(tag => {
                                     return (
-                                        <TagDeletePill key={tag.id} tag={tag} style={{marginRight: spacing(2)}}/>
+                                        <TagDeletePill
+                                            key={tag.id}
+                                            tag={tag}
+                                            style={{marginTop: spacing(1), marginRight: spacing(1)}}
+                                        />
                                     )
                                 })}
                             </Box>

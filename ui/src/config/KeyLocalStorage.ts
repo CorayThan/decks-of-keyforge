@@ -23,6 +23,7 @@ interface GenericStorage {
     userRows?: number
     agreedToSpoilerCreatureRules?: boolean
     viewNotes?: boolean
+    viewTags?: boolean
 
     offersSent?: boolean
     offersAccepted?: boolean
@@ -151,6 +152,10 @@ class KeyLocalStorage {
 
     toggleViewNotes = () => {
         keyLocalStorage.updateGenericStorage({viewNotes: !keyLocalStorage.genericStorage.viewNotes})
+    }
+
+    toggleViewTags = () => {
+        keyLocalStorage.updateGenericStorage({viewTags: !keyLocalStorage.genericStorage.viewTags})
     }
 
     clear = () => {

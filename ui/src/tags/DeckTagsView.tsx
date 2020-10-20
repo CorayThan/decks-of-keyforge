@@ -25,7 +25,13 @@ export class DeckTagsView extends React.Component<TagsViewProps> {
             <Box display={"flex"} flexWrap={"wrap"}>
                 {myTags.map(tag => {
                     return (
-                        <TagPill key={tag.id} tag={tag} active={tagIdsOnDeck.includes(tag.id)} deckId={deckId} style={{marginRight: spacing(2)}}/>
+                        <TagPill
+                            key={tag.id}
+                            tag={tag}
+                            active={tagIdsOnDeck.includes(tag.id)}
+                            deckId={deckId}
+                            style={{margin: spacing(1, 1, 0, 0)}}
+                        />
                     )
                 })}
             </Box>

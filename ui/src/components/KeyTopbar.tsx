@@ -300,14 +300,25 @@ const AppLinks = observer(() => (
             linkMenuStore={cardsMenuStore}
         />
         {screenStore.smallScreenTopBar() ? (
-            <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
+            <>
+                <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
+                <ListItemLink onClick={rightMenuStore.close} to={Routes.tags} primary={"Tags"}/>
+            </>
         ) : (
-            <LinkButton
-                href={Routes.users}
-                color={"inherit"}
-            >
-                Users
-            </LinkButton>
+            <>
+                <LinkButton
+                    href={Routes.users}
+                    color={"inherit"}
+                >
+                    Users
+                </LinkButton>
+                <LinkButton
+                    href={Routes.tags}
+                    color={"inherit"}
+                >
+                    Tags
+                </LinkButton>
+            </>
         )}
         <LinkMenu
             genericOnClick={rightMenuStore.close}

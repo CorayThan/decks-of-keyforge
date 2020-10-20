@@ -25,6 +25,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.client.RestTemplate
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.sql.DataSource
@@ -47,6 +48,11 @@ class KeyswapApplication() {
                     gen.writeString(value.format(TimeUtils.zonedDateTimeFormatter))
                 }
             }
+            val dateTimeSer = object : StdSerializer<LocalDateTime>(LocalDateTime::class.java) {
+                override fun serialize(value: LocalDateTime, gen: JsonGenerator, provider: SerializerProvider) {
+                    gen.writeString(value.format(TimeUtils.dateTimeFormatter))
+                }
+            }
             val dateSer = object : StdSerializer<LocalDate>(LocalDate::class.java) {
                 override fun serialize(value: LocalDate, gen: JsonGenerator, provider: SerializerProvider) {
                     gen.writeString(value.format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -61,6 +67,7 @@ class KeyswapApplication() {
                     .modulesToInstall(
                             JavaTimeModule()
                                     .addSerializer(zonedDateTimeSer)
+                                    .addSerializer(dateTimeSer)
                                     .addSerializer(dateSer)
                                     .addDeserializer(LocalDate::class.java, dateDeser)
                     )
