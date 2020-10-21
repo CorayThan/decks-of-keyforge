@@ -48,7 +48,9 @@ data class SaleNotificationQuery(
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
 ) {
-        fun toDto() = SaleNotificationQueryDto(
+    fun toDto(): SaleNotificationQueryDto {
+
+        val query = SaleNotificationQueryDto(
                 name,
                 houses,
                 excludeHouses,
@@ -59,11 +61,19 @@ data class SaleNotificationQuery(
                 forSaleInCountry,
                 expansions,
                 constraints.map { Constraint(it.property, it.cap, it.value) },
-                cards.map { DeckCardQuantity(it.cardNames, it.quantity, it.house, it.mav) },
+                cards.map {
+                    DeckCardQuantity(it.cardNames, it.quantity, it.house, it.mav)
+                },
                 owner,
                 user.id,
                 id
         )
+
+        // toString to prevent lazy load exceptions
+        query.toString()
+
+        return query
+    }
 }
 
 @GenerateTs
@@ -93,19 +103,19 @@ data class SaleNotificationQueryDto(
 
         val id: Long?
 ) {
-        fun toDeckFilters() = DeckFilters(
-                houses = houses,
-                excludeHouses = excludeHouses,
-                title = title,
-                forSale = forSale,
-                forTrade = forTrade,
-                forAuction = forAuction,
-                forSaleInCountry = forSaleInCountry,
-                expansions = expansions,
-                constraints = constraints,
-                cards = cards,
-                owner = owner,
-        )
+    fun toDeckFilters() = DeckFilters(
+            houses = houses,
+            excludeHouses = excludeHouses,
+            title = title,
+            forSale = forSale,
+            forTrade = forTrade,
+            forAuction = forAuction,
+            forSaleInCountry = forSaleInCountry,
+            expansions = expansions,
+            constraints = constraints,
+            cards = cards,
+            owner = owner,
+    )
 }
 
 @Entity

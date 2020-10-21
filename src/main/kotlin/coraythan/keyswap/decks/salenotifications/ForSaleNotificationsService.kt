@@ -2,7 +2,6 @@ package coraythan.keyswap.decks.salenotifications
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.QDeck
@@ -39,11 +38,11 @@ class ForSaleNotificationsService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private var queries: List<SaleNotificationQueryDto>? = null
 
-    @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay)
+    @Scheduled(fixedDelayString = "PT6H")
     fun refreshQueries() {
-        log.info("$scheduledStart refresh sale notif queries")
+        log.info("$scheduledStart refresh sale notification queries")
         this.reloadQueries()
-        log.info("$scheduledStop refresh sale notif queries")
+        log.info("$scheduledStop refresh sale notification queries")
     }
 
     fun migrate() {
@@ -95,9 +94,6 @@ class ForSaleNotificationsService(
             // Delay 30 seconds to make sure DB is finished saving the user deck
             delay(30000)
             try {
-                if (queries == null) {
-                    reloadQueries()
-                }
                 val deckId = listingInfo.deckId
                 val deck = deckRepo.findByIdOrNull(deckId)!!
                 val toSend: List<SaleNotificationQueryDto> = queries!!
@@ -118,7 +114,7 @@ class ForSaleNotificationsService(
                 }
             } catch (e: Exception) {
                 log.error("Couldn't send for sale notifications.", e)
-                emailService.sendErrorMessageToMe(e)
+                emailService.sendErrorMessageToMe("Couldn't send for sale notification", e)
             }
         }
     }
@@ -147,7 +143,6 @@ class ForSaleNotificationsService(
         check(maxNotifs > 0) { "You must be a $6 patron to save for sale queries." }
         val currentNotificationCount = saleNotificationQueryRepo.countByUserId(user.id)
         check(maxNotifs > currentNotificationCount) { "You have too many for sale notifications created. Please delete one to add one." }
-
 
 
         val toSave = SaleNotificationQuery(
@@ -184,20 +179,14 @@ class ForSaleNotificationsService(
     }
 
     private fun queryMatchesDeck(queryEntity: SaleNotificationQueryDto, deckId: Long): Boolean {
-        return try {
-            val query = queryEntity.toDeckFilters()
-            val userHolder = DeckSearchService.UserHolder(queryEntity.userId, currentUserService, userService)
-            if (queryEntity.name.contains("Test Query")) {
-                log.info("For sale query is $query")
-            }
-            val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
-                    .and(QDeck.deck.id.eq(deckId))
-            deckRepo.exists(predicate)
-        } catch (e: Exception) {
-            log.error("Couldn't match deck in for sale notif due to exception!", e)
-            emailService.sendErrorMessageToMe(e)
-            false
+        val query = queryEntity.toDeckFilters()
+        val userHolder = DeckSearchService.UserHolder(queryEntity.userId, currentUserService, userService)
+        if (queryEntity.name.contains("Test Query")) {
+            log.info("For sale query is $query")
         }
+        val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
+                .and(QDeck.deck.id.eq(deckId))
+        return deckRepo.exists(predicate)
     }
 
     private fun reloadQueries() {

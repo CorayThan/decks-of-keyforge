@@ -309,10 +309,22 @@ object DeckSynergyService {
                     c < 6 -> -1
                     else -> 0
                 },
-                "Artifact Control" to when {
-                    r in 1.25..3.5 -> 1
-                    r > 5.0 -> -1
-                    else -> 0
+                "Artifact Control" to when (
+                    traitsMap[SynergyTrait.destroys]?.traitValues?.plus(traitsMap[SynergyTrait.purges]?.traitValues ?: listOf())
+                        ?.map {
+                    if (
+                            it.value.player != SynTraitPlayer.FRIENDLY &&
+                            (it.value.cardTypes.contains(CardType.Artifact) || it.value.cardTypes.isEmpty())
+                    ) {
+                        it.value.strength().value
+                    } else {
+                        0
+                    }
+                }?.sum() ?: 0) {
+                    in 0..2 -> 0
+                    in 3..9 -> 1
+                    in 10..12 -> 0
+                    else -> -1
                 },
                 "Board Clears" to when (traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
                     in 3..10 -> 1
