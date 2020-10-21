@@ -27,6 +27,7 @@ class EmailService(
         private val currentUserService: CurrentUserService,
         private val offerRepo: OfferRepo,
         private val links: AppLinks,
+        private val userRepo: KeyUserRepo,
         @Value("\${env}")
         private val env: Env
 ) {
@@ -239,7 +240,9 @@ class EmailService(
         )
     }
 
-    fun sendDeckListedNotification(recipient: KeyUser, listingInfo: ListingInfo, deck: Deck, queryName: String) {
+    fun sendDeckListedNotification(recipientId: UUID, listingInfo: ListingInfo, deck: Deck, queryName: String) {
+
+        val recipient = userRepo.findByIdOrNull(recipientId) ?: throw IllegalStateException("No user with id $recipientId")
 
         try {
 

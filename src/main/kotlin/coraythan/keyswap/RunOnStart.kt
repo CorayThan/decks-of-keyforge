@@ -4,6 +4,7 @@ import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckImporterService
+import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.decks.salenotifications.ForSaleQueryRepo
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.stats.StatsService
@@ -25,6 +26,7 @@ var startupComplete = false
 @Component
 class RunOnStart(
         private val cardService: CardService,
+        private val forSaleNotificationsService: ForSaleNotificationsService,
         private val deckImporterService: DeckImporterService,
         private val statsService: StatsService,
         private val deckListingService: DeckListingService,
@@ -53,6 +55,8 @@ class RunOnStart(
 //        this.downloadAllNewCardImages()
 
         userSearchService.updateSearchResults()
+
+        forSaleNotificationsService.migrate()
 
         startupComplete = true
 

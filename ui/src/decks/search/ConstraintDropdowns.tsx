@@ -6,6 +6,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
+import { Constraint } from "../../generated-src/Constraint"
 
 export enum Cap {
     MIN = "MIN",
@@ -33,7 +34,7 @@ export class FiltersConstraintsStore {
         this.constraints.push({
             property: "",
             cap: Cap.MIN,
-            value: "0"
+            value: 0
         })
     }
 
@@ -44,7 +45,7 @@ export class FiltersConstraintsStore {
     private defaultConstraints = () => [{
         property: "",
         cap: Cap.MIN,
-        value: "0"
+        value: 0
     }]
 }
 
@@ -101,7 +102,7 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                             <TextField
                                 value={constraint.value}
                                 type={"number"}
-                                onChange={event => constraint.value = event.target.value}
+                                onChange={event => constraint.value = Number(event.target.value)}
                                 style={{width: 72, marginRight: spacing(1)}}
                             />
                         </div>
@@ -113,10 +114,4 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
             </div>
         )
     }
-}
-
-export interface Constraint {
-    property: string
-    cap: Cap
-    value: string
 }

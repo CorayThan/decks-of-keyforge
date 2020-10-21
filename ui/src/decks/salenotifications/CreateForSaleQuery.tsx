@@ -7,8 +7,10 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
+import { MyDokSubPaths } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
+import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
+import { HelperText } from "../../generic/CustomTypographies"
 import { SelectedOrExcludedHouses } from "../../houses/HouseSelectOrExclude"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LinkButton } from "../../mui-restyled/LinkButton"
@@ -18,10 +20,10 @@ import { userStore } from "../../user/UserStore"
 import { FiltersConstraintsStore } from "../search/ConstraintDropdowns"
 import { DeckFilters } from "../search/DeckFilters"
 import { forSaleNotificationsStore } from "./ForSaleNotificationsStore"
-import { ForSaleQuery } from "./ForSaleQuery"
 
 interface CreateForSaleQueryProps {
-    filters: DeckFilters
+    noDisplay: boolean
+    filters: () => DeckFilters
     houses: SelectedOrExcludedHouses
     constraints: FiltersConstraintsStore
 }
@@ -51,23 +53,18 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
             messageStore.setWarningMessage("For sale notification names must be less than 200 characters.")
             return
         }
-        const forSaleQuery: ForSaleQuery = Utils.jsonCopy(this.props.filters)
+        const forSaleQuery: SaleNotificationQueryDto = Utils.jsonCopy(this.props.filters())
+        forSaleQuery.userId = userStore.userId!
         forSaleQuery.houses = this.props.houses.getHousesSelectedTrue()
         forSaleQuery.constraints = this.props.constraints.cleanConstraints()
-        forSaleQuery.queryName = name
+        forSaleQuery.name = name
         forSaleNotificationsStore.addQuery(forSaleQuery)
         this.handleClose()
     }
 
     render() {
-        const user = userStore.user
-        if (
-            user == null
-            || !userStore.deckNotificationsAllowed
-            || (!this.props.filters.forSale && !this.props.filters.forTrade && !this.props.filters.forAuction)
-            || this.props.filters.owner === user.username
-        ) {
-            // Not allowed to create queries
+
+        if (this.props.noDisplay) {
             return null
         }
 
@@ -114,16 +111,16 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
                                         {userStore.maxNotifications}
                                     </Typography>
                                 </div>
-                                <Typography variant={"body2"} color={"textSecondary"} style={{marginBottom: spacing(2)}}>
+                                <HelperText style={{marginBottom: spacing(2)}}>
                                     Whenever a new deck is listed that matches your search selection on the left we will send you an email.
-                                    Favorites and notes will not be used.
+                                    Favorites, notes and tags will not be used.
                                     You can view and delete your notifications from your
-                                </Typography>
+                                </HelperText>
                                 <LinkButton
-                                    href={Routes.myProfile}
+                                    href={MyDokSubPaths.notifications}
                                     style={{marginBottom: spacing(2)}}
                                 >
-                                    Profile
+                                    Notifications Page
                                 </LinkButton>
                                 <Typography variant={"subtitle2"} color={"error"} style={{marginBottom: spacing(2)}}>
                                     Please ensure the search parameters are not too broad! You will be sent an email for all newly listed decks that match this

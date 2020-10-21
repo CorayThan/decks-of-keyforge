@@ -16,12 +16,13 @@ import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
 import { VerifyEmailPage } from "../components/VerifyEmailPage"
 import { DeckViewPage } from "../decks/DeckViewFull"
-import { ForSaleQuery, prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleQuery"
+import { prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
 import { UpdateSpoilerAerc } from "../extracardinfo/UpdateSpoilerAerc"
+import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
@@ -163,7 +164,7 @@ class Routes {
         return Routes.cardSearch(filters)
     }
 
-    static deckSearchForSaleQuery = (filters: ForSaleQuery) => {
+    static deckSearchForSaleQuery = (filters: SaleNotificationQueryDto) => {
         const cleaned = prepareForSaleQueryForQueryString(filters)
         return `${Routes.decks}?${QueryString.stringify(cleaned)}`
     }

@@ -2,12 +2,13 @@ import { clone, isEqual } from "lodash"
 import { observable } from "mobx"
 import * as React from "react"
 import { log, prettyJson, Utils } from "../../config/Utils"
+import { Constraint } from "../../generated-src/Constraint"
 import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
+import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
 import { SortDirection } from "../../generic/SortDirection"
 import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
-import { Constraint } from "./ConstraintDropdowns"
 
 export class DeckFilters {
 
@@ -236,7 +237,7 @@ export class DeckFilters {
     }
 }
 
-export const prepareDeckFiltersForQueryString = (filters: DeckFilters): DeckFilters => {
+export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNotificationQueryDto) => {
     const copied = Utils.jsonCopy(filters)
 
     Object.keys(copied).forEach((key: string) => {

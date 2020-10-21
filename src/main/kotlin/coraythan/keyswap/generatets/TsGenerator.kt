@@ -136,12 +136,12 @@ object TsDataType {
 
     fun secondKType(type: KType): String? = type.arguments.getOrNull(1)?.type?.classifier.toTSType()
 
-    fun isArray(type: KType) = type.classifier == List::class
+    fun isArray(type: KType) = type.classifier == List::class || type.classifier == Set::class
     fun isMap(type: KType) = type.classifier == Map::class
 }
 
 fun KType.toTSType(): String? {
-    val toConvert = if (this.classifier == List::class || this.classifier == Map::class) this.arguments.first().type?.classifier else this.classifier
+    val toConvert = if (this.classifier == List::class || this.classifier == Set::class || this.classifier == Map::class) this.arguments.first().type?.classifier else this.classifier
     return toConvert.toTSType()
 }
 

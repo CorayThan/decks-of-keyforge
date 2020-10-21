@@ -2,12 +2,15 @@ package coraythan.keyswap.decks.salenotifications
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
+import coraythan.keyswap.scheduledStart
+import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserService
@@ -16,14 +19,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Transactional
 @Service
 class ForSaleNotificationsService(
         private val forSaleQueryRepo: ForSaleQueryRepo,
+        private val saleNotificationQueryRepo: SaleNotificationQueryRepo,
         private val currentUserService: CurrentUserService,
         private val userService: KeyUserService,
         private val deckSearchService: DeckSearchService,
@@ -33,10 +37,57 @@ class ForSaleNotificationsService(
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-    private var queries: List<ForSaleQueryEntity>? = null
+    private var queries: List<SaleNotificationQueryDto>? = null
 
-    fun clean() {
+    @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay)
+    fun refreshQueries() {
+        log.info("$scheduledStart refresh sale notif queries")
+        this.reloadQueries()
+        log.info("$scheduledStop refresh sale notif queries")
+    }
 
+    fun migrate() {
+        log.info("Begin sale notif migration")
+
+        if (saleNotificationQueryRepo.count() == 0L) {
+            log.info("don't skip sale notif migration")
+            forSaleQueryRepo.findAll()
+                    .forEach {
+                        val query = objectMapper.readValue<ForSaleQuery>(it.json)
+                        saleNotificationQueryRepo.save(SaleNotificationQuery(
+                                name = it.name,
+                                houses = query.houses,
+                                excludeHouses = query.excludeHouses ?: setOf(),
+                                title = query.title,
+                                forSale = query.forSale,
+                                forTrade = query.forTrade,
+                                forAuction = query.forAuction,
+                                forSaleInCountry = query.forSaleInCountry,
+                                expansions = query.expansions,
+                                constraints = query.constraints
+                                        .map { constraint ->
+                                            SaleNotificationConstraint(
+                                                    constraint.property,
+                                                    constraint.cap,
+                                                    constraint.value,
+                                            )
+                                        },
+                                cards = query.cards
+                                        .map { card ->
+                                            SaleNotificationDeckCardQuantity(
+                                                    card.cardNames,
+                                                    card.quantity,
+                                                    card.house,
+                                                    card.mav
+                                            )
+                                        },
+                                owner = query.owner,
+                                user = it.user!!
+                        ))
+                    }
+        }
+
+        log.info("End sale notif migration")
     }
 
     fun sendNotifications(listingInfo: ListingInfo) {
@@ -49,18 +100,17 @@ class ForSaleNotificationsService(
                 }
                 val deckId = listingInfo.deckId
                 val deck = deckRepo.findByIdOrNull(deckId)!!
-                val toSend: List<ForSaleQueryEntity> = queries!!
-                        .filter { it.active && queryMatchesDeck(it, deckId) }
-                        .groupBy { it.user!! }
-                        .filter { it.key.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
+                val toSend: List<SaleNotificationQueryDto> = queries!!
+                        .filter { queryMatchesDeck(it, deckId) }
+                        .groupBy { it.userId }
                         .values.toList()
                         .map { it.first() }
 
                 log.debug("Checking for sending")
                 toSend.forEach {
-                    log.debug("Sending for sale email ${it.name} to ${it.user?.username} deck id: ${listingInfo.deckId}")
+                    log.debug("Sending for sale email ${it.name} to ${it.userId} deck id: ${listingInfo.deckId}")
                     emailService.sendDeckListedNotification(
-                            it.user!!,
+                            it.userId,
                             listingInfo,
                             deck,
                             it.name
@@ -73,21 +123,21 @@ class ForSaleNotificationsService(
         }
     }
 
-    fun deleteQuery(id: UUID) {
+    fun deleteQuery(id: Long) {
 
         val user = currentUserService.loggedInUser()!!
 
-        val query = forSaleQueryRepo.findByIdOrNull(id)
+        val query = saleNotificationQueryRepo.findByIdOrNull(id)
 
         if (query?.user?.id != user.id) {
             throw IllegalStateException("You must be the owner of the query")
         }
 
-        forSaleQueryRepo.deleteById(id)
+        saleNotificationQueryRepo.deleteById(id)
         this.reloadQueries()
     }
 
-    fun addForSaleQuery(query: ForSaleQuery) {
+    fun addForSaleQuery(query: SaleNotificationQueryDto) {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val maxNotifs = if (user.username == "SweeperArias") {
             100
@@ -95,47 +145,74 @@ class ForSaleNotificationsService(
             user.realPatreonTier()?.maxNotifications ?: 0
         }
         check(maxNotifs > 0) { "You must be a $6 patron to save for sale queries." }
-        val currentNotificationCount = forSaleQueryRepo.countByUserId(user.id)
+        val currentNotificationCount = saleNotificationQueryRepo.countByUserId(user.id)
         check(maxNotifs > currentNotificationCount) { "You have too many for sale notifications created. Please delete one to add one." }
 
-        val toSave = ForSaleQueryEntity(
-                name = query.queryName,
-                json = objectMapper.writeValueAsString(query),
-                user = user
+
+
+        val toSave = SaleNotificationQuery(
+                name = query.name,
+                houses = query.houses,
+                excludeHouses = query.excludeHouses,
+                title = query.title,
+                forSale = query.forSale,
+                forTrade = query.forTrade,
+                forAuction = query.forAuction,
+                forSaleInCountry = query.forSaleInCountry,
+                expansions = query.expansions,
+                constraints = query.constraints.map {
+                    SaleNotificationConstraint(
+                            it.property,
+                            it.cap,
+                            it.value
+                    )
+                },
+                cards = query.cards.map {
+                    SaleNotificationDeckCardQuantity(
+                            it.cardNames,
+                            it.quantity,
+                            it.house,
+                            it.mav
+                    )
+                },
+                owner = query.owner,
+                user = user,
         )
-        forSaleQueryRepo.save(toSave)
+        saleNotificationQueryRepo.save(toSave)
 
         this.reloadQueries()
     }
 
-    private fun queryMatchesDeck(queryEntity: ForSaleQueryEntity, deckId: Long): Boolean {
-        try {
-            val query = objectMapper.readValue<ForSaleQuery>(queryEntity.json)
-            val userHolder = DeckSearchService.UserHolder(queryEntity.user!!.id, currentUserService, userService)
+    private fun queryMatchesDeck(queryEntity: SaleNotificationQueryDto, deckId: Long): Boolean {
+        return try {
+            val query = queryEntity.toDeckFilters()
+            val userHolder = DeckSearchService.UserHolder(queryEntity.userId, currentUserService, userService)
             if (queryEntity.name.contains("Test Query")) {
                 log.info("For sale query is $query")
             }
             val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
                     .and(QDeck.deck.id.eq(deckId))
-            return deckRepo.exists(predicate)
+            deckRepo.exists(predicate)
         } catch (e: Exception) {
             log.error("Couldn't match deck in for sale notif due to exception!", e)
             emailService.sendErrorMessageToMe(e)
-            return false
+            false
         }
     }
 
     private fun reloadQueries() {
-        this.queries = forSaleQueryRepo.findAll()
+        this.queries = saleNotificationQueryRepo.findAll()
+                .filter { it.user.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
+                .map { it.toDto() }
     }
 
-    fun findAllForUser(): List<ForSaleQuery> {
+    fun findAllForUser(): List<SaleNotificationQueryDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        return forSaleQueryRepo.findByUserId(currentUser.id).map { objectMapper.readValue<ForSaleQuery>(it.json).copy(id = it.id) }
+        return saleNotificationQueryRepo.findByUserId(currentUser.id).map { it.toDto() }
     }
 
     fun findCountForUser(): Long {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        return forSaleQueryRepo.countByUserId(currentUser.id)
+        return saleNotificationQueryRepo.countByUserId(currentUser.id)
     }
 }

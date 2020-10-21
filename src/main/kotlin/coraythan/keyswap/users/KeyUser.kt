@@ -59,6 +59,7 @@ data class KeyUser(
         @OneToMany(mappedBy = "creator", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val tags: List<KTag> = listOf(),
 
+        // TODO remove
         @JsonIgnoreProperties("user")
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val forSaleQueries: List<ForSaleQueryEntity> = listOf(),

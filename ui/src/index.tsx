@@ -22,8 +22,4 @@ sellerRatingsStore.findSellerRatings()
 sellerStore.findFeaturedSellers()
 userStore.loadUserInfo()
 
-export const loadUserInfo = () => {
-
-}
-
 ReactDOM.render(<App/>, document.getElementById("root"))

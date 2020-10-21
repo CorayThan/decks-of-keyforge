@@ -94,12 +94,14 @@ enum class SortDirection(val direction: Sort.Direction) {
     DESC(Sort.Direction.DESC)
 }
 
+@GenerateTs
 data class Constraint(
         val property: String,
         val cap: Cap,
         val value: Int
 )
 
+@GenerateTs
 enum class Cap {
     MIN,
     MAX,

@@ -2,7 +2,6 @@ package coraythan.keyswap.decks.salenotifications
 
 import coraythan.keyswap.Api
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("${Api.base}/for-sale-notifications")
@@ -11,12 +10,12 @@ class ForSaleNotificationsEndpoints(
 ) {
 
     @PostMapping("/secured/add-query")
-    fun addQuery(@RequestBody query: ForSaleQuery) {
+    fun addQuery(@RequestBody query: SaleNotificationQueryDto) {
         forSaleNotificationsService.addForSaleQuery(query)
     }
 
     @DeleteMapping("/secured/{id}")
-    fun deleteQuery(@PathVariable id: UUID) {
+    fun deleteQuery(@PathVariable id: Long) {
         forSaleNotificationsService.deleteQuery(id)
     }
 

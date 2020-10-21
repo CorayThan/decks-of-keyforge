@@ -2,11 +2,13 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import * as React from "react"
 import { HttpConfig } from "../../config/HttpConfig"
-import { Routes } from "../../config/Routes"
+import { MyDokSubPaths } from "../../config/Routes"
+import { Utils } from "../../config/Utils"
+import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
-import { ForSaleQuery } from "./ForSaleQuery"
+import { prepareDeckFiltersForQueryString } from "../search/DeckFilters"
 
 export class ForSaleNotificationsStore {
 
@@ -14,32 +16,32 @@ export class ForSaleNotificationsStore {
     static readonly SECURE_CONTEXT = HttpConfig.API + "/for-sale-notifications/secured"
 
     @observable
-    queries?: ForSaleQuery[]
+    queries?: SaleNotificationQueryDto[]
 
     @observable
     queriesCount?: number
 
-    addQuery = (query: ForSaleQuery) => {
+    addQuery = (query: SaleNotificationQueryDto) => {
         query.cards = query.cards.filter((card) => card.cardNames.length > 0)
 
         axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/add-query`, query)
             .then(() => {
                 messageStore.setMessage(
-                    `Created deck notification "${query.queryName}". See it on your `,
+                    `Created deck notification "${query.name}". See it on your `,
                     "Success",
                     <LinkButton
                         color={"secondary"}
-                        href={Routes.myProfile}
-                        key={"profile"}
+                        href={MyDokSubPaths.notifications}
+                        key={"notifications"}
                     >
-                        Profile
+                        Notifications
                     </LinkButton>
                 )
                 userStore.loadLoggedInUser()
             })
     }
 
-    deleteQuery = (queryId: string) => {
+    deleteQuery = (queryId: number) => {
         axios.delete(`${ForSaleNotificationsStore.SECURE_CONTEXT}/${queryId}`)
             .then(() => {
                 messageStore.setSuccessMessage(`Deleted deck notification filter.`)
@@ -60,6 +62,12 @@ export class ForSaleNotificationsStore {
                 this.queriesCount = response.data
             })
     }
+}
+
+export const prepareForSaleQueryForQueryString = (filters: SaleNotificationQueryDto) => {
+    const copied = Utils.jsonCopy(filters)
+    delete copied.name
+    return prepareDeckFiltersForQueryString(copied)
 }
 
 export const forSaleNotificationsStore = new ForSaleNotificationsStore()

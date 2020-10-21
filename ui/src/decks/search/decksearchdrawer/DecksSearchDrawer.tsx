@@ -75,19 +75,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         if (event) {
             event.preventDefault()
         }
-        const filters = this.props.filters
-        filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
-        filters.houses = this.selectedHouses.getHousesSelectedTrue()
-        filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
-        filters.cards = this.deckCardsStore.cards
 
         if (!this.selectedHouses.validHouseSelection()) {
             messageStore.setWarningMessage("You may select up to 3 houses with houses excluded, and exclude all but 3.")
             return
         }
 
-        filters.sort = this.selectedSortStore.toEnumValue()
-        filters.constraints = this.constraintsStore.cleanConstraints()
+        const filters = this.makeFilters()
 
         if (!filters.forSale && !filters.forTrade && !filters.forAuction && !filters.myFavorites && !filters.owner) {
             // search is broad, so disable bad searches
@@ -103,6 +97,17 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             this.props.history.push(Routes.deckSearch(filters))
         }
         keyDrawerStore.closeIfSmall()
+    }
+
+    makeFilters = () => {
+        const filters = this.props.filters
+        filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
+        filters.houses = this.selectedHouses.getHousesSelectedTrue()
+        filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
+        filters.cards = this.deckCardsStore.cards
+        filters.sort = this.selectedSortStore.toEnumValue()
+        filters.constraints = this.constraintsStore.cleanConstraints()
+        return filters
     }
 
     clearSearch = () => {
@@ -184,7 +189,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     render() {
         const {
-            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, cards, owner, forSale, forTrade, forAuction,
+            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, owner, forSale, forTrade, forAuction,
             forSaleInCountry, notes, notesUser, completedAuctions, teamDecks, withOwners, handleMyPreviouslyOwnedDecksUpdate,
             tags, notTags
         } = this.props.filters
@@ -458,8 +463,14 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 >
                                     Clear
                                 </KeyButton>
+
                                 <CreateForSaleQuery
-                                    filters={this.props.filters}
+                                    noDisplay={
+                                        !userStore.deckNotificationsAllowed
+                                        || (!this.props.filters.forSale && !this.props.filters.forTrade && !this.props.filters.forAuction)
+                                        || this.props.filters.owner === userStore.username
+                                    }
+                                    filters={this.makeFilters}
                                     houses={this.selectedHouses}
                                     constraints={this.constraintsStore}
                                 />

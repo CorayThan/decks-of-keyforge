@@ -1,4 +1,3 @@
-import { ForSaleQueryEntity } from "../decks/salenotifications/ForSaleQuery"
 import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
 import { UserType } from "../generated-src/UserType"
 import { UserDeck } from "../userdeck/UserDeck"
@@ -16,7 +15,6 @@ export interface KeyUser {
     currencySymbol: string
     country?: string
     lastVersionSeen: string
-    forSaleQueries: ForSaleQueryEntity[]
     patreonId?: string
     patreonTier?: PatreonRewardsTier
     autoRenewListings: boolean

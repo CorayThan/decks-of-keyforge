@@ -11,6 +11,7 @@ import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
+import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
 import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
@@ -18,10 +19,9 @@ import { HouseBanner } from "../../houses/HouseBanner"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { forSaleNotificationsStore } from "./ForSaleNotificationsStore"
-import { ForSaleQuery } from "./ForSaleQuery"
 
 interface ForSaleQueryTableProps {
-    queries: ForSaleQuery[]
+    queries: SaleNotificationQueryDto[]
 }
 
 @observer
@@ -58,7 +58,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                             href={Routes.deckSearchForSaleQuery(queryWithoutId)}
                                             color={"primary"}
                                         >
-                                            {query.queryName.length === 0 ? "Unnamed" : query.queryName}
+                                            {query.name.trim().length === 0 ? "Unnamed" : query.name}
                                         </LinkButton>
                                     </TableCell>
                                     <TableCell>
