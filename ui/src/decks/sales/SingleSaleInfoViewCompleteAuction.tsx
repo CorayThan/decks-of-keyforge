@@ -14,7 +14,7 @@ import { UnstyledLink } from "../../generic/UnstyledLink"
 import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { userStore } from "../../user/UserStore"
-import { deckConditionReadableValue } from "../../userdeck/UserDeck"
+import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 
 @observer
 export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {

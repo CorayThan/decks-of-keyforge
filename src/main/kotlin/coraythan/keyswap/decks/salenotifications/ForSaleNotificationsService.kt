@@ -1,7 +1,5 @@
 package coraythan.keyswap.decks.salenotifications
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.QDeck
@@ -25,14 +23,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class ForSaleNotificationsService(
-        private val forSaleQueryRepo: ForSaleQueryRepo,
         private val saleNotificationQueryRepo: SaleNotificationQueryRepo,
         private val currentUserService: CurrentUserService,
         private val userService: KeyUserService,
         private val deckSearchService: DeckSearchService,
         private val deckRepo: DeckRepo,
-        private val emailService: EmailService,
-        private val objectMapper: ObjectMapper
+        private val emailService: EmailService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -43,50 +39,6 @@ class ForSaleNotificationsService(
         log.info("$scheduledStart refresh sale notification queries")
         this.reloadQueries()
         log.info("$scheduledStop refresh sale notification queries")
-    }
-
-    fun migrate() {
-        log.info("Begin sale notif migration")
-
-        if (saleNotificationQueryRepo.count() == 0L) {
-            log.info("don't skip sale notif migration")
-            forSaleQueryRepo.findAll()
-                    .forEach {
-                        val query = objectMapper.readValue<ForSaleQuery>(it.json)
-                        saleNotificationQueryRepo.save(SaleNotificationQuery(
-                                name = it.name,
-                                houses = query.houses,
-                                excludeHouses = query.excludeHouses ?: setOf(),
-                                title = query.title,
-                                forSale = query.forSale,
-                                forTrade = query.forTrade,
-                                forAuction = query.forAuction,
-                                forSaleInCountry = query.forSaleInCountry,
-                                expansions = query.expansions,
-                                constraints = query.constraints
-                                        .map { constraint ->
-                                            SaleNotificationConstraint(
-                                                    constraint.property,
-                                                    constraint.cap,
-                                                    constraint.value,
-                                            )
-                                        },
-                                cards = query.cards
-                                        .map { card ->
-                                            SaleNotificationDeckCardQuantity(
-                                                    card.cardNames,
-                                                    card.quantity,
-                                                    card.house,
-                                                    card.mav
-                                            )
-                                        },
-                                owner = query.owner,
-                                user = it.user!!
-                        ))
-                    }
-        }
-
-        log.info("End sale notif migration")
     }
 
     fun sendNotifications(listingInfo: ListingInfo) {

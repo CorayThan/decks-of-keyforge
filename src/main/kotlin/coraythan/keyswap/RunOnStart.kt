@@ -1,15 +1,9 @@
 package coraythan.keyswap
 
-import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
-import coraythan.keyswap.decks.DeckImporterService
-import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
-import coraythan.keyswap.decks.salenotifications.ForSaleQueryRepo
 import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.FixSynergies
-import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
@@ -26,12 +20,6 @@ var startupComplete = false
 @Component
 class RunOnStart(
         private val cardService: CardService,
-        private val forSaleNotificationsService: ForSaleNotificationsService,
-        private val deckImporterService: DeckImporterService,
-        private val statsService: StatsService,
-        private val deckListingService: DeckListingService,
-        private val forSaleQueryRepo: ForSaleQueryRepo,
-        private val userRepo: KeyUserRepo,
         private val fixSynergies: FixSynergies,
         private val userSearchService: UserSearchService,
         private val cardRepo: CardRepo,
@@ -55,8 +43,6 @@ class RunOnStart(
 //        this.downloadAllNewCardImages()
 
         userSearchService.updateSearchResults()
-
-        forSaleNotificationsService.migrate()
 
         startupComplete = true
 

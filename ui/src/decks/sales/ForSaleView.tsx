@@ -23,7 +23,7 @@ import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
-import { deckConditionReadableValue } from "../../userdeck/UserDeck"
+import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
