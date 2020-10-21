@@ -1,20 +1,26 @@
 DROP TABLE for_sale_query_entity;
 
-alter table user_deck drop column asking_price;
-
-alter table user_deck drop column listing_info;
-
-alter table user_deck drop column condition;
-
-alter table user_deck drop column redeemed;
-
-alter table user_deck drop column external_link;
-
-alter table user_deck drop column date_listed;
-
-alter table user_deck drop column expires_at;
-alter table user_deck drop column currency_symbol;
-alter table user_deck drop column language;
-alter table user_deck drop column for_sale_in_country;
-alter table user_deck drop column for_sale;
-alter table user_deck drop column for_trade;
+ALTER TABLE user_deck
+    DROP COLUMN asking_price;
+ALTER TABLE user_deck
+    DROP COLUMN listing_info;
+ALTER TABLE user_deck
+    DROP COLUMN condition;
+ALTER TABLE user_deck
+    DROP COLUMN redeemed;
+ALTER TABLE user_deck
+    DROP COLUMN external_link;
+ALTER TABLE user_deck
+    DROP COLUMN date_listed;
+ALTER TABLE user_deck
+    DROP COLUMN expires_at;
+ALTER TABLE user_deck
+    DROP COLUMN currency_symbol;
+ALTER TABLE user_deck
+    DROP COLUMN language;
+ALTER TABLE user_deck
+    DROP COLUMN for_sale_in_country;
+ALTER TABLE user_deck
+    DROP COLUMN for_sale;
+ALTER TABLE user_deck
+    DROP COLUMN for_trade;
