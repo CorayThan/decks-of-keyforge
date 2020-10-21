@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.auctions.purchases.Purchase
-import coraythan.keyswap.decks.salenotifications.ForSaleQueryEntity
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
@@ -58,11 +57,6 @@ data class KeyUser(
         @JsonIgnoreProperties("creator")
         @OneToMany(mappedBy = "creator", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val tags: List<KTag> = listOf(),
-
-        // TODO remove
-        @JsonIgnoreProperties("user")
-        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        val forSaleQueries: List<ForSaleQueryEntity> = listOf(),
 
         @JsonIgnoreProperties("boughtWithBuyItNow")
         @OneToMany(mappedBy = "boughtWithBuyItNow", fetch = FetchType.LAZY)
