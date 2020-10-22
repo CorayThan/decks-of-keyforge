@@ -141,8 +141,8 @@ export class SasAndAerc extends React.Component {
                         <List>
                             <ListItem><Typography>A from less than 5 to less than 2 gives -1 to -4 META.</Typography></ListItem>
                             <ListItem><Typography>C from less than 6 to less than 2 gives -1 to -3 META.</Typography></ListItem>
-                            <ListItem><Typography>R from less than 1.25 to 3.5 gives 1 META. R above 5 gives -1 META.</Typography></ListItem>
-                            <ListItem><Typography>3 to 10 trait strength worth of board clears is worth 1 META.</Typography></ListItem>
+                            <ListItem><Typography>R one or more hard R gives 1 META.</Typography></ListItem>
+                            <ListItem><Typography>3+ trait strength worth of board clears is worth 1 META.</Typography></ListItem>
                         </List>
                     ]}/>
                 </AboutGridItem>

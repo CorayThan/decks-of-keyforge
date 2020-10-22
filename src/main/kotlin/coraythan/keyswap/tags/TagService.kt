@@ -69,6 +69,8 @@ class TagService(
             .filter { it.publicityType == PublicityType.PRIVATE }
             .map { it.toDto() }
 
+    fun findTag(id: Long) = tagRepo.findByIdOrNull(id)
+
     fun findMyTags(): List<TagDto> {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
         return tagRepo.findByCreatorId(user.id)

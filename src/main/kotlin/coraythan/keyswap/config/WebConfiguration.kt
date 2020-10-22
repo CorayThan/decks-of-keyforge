@@ -3,6 +3,7 @@ package coraythan.keyswap.config
 import coraythan.keyswap.Api
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckSearchService
+import coraythan.keyswap.tags.TagService
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
@@ -19,7 +20,8 @@ import java.nio.charset.StandardCharsets
 class WebConfiguration(
         private val userSearchService: UserSearchService,
         private val deckSearchService: DeckSearchService,
-        private val cardService: CardService
+        private val cardService: CardService,
+        private val tagService: TagService,
 ) : WebMvcConfigurer {
 
     private val oneYearSeconds = 60 * 60 * 24 * 356
@@ -81,6 +83,7 @@ class WebConfiguration(
                     val queryStringValues = if (query != null) QueryStringParser(query) else null
 
                     val owner = queryStringValues?.findValue("owner")
+                    val tags = queryStringValues?.findValue("tags")
 
                     if (uri.contains("/decks") && owner != null) {
 
@@ -98,6 +101,24 @@ class WebConfiguration(
                                     }
                                 }
                         )
+
+                        transformed
+
+                    } else if (uri.contains("/decks") && tags != null) {
+                        val tagId = tags.toLongOrNull()
+
+                        var transformed = cachedIndexPage ?: transformIndexPage(resource)
+
+                        if (tagId != null) {
+                            val tag = tagService.findTag(tagId)
+                            if (tag != null) {
+                                transformed = transformIndexPage(
+                                        resource,
+                                        "Decks tagged with \"${tag.name}\"",
+                                        "This tag includes ${tag.decks.size} decks."
+                                )
+                            }
+                        }
 
                         transformed
 

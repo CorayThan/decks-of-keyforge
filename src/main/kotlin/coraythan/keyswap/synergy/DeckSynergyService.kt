@@ -294,6 +294,21 @@ object DeckSynergyService {
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
         val scalingAemberControlTraits = traitsMap[SynergyTrait.scalingAmberControl]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0
+        val destroys = traitsMap[SynergyTrait.destroys]?.traitValues ?: listOf()
+        val purges = traitsMap[SynergyTrait.purges]?.traitValues ?: listOf()
+        val artifactDestroyTraits = destroys
+                .filter {
+                    it.value.player != SynTraitPlayer.FRIENDLY &&
+                            (it.value.cardTypes.contains(CardType.Artifact) || it.value.cardTypes.isEmpty())
+                }
+        val artifactPurgeTraits = purges
+                .filter {
+                    it.card?.cardTitle == "Harvest Time" ||
+                            it.card?.cardTitle == "Reclaimed by Nature"
+                }
+
+        val hardRScore = artifactDestroyTraits.plus(artifactPurgeTraits).map { it.value.rating }.sum()
+        val boardWipeScore = traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0
 
         val metaScores = mapOf<String, Int>(
                 "Aember Control" to when {
@@ -309,25 +324,12 @@ object DeckSynergyService {
                     c < 6 -> -1
                     else -> 0
                 },
-                "Artifact Control" to when (
-                    traitsMap[SynergyTrait.destroys]?.traitValues?.plus(traitsMap[SynergyTrait.purges]?.traitValues ?: listOf())
-                        ?.map {
-                    if (
-                            it.value.player != SynTraitPlayer.FRIENDLY &&
-                            (it.value.cardTypes.contains(CardType.Artifact) || it.value.cardTypes.isEmpty())
-                    ) {
-                        it.value.strength().value
-                    } else {
-                        0
-                    }
-                }?.sum() ?: 0) {
-                    in 0..2 -> 0
-                    in 3..9 -> 1
-                    in 10..12 -> 0
-                    else -> -1
+                "Artifact Control" to when {
+                    hardRScore > 2 -> 1
+                    else -> 0
                 },
-                "Board Clears" to when (traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0) {
-                    in 3..10 -> 1
+                "Board Clears" to when {
+                    boardWipeScore > 2 -> 1
                     else -> 0
                 },
                 "Scaling Aember Control" to when {
