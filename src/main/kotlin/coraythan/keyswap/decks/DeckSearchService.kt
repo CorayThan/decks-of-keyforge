@@ -363,13 +363,18 @@ class DeckSearchService(
         }
         if (filters.constraints.isNotEmpty()) {
             filters.constraints.forEach {
-                if (it.property == "listedWithinDays") {
+                val property = if (it.property == "bonusAmber") {
+                    "rawAmber"
+                } else {
+                    it.property
+                }
+                if (property == "listedWithinDays") {
                     predicate.and(deckQ.auctions.any().dateListed.gt(now().minusDays(it.value.toLong())))
                 } else {
-                    val pathToVal = if (it.property == "buyItNow") {
-                        Expressions.path(Double::class.java, deckQ.auctions.any(), it.property)
+                    val pathToVal = if (property == "buyItNow") {
+                        Expressions.path(Double::class.java, deckQ.auctions.any(), property)
                     } else {
-                        Expressions.path(Double::class.java, deckQ, it.property)
+                        Expressions.path(Double::class.java, deckQ, property)
                     }
                     val capOpsValue = when (it.cap) {
                         Cap.MIN -> Ops.GOE

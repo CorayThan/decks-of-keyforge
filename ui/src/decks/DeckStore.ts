@@ -17,6 +17,7 @@ export class DeckStore {
     static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
     static readonly CONTEXT_SECURE = HttpConfig.API + "/decks/secured"
+    private static readonly MAX_PAGE_SIZE = 500
 
     @observable
     simpleDecks: Map<string, DeckSearchResult> = new Map()
@@ -255,9 +256,17 @@ export class DeckStore {
         const copiedFilters = {...filters}
         copiedFilters.pageSize = num
         copiedFilters.page = 0
-        const deckResults: AxiosResponse<DeckPage> = await axios.post(`${DeckStore.CONTEXT}/filter`, copiedFilters)
-        this.decksToDownload = deckResults.data.decks
-        log.info("Found deck count " + this.decksToDownload.length)
+        let decksBeingDownloaded: DeckSearchResult[] = []
+        copiedFilters.pageSize = DeckStore.MAX_PAGE_SIZE
+        let leftToDownload = num
+        while (leftToDownload > 0) {
+            const deckResults: AxiosResponse<DeckPage> = await axios.post(`${DeckStore.CONTEXT}/filter`, copiedFilters)
+            decksBeingDownloaded = decksBeingDownloaded.concat(deckResults.data.decks)
+            log.info(`Downloaded ${decksBeingDownloaded.length} decks so far current page: ${copiedFilters.page}`)
+            copiedFilters.page++
+            leftToDownload -= DeckStore.MAX_PAGE_SIZE
+        }
+        this.decksToDownload = decksBeingDownloaded
         this.downloadingDecks = false
     }
 

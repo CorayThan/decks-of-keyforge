@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.19"
+export const latestVersion = "5.17"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,21 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.17"}
+                    date={"11/1/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS Update",
+                            note: "This is a minor SAS update with a few modifications to cards. I've also added synergies for certain cards with " +
+                                "having an enhancement in general, although not the specific type or quantity, since those are unavailable through Master " +
+                                "Vault." +
+                                "For example, Rad Penny will get a bonus if it is enhanced. And Grim Reminder will synergize with creatures being enhanced " +
+                                "in general."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.16"}
                     date={"10/19/2020"}

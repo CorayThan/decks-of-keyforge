@@ -482,7 +482,6 @@ class EmailService(
         val fromEmail = "noreply@decksofkeyforge.com"
         val fromAddress = InternetAddress(fromEmail, "Decks of KeyForge")
         helper.setFrom(fromAddress)
-        helper.setFrom(fromAddress)
         if (replyTo != null) helper.setReplyTo(replyTo)
         helper.setTo(if (env == Env.dev) "decksofkeyforge@gmail.com" else email)
         if (ccEmail != null) helper.setCc(if (env == Env.dev) "decksofkeyforge@gmail.com" else ccEmail)

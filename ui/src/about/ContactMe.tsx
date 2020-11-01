@@ -38,7 +38,7 @@ export class ContactMe extends React.Component {
                             </span>,
                             <span>
                                 <Typography>
-                                    For comments and suggestions join the Discord server, contact CorayThan on Reddit, or send an email to
+                                    For comments and suggestions join the Discord server or send an email to
                                 </Typography>
                                 <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                             </span>,

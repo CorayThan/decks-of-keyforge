@@ -88,7 +88,13 @@ object DeckSynergyService {
             }
             val cardAllTraits = cardInfo.traits
                     .plus(cardSpecialTraits)
-                    .let { if (card.enhanced == true) it.plus(SynTraitValue(SynergyTrait.enhanced, rating = 3)) else it }
+                    .let {
+                        if (card.enhanced == true) {
+                            it.plus(SynTraitValue(SynergyTrait.enhanced, rating = 3, cardTypesInitial = card.allTypes().toList()))
+                        } else {
+                            it
+                        }
+                    }
             cardAllTraits
                     .forEach { traitValue ->
                         traitsMap.addTrait(traitValue, card, card.house)

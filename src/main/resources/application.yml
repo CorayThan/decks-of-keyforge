@@ -4,6 +4,8 @@ server:
   compression:
     enabled: true
     mime-types: application/json
+  tomcat:
+    connection-timeout:
 
 spring:
   application:
