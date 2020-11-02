@@ -3,7 +3,6 @@ package coraythan.keyswap.publicapis
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
-import coraythan.keyswap.decks.DeckWinsService
 import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.userdeck.UserDeckRepo
@@ -21,7 +20,6 @@ class PublicApiService(
         private val deckRepo: DeckRepo,
         private val cardService: CardService,
         private val statsService: StatsService,
-        private val deckWinsService: DeckWinsService,
         private val userDeckRepo: UserDeckRepo
 ) {
 

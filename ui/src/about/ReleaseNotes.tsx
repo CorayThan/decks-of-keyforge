@@ -49,9 +49,13 @@ export class ReleaseNotes extends React.Component {
                     releaseNotesWithHighlights={[
                         {
                             highlight: "SAS Update",
-                            note: "This is a minor SAS update with a few modifications to cards. I've also added synergies for certain cards with " +
+                            note: "This is a minor SAS update with a few modifications to cards."
+                        },
+                        {
+                            highlight: "Enhanced Enhancements",
+                            note: "I've also added synergies for certain cards with " +
                                 "having an enhancement in general, although not the specific type or quantity, since those are unavailable through Master " +
-                                "Vault." +
+                                "Vault. " +
                                 "For example, Rad Penny will get a bonus if it is enhanced. And Grim Reminder will synergize with creatures being enhanced " +
                                 "in general."
                         },

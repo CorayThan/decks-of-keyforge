@@ -66,7 +66,14 @@ export class DeckSynergiesInfoView extends React.Component<DeckSynergiesInfoView
 }
 
 const synergyDetailHeaders: SortableTableHeaderInfo<SynergyCombo>[] = [
-    {property: "cardName", transform: combo => <CardAsLine card={cardStore.fullCardFromCardName(combo.cardName)!} cardActualHouse={combo.house}/>},
+    {
+        property: "cardName", transform: combo => {
+            if (combo.notCard) {
+                return combo.cardName
+            }
+            return <CardAsLine card={cardStore.fullCardFromCardName(combo.cardName)!} cardActualHouse={combo.house}/>
+        }
+    },
     {property: "copies"},
     {title: "Base AERC", sortable: false, transform: (combo) => roundToHundreds(combo.aercScore - combo.netSynergy)},
     {property: "netSynergy", transformProperty: roundToHundreds},

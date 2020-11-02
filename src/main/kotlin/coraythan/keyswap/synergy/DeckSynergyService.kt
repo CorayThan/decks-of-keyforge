@@ -148,12 +148,16 @@ object DeckSynergyService {
                                     disruption = 0.0,
                                     creatureProtection = 0.0,
                                     other = value,
-                                    copies = 1
+                                    copies = 1,
+
+                                    notCard = true
                             )
                         }
                     }
                     selfEnhancedCombo
                 }
+                .groupBy { it.cardName }
+                .map { it.value.first().copy(copies = it.value.size) }
 
         val synergyCombos: List<SynergyCombo> = cards
                 .groupBy { Pair(it.cardTitle, it.house) }

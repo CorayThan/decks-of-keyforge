@@ -39,6 +39,8 @@ export interface SynergyCombo {
     other: number,
 
     copies: number
+
+    notCard?: boolean
 }
 
 export interface SynergyMatch {

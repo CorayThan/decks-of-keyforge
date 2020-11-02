@@ -283,6 +283,7 @@ const smallDeckViewCardLineWidth = 144
 const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult }) => {
     const {house, deck, cards, compact} = props
     const deckExpansion = deck.expansion
+
     return (
         <List>
             <AercForCombos combos={deck.synergyDetails?.filter(combo => combo.house === house)}>

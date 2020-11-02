@@ -19,7 +19,9 @@ data class SynergyCombo(
         val disruption: Double,
         val other: Double,
 
-        val copies: Int = 1
+        val copies: Int = 1,
+
+        val notCard: Boolean? = null,
 )
 
 data class DeckSynergyInfo(
