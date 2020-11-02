@@ -250,6 +250,14 @@ export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNoti
         delete copied.forSaleInCountry
     }
 
+    if (copied.userId != null) {
+        delete copied.userId
+    }
+
+    if (copied.forSale == null) {
+        delete copied.forSale
+    }
+
     if (copied.cards) {
         copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardNames != null && card.cardNames[0] != null && card.cardNames[0].length > 0)
         copied.cards = cardsAsParam(copied.cards)

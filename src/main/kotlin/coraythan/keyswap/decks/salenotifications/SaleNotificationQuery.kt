@@ -25,7 +25,7 @@ data class SaleNotificationQuery(
 
         val title: String = "",
 
-        val forSale: Boolean = false,
+        val forSale: Boolean? = false,
         val forTrade: Boolean = false,
         val forAuction: Boolean = false,
         val forSaleInCountry: Country? = null,
@@ -86,7 +86,7 @@ data class SaleNotificationQueryDto(
 
         val title: String = "",
 
-        val forSale: Boolean = false,
+        val forSale: Boolean? = null,
         val forTrade: Boolean = false,
         val forAuction: Boolean = false,
         val forSaleInCountry: Country? = null,
