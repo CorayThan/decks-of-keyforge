@@ -9,6 +9,7 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledException
+import coraythan.keyswap.users.search.UserSearchResult
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -226,5 +227,13 @@ class KeyUserService(
             log.info("$email email is already taken.")
             "This email is already taken."
         }
+    }
+
+    fun findUsersByUsername(name: String): List<UserSearchResult> {
+        return userRepo.findByUsernameContainsIgnoreCase(name.trim()).map {
+            it.minimalSearchResult()
+        }
+                .sortedBy { it.username.toLowerCase() }
+                .take(10)
     }
 }

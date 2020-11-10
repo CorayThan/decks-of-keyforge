@@ -96,9 +96,14 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             property: "buyerUsername",
             title: "Buyer",
             sortable: true,
-            transform: (purchase) => (
-                <Link href={Routes.userProfilePage(purchase.buyerUsername)}>{purchase.buyerUsername}</Link>
-            )
+            transform: (purchase) => {
+                if (purchase.buyerUsername == null) {
+                    return null
+                }
+                return (
+                    <Link href={Routes.userProfilePage(purchase.buyerUsername)}>{purchase.buyerUsername}</Link>
+                )
+            }
         }
     }
     const values: SortableTableHeaderInfo<PurchaseSearchResult>[] = [

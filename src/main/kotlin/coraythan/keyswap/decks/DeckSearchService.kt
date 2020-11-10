@@ -186,6 +186,18 @@ class DeckSearchService(
                     searchResult = searchResult.copy(owners = owners)
                 }
             }
+            if (filters.owners.isNotEmpty()) {
+                val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) filters.owners else filters.owners.filter { owner ->
+                    userService.findUserByUsername(owner)?.allowUsersToSeeDeckOwnership ?: false
+                }
+
+                val owners = userDeckRepo.findByDeckIdAndOwnedByIn(it.id, visibleUsers).mapNotNull { userDeck ->
+                    userDeck.ownedBy
+                }
+                if (owners.isNotEmpty()) {
+                    searchResult = searchResult.copy(owners = owners)
+                }
+            }
             searchResult
         }
 
@@ -315,6 +327,17 @@ class DeckSearchService(
                     )
                 }
             }
+        }
+        if (filters.owners.isNotEmpty()) {
+            val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) filters.owners else filters.owners.filter {
+                userService.findUserByUsername(it)?.allowUsersToSeeDeckOwnership ?: false
+            }
+
+            if (visibleUsers.isEmpty()) {
+                throw BadRequestException("None of the specified users have visible deck lists.")
+            }
+
+            predicate.and(deckQ.userDecks.any().ownedBy.`in`(visibleUsers))
         }
         if (filters.myFavorites) {
             val favsUserId = userHolder.user?.id

@@ -53,17 +53,17 @@ const memberTableHeaders = (isLeader: boolean, leaderUsername: string, store: Te
     const defaultHeaders: SortableTableHeaderInfo<UserSearchResult>[] = [
         {
             property: "username",
-            sortable: true,
-            transform: (user) => <Link href={Routes.decksForUserOnMyTeam(user.username)}>{user.username}</Link>
+            transform: (user) => <Link href={Routes.decksForUserOnMyTeam(user.username)}>{user.username}</Link>,
+            sortFunction: (user) => user.username.toLowerCase()
         },
-        {property: "deckCount", sortable: true},
-        {property: "topSasAverage", sortable: true},
-        {property: "highSas", sortable: true},
-        {property: "lowSas", sortable: true},
-        {property: "totalPower", sortable: true},
-        {property: "totalChains", sortable: true},
-        {property: "mavericks", sortable: true},
-        {property: "anomalies", sortable: true},
+        {property: "deckCount"},
+        {property: "topSasAverage"},
+        {property: "highSas"},
+        {property: "lowSas"},
+        {property: "totalPower"},
+        {property: "totalChains"},
+        {property: "mavericks"},
+        {property: "anomalies"},
     ]
 
     if (isLeader) {
@@ -213,7 +213,7 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                 <SortableTable
                     headers={memberTableHeaders(isLeader, leader, teamManagementStore)}
                     data={members}
-                    defaultSort={"username"}
+                    defaultSort={"deckCount"}
                 />
             </Paper>
 

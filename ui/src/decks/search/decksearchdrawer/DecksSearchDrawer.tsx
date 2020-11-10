@@ -31,6 +31,7 @@ import { KeyLink } from "../../../mui-restyled/KeyLink"
 import { LinkButton } from "../../../mui-restyled/LinkButton"
 import { messageStore } from "../../../ui/MessageStore"
 import { screenStore } from "../../../ui/ScreenStore"
+import { UserSearchSuggest } from "../../../user/search/UserSearchSuggest"
 import { userStore } from "../../../user/UserStore"
 import { deckStore } from "../../DeckStore"
 import { CreateForSaleQuery } from "../../salenotifications/CreateForSaleQuery"
@@ -191,7 +192,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const {
             title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, owner, forSale, forTrade, forAuction,
             forSaleInCountry, notes, notesUser, completedAuctions, teamDecks, withOwners, handleMyPreviouslyOwnedDecksUpdate,
-            tags, notTags
+            tags, notTags, owners
         } = this.props.filters
 
         const analyze = this.props.location.pathname.includes(Routes.collectionStats)
@@ -316,7 +317,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <SearchDrawerExpansionPanel
                                     initiallyOpen={
                                         forAuction || forTrade || myFavorites || completedAuctions || teamDecks
-                                        || withOwners
+                                        || withOwners || owners.length > 0
                                     }
                                     title={"Extra Options"}
                                 >
@@ -413,6 +414,40 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             style={{width: 136}}
                                         />
                                     </div>
+                                    {owners.length > 0 && (
+                                        <div>
+                                            <Typography variant={"subtitle2"} style={{marginTop: spacing(1)}}>
+                                                Decks owned by
+                                            </Typography>
+                                            <Box display={"flex"} flexWrap={"wrap"}>
+                                                {owners.map(ownedBy => (
+                                                    <Box
+                                                        key={ownedBy}
+                                                        display={"flex"}
+                                                        alignItems={"center"}
+                                                        style={{margin: spacing(1, 1, 0, 0)}}
+                                                    >
+                                                        <Link
+                                                            href={Routes.userProfilePage(ownedBy)}
+                                                            target={"_blank"}
+                                                        >
+                                                            {ownedBy}
+                                                        </Link>
+                                                        <IconButton
+                                                            style={{marginLeft: spacing(1)}}
+                                                            size={"small"}
+                                                            onClick={() => this.props.filters.owners = this.props.filters.owners.filter(toFilter => toFilter !== ownedBy)}
+                                                        >
+                                                            <Close fontSize={"small"}/>
+                                                        </IconButton>
+                                                    </Box>
+                                                ))}
+                                            </Box>
+                                        </div>
+                                    )}
+                                    <UserSearchSuggest
+                                        usernames={owners}
+                                    />
                                 </SearchDrawerExpansionPanel>
                                 <DeckSearchDrawerTagsAndNotes
                                     initiallyOpen={notesUser.length > 0 || notes.length > 0 || !!keyLocalStorage.genericStorage.viewNotes}

@@ -10,6 +10,10 @@ interface UserDeckRepo : JpaRepository<UserDeck, UUID>, QuerydslPredicateExecuto
     fun findByDeckIdAndOwnedByNotNull(deckId: Long): List<UserDeck>
     fun findByDeckIdAndTeamId(deckId: Long, teamId: UUID): List<UserDeck>
 
+    @Query("SELECT userDeck FROM UserDeck userDeck WHERE userDeck.deck.id = ?1 AND userDeck.ownedBy IN ?2")
+    fun findByDeckIdAndOwnedByIn(deckId: Long, ownerOptions: List<String>): List<UserDeck>
+//    fun findByDeckIdAndOwnedBy(deckId: Long, owner: String): UserDeck?
+
     fun findByOwnedBy(ownedBy: String): List<UserDeck>
     fun findByUserId(userId: UUID): List<UserDeck>
     fun existsByUserIdAndDeckId(userId: UUID, deckId: Long): Boolean

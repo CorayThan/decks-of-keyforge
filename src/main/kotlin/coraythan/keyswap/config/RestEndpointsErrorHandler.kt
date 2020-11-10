@@ -51,7 +51,7 @@ class RestErrorHandler {
                 """
     In bad request response handler.
     Exception type: ${ex::class.java}
-    Message: ${ex.message}.
+    Message: ${ex.message}
     For request url: ${request.requestURI}
     remote user: ${request.remoteUser}
     headers: ${request.headerNames.toList().filter {

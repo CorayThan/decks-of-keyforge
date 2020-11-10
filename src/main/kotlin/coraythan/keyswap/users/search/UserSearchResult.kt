@@ -28,7 +28,9 @@ data class UserSearchResult(
 
         @TsIgnore
         @JsonIgnore
-        val team: Team?
+        val team: Team?,
+
+        val allowUsersToSeeDeckOwnership: Boolean = true,
 ) {
     val teamName = team?.name
 }

@@ -29,6 +29,7 @@ interface DeckQuery {
     val cards: List<DeckCardQuantity>
 
     val owner: String
+    val owners: List<String>
     val previousOwner: String
 }
 
@@ -59,6 +60,7 @@ data class DeckFilters(
         override val cards: List<DeckCardQuantity> = listOf(),
 
         override val owner: String = "",
+        override val owners: List<String> = listOf(),
         override val previousOwner: String = "",
         val pageSize: Long = 20,
 

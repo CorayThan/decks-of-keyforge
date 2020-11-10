@@ -18,6 +18,9 @@ class UserEndpoints(
         val apiKeys: SecretApiKeyValidator
 ) {
 
+    @GetMapping("/by-name/{name}")
+    fun findUsersByUsername(@PathVariable name: String) = userService.findUsersByUsername(name)
+
     @GetMapping("/secured/your-user")
     fun findYourUser() = currentUserService.loggedInUserDto()
 

@@ -13,6 +13,7 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun findByEmail(email: String): KeyUser?
     fun findByEmailIgnoreCase(email: String): KeyUser?
     fun findByUsernameIgnoreCase(username: String): KeyUser?
+    fun findByUsernameContainsIgnoreCase(username: String): List<KeyUser>
     fun findByApiKey(apiKey: String): KeyUser?
     fun findByPatreonId(patreonId: String): KeyUser?
     fun findByPatreonTier(tier: PatreonRewardsTier): List<KeyUser>

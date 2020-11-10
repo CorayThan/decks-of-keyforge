@@ -16,7 +16,7 @@ export class LoggedInRoute extends React.Component<RouteProps> {
         if (loggedIn) {
             return <Route {...this.props} />
         } else {
-            return <Redirect to={Routes.decks}/>
+            return <Redirect to={Routes.landing}/>
         }
     }
 }

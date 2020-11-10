@@ -190,7 +190,30 @@ data class KeyUser(
                 this.type,
                 this.patreonTier,
                 this.manualPatreonTier,
-                this.team
+                this.team,
+                !this.allowUsersToSeeDeckOwnership
+        )
+    }
+
+    fun minimalSearchResult(): UserSearchResult {
+        return UserSearchResult(
+                this.id,
+                this.username,
+                this.rating,
+                if (this.allowUsersToSeeDeckOwnership) deckCount else 0,
+                forSaleCount,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                this.type,
+                null,
+                null,
+                null,
+                this.allowUsersToSeeDeckOwnership
         )
     }
 

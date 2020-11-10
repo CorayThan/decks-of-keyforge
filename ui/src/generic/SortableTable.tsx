@@ -67,6 +67,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 
     componentDidUpdate(prevProps: SortableTableProps<T>) {
         if (prevProps.data !== this.props.data) {
+            log.info("Sortable table did update")
             this.store.update(this.props.defaultSort, this.props.data, this.props.defaultSortFunction, undefined, this.props.noInitialSort)
         }
     }
@@ -155,7 +156,6 @@ class SortableTableStore<T> {
         this.sortFunction = sortFunction
         this.sortFunctionName = sortFunctionName
         if (noResort !== true) {
-            log.info("resort the table")
             this.resort()
         }
     }
@@ -172,11 +172,10 @@ class SortableTableStore<T> {
     changeSortHandler = (header: SortableTableHeaderInfo<T>) => {
         const {property, sortFunction, title} = header
         return () => {
-            if ((this.activeTableSort === property && property != null) || this.sortFunctionName === title) {
+            if (this.activeTableSort === property && property != null) {
                 this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
-            } else {
-                this.activeTableSort = property
             }
+            this.activeTableSort = property
             this.sortFunction = sortFunction
             this.sortFunctionName = title
             this.resort()

@@ -114,7 +114,7 @@ class WebConfiguration(
                             if (tag != null) {
                                 transformed = transformIndexPage(
                                         resource,
-                                        "Decks tagged with \"${tag.name}\"",
+                                        tag.name,
                                         "This tag includes ${tag.decks.size} decks."
                                 )
                             }

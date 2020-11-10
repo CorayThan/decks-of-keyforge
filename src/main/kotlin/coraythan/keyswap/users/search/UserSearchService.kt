@@ -130,7 +130,7 @@ class UserSearchService(
                 .select(
                         Projections.constructor(UserSearchResult::class.java,
                                 userQ.id, userQ.username, userQ.rating, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas, userQ.lowSas, userQ.totalPower,
-                                userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier, userQ.team
+                                userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier, userQ.team, userQ.allowUsersToSeeDeckOwnership
                         )
                 )
                 .from(userQ)

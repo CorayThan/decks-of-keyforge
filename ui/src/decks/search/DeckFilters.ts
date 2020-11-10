@@ -43,6 +43,11 @@ export class DeckFilters {
                 queryObject.tags = [asNumber]
             }
         }
+        if (queryObject.owners != null) {
+            if (queryObject.owners.constructor !== Array) {
+                queryObject.owners = [queryObject.owners]
+            }
+        }
         if (queryObject.notTags != null) {
             if (queryObject.notTags.constructor === Array) {
                 queryObject.notTags = queryObject.notTags.map((expansion: string) => Number(expansion))
@@ -170,6 +175,8 @@ export class DeckFilters {
     @observable
     owner = ""
     @observable
+    owners: string[] = []
+    @observable
     previousOwner = ""
     pageSize = 20
 
@@ -193,6 +200,7 @@ export class DeckFilters {
         this.notTags = []
         this.sortDirection = "DESC"
         this.owner = ""
+        this.owners = []
         this.previousOwner = ""
         this.withOwners = false
         this.teamDecks = false
