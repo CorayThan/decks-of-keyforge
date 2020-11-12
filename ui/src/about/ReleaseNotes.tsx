@@ -7,14 +7,14 @@ import { ArticleInternalLink } from "../articles/ArticleView"
 import { CardFilters } from "../cards/CardFilters"
 import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
+import { AboutSubPaths, MyDokSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/DiscordButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.17"
+export const latestVersion = "5.18"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,21 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"5.18"}
+                    date={"11/12/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Notification Precedence",
+                            note: "You can now order your sales notification queries so the ones you care more about will be triggered first. If you're a " +
+                                "$6+ patron head to your notifications page to check it out!"
+                        },
+                        {
+                            note: <LinkButton href={MyDokSubPaths.notifications} variant={"outlined"} color={"primary"}>Notifications</LinkButton>
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.17"}
                     date={"11/1/2020"}

@@ -1,13 +1,14 @@
-import { Card, IconButton, Typography } from "@material-ui/core"
+import { Box, Card, IconButton, TextField, Tooltip, Typography } from "@material-ui/core"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
-import { Delete } from "@material-ui/icons"
+import { Delete, HelpOutline } from "@material-ui/icons"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { globalLoaderStore } from "../../config/KeyLoaderBar"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
@@ -33,9 +34,22 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                 <Table padding={"default"}>
                     <TableHead>
                         <TableRow>
+                            {!small && (
+                                <TableCell>
+                                    <Box display={"flex"}>
+                                        Order
+                                        <Tooltip
+                                            title={"In the case of multiple matches, the notification email will include the notification with the lowest number."}
+                                        >
+                                            <Box ml={0.5}><HelpOutline fontSize={"small"}/></Box>
+                                        </Tooltip>
+                                    </Box>
+                                </TableCell>
+                            )}
+                            <TableCell>Notifications Search</TableCell>
                             <TableCell>Notifications Search</TableCell>
                             <TableCell>Search Type</TableCell>
-                            {small ? null : (
+                            {!small && (
                                 <>
                                     <TableCell>Deck Name</TableCell>
                                     <TableCell>Expansions</TableCell>
@@ -53,6 +67,9 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                             const {id, ...queryWithoutId} = query
                             return (
                                 <TableRow key={id}>
+                                    {!small && (
+                                        <EditPrecedence query={query}/>
+                                    )}
                                     <TableCell>
                                         <LinkButton
                                             href={Routes.deckSearchForSaleQuery(queryWithoutId)}
@@ -113,4 +130,55 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
             </Card>
         )
     }
+}
+
+interface NotifUpdate {
+    notif: SaleNotificationQueryDto
+    requestId: string
+}
+
+class PrecedenceStore {
+    queriesToUpdate: NotifUpdate[] = []
+    pendingUpdateTimeoutId?: number
+
+    queueUpdate = (query: SaleNotificationQueryDto) => {
+
+        if (this.pendingUpdateTimeoutId != null) {
+            window.clearTimeout(this.pendingUpdateTimeoutId)
+        }
+        if (!this.queriesToUpdate.map(notif => notif.notif.id).includes(query.id!)) {
+            const requestId = globalLoaderStore.trackRequest()
+            this.queriesToUpdate.push({
+                notif: query,
+                requestId
+            })
+        }
+        this.pendingUpdateTimeoutId = window.setTimeout(() => {
+            const update = this.queriesToUpdate
+            this.queriesToUpdate = []
+            this.pendingUpdateTimeoutId = undefined
+
+            update.forEach((queryToUpdate) => {
+                forSaleNotificationsStore.updatePrecedence(queryToUpdate.notif.id!, queryToUpdate.notif.precedence, queryToUpdate.requestId)
+            })
+        }, 2000)
+    }
+}
+
+const precedenceStore = new PrecedenceStore()
+
+const EditPrecedence = (props: { query: SaleNotificationQueryDto }) => {
+    return (
+        <TableCell>
+            <TextField
+                style={{width: 48}}
+                type={"number"}
+                value={props.query.precedence}
+                onChange={(event) => {
+                    props.query.precedence = Number(event.target.value)
+                    precedenceStore.queueUpdate(props.query)
+                }}
+            />
+        </TableCell>
+    )
 }

@@ -44,6 +44,8 @@ data class SaleNotificationQuery(
         @ManyToOne
         val user: KeyUser,
 
+        val precedence: Int = 1000,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
@@ -66,6 +68,7 @@ data class SaleNotificationQuery(
                 },
                 owner,
                 user.id,
+                precedence,
                 id
         )
 
@@ -100,6 +103,8 @@ data class SaleNotificationQueryDto(
         val owner: String = "",
 
         val userId: UUID,
+
+        val precedence: Int,
 
         val id: Long?
 ) {

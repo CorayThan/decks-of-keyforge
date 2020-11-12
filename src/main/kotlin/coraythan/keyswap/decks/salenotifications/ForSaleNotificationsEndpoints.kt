@@ -24,4 +24,7 @@ class ForSaleNotificationsEndpoints(
 
     @GetMapping("/secured/count")
     fun findCountForUser() = forSaleNotificationsService.findCountForUser()
+
+    @PostMapping("/secured/update-precedence/{id}/{precedence}")
+    fun updatePrecedence(@PathVariable id: Long, @PathVariable precedence: Int) = forSaleNotificationsService.updatePrecedence(id, precedence)
 }

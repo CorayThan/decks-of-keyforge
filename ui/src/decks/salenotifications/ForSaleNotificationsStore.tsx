@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import * as React from "react"
 import { HttpConfig } from "../../config/HttpConfig"
+import { globalLoaderStore } from "../../config/KeyLoaderBar"
 import { MyDokSubPaths } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
@@ -61,6 +62,11 @@ export class ForSaleNotificationsStore {
             .then((response: AxiosResponse<number>) => {
                 this.queriesCount = response.data
             })
+    }
+
+    updatePrecedence = async (id: number, precedence: number, requestId: string) => {
+        await axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/update-precedence/${id}/${precedence}`)
+        globalLoaderStore.untrackRequest(requestId)
     }
 }
 

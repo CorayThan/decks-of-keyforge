@@ -1,12 +1,15 @@
 import { LinearProgress } from "@material-ui/core"
+import { computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { teamStore } from "../teams/TeamStore"
 import { userSearchStore } from "../user/search/UserSearchStore"
+import { Utils } from "./Utils"
 
 export const KeyLoaderBar = observer(() => {
 
     if (
+        globalLoaderStore.anythingTracked ||
         teamStore.loadingTeamPage ||
         userSearchStore.searching
     ) {
@@ -26,3 +29,26 @@ export const KeyLoaderBar = observer(() => {
 
     return null
 })
+
+class GlobalLoaderStore {
+
+    @observable
+    trackingIds: string[] = []
+
+    trackRequest = () => {
+        const requestId = Utils.pseudoUuid()
+        this.trackingIds.push(requestId)
+        return requestId
+    }
+
+    untrackRequest = (requestId: string) => {
+        this.trackingIds = this.trackingIds.filter(id => id !== requestId)
+    }
+
+    @computed
+    get anythingTracked() {
+        return this.trackingIds.length > 0
+    }
+}
+
+export const globalLoaderStore = new GlobalLoaderStore()

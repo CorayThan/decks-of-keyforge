@@ -1,5 +1,7 @@
 package coraythan.keyswap.decks.salenotifications
 
+import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.QDeck
@@ -34,7 +36,7 @@ class ForSaleNotificationsService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private var queries: List<SaleNotificationQueryDto>? = null
 
-    @Scheduled(fixedDelayString = "PT6H")
+    @Scheduled(fixedDelayString = "PT1H")
     fun refreshQueries() {
         log.info("$scheduledStart refresh sale notification queries")
         this.reloadQueries()
@@ -145,15 +147,24 @@ class ForSaleNotificationsService(
         this.queries = saleNotificationQueryRepo.findAll()
                 .filter { it.user.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
                 .map { it.toDto() }
+                .sortedBy { it.precedence }
     }
 
     fun findAllForUser(): List<SaleNotificationQueryDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return saleNotificationQueryRepo.findByUserId(currentUser.id).map { it.toDto() }
+                .sortedWith(compareBy({it.precedence}, {it.name.toLowerCase()}))
     }
 
     fun findCountForUser(): Long {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return saleNotificationQueryRepo.countByUserId(currentUser.id)
+    }
+
+    fun updatePrecedence(id: Long, precedence: Int) {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        val query = saleNotificationQueryRepo.findByIdOrNull(id) ?: throw BadRequestException("No notif with id $id")
+        if (query.user.id != currentUser.id) throw UnauthorizedException("You don't own this notif.")
+        saleNotificationQueryRepo.save(query.copy(precedence = precedence))
     }
 }
