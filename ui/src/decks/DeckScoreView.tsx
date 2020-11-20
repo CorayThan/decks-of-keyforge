@@ -80,7 +80,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     const sasTooltip = expansion === Expansion.MASS_MUTATION ? "This is a work in progress SAS rating. Expect this to change a bunch over the coming days." : "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
 
     return (
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex"}} className={"deck-score-box"}>
             <div style={props.style}>
                 <Tooltip title={"Total SAS / AERC score without synergies and antisynergies."}>
                     <div>

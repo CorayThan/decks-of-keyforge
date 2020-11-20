@@ -47,6 +47,22 @@ export class ThirdPartyIntegrations extends React.Component {
                     urlName={"Dropbox link to Excel sheet"}
                     discord={"GavinForge (Steve)#7647"}
                 />
+                <DisplayIntegration
+                    name={"Redirect MV to DoK"}
+                    description={"A Chrome plugin that adds a button to go from a deck page on Master Vault to Decks of KeyForge"}
+                    url={"https://chrome.google.com/webstore/detail/decksofkeyforgecom-redire/hoppohnelffeollapmhmgckjmhkhgnhn?hl=en"}
+                    urlName={"Decks Of KeyForge redirect"}
+                    discord={"Aurore#3266"}
+                />
+                <DisplayIntegration
+                    name={"Hide SAS Scores"}
+                    description={
+                        "Instructions to use a Chrome Plugin to hide SAS scores on Decks of KeyForge."
+                    }
+                    url={"https://timeshapers.com/2020/11/19/hiding-sas-totals-on-decks-of-keyforge/"}
+                    urlName={"Hide SAS Scores instructions"}
+                    discord={"Aurore#3266"}
+                />
             </>
         )
     }

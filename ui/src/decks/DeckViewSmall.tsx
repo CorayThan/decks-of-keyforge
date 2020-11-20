@@ -163,6 +163,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
     }
 }
 
+const deckTopClass = "deck-top-contents"
+
 const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props
     const {housesAndCards, id, forAuction, forSale, forTrade, expansion} = deck
@@ -219,6 +221,7 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                     justifyContent: "space-between",
                     marginRight: spacing(2),
                 }}
+                className={deckTopClass}
             >
                 <div style={{display: "grid", gap: spacing(2)}}>
                     {saleIcons && (
@@ -237,10 +240,13 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
         )
     } else {
         return (
-            <div style={{
-                display: "flex",
-                alignItems: "center"
-            }}>
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center"
+                }}
+                className={deckTopClass}
+            >
                 <div style={{display: "grid", gap: spacing(2)}}>
                     {saleIcons}
                 </div>
