@@ -48,7 +48,11 @@ export interface SortableTableHeaderInfo<T> {
 interface SortableTableProps<T> {
     headers: SortableTableHeaderInfo<T>[]
     data: T[]
-    defaultSort: keyof T
+
+    /**
+     * Should be property or title of the header
+     */
+    defaultSort: string | keyof T
     defaultSortFunction?: TransformTableData<T>
     noInitialSort?: boolean
     noOverflow?: boolean
@@ -58,18 +62,24 @@ interface SortableTableProps<T> {
 @observer
 export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 
+    // @ts-ignore
     store: SortableTableStore<T>
 
     constructor(props: SortableTableProps<T>) {
         super(props)
-        this.store = new SortableTableStore<T>(props.defaultSort, props.data, props.defaultSortFunction, props.noInitialSort)
+        this.updateStore(props)
     }
 
     componentDidUpdate(prevProps: SortableTableProps<T>) {
         if (prevProps.data !== this.props.data) {
-            log.info("Sortable table did update")
-            this.store.update(this.props.defaultSort, this.props.data, this.props.defaultSortFunction, undefined, this.props.noInitialSort)
+            this.updateStore(this.props)
         }
+    }
+
+    updateStore = (props: SortableTableProps<T>) => {
+        const defaultSortHeader = props.headers.find(header => header.property === props.defaultSort || header.title === props.defaultSort)
+        log.debug(`Update sortable table store with default sort ${props.defaultSort} found header ${defaultSortHeader?.property}, ${defaultSortHeader?.title}`)
+        this.store = new SortableTableStore<T>(props.data, defaultSortHeader!, !!props.noInitialSort)
     }
 
     render() {
@@ -88,7 +98,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                                         <TableSortLabel
                                             active={store.activeTableSort === header.property && store.sortFunctionName === header.title}
                                             direction={store.tableSortDir}
-                                            onClick={store.changeSortHandler(header)}
+                                            onClick={store.changeSortHandler(header) as () => void}
                                         >
                                             {header.titleNode}{header.title ?? startCase(header.property as string)}
                                         </TableSortLabel>
@@ -146,18 +156,14 @@ class SortableTableStore<T> {
         // @ts-ignore
     sortedItems: T[]
 
-    constructor(private defaultSort: keyof T, private data: T[], private defaultSortFunction?: TransformTableData<T>, private noInitialSort?: boolean) {
-        this.update(defaultSort, data, defaultSortFunction, undefined, noInitialSort)
+    constructor(private data: T[], private defaultSortHeader: SortableTableHeaderInfo<T>, private noInitialSort: boolean) {
+        this.update(data, defaultSortHeader, noInitialSort)
     }
 
-    update = (sort: keyof T, data: T[], sortFunction?: TransformTableData<T>, sortFunctionName?: string, noResort?: boolean) => {
-        this.activeTableSort = sort
+    update = (data: T[], defaultSortHeader: SortableTableHeaderInfo<T>, noInitialSort: boolean) => {
         this.sortedItems = data
-        this.sortFunction = sortFunction
-        this.sortFunctionName = sortFunctionName
-        if (noResort !== true) {
-            this.resort()
-        }
+        const sortHandler = this.changeSortHandler(defaultSortHeader)
+        sortHandler(noInitialSort)
     }
 
     resort = () => {
@@ -171,14 +177,19 @@ class SortableTableStore<T> {
 
     changeSortHandler = (header: SortableTableHeaderInfo<T>) => {
         const {property, sortFunction, title} = header
-        return () => {
+        return (noResort?: boolean) => {
             if ((property != null && this.activeTableSort === property) || (title != null && this.sortFunctionName === title)) {
                 this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
+            }
+            if (this.tableSortDir == null) {
+                this.tableSortDir = "desc"
             }
             this.activeTableSort = property
             this.sortFunction = sortFunction
             this.sortFunctionName = title
-            this.resort()
+            if (noResort !== true) {
+                this.resort()
+            }
         }
     }
 }

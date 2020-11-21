@@ -18,6 +18,7 @@ export const roundToThousands = (round: number) => Math.round(round * 1000) / 10
 export class Utils {
 
     private static readonly readableDateFormat = "MMM d, yyyy"
+    private static readonly readableDateTimeFormat = "MMM d, yyyy, h:mm a"
     static readonly localDateFormat = "yyyy-MM-dd"
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
     static readonly dateTimeFormat = "yyyy-MM-dd'T'HH:mm"
@@ -76,6 +77,7 @@ export class Utils {
     static parseLocalDate = (date: string) => parse(date, Utils.localDateFormat, new Date())
     static parseZonedDateTime = (date: string) => parse(date, Utils.zonedDateTimeFormat, new Date())
     static parseDateTime = (date: string) => parse(date, Utils.dateTimeFormat, new Date())
+    static parseReadableLocalDateTime = (date: string) => parse(date, Utils.readableDateTimeFormat, new Date())
 
     static nowDateString = () => format(new Date(), Utils.localDateFormat)
 

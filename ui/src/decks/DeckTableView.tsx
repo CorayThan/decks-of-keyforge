@@ -253,7 +253,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                     <SortableTable
                         headers={deckTableHeaders}
                         data={decks}
-                        defaultSort={"sasRating"}
+                        defaultSort={"SAS"}
                         noInitialSort={true}
                     />
                 </Paper>
