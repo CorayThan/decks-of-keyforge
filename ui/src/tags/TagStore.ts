@@ -5,9 +5,9 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { CreateTag } from "../generated-src/CreateTag"
 import { DeckTagDto } from "../generated-src/DeckTagDto"
+import { PublicityType } from "../generated-src/PublicityType"
 import { TagDto } from "../generated-src/TagDto"
 import { messageStore } from "../ui/MessageStore"
-import { userStore } from "../user/UserStore"
 
 export class TagStore {
 
@@ -34,6 +34,9 @@ export class TagStore {
 
     @observable
     loadingSearchTags = false
+
+    @observable
+    updatingTags = false
 
     tagDeck = async (deckId: number, tagId: number) => {
         await axios.post(`${TagStore.SECURE_CONTEXT}/tag/${tagId}/deck/${deckId}`)
@@ -90,7 +93,7 @@ export class TagStore {
     }
 
     viewedTag = (tagId: number) => {
-        if (userStore.loggedIn()) {
+        if (keyLocalStorage.hasAuthKey()) {
             axios.post(`${TagStore.SECURE_CONTEXT}/view/${tagId}`)
         }
     }
@@ -106,6 +109,13 @@ export class TagStore {
         this.loadingMyTags = true
         await axios.delete(`${TagStore.SECURE_CONTEXT}/${tagId}`)
         await this.findMyTags()
+    }
+
+    updateTagPublicity = async (tagId: number, publicity: PublicityType) => {
+        this.updatingTags = true
+        await axios.post(`${TagStore.SECURE_CONTEXT}/${tagId}/update-publicity/${publicity}`)
+        await this.findMyTags()
+        this.updatingTags = false
     }
 
 }

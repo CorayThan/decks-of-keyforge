@@ -44,7 +44,7 @@ export class ReleaseNotes extends React.Component {
                 </Paper>
                 <ReleaseNote
                     releaseNumber={"5.18"}
-                    date={"11/12/2020"}
+                    date={"11/20/2020"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
@@ -54,6 +54,19 @@ export class ReleaseNotes extends React.Component {
                         },
                         {
                             note: <LinkButton href={MyDokSubPaths.notifications} variant={"outlined"} color={"primary"}>Notifications</LinkButton>
+                        },
+                        {
+                            highlight: "Tagging Improvements",
+                            note: "You can now change a tag's visibility and click them to mark them on decks more easily. " +
+                                "I've also fixed a bug that caused tag views to not properly increment."
+                        },
+                        {
+                            highlight: "Improved Theoretical Decks",
+                            note: "The system now tracks what theoretical decks you've made, so you can view ones you made in the past. Just go to " +
+                                "the page you create one from, and click 'My Past Theories'. Note that all theoretical decks you've made prior to this " +
+                                "point are lost to the mists of time (unless you have a bookmark). " +
+                                "I've also made it so you can specify which cards are enhanced, " +
+                                "as that can affect SAS scores."
                         },
                     ]}
                 />

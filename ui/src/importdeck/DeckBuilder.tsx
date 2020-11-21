@@ -1,4 +1,4 @@
-import { Button, Divider } from "@material-ui/core"
+import { Box, Button, Divider, IconButton } from "@material-ui/core"
 import { Delete } from "@material-ui/icons"
 import { cloneDeep, sortBy } from "lodash"
 import { autorun, computed, observable } from "mobx"
@@ -11,8 +11,10 @@ import { CardAsLine } from "../cards/views/CardAsLine"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { expansionInfoMap, possibleCardExpansionsForExpansion } from "../expansions/Expansions"
+import { ExtendedExpansionUtils } from "../expansions/ExtendedExpansionUtils"
 import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
+import { TheoryCard } from "../generated-src/TheoryCard"
 import { HouseLabel } from "../houses/HouseUtils"
 import { DeckBuilderData } from "./DeckBuilderData"
 
@@ -38,7 +40,7 @@ class DeckBuilderStore {
             return false
         }
         let valid = true
-        entries.forEach((value: [string, string[]]) => {
+        entries.forEach((value: [string, TheoryCard[]]) => {
             if (value[1].length !== 12) {
                 valid = false
             }
@@ -46,14 +48,12 @@ class DeckBuilderStore {
         return valid
     }
 
-    removeCard = (card: KCard) => {
-        Object.entries(this.currentDeck!.cards).forEach((value: [string, string[]]) => {
-            const cards = value[1]
-            const firstIdx = cards.indexOf(card.cardTitle)
-            if (firstIdx !== -1) {
-                cards.splice(firstIdx, 1)
-            }
-        })
+    removeCard = (house: House, cardIdx: number) => {
+        this.currentDeck!.cards[house]!.splice(cardIdx, 1)
+    }
+
+    enhanceCard = (house: House, cardIdx: number) => {
+        this.currentDeck!.cards[house]![cardIdx].enhanced = !this.currentDeck!.cards[house]![cardIdx].enhanced
     }
 
     addCardHandler = (house: House) => {
@@ -72,8 +72,8 @@ class DeckBuilderStore {
                 }
                 log.debug(`Pushing ${copiedCard.cardTitle} to house ${house}`)
                 const houseCards = this.currentDeck!.cards[house]
-                houseCards.push(copiedCard.cardTitle)
-                this.currentDeck!.cards[house] = sortBy(houseCards, (card: string) => cardStore.fullCardFromCardName(card)?.cardNumber)
+                houseCards.push({name: copiedCard.cardTitle, enhanced: false})
+                this.currentDeck!.cards[house] = sortBy(houseCards, (card: TheoryCard) => cardStore.fullCardFromCardName(card.name)?.cardNumber)
                 cardHolder.option = ""
             }
         })
@@ -84,39 +84,52 @@ class DeckBuilderStore {
 export const deckBuilderStore = new DeckBuilderStore()
 
 @observer
-export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: string[], expansion: Expansion }> {
+export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: TheoryCard[], expansion: Expansion }> {
     render() {
-        const cards = this.props.cards.map(cardName => cardStore.fullCardFromCardName(cardName) as KCard)
+        const {house, cards, expansion} = this.props
         const searchSuggestCardNames = Array.from(new Set(cardStore.findCardNamesForExpansion().flatMap(forExp => {
-            const validExpansions = possibleCardExpansionsForExpansion(expansionInfoMap.get(this.props.expansion)!.expansionNumber)
+            const validExpansions = possibleCardExpansionsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber)
             if (validExpansions.includes(expansionInfoMap.get(forExp.expansion)!.expansionNumber)) {
                 return forExp.names
             } else {
                 return []
             }
         })))
+        const showEnhanced = ExtendedExpansionUtils.allowsEnhancements(expansion)
         return (
             <div style={{display: "flex", flexDirection: "column", width: 240}}>
-                <HouseLabel title={true} house={this.props.house}/>
+                <HouseLabel title={true} house={house}/>
                 <Divider style={{marginTop: 4}}/>
-                {cards.map((card, idx) => (
-                    <div key={idx} style={{display: "flex", alignItems: "center"}}>
-                        <CardAsLine card={card} width={160} marginTop={4} cardActualHouse={this.props.house}/>
-                        <div style={{flexGrow: 1}}/>
-                        <Button
-                            size={"small"}
-                            style={{width: 32, height: 32, minWidth: 32, minHeight: 32}}
-                            onClick={() => deckBuilderStore.removeCard(card)}
-                        >
-                            <Delete color={"action"}/>
-                        </Button>
-                    </div>
-                ))}
+                {cards.map((card, idx) => {
+                    const fullCard = cardStore.fullCardFromCardName(card.name) as KCard
+                    return (
+                        <Box display={"flex"} alignItems={"center"} key={idx}>
+                            <CardAsLine card={fullCard} width={showEnhanced ? 120 : 160} marginTop={4} cardActualHouse={this.props.house}/>
+                            <Box flexGrow={1}/>
+                            {showEnhanced && (
+                                <Button
+                                    onClick={() => deckBuilderStore.enhanceCard(house, idx)}
+                                    color={card.enhanced ? "primary" : undefined}
+                                    size={"small"}
+                                >
+                                    Enhanced
+                                </Button>
+                            )}
+                            <IconButton
+                                size={"small"}
+                                style={{width: 32, height: 32, minWidth: 32, minHeight: 32}}
+                                onClick={() => deckBuilderStore.removeCard(house, idx)}
+                            >
+                                <Delete color={"action"} fontSize={"small"}/>
+                            </IconButton>
+                        </Box>
+                    )
+                })}
                 <div style={{flexGrow: 1}}/>
-                {this.props.cards.length < 12 ? (
+                {cards.length < 12 ? (
                     <SingleCardSearchSuggest
-                        selected={deckBuilderStore.addCardHandler(this.props.house)}
-                        style={{marginTop: spacing(2)}}
+                        selected={deckBuilderStore.addCardHandler(house)}
+                        style={{marginTop: spacing(1)}}
                         placeholder={"Add Card"}
                         names={searchSuggestCardNames}
                     />

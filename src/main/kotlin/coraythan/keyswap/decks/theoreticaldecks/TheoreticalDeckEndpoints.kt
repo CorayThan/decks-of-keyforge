@@ -14,9 +14,12 @@ class TheoreticalDeckEndpoints(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @GetMapping("/secured/mine")
+    fun findMyTheoreticalDecks() = theoreticalDeckService.findMyTheoreticalDecks()
+
     @GetMapping("/{id}")
     fun find(@PathVariable id: UUID) = theoreticalDeckService.findTheoreticalDeck(id)
 
-    @PostMapping
+    @PostMapping("/secured")
     fun save(@RequestBody deck: DeckBuildingData) = theoreticalDeckService.saveTheoreticalDeck(deck)
 }

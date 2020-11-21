@@ -211,8 +211,8 @@ class DeckImporterService(
     private fun makeBasicDeckFromDeckBuilderData(deckBuilderData: DeckBuildingData): Pair<Deck, List<Card>> {
         val cards = deckBuilderData.cards.flatMap { entry ->
             entry.value.map {
-                val card: Card = cardService.findByExpansionCardName(deckBuilderData.expansion.expansionNumber, it)
-                        ?: cardService.findByCardName(it)
+                val card: Card = cardService.findByExpansionCardName(deckBuilderData.expansion.expansionNumber, it.name, it.enhanced)
+                        ?: cardService.findByCardName(it.name)
                         ?: throw BadRequestException("Couldn't find card with expansion ${deckBuilderData.expansion.expansionNumber} name $it and house ${entry.key}")
 
                 card.copy(house = entry.key)

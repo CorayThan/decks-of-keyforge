@@ -1,4 +1,4 @@
-import { Button, Typography } from "@material-ui/core"
+import { Box, Button, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
@@ -11,10 +11,12 @@ import { activeExpansions } from "../../expansions/Expansions"
 import { ExpansionSelector, SelectedExpansion } from "../../expansions/ExpansionSelector"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
+import { TheoryCard } from "../../generated-src/TheoryCard"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyCard } from "../../generic/KeyCard"
 import { HouseSelect, SelectedHouses } from "../../houses/HouseSelect"
 import { KeyButton } from "../../mui-restyled/KeyButton"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { userStore } from "../../user/UserStore"
 import { deckBuilderStore, DisplayCardsInHouseEditable } from "../DeckBuilder"
@@ -23,7 +25,7 @@ import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 
 export const CreateTheoreticalDeck = observer(() => {
 
-    const [expansionStore] = useState(new SelectedExpansion(activeExpansions, true))
+    const [expansionStore] = useState(new SelectedExpansion(activeExpansions))
     const [housesStore] = useState(new SelectedHouses([House.Dis, House.Logos, House.Shadows]))
 
     const resetDeck = () => {
@@ -79,9 +81,13 @@ export const CreateTheoreticalDeck = observer(() => {
     return (
         <div style={{display: "flex", flexDirection: "column", padding: spacing(4), alignItems: "center"}}>
             <div>
-                <div>
-                    <ExpansionSelector store={expansionStore} style={{marginBottom: spacing(4), width: 200}}/>
-                </div>
+                <Box display={"flex"} flexWrap={"wrap"}>
+                    <ExpansionSelector store={expansionStore} style={{marginBottom: spacing(2), marginRight: spacing(2), width: 200}}/>
+                    <Box flexGrow={1}/>
+                    <div>
+                        <LinkButton href={Routes.myTheoreticalDecks}>My Past Theories</LinkButton>
+                    </div>
+                </Box>
                 <div style={{maxWidth: 784}}>
                     <HouseSelect style={{marginBottom: spacing(4)}} selectedHouses={housesStore}/>
                 </div>
@@ -104,9 +110,15 @@ export const CreateTheoreticalDeck = observer(() => {
                 {Utils.isDev() && (
                     <KeyButton
                         onClick={() => {
-                            deckBuilderStore.currentDeck!.cards["Shadows"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
-                            deckBuilderStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
-                            deckBuilderStore.currentDeck!.cards["Logos"] = cardStore.allCards.slice(0, 12).map(card => card.cardTitle)
+                            deckBuilderStore.currentDeck!.cards["Shadows"] = cardStore.allCards.slice(0, 12).map(card => ({
+                                name: card.cardTitle,
+                                enhanced: false
+                            }))
+                            deckBuilderStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => ({name: card.cardTitle, enhanced: false}))
+                            deckBuilderStore.currentDeck!.cards["Logos"] = cardStore.allCards.slice(0, 12).map(card => ({
+                                name: card.cardTitle,
+                                enhanced: false
+                            }))
                         }}
                     >
                         Add test cards
@@ -141,7 +153,7 @@ const CreateTheoreticalDeckBuilder = observer((props: { expansion: Expansion, ho
             margin={0}
         >
             <div style={{display: "flex", flexWrap: "wrap", margin: spacing(2), paddingBottom: spacing(2)}}>
-                {deckCards.map((value: [string, string[]], index: number) => {
+                {deckCards.map((value: [string, TheoryCard[]], index: number) => {
                     return (
                         <div key={value[0]} style={{marginRight: index !== 2 ? spacing(2) : 0}}>
                             <DisplayCardsInHouseEditable house={value[0] as House} cards={value[1]} expansion={expansion}/>
@@ -152,4 +164,3 @@ const CreateTheoreticalDeckBuilder = observer((props: { expansion: Expansion, ho
         </KeyCard>
     )
 })
-

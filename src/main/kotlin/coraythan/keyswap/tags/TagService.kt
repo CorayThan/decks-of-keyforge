@@ -62,8 +62,16 @@ class TagService(
         ))
     }
 
+    fun updateTagPublicityType(id: Long, publicityType: PublicityType) {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val tag = tagRepo.findByIdOrNull(id) ?: throw IllegalStateException("No tag with id $id")
+        if (tag.creator.id != user.id) throw UnauthorizedException("Can only edit your own tags.")
+        tagRepo.save(tag.copy(publicityType = publicityType))
+    }
+
     fun findPublicTags() = tagRepo.findByPublicityType(PublicityType.PUBLIC)
             .map { it.toDto(it.decks.size) }
+            .sortedWith(compareBy({ it.viewsThisMonth }, { it.created }))
 
     fun findTagInfos(ids: List<Long>) = tagRepo.findAllById(ids)
             .filter { it.publicityType == PublicityType.PRIVATE }
@@ -75,7 +83,7 @@ class TagService(
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
         return tagRepo.findByCreatorId(user.id)
                 .map { it.toDto() }
-                .sortedWith(compareBy({ it.publicityType}, {it.name}))
+                .sortedWith(compareBy({ it.publicityType }, { it.name }))
     }
 
     fun findMyDeckTags(): List<DeckTagDto> {

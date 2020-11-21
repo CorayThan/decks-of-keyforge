@@ -1,5 +1,5 @@
-import { Avatar, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, Typography } from "@material-ui/core"
-import { Done } from "@material-ui/icons"
+import { Avatar, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@material-ui/core"
+import { Delete } from "@material-ui/icons"
 import * as React from "react"
 import { useState } from "react"
 import { PublicityType } from "../generated-src/PublicityType"
@@ -30,40 +30,26 @@ export const TagPill = (props: { tag: TagDto, active: boolean, deckId: number, s
             label={tag.name}
             avatar={avatar}
             color={active ? "primary" : undefined}
-            onDelete={() => {
+            onClick={() => {
                 active ? tagStore.untagDeck(deckId, tag.id) : tagStore.tagDeck(deckId, tag.id)
             }}
-            deleteIcon={active ? undefined : <Done/>}
             style={style}
         />
 
     )
 }
 
-export const TagDeletePill = (props: { tag: TagDto, style?: React.CSSProperties }) => {
-    const {tag, style} = props
-    let avatar = undefined
-    let tip = ""
-    if (tag.publicityType === PublicityType.NOT_SEARCHABLE) {
-        avatar = <Avatar>SP</Avatar>
-        tip = "Semi-private tag, cannot be searched"
-    } else if (tag.publicityType === PublicityType.PUBLIC) {
-        avatar = <Avatar>P</Avatar>
-        tip = "Public tag"
-    } else if (tag.publicityType === PublicityType.PRIVATE) {
-        tip = "Private tag"
-    }
+export const DeleteTagButton = (props: { tag: TagDto }) => {
+    const {tag} = props
     const [open, setOpen] = useState(false)
     return (
         <>
-            <Tooltip title={tip}>
-                <Chip
-                    label={tag.name}
-                    avatar={avatar}
-                    onDelete={() => setOpen(true)}
-                    style={style}
-                />
-            </Tooltip>
+            <IconButton
+                size={"small"}
+                onClick={() => setOpen(true)}
+            >
+                <Delete fontSize={"small"}/>
+            </IconButton>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}

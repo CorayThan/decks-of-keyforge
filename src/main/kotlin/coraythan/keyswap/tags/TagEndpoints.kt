@@ -15,6 +15,9 @@ class TagEndpoints(
     @PostMapping("/secured")
     fun createTag(@RequestBody createTag: CreateTag) = tagService.createTag(createTag)
 
+    @PostMapping("/secured/{id}/update-publicity/{publicity}")
+    fun updateTagPublicity(@PathVariable id: Long, @PathVariable publicity: PublicityType) = tagService.updateTagPublicityType(id, publicity)
+
     @GetMapping("/public")
     fun findPublicTags() = tagService.findPublicTags()
 

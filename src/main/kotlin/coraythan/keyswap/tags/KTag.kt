@@ -18,6 +18,8 @@ data class KTag(
         @Enumerated(EnumType.STRING)
         val publicityType: PublicityType = PublicityType.PUBLIC,
 
+        val publicEdits: Boolean = false,
+
         @JsonIgnoreProperties("tag")
         @OneToMany(mappedBy = "tag", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val decks: List<DeckTag> = listOf(),

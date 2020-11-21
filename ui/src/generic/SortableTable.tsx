@@ -172,7 +172,7 @@ class SortableTableStore<T> {
     changeSortHandler = (header: SortableTableHeaderInfo<T>) => {
         const {property, sortFunction, title} = header
         return () => {
-            if (this.activeTableSort === property && property != null) {
+            if ((property != null && this.activeTableSort === property) || (title != null && this.sortFunctionName === title)) {
                 this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
             }
             this.activeTableSort = property

@@ -60,7 +60,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             return null
         }
 
-        const {deck, saleInfo, fullVersion, hideActions, style} = this.props
+        const {deck, saleInfo, fullVersion, hideActions, style, fake} = this.props
         const {id, keyforgeId, name, wishlistCount, funnyCount, owners} = deck
 
         const compact = screenStore.smallDeckView()
@@ -97,7 +97,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <div style={{flexGrow: 1}}>
                             <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
                                 <KeyLink
-                                    to={Routes.deckPage(keyforgeId)}
+                                    to={fake ? Routes.theoreticalDeckPage(keyforgeId) : Routes.deckPage(keyforgeId)}
                                     disabled={fullVersion}
                                     noStyle={true}
                                 >
@@ -114,7 +114,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     <InlineDeckNote id={deck.id}/>
                                 </Collapse>
                             </CardContent>
-                            {hideActions ? null : (
+                            {!hideActions && !fake && (
                                 <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
                                     {fullVersion && !compact ? (
                                         <KeyButton

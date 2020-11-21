@@ -25,6 +25,7 @@ import { UpdateSpoilerAerc } from "../extracardinfo/UpdateSpoilerAerc"
 import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
+import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreticalDecks"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { LandingPage } from "../landing/LandingPage"
 import { MyDokPage } from "../my-dok/MyDokPage"
@@ -76,6 +77,7 @@ class Routes {
     static tags = "/tags"
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
+    static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static stats = "/stats"
     static articles = "/articles"
@@ -211,6 +213,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.createTheoreticalDeck}
                         component={CreateTheoreticalDeck}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.myTheoreticalDecks}
+                        component={ViewMyTheoreticalDecks}
                     />
                     <Route
                         exact={true}

@@ -15,6 +15,8 @@ data class TheoreticalDeck(
 
         val houseNamesString: String = "",
 
+        val creatorId: UUID? = null,
+
         @Id
         val id: UUID = UUID.randomUUID()
 )

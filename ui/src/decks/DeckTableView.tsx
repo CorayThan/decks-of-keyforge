@@ -290,6 +290,12 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
         this.setPriceForSeller(this.props)
     }
 
+    componentDidUpdate(prevProps: Readonly<SellerViewCellProps>) {
+        if (this.props.deck.keyforgeId !== prevProps.deck.keyforgeId) {
+            this.setPriceForSeller(this.props)
+        }
+    }
+
     setPriceForSeller = (props: SellerViewCellProps) => {
         const {deck, sellerVersion} = props
         this.price = DeckUtils.findPrice(deck, sellerVersion)?.toString()
@@ -297,7 +303,6 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
 
     render() {
         const {deck, sellerVersion} = this.props
-        log.info("For deck: " + deck.name + " price: " + this.price)
         const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
         if (auctionInfo != null && this.price != null && sellerVersion) {
             return (

@@ -1,5 +1,4 @@
 import {
-    Box,
     Button,
     Dialog,
     DialogActions,
@@ -8,8 +7,10 @@ import {
     FormControl,
     FormHelperText,
     FormLabel,
+    MenuItem,
     Radio,
     RadioGroup,
+    Select,
     TextField,
     Typography
 } from "@material-ui/core"
@@ -18,9 +19,12 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { Utils } from "../config/Utils"
 import { PublicityType } from "../generated-src/PublicityType"
+import { SortableTable } from "../generic/SortableTable"
 import { KeyButton } from "../mui-restyled/KeyButton"
-import { TagDeletePill } from "./TagPill"
+import { Loader } from "../mui-restyled/Loader"
+import { DeleteTagButton } from "./TagPill"
 import { tagStore } from "./TagStore"
 
 @observer
@@ -59,7 +63,8 @@ export class ManageTagsButton extends React.Component {
 
     render() {
 
-        const nameError = tagStore.myTags?.find(tag => tag.name === this.name.trim()) != null
+        const myTags = tagStore.myTags ?? []
+        const nameError = myTags.find(tag => tag.name === this.name.trim()) != null
 
         return (
             <>
@@ -77,18 +82,46 @@ export class ManageTagsButton extends React.Component {
                     >
                         <DialogTitle>Manage Tags</DialogTitle>
                         <DialogContent>
-                            <Typography variant={"subtitle1"}>Delete Tags</Typography>
-                            <Box display={"flex"} flexWrap={"wrap"}>
-                                {tagStore.myTags?.map(tag => {
-                                    return (
-                                        <TagDeletePill
-                                            key={tag.id}
-                                            tag={tag}
-                                            style={{marginTop: spacing(1), marginRight: spacing(1)}}
-                                        />
-                                    )
-                                })}
-                            </Box>
+                            {(tagStore.updatingTags || tagStore.loadingMyTags) && <Loader/>}
+                            <SortableTable
+                                headers={[
+                                    {
+                                        property: "name",
+                                    },
+                                    {
+                                        title: "Publicity",
+                                        transform: tag => (
+                                            <FormControl fullWidth={true}>
+                                                <Select
+                                                    value={tag.publicityType}
+                                                    onChange={event => tagStore.updateTagPublicity(tag.id, event.target.value as PublicityType)}
+                                                >
+                                                    <MenuItem value={PublicityType.PUBLIC}>Public</MenuItem>
+                                                    <MenuItem value={PublicityType.NOT_SEARCHABLE}>Semi-Private</MenuItem>
+                                                    <MenuItem value={PublicityType.PRIVATE}>Private</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        )
+                                    },
+                                    {
+                                        property: "created",
+                                        transform: tag => Utils.formatDateTimeToDate(tag.created)
+                                    },
+                                    {
+                                        title: "Delete",
+                                        transform: tag => (
+                                            <DeleteTagButton
+                                                tag={tag}
+                                            />
+                                        ),
+                                        sortable: false
+                                    },
+
+
+                                ]}
+                                data={myTags}
+                                defaultSort={"created"}
+                            />
 
                             <Typography variant={"subtitle1"} style={{marginTop: spacing(2), marginBottom: spacing(1)}}>Create Tag</Typography>
                             <TextField
