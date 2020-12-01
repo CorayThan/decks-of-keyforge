@@ -587,12 +587,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             <ToggleButton value={500}>
                                                 500
                                             </ToggleButton>
+                                            <ToggleButton value={1000}>
+                                                1000
+                                            </ToggleButton>
                                             {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
-                                                <ToggleButton value={1000}>
-                                                    1000
-                                                </ToggleButton>
-                                            )}
-                                            {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.MERCHANT_AEMBERMAKER) && (
                                                 <ToggleButton value={2500}>
                                                     2500
                                                 </ToggleButton>

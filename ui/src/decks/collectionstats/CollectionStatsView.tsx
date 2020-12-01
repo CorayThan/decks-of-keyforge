@@ -11,9 +11,11 @@ import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
+import { expansionInfoMap } from "../../expansions/Expansions"
 import { BarData } from "../../generated-src/BarData"
 import { CardCounts } from "../../generated-src/CardCounts"
 import { CollectionStats } from "../../generated-src/CollectionStats"
+import { Expansion } from "../../generated-src/Expansion"
 import { HouseCount } from "../../generated-src/HouseCount"
 import { ThreeHousesCount } from "../../generated-src/ThreeHousesCount"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
@@ -60,7 +62,7 @@ export class CollectionStatsView extends React.Component<CollectionStatsViewProp
         }
 
         const {stats} = this.props
-        const {houseCounts, houseDeckCounts, cardCounts, sasValues} = stats
+        const {houseCounts, houseDeckCounts, cardCounts, sasValues, expansionCounts} = stats
 
         if (stats.deckCount === 0) {
             return <Typography variant={"subtitle1"}>Sorry, no decks matched your search!</Typography>
@@ -71,6 +73,9 @@ export class CollectionStatsView extends React.Component<CollectionStatsViewProp
                 <Box m={4} display={"flex"}>
                     <Box display={"flex"} width={480} mr={4} flexDirection={"column"}>
                         <HousesGraph houseCounts={houseCounts}/>
+                        <Box mt={4}>
+                            <ExpansionsGraph expansionCounts={expansionCounts}/>
+                        </Box>
                         <Box mt={4}>
                             <SasGraph sasValues={sasValues}/>
                         </Box>
@@ -138,6 +143,30 @@ const HousesGraph = (props: { houseCounts: HouseCount[] }) => {
                             id: label,
                             label,
                             value: house.count
+                        }
+                    })}
+                    theme={themeStore.nivoTheme}
+                />
+            </Box>
+        </Paper>
+    )
+}
+
+const ExpansionsGraph = (props: { expansionCounts: BarData[] }) => {
+    return (
+        <Paper style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <Typography style={{marginTop: spacing(1)}} variant={"h5"} color={"primary"}>Expansions</Typography>
+            <Box width={440} height={280}>
+                <ResponsivePie
+                    innerRadius={0.4}
+                    padAngle={4}
+                    cornerRadius={4}
+                    margin={{top: 32, right: 72, bottom: 32, left: 72}}
+                    data={props.expansionCounts.map(expansion => {
+                        return {
+                            id: expansionInfoMap.get(expansion.x as Expansion)!.abbreviation,
+                            label: expansionInfoMap.get(expansion.x as Expansion)!.name,
+                            value: expansion.y
                         }
                     })}
                     theme={themeStore.nivoTheme}

@@ -1,19 +1,12 @@
-import { Box, Tooltip, Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
-import { DeckSearchResult, DeckUtils } from "../../decks/models/DeckSearchResult"
-import { Expansion } from "../../generated-src/Expansion"
-import { EnhancedAmberIcon } from "../../generic/icons/enhancements/EnhancedAmberIcon"
-import { EnhancedCaptureIcon } from "../../generic/icons/enhancements/EnhancedCaptureIcon"
-import { EnhancedDamageIcon } from "../../generic/icons/enhancements/EnhancedDamageIcon"
-import { EnhancedDrawIcon } from "../../generic/icons/enhancements/EnhancedDrawIcon"
-import { SasTip } from "../../mui-restyled/SasTip"
+import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { HasAerc } from "../HasAerc"
 import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
-import { Fragment } from "react"
 
 export enum AercViewType {
     DECK,
@@ -53,49 +46,6 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
         .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
         .filter(card => card != null) as KCard[]
 
-    let enhancedIcons = null
-
-    let enhancedAmber = 0
-    let enhancedCapture = 0
-    let enhancedDamage = 0
-    let enhancedDraw = 0
-    if (deck.expansion === Expansion.MASS_MUTATION) {
-        cards.forEach(card => {
-            enhancedAmber += card.extraCardInfo.enhancementAmber
-            enhancedCapture += card.extraCardInfo.enhancementCapture
-            enhancedDamage += card.extraCardInfo.enhancementDamage
-            enhancedDraw += card.extraCardInfo.enhancementDraw
-        })
-
-        enhancedIcons = (
-            <Box
-                display={"grid"}
-                gridTemplateColumns={mobile ? "1fr" : "1fr 1fr 1fr 1fr"}
-                my={1}
-                px={mobile ? 1 : 0}
-                gridGap={4}
-            >
-                <Box display={"flex"}>
-                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedAmber}</Typography>
-                    <EnhancedAmberIcon/>
-                </Box>
-                <Box display={"flex"}>
-                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedCapture}</Typography>
-                    <EnhancedCaptureIcon/>
-                </Box>
-                <Box display={"flex"}>
-                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDamage}</Typography>
-                    <EnhancedDamageIcon/>
-                </Box>
-                <Box display={"flex"}>
-                    <Typography variant={"body2"} style={{marginRight: 4}}>{enhancedDraw}</Typography>
-                    <EnhancedDrawIcon/>
-                </Box>
-            </Box>
-        )
-    }
-
-
     if (mobile) {
         return (
             <div
@@ -114,7 +64,6 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
                 <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
                 <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
-                {enhancedIcons}
             </div>
         )
     }
@@ -135,30 +84,6 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             {/*        </Tooltip>*/}
             {/*    </div>*/}
             {/*)}*/}
-            <div style={{marginLeft: spacing(1)}}>
-                <SasTip
-                    title={<Typography variant={"subtitle1"}>META Score</Typography>}
-                    contents={(
-                        <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
-                            {Object.entries(deck.metaScores ?? {})
-                                .map(meta => (
-                                    <Fragment key={meta[0]}>
-                                        <Typography variant={"body2"}>{meta[0]}</Typography>
-                                        <Typography variant={"body2"}>{meta[1]}</Typography>
-                                    </Fragment>
-                                ))}
-                        </Box>
-                    )}
-                >
-                    <div style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end"}}>
-                        <Typography variant={"h5"} color={"primary"} style={{fontSize: 18, marginRight: spacing(1)}}>
-                            {DeckUtils.calculateMetaScore(deck)}
-                        </Typography>
-                        <Typography variant={"h5"} color={"primary"} style={{fontSize: 14, marginBottom: 2}} noWrap={true}>META</Typography>
-                    </div>
-                </SasTip>
-            </div>
-            {enhancedIcons}
             <div
                 style={{
                     display: "grid",

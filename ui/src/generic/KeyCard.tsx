@@ -17,7 +17,7 @@ export const KeyCard = observer((props: { topContents: React.ReactNode, rightCon
             <Card style={{margin: margin ?? spacing(2), ...style}} {...rest}>
                 <div style={{display: "flex"}}>
                     <div>
-                        <div style={{backgroundColor, padding: spacing(2), ...topContentsStyle}}>
+                        <div style={{backgroundColor, padding: spacing(1), ...topContentsStyle}}>
                             {topContents}
                         </div>
                         {children}
@@ -29,7 +29,7 @@ export const KeyCard = observer((props: { topContents: React.ReactNode, rightCon
     }
     return (
         <Card style={{margin: margin ?? spacing(2), ...style}} {...rest}>
-            <div style={{backgroundColor, padding: spacing(2), ...topContentsStyle}}>
+            <div style={{backgroundColor, padding: spacing(1), ...topContentsStyle}}>
                 {topContents}
             </div>
             {children}

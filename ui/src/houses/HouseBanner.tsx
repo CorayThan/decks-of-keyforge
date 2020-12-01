@@ -6,15 +6,16 @@ import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { houseValues } from "./HouseUtils"
 
-export const HouseBanner = (props: { houses: House[], size?: number, style?: React.CSSProperties, expansion?: Expansion }) => {
-    const {houses, style, expansion} = props
+export const HouseBanner = (props: { houses: House[], size?: number, style?: React.CSSProperties, expansion?: Expansion, extras?: React.ReactNode }) => {
+    const {houses, style, expansion, extras} = props
     let size = 64
     if (props.size) {
         size = props.size
     }
 
     return (
-        <div style={{display: "flex", justifyContent: "space-evenly", ...style}}>
+        <div style={{display: "flex", justifyContent: "space-evenly", alignItems: "center", ...style}}>
+            {extras}
             {houses.map((house) => (
                 <HouseImage house={house} key={house} size={size}/>
             ))}

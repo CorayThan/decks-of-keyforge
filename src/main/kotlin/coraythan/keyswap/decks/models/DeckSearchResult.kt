@@ -2,6 +2,7 @@ package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.House
+import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.roundToOneSigDig
@@ -72,9 +73,22 @@ data class DeckSearchResult(
         val dateAdded: LocalDate? = null
 ) {
 
-    fun printDeckSimple(): String {
+    fun printDeckSimple(saleInfo: DeckListing? = null): String {
+
+        val buyItNow = saleInfo?.buyItNow
+        val highBid = saleInfo?.highestBid
+        val highOffer = saleInfo?.highestOffer
+        val currencySymbol = saleInfo?.currencySymbol
+        val buyItNowMessage = if (buyItNow == null) "" else ", BIN: $currencySymbol$buyItNow"
+
+        val forSaleMessage = when {
+            forAuction == true -> " • On Auction${if (highBid == null) "" else ", high bid: $currencySymbol$highBid"}$buyItNowMessage"
+            forSale == true -> " • For Sale${if (highOffer == null) "" else ", high offer:  $currencySymbol$highOffer"}$buyItNowMessage"
+            else -> ""
+        }
+
         return "$sasRating SAS • ${expansion.readable} • ${housesAndCards.map { it.house }.joinToString(" – ") { it.masterVaultValue }}" +
-                if (forSale == true || forAuction == true || forTrade == true) " • For sale" else ""
+                forSaleMessage
     }
 
     fun printDeck(): String {

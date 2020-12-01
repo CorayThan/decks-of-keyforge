@@ -1,4 +1,4 @@
-import { Card, Collapse, Tooltip } from "@material-ui/core"
+import { Box, Card, Collapse, Tooltip } from "@material-ui/core"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
@@ -38,6 +38,7 @@ import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { DeckScoreView } from "./DeckScoreView"
+import { EnhancementsInDeck } from "./EnhancementsInDeck"
 import { DeckSearchResult } from "./models/DeckSearchResult"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 import { DeckOwnershipButton } from "./ownership/DeckOwnershipButton"
@@ -197,17 +198,17 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
             <>
                 {displayForAuction && (
                     <Tooltip title={"On auction"}>
-                        <div style={{display: "flex", justifyContent: "center"}}><AuctionDeckIcon height={40}/></div>
+                        <div style={{display: "flex", justifyContent: "center"}}><AuctionDeckIcon height={36}/></div>
                     </Tooltip>
                 )}
                 {displayForSale && (
                     <Tooltip title={"For sale"}>
-                        <div style={{display: "flex", justifyContent: "center"}}><SellDeckIcon height={40}/></div>
+                        <div style={{display: "flex", justifyContent: "center"}}><SellDeckIcon height={36}/></div>
                     </Tooltip>
                 )}
                 {displayForTrade && (
                     <Tooltip title={"For trade"}>
-                        <div style={{display: "flex", justifyContent: "center"}}><TradeDeckIcon height={40}/></div>
+                        <div style={{display: "flex", justifyContent: "center"}}><TradeDeckIcon height={36}/></div>
                     </Tooltip>
                 )}
             </>
@@ -219,7 +220,6 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    marginRight: spacing(2),
                 }}
                 className={deckTopClass}
             >
@@ -240,22 +240,23 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
         )
     } else {
         return (
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center"
-                }}
+            <Box
+                display={"flex"}
+                alignItems={"center"}
                 className={deckTopClass}
             >
-                <div style={{display: "grid", gap: spacing(2)}}>
-                    {saleIcons}
-                </div>
-                <div style={{flexGrow: 1}}>
-                    <HouseBanner houses={houses} expansion={deck.expansion}/>
+                <Box
+                    display={"grid"}
+                    gridGap={spacing(1)}
+                    flexGrow={1}
+                    alignItems={"center"}
+                >
+                    <HouseBanner houses={houses} expansion={deck.expansion} extras={saleIcons}/>
                     <OrganizedPlayStats deck={deck}/>
-                </div>
+                    <EnhancementsInDeck deck={deck}/>
+                </Box>
                 <DeckScoreView deck={deck}/>
-            </div>
+            </Box>
         )
     }
 })

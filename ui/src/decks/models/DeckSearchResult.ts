@@ -4,6 +4,7 @@ import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
 import { HouseAndCards } from "../../generated-src/HouseAndCards"
+import { SynergyTrait } from "../../generated-src/SynergyTrait"
 import { CsvData } from "../../generic/CsvDownloadButton"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { userStore } from "../../user/UserStore"
@@ -78,6 +79,13 @@ export interface DeckSearchResult {
 
 }
 
+export interface TraitInDeckInfo {
+    trait: SynergyTrait
+    count: number
+    strength: number
+    houseCounts: Map<House, number>
+}
+
 export class DeckUtils {
 
     static calculateMetaScore = (deck: DeckSearchResult) => {
@@ -123,6 +131,38 @@ export class DeckUtils {
             }
         }
         return undefined
+    }
+
+    static traits = (deck: DeckSearchResult): Map<SynergyTrait, TraitInDeckInfo> => {
+        const traitsInDeck: Map<SynergyTrait, TraitInDeckInfo> = new Map()
+        const houses = deck.housesAndCards.map(houseAndCards => houseAndCards.house)
+        deck.housesAndCards.forEach(houseAndCards => {
+            houseAndCards.cards.forEach(card => {
+                const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
+                fullCard?.extraCardInfo?.traits?.forEach(trait => {
+                    let traitInDeck = traitsInDeck.get(trait.trait)
+                    if (traitInDeck == null) {
+                        const newTrait = {
+                            trait: trait.trait,
+                            count: 0,
+                            strength: 0,
+                            houseCounts: new Map()
+                        }
+                        traitsInDeck.set(trait.trait, newTrait)
+                        traitInDeck = newTrait
+                        houses.forEach(house => {
+                            newTrait.houseCounts.set(house, 0)
+                        })
+                    }
+                    log.info("Add trait " + trait.trait)
+                    traitInDeck.count += 1
+                    traitInDeck.strength += trait.rating
+                    traitInDeck.houseCounts.set(houseAndCards.house, traitInDeck.houseCounts.get(houseAndCards.house)! + 1)
+                })
+            })
+        })
+        log.info("Trait size " + traitsInDeck.size)
+        return traitsInDeck
     }
 
     static sasForHouse = (combos: SynergyCombo[], accessor?: (combo: SynergyCombo) => number, house?: House): number => {

@@ -1,6 +1,8 @@
 package coraythan.keyswap.config
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.auctions.DeckListingRepo
+import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.tags.TagService
@@ -22,6 +24,7 @@ class WebConfiguration(
         private val deckSearchService: DeckSearchService,
         private val cardService: CardService,
         private val tagService: TagService,
+        private val deckListingRepo: DeckListingRepo,
 ) : WebMvcConfigurer {
 
     private val oneYearSeconds = 60 * 60 * 24 * 356
@@ -131,10 +134,15 @@ class WebConfiguration(
                         if (deck == null) {
                             resource
                         } else {
+                            val listing = if (deck.deck.forSale == true) {
+                                deckListingRepo.findByDeckIdAndStatusNot(deck.deck.id, DeckListingStatus.COMPLETE)
+                            } else {
+                                null
+                            }
                             transformIndexPage(
                                     resource,
                                     deck.deck.name,
-                                    deck.deck.printDeckSimple()
+                                    deck.deck.printDeckSimple(listing)
                             )
                         }
 

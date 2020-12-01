@@ -1,9 +1,10 @@
-import { Typography } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import Tooltip from "@material-ui/core/Tooltip"
 import HistoryIcon from "@material-ui/icons/History"
 import { range } from "lodash"
 import * as React from "react"
+import { Fragment } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { roundToThousands } from "../config/Utils"
@@ -11,7 +12,8 @@ import { activeExpansions } from "../expansions/Expansions"
 import { Expansion } from "../generated-src/Expansion"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
-import { DeckSearchResult } from "./models/DeckSearchResult"
+import { SasTip } from "../mui-restyled/SasTip"
+import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
 
 export enum DeckScoreSize {
     SMALL,
@@ -57,6 +59,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         expansion
     } = deck
 
+    const metaScore = DeckUtils.calculateMetaScore(deck)
+
     if (expansion != null && !activeExpansions.includes(expansion)) {
         return (
             <Typography variant={"h5"} style={{color: "#FFFFFF"}}>Score Pending</Typography>
@@ -80,8 +84,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     const sasTooltip = expansion === Expansion.MASS_MUTATION ? "This is a work in progress SAS rating. Expect this to change a bunch over the coming days." : "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
 
     return (
-        <div style={{display: "flex"}} className={"deck-score-box"}>
-            <div style={props.style}>
+        <Box display={"flex"} className={"deck-score-box"}>
+            <div style={{height: 148, ...props.style}}>
                 <Tooltip title={"Total SAS / AERC score without synergies and antisynergies."}>
                     <div>
                         <RatingRow value={aercScore} name={"BASE AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
@@ -89,7 +93,28 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                 </Tooltip>
                 <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
-                <div style={{borderBottom: "1px solid rgba(255,255,255)"}}/>
+                <SasTip
+                    title={<Typography variant={"subtitle1"}>META Score</Typography>}
+                    contents={(
+                        <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
+                            {Object.entries(deck.metaScores ?? {})
+                                .map(meta => (
+                                    <Fragment key={meta[0]}>
+                                        <Typography variant={"body2"}>{meta[0]}</Typography>
+                                        <Typography variant={"body2"}>{meta[1]}</Typography>
+                                    </Fragment>
+                                ))}
+                        </Box>
+                    )}
+                >
+                    <RatingRow
+                        value={Math.abs(metaScore)}
+                        name={"META"}
+                        operator={metaScore > -1 ? "+" : "-"}
+                        size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}
+                    />
+                </SasTip>
+                <div style={{borderBottom: "1px solid rgba(255,255,255)", paddingTop: 2}}/>
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}/>
                     <Tooltip
@@ -120,7 +145,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                     />
                 </div>
             )}
-        </div>
+        </Box>
     )
 }
 
@@ -255,6 +280,7 @@ const RatingRow = (props: { value: number, name: string, operator?: string, size
     let smallFontSize: number | undefined = 12
     let smallTextMarginBottom: number | undefined = 2
     let width = 88
+    let lineHeight: number | undefined
     if (size === DeckScoreSize.LARGE) {
         largeText = "h3"
         smallText = "h5"
@@ -266,6 +292,7 @@ const RatingRow = (props: { value: number, name: string, operator?: string, size
         smallText = "body2"
         smallFontSize = 10
         width = 72
+        lineHeight = 1.3
     } else if (size === DeckScoreSize.MEDIUM_LARGE) {
         largeText = "h4"
         smallText = "h5"
@@ -276,10 +303,15 @@ const RatingRow = (props: { value: number, name: string, operator?: string, size
     return (
         <div style={{display: "flex", alignItems: "flex-end"}}>
             <div style={{flexGrow: 1}}/>
-            <Typography variant={largeText} style={{color: "#FFFFFF", marginRight: spacing(1)}}>{props.operator} {props.value}</Typography>
+            <Typography
+                variant={largeText}
+                style={{color: "#FFFFFF", marginRight: spacing(1), lineHeight}}
+            >
+                {props.operator} {props.value}
+            </Typography>
             <Typography
                 variant={smallText}
-                style={{fontSize: smallFontSize, marginBottom: smallTextMarginBottom, color: "#FFFFFF", width}}
+                style={{fontSize: smallFontSize, marginBottom: smallTextMarginBottom, color: "#FFFFFF", width, lineHeight}}
             >
                 {props.name}
             </Typography>

@@ -48,6 +48,7 @@ data class CollectionStats(
         val houseDeckCounts: List<ThreeHousesCount>,
         val cardCounts: List<CardCounts>,
         val sasValues: List<BarData>,
+        val expansionCounts: List<BarData>,
         val deckCount: Int,
 ) {
     companion object {
@@ -76,6 +77,10 @@ data class CollectionStats(
                             .groupBy { it }
                             .map { HouseCount(it.key, it.value.size) }
                             .sortedBy { it.house },
+                    expansionCounts = decks
+                            .groupBy { it.expansion }
+                            .map { BarData(it.key, it.value.size) }
+                            .sortedBy { it.x as Expansion },
                     houseDeckCounts = decks
                             .groupBy { it.housesAndCards.map { houseAndCards -> houseAndCards.house } }
                             .map { ThreeHousesCount(
