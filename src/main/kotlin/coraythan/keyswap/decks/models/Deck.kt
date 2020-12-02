@@ -134,8 +134,9 @@ data class Deck(
             this.disruption == o.disruption &&
             this.creatureProtection == o.creatureProtection &&
             this.other == o.other &&
-            this.bonusCapture == o.bonusCapture &&
-            this.bonusDraw == o.bonusDraw
+            this.sasRating == o.sasRating &&
+            this.aercScore == o.aercScore
+
 
     fun toDeckSearchResult(
             housesAndCards: List<HouseAndCards>,

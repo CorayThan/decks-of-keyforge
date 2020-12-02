@@ -53,8 +53,12 @@ export class CollectionStatsSearchPage extends React.Component<RouteComponentPro
     render() {
         const filters = this.makeFilters(this.props)
         return (
-            <CollectionStatsSearchContainer history={this.props.history} location={this.props.location} filters={filters}
-                                            queryParams={this.props.location.search}/>
+            <CollectionStatsSearchContainer
+                history={this.props.history}
+                location={this.props.location}
+                filters={filters}
+                queryParams={this.props.location.search}
+            />
         )
     }
 }

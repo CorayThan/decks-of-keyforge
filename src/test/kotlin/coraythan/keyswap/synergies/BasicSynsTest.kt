@@ -299,6 +299,45 @@ class BasicSynsTest {
         assertEquals(5.28, combo.aercScore, 0.001)
     }
 
+    val spiritsWayCards = listOf<Card>()
+            .plus(
+                    basicCard().copy(
+                            id = "spirits way",
+                            house = House.Sanctum,
+                            cardTitle = "spirits way",
+                            extraCardInfo = ExtraCardInfo(
+                                    creatureControl = 0.0,
+                                    creatureControlMax = 10.0,
+                                    synergies = listOf(
+                                            SynTraitValue(
+                                                    SynergyTrait.any,
+                                                    -1,
+                                                    cardTypesInitial = listOf(CardType.Creature),
+                                                    powersString = "3+"
+                                            ),
+                                    ),
+                                    baseSynPercent = 180
+                            )
+                    )
+            )
+            .plus((0..9).map {
+                basicCard().copy(
+                        id = "beef",
+                        house = House.Sanctum,
+                        cardTitle = "beef",
+                        cardType = CardType.Creature,
+                        power = 3,
+                )
+            })
+
+    @Test
+    fun testSpiritsWay() {
+        val spiritsWay = DeckSynergyService.fromDeckWithCards(boringDeck, spiritsWayCards)
+        log.info("Spirits way details: $spiritsWay")
+        assertEquals(8.0, spiritsWay.creatureControl, 0.001)
+        assertEquals(-100, spiritsWay.synergyCombos.find { it.cardName == "spirits way" }?.synergies?.firstOrNull()?.percentSynergized)
+    }
+
     val selfSynergy = listOf<Card>()
             .plus(
                     basicCard().copy(
@@ -329,19 +368,19 @@ class BasicSynsTest {
 
     val selfSynergyInHouse = listOf<Card>()
             .plus(
-                        basicCard().copy(
-                                id = "kirby",
-                                house = House.Brobnar,
-                                cardTitle = "kirby",
-                                power = 10,
-                                extraCardInfo = ExtraCardInfo(
-                                        efficiency = 1.0,
-                                        efficiencyMax = 5.0,
-                                        synergies = listOf(
-                                                SynTraitValue(SynergyTrait.card, 3, cardName = "kirby", house = SynTraitHouse.house)
-                                        )
-                                )
-                        )
+                    basicCard().copy(
+                            id = "kirby",
+                            house = House.Brobnar,
+                            cardTitle = "kirby",
+                            power = 10,
+                            extraCardInfo = ExtraCardInfo(
+                                    efficiency = 1.0,
+                                    efficiencyMax = 5.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.card, 3, cardName = "kirby", house = SynTraitHouse.house)
+                                    )
+                            )
+                    )
             )
             .plus(
                     (0..1).map {

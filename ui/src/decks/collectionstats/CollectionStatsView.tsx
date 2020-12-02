@@ -169,6 +169,7 @@ const ExpansionsGraph = (props: { expansionCounts: BarData[] }) => {
                             value: expansion.y
                         }
                     })}
+                    colors={{scheme: "category10"}}
                     theme={themeStore.nivoTheme}
                 />
             </Box>
