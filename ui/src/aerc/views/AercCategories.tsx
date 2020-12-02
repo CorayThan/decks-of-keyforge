@@ -3,15 +3,19 @@ import * as React from "react"
 import { CardType } from "../../cards/CardType"
 import { KCard } from "../../cards/KCard"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
+import { Expansion } from "../../generated-src/Expansion"
 import { SynergyTrait } from "../../generated-src/SynergyTrait"
 import { AercIcon, AercType } from "../../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../../generic/icons/AmberIcon"
 import { ArchiveIcon } from "../../generic/icons/ArchiveIcon"
+import { BoardWipeIcon } from "../../generic/icons/BoardWipeIcon"
 import { ActionIcon } from "../../generic/icons/card-types/ActionIcon"
 import { ArtifactIcon } from "../../generic/icons/card-types/ArtifactIcon"
 import { CreatureIcon } from "../../generic/icons/card-types/CreatureIcon"
 import { UpgradeIcon } from "../../generic/icons/card-types/UpgradeIcon"
 import { KeyCheatIcon } from "../../generic/icons/KeyCheatIcon"
+import { MutantIcon } from "../../generic/icons/MutantIcon"
+import { ScalingStealIcon } from "../../generic/icons/ScalingStealIcon"
 import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { SynTraitPlayer } from "../../synergy/SynTraitValue"
@@ -39,27 +43,9 @@ export const AercCategoryExtras = (props: AercCatProps) => {
                 accessor: combo => combo.other
             }
         },
-        {
-            icon: <AmberIcon width={width}/>,
-            info: deck.rawAmber,
-            cardsTips: {
-                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
-                cards,
-                title: "Bonus Aember"
-            }
-        },
     ]
 
     const secondTwo: InfoIconValue[] = [
-        {
-            icon: <KeyCheatIcon width={width}/>,
-            info: deck.keyCheatCount ?? 0,
-            cardsTips: {
-                matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
-                cards,
-                title: "Key Cheat Cards"
-            }
-        },
         {
             icon: <ArchiveIcon width={width}/>,
             info: `${deck.cardArchiveCount ?? 0}/${cards.filter(
@@ -69,7 +55,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             ).length}`,
             cardsTips: {
                 matches: card => card.extraCardInfo?.traits?.find(traitValue =>
-                        (traitValue.trait === SynergyTrait.archives && traitValue.player !== SynTraitPlayer.ENEMY)
+                    (traitValue.trait === SynergyTrait.archives && traitValue.player !== SynTraitPlayer.ENEMY)
                 ) != null,
                 matches2: card => card.extraCardInfo?.traits?.find(traitValue =>
                     (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
@@ -78,19 +64,62 @@ export const AercCategoryExtras = (props: AercCatProps) => {
                 title: "Archives Cards",
                 title2: "Randomly Archives Cards"
             }
-        }
+        },
+        {
+            icon: <KeyCheatIcon width={width}/>,
+            info: deck.keyCheatCount ?? 0,
+            cardsTips: {
+                matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
+                cards,
+                title: "Key Cheat Cards"
+            }
+        },
+    ]
+
+    const thirdTwo: InfoIconValue[] = [
+        {
+            icon: <ScalingStealIcon width={width}/>,
+            info: cards.filter(cardMatchesScalingSteal).length,
+            cardsTips: {
+                matches: card => cardMatchesScalingSteal(card) != null,
+                cards,
+                title: "Scaling Aember Control"
+            }
+        },
+        {
+            icon: <BoardWipeIcon width={width}/>,
+            info: cards.filter(cardMatchesBoardWipe).length,
+            cardsTips: {
+                matches: card => cardMatchesBoardWipe(card) != null,
+                cards,
+                title: "Board Wipes"
+            }
+        },
     ]
 
     if (twoHigh) {
+        firstTwo.push({
+            icon: <AmberIcon width={width}/>,
+            info: deck.rawAmber,
+            cardsTips: {
+                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
+                cards,
+                title: "Bonus Aember"
+            }
+        })
         return (
             <>
                 <AercCategory
-                    name={"Extras"}
+                    name={"Other"}
                     infos={firstTwo}
                 />
                 <AercCategory
                     name={"Extras"}
                     infos={secondTwo}
+                />
+                <AercCategory
+                    name={"Extras"}
+                    infos={thirdTwo}
                 />
             </>
         )
@@ -101,10 +130,18 @@ export const AercCategoryExtras = (props: AercCatProps) => {
         <AercCategory
             name={"Extras"}
             small={true}
-            infos={firstTwo.concat(secondTwo)}
+            infos={firstTwo.concat(secondTwo).concat(thirdTwo)}
         />
     )
 }
+
+const cardMatchesScalingSteal = (card: KCard) => card.extraCardInfo?.traits?.find(traitValue => (
+    traitValue.trait === SynergyTrait.scalingAmberControl && traitValue.rating > 1
+))
+
+const cardMatchesBoardWipe = (card: KCard) => card.extraCardInfo?.traits?.find(traitValue => (
+    traitValue.trait === SynergyTrait.boardClear && traitValue.rating > 1
+))
 
 export const AercCategoryCounts = (props: AercCatProps) => {
     const {deck, cards, twoHigh} = props
@@ -151,6 +188,18 @@ export const AercCategoryCounts = (props: AercCatProps) => {
         }
     ]
 
+    const thirdTwo: InfoIconValue[] = [
+        {
+            icon: <AmberIcon width={width}/>,
+            info: deck.rawAmber,
+            cardsTips: {
+                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
+                cards,
+                title: "Bonus Aember"
+            }
+        },
+    ]
+
     if (twoHigh) {
         return (
             <>
@@ -166,12 +215,23 @@ export const AercCategoryCounts = (props: AercCatProps) => {
         )
     }
 
+    if (deck.expansion === Expansion.MASS_MUTATION) {
+        thirdTwo.push({
+            icon: <MutantIcon width={width}/>,
+            info: cards.filter(card => card.traits?.includes("MUTANT") ?? false).length,
+            cardsTips: {
+                matches: card => card.traits?.includes("MUTANT") ?? false,
+                cards,
+                title: "Mutants"
+            }
+        })
+    }
 
     return (
         <AercCategory
             name={"Counts"}
             small={true}
-            infos={firstTwo.concat(secondTwo)}
+            infos={firstTwo.concat(secondTwo).concat(thirdTwo)}
         />
     )
 }

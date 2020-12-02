@@ -8,6 +8,7 @@ import coraythan.keyswap.decks.models.DeckCount
 import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.decks.models.DecksPage
 import coraythan.keyswap.decks.models.doneRatingDecks
+import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.userdeck.UserDeckService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
@@ -19,7 +20,8 @@ class DeckEndpoints(
         private val deckSearchService: DeckSearchService,
         private val deckImporterService: DeckImporterService,
         private val userDeckService: UserDeckService,
-        private val deckWinsService: DeckWinsService
+        private val deckWinsService: DeckWinsService,
+        private val pastSasService: PastSasService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -107,9 +109,8 @@ class DeckEndpoints(
     @PostMapping("/secured/{id}/refresh-deck-scores")
     fun refreshDeckScores(@PathVariable id: String) = deckWinsService.updateSingleDeck(id)
 
-//    @PostMapping("/add-cards-for-expansion/{expansionId}/{cardsInExpansion}")
-//    fun addCardsForExpansion(@PathVariable expansionId: Int, @PathVariable cardsInExpansion: Int) = deckImporterService.addCardsForExpansion(expansionId, cardsInExpansion)
-
+    @GetMapping("/past-sas/{id}")
+    fun findPastSas(@PathVariable id: Long) = pastSasService.findByDeckId(id)
 }
 
 data class SimpleDeckResponse(

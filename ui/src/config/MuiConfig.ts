@@ -1,5 +1,5 @@
 import { createMuiTheme } from "@material-ui/core"
-import { amber, blue } from "@material-ui/core/colors"
+import { amber, blue, grey } from "@material-ui/core/colors"
 import { computed, observable } from "mobx"
 import { VictoryTheme } from "victory"
 import { screenStore } from "../ui/ScreenStore"
@@ -68,6 +68,11 @@ export class ThemeStore {
     }
 
     @computed
+    get lightTextColor() {
+        return this.darkMode ? grey["500"] : grey["800"]
+    }
+
+    @computed
     get iconColor() {
         return this.darkMode ? "#FFFFFF" : undefined
     }
@@ -75,14 +80,17 @@ export class ThemeStore {
     @computed
     get victoryTheme() {
         if (this.darkMode) {
-            const copiedTheme = {...VictoryTheme.grayscale}
+            const copiedTheme = {...VictoryTheme.material}
 
             copiedTheme.axis!.style!.axis!.stroke = "white"
             copiedTheme.axis!.style!.tickLabels!.fill = "white"
+            copiedTheme.tooltip!.flyoutStyle!.fill = themeStore.backgroundColor
+            copiedTheme.tooltip!.flyoutStyle!.color = "white"
+
 
             return copiedTheme
         }
-        return VictoryTheme.grayscale
+        return VictoryTheme.material
     }
 
     @computed

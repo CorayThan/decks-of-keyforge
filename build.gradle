@@ -32,7 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '420'
+version = '421'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
@@ -108,4 +108,10 @@ dependencies {
     runtimeOnly('org.postgresql:postgresql')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
+
+    // TODO remove this
+
+    testImplementation("org.junit.vintage:junit-vintage-engine") {
+        exclude group: "org.hamcrest", module: "hamcrest-core"
+    }
 }

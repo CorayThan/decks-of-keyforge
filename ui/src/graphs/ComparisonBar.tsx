@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core"
 import { amber, blue } from "@material-ui/core/colors"
 import * as React from "react"
-import { VictoryAxis, VictoryBar, VictoryChart, VictoryContainer, VictoryTheme } from "victory"
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryContainer } from "victory"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { BarData } from "../generated-src/BarData"
 
@@ -26,7 +26,7 @@ export const ComparisonBar = (props: ComparisonBarProps) => (
         <Typography variant={"h5"} color={themeStore.darkMode ? "textPrimary" : "primary"}>{props.name}</Typography>
         <VictoryChart
             // @ts-ignore
-            theme={VictoryTheme.material}
+            theme={themeStore.victoryTheme}
             padding={{top: 24, bottom: 32, left: 32, right: 32}}
             width={300}
             height={142}

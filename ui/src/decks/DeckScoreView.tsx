@@ -1,7 +1,6 @@
 import { Box, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import Tooltip from "@material-ui/core/Tooltip"
-import HistoryIcon from "@material-ui/icons/History"
 import { range } from "lodash"
 import * as React from "react"
 import { Fragment } from "react"
@@ -14,6 +13,7 @@ import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { SasTip } from "../mui-restyled/SasTip"
 import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
+import { PastSasButton } from "./PastSasButton"
 
 export enum DeckScoreSize {
     SMALL,
@@ -50,6 +50,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     const {small, deck, noLinks} = props
     const {
+        id,
+        name,
         aercScore,
         previousSasRating,
         sasRating,
@@ -71,8 +73,8 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     if (previousSasRating != null && previousSasRating !== sasRating && previousSasRating !== 0) {
         sasInfo = (
             <Tooltip title={`Previous SAS rating: ${previousSasRating}`} enterTouchDelay={100}>
-                <div>
-                    <HistoryIcon style={{marginTop: spacing(1), marginLeft: spacing(2), color: "#FFFFFF", width: 20, height: 20}}/>
+                <div style={{marginLeft: spacing(1)}}>
+                    <PastSasButton name={name} deckId={id}/>
                 </div>
             </Tooltip>
         )

@@ -7,6 +7,7 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { CollectionStats } from "../generated-src/CollectionStats"
 import { DeckSaleInfo } from "../generated-src/DeckSaleInfo"
+import { PastSas } from "../generated-src/PastSas"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
@@ -67,6 +68,9 @@ export class DeckStore {
     randomDeckId?: string
 
     @observable
+    pastSas?: PastSas[]
+
+    @observable
     deckNameSearchResults: DeckSearchResult[] = []
 
     @observable
@@ -101,6 +105,14 @@ export class DeckStore {
                 } else {
                     this.deck = deck
                 }
+            })
+    }
+
+    findPastSas = (deckId: number) => {
+        this.pastSas = undefined
+        axios.get(`${DeckStore.CONTEXT}/past-sas/${deckId}`)
+            .then((response: AxiosResponse<PastSas[]>) => {
+                this.pastSas = response.data
             })
     }
 

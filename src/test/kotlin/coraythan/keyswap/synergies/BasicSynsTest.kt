@@ -165,7 +165,7 @@ class BasicSynsTest {
 
         val basicSynAntisynResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicSynAndAntisyn)
         assertEquals(0, basicSynAntisynResults.synergyRating)
-        assertEquals(2, basicSynAntisynResults.sasRating)
+        assertEquals(2, basicSynAntisynResults.sasRating - basicSynAntisynResults.metaScores.values.sum())
         assertEquals(2, basicSynAntisynResults.rawAerc)
     }
 
@@ -200,7 +200,8 @@ class BasicSynsTest {
     fun testPureSynergies() {
         val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlySynergies)
         assertEquals(36, hasOnlySynergiesResults.synergyRating)
-        assertEquals(36, hasOnlySynergiesResults.sasRating)
+        // 29 due to meta score
+        assertEquals(29, hasOnlySynergiesResults.sasRating)
         assertEquals(0, hasOnlySynergiesResults.rawAerc)
     }
 
@@ -236,7 +237,7 @@ class BasicSynsTest {
         val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlyAntisynergies)
         assertEquals(0, hasOnlySynergiesResults.synergyRating)
         assertEquals(36, hasOnlySynergiesResults.antisynergyRating)
-        assertEquals(0, hasOnlySynergiesResults.sasRating)
+        assertEquals(0, hasOnlySynergiesResults.sasRating - hasOnlySynergiesResults.metaScores.values.sum())
         assertEquals(36, hasOnlySynergiesResults.rawAerc)
     }
 
@@ -286,7 +287,7 @@ class BasicSynsTest {
         val shooler = DeckSynergyService.fromDeckWithCards(boringDeck, shoolerHyseriaKeyA)
         log.info("Combos: ${shooler.synergyCombos}")
         assertEquals(5, shooler.synergyRating)
-        assertEquals(5, shooler.sasRating)
+        assertEquals(5, shooler.sasRating - shooler.metaScores.values.sum())
         assertEquals(0, shooler.rawAerc)
         assertEquals(5.28, shooler.amberControl, 0.001)
         val combo = shooler.synergyCombos.find { it.netSynergy > 0 }!!

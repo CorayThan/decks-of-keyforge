@@ -8,11 +8,13 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
@@ -49,6 +51,7 @@ class DeckImporterService(
         private val statsService: StatsService,
         private val objectMapper: ObjectMapper,
         private val cardRepo: CardRepo,
+        private val pastSasService: PastSasService,
         @Value("\${env}")
         private val env: Env,
         val entityManager: EntityManager
@@ -152,17 +155,19 @@ class DeckImporterService(
 
                     val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
 
-                    val rated = deckResults.mapNotNull {
-                        val rated = rateDeck(it, majorRevision).copy(lastUpdate = ZonedDateTime.now())
+                    val rated: List<Pair<Deck, DeckSynergyInfo>> = deckResults.mapNotNull {
+                        val deckSynergiesPair = rateDeck(it, majorRevision)
+                        val rated = deckSynergiesPair.first.copy(lastUpdate = ZonedDateTime.now())
                         if (rated.ratingsEqual(it)) {
                             null
                         } else {
-                            rated
+                            Pair(rated, deckSynergiesPair.second)
                         }
                     }
                     quantRerated += rated.size
                     if (rated.isNotEmpty()) {
-                        deckRepo.saveAll(rated)
+                        deckRepo.saveAll(rated.map { it.first })
+                        pastSasService.createAll(rated)
                     }
                     deckRatingProgressService.revPage()
 
@@ -290,19 +295,19 @@ class DeckImporterService(
                         cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                 )
 
-        val ratedDeck = rateDeck(saveable)
+        val ratedDeck =  rateDeck(saveable).first
 
         check(!ratedDeck.cardIds.isBlank()) { "Can't save a deck without its card ids: $deck" }
 
         return ratedDeck
     }
 
-    fun rateDeck(deck: Deck, majorRevision: Boolean = false): Deck {
+    fun rateDeck(deck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
         val cards = cardService.cardsForDeck(deck)
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards)
         val bonusDraw = cards.mapNotNull { it.extraCardInfo?.enhancementDraw }.sum()
         val bonusCapture = cards.mapNotNull { it.extraCardInfo?.enhancementCapture }.sum()
-        return deck.copy(
+        return Pair(deck.copy(
 
                 bonusDraw = if (bonusDraw == 0) null else bonusDraw,
                 bonusCapture = if (bonusCapture == 0) null else bonusCapture,
@@ -328,6 +333,6 @@ class DeckImporterService(
                 aercVersion = publishedAercVersion,
                 synergyRating = deckSynergyInfo.synergyRating,
                 antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
-        )
+        ), deckSynergyInfo)
     }
 }

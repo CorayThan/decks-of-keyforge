@@ -4,7 +4,7 @@ import { sortBy } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Area, Bar, CartesianGrid, ComposedChart, Label, Tooltip, XAxis, YAxis } from "recharts"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { roundToTens } from "../config/Utils"
 import { BarData } from "../generated-src/BarData"
 import { screenStore } from "../ui/ScreenStore"
@@ -95,12 +95,22 @@ export class StatsBar extends React.Component<StatsBarProps> {
                         <CartesianGrid stroke={grey["100"]}/>
                         <XAxis dataKey={"x"}>
                             {xAxisName && (
-                                <Label offset={-8} position={"insideBottom"} value={xAxisName}/>
+                                <Label
+                                    offset={-8}
+                                    position={"insideBottom"}
+                                    value={xAxisName}
+                                />
                             )}
                         </XAxis>
                         {!hideY && (
                             <YAxis yAxisId={"left"} domain={yDomain ? yDomain : [0, 100]}>
-                                <Label value={yAxisName} angle={-90} position={"insideLeft"} offset={16}/>
+                                <Label
+                                    value={yAxisName}
+                                    angle={-90}
+                                    position={"insideLeft"}
+                                    offset={16}
+                                    style={{fill: themeStore.lightTextColor}}
+                                />
                             </YAxis>
                         )}
                         {includePercent ? (

@@ -144,7 +144,10 @@ export const includeCardOrSpoiler = (filters: CardFilters | SpoilerFilters, card
 
     return (!filters.title || Utils.cardNameIncludes(card.cardTitle, filters.title))
         &&
-        (!filters.description || card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim()))
+        (!filters.description || (
+            card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim())
+            || (card.traits ?? []).join("").includes(filters.description.toLowerCase().trim())
+        ))
         &&
         (filters.houses.length === 0 || (card.houses != null && card.houses.length > 0 && filters.houses.some(house => card.houses!.includes(house))))
         &&

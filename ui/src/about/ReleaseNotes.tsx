@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "5.18"
+export const latestVersion = "6.0"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,28 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.0"}
+                    date={"12/1/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Meta Score Incorporated into SAS",
+                            note: "I've incorporated the Meta Score into the overall SAS score. The Meta score is now in the SAS equation at the top, and " +
+                                "you can still hover it to see its values. This may not be as extreme as other major SAS version changes, but I thought it " +
+                                "warranted the big 6.0"
+                        },
+                        {
+                            highlight: "New Stats",
+                            note: "You can now see at a glance the scaling aember control and board wipes in a deck at the bottom of the AERC info pane."
+                        },
+                        {
+                            highlight: "SAS History Recording",
+                            note: "I'm now recording the history of SAS scores for decks. In the future you'll be able to click the SAS History button to " +
+                                "see all the previous recorded SAS values for a deck."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"5.18"}
                     date={"11/20/2020"}

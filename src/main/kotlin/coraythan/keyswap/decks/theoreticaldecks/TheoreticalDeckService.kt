@@ -54,6 +54,6 @@ class TheoreticalDeckService(
         )
         val withCards = deck.withCards(cardService.cardsForDeck(deck))
         val rated = deckImporterService.rateDeck(withCards)
-        return deckSearchService.deckToDeckWithSynergies(rated)
+        return deckSearchService.deckToDeckWithSynergies(rated.first)
     }
 }

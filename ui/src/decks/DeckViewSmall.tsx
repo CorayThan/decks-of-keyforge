@@ -216,27 +216,42 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
     }
     if (compact) {
         return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                }}
-                className={deckTopClass}
+            <Box
+                display={"grid"}
+                gridGap={spacing(1)}
+                flexGrow={1}
+                alignItems={"center"}
             >
-                <div style={{display: "grid", gap: spacing(2)}}>
-                    {saleIcons && (
-                        <div style={{display: "grid", gap: spacing(1), gridAutoFlow: "column", alignItems: "end"}}>
-                            {saleIcons}
-                        </div>
-                    )}
-                    <Tooltip title={expansionInfoMap.get(expansion)!.name}>
-                        <div style={{display: "flex", justifyContent: "center", alignItems: displaySaleIcons ? undefined : "center"}}>
-                            <ExpansionIcon expansion={expansion} size={40} white={true}/>
-                        </div>
-                    </Tooltip>
-                </div>
-                <DeckScoreView deck={deck} style={{marginLeft: spacing(4)}}/>
-            </div>
+                <Box
+                    display={"flex"}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    className={deckTopClass}
+                >
+                    <Box
+                        display={"grid"}
+                        gridGap={spacing(2)}
+                    >
+                        {saleIcons && (
+                            <Box
+                                display={"grid"}
+                                gridGap={spacing(2)}
+                                gridAutoFlow={"column"}
+                            >
+                                {saleIcons}
+                            </Box>
+                        )}
+                        <Tooltip title={expansionInfoMap.get(expansion)!.name}>
+                            <div>
+                                <ExpansionIcon expansion={expansion} size={40} white={true}/>
+                            </div>
+                        </Tooltip>
+                    </Box>
+                    <DeckScoreView deck={deck} style={{marginLeft: spacing(4)}}/>
+                </Box>
+                <OrganizedPlayStats deck={deck}/>
+                <EnhancementsInDeck deck={deck}/>
+            </Box>
         )
     } else {
         return (

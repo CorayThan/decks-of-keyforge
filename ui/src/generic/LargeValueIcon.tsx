@@ -18,7 +18,7 @@ export const LargeValueIconsRow = (props: { values: LargeValueIconProps[] }) => 
             justifyContent={"center"}
         >
             {props.values.map((valueProps, idx) => (
-                <LargeValueIcon {...valueProps}/>
+                <LargeValueIcon {...valueProps} key={idx}/>
             ))}
         </Box>
     )
