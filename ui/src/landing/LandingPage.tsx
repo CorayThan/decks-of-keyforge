@@ -1,4 +1,4 @@
-import { Divider, List, ListSubheader, Typography } from "@material-ui/core"
+import { Box, Divider, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Link } from "react-router-dom"
@@ -145,10 +145,10 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <div style={{flexGrow: 1}}>
                         {screenStore.screenSizeSm() ? (
-                            <div style={{marginTop: spacing(1), display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                                <DeckSearchLink name={"Search"} filters={topSas} style={{margin: spacing(1)}}/>
-                                <DeckSearchLink name={"For Sale"} filters={forSale} style={{margin: spacing(1)}}/>
-                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{margin: spacing(1)}}/>
+                            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                                <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>
+                                <DeckSearchLink name={"For Sale"} filters={forSale} style={{marginTop: spacing(2)}}/>
+                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
                             </div>
                         ) : null}
                         <FeaturedSellersView/>
@@ -174,11 +174,17 @@ export class LandingPage extends React.Component<{}> {
                                     Join in!
                                 </LandingPageTitle>
                             </UnstyledLink>
-                            <div>
-                                <PatronButton size={"large"}/>
-                                <DiscordButton style={{marginLeft: spacing(2)}}/>
-                                <TwitterButton style={{marginLeft: spacing(2)}}/>
-                            </div>
+                            <Box display={"grid"} gridGap={spacing(2)} gridAutoFlow={screenStore.screenSizeXs() ? undefined : "column"}>
+                                <Box>
+                                    <PatronButton size={"large"}/>
+                                </Box>
+                                <Box>
+                                    <DiscordButton/>
+                                </Box>
+                                <Box>
+                                    <TwitterButton/>
+                                </Box>
+                            </Box>
                             <LandingPageTitle>
                                 Disclaimers
                             </LandingPageTitle>
@@ -190,7 +196,7 @@ export class LandingPage extends React.Component<{}> {
                                 DoK is owned and operated by Graylake LLC. For questions or comments check out
                                 the <Link to={AboutSubPaths.contact}>contact me page</Link>!
                             </Typography>
-                            <Typography style={{marginBottom: spacing(1)}} >
+                            <Typography style={{marginBottom: spacing(1)}}>
                                 When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
                                 any transactions.
                             </Typography>

@@ -14,6 +14,6 @@ interface DeckListingRepo : CrudRepository<DeckListing, UUID> {
     fun findBySellerIdAndDeckId(sellerId: UUID, deckId: Long): List<DeckListing>
     fun existsBySellerIdAndDeckIdAndStatusNot(sellerId: UUID, deckId: Long, status: DeckListingStatus): Boolean
 
-    fun findByDeckIdAndStatusNot(deckId: Long, status: DeckListingStatus): DeckListing?
+    fun findByDeckIdAndStatusNot(deckId: Long, status: DeckListingStatus): List<DeckListing>
 
 }

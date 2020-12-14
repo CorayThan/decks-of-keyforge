@@ -89,13 +89,15 @@ class UserDeckService(
                     teamId = if (mark && team != null) team.id else null
             )
         }
+
+        val deck = deckRepo.findByIdOrNull(deckId)
+        val previouslyOwned = previouslyOwnedDeckRepo.existsByDeckIdAndPreviousOwnerId(deckId, user.id)
         if (mark) {
-            if (previouslyOwnedDeckRepo.existsByDeckIdAndPreviousOwnerId(deckId, user.id)) {
+            if (previouslyOwned) {
                 previouslyOwnedDeckRepo.deleteByDeckIdAndPreviousOwnerId(deckId, user.id)
             }
         } else {
-            val deck = deckRepo.findByIdOrNull(deckId)
-            if (deck != null) {
+            if (deck != null && !previouslyOwned) {
                 previouslyOwnedDeckRepo.save(PreviouslyOwnedDeck(user, deck))
             }
         }

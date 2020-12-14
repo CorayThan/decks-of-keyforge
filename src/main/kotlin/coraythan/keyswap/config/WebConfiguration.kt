@@ -6,6 +6,8 @@ import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.tags.TagService
+import coraythan.keyswap.users.KeyUserService
+import coraythan.keyswap.users.search.UserSearchResult
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
@@ -95,14 +97,7 @@ class WebConfiguration(
                         val transformed = transformIndexPage(
                                 resource,
                                 if (queryStringValues.contains("forSale")) "$owner's Decks for Sale" else "$owner's Decks",
-                                if (userStats == null) "" else {
-                                    if (queryStringValues.contains("forSale")) {
-                                        "Search $owner's decks for sale. They have ${userStats.forSaleCount} decks listed."
-                                    } else {
-                                        "Search $owner's collection. They have ${userStats.deckCount} decks" +
-                                                if (userStats.forSaleCount > 0) ", with ${userStats.forSaleCount} for sale." else "."
-                                    }
-                                }
+                                userInfoFromStats(userStats, queryStringValues.contains("forSale"))
                         )
 
                         transformed
@@ -135,7 +130,7 @@ class WebConfiguration(
                             resource
                         } else {
                             val listing = if (deck.deck.forSale == true) {
-                                deckListingRepo.findByDeckIdAndStatusNot(deck.deck.id, DeckListingStatus.COMPLETE)
+                                deckListingRepo.findByDeckIdAndStatusNot(deck.deck.id, DeckListingStatus.COMPLETE).firstOrNull()
                             } else {
                                 null
                             }
@@ -173,6 +168,20 @@ class WebConfiguration(
                                     420
                             )
                         }
+                    } else if (uri.contains("/users/${KeyUserService.usernameRegexBase}$".toRegex())) {
+
+                        val username = uri.substring(7)
+                        val userStats = userSearchService.findStatsForUser(username)
+
+                        transformIndexPage(
+                                resource,
+                                "$username's Profile",
+                                if (userStats == null) {
+                                    ""
+                                } else {
+                                    "View $username's profile. They have ${userStats.deckCount} decks, with ${userStats.forSaleCount} for sale."
+                                }
+                        )
                     } else if (uri.contains("/cards")) {
                         transformIndexPage(
                                 resource,
@@ -220,6 +229,15 @@ class WebConfiguration(
 
                 }
 
+    }
+
+    private fun userInfoFromStats(userStats: UserSearchResult?, forSale: Boolean) = if (userStats == null) "" else {
+        if (forSale) {
+            "Search ${userStats.username}'s decks for sale. They have ${userStats.forSaleCount} decks listed."
+        } else {
+            "Search ${userStats.username}'s collection. They have ${userStats.deckCount} decks" +
+                    if (userStats.forSaleCount > 0) ", with ${userStats.forSaleCount} for sale." else "."
+        }
     }
 
     private fun transformIndexPage(

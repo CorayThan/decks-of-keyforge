@@ -33,10 +33,11 @@ class KeyUserService(
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-    private val usernameRegex = "(\\d|\\w|-|_)+".toRegex()
 
     companion object {
         val termsVersion = 1
+        val usernameRegexBase = "(\\d|\\w|-|_)+"
+        val usernameRegex = usernameRegexBase.toRegex()
     }
 
     @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay)
