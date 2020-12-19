@@ -26,15 +26,20 @@ import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 export const CreateTheoreticalDeck = observer(() => {
 
     const [expansionStore] = useState(new SelectedExpansion(activeExpansions))
-    const [housesStore] = useState(new SelectedHouses([House.Dis, House.Logos, House.Shadows]))
+    const [housesStore] = useState(new SelectedHouses(deckBuilderStore.houses ?? [House.Dis, House.Logos, House.Shadows]))
 
-    const resetDeck = () => {
-        const cards: CardsInHouses = {}
-        housesStore.getHousesSelectedTrue().forEach(house => cards[house] = [])
-        deckBuilderStore.currentDeck = {
-            name: "The One that Theoretically Exists",
-            cards,
-            expansion: expansionStore.currentExpansionOrDefault()
+    const resetDeck = (force?: boolean) => {
+        if (deckBuilderStore.currentDeck == null || force) {
+            const cards: CardsInHouses = {}
+            housesStore.getHousesSelectedTrue().forEach(house => cards[house] = [])
+            deckBuilderStore.currentDeck = {
+                name: "The One that Theoretically Exists",
+                cards,
+                expansion: expansionStore.currentExpansionOrDefault()
+            }
+            deckBuilderStore.houses = undefined
+        } else {
+            expansionStore.expansion = deckBuilderStore.currentDeck?.expansion
         }
     }
 
@@ -92,7 +97,7 @@ export const CreateTheoreticalDeck = observer(() => {
                     <HouseSelect style={{marginBottom: spacing(4)}} selectedHouses={housesStore}/>
                 </div>
                 <CreateTheoreticalDeckBuilder expansion={expansionStore.currentExpansionOrDefault()} houses={housesStore.getHousesSelectedTrue()}/>
-                <Button onClick={resetDeck} style={{marginRight: spacing(2)}}>
+                <Button onClick={() => resetDeck(true)} style={{marginRight: spacing(2)}}>
                     Reset
                 </Button>
                 <KeyButton

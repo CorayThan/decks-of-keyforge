@@ -174,18 +174,12 @@ export class LandingPage extends React.Component<{}> {
                                     Join in!
                                 </LandingPageTitle>
                             </UnstyledLink>
-                            <Box display={"grid"} gridGap={spacing(2)} gridAutoFlow={screenStore.screenSizeXs() ? undefined : "column"}>
-                                <Box>
-                                    <PatronButton size={"large"}/>
-                                </Box>
-                                <Box>
-                                    <DiscordButton/>
-                                </Box>
-                                <Box>
-                                    <TwitterButton/>
-                                </Box>
+                            <Box display={"flex"} flexWrap={"wrap"}>
+                                <PatronButton size={"large"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <DiscordButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <TwitterButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                             </Box>
-                            <LandingPageTitle>
+                            <LandingPageTitle marginTop={spacing(2)}>
                                 Disclaimers
                             </LandingPageTitle>
                             <Typography style={{marginBottom: spacing(1)}}>
@@ -217,12 +211,12 @@ export class LandingPage extends React.Component<{}> {
     }
 }
 
-export const LandingPageTitle = observer((props: { children: string }) => {
+export const LandingPageTitle = observer((props: { children: string, marginTop?: number }) => {
     return (
         <Typography
             variant={"h4"}
             color={themeStore.darkMode ? "textPrimary" : "primary"}
-            style={{marginBottom: spacing(2), marginTop: spacing(4)}}
+            style={{marginBottom: spacing(2), marginTop: props.marginTop ? props.marginTop : spacing(4)}}
         >
             {props.children}
         </Typography>

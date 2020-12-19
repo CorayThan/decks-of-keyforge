@@ -3,10 +3,14 @@ import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import { MoreVert } from "@material-ui/icons"
 import * as React from "react"
-import { useLocation } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import { ReportPurchaseButton } from "../../auctions/purchases/ReportPurchaseButton"
 import { CardsForDeck } from "../../cards/CardsForDeck"
+import { Routes } from "../../config/Routes"
+import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
+import { deckBuilderStore } from "../../importdeck/DeckBuilder"
 import { ToggleDeckNotesMenuItem } from "../../notes/DeckNote"
+import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { deckStore } from "../DeckStore"
@@ -28,6 +32,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
     }
 
     const location = useLocation()
+    const history = useHistory()
     const username = userStore.username
 
     return (
@@ -65,6 +70,17 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                         }}
                     >
                         Not Previously Owned
+                    </MenuItem>
+                )}
+                {!screenStore.screenSizeXs() && userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.NOTICE_BARGAINS) && (
+                    <MenuItem
+                        onClick={() => {
+                            deckBuilderStore.buildFromDeck(deck)
+                            history.push(Routes.createTheoreticalDeck)
+                            handleClose()
+                        }}
+                    >
+                        Theoretical Version
                     </MenuItem>
                 )}
             </Menu>

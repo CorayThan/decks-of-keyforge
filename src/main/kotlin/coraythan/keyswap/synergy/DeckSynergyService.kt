@@ -401,7 +401,7 @@ object DeckSynergyService {
             val artifactCount = cardsForHouse.filter { it.cardType == CardType.Artifact }.size
             val upgradeCount = cardsForHouse.filter { it.cardType == CardType.Upgrade }.size
 
-            val bonusAmber = cards.map { it.amber }.sum()
+            val bonusAmber = cardsForHouse.map { it.amber }.sum()
             traits.addDeckTrait(SynergyTrait.bonusAmber, bonusAmber, house, SynTraitHouse.house, strength = TraitStrength.EXTRA_WEAK)
 
             val totalExpectedAmber = cardsForHouse.map {
@@ -611,8 +611,11 @@ data class SynTraitValuesForTrait(
                     val playerMatch = playersMatch(synergyValue.player, it.value.player)
                     val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
                     val powerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
-                    val traitMatch = traitsMatch(synergyValue.cardTraits, traitsCard?.traits, synergyValue.notCardTraits)
-                    val match = typeMatch && playerMatch && houseMatch && powerMatch && traitMatch
+                    // For matching traits on the synergy
+                    val synergyTraitsMatch = traitsOnSynergyMatch(synergyValue.cardTraits, traitsCard?.traits, synergyValue.notCardTraits)
+                    // For matching traits on the trait
+                    val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits, traitsCard?.traits, it.value.notCardTraits)
+                    val match = typeMatch && playerMatch && houseMatch && powerMatch && synergyTraitsMatch && traitsTraitMatch
 
                     // log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
 
@@ -647,7 +650,15 @@ data class SynTraitValuesForTrait(
         return player1 == SynTraitPlayer.ANY || player2 == SynTraitPlayer.ANY || player1 == player2
     }
 
-    private fun traitsMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?, nonMatchOnly: Boolean): Boolean {
+    private fun traitsOnSynergyMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?, nonMatchOnly: Boolean): Boolean {
+        // log.info("In traits match syn traits $synergyTraits cardTraits $cardTraits")
+        return synergyTraits.isEmpty() || (cardTraits != null && synergyTraits.all {
+            val hasMatch = cardTraits.contains(it)
+            if (nonMatchOnly) !hasMatch else hasMatch
+        })
+    }
+
+    private fun traitsOnTraitMatch(synergyTraits: Collection<String>, cardTraits: Collection<String>?, nonMatchOnly: Boolean): Boolean {
         // log.info("In traits match syn traits $synergyTraits cardTraits $cardTraits")
         return synergyTraits.isEmpty() || (cardTraits != null && synergyTraits.all {
             val hasMatch = cardTraits.contains(it)

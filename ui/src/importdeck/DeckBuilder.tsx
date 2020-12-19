@@ -10,17 +10,21 @@ import { SingleCardSearchSuggest } from "../cards/SingleCardSearchSuggest"
 import { CardAsLine } from "../cards/views/CardAsLine"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
+import { DeckSearchResult } from "../decks/models/DeckSearchResult"
 import { expansionInfoMap, possibleCardExpansionsForExpansion } from "../expansions/Expansions"
 import { ExtendedExpansionUtils } from "../expansions/ExtendedExpansionUtils"
 import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { TheoryCard } from "../generated-src/TheoryCard"
 import { HouseLabel } from "../houses/HouseUtils"
-import { DeckBuilderData } from "./DeckBuilderData"
+import { CardsInHouses, DeckBuilderData } from "./DeckBuilderData"
 
 class DeckBuilderStore {
     @observable
     currentDeck?: DeckBuilderData
+
+    @observable
+    houses?: House[]
 
     @computed
     get deckIsValid(): boolean {
@@ -78,6 +82,23 @@ class DeckBuilderStore {
             }
         })
         return cardHolder
+    }
+
+    buildFromDeck = (deck: DeckSearchResult) => {
+        const cards: CardsInHouses = {}
+        this.houses = []
+        deck.housesAndCards.forEach(houseAndCards => {
+            this.houses?.push(houseAndCards.house)
+            cards[houseAndCards.house] = houseAndCards.cards.map(card => ({
+                name: card.cardTitle,
+                enhanced: card.enhanced ?? false
+            }))
+        })
+        this.currentDeck = {
+            name: "Imaginary " + deck.name,
+            expansion: deck.expansion,
+            cards
+        }
     }
 }
 
