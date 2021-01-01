@@ -72,7 +72,7 @@ export class SasAndAerc extends React.Component {
                             texts={[
                                 "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
                                 "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
-                                "1 point is approximately equal to dealing 3 damage or stunning 2 creatures."
+                                "1 point is approximately equal to dealing 3 damage or stunning 2 creatures. Destroying a creature is worth 1.5 C."
                             ]}
                             icon={AercType.C}
                         />,

@@ -269,6 +269,7 @@ class StatsService(
                                             artifactControl = aercData.artifactControl + relevantCombos.sumByDouble { it.artifactControl * it.copies },
                                             creatureControl = aercData.creatureControl + relevantCombos.sumByDouble { it.creatureControl * it.copies },
                                             effectivePower = aercData.effectivePower + relevantCombos.sumBy { it.effectivePower * it.copies },
+                                            efficiency = aercData.efficiency + relevantCombos.sumByDouble { it.efficiency * it.copies },
                                             recursion = aercData.recursion + relevantCombos.sumByDouble { it.recursion * it.copies },
                                             disruption = aercData.disruption + relevantCombos.sumByDouble { it.disruption * it.copies },
                                             creatureProtection = aercData.creatureProtection + relevantCombos.sumByDouble { it.creatureProtection * it.copies },

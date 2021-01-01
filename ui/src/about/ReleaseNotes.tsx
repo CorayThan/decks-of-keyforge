@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.0"
+export const latestVersion = "6.1"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,25 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.1"}
+                    date={"12/31/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "New AERC Stat: Recursion",
+                            note: "Efficiency has long included effects that let you draw and play additional cards, like Library Access or Labwork, " +
+                                "as well as effects that let you replay cards that have already been played, like Nepenthe Seed or Resurgence. " +
+                                "I've now separated cards that let you replay cards into a new AERC stat, so you can easily see the difference between " +
+                                "a deck with multiple Stirring Graves and Resurgences, and one with many Daughter and Subject Kirby, for example."
+                        },
+                        {
+                            highlight: "Destroy effects rebalanced",
+                            note: "With the rise of high value creatures with WC and MM, the value of destroying a creature is higher than it once was. " +
+                                "I've benchmarked a destroy creature effect at 1.5 AERC, with some discount for conditional destroy effects."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.0"}
                     date={"12/1/2020"}

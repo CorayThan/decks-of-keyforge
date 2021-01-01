@@ -157,7 +157,7 @@ data class Card(
                     printValue("C", info.creatureControl, info.creatureControlMax),
                     printValue("P", this.effectivePower.toDouble() / 10, if (info.effectivePowerMax != null && info.effectivePowerMax != 0.0) info.effectivePowerMax / 10 else null),
                     printValue("F", info.efficiency, info.efficiencyMax),
-                    printValue("F", info.recursion, info.recursionMax),
+                    printValue("U", info.recursion, info.recursionMax),
                     printValue("D", info.disruption, info.disruptionMax),
                     printValue("CP", info.creatureProtection, info.creatureProtectionMax),
                     printValue("O", info.other, info.otherMax)

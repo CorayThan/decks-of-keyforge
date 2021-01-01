@@ -267,15 +267,15 @@ export const AercCategorySpeed = (props: AercScoresCategoryProps) => {
                 accessor: (combo: SynergyCombo) => combo.efficiency
             }
         },
-        // {
-        //     icon: <AercIcon type={AercType.U}/>,
-        //     info: hasAerc.recursion ?? 0,
-        //     combosTips: {
-        //         title: "Recursion (U)",
-        //         combos: combos?.filter(combo => combo.recursion != null && combo.recursion != 0),
-        //         accessor: (combo: SynergyCombo) => combo.recursion
-        //     }
-        // },
+        {
+            icon: <AercIcon type={AercType.U}/>,
+            info: hasAerc.recursion ?? 0,
+            combosTips: {
+                title: "Recursion (U)",
+                combos: combos?.filter(combo => combo.recursion != null && combo.recursion != 0),
+                accessor: (combo: SynergyCombo) => combo.recursion
+            }
+        },
     ]
 
     if (!twoHigh) {
