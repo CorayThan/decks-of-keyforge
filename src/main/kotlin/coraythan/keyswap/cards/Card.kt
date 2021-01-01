@@ -96,6 +96,7 @@ data class Card(
                         cardInfo.artifactControl +
                         cardInfo.creatureControl +
                         cardInfo.efficiency +
+                        cardInfo.recursion +
                         cardInfo.disruption +
                         cardInfo.creatureProtection +
                         cardInfo.other +
@@ -114,6 +115,7 @@ data class Card(
                         (cardInfo.artifactControlMax ?: cardInfo.artifactControl) +
                         (cardInfo.creatureControlMax ?: cardInfo.creatureControl) +
                         (cardInfo.efficiencyMax ?: cardInfo.efficiency) +
+                        (cardInfo.recursionMax ?: cardInfo.recursion) +
                         (cardInfo.disruptionMax ?: cardInfo.disruption) +
                         (cardInfo.creatureProtectionMax ?: cardInfo.creatureProtection) +
                         (cardInfo.otherMax ?: cardInfo.other) +
@@ -155,6 +157,7 @@ data class Card(
                     printValue("C", info.creatureControl, info.creatureControlMax),
                     printValue("P", this.effectivePower.toDouble() / 10, if (info.effectivePowerMax != null && info.effectivePowerMax != 0.0) info.effectivePowerMax / 10 else null),
                     printValue("F", info.efficiency, info.efficiencyMax),
+                    printValue("F", info.recursion, info.recursionMax),
                     printValue("D", info.disruption, info.disruptionMax),
                     printValue("CP", info.creatureProtection, info.creatureProtectionMax),
                     printValue("O", info.other, info.otherMax)

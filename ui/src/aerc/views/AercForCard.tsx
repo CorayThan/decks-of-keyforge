@@ -63,6 +63,12 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
                 name={short ? "F" : "Efficiency (F)"}
             />
             <AercScore
+                score={info.recursion}
+                max={info.recursionMax}
+                synergizedScore={realValue && realValue.recursion}
+                name={short ? "U" : "Recursion (U)"}
+            />
+            <AercScore
                 score={info.disruption}
                 max={info.disruptionMax}
                 synergizedScore={realValue && realValue.disruption}

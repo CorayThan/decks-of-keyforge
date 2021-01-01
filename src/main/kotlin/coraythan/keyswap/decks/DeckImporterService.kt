@@ -322,6 +322,7 @@ class DeckImporterService(
                 artifactControl = deckSynergyInfo.artifactControl,
                 creatureControl = deckSynergyInfo.creatureControl,
                 efficiency = deckSynergyInfo.efficiency,
+                recursion = deckSynergyInfo.recursion,
                 effectivePower = deckSynergyInfo.effectivePower,
                 disruption = deckSynergyInfo.disruption,
                 creatureProtection = deckSynergyInfo.creatureProtection,

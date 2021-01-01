@@ -47,6 +47,7 @@ export class WinRateStatsView extends React.Component<{}> {
                     xTickFormat={(tick: number) => tick - 5}
                     quantities={stats.efficiency}
                 />
+                <WinRateBar name={"Recursion Win Rate"} data={stats.recursionWinRate} secondary={true} quantities={stats.recursion}/>
                 <WinRateBar name={"Disruption Win Rate"} data={stats.disruptionWinRate} secondary={true} quantities={stats.disruption}/>
                 <WinRateBar name={"Effective Power Win Rate"} data={stats.effectivePowerWinRate} secondary={true} quantities={stats.effectivePower}/>
                 <WinRateBar name={"Creature Protection Win Rate"} data={stats.creatureProtectionWinRate} secondary={true}

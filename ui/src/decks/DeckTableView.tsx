@@ -190,6 +190,11 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 sortFunction: deck => roundToHundreds(deck.efficiency)
             },
             {
+                title: "U",
+                transform: deck => roundToHundreds(deck.recursion),
+                sortFunction: deck => roundToHundreds(deck.recursion)
+            },
+            {
                 title: "D",
                 transform: deck => roundToHundreds(deck.disruption),
                 sortFunction: deck => roundToHundreds(deck.disruption)

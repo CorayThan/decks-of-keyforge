@@ -143,6 +143,7 @@ object DeckSynergyService {
                                     artifactControl = 0.0,
                                     creatureControl = 0.0,
                                     efficiency = 0.0,
+                                    recursion = 0.0,
                                     effectivePower = 0,
 
                                     disruption = 0.0,
@@ -234,6 +235,7 @@ object DeckSynergyService {
                     val rValue = synergizedValue(totalSynPercent, cardInfo.artifactControl, cardInfo.artifactControlMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
                     val cValue = synergizedValue(totalSynPercent, cardInfo.creatureControl, cardInfo.creatureControlMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
                     val fValue = synergizedValue(totalSynPercent, cardInfo.efficiency, cardInfo.efficiencyMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
+                    val uValue = synergizedValue(totalSynPercent, cardInfo.recursion, cardInfo.recursionMax, hasPositive, hasNegative, cardInfo.baseSynPercent)
                     val pValue = if (cardInfo.effectivePower == 0 && (cardInfo.effectivePowerMax == null || cardInfo.effectivePowerMax == 0.0)) {
                         SynergizedValue(card.effectivePower.toDouble(), 0.0)
                     } else {
@@ -249,6 +251,7 @@ object DeckSynergyService {
                             rValue,
                             cValue,
                             fValue,
+                            uValue,
                             pValue.copy(
                                     value = (pValue.value / 10).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble(),
                                     synergy = (pValue.synergy / 10).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
@@ -272,6 +275,7 @@ object DeckSynergyService {
                             artifactControl = rValue.value,
                             creatureControl = cValue.value,
                             efficiency = fValue.value,
+                            recursion = uValue.value,
                             effectivePower = pValue.value.toInt(),
 
                             disruption = dValue.value,
@@ -287,6 +291,7 @@ object DeckSynergyService {
         val r = synergyCombos.map { it.artifactControl * it.copies }.sum()
         val c = synergyCombos.map { it.creatureControl * it.copies }.sum()
         val f = synergyCombos.map { it.efficiency * it.copies }.sum()
+        val u = synergyCombos.map { it.recursion * it.copies }.sum()
         val d = synergyCombos.map { it.disruption * it.copies }.sum()
         val p = synergyCombos.map { it.effectivePower * it.copies }.sum()
         val o = synergyCombos.map { it.other * it.copies }.sum()
@@ -346,7 +351,7 @@ object DeckSynergyService {
         val synergy = roundToInt(synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum(), RoundingMode.HALF_UP)
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
         val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
-        val newSas = roundToInt(a + e + r + c + f + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4) + metaScore, RoundingMode.HALF_UP)
+        val newSas = roundToInt(a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4) + metaScore, RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy - metaScore
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
@@ -363,6 +368,7 @@ object DeckSynergyService {
                 artifactControl = r,
                 creatureControl = c,
                 efficiency = f,
+                recursion = u,
                 effectivePower = p,
                 disruption = d,
                 creatureProtection = cp,

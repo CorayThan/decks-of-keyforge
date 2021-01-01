@@ -20,6 +20,7 @@ data class AercData(
         val creatureControl: Double = 0.0,
         val effectivePower: Double = 0.0,
         val efficiency: Double = 0.0,
+        val recursion: Double = 0.0,
         val disruption: Double = 0.0,
         val creatureProtection: Double = 0.0,
         val other: Double = 0.0
@@ -37,6 +38,7 @@ data class AercData(
                 creatureControl = findAverage(creatureControl),
                 effectivePower = findAverage(effectivePower / 10),
                 efficiency = findAverage(efficiency),
+                recursion = findAverage(recursion),
                 disruption = findAverage(disruption),
                 creatureProtection = findAverage(creatureProtection),
                 other = findAverage(other)

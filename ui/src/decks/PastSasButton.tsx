@@ -49,6 +49,7 @@ export const PastSasButton = observer((props: { name: string, deckId: number }) 
                                         {property: "creatureControl"},
                                         {property: "effectivePower"},
                                         {property: "efficiency"},
+                                        {property: "recursion"},
                                         {property: "disruption"},
                                         {property: "creatureProtection"},
                                         {property: "other"},

@@ -30,17 +30,17 @@ interface AercCatProps {
 }
 
 export const AercCategoryExtras = (props: AercCatProps) => {
-    const {deck, cards, hasAerc, combos, twoHigh} = props
+    const {deck, cards, twoHigh} = props
     const width = twoHigh ? undefined : 20
 
     const firstTwo: InfoIconValue[] = [
         {
-            icon: <AercIcon type={AercType.O} width={width}/>,
-            info: hasAerc.other ?? 0,
-            combosTips: {
-                title: "Other",
-                combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? [],
-                accessor: combo => combo.other
+            icon: <AmberIcon width={width}/>,
+            info: deck.rawAmber,
+            cardsTips: {
+                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
+                cards,
+                title: "Bonus Aember"
             }
         },
     ]
@@ -98,21 +98,8 @@ export const AercCategoryExtras = (props: AercCatProps) => {
     ]
 
     if (twoHigh) {
-        firstTwo.push({
-            icon: <AmberIcon width={width}/>,
-            info: deck.rawAmber,
-            cardsTips: {
-                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
-                cards,
-                title: "Bonus Aember"
-            }
-        })
         return (
             <>
-                <AercCategory
-                    name={"Other"}
-                    infos={firstTwo}
-                />
                 <AercCategory
                     name={"Extras"}
                     infos={secondTwo}
@@ -120,6 +107,10 @@ export const AercCategoryExtras = (props: AercCatProps) => {
                 <AercCategory
                     name={"Extras"}
                     infos={thirdTwo}
+                />
+                <AercCategory
+                    name={"Amber"}
+                    infos={firstTwo}
                 />
             </>
         )
@@ -188,17 +179,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
         }
     ]
 
-    const thirdTwo: InfoIconValue[] = [
-        {
-            icon: <AmberIcon width={width}/>,
-            info: deck.rawAmber,
-            cardsTips: {
-                matches: card => card.amber > 0 || card.extraCardInfo.enhancementAmber > 0,
-                cards,
-                title: "Bonus Aember"
-            }
-        },
-    ]
+    const thirdTwo: InfoIconValue[] = []
 
     if (twoHigh) {
         return (
@@ -239,6 +220,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
 interface AercScoresCategoryProps {
     hasAerc: HasAerc
     combos: SynergyCombo[]
+    twoHigh?: boolean
 }
 
 export const AercCategoryAmber = (props: AercScoresCategoryProps) => {
@@ -273,32 +255,45 @@ export const AercCategoryAmber = (props: AercScoresCategoryProps) => {
 }
 
 export const AercCategorySpeed = (props: AercScoresCategoryProps) => {
-    const {hasAerc, combos} = props
+    const {hasAerc, combos, twoHigh} = props
+
+    const speeds = [
+        {
+            icon: <AercIcon type={AercType.F}/>,
+            info: hasAerc.efficiency ?? 0,
+            combosTips: {
+                title: "Efficiency (F)",
+                combos: combos?.filter(combo => combo.efficiency != null && combo.efficiency != 0),
+                accessor: (combo: SynergyCombo) => combo.efficiency
+            }
+        },
+        // {
+        //     icon: <AercIcon type={AercType.U}/>,
+        //     info: hasAerc.recursion ?? 0,
+        //     combosTips: {
+        //         title: "Recursion (U)",
+        //         combos: combos?.filter(combo => combo.recursion != null && combo.recursion != 0),
+        //         accessor: (combo: SynergyCombo) => combo.recursion
+        //     }
+        // },
+    ]
+
+    if (!twoHigh) {
+        speeds.push({
+            icon: <AercIcon type={AercType.D}/>,
+            info: hasAerc.disruption ?? 0,
+            combosTips: {
+                title: "Disruption (D)",
+                combos: combos?.filter(combo => combo.disruption != null && combo.disruption != 0),
+                accessor: (combo: SynergyCombo) => combo.disruption
+            }
+        })
+    }
+
     return (
         <AercCategory
             name={"Speed"}
-            infos={
-                [
-                    {
-                        icon: <AercIcon type={AercType.F}/>,
-                        info: hasAerc.efficiency ?? 0,
-                        combosTips: {
-                            title: "Efficiency (F)",
-                            combos: combos.filter(combo => combo.efficiency != null && combo.efficiency != 0),
-                            accessor: (combo: SynergyCombo) => combo.efficiency
-                        }
-                    },
-                    {
-                        icon: <AercIcon type={AercType.D}/>,
-                        info: hasAerc.disruption ?? 0,
-                        combosTips: {
-                            title: "Disruption (D)",
-                            combos: combos.filter(combo => combo.disruption != null && combo.disruption != 0),
-                            accessor: (combo: SynergyCombo) => combo.disruption
-                        }
-                    },
-                ]
-            }
+            infos={speeds}
         />
     )
 }
@@ -335,28 +330,71 @@ export const AercCategoryControl = (props: AercScoresCategoryProps) => {
 }
 
 export const AercCategoryBoard = (props: AercScoresCategoryProps) => {
-    const {hasAerc, combos} = props
+    const {hasAerc, combos, twoHigh} = props
+    const boards: InfoIconValue[] = [
+        {
+            icon: <AercIcon type={AercType.P}/>,
+            info: hasAerc.effectivePower,
+            combosTips: {
+                title: "Effective Power (P)",
+                combos: combos.filter(combo => combo.effectivePower != null && combo.effectivePower != 0),
+                accessor: combo => combo.effectivePower
+            }
+        },
+        {
+            icon: <AercIcon type={AercType.S}/>,
+            info: hasAerc.creatureProtection ?? 0,
+            combosTips: {
+                title: "Creature Protection",
+                combos: combos.filter(combo => combo.creatureProtection != null && combo.creatureProtection != 0),
+                accessor: combo => combo.creatureProtection
+            }
+        }
+    ]
+
+    if (!twoHigh) {
+        boards.push({
+            icon: <AercIcon type={AercType.O}/>,
+            info: hasAerc.other ?? 0,
+            combosTips: {
+                title: "Other",
+                combos: combos?.filter(combo => combo.other != null && combo.other != 0) ?? [],
+                accessor: combo => combo.other
+            }
+        })
+    }
+
     return (
         <AercCategory
             name={"Board"}
+            infos={boards}
+        />
+    )
+}
+
+export const AercCategoryOther = (props: AercScoresCategoryProps) => {
+    const {hasAerc, combos} = props
+    return (
+        <AercCategory
+            name={"Other"}
             infos={
                 [
                     {
-                        icon: <AercIcon type={AercType.P}/>,
-                        info: hasAerc.effectivePower,
+                        icon: <AercIcon type={AercType.D}/>,
+                        info: hasAerc.disruption ?? 0,
                         combosTips: {
-                            title: "Effective Power (P)",
-                            combos: combos.filter(combo => combo.effectivePower != null && combo.effectivePower != 0),
-                            accessor: combo => combo.effectivePower
+                            title: "Disruption (D)",
+                            combos: combos.filter(combo => combo.disruption != null && combo.disruption != 0),
+                            accessor: combo => combo.disruption
                         }
                     },
                     {
-                        icon: <AercIcon type={AercType.S}/>,
-                        info: hasAerc.creatureProtection ?? 0,
+                        icon: <AercIcon type={AercType.O}/>,
+                        info: hasAerc.creatureControl ?? 0,
                         combosTips: {
-                            title: "Creature Protection",
-                            combos: combos.filter(combo => combo.creatureProtection != null && combo.creatureProtection != 0),
-                            accessor: combo => combo.creatureProtection
+                            title: "Other (O)",
+                            combos: combos.filter(combo => combo.other != null && combo.other != 0),
+                            accessor: combo => combo.other
                         }
                     },
                 ]

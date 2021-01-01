@@ -534,6 +534,10 @@ class EmailService(
                     <td>${deck.efficiency.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
+                    <td>Recursion (U)</td>
+                    <td>${deck.recursion?.roundToOneSigDig()}</td>
+                </tr>
+                <tr>
                     <td>Disruption (D)</td>
                     <td>${deck.disruption.roundToOneSigDig()}</td>
                 </tr>

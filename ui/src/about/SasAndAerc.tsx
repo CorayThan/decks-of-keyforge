@@ -28,7 +28,7 @@ export class SasAndAerc extends React.Component {
                     <InfoListCard title={"The AERC of your Deck"} infos={[
                         <Typography variant={"h5"}>AERC Deck Traits</Typography>,
                         "I've rated every card in key metrics, like its expected Aember Control (A), Expected Aember (E), Artifact Control (R), " +
-                        "Creature Control (C), Efficiency (F), Disruption (D), Effective Creature Power (P), Creature Protection (CP) " +
+                        "Creature Control (C), Efficiency (F), Recursion (U), Disruption (D), Effective Creature Power (P), Creature Protection (CP) " +
                         "and Other.",
                         "Together these traits form a deck's AERC rating, pronounced \"Arc\" much like aember.",
                         "When added together, these metrics represent the value of a deck converted to Aember.",
@@ -87,6 +87,15 @@ export class SasAndAerc extends React.Component {
                                 "archiving a card of your choice is 1.5, drawing a card is worth 0.75, and discarding a card is worth 0.5."
                             ]}
                             icon={AercType.F}
+                        />,
+                        <AercTraitDescription
+                            title={"Recursion (U)"}
+                            img={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/regrowth.png"}
+                            texts={[
+                                "Recursion is increased by effects that allow you to play cards that have already been played. Replaying a card is usually " +
+                                "worth 2 or less AERC, depending on restrictions."
+                            ]}
+                            icon={AercType.U}
                         />,
                         <AercTraitDescription
                             title={"Disruption (D)"}

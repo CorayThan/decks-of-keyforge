@@ -106,6 +106,7 @@ const synergyDetailHeaders: SortableTableHeaderInfo<SynergyCombo>[] = [
     {property: "creatureControl", transformProperty: roundToHundreds},
     {property: "effectivePower", transformProperty: roundToHundreds},
     {property: "efficiency", transformProperty: roundToHundreds},
+    {property: "recursion", transformProperty: roundToHundreds},
     {property: "disruption", transformProperty: roundToHundreds},
     {property: "other", transformProperty: roundToHundreds},
 ]

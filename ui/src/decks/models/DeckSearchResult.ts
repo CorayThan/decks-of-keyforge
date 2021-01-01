@@ -72,6 +72,7 @@ export interface DeckSearchResult {
     artifactControl?: number
     creatureControl: number
     efficiency?: number
+    recursion?: number
     effectivePower: number
     creatureProtection?: number
     disruption?: number
@@ -184,6 +185,7 @@ export class DeckUtils {
             creatureControl,
             effectivePower,
             efficiency,
+            recursion,
             disruption,
             other,
             ...rest
@@ -196,6 +198,7 @@ export class DeckUtils {
             creatureControl: roundToHundreds(creatureControl),
             effectivePower: roundToHundreds(effectivePower),
             efficiency: roundToHundreds(efficiency),
+            recursion: roundToHundreds(recursion),
             disruption: roundToHundreds(disruption),
             other: roundToHundreds(other),
             ...rest
@@ -223,6 +226,7 @@ export class DeckUtils {
                 synergies.creatureControl,
                 synergies.effectivePower,
                 synergies.efficiency,
+                synergies.recursion,
                 synergies.disruption,
                 synergies.other,
 
@@ -280,6 +284,7 @@ export class DeckUtils {
             "Creature Control",
             "Effective Power",
             "Efficiency",
+            "Recursion",
             "Disruption",
             "Other",
 

@@ -104,6 +104,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     @observable
     efficiency = "0"
     @observable
+    recursion = "0"
+    @observable
     effectivePower = "0"
     @observable
     creatureProtection = "0"
@@ -124,6 +126,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     aercScoreMax = "0"
     @observable
     efficiencyMax = "0"
+    @observable
+    recursionMax = "0"
     @observable
     effectivePowerMax = "0"
     @observable
@@ -180,6 +184,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.artifactControl = extraCardInfo.artifactControl.toString()
         this.creatureControl = extraCardInfo.creatureControl.toString()
         this.efficiency = extraCardInfo.efficiency.toString()
+        this.recursion = extraCardInfo.recursion.toString()
         this.effectivePower = extraCardInfo.effectivePower.toString()
         this.creatureProtection = extraCardInfo.creatureProtection.toString()
         this.disruption = extraCardInfo.disruption.toString()
@@ -190,6 +195,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.artifactControlMax = extraCardInfo.artifactControlMax == null ? "0" : extraCardInfo.artifactControlMax.toString()
         this.creatureControlMax = extraCardInfo.creatureControlMax == null ? "0" : extraCardInfo.creatureControlMax.toString()
         this.efficiencyMax = extraCardInfo.efficiencyMax == null ? "0" : extraCardInfo.efficiencyMax.toString()
+        this.recursionMax = extraCardInfo.recursionMax == null ? "0" : extraCardInfo.recursionMax.toString()
         this.effectivePowerMax = extraCardInfo.effectivePowerMax == null ? "0" : extraCardInfo.effectivePowerMax.toString()
         this.creatureProtectionMax = extraCardInfo.creatureProtectionMax == null ? "0" : extraCardInfo.creatureProtectionMax.toString()
         this.disruptionMax = extraCardInfo.disruptionMax == null ? "0" : extraCardInfo.disruptionMax.toString()
@@ -230,6 +236,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             artifactControl: Number(this.artifactControl),
             creatureControl: Number(this.creatureControl),
             efficiency: Number(this.efficiency),
+            recursion: Number(this.recursion),
             effectivePower: Number(this.effectivePower),
             creatureProtection: Number(this.creatureProtection),
             disruption: Number(this.disruption),
@@ -245,6 +252,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             creatureControlMax: Utils.toNumberOrUndefined(this.creatureControlMax),
             // @ts-ignore
             efficiencyMax: Utils.toNumberOrUndefined(this.efficiencyMax),
+            // @ts-ignore
+            recursionMax: Utils.toNumberOrUndefined(this.recursionMax),
             // @ts-ignore
             effectivePowerMax: Utils.toNumberOrUndefined(this.effectivePowerMax),
             // @ts-ignore
@@ -393,6 +402,16 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 name={"efficiency max"}
                                 value={this.efficiencyMax}
                                 update={(event: EventValue) => this.efficiencyMax = event.target.value}
+                            />
+                            <InfoInput
+                                name={"recursion"}
+                                value={this.recursion}
+                                update={(event: EventValue) => this.recursion = event.target.value}
+                            />
+                            <InfoInput
+                                name={"recursion max"}
+                                value={this.recursionMax}
+                                update={(event: EventValue) => this.recursionMax = event.target.value}
                             />
                             <InfoInput
                                 name={"disruption"}

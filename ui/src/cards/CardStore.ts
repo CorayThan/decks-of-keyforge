@@ -390,8 +390,8 @@ export class CardStore {
         const {effectivePower, aercScore, aercScoreMax} = card
         const extraCardInfo = cardStore.findExtraInfoToUse(card)
         const {
-            amberControl, expectedAmber, creatureControl, artifactControl, efficiency, creatureProtection, disruption, other,
-            amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, effectivePowerMax, creatureProtectionMax, disruptionMax, otherMax
+            amberControl, expectedAmber, creatureControl, artifactControl, efficiency, recursion, creatureProtection, disruption, other,
+            amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, recursionMax, effectivePowerMax, creatureProtectionMax, disruptionMax, otherMax
         } = extraCardInfo
 
         let averageAercScore = card.aercScore
@@ -405,6 +405,7 @@ export class CardStore {
             creatureControl,
             artifactControl,
             efficiency,
+            recursion,
             effectivePower,
             creatureProtection,
             disruption,
@@ -414,6 +415,7 @@ export class CardStore {
             creatureControlMax,
             artifactControlMax,
             efficiencyMax,
+            recursionMax,
             effectivePowerMax,
             creatureProtectionMax,
             disruptionMax,

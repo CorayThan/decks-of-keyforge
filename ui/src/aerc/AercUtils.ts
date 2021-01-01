@@ -5,6 +5,7 @@ export const aercProperties = [
     "creatureControl",
     "effectivePower",
     "efficiency",
+    "recursion",
     "disruption",
     "creatureProtection",
     "other"

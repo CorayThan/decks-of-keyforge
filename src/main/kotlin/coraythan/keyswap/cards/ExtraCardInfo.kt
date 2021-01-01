@@ -49,6 +49,9 @@ data class ExtraCardInfo(
         val efficiency: Double = 0.0,
         val efficiencyMax: Double? = null,
 
+        val recursion: Double = 0.0,
+        val recursionMax: Double? = null,
+
         val effectivePower: Int = 0,
         val effectivePowerMax: Double? = null,
 
@@ -124,6 +127,7 @@ data class ExtraCardInfo(
             creatureControlMax = if (this.creatureControlMax == 0.0) null else this.creatureControlMax,
             effectivePowerMax = if (this.effectivePowerMax == 0.0) null else this.effectivePowerMax,
             efficiencyMax = if (this.efficiencyMax == 0.0) null else this.efficiencyMax,
+            recursionMax = if (this.recursionMax == 0.0) null else this.recursionMax,
             disruptionMax = if (this.disruptionMax == 0.0) null else this.disruptionMax,
             otherMax = if (this.otherMax == 0.0) null else this.otherMax
     )
@@ -141,6 +145,8 @@ data class ExtraCardInfo(
                 artifactControlMax = info.artifactControlMax,
                 efficiency = info.efficiency,
                 efficiencyMax = info.efficiencyMax,
+                recursion = info.recursion,
+                recursionMax = info.recursionMax,
                 effectivePower = info.effectivePower,
                 effectivePowerMax = info.effectivePowerMax,
                 disruption = info.disruption,

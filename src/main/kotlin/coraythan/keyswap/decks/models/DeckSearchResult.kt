@@ -33,6 +33,7 @@ data class DeckSearchResult(
         val creatureControl: Double = 0.0,
         val artifactControl: Double? = null,
         val efficiency: Double? = null,
+        val recursion: Double? = null,
         val effectivePower: Int = 0,
         val creatureProtection: Double? = null,
         val disruption: Double? = null,
@@ -101,6 +102,7 @@ data class DeckSearchResult(
             ${(artifactControl ?: 0.0).roundToOneSigDig()} Artifact Control (R)
             ${creatureControl.roundToOneSigDig()} Creature Control (C)
             ${(efficiency ?: 0.0).roundToOneSigDig()} Efficiency (F)
+            ${(recursion ?: 0.0).roundToOneSigDig()} Recursion (U)
             ${(disruption ?: 0.0).roundToOneSigDig()} Disruption (D)
             
             $actionCount Actions

@@ -19,6 +19,7 @@ data class PastSas(
         val creatureControl: Double,
         val artifactControl: Double,
         val efficiency: Double,
+        val recursion: Double,
         val creatureProtection: Double,
         val disruption: Double,
         val other: Double,

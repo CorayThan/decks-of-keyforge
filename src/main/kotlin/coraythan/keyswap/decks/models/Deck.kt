@@ -54,6 +54,7 @@ data class Deck(
         val creatureControl: Double = 0.0,
         val artifactControl: Double = 0.0,
         val efficiency: Double = 0.0,
+        val recursion: Double? = 0.0,
         val effectivePower: Int = 0,
         val creatureProtection: Double? = 0.0,
         val disruption: Double = 0.0,
@@ -131,6 +132,7 @@ data class Deck(
             this.creatureControl == o.creatureControl &&
             this.effectivePower == o.effectivePower &&
             this.efficiency == o.efficiency &&
+            this.recursion == o.recursion &&
             this.disruption == o.disruption &&
             this.creatureProtection == o.creatureProtection &&
             this.other == o.other &&
@@ -175,6 +177,7 @@ data class Deck(
                 creatureControl = synergies?.creatureControl ?: creatureControl,
                 artifactControl = (synergies?.artifactControl ?: artifactControl).zeroToNull(),
                 efficiency = (synergies?.efficiency ?: efficiency).zeroToNull(),
+                recursion = (synergies?.recursion ?: recursion).zeroToNull(),
                 effectivePower = synergies?.effectivePower ?: effectivePower,
                 creatureProtection = (synergies?.creatureProtection ?: creatureProtection).zeroToNull(),
                 disruption = (synergies?.disruption ?: disruption).zeroToNull(),

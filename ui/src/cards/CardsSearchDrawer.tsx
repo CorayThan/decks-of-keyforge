@@ -95,6 +95,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
             "artifactControl",
             "creatureControl",
             "efficiency",
+            "recursion",
             "disruption",
             "creatureProtection",
             "effectivePower",

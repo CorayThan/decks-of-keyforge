@@ -31,6 +31,7 @@ class PastSasService(
             creatureControl = synergies.creatureControl,
             artifactControl = synergies.artifactControl,
             efficiency = synergies.efficiency,
+            recursion = synergies.recursion,
             creatureProtection = synergies.creatureProtection,
             disruption = synergies.disruption,
             other = synergies.other,

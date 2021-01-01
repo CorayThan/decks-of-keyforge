@@ -6,7 +6,15 @@ import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { HasAerc } from "../HasAerc"
-import { AercCategoryAmber, AercCategoryBoard, AercCategoryControl, AercCategoryCounts, AercCategoryExtras, AercCategorySpeed } from "./AercCategories"
+import {
+    AercCategoryAmber,
+    AercCategoryBoard,
+    AercCategoryControl,
+    AercCategoryCounts,
+    AercCategoryExtras,
+    AercCategoryOther,
+    AercCategorySpeed
+} from "./AercCategories"
 
 export enum AercViewType {
     DECK,
@@ -34,8 +42,9 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             >
                 <AercCategoryAmber hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryControl hasAerc={hasAerc} combos={combos}/>
-                <AercCategorySpeed hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
+                <AercCategorySpeed hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryBoard hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryOther hasAerc={hasAerc} combos={combos}/>
             </div>
         )
     }
@@ -60,8 +69,9 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             >
                 <AercCategoryAmber hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryControl hasAerc={hasAerc} combos={combos}/>
-                <AercCategorySpeed hasAerc={hasAerc} combos={combos}/>
-                <AercCategoryBoard hasAerc={hasAerc} combos={combos}/>
+                <AercCategorySpeed hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryBoard hasAerc={hasAerc} combos={combos} twoHigh={true}/>
+                <AercCategoryOther hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
                 <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos} twoHigh={true}/>
             </div>

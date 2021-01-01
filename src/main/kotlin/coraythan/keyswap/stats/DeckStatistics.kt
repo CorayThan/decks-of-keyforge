@@ -14,6 +14,7 @@ data class DeckStatistics(
         val creatureControl: MutableMap<Int, Int> = mutableMapOf(),
         val artifactControl: MutableMap<Int, Int> = mutableMapOf(),
         val efficiency: MutableMap<Int, Int> = mutableMapOf(),
+        val recursion: MutableMap<Int, Int> = mutableMapOf(),
         val disruption: MutableMap<Int, Int> = mutableMapOf(),
         val creatureProtection: MutableMap<Int, Int> = mutableMapOf(),
         val other: MutableMap<Int, Int> = mutableMapOf(),
@@ -41,6 +42,7 @@ data class DeckStatistics(
         val artifactControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val creatureControlToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val efficiencyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
+        val recursionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val disruptionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val creatureProtectionToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val otherToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
@@ -66,6 +68,8 @@ data class DeckStatistics(
         get() = IndividalDeckTraitStats.fromValues(artifactControl)
     val efficiencyStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(efficiency)
+    val recursionStats: IndividalDeckTraitStats
+        get() = IndividalDeckTraitStats.fromValues(recursion)
     val disruptionStats: IndividalDeckTraitStats
         get() = IndividalDeckTraitStats.fromValues(disruption)
     val creatureProtectionStats: IndividalDeckTraitStats
@@ -99,6 +103,7 @@ data class DeckStatistics(
             averageCreatureControl = creatureControlStats.median,
             averageArtifactControl = artifactControlStats.median,
             averageEfficiency = efficiencyStats.median,
+            averageRecursion = recursionStats.median,
             averageDisruption = disruptionStats.median,
             averageCreatureProtection = creatureProtectionStats.median,
             averageOther = otherStats.median,
@@ -113,7 +118,7 @@ data class DeckStatistics(
             expectedAmber = expectedAmber.map { BarData(it.key, it.value) },
             artifactControl = artifactControl.map { BarData(it.key, it.value) },
             creatureControl = creatureControl.map { BarData(it.key, it.value) },
-            efficiency = efficiency.map { BarData(it.key, it.value) },
+            recursion = efficiency.map { BarData(it.key, it.value) },
             disruption = disruption.map { BarData(it.key, it.value) },
             creatureProtection = creatureProtection.map { BarData(it.key, it.value) },
             other = other.map { BarData(it.key, it.value) },
@@ -133,7 +138,7 @@ data class DeckStatistics(
             expectedAmberWinRate = expectedAmberToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             artifactControlWinRate = artifactControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             creatureControlWinRate = creatureControlToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
-            efficiencyWinRate = efficiencyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
+            recursionWinRate = recursionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             disruptionWinRate = disruptionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             creatureProtectionWinRate = creatureProtectionToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             otherWinRate = otherToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
@@ -159,6 +164,7 @@ data class DeckStatistics(
             artifactControlPercentiles = artifactControlStats.percentileForValue,
             effectivePowerPercentiles = effectivePowerStats.percentileForValue,
             efficiencyPercentiles = efficiencyStats.percentileForValue,
+            recursionPercentiles = recursionStats.percentileForValue,
             disruptionPercentiles = disruptionStats.percentileForValue,
 
             aercDatas = aercDatas.map { it.toAverages() }

@@ -4,6 +4,7 @@ export interface HasAerc {
     artifactControl: number
     creatureControl: number
     efficiency: number
+    recursion: number
     effectivePower: number
     creatureProtection: number
     disruption: number
@@ -15,6 +16,7 @@ export interface HasAerc {
     artifactControlMax?: number
     creatureControlMax?: number
     efficiencyMax?: number
+    recursionMax?: number
     effectivePowerMax?: number
     creatureProtectionMax?: number
     disruptionMax?: number

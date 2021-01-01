@@ -14,6 +14,8 @@ export interface ExtraCardInfo {
     artifactControlMax?: number
     efficiency: number
     efficiencyMax?: number
+    recursion: number
+    recursionMax?: number
     effectivePower: number
     effectivePowerMax?: number
     disruption: number

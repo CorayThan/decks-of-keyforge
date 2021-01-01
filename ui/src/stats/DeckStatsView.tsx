@@ -73,7 +73,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
         const {
             sasRating, synergyRating, antisynergyRating,
             aercScore, amberControl, expectedAmber, artifactControl, creatureControl,
-            efficiency, effectivePower, disruption, creatureProtection
+            efficiency, recursion, effectivePower, disruption, creatureProtection
         } = this.props.deck
         const stats = statsStore.stats
         if (!stats) {
@@ -95,6 +95,7 @@ export class ExtraDeckStatsView extends React.Component<DeckStatsViewProps> {
             {name: "Creature Control", data: stats.creatureControl, comparison: Math.round(creatureControl)},
             {name: "Effective Power", data: stats.effectivePower, comparison: effectiveCreaturePowerCompareValue},
             {name: "Efficiency", data: stats.efficiency, comparison: Math.round(efficiency ?? 0)},
+            {name: "Recursion", data: stats.recursion, comparison: Math.round(recursion ?? 0)},
             {name: "Disruption", data: stats.disruption, comparison: Math.round(disruption ?? 0)},
         ]
 

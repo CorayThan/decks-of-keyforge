@@ -8,6 +8,7 @@ import Efficiency from "./efficiency.svg"
 import ExpectedAmber from "./expected-amber.svg"
 import Other from "./other.svg"
 import Power from "./power.svg"
+import Recursion from "./recursion.svg"
 
 export enum AercType {
     A,
@@ -19,7 +20,7 @@ export enum AercType {
     O,
     S,
     P,
-    H
+    U
 }
 
 export const AercIcon = (props: { type: AercType, width?: number, style?: React.CSSProperties }) => {
@@ -52,6 +53,9 @@ export const AercIcon = (props: { type: AercType, width?: number, style?: React.
             break
         case AercType.O:
             icon = Other
+            break
+        case AercType.U:
+            icon = Recursion
             break
     }
 

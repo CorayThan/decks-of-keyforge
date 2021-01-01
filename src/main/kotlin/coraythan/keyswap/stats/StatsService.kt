@@ -207,6 +207,7 @@ class StatsService(
                         stats.creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
                         stats.artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
                         stats.efficiency.incrementValue(ratedDeck.efficiency.roundToInt())
+                        stats.recursion.incrementValue(ratedDeck.recursion?.roundToInt() ?: 0)
                         stats.disruption.incrementValue(ratedDeck.disruption.roundToInt())
                         stats.creatureProtection.incrementValue(ratedDeck.creatureProtection?.roundToInt() ?: 0)
                         stats.other.incrementValue(ratedDeck.other.roundToInt())
@@ -237,6 +238,7 @@ class StatsService(
                             stats.artifactControlToWinsLosses.addWinsLosses(ratedDeck.artifactControl.roundToInt(), wins)
                             stats.creatureControlToWinsLosses.addWinsLosses(ratedDeck.creatureControl.roundToInt(), wins)
                             stats.efficiencyToWinsLosses.addWinsLosses(ratedDeck.efficiency.roundToInt(), wins)
+                            stats.recursionToWinsLosses.addWinsLosses(ratedDeck.recursion?.roundToInt() ?: 0, wins)
                             stats.disruptionToWinsLosses.addWinsLosses(ratedDeck.disruption.roundToInt(), wins)
                             stats.creatureProtectionToWinsLosses.addWinsLosses(ratedDeck.creatureProtection?.roundToInt() ?: 0, wins)
                             stats.otherToWinsLosses.addWinsLosses(ratedDeck.other.roundToInt(), wins)
@@ -267,7 +269,7 @@ class StatsService(
                                             artifactControl = aercData.artifactControl + relevantCombos.sumByDouble { it.artifactControl * it.copies },
                                             creatureControl = aercData.creatureControl + relevantCombos.sumByDouble { it.creatureControl * it.copies },
                                             effectivePower = aercData.effectivePower + relevantCombos.sumBy { it.effectivePower * it.copies },
-                                            efficiency = aercData.efficiency + relevantCombos.sumByDouble { it.efficiency * it.copies },
+                                            recursion = aercData.recursion + relevantCombos.sumByDouble { it.recursion * it.copies },
                                             disruption = aercData.disruption + relevantCombos.sumByDouble { it.disruption * it.copies },
                                             creatureProtection = aercData.creatureProtection + relevantCombos.sumByDouble { it.creatureProtection * it.copies },
                                             other = aercData.other + relevantCombos.sumByDouble { it.other * it.copies }

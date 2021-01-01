@@ -19,6 +19,7 @@ data class GlobalStats(
         val averageCreatureControl: Int = 0,
         val averageArtifactControl: Int = 0,
         val averageEfficiency: Int = 0,
+        val averageRecursion: Int = 0,
         val averageDisruption: Int = 0,
         val averageCreatureProtection: Int = 0,
         val averageOther: Int = 0,
@@ -34,6 +35,7 @@ data class GlobalStats(
         val artifactControl: List<BarData> = listOf(),
         val creatureControl: List<BarData> = listOf(),
         val efficiency: List<BarData> = listOf(),
+        val recursion: List<BarData> = listOf(),
         val disruption: List<BarData> = listOf(),
         val creatureProtection: List<BarData> = listOf(),
         val other: List<BarData> = listOf(),
@@ -54,6 +56,7 @@ data class GlobalStats(
         val artifactControlWinRate: List<BarData>? = listOf(),
         val creatureControlWinRate: List<BarData>? = listOf(),
         val efficiencyWinRate: List<BarData>? = listOf(),
+        val recursionWinRate: List<BarData>? = listOf(),
         val disruptionWinRate: List<BarData>? = listOf(),
         val creatureProtectionWinRate: List<BarData>? = listOf(),
         val otherWinRate: List<BarData>? = listOf(),
@@ -79,6 +82,7 @@ data class GlobalStats(
         val artifactControlPercentiles: Map<Int, Double> = mapOf(),
         val effectivePowerPercentiles: Map<Int, Double> = mapOf(),
         val efficiencyPercentiles: Map<Int, Double> = mapOf(),
+        val recursionPercentiles: Map<Int, Double> = mapOf(),
         val disruptionPercentiles: Map<Int, Double> = mapOf(),
 
         val aercDatas: List<AercData> = listOf()

@@ -18,6 +18,7 @@ export const DeckSearchDrawerConstraints = memo((props: DeckSearchDrawerConstrai
         "artifactControl",
         "creatureControl",
         "efficiency",
+        "recursion",
         "disruption",
         "effectivePower",
         "bonusAmber",
