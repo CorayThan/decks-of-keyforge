@@ -170,6 +170,10 @@ export class Utils {
         }
         return filename.split(".").pop() ?? ""
     }
+
+    static removeLineBreaks = (toModify: string) => {
+        return toModify.replace(/(\r\n|\n|\r)/gm, " ")
+    }
 }
 
 type EnumType = string | number

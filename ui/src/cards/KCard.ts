@@ -1,5 +1,6 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
+import { Utils } from "../config/Utils"
 import { activeExpansions } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { Expansion } from "../generated-src/Expansion"
@@ -200,8 +201,8 @@ export class CardUtils {
                 card.extraCardInfo.traits.map(trait => synTraitValueToString(trait)),
                 card.extraCardInfo.synergies.map(value => synTraitValueToString(value)),
                 card.traits,
-                card.cardText,
-                card.flavorText
+                Utils.removeLineBreaks(card.cardText),
+                Utils.removeLineBreaks(card.flavorText ?? ""),
             ]
         })
         data.unshift([

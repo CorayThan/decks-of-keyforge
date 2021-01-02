@@ -390,7 +390,7 @@ export const AercCategoryOther = (props: AercScoresCategoryProps) => {
                     },
                     {
                         icon: <AercIcon type={AercType.O}/>,
-                        info: hasAerc.creatureControl ?? 0,
+                        info: hasAerc.other ?? 0,
                         combosTips: {
                             title: "Other (O)",
                             combos: combos.filter(combo => combo.other != null && combo.other != 0),
