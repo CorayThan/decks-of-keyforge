@@ -9,6 +9,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
 import { uiStore } from "../ui/UiStore"
+import { ComparisonPopover } from "./comparison/ComparisonPopover"
 import { deckImportPopStore } from "./DeckImportPop"
 import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
@@ -131,6 +132,7 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
                 <DeckSynergiesInfoView
                     synergies={deck}
                 />
+                <ComparisonPopover/>
             </div>
         )
 

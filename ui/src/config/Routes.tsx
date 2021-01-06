@@ -15,6 +15,7 @@ import { ChangePasswordPage } from "../components/ChangePasswordPage"
 import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
 import { KeyTopbar } from "../components/KeyTopbar"
 import { VerifyEmailPage } from "../components/VerifyEmailPage"
+import { DeckComparisonView } from "../decks/comparison/DeckComparisonView"
 import { DeckViewPage } from "../decks/DeckViewFull"
 import { prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
@@ -77,6 +78,7 @@ class Routes {
     static tags = "/tags"
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
+    static compareDecks = "/compare-decks"
     static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static stats = "/stats"
@@ -104,6 +106,7 @@ class Routes {
     static usersMm = () => `/decks?owner=${userStore.username}&expansions=479`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
     static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
+    static compareDecksWithIds = (ids: string[]) => `${Routes.compareDecks}?${ids.map(id => `decks=${id}`).join("&")}`
 
     /**
      * Deck filters should be cleaned.
@@ -259,6 +262,10 @@ const KeyRouter = observer(() => {
                     <Route
                         path={Routes.decks}
                         component={DeckSearchPage}
+                    />
+                    <Route
+                        path={Routes.compareDecks}
+                        component={DeckComparisonView}
                     />
                     <Route
                         path={Routes.tags}

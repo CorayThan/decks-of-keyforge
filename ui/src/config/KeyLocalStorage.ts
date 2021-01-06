@@ -1,4 +1,5 @@
 import { observable } from "mobx"
+import { DeckNameId } from "../decks/comparison/CompareDecks"
 import { ListingInfo } from "../generated-src/ListingInfo"
 import { log } from "./Utils"
 
@@ -11,6 +12,7 @@ enum Keys {
     SMALL_TABLE_VIEW = "SMALL_TABLE_VIEW",
     DECK_LIST_VIEW_TYPE = "DECK_LIST_VIEW_TYPE",
     SALE_DEFAULTS = "SALE_DEFAULTS_2",
+    DECKS_TO_COMPARE = "DECKS_TO_COMPARE",
     GENERIC_STORAGE = "GENERIC_STORAGE"
 }
 
@@ -59,6 +61,9 @@ class KeyLocalStorage {
     @observable
     saleDefaults?: Partial<ListingInfo>
 
+    @observable
+    decksToCompare: DeckNameId[] = []
+
     private localStorage = window.localStorage
 
     constructor() {
@@ -69,6 +74,7 @@ class KeyLocalStorage {
         this.loadShowAllCards()
         this.loadCardListViewType()
         this.loadSaleDefaults()
+        this.loadDecksToCompare()
         this.loadGenericStorage()
     }
 
@@ -131,6 +137,25 @@ class KeyLocalStorage {
         this.localStorage.setItem(Keys.SALE_DEFAULTS, JSON.stringify(defaults))
     }
 
+    removeDeckToCompare = (id: string) => {
+        if (this.decksToCompare.find(existingDeck => existingDeck.keyforgeId === id) != null) {
+            this.decksToCompare = this.decksToCompare.filter(deck => deck.keyforgeId !== id)
+            this.localStorage.setItem(Keys.DECKS_TO_COMPARE, JSON.stringify(this.decksToCompare))
+        }
+    }
+
+    addDeckToCompare = (deck: DeckNameId) => {
+        if (this.decksToCompare.find(existingDeck => existingDeck.keyforgeId === deck.keyforgeId) == null) {
+            this.decksToCompare.push(deck)
+            this.localStorage.setItem(Keys.DECKS_TO_COMPARE, JSON.stringify(this.decksToCompare))
+        }
+    }
+
+    clearDeckstoCompare = () => {
+        this.localStorage.removeItem(Keys.DECKS_TO_COMPARE)
+        this.decksToCompare = []
+    }
+
     updateGenericStorage = (updates: GenericStorage) => {
         const updated = {
             ...this.genericStorage,
@@ -171,6 +196,18 @@ class KeyLocalStorage {
             } catch (e) {
                 log.error("Couldn't read sale defaults from " + saleDefaults)
                 this.localStorage.removeItem(Keys.SALE_DEFAULTS)
+            }
+        }
+    }
+
+    private loadDecksToCompare = () => {
+        const decksToCompare = this.localStorage.getItem(Keys.DECKS_TO_COMPARE)
+        if (decksToCompare != null && decksToCompare.length > 0) {
+            try {
+                this.decksToCompare = JSON.parse(decksToCompare) as DeckNameId[]
+            } catch (e) {
+                log.error("Couldn't read decks to compare from " + decksToCompare)
+                this.localStorage.removeItem(Keys.DECKS_TO_COMPARE)
             }
         }
     }

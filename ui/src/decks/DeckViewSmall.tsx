@@ -33,6 +33,7 @@ import { DeckTagsView } from "../tags/DeckTagsView"
 import { screenStore } from "../ui/ScreenStore"
 import { OwnersList } from "../userdeck/OwnersList"
 import { userDeckStore } from "../userdeck/UserDeckStore"
+import { CompareDeckButton } from "./buttons/CompareDeckButton"
 import { FavoriteDeck } from "./buttons/FavoriteDeck"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
@@ -51,6 +52,7 @@ interface DeckViewSmallProps {
     hideActions?: boolean
     style?: React.CSSProperties
     fake?: boolean
+    margin?: number
 }
 
 @observer
@@ -61,7 +63,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
             return null
         }
 
-        const {deck, saleInfo, fullVersion, hideActions, style, fake} = this.props
+        const {deck, saleInfo, fullVersion, hideActions, style, fake, margin} = this.props
         const {id, keyforgeId, name, wishlistCount, funnyCount, owners} = deck
 
         const compact = screenStore.smallDeckView()
@@ -84,7 +86,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                 <KeyCard
                     style={{
                         width,
-                        margin: spacing(2),
+                        margin: margin ? margin : spacing(2),
                         ...style
                     }}
                     topContents={<DeckViewTopContents deck={deck} compact={compact}/>}
@@ -125,15 +127,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                             MV
                                         </KeyButton>
                                     ) : null}
-                                    {!fullVersion ? (
-                                        <KeyLink
-                                            to={Routes.deckPage(keyforgeId)}
-                                            noStyle={true}
-                                        >
-                                            <KeyButton color={"primary"}>View</KeyButton>
-                                        </KeyLink>
-                                    ) : null}
                                     {compact ? null : (<MyDecksButton deck={deck}/>)}
+                                    {compact ? null : (<CompareDeckButton deck={deck}/>)}
                                     <div style={{flexGrow: 1, margin: 0}}/>
                                     <div>
                                         <FavoriteDeck deckName={name} deckId={id} favoriteCount={wishlistCount ?? 0}/>

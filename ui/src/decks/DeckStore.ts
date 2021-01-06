@@ -10,6 +10,7 @@ import { DeckSaleInfo } from "../generated-src/DeckSaleInfo"
 import { PastSas } from "../generated-src/PastSas"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
+import { DeckCompareResults } from "./comparison/CompareDecks"
 import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
 import { DeckFilters } from "./search/DeckFilters"
 
@@ -87,6 +88,9 @@ export class DeckStore {
     @observable
     calculatingStats = false
 
+    @observable
+    compareDecks?: DeckCompareResults[]
+
     reset = () => {
         this.currentDeckPage = 0
         this.deckIdToDeck = undefined
@@ -94,6 +98,12 @@ export class DeckStore {
         this.nextDeckPage = undefined
         this.decksCount = undefined
         this.currentFilters = undefined
+    }
+
+    findComparisonDecks = async (deckIds: string[]) => {
+        this.compareDecks = undefined
+        const response: AxiosResponse<DeckCompareResults[]> = await axios.post(`${DeckStore.CONTEXT}/compare`, deckIds)
+        this.compareDecks = response.data
     }
 
     findDeck = (keyforgeId: string) => {

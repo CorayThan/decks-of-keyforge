@@ -4,6 +4,7 @@ import coraythan.keyswap.Api
 import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.collectionstats.CollectionStats
+import coraythan.keyswap.decks.compare.DeckCompareService
 import coraythan.keyswap.decks.models.DeckCount
 import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.decks.models.DecksPage
@@ -21,7 +22,8 @@ class DeckEndpoints(
         private val deckImporterService: DeckImporterService,
         private val userDeckService: UserDeckService,
         private val deckWinsService: DeckWinsService,
-        private val pastSasService: PastSasService
+        private val pastSasService: PastSasService,
+        private val deckCompareService: DeckCompareService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -48,8 +50,10 @@ class DeckEndpoints(
         } catch (ex: Exception) {
             throw RuntimeException("Couldn't filter decks with filters $deckFilters", ex)
         }
-
     }
+
+    @PostMapping("/compare")
+    fun compareDecks(@RequestBody deckIds: List<String>) = deckCompareService.compareDecks(deckIds)
 
     @PostMapping("/filter-count")
     fun decksCount(@RequestBody deckFilters: DeckFilters): DeckCount {

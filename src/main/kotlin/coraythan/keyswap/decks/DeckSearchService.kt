@@ -262,6 +262,7 @@ class DeckSearchService(
             canAccessTag(it, userHolder.user?.id)
             predicate.and(deckQ.tags.any().tag.id.eq(it))
         }
+
         filters.notTags.forEach {
             canAccessTag(it, userHolder.user?.id)
             predicate.andNot(deckQ.tags.any().tag.id.eq(it))
@@ -460,7 +461,8 @@ class DeckSearchService(
         return deck.toDeckSearchResult(
                 cardService.deckToHouseAndCards(deck),
                 cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats())
+                stats = statsService.findCurrentStats()
+        )
     }
 
     fun findDeckWithSynergies(keyforgeId: String): DeckWithSynergyInfo? {

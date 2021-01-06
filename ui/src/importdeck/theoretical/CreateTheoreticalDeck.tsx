@@ -49,10 +49,6 @@ export const CreateTheoreticalDeck = observer(() => {
     }, [])
 
     useEffect(() => {
-        resetDeck()
-    }, [expansionStore.currentExpansionOrDefault()])
-
-    useEffect(() => {
         const oldCards: CardsInHouses = deckBuilderStore.currentDeck?.cards!
         const cards: CardsInHouses = {}
         const houses = housesStore.getHousesSelectedTrue()

@@ -47,7 +47,7 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
                             }}
                             menuItem={menuItem}
                         >
-                            {owned ? "Not mine" : "Add to My Decks"}
+                            {owned ? "Not mine" : "My Deck"}
                         </DeckActionClickable>
                     )}
                 {listButton}

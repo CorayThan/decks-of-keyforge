@@ -1,0 +1,54 @@
+import { Box } from "@material-ui/core"
+import { observer } from "mobx-react"
+import * as QueryString from "querystring"
+import * as React from "react"
+import { useEffect } from "react"
+import { useLocation } from "react-router-dom"
+import { keyLocalStorage } from "../../config/KeyLocalStorage"
+import { spacing } from "../../config/MuiConfig"
+import { Loader } from "../../mui-restyled/Loader"
+import { uiStore } from "../../ui/UiStore"
+import { deckStore } from "../DeckStore"
+import { DeckViewSmall } from "../DeckViewSmall"
+import { DeckComparisonSummary } from "./DeckComparisonSummary"
+
+export const DeckComparisonView = observer(() => {
+
+    const location = useLocation()
+    const search = location.search
+    useEffect(() => {
+        let searchToUse = search
+        if (search.startsWith("?")) {
+            searchToUse = search.substr(1)
+        }
+        const queryValues = QueryString.parse(searchToUse)
+        if (queryValues.decks != null && queryValues.decks.constructor === Array) {
+            const decks: string[] = queryValues.decks
+            deckStore.findComparisonDecks(decks)
+        }
+    }, [search])
+    useEffect(() => {
+        uiStore.setTopbarValues("Compare Decks", "Compare", "Evaluate decks side by side")
+        return () => {
+            keyLocalStorage.clearDeckstoCompare()
+        }
+    }, [])
+
+    const compareDecks = deckStore.compareDecks
+
+    if (compareDecks == null) {
+        return <Loader/>
+    }
+
+    return (
+        <Box display={"flex"} style={{overflowX: "auto"}} justifyContent={"center"}>
+            {compareDecks.map(comparison => (
+                <div key={comparison.deck.id}>
+                    <DeckComparisonSummary results={comparison.values}/>
+                    <Box mb={2}/>
+                    <DeckViewSmall deck={comparison.deck} margin={spacing(1)}/>
+                </div>
+            ))}
+        </Box>
+    )
+})

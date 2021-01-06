@@ -18,6 +18,7 @@ import { tagStore } from "../../tags/TagStore"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
+import { ComparisonPopover } from "../comparison/ComparisonPopover"
 import { DeckListView } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { DeckTableView } from "../DeckTableView"
@@ -166,6 +167,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
         return (
             <div style={{display: "flex"}}>
                 <DecksSearchDrawer history={history} filters={filters} location={location}/>
+                <ComparisonPopover/>
                 <div
                     style={{
                         flexGrow: 1,

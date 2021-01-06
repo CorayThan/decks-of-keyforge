@@ -6,6 +6,7 @@ interface DeckActionClickableProps {
     onClick: () => void
     children: React.ReactNode
     menuItem?: boolean
+    disabled?: boolean
 }
 
 export const DeckActionClickable = (props: DeckActionClickableProps) => {
@@ -13,6 +14,7 @@ export const DeckActionClickable = (props: DeckActionClickableProps) => {
         return (
             <MenuItem
                 onClick={props.onClick}
+                disabled={props.disabled}
             >
                 {props.children}
             </MenuItem>
@@ -22,6 +24,7 @@ export const DeckActionClickable = (props: DeckActionClickableProps) => {
         <KeyButton
             color={"primary"}
             onClick={props.onClick}
+            disabled={props.disabled}
         >
             {props.children}
         </KeyButton>

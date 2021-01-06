@@ -58,6 +58,11 @@ export class ThemeStore {
     }
 
     @computed
+    get lightAmberBackground() {
+        return this.darkMode ? grey["600"] : amber["50"]
+    }
+
+    @computed
     get tableBackgroundColor() {
         return this.darkMode ? "#666666" : "#FBFBFB"
     }
