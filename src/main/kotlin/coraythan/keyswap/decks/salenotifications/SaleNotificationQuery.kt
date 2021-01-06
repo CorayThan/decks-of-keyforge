@@ -128,7 +128,7 @@ data class SaleNotificationConstraint(
 
         val property: String,
         val cap: Cap,
-        val value: Int,
+        val value: Double,
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

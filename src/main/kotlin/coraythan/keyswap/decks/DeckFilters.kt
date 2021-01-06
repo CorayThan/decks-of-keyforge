@@ -100,7 +100,7 @@ enum class SortDirection(val direction: Sort.Direction) {
 data class Constraint(
         val property: String,
         val cap: Cap,
-        val value: Int
+        val value: Double
 )
 
 @GenerateTs
