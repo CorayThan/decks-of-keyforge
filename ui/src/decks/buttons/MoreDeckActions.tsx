@@ -15,6 +15,7 @@ import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { deckStore } from "../DeckStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
+import { CompareDeckButton } from "./CompareDeckButton"
 import { DeckActionClickable } from "./DeckActionClickable"
 import { MyDecksButton } from "./MyDecksButton"
 
@@ -48,6 +49,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                 onClose={handleClose}
             >
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
+                {compact ? <CompareDeckButton deck={deck} menuItem={true} onClick={handleClose}/> : null}
                 <ReportPurchaseButton deckId={deck.id} deckName={deck.name} onClick={handleClose}/>
                 <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
                 <ToggleDeckNotesMenuItem onClick={handleClose}/>

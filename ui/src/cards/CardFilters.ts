@@ -4,7 +4,6 @@ import * as React from "react"
 import { Utils } from "../config/Utils"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
 import { Constraint } from "../generated-src/Constraint"
-import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
@@ -25,9 +24,6 @@ export class CardFilters {
         if (typeof queryObject.rarities === "string") {
             queryObject.rarities = [queryObject.rarities]
         }
-        if (typeof queryObject.minAdaptiveScore === "string") {
-            queryObject.minAdaptiveScore = Number(queryObject.minAdaptiveScore)
-        }
         if (typeof queryObject.powers === "string") {
             queryObject.powers = [Number(queryObject.powers)]
         } else if (queryObject.powers != null) {
@@ -46,6 +42,14 @@ export class CardFilters {
                 queryObject.expansions = [expansionAsNumber]
             }
         }
+        if (queryObject.excludedExpansions != null) {
+            if (queryObject.excludedExpansions.constructor === Array) {
+                queryObject.excludedExpansions = queryObject.excludedExpansions.map((expansion: string) => Number(expansion))
+            } else {
+                const expansionAsNumber = Number(queryObject.excludedExpansions)
+                queryObject.excludedExpansions = [expansionAsNumber]
+            }
+        }
         if (queryObject.constraints) {
             if (typeof queryObject.constraints === "string") {
                 queryObject.constraints = [queryObject.constraints]
@@ -61,9 +65,6 @@ export class CardFilters {
         }
         if (queryObject.aercHistory) {
             queryObject.aercHistory = queryObject.aercHistory === "true"
-        }
-        if (queryObject.thisExpansionOnly) {
-            queryObject.thisExpansionOnly = queryObject.thisExpansionOnly === "true"
         }
         if (queryObject.aercHistoryDate === "") {
             queryObject.aercHistoryDate = undefined
@@ -86,13 +87,11 @@ export class CardFilters {
     powers: number[] = []
     ambers: number[] = []
     @observable
-    minAdaptiveScore?: number
-    @observable
     trait?: SynergyTrait
     @observable
     synergy?: SynergyTrait
-    expansion?: Expansion
-    thisExpansionOnly?: boolean
+    expansions: number[] = []
+    excludedExpansions: number[] = []
     constraints: Constraint[] = []
 
     @observable
@@ -112,12 +111,11 @@ export class CardFilters {
         this.houses = []
         this.powers = []
         this.ambers = []
-        this.minAdaptiveScore = undefined
         this.trait = undefined
         this.constraints = []
         this.synergy = undefined
-        this.expansion = undefined
-        this.thisExpansionOnly = undefined
+        this.expansions = []
+        this.excludedExpansions = []
         this.sort = undefined
         this.aercHistory = undefined
         this.aercHistoryDate = undefined

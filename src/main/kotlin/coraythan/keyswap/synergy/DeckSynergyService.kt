@@ -5,6 +5,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.roundToTwoSigDig
 import org.slf4j.LoggerFactory
 import java.math.RoundingMode
 import kotlin.math.absoluteValue
@@ -703,4 +704,4 @@ data class SynTraitValuesForTrait(
 
 data class SynergizedValue(val value: Double, val synergy: Double)
 
-fun Double?.isZeroOrNull() = this == null || this == 0.0
+fun Double?.isZeroOrNull() = this == null || this.roundToTwoSigDig() == 0.0

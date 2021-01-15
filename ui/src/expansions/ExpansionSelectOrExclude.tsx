@@ -105,4 +105,5 @@ export class SelectedOrExcludedExpansions {
     getExpansionsExcludedTrue = () => this.selectedExpansions.filter(expansion => expansion.state === CheckboxState.EXCLUDED).map(expansion => expansion.expansion)
 
     expansionsAsNumberArray = () => this.getExpansionsSelectedTrue().map(expansion => expansionInfoMap.get(expansion)!.expansionNumber)
+    excludedExpansionsAsNumberArray = () => this.getExpansionsExcludedTrue().map(expansion => expansionInfoMap.get(expansion)!.expansionNumber)
 }

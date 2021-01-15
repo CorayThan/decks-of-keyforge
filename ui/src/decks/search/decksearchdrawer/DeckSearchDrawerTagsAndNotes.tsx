@@ -84,12 +84,12 @@ export const DeckSearchDrawerTagsAndNotes = memo((props: DeckSearchDrawerTagsAnd
                     <SelectTags
                         selectedTagIds={selectedTagIds}
                         handleTagsUpdate={updateTagIds}
-                        label={"Include Tags"}
+                        label={"Includes All These Tags"}
                     />
                     <SelectTags
                         selectedTagIds={selectedNotTagIds}
                         handleTagsUpdate={updateNotTagIds}
-                        label={"Do Not Include Tags"}
+                        label={"Not These Tags"}
                     />
                     <NotesSearch
                         notesUser={notesUser}

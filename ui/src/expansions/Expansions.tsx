@@ -64,3 +64,5 @@ export const ExpansionLabel = (props: { expansion: Expansion, width?: number, ic
         </div>
     )
 }
+
+export const expansionNumberForExpansion = (expansion: Expansion) => expansionInfoMap.get(expansion)!.expansionNumber

@@ -3,6 +3,7 @@ import { startCase } from "lodash"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { spacing } from "../config/MuiConfig"
 
 export interface SelectedValue<T> {
     value: T
@@ -23,7 +24,7 @@ export class SelectedValues<T> {
     reset = () => this.selectedValues = []
 }
 
-interface KeyMultiSelectProps<T> {
+export interface KeyMultiSelectProps<T> {
     name: string
     selected: SelectedValues<T>
     options: SelectedValue<T>[] | string[]
@@ -47,37 +48,35 @@ export class KeyMultiSelect<T> extends React.Component<KeyMultiSelectProps<T>> {
             : options) as SelectedValue<T>[]
 
         return (
-            <div style={{display: "flex", flexWrap: "wrap"}}>
-                <FormControl style={{minWidth: 120, maxWidth: 300}}>
-                    <InputLabel shrink={selectedValues.length !== 0} id={labelId}>{name}</InputLabel>
-                    <Select
-                        id={id}
-                        labelId={labelId}
-                        multiple={true}
-                        value={selectedValues}
-                        onChange={this.handleChange}
-                        input={<Input/>}
-                        renderValue={(selected) => (selected as string[]).join(", ")}
-                        MenuProps={{
-                            PaperProps: {
-                                style: {
-                                    maxHeight: 48 * 4.5 + 8,
-                                    width: 250
-                                }
+            <FormControl style={{minWidth: 120, marginRight: spacing(2)}}>
+                <InputLabel shrink={selectedValues.length !== 0} id={labelId}>{name}</InputLabel>
+                <Select
+                    id={id}
+                    labelId={labelId}
+                    multiple={true}
+                    value={selectedValues}
+                    onChange={this.handleChange}
+                    input={<Input/>}
+                    renderValue={(selected) => (selected as string[]).join(", ")}
+                    MenuProps={{
+                        PaperProps: {
+                            style: {
+                                maxHeight: 48 * 4.5 + 8,
+                                width: 250
                             }
-                        }}
-                    >
-                        {optionsFixed.map(option => {
-                            return (
-                                <MenuItem key={option.label} value={option.value as unknown as string | number}>
-                                    <Checkbox checked={selectedValues.indexOf(option.value) > -1}/>
-                                    <ListItemText primary={option.label}/>
-                                </MenuItem>
-                            )
-                        })}
-                    </Select>
-                </FormControl>
-            </div>
+                        }
+                    }}
+                >
+                    {optionsFixed.map(option => {
+                        return (
+                            <MenuItem key={option.label} value={option.value as unknown as string | number}>
+                                <Checkbox checked={selectedValues.indexOf(option.value) > -1}/>
+                                <ListItemText primary={option.label}/>
+                            </MenuItem>
+                        )
+                    })}
+                </Select>
+            </FormControl>
         )
     }
 }

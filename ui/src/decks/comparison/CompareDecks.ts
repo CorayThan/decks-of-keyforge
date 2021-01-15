@@ -1,3 +1,4 @@
+import { DifferenceAmount } from "../../generated-src/DifferenceAmount"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 
 export interface DeckCompareResults {
@@ -8,7 +9,7 @@ export interface DeckCompareResults {
 export interface DeckCompareValue {
     stat: string
     valueDiff: number
-    significantlyDifferent: boolean
+    significantlyDifferent: DifferenceAmount
 }
 
 export interface DeckNameId {

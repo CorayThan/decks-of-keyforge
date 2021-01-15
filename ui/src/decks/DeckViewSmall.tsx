@@ -26,7 +26,6 @@ import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { HouseBanner } from "../houses/HouseBanner"
 import { HouseLabel } from "../houses/HouseUtils"
-import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { InlineDeckNote } from "../notes/DeckNote"
 import { DeckTagsView } from "../tags/DeckTagsView"
@@ -80,6 +79,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes
         const viewTags = !hideActions && keyLocalStorage.genericStorage.viewTags
+        const link = fake ? Routes.theoreticalDeckPage(keyforgeId) : Routes.deckPage(keyforgeId)
 
         return (
             <div>
@@ -100,13 +100,13 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <div style={{flexGrow: 1}}>
                             <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
                                 <KeyLink
-                                    to={fake ? Routes.theoreticalDeckPage(keyforgeId) : Routes.deckPage(keyforgeId)}
+                                    to={link}
                                     disabled={fullVersion}
                                     noStyle={true}
                                 >
-                                    <div style={{maxWidth: width - spacing(6)}}>
+                                    <Box style={{maxWidth: width - spacing(6)}}>
                                         <Typography variant={"h5"}>{name}</Typography>
-                                    </div>
+                                    </Box>
                                 </KeyLink>
                                 <DisplayAllCardsByHouse deck={deck} compact={compact}/>
                                 <OwnersList owners={owners}/>
@@ -119,16 +119,8 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardContent>
                             {!hideActions && !fake && (
                                 <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                                    {fullVersion && !compact ? (
-                                        <KeyButton
-                                            href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
-                                            color={"primary"}
-                                        >
-                                            MV
-                                        </KeyButton>
-                                    ) : null}
-                                    {compact ? null : (<MyDecksButton deck={deck}/>)}
                                     {compact ? null : (<CompareDeckButton deck={deck}/>)}
+                                    {compact ? null : (<MyDecksButton deck={deck}/>)}
                                     <div style={{flexGrow: 1, margin: 0}}/>
                                     <div>
                                         <FavoriteDeck deckName={name} deckId={id} favoriteCount={wishlistCount ?? 0}/>

@@ -7,7 +7,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { IdbUtils } from "../config/IdbUtils"
 import { log, prettyJson, roundToHundreds, Utils } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
-import { expansionInfos } from "../expansions/Expansions"
+import { expansionInfos, expansionNumberForExpansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { Expansion } from "../generated-src/Expansion"
 import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
@@ -107,9 +107,12 @@ export class CardStore {
         if (filters.sort == null) {
             filters.sort = CardSort.SET_NUMBER
         }
+
+        log.info("Expansions not: " + filters.excludedExpansions)
         const toSearch = this.allCards
         let filtered = toSearch.slice().filter(card => {
             const extraInfo = this.findExtraInfoToUse(card)
+            const cardNumsConverted = card.cardNumbers?.map(cardNum => cardNum.expansion === Expansion.ANOMALY_EXPANSION ? {expansion: Expansion.WORLDS_COLLIDE, cardNumber: cardNum.cardNumber} : cardNum)
             return (
                 (filters.aercHistoryDate == null || card.extraCardInfo.publishedDate === filters.aercHistoryDate)
                 &&
@@ -125,17 +128,15 @@ export class CardStore {
                     }
                 }))
                 &&
-                (filters.minAdaptiveScore == null || filters.minAdaptiveScore <= this.nextAdaptiveScore(card.cardTitle))
-                &&
                 (filters.trait == null || extraInfo.traits.some(infoTrait => infoTrait.trait === filters.trait))
                 &&
                 (filters.synergy == null || extraInfo.synergies.some(infoTrait => infoTrait.trait === filters.synergy))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)
                 &&
-                (!filters.thisExpansionOnly || card.cardNumbers?.length === 1)
+                (filters.expansions.length === 0 || cardNumsConverted?.find(cardNum => filters.expansions.includes(expansionNumberForExpansion(cardNum.expansion))) != null)
                 &&
-                (filters.expansion == null || card.cardNumbers?.map((cardNumberSetPair: CardNumberSetPair) => cardNumberSetPair.expansion).indexOf(filters.expansion) !== -1)
+                (filters.excludedExpansions.length === 0 || cardNumsConverted?.find(cardNum => filters.excludedExpansions.includes(expansionNumberForExpansion(cardNum.expansion))) == null)
             )
         })
 
@@ -159,14 +160,14 @@ export class CardStore {
         } else if (filters.sort === "NAME") {
             filtered = sortBy(filtered, ["cardTitle", "cardNumber"])
 
-        } else if (filters.sort === "SET_NUMBER" && filters.expansion == null) {
+        } else if (filters.sort === "SET_NUMBER" && filters.expansions.length !== 1) {
             log.info("Sort by house then card number")
             filtered = sortBy(filtered, (card: KCard) => {
                 return `${card.house}${card.cardNumber.toString().padStart(4, "0")}`
             })
         } else if (filters.sort === "SET_NUMBER") {
             filtered = sortBy(filtered, (card: KCard) => {
-                const cardNumbers = card.cardNumbers?.filter((cardNumber: CardNumberSetPair) => cardNumber.expansion === filters.expansion) ?? []
+                const cardNumbers = card.cardNumbers?.filter((cardNumber: CardNumberSetPair) => filters.expansions.includes(expansionNumberForExpansion(cardNumber.expansion))) ?? []
                 if (cardNumbers.length > 0) {
                     return cardNumbers[0].cardNumber
                 } else {

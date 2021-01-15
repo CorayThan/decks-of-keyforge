@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.2"
+export const latestVersion = "6.3"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,22 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.3"}
+                    date={"1/11/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Deck Comparison Tool",
+                            note: "I've made a deck comparison tool that lets Patrons compare decks side by side! It also displays a short summary that " +
+                                "lets you know which deck is better in certain key AERC and card count categories."
+                        },
+                        {
+                            highlight: "Card Search Improvements",
+                            note: "I revised the card search to make it easier to select the expansion, and gave it expandable drawers like the deck search."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.2"}
                     date={"1/4/2020"}

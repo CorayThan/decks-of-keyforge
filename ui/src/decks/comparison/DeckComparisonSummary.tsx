@@ -1,53 +1,77 @@
 import { Box, Divider, Paper, Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import React, { Fragment } from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
+import { DifferenceAmount } from "../../generated-src/DifferenceAmount"
 import { AercIcon, AercType } from "../../generic/icons/aerc/AercIcon"
 import { ArrowQuality, ArrowQualityIcon } from "../../generic/icons/ArrowQualityIcon"
 import { ArtifactIcon } from "../../generic/icons/card-types/ArtifactIcon"
 import { CreatureIcon } from "../../generic/icons/card-types/CreatureIcon"
+import { screenStore } from "../../ui/ScreenStore"
 import { DeckCompareValue } from "./CompareDecks"
 
 const isSecondColumn = (stat: string) => stat.includes("Count") || stat.includes("Efficiency") || stat.includes("Disruption")
 
-export const DeckComparisonSummary = (props: { results: DeckCompareValue[] }) => {
+export const DeckComparisonSummary = observer((props: { results: DeckCompareValue[] }) => {
     const results = props.results
 
     const aercResults = results.filter(result => !isSecondColumn(result.stat))
     const countResults = results.filter(result => isSecondColumn(result.stat))
 
+    const smallView = screenStore.smallDeckView()
+
     return (
-        <Paper style={{margin: spacing(1), padding: spacing(2), backgroundColor: themeStore.aercViewBackground, overflowY: "auto", height: 216}}>
+        <Paper
+            style={{
+                margin: spacing(1),
+                padding: spacing(2),
+                backgroundColor: themeStore.aercViewBackground,
+                overflowY: "auto",
+                height: smallView ? 360 : 216,
+                width: smallView ? 328 : undefined
+            }}
+        >
             <Typography variant={"h5"} style={{fontSize: 20}}>Comparison Summary</Typography>
-            <Divider style={{width: 640, marginTop: spacing(1), marginBottom: spacing(1)}}/>
+            <Divider style={{width: smallView ? 280 : 640, marginTop: spacing(1), marginBottom: spacing(1)}}/>
             <Box>
                 {props.results.length === 0 && (
                     <Typography>
                         No significant stat differences
                     </Typography>
                 )}
-                <Box display={"flex"}>
-                    <DeckComparisonList results={aercResults}/>
-                    <Box ml={2}>
-                        <DeckComparisonList results={countResults}/>
+                {smallView ? (
+                    <DeckComparisonList results={results} width={280}/>
+                ) : (
+                    <Box display={"flex"}>
+                        <DeckComparisonList results={aercResults} width={320}/>
+                        <Box ml={2}>
+                            <DeckComparisonList results={countResults} width={320}/>
+                        </Box>
                     </Box>
-                </Box>
+                )}
             </Box>
         </Paper>
     )
-}
+})
 
-const DeckComparisonList = (props: { results: DeckCompareValue[] }) => {
+const DeckComparisonList = (props: { results: DeckCompareValue[], width: number }) => {
     return (
-        <Box display={"grid"} gridTemplateColumns={"1fr 1fr 10fr"} gridGap={8} width={320}>
+        <Box display={"grid"} gridTemplateColumns={"1fr 1fr 10fr"} gridGap={8} width={props.width}>
             {props.results.map(result => {
-                let quality = ArrowQuality.BEST
-                if (result.valueDiff > 0 && !result.significantlyDifferent) {
-                    quality = ArrowQuality.BETTER
-                } else if (result.valueDiff < 0) {
-                    if (result.significantlyDifferent) {
-                        quality = ArrowQuality.WORST
+                let quality: ArrowQuality | undefined
+                if (result.significantlyDifferent !== DifferenceAmount.MINIMAL) {
+                    if (result.significantlyDifferent === DifferenceAmount.MODERATE) {
+                        if (result.valueDiff > 0) {
+                            quality = ArrowQuality.BETTER
+                        } else {
+                            quality = ArrowQuality.WORSE
+                        }
                     } else {
-                        quality = ArrowQuality.WORSE
+                        if (result.valueDiff > 0) {
+                            quality = ArrowQuality.BEST
+                        } else {
+                            quality = ArrowQuality.WORST
+                        }
                     }
                 }
                 let icon
@@ -74,7 +98,7 @@ const DeckComparisonList = (props: { results: DeckCompareValue[] }) => {
                 return (
                     <Fragment key={result.stat}>
                         <Box display={"flex"} height={height}>
-                            {!result.stat.includes("Count") ? (
+                            {quality != null && !result.stat.includes("Count") ? (
                                 <ArrowQualityIcon arrowQuality={quality} style={{marginRight: spacing(1)}}/>
                             ) : (
                                 <Box width={32}/>

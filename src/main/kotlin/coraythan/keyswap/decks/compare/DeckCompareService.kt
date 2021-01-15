@@ -13,6 +13,41 @@ class DeckCompareService(
         private val deckSearchService: DeckSearchService
 ) {
 
+
+    /**
+     * Match Up Score
+     *
+     * Key things to rate:
+     *
+     * Requires new deck metric:
+     * burst aember dependent vs. scaling aember control
+     * creature static / use value vs. creature controlling
+     * creature rush vs. board wipes
+     * artifact dependent vs. artifact controlling
+     *
+     *
+     * Counter cards:
+     *
+     * Counters Actions -------------
+     * Counters Steal --------------- Discombobulator
+     * Counters Discard ------------- Auto-Encoder
+     * Counters Multiple copies ----- Etan's Jar
+     * Counters Reaping ------------- Aember Imp, Ragwarg, Little Rapscal, Opposition Research
+     * Counters Fighting ------------
+     * Counters Elusive -------------
+     * Counters specific House ------ King of the Crag, Take that, Smartypants, Painmail, E'e on the Fringes, Hecatomb
+     * Counters creature power range- Warrior's Refrain, Autocannon, Earthshaker, Bellowing Patrizate, Hebe the Huge, Pingle Who Annoys, Phoenix Heart, Onyx Knight,
+     * Counters shared houses ------- Gleeful Mayhem, Collar of Subordinat ion, Overlord Greking
+     * Counters aember capture ------ Guilty Hearts
+     * Counters creature recursion -- Annihilation Ritual, Eater of the Dead
+     * Counters recursion ----------- Creeping Oblivion
+     * Counters creature trait ------ XXXX's Bane, Krrrzzzzaaaap
+     *
+     * Buffs creature power range --- Grump Buggy
+     * Buffs creature trait --------- Professor Terato,
+     * Buffs good on play creatures - Hysteria, Mind Over Matter
+     */
+
     fun compareDecks(deckIds: List<String>): List<DeckCompareResults> {
         if (deckIds.size < 2) throw BadRequestException("Not enough decks to compare.")
 
@@ -45,14 +80,13 @@ class DeckCompareService(
                         compareStats(deckToCompare, decks, "Disruption", 5.0) { deck ->
                             deck.disruption ?: 0.0
                         },
-                        compareStats(deckToCompare, decks, "Creature Count", 5.0) { deck ->
-                            deck.creatureCount?.toDouble() ?: 0.0
-                        },
                         compareStats(deckToCompare, decks, "Artifact Count", 3.0) { deck ->
                             deck.artifactCount?.toDouble() ?: 0.0
                         },
+                        compareStats(deckToCompare, decks, "Creature Count", 5.0) { deck ->
+                            deck.creatureCount?.toDouble() ?: 0.0
+                        },
                 )
-                        .filterNotNull()
         )
     }
 
@@ -62,7 +96,7 @@ class DeckCompareService(
             stat: String,
             significantDifference: Double,
             statAccessor: (deck: DeckSearchResult) -> Double
-    ): DeckCompareValue? {
+    ): DeckCompareValue {
         val decksMinusThis = decks.minus(deck)
         val maxStat: Double = decksMinusThis.map(statAccessor).maxOrNull()!!
         val minStat: Double = decksMinusThis.map(statAccessor).minOrNull()!!
@@ -73,14 +107,17 @@ class DeckCompareService(
         } else if (thisStat < minStat) {
             thisStat - minStat
         } else {
-            return null
+            0.0
         }
-        val significantlyDifferent = diff.absoluteValue >= significantDifference
 
         return DeckCompareValue(
                 stat,
                 diff,
-                significantlyDifferent
+                when {
+                    diff.absoluteValue >= significantDifference -> DifferenceAmount.SIGNIFICANT
+                    diff.absoluteValue >= (significantDifference / 2.0) -> DifferenceAmount.MODERATE
+                    else -> DifferenceAmount.MINIMAL
+                }
         )
     }
 }

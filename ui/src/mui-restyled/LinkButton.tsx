@@ -1,4 +1,4 @@
-import { Button, Link, ListItem, ListItemText } from "@material-ui/core"
+import { Button, IconButton, IconButtonProps, Link, ListItem, ListItemText } from "@material-ui/core"
 import { ButtonProps } from "@material-ui/core/Button"
 import { ListItemProps } from "@material-ui/core/ListItem"
 import * as React from "react"
@@ -12,6 +12,21 @@ export const LinkButton = (props: ButtonProps & { newWindow?: boolean }) => {
     return (
         // @ts-ignore
         <Button
+            {...rest}
+            href={href}
+            target={newWindow ? "_blank" : undefined}
+            rel={newWindow ? "noopener noreferrer" : undefined}
+            component={"a"}
+            style={{whiteSpace: "nowrap", ...style}}
+        />
+    )
+}
+
+export const LinkIconButton = (props: IconButtonProps & { href: string, newWindow?: boolean }) => {
+    const {href, newWindow, style, ...rest} = props
+    return (
+        // @ts-ignore
+        <IconButton
             {...rest}
             href={href}
             target={newWindow ? "_blank" : undefined}

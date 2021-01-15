@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -6,6 +6,7 @@ import { Routes } from "../config/Routes"
 import { InfoListCard } from "../generic/InfoListCard"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { GithubTicketsButton } from "../thirdpartysites/github/GithubTicketsButton"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
@@ -31,16 +32,17 @@ export class ContactMe extends React.Component {
                             "SAS is a unique rating system that reflects approximate deck power.",
                             "List decks for sale or trade, and use the search features to find available decks.",
                             "Wishlist and mark decks as funny, and see what everyone else thinks too!",
-                            <span style={{display: "flex", alignItems: "center"}}>
-                                <Typography style={{marginRight: spacing(1)}}>Join the discussion:</Typography>
-                                <DiscordButton style={{margin: spacing(1)}}/>
-                                <TwitterButton style={{margin: spacing(1)}}/>
-                            </span>,
+                            <Box display={"flex"} alignItems={"center"} my={2}>
+                                <DiscordButton style={{marginRight: spacing(2)}}/>
+                                <TwitterButton style={{marginRight: spacing(2)}}/>
+                                <GithubTicketsButton/>
+                            </Box>,
                             <span>
                                 <Typography>
-                                    For comments and suggestions join the Discord server or send an email to
+                                    Please request features and report bugs with the "Report an Issue" button above.
+                                    You can also make comments and suggestions on the Discord server or send an email
+                                    to <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                                 </Typography>
-                                <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
                             </span>,
                             <div style={{paddingTop: spacing(1)}}>
                                 <PatronButton/>
@@ -71,7 +73,17 @@ export class ContactMe extends React.Component {
                         "like to help make it better or collaborate! But please don't steal the system, obviously.",
                         "Also, the SAS rating system isn't perfect, and is subject to change at any time. We are not responsible for any perceived " +
                         "or real loss of value due to changes to the system.",
-                        <LinkButton variant={"outlined"} size={"small"} href={Routes.privacyPolicy}>Privacy Policy</LinkButton>
+                        <Box>
+                            <LinkButton size={"small"} href={Routes.codeOfConduct} newWindow={true} style={{marginRight: spacing(2)}}>
+                                Code of Conduct
+                            </LinkButton>
+                            <LinkButton size={"small"} href={Routes.termsOfUse} newWindow={true} style={{marginRight: spacing(2)}}>
+                                Terms of Use
+                            </LinkButton>
+                            <LinkButton size={"small"} href={Routes.privacyPolicy} newWindow={true}>
+                                Privacy Policy
+                            </LinkButton>
+                        </Box>
                     ]}/>
                 </AboutGridItem>
             </>

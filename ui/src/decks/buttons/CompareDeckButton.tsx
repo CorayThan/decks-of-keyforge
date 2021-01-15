@@ -8,13 +8,14 @@ import { DeckActionClickable } from "./DeckActionClickable"
 interface CompareDeckButtonProps {
     deck: DeckSearchResult
     menuItem?: boolean
+    onClick?: () => void
 }
 
 @observer
 export class CompareDeckButton extends React.Component<CompareDeckButtonProps> {
 
     render() {
-        const {menuItem, deck} = this.props
+        const {menuItem, deck, onClick} = this.props
         if (!userStore.loggedIn()) {
             return null
         }
@@ -27,6 +28,9 @@ export class CompareDeckButton extends React.Component<CompareDeckButtonProps> {
                         keyforgeId: deck.keyforgeId,
                         name: deck.name
                     })
+                    if (onClick) {
+                        onClick()
+                    }
                 }}
                 menuItem={menuItem}
             >

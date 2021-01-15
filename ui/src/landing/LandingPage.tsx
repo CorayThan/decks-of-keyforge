@@ -17,6 +17,7 @@ import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
 import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { GithubTicketsButton } from "../thirdpartysites/github/GithubTicketsButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
@@ -178,6 +179,7 @@ export class LandingPage extends React.Component<{}> {
                                 <PatronButton size={"large"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <DiscordButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <TwitterButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <GithubTicketsButton style={{marginBottom: spacing(2)}}/>
                             </Box>
                             <LandingPageTitle marginTop={spacing(2)}>
                                 Disclaimers

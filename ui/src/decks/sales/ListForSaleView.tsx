@@ -251,7 +251,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         menuItem={menuItem}
                         onClick={this.handleOpenForEdit}
                     >
-                        Edit Listing
+                        Edit Sale
                     </DeckActionClickable>
                     <SoldButton deck={deck} menuItem={menuItem}/>
                 </>

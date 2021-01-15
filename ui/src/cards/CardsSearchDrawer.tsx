@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@material-ui/core"
+import { Box, Checkbox, FormControlLabel, IconButton, Switch, Tooltip, Typography } from "@material-ui/core"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
@@ -10,19 +10,22 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { ChangeEvent } from "react"
 import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../components/KeyDrawer"
+import { SearchDrawerExpansionPanel } from "../components/SearchDrawerExpansionPanel"
 import { SortDirectionView } from "../components/SortDirectionView"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "../decks/search/ConstraintDropdowns"
-import { ExpansionSelector, SelectedExpansion } from "../expansions/ExpansionSelector"
+import { expansionInfoMapNumbers } from "../expansions/Expansions"
+import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../expansions/ExpansionSelectOrExclude"
 import { validSynergies, validTraits } from "../extracardinfo/SynergyTrait"
 import { Rarity } from "../generated-src/Rarity"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { CsvDownloadButton } from "../generic/CsvDownloadButton"
 import { HouseSelect, SelectedHouses } from "../houses/HouseSelect"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { KeyMultiCheckbox } from "../mui-restyled/KeyMultiCheckbox"
 import { KeyMultiSelect, SelectedValues } from "../mui-restyled/KeyMultiSelect"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
@@ -47,7 +50,10 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedPowers = new SelectedValues<number>(this.props.filters.powers)
     selectedAmbers = new SelectedValues<number>(this.props.filters.ambers)
     selectedSortStore = new CardSortSelectStore(this.props.filters.sort)
-    selectedExpansion = new SelectedExpansion(this.props.filters.expansion == null ? undefined : [this.props.filters.expansion])
+    selectedExpansions = new SelectedOrExcludedExpansions(
+        this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum),
+        this.props.filters.excludedExpansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum),
+    )
     selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
 
     constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
@@ -63,8 +69,8 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.powers = this.selectedPowers.selectedValues
         filters.ambers = this.selectedAmbers.selectedValues
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
-        filters.expansion = this.selectedExpansion.currentExpansion()
-        filters.thisExpansionOnly = this.selectedExpansion.onlyThisExpansion
+        filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
+        filters.excludedExpansions = this.selectedExpansions.excludedExpansionsAsNumberArray()
         filters.aercHistoryDate = this.selectedPublishDate.date
         filters.constraints = this.constraintsStore.cleanConstraints()
         cardStore.searchCards(filters)
@@ -81,7 +87,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         this.selectedRarities.reset()
         this.selectedPowers.reset()
         this.selectedAmbers.reset()
-        this.selectedExpansion.reset()
+        this.selectedExpansions.reset()
         this.constraintsStore.reset()
     }
 
@@ -127,118 +133,102 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                 fullWidth={true}
                             />
                         </ListItem>
+                        <ListItem style={{marginTop: spacing(1)}}>
+                            <ExpansionSelectOrExclude selectedExpansions={this.selectedExpansions} allowExclusions={true}/>
+                        </ListItem>
                         <ListItem>
                             <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
-                        <ListItem style={{display: "flex", flexWrap: "wrap", marginTop: 0, paddingTop: 0}}>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
-                                <KeyMultiSelect
-                                    name={"Card Type"}
-                                    selected={this.selectedCardTypes}
-                                    options={Utils.enumValues(CardType) as CardType[]}
-                                />
-                            </div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
-                                <KeyMultiSelect
-                                    name={"Rarity"}
-                                    selected={this.selectedRarities}
-                                    options={[
-                                        Rarity.Common,
-                                        Rarity.Uncommon,
-                                        Rarity.Rare,
-                                        Rarity.Special,
-                                    ]}
-                                />
-                            </div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
-                                <KeyMultiSelect
-                                    name={"Aember"}
-                                    selected={this.selectedAmbers}
-                                    options={range(0, 5)
-                                        .map(amber => amber.toString())}
-                                />
-                            </div>
-                            <div style={{marginRight: spacing(2), marginTop: spacing(1)}}>
-                                <KeyMultiSelect
-                                    name={"Power"}
-                                    selected={this.selectedPowers}
-                                    options={range(1, 17)
-                                        .map(power => power.toString())}
-                                />
-                            </div>
-                        </ListItem>
                         <ListItem>
-                            <ConstraintDropdowns
-                                store={this.constraintsStore}
-                                properties={constraintOptions}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <Autocomplete
-                                options={Utils.arrPlus(validTraits, ["", SynergyTrait.alpha, SynergyTrait.omega]) as (SynergyTrait | "")[]}
-                                value={filters.trait ?? ""}
-                                renderInput={(params) => <TextField {...params} label={"Trait"}/>}
-                                renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
-                                onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
-                                    const newValueTyped = newValue as (SynergyTrait | "" | null)
-                                    filters.trait = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
-                                }}
-                                fullWidth={true}
-                                size={"small"}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <Autocomplete
-                                options={Utils.arrPlus(validSynergies, "") as (SynergyTrait | "")[]}
-                                value={filters.synergy ?? ""}
-                                renderInput={(params) => <TextField {...params} label={"Synergy"}/>}
-                                renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
-                                onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
-                                    const newValueTyped = newValue as (SynergyTrait | "" | null)
-                                    filters.synergy = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
-                                }}
-                                fullWidth={true}
-                                size={"small"}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={filters.aercHistory}
-                                        onChange={() => {
-                                            filters.aercHistory = !filters.aercHistory
-                                            if (!filters.aercHistory) {
-                                                this.selectedPublishDate.reset()
-                                            }
-                                        }}
+                            <div>
+                                <SearchDrawerExpansionPanel initiallyOpen={this.selectedCardTypes.selectedValues.length > 0} title={"Attributes"}>
+                                    <Box>
+                                        <KeyMultiCheckbox
+                                            name={"Card Type"}
+                                            selected={this.selectedCardTypes}
+                                            options={Utils.enumValues(CardType) as CardType[]}
+                                        />
+                                        <KeyMultiCheckbox
+                                            name={"Rarity"}
+                                            selected={this.selectedRarities}
+                                            options={[
+                                                Rarity.Common,
+                                                Rarity.Uncommon,
+                                                Rarity.Rare,
+                                                Rarity.Special,
+                                            ]}
+                                        />
+                                        <KeyMultiSelect
+                                            name={"Aember"}
+                                            selected={this.selectedAmbers}
+                                            options={range(0, 5)
+                                                .map(amber => amber.toString())}
+                                        />
+                                        <KeyMultiSelect
+                                            name={"Power"}
+                                            selected={this.selectedPowers}
+                                            options={range(1, 17)
+                                                .map(power => power.toString())}
+                                        />
+                                    </Box>
+                                </SearchDrawerExpansionPanel>
+                                <SearchDrawerExpansionPanel initiallyOpen={!this.constraintsStore.isDefaultConstraints()} title={"Constraints"}>
+                                    <ConstraintDropdowns
+                                        store={this.constraintsStore}
+                                        properties={constraintOptions}
                                     />
-                                }
-                                label={"Past AERC"}
-                            />
-                            {filters.aercHistory && (
-                                <PublishDateSelect selected={this.selectedPublishDate}/>
-                            )}
+                                </SearchDrawerExpansionPanel>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={filters.trait != null || filters.synergy != null}
+                                    title={"Synergies & Past AERC"}
+                                    lastPanel={true}
+                                >
+                                    <Autocomplete
+                                        options={Utils.arrPlus(validTraits, ["", SynergyTrait.alpha, SynergyTrait.omega]) as (SynergyTrait | "")[]}
+                                        value={filters.trait ?? ""}
+                                        renderInput={(params) => <TextField {...params} label={"Trait"}/>}
+                                        renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
+                                        onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
+                                            const newValueTyped = newValue as (SynergyTrait | "" | null)
+                                            filters.trait = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
+                                        }}
+                                        fullWidth={true}
+                                        size={"small"}
+                                    />
+                                    <Autocomplete
+                                        options={Utils.arrPlus(validSynergies, "") as (SynergyTrait | "")[]}
+                                        value={filters.synergy ?? ""}
+                                        renderInput={(params) => <TextField {...params} label={"Synergy"}/>}
+                                        renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
+                                        onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
+                                            const newValueTyped = newValue as (SynergyTrait | "" | null)
+                                            filters.synergy = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
+                                        }}
+                                        fullWidth={true}
+                                        size={"small"}
+                                    />
+                                    <FormControlLabel
+                                        style={{marginTop: spacing(1)}}
+                                        control={
+                                            <Checkbox
+                                                checked={filters.aercHistory}
+                                                onChange={() => {
+                                                    filters.aercHistory = !filters.aercHistory
+                                                    if (!filters.aercHistory) {
+                                                        this.selectedPublishDate.reset()
+                                                    }
+                                                }}
+                                            />
+                                        }
+                                        label={"Past AERC"}
+                                    />
+                                    {filters.aercHistory && (
+                                        <PublishDateSelect selected={this.selectedPublishDate}/>
+                                    )}
+                                </SearchDrawerExpansionPanel>
+                            </div>
                         </ListItem>
-                        {userStore.contentCreator && (
-                            <ListItem>
-                                <TextField
-                                    label={"Min Adaptive Score"}
-                                    value={filters.minAdaptiveScore?.toString() ?? ""}
-                                    type={"number"}
-                                    onChange={event => filters.minAdaptiveScore = Utils.toNumberOrUndefined(event.target.value)}
-                                />
-                            </ListItem>
-                        )}
                         <ListItem>
-                            <ExpansionSelector
-                                store={this.selectedExpansion}
-                                small={false}
-                                displayNoneOption={true}
-                                displayAnomaly={true}
-                                includeOnlys={true}
-                                style={{marginRight: spacing(2)}}
-                            />
                             <CardSortSelect store={this.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={filters}/>

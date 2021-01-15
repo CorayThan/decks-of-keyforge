@@ -6,18 +6,31 @@ import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing, theme, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { LinkButton } from "../../mui-restyled/LinkButton"
+import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 
 export const ComparisonPopover = observer(() => {
     const decks = keyLocalStorage.decksToCompare
-    if (decks.length === 0) {
+    if (decks.length === 0 || userStore.loginInProgress) {
         return null
     }
+
+    const patron = userStore.patron
 
     return (
         <Box style={{position: "fixed", right: theme.spacing(2), bottom: theme.spacing(2), zIndex: screenStore.zindexes.keyDrawer}}>
             <Paper style={{background: themeStore.lightAmberBackground}}>
+                {!patron && (
+                    <Box p={2}>
+                        <Typography
+                            style={{marginBottom: spacing(2)}}
+                        >
+                            Please become a patron to compare decks!
+                        </Typography>
+                        <PatronButton/>
+                    </Box>
+                )}
                 <List>
                     {decks.map(deck => (
                         <ListItem key={deck.keyforgeId}>
@@ -46,7 +59,7 @@ export const ComparisonPopover = observer(() => {
                     color={"primary"}
                     href={Routes.compareDecksWithIds(decks.map(deck => deck.keyforgeId))}
                     style={{margin: spacing(2)}}
-                    disabled={!userStore.patron || decks.length < 2}
+                    disabled={!patron || decks.length < 2}
                 >
                     Compare
                 </LinkButton>

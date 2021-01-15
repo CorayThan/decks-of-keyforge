@@ -1,13 +1,17 @@
-import { Link, Typography } from "@material-ui/core"
+import { Button, Card, CardActionArea, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
+import { useState } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
+import CollectionAnalysis from "../generic/imgs/patron-benefits/collection-analysis.png"
+import DarkMode from "../generic/imgs/patron-benefits/dark-mode.png"
 import { InfoListCard } from "../generic/InfoListCard"
 import { LinkPatreon } from "../thirdpartysites/patreon/LinkPatreon"
 import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
+import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
 
@@ -135,7 +139,57 @@ export class PatreonRewards extends React.Component {
                         ]}
                     />
                 </AboutGridItem>
+                <AboutGridItem>
+                    <BenefitPic name={"Dark Mode"} costPerMonth={3} src={DarkMode} mediaHeight={288}/>
+                    <div style={{marginBottom: spacing(4)}}/>
+                    <BenefitPic name={"Collection Analysis"} costPerMonth={3} src={CollectionAnalysis} mediaHeight={400} />
+                    <div style={{marginBottom: spacing(4)}}/>
+                </AboutGridItem>
             </>
         )
     }
+}
+
+export const BenefitPic = (props: {name: string, costPerMonth: number, src: string, mediaHeight: number}) => {
+
+    const {name, costPerMonth, src, mediaHeight} = props
+
+    const [open, setOpen] = useState(false)
+
+    return (
+        <>
+            <Card style={{maxWidth: 624}}>
+                <CardActionArea
+                    onClick={() => setOpen(true)}
+                >
+                    <CardMedia
+                        style={{height: mediaHeight}}
+                        image={src}
+                        title={name}
+                    />
+                </CardActionArea>
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        ${costPerMonth}+ per month
+                    </Typography>
+                </CardContent>
+            </Card>
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                fullScreen={true}
+            >
+                <DialogTitle>{name}</DialogTitle>
+                <DialogContent>
+                    <img alt={name} src={src} width={screenStore.screenWidth - 80} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    )
 }

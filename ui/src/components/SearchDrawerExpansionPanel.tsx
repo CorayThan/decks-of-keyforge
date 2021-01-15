@@ -8,6 +8,7 @@ interface SearchDrawerExpansionPanelProps {
     title: string
     onClick?: () => void
     children: React.ReactNode
+    lastPanel?: boolean
 }
 
 const transition = {
@@ -15,7 +16,7 @@ const transition = {
 }
 
 export const SearchDrawerExpansionPanel = (props: SearchDrawerExpansionPanelProps) => {
-    const {title, onClick, children, initiallyOpen} = props
+    const {title, onClick, children, initiallyOpen, lastPanel} = props
 
     const [open, setOpen] = useState(initiallyOpen)
 
@@ -37,6 +38,7 @@ export const SearchDrawerExpansionPanel = (props: SearchDrawerExpansionPanelProp
             <Collapse in={open} style={{marginBottom: open ? spacing(1) : 0}}>
                 {children}
             </Collapse>
+            {lastPanel && (<Divider/>)}
         </div>
     )
 }
