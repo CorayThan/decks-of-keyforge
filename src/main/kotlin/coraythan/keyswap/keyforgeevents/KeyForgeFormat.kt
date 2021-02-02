@@ -6,6 +6,7 @@ import coraythan.keyswap.generatets.GenerateTs
 enum class KeyForgeFormat {
     ARCHON,
     TRIAD,
+    SURVIVAL,
     ADAPTIVE,
     REVERSAL,
     SAS_CAP,

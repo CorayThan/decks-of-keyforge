@@ -26,7 +26,22 @@ export const KeyForgeEventsPage = observer(() => {
         return <Loader/>
     }
 
-    const narrow = screenStore.screenSizeMd()
+    if (screenStore.screenSizeMd()) {
+        return (
+            <Box p={2}>
+                <Paper style={{padding: spacing(2)}}>
+                    <Typography gutterBottom={true} variant={"h4"} color={"primary"}>Calendar of Events</Typography>
+                    <CreateKeyForgeEvent/>
+                    <Box my={2} display={"flex"} alignItems={"flex-end"} flexWrap={"wrap"}>
+                        <KeyForgeEventsSearchOptions/>
+                    </Box>
+                </Paper>
+                <Box mt={2}>
+                    <KeyForgeEventCalendar events={keyForgeEventStore.foundEvents}/>
+                </Box>
+            </Box>
+        )
+    }
 
     return (
         <Box m={4}>
@@ -35,14 +50,9 @@ export const KeyForgeEventsPage = observer(() => {
                     <Box display={"flex"} mb={2}>
                         <Typography variant={"h4"} color={"primary"}>Calendar of Events</Typography>
                         <Box flexGrow={1} ml={2}/>
-                        {!narrow && <KeyForgeEventsSearchOptions/>}
+                        <KeyForgeEventsSearchOptions/>
                         <CreateKeyForgeEvent/>
                     </Box>
-                    {narrow && (
-                        <Box mb={2}>
-                            <KeyForgeEventsSearchOptions/>
-                        </Box>
-                    )}
                     <Divider/>
                     <Box mt={2}>
                         <KeyForgeEventCalendar events={keyForgeEventStore.foundEvents}/>

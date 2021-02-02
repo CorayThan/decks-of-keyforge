@@ -1,4 +1,5 @@
 import { Box, Card, CardActions, CardContent, CardMedia, Divider, Tooltip, Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import React from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
@@ -6,10 +7,13 @@ import { TimeUtils } from "../config/TimeUtils"
 import { KeyForgeEventDto } from "../generated-src/KeyForgeEventDto"
 import { DiscordIcon } from "../generic/icons/DiscordIcon"
 import { LinkButtonSafe } from "../mui-restyled/LinkButton"
+import { userStore } from "../user/UserStore"
+import { CreateKeyForgeEvent } from "./CreateKeyForgeEvent"
+import { DeleteKeyForgeEvent } from "./DeleteKeyForgeEvent"
 
-export const KeyForgeEventCard = (props: { event: KeyForgeEventDto }) => {
+export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) => {
     const {event} = props
-    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed} = event
+    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername} = event
 
     const width = 320
     const mediaHeight = 120
@@ -45,11 +49,20 @@ export const KeyForgeEventCard = (props: { event: KeyForgeEventDto }) => {
             <CardActions>
                 <LinkButtonSafe color={"primary"} href={signupLink}>Sign Up</LinkButtonSafe>
                 {discordServer && (
-                    <LinkButtonSafe color={"primary"} href={discordServer}><DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord</LinkButtonSafe>)}
+                    <LinkButtonSafe color={"primary"} href={discordServer}>
+                        <DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord
+                    </LinkButtonSafe>
+                )}
+                {userStore.username === createdByUsername && (
+                    <>
+                        <CreateKeyForgeEvent initialEvent={event}/>
+                        <DeleteKeyForgeEvent event={event}/>
+                    </>
+                )}
             </CardActions>
         </Card>
     )
-}
+})
 
 const EventDescriptionLine = (props: { name: string, value?: string, maxHeight?: number, style?: React.CSSProperties }) => {
     const {name, value, maxHeight, style} = props

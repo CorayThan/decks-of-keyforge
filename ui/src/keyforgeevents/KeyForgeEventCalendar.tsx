@@ -1,8 +1,10 @@
-import { Box, Typography } from "@material-ui/core"
+import { Box, Grid, Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import React from "react"
-import { themeStore } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { TimeUtils } from "../config/TimeUtils"
 import { KeyForgeEventDto } from "../generated-src/KeyForgeEventDto"
+import { screenStore } from "../ui/ScreenStore"
 import { KeyForgeEventCard } from "./KeyForgeEventCard"
 
 export const KeyForgeEventCalendar = (props: { events: KeyForgeEventDto[] }) => {
@@ -36,31 +38,43 @@ export const KeyForgeEventCalendar = (props: { events: KeyForgeEventDto[] }) => 
     )
 }
 
-export const KeyForgeEventsWeek = (props: { week: string, events: KeyForgeEventDto[], idx: number }) => {
+export const KeyForgeEventsWeek = observer((props: { week: string, events: KeyForgeEventDto[], idx: number }) => {
     const {week, events, idx} = props
 
-    return (
-        <Box mt={idx === 0 ? 0 : 4}>
-            <Typography variant={"h6"}>{week}</Typography>
-            <Box
-                display={"flex"}
-                flexWrap={"wrap"}
-                mt={2}
-                pt={2}
-                px={2}
-                style={{backgroundColor: themeStore.calendarBackground, borderRadius: 4}}
-            >
-                {events.map(event => {
-                    return (
-                        <Box key={event.id} mr={2} mb={2}>
-                            <KeyForgeEventCard event={event}/>
-                        </Box>
-                    )
-                })}
+    const contents = (
+        <Grid container={true} spacing={2}>
+            {events.map(event => {
+                return (
+                    <Grid item={true} key={event.id}>
+                        <KeyForgeEventCard event={event}/>
+                    </Grid>
+                )
+            })}
+        </Grid>
+    )
+
+    if (screenStore.screenSizeXs()) {
+        return (
+            <Box my={2}>
+                <Typography gutterBottom={true} variant={"h6"}>{week}</Typography>
+                {contents}
             </Box>
+        )
+    }
+
+    return (
+        <Box
+            display={"flex"}
+            flexWrap={"wrap"}
+            mt={2}
+            p={2}
+            style={{backgroundColor: themeStore.calendarBackground, borderRadius: 4}}
+        >
+            <Typography variant={"h6"} style={{marginBottom: spacing(2)}}>{week}</Typography>
+            {contents}
         </Box>
     )
-}
+})
 
 interface EventsInAWeek {
     weekName: string

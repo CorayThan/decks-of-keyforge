@@ -23,6 +23,9 @@ export class KeyForgeEventStore {
     @observable
     addingEventIcon = false
 
+    @observable
+    deletingEvent = false
+
     saveEventIcon = async (eventIconName: string, eventIcon: File | Blob, extension: string) => {
         this.addingEventIcon = true
 
@@ -54,13 +57,15 @@ export class KeyForgeEventStore {
     saveEvent = async (event: KeyForgeEventDto) => {
         this.savingEvent = true
         await axios.post(KeyForgeEventStore.SECURE_CONTEXT, event)
-        messageStore.setSuccessMessage(event.id == null ? "Saved your new Event! Reload the page to see it." : "Updated your event.")
+        messageStore.setSuccessMessage(event.id == null ? "Saved your new Event! Reload the page to see it." : "Updated your event. Reload the page to see the update.")
         this.savingEvent = false
     }
 
     deleteEvent = async (eventId: number) => {
+        this.deletingEvent = true
         await axios.delete(KeyForgeEventStore.SECURE_CONTEXT + "/" + eventId)
-        messageStore.setSuccessMessage("Deleted your event.")
+        this.deletingEvent = false
+        messageStore.setSuccessMessage("Deleted your event. It will not appear on page reload.")
     }
 }
 

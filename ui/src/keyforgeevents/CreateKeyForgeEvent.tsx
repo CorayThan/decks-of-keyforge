@@ -45,8 +45,8 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
         <>
             <Button
                 onClick={() => store.open = true}
-                variant={"outlined"}
-                color={"primary"}
+                variant={initialEvent == null ? "outlined" : undefined}
+                color={initialEvent == null ? "primary" : undefined}
             >
                 {initialEvent == null ? "Create an Event" : "Update"}
             </Button>

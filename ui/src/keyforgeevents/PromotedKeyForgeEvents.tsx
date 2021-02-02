@@ -1,4 +1,3 @@
-import { Box, Paper } from "@material-ui/core"
 import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { EventTimeRange } from "../generated-src/EventTimeRange"
@@ -21,10 +20,6 @@ export const PromotedKeyForgeEvents = observer(() => {
     }
 
     return (
-        <Paper>
-            <Box p={2}>
-                <KeyForgeEventCalendar events={keyForgeEventStore.foundEvents}/>
-            </Box>
-        </Paper>
+        <KeyForgeEventCalendar events={keyForgeEventStore.foundEvents}/>
     )
 })
