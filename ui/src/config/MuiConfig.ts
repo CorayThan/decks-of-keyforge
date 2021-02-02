@@ -63,6 +63,11 @@ export class ThemeStore {
     }
 
     @computed
+    get calendarBackground() {
+        return this.darkMode ? grey["700"] : blue["50"]
+    }
+
+    @computed
     get lightAmberBackground() {
         return this.darkMode ? grey["600"] : amber["100"]
     }

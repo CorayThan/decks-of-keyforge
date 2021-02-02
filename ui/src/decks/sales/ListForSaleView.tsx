@@ -14,6 +14,7 @@ import { deckListingStore } from "../../auctions/DeckListingStore"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
 import { DeckCondition } from "../../generated-src/DeckCondition"
@@ -79,7 +80,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     editAuctionId?: string
 
     componentDidMount(): void {
-        this.auctionEndTime = format(Utils.roundToNearestMinutes(new Date(), 15), "HH:mm")
+        this.auctionEndTime = format(TimeUtils.roundToNearestMinutes(new Date(), 15), "HH:mm")
     }
 
     handleClose = () => this.open = false
@@ -131,7 +132,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             if (expiresAtLocalDate == null) {
                 this.expireInDays = "365"
             } else {
-                const expiresDate = Utils.parseLocalDate(expiresAtLocalDate)
+                const expiresDate = TimeUtils.parseLocalDate(expiresAtLocalDate)
                 this.expireInDays = differenceInDays(expiresDate, new Date()).toString()
                 this.preExistingDays = this.expireInDays
             }

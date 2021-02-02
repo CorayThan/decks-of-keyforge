@@ -2,7 +2,7 @@ import { MenuItem, TextField } from "@material-ui/core"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Utils } from "../../config/Utils"
+import { TimeUtils } from "../../config/TimeUtils"
 import { cardStore } from "../CardStore"
 
 @observer
@@ -23,7 +23,7 @@ export class PublishDateSelect extends React.Component<{ selected: SelectedPubli
                 </MenuItem>
                 {cardStore.aercUpdateDates.map(option => (
                     <MenuItem key={option} value={option}>
-                        {Utils.formatDate(option)}
+                        {TimeUtils.formatDate(option)}
                     </MenuItem>
                 ))}
             </TextField>

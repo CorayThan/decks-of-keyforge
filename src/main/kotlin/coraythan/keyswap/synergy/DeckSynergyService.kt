@@ -327,9 +327,10 @@ object DeckSynergyService {
                     else -> 0
                 },
                 "Creature Control" to when {
-                    c < 2 -> -3
-                    c < 4 -> -2
-                    c < 6 -> -1
+                    c < 2 -> -4
+                    c < 4 -> -3
+                    c < 6 -> -2
+                    c < 7 -> -1
                     else -> 0
                 },
                 "Artifact Control" to when {

@@ -44,7 +44,9 @@ data class DeckSynergyInfo(
         val other: Double,
 
         val metaScores: Map<String, Int>,
-)
+) {
+    fun meta() = metaScores.map { it.value }.sum()
+}
 
 data class SynergyMatch(
         val trait: SynTraitValue,

@@ -47,7 +47,7 @@ export class StatsBar extends React.Component<StatsBarProps> {
         const sizes = small == null ? autoSizes : (small ? smallStyle : largeStyle)
 
         if (data == null) {
-            return <Typography style={{margin: spacing(2)}}>Calculating Stats</Typography>
+            return <Typography style={{margin: spacing(2)}}>Calculating {name}</Typography>
         }
 
         const quantitiesMapped = quantities == null ? undefined : new Map(

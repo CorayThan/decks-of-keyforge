@@ -6,6 +6,7 @@ import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, Routes } from "../config/Routes"
 import CollectionAnalysis from "../generic/imgs/patron-benefits/collection-analysis.png"
 import DarkMode from "../generic/imgs/patron-benefits/dark-mode.png"
+import DeckComparison from "../generic/imgs/patron-benefits/deck-comparison.png"
 import { InfoListCard } from "../generic/InfoListCard"
 import { LinkPatreon } from "../thirdpartysites/patreon/LinkPatreon"
 import { patronRewardLevelName } from "../thirdpartysites/patreon/PatreonRewardsTier"
@@ -85,6 +86,7 @@ export class PatreonRewards extends React.Component {
                             "Dark mode",
                             "Analyze collections of decks up to 1000",
                             "Create tags for decks and search those tags",
+                            "Compare decks side by side",
                             "List decks for sale or trade for up to 1 year",
                             "List up to 250 decks for sale. (Free maximum is 100.)",
                             "Create auctions or public offer-based sale listings",
@@ -144,6 +146,7 @@ export class PatreonRewards extends React.Component {
                     <div style={{marginBottom: spacing(4)}}/>
                     <BenefitPic name={"Collection Analysis"} costPerMonth={3} src={CollectionAnalysis} mediaHeight={400} />
                     <div style={{marginBottom: spacing(4)}}/>
+                    <BenefitPic name={"Compare Decks"} costPerMonth={3} src={DeckComparison} mediaHeight={360} />
                 </AboutGridItem>
             </>
         )

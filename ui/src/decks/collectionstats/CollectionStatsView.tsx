@@ -318,7 +318,7 @@ const cardCountHeaders: SortableTableHeaderInfo<CardCounts>[] = [
         transform: (data) => <CardAsLine card={{cardTitle: data.name, legacy: data.legacy > 0, maverick: data.mav > 0, anomaly: data.anomaly > 0}}/>
     },
     {property: "count", title: "Count", sortable: true},
-    {property: "mostInDeck", title: "In Deck", sortable: true},
+    {property: "mostInDeck", title: "Max/Deck", sortable: true},
     {property: "mav", title: "Mavs", sortable: true},
     {
         property: "setCounts",

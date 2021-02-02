@@ -1,5 +1,5 @@
-import { Avatar, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@material-ui/core"
-import { Delete } from "@material-ui/icons"
+import { Avatar, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from "@material-ui/core"
+import { Archive, Delete, Unarchive } from "@material-ui/icons"
 import * as React from "react"
 import { useState } from "react"
 import { PublicityType } from "../generated-src/PublicityType"
@@ -44,12 +44,13 @@ export const DeleteTagButton = (props: { tag: TagDto }) => {
     const [open, setOpen] = useState(false)
     return (
         <>
-            <IconButton
-                size={"small"}
-                onClick={() => setOpen(true)}
-            >
-                <Delete fontSize={"small"}/>
-            </IconButton>
+            <Tooltip title={"Delete"}>
+                <IconButton
+                    onClick={() => setOpen(true)}
+                >
+                    <Delete/>
+                </IconButton>
+            </Tooltip>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}
@@ -74,5 +75,23 @@ export const DeleteTagButton = (props: { tag: TagDto }) => {
                 </DialogActions>
             </Dialog>
         </>
+    )
+}
+
+export const ArchiveTagButton = (props: { tag: TagDto }) => {
+    const {tag} = props
+    return (
+        <Tooltip title={tag.archived ? "Unarchive" : "Archive. Archived tags will only show on decks if the deck is tagged with them."}>
+            <IconButton
+                onClick={() => tagStore.archiveTag(tag.id)}
+                disabled={tagStore.loadingMyTags}
+            >
+                {tag.archived ? (
+                    <Unarchive/>
+                ) : (
+                    <Archive/>
+                )}
+            </IconButton>
+        </Tooltip>
     )
 }

@@ -72,7 +72,9 @@ export class SasAndAerc extends React.Component {
                             texts={[
                                 "Creature control is increased by cards that damage, destroy, or disable enemy creatures. " +
                                 "Special abilities that encourage using a creature to fight contribute extra depending on the ability.",
-                                "1 point is approximately equal to dealing 3 damage or stunning 2 creatures. Destroying a creature is worth 1.5 C."
+                                "1 point is approximately equal to dealing 3 damage or stunning 2 creatures. Destroying a creature is worth 1.5 C.",
+                                "Board wipes assume your opponent has 4 creatures and you have 1 creature. An unconditional board wipe is considered " +
+                                "5 C and -1 P for 4 total AERC."
                             ]}
                             icon={AercType.C}
                         />,

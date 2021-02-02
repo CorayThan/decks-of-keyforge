@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.3"
+export const latestVersion = "6.4"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,33 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.4"}
+                    date={"2/1/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "KeyForge Event Calendar!",
+                            note: "You can now create and view KeyForge events on DoK! I hope this helps users of the site find fun online KeyForge events " +
+                                "to participate in. $3+ patrons can create events. $6+ patrons will have their events promoted to the landing page " +
+                                "of DoK, and can add a small event banner image. If this feature is useful in the future I'll extend it to " +
+                                "work with in-person events."
+                        },
+                        {
+                            highlight: "SAS update, changes to Creature Control",
+                            note: "Along with the normal minor updates to card AERCs, I've significantly rebalanced the distribution of C within AERC. " +
+                                "The total AERC value of most creature control cards should not have changed in most cases, but now double sided board " +
+                                "wipes like Gateway to Dis have a much higher C rating, and more significant AERC negatives in other stats like F and P. " +
+                                "This should allow you to look at a deck's C and more easily evaluate how well it can deal with an opposing board. " +
+                                "I've also slightly increased the negative META score for having very low C. Thanks to " +
+                                "the other members of Team SAS-LP for helping evaluate these changes!"
+                        },
+                        {
+                            highlight: "Archive Tags",
+                            note: "You can now archive your deck tags so decks will only show that tag if they are already tagged with it."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.3"}
                     date={"1/11/2020"}

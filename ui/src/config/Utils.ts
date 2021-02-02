@@ -1,7 +1,4 @@
 import * as Bowser from "bowser"
-import { getMinutes, setMinutes, startOfMinute } from "date-fns"
-import format from "date-fns/format"
-import parse from "date-fns/parse"
 import { round } from "lodash"
 import * as loglevel from "loglevel"
 
@@ -17,11 +14,6 @@ export const roundToThousands = (round: number) => Math.round(round * 1000) / 10
 
 export class Utils {
 
-    private static readonly readableDateFormat = "MMM d, yyyy"
-    private static readonly readableDateTimeFormat = "MMM d, yyyy, h:mm a"
-    static readonly localDateFormat = "yyyy-MM-dd"
-    static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
-    static readonly dateTimeFormat = "yyyy-MM-dd'T'HH:mm"
     static readonly bowser = Bowser.getParser(window.navigator.userAgent)
 
     static pseudoUuid = () => {
@@ -57,33 +49,16 @@ export class Utils {
         return re.test(String(email).toLowerCase())
     }
 
-    static formatZonedDateTimeToDate = (date: string) => {
-        return format(Utils.parseZonedDateTime(date), Utils.readableDateFormat)
+    static validateUrl = (url: string) => {
+        // eslint-disable-next-line
+        const re = /^(http|https):\/\/[^ "]+$/
+        return re.test(String(url).toLowerCase())
     }
 
-    static formatDateTimeToDate = (date: string) => {
-        return format(Utils.parseDateTime(date), Utils.readableDateFormat)
-    }
-
-    static formatDate = (date: string) => {
-        try {
-            return format(Utils.parseLocalDate(date), Utils.readableDateFormat)
-        } catch (e) {
-            log.warn("Couldn't parse date from " + date)
-            return "bad date"
-        }
-    }
-
-    static parseLocalDate = (date: string) => parse(date, Utils.localDateFormat, new Date())
-    static parseZonedDateTime = (date: string) => parse(date, Utils.zonedDateTimeFormat, new Date())
-    static parseDateTime = (date: string) => parse(date, Utils.dateTimeFormat, new Date())
-    static parseReadableLocalDateTime = (date: string) => parse(date, Utils.readableDateTimeFormat, new Date())
-
-    static nowDateString = () => format(new Date(), Utils.localDateFormat)
-
-    static roundToNearestMinutes = (date: Date, interval: number) => {
-        const roundedMinutes = Math.floor(getMinutes(date) / interval) * interval
-        return setMinutes(startOfMinute(date), roundedMinutes)
+    static validateDiscordServer = (discordServerLink: string) => {
+        // eslint-disable-next-line
+        const re = /^https:\/\/discord.gg\/[a-zA-Z]+$/
+        return re.test(String(discordServerLink).toLowerCase())
     }
 
     static toNumberOrUndefined = (num?: number | string) => num == null || num === 0 || num === "" || num === "0" ? undefined : Number(num)

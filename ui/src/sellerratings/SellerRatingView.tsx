@@ -8,7 +8,7 @@ import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing, theme, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { Utils } from "../config/Utils"
+import { TimeUtils } from "../config/TimeUtils"
 import { HelperText } from "../generic/CustomTypographies"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -211,7 +211,7 @@ const DisplayReviewsDialog = observer((props: UserRatingDialogProps) => {
                                         <WhiteSpaceTypography style={{marginTop: spacing(1)}}>{review.review}</WhiteSpaceTypography>
                                         <HelperText style={{margin: spacing(1, 0)}}>
                                             Reviewed by <Link href={Routes.userProfilePage(review.reviewerUsername)}>
-                                            {review.reviewerUsername}</Link> on {Utils.formatDate(review.created)}
+                                            {review.reviewerUsername}</Link> on {TimeUtils.formatDate(review.created)}
                                         </HelperText>
                                         {review.reviewerUsername === userStore.username && (
                                             <Box display={"flex"}>

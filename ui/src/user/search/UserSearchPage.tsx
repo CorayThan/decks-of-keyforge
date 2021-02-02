@@ -446,7 +446,7 @@ const headCells: HeadCell[] = [
 ]
 
 const headCellsWithPatrons = [...headCells]
-headCellsWithPatrons.splice(1, 0, {id: "patreonTier", label: "Patreon Tier"})
+headCellsWithPatrons.splice(2, 0, {id: "patreonTier", label: "Patreon Tier"})
 
 class AddPatreonStore {
 

@@ -21,6 +21,12 @@ export class PatreonRequired extends React.Component<PatreonRequiredProps> {
     render() {
         const {message, requiredLevel, style} = this.props
 
+        if (!userStore.loggedIn()) {
+            return (
+                <Typography color={"error"}>Please login to use this Patron-only feature.</Typography>
+            )
+        }
+
         if (userStore.patron && (requiredLevel == null || userStore.patronLevelEqualToOrHigher(requiredLevel))) {
             return null
         }

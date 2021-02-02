@@ -62,6 +62,10 @@ class S3Service(
         return addImage(storeBanner, "stores", "$userId-banner", extension)
     }
 
+    fun addGenericUserImg(img: MultipartFile, extension: String): String {
+        return addImage(img, "user-imgs", UUID.randomUUID().toString(), extension)
+    }
+
     fun deleteUserContent(key: String) {
         s3client.deleteObject(
                 userContentBucket,

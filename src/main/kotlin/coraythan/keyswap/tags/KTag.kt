@@ -24,6 +24,8 @@ data class KTag(
         @OneToMany(mappedBy = "tag", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
         val decks: List<DeckTag> = listOf(),
 
+        val archived: Boolean = false,
+
         val views: Int = 0,
         val viewsThisMonth: Int = 0,
 
@@ -41,6 +43,7 @@ data class KTag(
                 views,
                 viewsThisMonth,
                 created,
+                archived,
                 id,
                 quantity
         )

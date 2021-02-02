@@ -1,7 +1,21 @@
-import { Button, IconButton, IconButtonProps, Link, ListItem, ListItemText } from "@material-ui/core"
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    IconButtonProps,
+    Link,
+    ListItem,
+    ListItemText
+} from "@material-ui/core"
 import { ButtonProps } from "@material-ui/core/Button"
 import { ListItemProps } from "@material-ui/core/ListItem"
 import * as React from "react"
+import { useState } from "react"
 import { spacing } from "../config/MuiConfig"
 
 export const LinkButton = (props: ButtonProps & { newWindow?: boolean }) => {
@@ -56,5 +70,45 @@ export const ListItemLink = (props: ListItemLinkProps) => {
                 <ListItemText primary={primary}/>
             </Link>
         </ListItem>
+    )
+}
+
+export const LinkButtonSafe = (props: ButtonProps) => {
+    const {href, onClick, ...rest} = props
+    const [open, setOpen] = useState(false)
+    return (
+        <>
+            <Button
+                {...rest}
+                onClick={(event) => {
+                    setOpen(true)
+                    if (onClick) {
+                        onClick(event)
+                    }
+                }}
+            />
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Head through the wormhole?</DialogTitle>
+                <DialogContent>
+                    <Box display={"flex"} justifyContent={"center"} mb={2}>
+                        <img width={200} src={"https://dok-imgs.s3-us-west-2.amazonaws.com/wild-wormhole.jpg"}/>
+                    </Box>
+                    <DialogContentText gutterBottom={true}>
+                        Click this link to leave DoK
+                    </DialogContentText>
+                    <Link
+                        href={href}
+                        target={"_blank"}
+                        rel={"noopener noreferrer"}
+                        onClick={() => setOpen(false)}
+                    >
+                        {href}
+                    </Link>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        </>
     )
 }

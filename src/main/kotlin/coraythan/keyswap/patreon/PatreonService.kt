@@ -3,6 +3,7 @@ package coraythan.keyswap.patreon
 import com.patreon.PatreonOAuth
 import coraythan.keyswap.config.AppLinks
 import coraythan.keyswap.config.Env
+import coraythan.keyswap.keyforgeevents.KeyForgeEventService
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
@@ -32,7 +33,8 @@ class PatreonService(
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
         private val patreonAccountRepo: PatreonAccountRepo,
-        private val appLinks: AppLinks
+        private val appLinks: AppLinks,
+        private val keyForgeEventService: KeyForgeEventService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -185,6 +187,7 @@ class PatreonService(
                 log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier and contribution to $lifetimeSupportCents.")
                 val storeName = if (bestTier.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION)) user.storeName else null
                 userRepo.updatePatronTierAndLifetimeSupportCents(bestTier, lifetimeSupportCents, storeName, user.id)
+                keyForgeEventService.updatePromotedEventsForUser(user)
             }
         }
         if (patreonCampaign.meta.pagination.cursors != null) {

@@ -3,7 +3,7 @@ import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { Utils } from "../config/Utils"
+import { TimeUtils } from "../config/TimeUtils"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { TagDto } from "../generated-src/TagDto"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
@@ -56,6 +56,6 @@ const tagsTableHeaders: SortableTableHeaderInfo<TagDto>[] = [
     {property: "viewsThisMonth"},
     {
         property: "created",
-        transform: (tag) => Utils.formatDateTimeToDate(tag.created)
+        transform: (tag) => TimeUtils.formatDateTimeToDate(tag.created)
     },
 ]

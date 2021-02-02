@@ -3,7 +3,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { Utils } from "../../config/Utils"
+import { TimeUtils } from "../../config/TimeUtils"
 import { OfferDto } from "../../generated-src/OfferDto"
 import { countryToLabel } from "../../generic/CountryUtils"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
@@ -49,14 +49,14 @@ const baseOfferTableHeaders = (currency: string, offerToMe: boolean, large?: boo
     const headers: SortableTableHeaderInfo<OfferDto>[] = [
         {property: "amount", title: "Amount", sortable: true, transform: (data) => `${currency}${data.amount}`},
         {property: "status", title: "Status", sortable: true},
-        {property: "sentTime", title: "Sent", sortable: true, sortFunction: (data) => Utils.parseReadableLocalDateTime(data.sentTime).getTime()},
+        {property: "sentTime", title: "Sent", sortable: true, sortFunction: (data) => TimeUtils.parseReadableLocalDateTime(data.sentTime).getTime()},
         otherUserColumn,
         {title: "Actions", transform: (data) => <OfferActions offer={data}/>},
     ]
 
     if (large) {
         headers.splice(3, 0,
-            {property: "expiresOn", title: "Expires", sortable: true, sortFunction: (data) => Utils.parseReadableLocalDateTime(data.expiresOn).getTime()},
+            {property: "expiresOn", title: "Expires", sortable: true, sortFunction: (data) => TimeUtils.parseReadableLocalDateTime(data.expiresOn).getTime()},
         )
         headers.splice(4, 0,
             {property: "country", title: "Country", sortable: true, transform: (data) => countryToLabel(data.country)}

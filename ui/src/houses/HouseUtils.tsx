@@ -39,13 +39,13 @@ export const houseValuesArray: HouseValue[] = [
         img: sanctumImg
     },
     {
-        house: House.Shadows,
-        img: shadowsImg
-    },
-    {
         house: House.Saurian,
         img: saurianRepublicImg,
         displayName: "Saurian"
+    },
+    {
+        house: House.Shadows,
+        img: shadowsImg
     },
     {
         house: House.StarAlliance,

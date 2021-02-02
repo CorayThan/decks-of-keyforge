@@ -5,7 +5,7 @@ import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { Utils } from "../../config/Utils"
+import { TimeUtils } from "../../config/TimeUtils"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { SimpleCard } from "../../generated-src/SimpleCard"
 import { GraySidebar } from "../../generic/GraySidebar"
@@ -179,7 +179,7 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
             <div style={{display: "flex", alignItems: "flex-end"}}>
                 <Typography color={"textPrimary"} variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
                 {title && publishedDate && (
-                    <Typography color={"textPrimary"} variant={"subtitle2"}>{Utils.formatDate(publishedDate)}</Typography>
+                    <Typography color={"textPrimary"} variant={"subtitle2"}>{TimeUtils.formatDate(publishedDate)}</Typography>
                 )}
             </div>
             <AercForCard card={card} realValue={combo}/>

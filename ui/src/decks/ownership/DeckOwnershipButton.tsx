@@ -11,6 +11,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { TimeUtils } from "../../config/TimeUtils"
 import { log, Utils } from "../../config/Utils"
 import { HelperText } from "../../generic/CustomTypographies"
 import { FileUploadButton, FileUploadType } from "../../mui-restyled/FileUploadButton"
@@ -103,7 +104,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                             >
                                                 <Typography variant={"subtitle1"}>{detail.username}</Typography>
                                             </KeyLink>
-                                            <Typography variant={"subtitle1"}>{Utils.formatDate(detail.uploadDate)}</Typography>
+                                            <Typography variant={"subtitle1"}>{TimeUtils.formatDate(detail.uploadDate)}</Typography>
                                             {detail.username === userStore.username && (
                                                 <IconButton
                                                     size={"small"}

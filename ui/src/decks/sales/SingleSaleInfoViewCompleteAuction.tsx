@@ -7,7 +7,7 @@ import * as React from "react"
 import { BidHistoryButton } from "../../auctions/BidHistoryButton"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { Utils } from "../../config/Utils"
+import { TimeUtils } from "../../config/TimeUtils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { countryToLabel } from "../../generic/CountryUtils"
 import { UnstyledLink } from "../../generic/UnstyledLink"
@@ -122,7 +122,7 @@ export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInf
                     Deck language: {startCase(language!.toString().toLowerCase())}
                 </Typography>
                 <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                    Listed on {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
+                    Listed on {TimeUtils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
                 </Typography>
             </div>
         )

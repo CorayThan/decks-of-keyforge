@@ -24,11 +24,15 @@ export class DeckTagsView extends React.Component<TagsViewProps> {
         return (
             <Box display={"flex"} flexWrap={"wrap"}>
                 {myTags.map(tag => {
+                    const tagOnDeck = tagIdsOnDeck.includes(tag.id)
+                    if (!tagOnDeck && tag.archived) {
+                        return null
+                    }
                     return (
                         <TagPill
                             key={tag.id}
                             tag={tag}
-                            active={tagIdsOnDeck.includes(tag.id)}
+                            active={tagOnDeck}
                             deckId={deckId}
                             style={{margin: spacing(1, 1, 0, 0)}}
                         />

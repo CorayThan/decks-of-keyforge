@@ -111,6 +111,12 @@ export class TagStore {
         await this.findMyTags()
     }
 
+    archiveTag = async (tagId: number) => {
+        this.loadingMyTags = true
+        await axios.post(`${TagStore.SECURE_CONTEXT}/archive/${tagId}`)
+        await this.findMyTags()
+    }
+
     updateTagPublicity = async (tagId: number, publicity: PublicityType) => {
         this.updatingTags = true
         await axios.post(`${TagStore.SECURE_CONTEXT}/${tagId}/update-publicity/${publicity}`)

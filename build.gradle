@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.4.20'
+        kotlinVersion = '1.4.21'
         springBootVersion = '2.4.0'
         queryDslVersion = "4.4.0"
         shedlockVersion = "4.16.0"
@@ -32,7 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.github.ManifestClasspath"
 
 group = 'coraythan'
-version = '427'
+version = '429'
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]

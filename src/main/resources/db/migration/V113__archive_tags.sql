@@ -1,0 +1,9 @@
+ALTER TABLE ktag
+    ADD COLUMN archived BOOLEAN;
+
+UPDATE ktag
+SET archived = FALSE;
+
+ALTER TABLE ktag
+    ALTER COLUMN archived SET DEFAULT FALSE;
+

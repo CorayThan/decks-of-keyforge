@@ -3,6 +3,7 @@ import { messageStore } from "../ui/MessageStore"
 import { clientVersion } from "./ClientVersion"
 import { keyLocalStorage } from "./KeyLocalStorage"
 import { monitoring } from "./Monitoring"
+import { TimeUtils } from "./TimeUtils"
 import { log } from "./Utils"
 
 export let axiosWithoutErrors = axios.create()
@@ -14,11 +15,7 @@ export class HttpConfig {
     static API = "/api"
 
     static setupAxios = () => {
-        let timezoneOffset = new Date().getTimezoneOffset() * -1
-        if (timezoneOffset == null || isNaN(timezoneOffset)) {
-            log.warn("No timezone offset available.")
-            timezoneOffset = 0
-        }
+        const timezoneOffset = TimeUtils.currentTimeZoneOffset()
         axios.defaults.headers.common.Timezone = timezoneOffset
 
         const token = keyLocalStorage.findAuthKey()

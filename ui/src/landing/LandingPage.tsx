@@ -11,6 +11,7 @@ import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { ExpansionNumber } from "../expansions/Expansions"
 import { Expansion } from "../generated-src/Expansion"
 import { UnstyledLink } from "../generic/UnstyledLink"
+import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
@@ -69,8 +70,8 @@ export class LandingPage extends React.Component<{}> {
         const stats = statsStore.stats
 
         return (
-            <div>
-                <div style={{display: "flex"}}>
+            <Box>
+                <Box display={"flex"}>
                     <KeyDrawer width={landingPageDrawerWidth} hamburgerMenu={true}>
                         <List>
                             <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2), paddingRight: spacing(1)}}>
@@ -144,7 +145,7 @@ export class LandingPage extends React.Component<{}> {
                             <DeckSearchLink name={"Funniest"} filters={topFunny} style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
-                    <div style={{flexGrow: 1}}>
+                    <Box style={{flexGrow: 1}}>
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>
@@ -153,6 +154,12 @@ export class LandingPage extends React.Component<{}> {
                             </div>
                         ) : null}
                         <FeaturedSellersView/>
+                        <Box m={4}>
+                            <LandingPageTitle link={Routes.events} linkName={"View All"}>
+                                Featured Events
+                            </LandingPageTitle>
+                            <PromotedKeyForgeEvents/>
+                        </Box>
                         <div style={{marginLeft: spacing(2)}}>
                             <div style={{marginLeft: spacing(2)}}>
                                 {/*<LastTwoArticles/>*/}
@@ -181,7 +188,7 @@ export class LandingPage extends React.Component<{}> {
                                 <TwitterButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <GithubTicketsButton style={{marginBottom: spacing(2)}}/>
                             </Box>
-                            <LandingPageTitle marginTop={spacing(2)}>
+                            <LandingPageTitle marginTop={2}>
                                 Disclaimers
                             </LandingPageTitle>
                             <Typography style={{marginBottom: spacing(1)}}>
@@ -206,22 +213,33 @@ export class LandingPage extends React.Component<{}> {
                                 Privacy Policy
                             </LinkButton>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Box>
+                </Box>
+            </Box>
         )
     }
 }
 
-export const LandingPageTitle = observer((props: { children: string, marginTop?: number }) => {
+export const LandingPageTitle = observer((props: { children: string, marginTop?: number, linkName?: string, link?: string }) => {
     return (
-        <Typography
-            variant={"h4"}
-            color={themeStore.darkMode ? "textPrimary" : "primary"}
-            style={{marginBottom: spacing(2), marginTop: props.marginTop ? props.marginTop : spacing(4)}}
-        >
-            {props.children}
-        </Typography>
+        <Box display={"flex"} alignItems={"flex-start"} mb={2} mt={props.marginTop ?? 4}>
+            <Typography
+                variant={"h4"}
+                color={themeStore.darkMode ? "textPrimary" : "primary"}
+            >
+                {props.children}
+            </Typography>
+            {props.link != null && (
+                <LinkButton
+                    variant={"outlined"}
+                    href={props.link}
+                    color={"primary"}
+                    style={{marginLeft: spacing(4)}}
+                >
+                    {props.linkName}
+                </LinkButton>
+            )}
+        </Box>
     )
 })
 

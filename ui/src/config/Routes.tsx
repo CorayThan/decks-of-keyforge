@@ -4,7 +4,9 @@ import * as QueryString from "query-string"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { AboutPage } from "../about/AboutPage"
+import { CommunityPage } from "../about/CommunityPage"
 import { PrivacyPolicy } from "../about/PrivacyPolicy"
+import { ThirdPartyIntegrations } from "../about/ThirdPartyIntegrations"
 import { AdminPanelView } from "../admin/AdminPanelView"
 import { ArticlesPage } from "../articles/ArticlesPage"
 import { CardFilters, prepareCardFiltersForQueryString } from "../cards/CardFilters"
@@ -28,6 +30,7 @@ import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
 import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreticalDecks"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
+import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
 import { LandingPage } from "../landing/LandingPage"
 import { MyDokPage } from "../my-dok/MyDokPage"
 import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
@@ -60,6 +63,8 @@ class Routes {
 
     static landing = ""
     static users = "/users"
+    static community = "/community"
+    static events = "/events"
     static adminPanel = "/admin-panel"
     static myProfile = MyDokSubPaths.profile
     static cards = "/cards"
@@ -88,6 +93,7 @@ class Routes {
     static privacyPolicy = "/privacy-policy"
     static termsOfUse = "/terms-of-use"
     static codeOfConduct = "/code-of-conduct"
+    static thirdPartyTools = "/third-party-tools"
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
@@ -272,8 +278,20 @@ const KeyRouter = observer(() => {
                         component={TagSearchPage}
                     />
                     <Route
+                        path={Routes.community}
+                        component={CommunityPage}
+                    />
+                    <Route
                         path={Routes.users}
                         component={UserSearchPage}
+                    />
+                    <Route
+                        path={Routes.events}
+                        component={KeyForgeEventsPage}
+                    />
+                    <Route
+                        path={Routes.thirdPartyTools}
+                        component={ThirdPartyIntegrations}
                     />
                     <Route
                         path={Routes.stats}
@@ -373,7 +391,6 @@ export class AboutSubPaths {
     static releaseNotes = Routes.about + "/release-notes"
     static sellersAndDevs = Routes.about + "/sellers-and-devs"
     static teamSas = Routes.about + "/team-sas"
-    static thirdPartyIntegrations = Routes.about + "/third-party-integrations"
 }
 
 export class StatsSubPaths {

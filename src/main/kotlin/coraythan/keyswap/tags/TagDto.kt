@@ -11,6 +11,7 @@ data class TagDto(
         val views: Int,
         val viewsThisMonth: Int,
         val created: LocalDateTime,
+        val archived: Boolean,
         val id: Long,
         val deckQuantity: Int?,
 )

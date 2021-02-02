@@ -107,6 +107,13 @@ class TagService(
         tagRepo.deleteById(tagId)
     }
 
+    fun archiveTag(id: Long) {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val tag = tagRepo.findByIdOrNull(id) ?: throw IllegalStateException("No tag with id $id")
+        if (tag.creator.id != user.id) throw UnauthorizedException("Can only edit your own tags.")
+        tagRepo.save(tag.copy(archived = !tag.archived))
+    }
+
     fun tagDeck(deckId: Long, tagId: Long) {
         val tag = userOwnsTag(tagId)
         val deck = deckRepo.findByIdOrNull(deckId) ?: throw IllegalStateException("No deck with id $deckId")

@@ -10,7 +10,7 @@ import { BuyItNowButton } from "../../auctions/BuyItNowButton"
 import { OfferButton } from "../../auctions/offers/OfferButton"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { Utils } from "../../config/Utils"
+import { TimeUtils } from "../../config/TimeUtils"
 import { SendEmailDialog } from "../../emails/SendEmailDialog"
 import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
@@ -249,11 +249,11 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                         </Typography>
                     </div>
                     <Typography style={{margin: spacing(1, 2, 0)}} variant={"subtitle2"}>
-                        Listed {Utils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
+                        Listed {TimeUtils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
                     </Typography>
                     {expiresAt != null && !forAuction ? (
                         <Typography style={{margin: spacing(1, 2, 2)}} variant={"subtitle2"}>
-                            Expires {Utils.formatDate(expiresAt)}
+                            Expires {TimeUtils.formatDate(expiresAt)}
                         </Typography>
                     ) : null}
                     <Divider style={{marginTop: spacing(2)}}/>

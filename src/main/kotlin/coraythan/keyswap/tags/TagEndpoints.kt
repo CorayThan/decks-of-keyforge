@@ -36,6 +36,9 @@ class TagEndpoints(
     @DeleteMapping("/secured/{tagId}")
     fun deleteTag(@PathVariable tagId: Long) = tagService.deleteTag(tagId)
 
+    @PostMapping("/secured/archive/{tagId}")
+    fun archiveTag(@PathVariable tagId: Long) = tagService.archiveTag(tagId)
+
     @PostMapping("/tags-info")
     fun findTagInfo(@RequestBody tagIds: List<Long>) = tagService.findPublicTags()
 }

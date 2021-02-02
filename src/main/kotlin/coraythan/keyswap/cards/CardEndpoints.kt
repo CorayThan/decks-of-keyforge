@@ -17,7 +17,7 @@ class CardEndpoints(
 
     @PostMapping("/filter")
     fun cards(@RequestBody cardFilters: CardFilters): Iterable<Card> {
-        var cards: Iterable<Card> = listOf()
+        var cards: Iterable<Card>
         val cardFilterTime = measureTimeMillis {
             cards = cardService.filterCards(cardFilters)
         }

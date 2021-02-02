@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
@@ -19,12 +20,12 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { Utils } from "../config/Utils"
+import { TimeUtils } from "../config/TimeUtils"
 import { PublicityType } from "../generated-src/PublicityType"
 import { SortableTable } from "../generic/SortableTable"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
-import { DeleteTagButton } from "./TagPill"
+import { ArchiveTagButton, DeleteTagButton } from "./TagPill"
 import { tagStore } from "./TagStore"
 
 @observer
@@ -105,19 +106,17 @@ export class ManageTagsButton extends React.Component {
                                     },
                                     {
                                         property: "created",
-                                        transform: tag => Utils.formatDateTimeToDate(tag.created)
+                                        transform: tag => TimeUtils.formatDateTimeToDate(tag.created)
                                     },
                                     {
-                                        title: "Delete",
                                         transform: tag => (
-                                            <DeleteTagButton
-                                                tag={tag}
-                                            />
+                                            <Box display={"flex"}>
+                                                <ArchiveTagButton tag={tag}/>
+                                                <DeleteTagButton tag={tag}/>
+                                            </Box>
                                         ),
-                                        sortable: false
+                                        sortable: false,
                                     },
-
-
                                 ]}
                                 data={myTags}
                                 defaultSort={"created"}

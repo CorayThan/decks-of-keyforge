@@ -71,12 +71,14 @@ export enum MenuStoreName {
     CARDS,
     STATS,
     ABOUT,
-    MY_DOK
+    MY_DOK,
+    COMMUNITY
 }
 
 const decksMenuStore = new LinkMenuStore(MenuStoreName.DECKS)
 const myDecksMenuStore = new LinkMenuStore(MenuStoreName.MY_DECKS)
 const cardsMenuStore = new LinkMenuStore(MenuStoreName.CARDS)
+const communityMenuStore = new LinkMenuStore(MenuStoreName.COMMUNITY)
 const statsMenuStore = new LinkMenuStore(MenuStoreName.STATS)
 const aboutMenuStore = new LinkMenuStore(MenuStoreName.ABOUT)
 const myDokMenuStore = new LinkMenuStore(MenuStoreName.MY_DOK)
@@ -94,6 +96,9 @@ export const closeAllMenuStoresExcept = (except?: MenuStoreName) => {
     }
     if (except !== MenuStoreName.STATS) {
         closeThese.push(statsMenuStore)
+    }
+    if (except !== MenuStoreName.COMMUNITY) {
+        closeThese.push(communityMenuStore)
     }
     if (except !== MenuStoreName.ABOUT) {
         closeThese.push(aboutMenuStore)
@@ -299,27 +304,6 @@ const AppLinks = observer(() => (
             ]}
             linkMenuStore={cardsMenuStore}
         />
-        {screenStore.smallScreenTopBar() ? (
-            <>
-                <ListItemLink onClick={rightMenuStore.close} to={Routes.users} primary={"Users"}/>
-                <ListItemLink onClick={rightMenuStore.close} to={Routes.tags} primary={"Tags"}/>
-            </>
-        ) : (
-            <>
-                <LinkButton
-                    href={Routes.users}
-                    color={"inherit"}
-                >
-                    Users
-                </LinkButton>
-                <LinkButton
-                    href={Routes.tags}
-                    color={"inherit"}
-                >
-                    Tags
-                </LinkButton>
-            </>
-        )}
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[
@@ -328,9 +312,20 @@ const AppLinks = observer(() => (
                 {to: StatsSubPaths.deckStats, text: "Deck Stats", mobileActive: false},
                 {to: StatsSubPaths.aercStats, text: "AERC Stats", mobileActive: false},
                 {to: StatsSubPaths.purchaseStats, text: "Sale Stats", mobileActive: false},
-                {to: Routes.articles, text: "Articles", mobileActive: true},
             ]}
             linkMenuStore={statsMenuStore}
+        />
+        <LinkMenu
+            genericOnClick={rightMenuStore.close}
+            links={[
+                {to: Routes.community, text: "Community", mobileActive: false},
+                {to: Routes.users, text: "Users", mobileActive: true},
+                {to: Routes.tags, text: "Tagged Decks", mobileActive: true},
+                {to: Routes.events, text: "Events", mobileActive: true},
+                {to: Routes.articles, text: "Articles", mobileActive: true},
+                {to: Routes.thirdPartyTools, text: "3rd Party Tools", mobileActive: false},
+            ]}
+            linkMenuStore={communityMenuStore}
         />
         {screenStore.smallScreenTopBar() ? (
             <>
@@ -368,11 +363,6 @@ const AppLinks = observer(() => (
                             onClick={rightMenuStore.close}
                             primary={"Team SAS-LP"}
                         />
-                        <ListItemLink
-                            to={AboutSubPaths.thirdPartyIntegrations}
-                            onClick={rightMenuStore.close}
-                            primary={"3rd Party Tools"}
-                        />
                     </List>
                 </Collapse>
             </>
@@ -387,7 +377,6 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
                     {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
                     {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
-                    {to: AboutSubPaths.thirdPartyIntegrations, text: "3rd Party Tools"},
                 ]}
                 linkMenuStore={aboutMenuStore}
             />
