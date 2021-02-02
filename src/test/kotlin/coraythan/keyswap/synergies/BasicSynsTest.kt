@@ -200,8 +200,8 @@ class BasicSynsTest {
     fun testPureSynergies() {
         val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlySynergies)
         assertEquals(36, hasOnlySynergiesResults.synergyRating)
-        // 29 due to meta score
-        assertEquals(29, hasOnlySynergiesResults.sasRating)
+        // 28 due to meta score
+        assertEquals(28, hasOnlySynergiesResults.sasRating)
         assertEquals(0, hasOnlySynergiesResults.rawAerc)
     }
 
