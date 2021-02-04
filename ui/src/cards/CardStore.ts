@@ -217,7 +217,7 @@ export class CardStore {
             const msStart = performance.now()
             if (newVersion == null) {
                 // this version of cards already saved, just load it
-                cardsLoaded = await get(this.cardsKey)
+                cardsLoaded = await get(this.cardsKey) ?? []
             } else {
                 const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
                 cardsLoaded = cardsData.data.slice()

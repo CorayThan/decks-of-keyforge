@@ -1,9 +1,9 @@
 buildscript {
     ext {
-        kotlinVersion = '1.4.21'
-        springBootVersion = '2.4.0'
+        kotlinVersion = '1.4.30'
+        springBootVersion = '2.4.2'
         queryDslVersion = "4.4.0"
-        shedlockVersion = "4.16.0"
+        shedlockVersion = "4.20.0"
         jjwtVersion = "0.11.2"
     }
     repositories {
@@ -84,7 +84,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1')
+    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2')
     implementation('org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2')
 
     implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
@@ -92,15 +92,15 @@ dependencies {
     implementation('org.flywaydb:flyway-core')
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
-    implementation("org.apache.commons:commons-lang3:3.10")
+    implementation("org.apache.commons:commons-lang3:3.11")
     implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
     implementation("com.patreon:patreon:0.4.2")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.11.785")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.11.948")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtime("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtime("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
-    implementation("com.vladmihalcea:hibernate-types-52:2.9.12")
+    implementation("com.vladmihalcea:hibernate-types-52:2.10.2")
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion")
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jpa")

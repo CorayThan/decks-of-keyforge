@@ -34,11 +34,11 @@ export class UserImgStore {
         this.uploading = false
     }
 
-    saveEventBannerImg = async (imgFile: File | Blob, extension: string) => {
+    saveEventBannerImg = async (imgFile: File, extension: string) => {
         return this.saveUserImg(imgFile, UserImgTag.EVENT_BANNER, extension, 0.25, 320)
     }
 
-    private saveUserImg = async (imgFile: File | Blob, tag: UserImgTag, extension: string, maxSizeMB: number, maxWidthOrHeight: number) => {
+    private saveUserImg = async (imgFile: File, tag: UserImgTag, extension: string, maxSizeMB: number, maxWidthOrHeight: number) => {
         this.uploading = true
 
         try {
