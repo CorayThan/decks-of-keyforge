@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.5"
+export const latestVersion = "6.4"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,25 +42,20 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
-                <ReleaseNote
-                    releaseNumber={"6.5"}
-                    date={"2/4/2020"}
-                    expanded={true}
-                    releaseNotesWithHighlights={[
-                        {
-                            highlight: "Minor SAS Changes for Board Clears",
-                            note: "I've decided to do an additional pass on board clear AERC scores to improve a couple poor scores from the previous update. " +
-                                "Negative Effective Power on board clears as been made more consistent, and lower for some where it was unusually high. " +
-                                "I've also reduced the excessively high score for Unlocked Gateway and made board clear scores a little more consistent with " +
-                                "each other in general."
-                        },
-                        {
-                            highlight: "Event Improvements",
-                            note: "I'm still working on polishing up the KeyForge Events. This fixes a bug where events on Sunday showed on the wrong week. " +
-                                "Also changed the images to be a little taller as that should look better for most of the images uploaded."
-                        },
-                    ]}
-                />
+                {/*<ReleaseNote*/}
+                {/*    releaseNumber={"6.5"}*/}
+                {/*    date={"2/4/2020"}*/}
+                {/*    expanded={true}*/}
+                {/*    releaseNotesWithHighlights={[*/}
+                {/*        {*/}
+                {/*            highlight: "Minor SAS Changes for Board Clears",*/}
+                {/*            note: "I've decided to do an additional pass on board clear AERC scores to improve a couple poor scores from the previous update. " +*/}
+                {/*                "Negative Effective Power on board clears as been made more consistent, and lower for some where it was unusually high. " +*/}
+                {/*                "I've also reduced the excessively high score for Unlocked Gateway and made board clear scores a little more consistent with " +*/}
+                {/*                "each other in general."*/}
+                {/*        },*/}
+                {/*    ]}*/}
+                {/*/>*/}
                 <ReleaseNote
                     releaseNumber={"6.4"}
                     date={"2/1/2020"}
