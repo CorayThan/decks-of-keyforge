@@ -57,7 +57,7 @@ export class Utils {
 
     static validateDiscordServer = (discordServerLink: string) => {
         // eslint-disable-next-line
-        const re = /^https:\/\/discord.gg\/[a-zA-Z]+$/
+        const re = /^https:\/\/discord.gg\/[a-zA-Z0-9]+$/
         return re.test(String(discordServerLink).toLowerCase())
     }
 

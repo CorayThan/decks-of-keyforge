@@ -9,7 +9,7 @@ export const PromotedKeyForgeEvents = observer(() => {
 
     useEffect(() => {
         keyForgeEventStore.searchEvents({
-            timeRange: EventTimeRange.NEXT_TWO_MONTHS,
+            timeRange: EventTimeRange.NEXT_MONTH,
             promoted: true,
             formats: []
         })

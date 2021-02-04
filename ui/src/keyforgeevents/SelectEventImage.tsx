@@ -37,7 +37,7 @@ export const SelectEventImage = observer((props: { selectedImg?: string, setImag
             <Dialog open={store.open}>
                 <DialogContent>
                     <PatreonRequired requiredLevel={PatreonRewardsTier.SUPPORT_SOPHISTICATION}/>
-                    <Typography>Please make sure your images are landscape. They will be displayed 320px wide by 120px high.</Typography>
+                    <Typography>Please make sure your images are landscape. They will be displayed 320px wide by 160px high.</Typography>
                     <Box mb={2} mt={2}>
                         {availableImages.length === 0 ? (
                             <Typography>You have no event images yet. Please upload one.</Typography>

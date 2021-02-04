@@ -8,7 +8,7 @@ export class TimeUtils {
     private static readonly readableDateFormat = "MMM d, yyyy"
     private static readonly readableDateTimeFormat = "MMM d, yyyy, h:mm a"
     private static readonly eventTimeFormat = "h:mm a z"
-    private static readonly eventDateFormat = "MMM d, yy"
+    private static readonly eventDateFormat = "EEE MMM d, yy"
     private static readonly eventWeekFormat = "MMM d, yyyy"
     static readonly localDateFormat = "yyyy-MM-dd"
     static readonly zonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm'Z'"
@@ -60,9 +60,12 @@ export class TimeUtils {
 
     static weekDescriptionForEvent = (fromDate: Date) => {
         const fromDateDayOfWeek = getDay(fromDate)
-        const offsetDays = fromDateDayOfWeek - 1
+        let offsetDays = fromDateDayOfWeek - 1
+        if (fromDateDayOfWeek === 0) {
+            // Sunday on previous week
+            offsetDays = 6
+        }
         const monday = addDays(fromDate, -offsetDays)
-
         return `Week of ${format(monday, TimeUtils.eventWeekFormat)}`
     }
 

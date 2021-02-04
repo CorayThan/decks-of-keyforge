@@ -16,7 +16,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
     const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername} = event
 
     const width = 320
-    const mediaHeight = 120
+    const mediaHeight = 160
 
     return (
         <Card style={{width}}>
@@ -38,7 +38,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                 </Box>
                 <Typography gutterBottom={true} variant={"h5"}>{name}</Typography>
                 <Divider/>
-                <Box display={"flex"} justifyContent={"space-between"}>
+                <Box display={"grid"} gridTemplateColumns={"1fr 1fr 1fr"} gridGap={8}>
                     <EventDescriptionLine name={"Variant"} value={format + (sealed ? " SEALED" : "")}/>
                     <EventDescriptionLine name={"Entry Fee"} value={entryFee}/>
                     <EventDescriptionLine name={"Duration"} value={duration}/>
@@ -67,7 +67,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
 const EventDescriptionLine = (props: { name: string, value?: string, maxHeight?: number, style?: React.CSSProperties }) => {
     const {name, value, maxHeight, style} = props
     if (value == null) {
-        return null
+        return <div/>
     }
 
     let boxStyle: React.CSSProperties = {}

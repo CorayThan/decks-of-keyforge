@@ -18,7 +18,9 @@ export const KeyForgeEventCalendar = (props: { events: KeyForgeEventDto[] }) => 
     let currentWeekStart: string | undefined = undefined
 
     events.forEach(event => {
-        const thisEventWeekStart = TimeUtils.weekDescriptionForEvent(TimeUtils.eventDateTime(event.startDateTime))
+        const eventStartDateTime = TimeUtils.eventDateTime(event.startDateTime)
+        const thisEventWeekStart = TimeUtils.weekDescriptionForEvent(eventStartDateTime)
+
         if (thisEventWeekStart !== currentWeekStart) {
             currentWeekStart = thisEventWeekStart
             eventsByWeek.push({
@@ -31,15 +33,15 @@ export const KeyForgeEventCalendar = (props: { events: KeyForgeEventDto[] }) => 
 
     return (
         <Box>
-            {eventsByWeek.map((eventsForWeek, idx) => (
-                <KeyForgeEventsWeek week={eventsForWeek.weekName} events={eventsForWeek.events} idx={idx} key={eventsForWeek.weekName}/>
+            {eventsByWeek.map((eventsForWeek) => (
+                <KeyForgeEventsWeek week={eventsForWeek.weekName} events={eventsForWeek.events} key={eventsForWeek.weekName}/>
             ))}
         </Box>
     )
 }
 
-export const KeyForgeEventsWeek = observer((props: { week: string, events: KeyForgeEventDto[], idx: number }) => {
-    const {week, events, idx} = props
+export const KeyForgeEventsWeek = observer((props: { week: string, events: KeyForgeEventDto[] }) => {
+    const {week, events} = props
 
     const contents = (
         <Grid container={true} spacing={2}>

@@ -14,5 +14,6 @@ data class KeyForgeEventFilters(
 enum class EventTimeRange {
     PAST,
     FUTURE,
-    NEXT_TWO_MONTHS,
+    NEXT_MONTH,
+    NEXT_THREE_MONTHS,
 }

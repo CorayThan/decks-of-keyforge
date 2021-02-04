@@ -74,7 +74,8 @@ const KeyForgeEventsSearchOptions = observer(() => {
                         keyForgeEventsSearchStore.search.timeRange = event.target.value as EventTimeRange
                     }}
                 >
-                    <MenuItem value={EventTimeRange.NEXT_TWO_MONTHS}>Next Two Months</MenuItem>
+                    <MenuItem value={EventTimeRange.NEXT_MONTH}>Next Month</MenuItem>
+                    <MenuItem value={EventTimeRange.NEXT_THREE_MONTHS}>Next Three Months</MenuItem>
                     <MenuItem value={EventTimeRange.FUTURE}>All Future Events</MenuItem>
                     <MenuItem value={EventTimeRange.PAST}>Past Events</MenuItem>
                 </Select>
@@ -120,7 +121,7 @@ const KeyForgeEventsSearchOptions = observer(() => {
 class KeyForgeEventsSearchStore {
     @observable
     search: KeyForgeEventFilters = {
-        timeRange: EventTimeRange.NEXT_TWO_MONTHS,
+        timeRange: EventTimeRange.NEXT_MONTH,
         promoted: false,
         formats: []
     }

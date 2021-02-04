@@ -236,7 +236,7 @@ data class Deck(
                         }.sorted().joinToString("~") + "~" +
                 // Add duplicates for mavericks with the house
                 newCardsList
-                        .filter { it.maverick }
+                        .filter { it.maverick && !it.anomaly }
                         .groupBy { it.cardTitle }
                         .flatMap { entry ->
                             entry.value

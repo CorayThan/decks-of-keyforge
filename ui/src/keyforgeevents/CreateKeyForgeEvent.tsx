@@ -68,8 +68,8 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => kfEvent.name = event.target.value}
                                 required={true}
                                 fullWidth={true}
-                                error={store.titleTooLong()}
-                                helperText={store.titleTooLong() ? `Name must be 40 characters or less. Current length: ${kfEvent.name.trim().length}` : undefined}
+                                error={!store.nameValid() && store.saveAttempted}
+                                helperText={kfEvent.name.trim().length > store.maxNameLength ? `Name must be ${store.maxNameLength} characters or less. Current length: ${kfEvent.name.trim().length}` : undefined}
                             />
                         </Grid>
                         <Grid item={true} xs={3}>
@@ -111,8 +111,8 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 multiline={true}
                                 rows={3}
                                 fullWidth={true}
-                                error={store.descriptionTooLong()}
-                                helperText={store.descriptionTooLong() ? `Description must be 2000 characters or less. Current length: ${kfEvent.description.trim().length}` : undefined}
+                                error={!store.descriptionValid() && store.saveAttempted}
+                                helperText={kfEvent.description.trim().length > store.maxDescriptionLength ? `Description must be 1000 characters or less. Current length: ${kfEvent.description.trim().length}` : undefined}
                             />
                         </Grid>
                         <Grid item={true} xs={12}>
@@ -123,6 +123,7 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 helperText={"Required url, e.g. https://coolkeyforge.com/my-event"}
                                 fullWidth={true}
                                 required={true}
+                                error={!store.signupLinkValid() && store.saveAttempted}
                             />
                         </Grid>
                         <Grid item={true} xs={12}>
@@ -132,6 +133,7 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => kfEvent.discordServer = event.target.value}
                                 helperText={"Invite to discord server, e.g. https://discord.gg/sNkHD7k"}
                                 fullWidth={true}
+                                error={!store.discordServerValid()}
                             />
                         </Grid>
                         <Grid item={true} xs={12} sm={6}>
@@ -197,11 +199,16 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                     <KeyButton
                         color={"primary"}
                         loading={keyForgeEventStore.savingEvent}
-                        disabled={!isPatron || !store.valid()}
+                        disabled={!isPatron}
                         onClick={async () => {
-                            const eventToSend = store.cleanEvent()
-                            keyForgeEventStore.saveEvent(eventToSend)
-                            store.toggleOpen()
+                            if (!store.valid()) {
+                                store.saveAttempted = true
+                            } else {
+                                store.saveAttempted = false
+                                const eventToSend = store.cleanEvent()
+                                keyForgeEventStore.saveEvent(eventToSend)
+                                store.toggleOpen()
+                            }
                         }}
                     >
                         Save
@@ -213,6 +220,12 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
 })
 
 class CreateKeyForgeEventStore {
+
+    maxNameLength = 40
+    maxDescriptionLength = 1000
+
+    @observable
+    saveAttempted = false
 
     @observable
     open = false
@@ -229,19 +242,27 @@ class CreateKeyForgeEventStore {
     }
 
     valid = () => {
-        return this.event.name.length > 3 && !this.titleTooLong() &&
-            this.event.description.trim().length > 3 && !this.descriptionTooLong() &&
-            isValid(new Date(this.event.startDateTime)) &&
-            Utils.validateUrl(this.event.signupLink) &&
-            (this.event.discordServer == null || this.event.discordServer.trim().length === 0 || Utils.validateDiscordServer(this.event.discordServer.trim()))
+        return this.nameValid() &&
+            this.descriptionValid() &&
+            this.signupLinkValid() &&
+            this.discordServerValid() &&
+            isValid(new Date(this.event.startDateTime))
     }
 
-    descriptionTooLong = () => {
-        return this.event.description.trim().length > 1000
+    descriptionValid = () => {
+        return this.event.description.trim().length > 3 && this.event.description.trim().length <= this.maxDescriptionLength
     }
 
-    titleTooLong = () => {
-        return this.event.name.trim().length > 40
+    nameValid = () => {
+        return this.event.name.length > 3 && this.event.name.trim().length <= this.maxNameLength
+    }
+
+    signupLinkValid = () => {
+        return Utils.validateUrl(this.event.signupLink)
+    }
+
+    discordServerValid = () => {
+        return this.event.discordServer == null || this.event.discordServer.trim().length === 0 || Utils.validateDiscordServer(this.event.discordServer.trim())
     }
 
     cleanEvent = () => {
@@ -279,6 +300,7 @@ class CreateKeyForgeEventStore {
         } else {
             this.event = Utils.jsonCopy(this.originalEvent)
         }
+        this.saveAttempted = false
     }
 
     constructor(private originalEvent?: KeyForgeEventDto) {

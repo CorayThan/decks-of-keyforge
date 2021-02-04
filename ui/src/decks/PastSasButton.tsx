@@ -3,6 +3,7 @@ import HistoryIcon from "@material-ui/icons/History"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
+import { roundToHundreds } from "../config/Utils"
 import { SortableTable } from "../generic/SortableTable"
 import { Loader } from "../mui-restyled/Loader"
 import { deckStore } from "./DeckStore"
@@ -43,16 +44,16 @@ export const PastSasButton = observer((props: { name: string, deckId: number }) 
                                         {property: "aercScore"},
                                         {property: "synergyRating"},
                                         {property: "antisynergyRating"},
-                                        {property: "amberControl"},
-                                        {property: "expectedAmber"},
-                                        {property: "artifactControl"},
-                                        {property: "creatureControl"},
-                                        {property: "effectivePower"},
-                                        {property: "efficiency"},
-                                        {property: "recursion"},
-                                        {property: "disruption"},
-                                        {property: "creatureProtection"},
-                                        {property: "other"},
+                                        {property: "amberControl", transform: pastSas => roundToHundreds(pastSas.amberControl)},
+                                        {property: "expectedAmber", transform: pastSas => roundToHundreds(pastSas.expectedAmber)},
+                                        {property: "artifactControl", transform: pastSas => roundToHundreds(pastSas.artifactControl)},
+                                        {property: "creatureControl", transform: pastSas => roundToHundreds(pastSas.creatureControl)},
+                                        {property: "effectivePower", transform: pastSas => roundToHundreds(pastSas.effectivePower)},
+                                        {property: "efficiency", transform: pastSas => roundToHundreds(pastSas.efficiency)},
+                                        {property: "recursion", transform: pastSas => roundToHundreds(pastSas.recursion)},
+                                        {property: "disruption", transform: pastSas => roundToHundreds(pastSas.disruption)},
+                                        {property: "creatureProtection", transform: pastSas => roundToHundreds(pastSas.creatureProtection)},
+                                        {property: "other", transform: pastSas => roundToHundreds(pastSas.other)},
                                     ]}
                                     data={pastSas}
                                     defaultSort={"updateDate"}

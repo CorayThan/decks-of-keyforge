@@ -34,7 +34,8 @@ class KeyForgeEventService(
         when (filters.timeRange) {
             EventTimeRange.PAST -> predicate.and(eventQ.startDateTime.before(now))
             EventTimeRange.FUTURE -> predicate.and(eventQ.startDateTime.after(now))
-            EventTimeRange.NEXT_TWO_MONTHS -> predicate.and(eventQ.startDateTime.between(now, now.plusMonths(2)))
+            EventTimeRange.NEXT_MONTH -> predicate.and(eventQ.startDateTime.between(now, now.plusMonths(1)))
+            EventTimeRange.NEXT_THREE_MONTHS -> predicate.and(eventQ.startDateTime.between(now, now.plusMonths(3)))
         }
 
         if (filters.promoted) {
