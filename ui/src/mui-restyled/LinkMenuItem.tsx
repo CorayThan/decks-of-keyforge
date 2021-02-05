@@ -4,6 +4,7 @@ import { Link, LinkProps } from "react-router-dom"
 
 export const LinkMenuItem = (props: LinkProps) => {
     return (
+        // @ts-ignore
         <MenuItem
             component={Link}
             {...props}

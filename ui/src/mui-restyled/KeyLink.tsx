@@ -8,9 +8,10 @@ export const KeyLink = (props: { disabled?: boolean, noStyle?: boolean, newWindo
         return <div>{props.children}</div>
     }
     return (
-        // @ts-ignore
         <Link
-            style={{textDecoration: noStyle ? "none" : undefined, color: undefined, ...style}} {...rest}
+            // @ts-ignore
+            style={{textDecoration: noStyle ? "none" : undefined, color: undefined, ...style}}
+            {...rest}
             color={"inherit"}
             component={RouterLink}
             target={newWindow ? "_blank" : undefined}
