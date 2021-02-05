@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, Input, InputLabel, ListItemText, MenuItem, Select } from "@material-ui/core"
 import { startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -16,6 +16,7 @@ export class SelectedValues<T> {
     selectedValues: T[] = []
 
     constructor(initial?: T[]) {
+        makeObservable(this)
         if (initial != null) {
             this.selectedValues = initial
         }

@@ -1,6 +1,6 @@
 import { Box, Button, Divider, FormControl, Input, InputLabel, MenuItem, Paper, Select, Typography } from "@material-ui/core"
 import { startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { spacing } from "../config/MuiConfig"
@@ -137,6 +137,10 @@ class KeyForgeEventsSearchStore {
             return "archon"
         }
         return ""
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

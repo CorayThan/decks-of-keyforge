@@ -1,10 +1,9 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { UserSearchResults } from "../../generated-src/UserSearchResults"
 
 export class UserSearchStore {
-
     static readonly CONTEXT = HttpConfig.API + "/user-search"
 
     @observable
@@ -29,6 +28,10 @@ export class UserSearchStore {
                 this.searching = false
                 this.results = response.data
             })
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

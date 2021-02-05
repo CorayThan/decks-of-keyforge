@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import * as React from "react"
 import { SortOption } from "../../decks/selects/DeckSortSelect"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
@@ -27,6 +27,7 @@ export class CardSortSelectStore implements SelectedStore {
     selectedValue = cardSortOptions[0].name
 
     constructor(initial?: string) {
+        makeObservable(this)
         if (initial != null) {
             this.selectedValue = cardSortOptions.find(option => option.value === initial)?.name ?? cardSortOptions[0].name
         }

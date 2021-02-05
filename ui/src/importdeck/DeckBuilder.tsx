@@ -1,7 +1,7 @@
 import { Box, Button, Divider, IconButton } from "@material-ui/core"
 import { Delete } from "@material-ui/icons"
 import { cloneDeep, sortBy } from "lodash"
-import { autorun, computed, observable } from "mobx"
+import { autorun, computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { cardStore } from "../cards/CardStore"
@@ -25,6 +25,10 @@ class DeckBuilderStore {
 
     @observable
     houses?: House[]
+
+    constructor() {
+        makeObservable(this)
+    }
 
     @computed
     get deckIsValid(): boolean {

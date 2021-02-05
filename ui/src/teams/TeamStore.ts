@@ -1,11 +1,10 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { TeamOrInvites } from "../generated-src/TeamOrInvites"
 import { messageStore } from "../ui/MessageStore"
 
 export class TeamStore {
-
     static readonly SECURE_CONTEXT = HttpConfig.API + "/teams/secured"
 
     @observable
@@ -82,6 +81,9 @@ export class TeamStore {
             })
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const teamStore = new TeamStore()

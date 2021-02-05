@@ -1,5 +1,5 @@
 import { ClickAwayListener, Divider, Tooltip, Typography, withStyles } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -23,7 +23,6 @@ const SasTipInner = withStyles(() => ({
 
 @observer
 export class SasTip extends React.Component<SasTipProps> {
-
     @observable
     open = false
 
@@ -33,6 +32,11 @@ export class SasTip extends React.Component<SasTipProps> {
 
     handleTooltipClose = () => {
         this.open = false
+    }
+
+    constructor(props: SasTipProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

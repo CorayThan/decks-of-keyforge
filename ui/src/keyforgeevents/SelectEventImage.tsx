@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
@@ -130,7 +130,6 @@ export const SelectEventImage = observer((props: { selectedImg?: string, setImag
 
 
 class SelectEventImageStore {
-
     @observable
     open = false
 
@@ -139,4 +138,8 @@ class SelectEventImageStore {
 
     @observable
     reallyDelete?: string
+
+    constructor() {
+        makeObservable(this)
+    }
 }

@@ -14,7 +14,7 @@ import {
     Tooltip,
     Typography
 } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing } from "../config/MuiConfig"
@@ -29,7 +29,6 @@ import { userStore } from "../user/UserStore"
 import { teamStore } from "./TeamStore"
 
 class TeamManagementStore {
-
     @observable
     username = ""
 
@@ -46,6 +45,10 @@ class TeamManagementStore {
         if (nameTrimmed.length === 0) return false
 
         return true
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

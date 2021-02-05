@@ -5,7 +5,7 @@ import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import { sortBy, startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { log, SortOrder } from "../config/Utils"
@@ -157,6 +157,7 @@ class SortableTableStore<T> {
     sortedItems: T[]
 
     constructor(private data: T[], private defaultSortHeader: SortableTableHeaderInfo<T>, private noInitialSort: boolean) {
+        makeObservable(this)
         this.update(data, defaultSortHeader, noInitialSort)
     }
 

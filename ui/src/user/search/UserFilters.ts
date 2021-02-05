@@ -1,5 +1,5 @@
 import { isEqual } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { Utils } from "../../config/Utils"
 import { UserSort } from "../../generated-src/UserSort"
 
@@ -48,6 +48,10 @@ export class UserFilters {
         this.friends = false
         this.sort = UserSort.DECK_COUNT
         this.username = ""
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

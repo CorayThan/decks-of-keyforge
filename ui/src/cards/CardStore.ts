@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { get, set } from "idb-keyval"
 import { clone, sortBy } from "lodash"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { HasAerc } from "../aerc/HasAerc"
 import { HttpConfig } from "../config/HttpConfig"
 import { IdbUtils } from "../config/IdbUtils"
@@ -17,7 +17,6 @@ import { CardFilters, CardSort } from "./CardFilters"
 import { cardNameToCardNameKey, CardNumberSetPair, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
 
 export class CardStore {
-
     static readonly CONTEXT = HttpConfig.API + "/cards"
     private nonAlphanumericSpaceRegex = /[^a-zA-Z0-9\s\-,]/g
     private cardsVersionKey = "cardsVersion"
@@ -217,7 +216,7 @@ export class CardStore {
             const msStart = performance.now()
             if (newVersion == null) {
                 // this version of cards already saved, just load it
-                cardsLoaded = await get(this.cardsKey) ?? []
+                cardsLoaded = (await get(this.cardsKey)) ?? []
             } else {
                 const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
                 cardsLoaded = cardsData.data.slice()
@@ -362,6 +361,10 @@ export class CardStore {
             return undefined
         }
         return this.nextExtraInfo[this.cleanCardName(cardName)]
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 
     @computed

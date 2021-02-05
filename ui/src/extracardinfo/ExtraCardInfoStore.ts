@@ -1,12 +1,11 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 
 export class ExtraCardInfoStore {
-
     static readonly CONTEXT = HttpConfig.API + "/extra-card-infos"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/extra-card-infos/secured"
 
@@ -47,6 +46,10 @@ export class ExtraCardInfoStore {
         this.savingExtraCardInfo = false
         messageStore.setSuccessMessage("Saved extraCardInfo!", 1000)
         return extraCardInfoId.data
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

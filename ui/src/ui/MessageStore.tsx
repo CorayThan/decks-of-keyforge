@@ -3,7 +3,7 @@ import { amber } from "@material-ui/core/colors"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Snackbar from "@material-ui/core/Snackbar/Snackbar"
 import CloseIcon from "@material-ui/icons/Close"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { theme, themeStore } from "../config/MuiConfig"
@@ -13,7 +13,6 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 export type MessageType = "Error" | "Warn" | "Success"
 
 export class MessageStore {
-
     @observable
     message = ""
 
@@ -54,6 +53,10 @@ export class MessageStore {
         this.action = action
         this.open = true
         this.hideDuration = duration ? duration : 6000
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

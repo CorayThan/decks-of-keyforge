@@ -3,7 +3,7 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { Rating } from "@material-ui/lab"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing, theme, themeStore } from "../config/MuiConfig"
@@ -20,7 +20,6 @@ import { sellerRatingsStore } from "./SellerRatingsStore"
 type RatingValue = 0 | 1 | 2 | 3 | 4 | 5
 
 class UserRatingStore {
-
     @observable
     writingReview = false
 
@@ -87,6 +86,10 @@ class UserRatingStore {
     }
     reviewIsValid = () => this.rating >= 1 && this.rating <= 5 && this.review.trim().length > 0 && this.review.trim().length < 2500
         && this.title.trim().length < 81 && this.title.trim().length > 0
+
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 interface UserRatingProps {

@@ -1,12 +1,11 @@
 import axios from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 import { SellerMessage } from "./SellerMessage"
 
 class EmailStore {
-
     static readonly CONTEXT = HttpConfig.API + "/emails"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/emails/secured"
 
@@ -66,6 +65,9 @@ class EmailStore {
         }
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const emailStore = new EmailStore()

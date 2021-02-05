@@ -1,7 +1,7 @@
 import Typography from "@material-ui/core/Typography/Typography"
 import * as History from "history"
 import { isEqual } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
@@ -151,6 +151,7 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
 
     constructor(props: CardsContainerWithScrollProps) {
         super(props)
+        makeObservable(this)
         this.resetCardsToDisplay(props)
     }
 

@@ -1,7 +1,6 @@
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 
 export class UiStore {
-
     @observable
     topbarName = ""
 
@@ -28,6 +27,10 @@ export class UiStore {
                 (name.length > 0 ? (name + " – ") : "") +
                 "Search, evaluate, buy and sell KeyForge decks. Find synergies and antisynergies for your decks with the SAS rating system."
         }
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

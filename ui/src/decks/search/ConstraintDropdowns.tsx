@@ -1,7 +1,7 @@
 import { Button, IconButton, MenuItem, TextField } from "@material-ui/core"
 import { Delete } from "@material-ui/icons"
 import { startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
@@ -20,6 +20,7 @@ export class FiltersConstraintsStore {
     constraints: Constraint[]
 
     constructor(initialConstraints?: Constraint[]) {
+        makeObservable(this)
         this.constraints = initialConstraints ? initialConstraints : []
         if (initialConstraints == null || initialConstraints.length === 0) {
             this.addDefault()

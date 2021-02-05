@@ -1,6 +1,6 @@
 import { Box, LinearProgress } from "@material-ui/core"
 import TextField, { TextFieldProps } from "@material-ui/core/TextField"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { ChangeEvent } from "react"
@@ -25,6 +25,7 @@ export class AutoSaveTextFieldStore {
     saving = false
 
     constructor(value: string, private onSave: (toSave: string) => void) {
+        makeObservable(this)
         this.value = value
     }
 

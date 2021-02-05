@@ -1,5 +1,5 @@
 import { LinearProgress } from "@material-ui/core"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { teamStore } from "../teams/TeamStore"
@@ -31,7 +31,6 @@ export const KeyLoaderBar = observer(() => {
 })
 
 class GlobalLoaderStore {
-
     @observable
     trackingIds: string[] = []
 
@@ -43,6 +42,10 @@ class GlobalLoaderStore {
 
     untrackRequest = (requestId: string) => {
         this.trackingIds = this.trackingIds.filter(id => id !== requestId)
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 
     @computed

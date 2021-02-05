@@ -1,5 +1,5 @@
 import { clone, isEqual } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import * as React from "react"
 import { log, prettyJson, Utils } from "../../config/Utils"
 import { Constraint } from "../../generated-src/Constraint"
@@ -11,7 +11,6 @@ import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
 
 export class DeckFilters {
-
     static forSale = () => {
         const filters = new DeckFilters()
         filters.forSale = true
@@ -238,6 +237,10 @@ export class DeckFilters {
         const cloned = clone(this)
         cloned.cards = cloned.cards.filter(card => card.cardNames.length > 0 && card.cardNames[0].length > 0)
         return cloned
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 
     get isForSaleOrTrade() {

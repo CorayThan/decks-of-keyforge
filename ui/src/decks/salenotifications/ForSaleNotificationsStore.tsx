@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import * as React from "react"
 import { HttpConfig } from "../../config/HttpConfig"
 import { globalLoaderStore } from "../../config/KeyLoaderBar"
@@ -12,7 +12,6 @@ import { userStore } from "../../user/UserStore"
 import { prepareDeckFiltersForQueryString } from "../search/DeckFilters"
 
 export class ForSaleNotificationsStore {
-
     static readonly CONTEXT = HttpConfig.API + "/for-sale-notifications"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/for-sale-notifications/secured"
 
@@ -67,6 +66,10 @@ export class ForSaleNotificationsStore {
     updatePrecedence = async (id: number, precedence: number, requestId: string) => {
         await axios.post(`${ForSaleNotificationsStore.SECURE_CONTEXT}/update-precedence/${id}/${precedence}`)
         globalLoaderStore.untrackRequest(requestId)
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

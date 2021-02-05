@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { CardFilters } from "../cards/CardFilters"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
@@ -12,7 +12,6 @@ import { Spoiler } from "./Spoiler"
 import { SpoilerFilters } from "./SpoilerFilters"
 
 export class SpoilerStore {
-
     static readonly CONTEXT = HttpConfig.API + "/spoilers"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/spoilers/secured"
 
@@ -133,6 +132,10 @@ export class SpoilerStore {
 
     containsCardNumberIgnoreCase = (cardNumber: string) => {
         return !!this.allSpoilers.find(spoiler => spoiler.cardNumber != null && spoiler.cardNumber.toLowerCase().trim() === cardNumber.toLowerCase().trim())
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

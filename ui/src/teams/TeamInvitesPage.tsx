@@ -1,5 +1,5 @@
 import { Button, Grid, List, ListItem, Paper, TextField, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing } from "../config/MuiConfig"
@@ -11,7 +11,6 @@ import { userStore } from "../user/UserStore"
 import { teamStore } from "./TeamStore"
 
 class CreateTeamStore {
-
     private readonly teamNameRegex = /^[a-zA-Z0-9\s',-]+$/
 
     @observable
@@ -26,6 +25,10 @@ class CreateTeamStore {
         if (!this.teamNameRegex.test(nameTrimmed)) return false
 
         return true
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

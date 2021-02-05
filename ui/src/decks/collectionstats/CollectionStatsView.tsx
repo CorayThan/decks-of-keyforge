@@ -1,7 +1,7 @@
 import { Box, Checkbox, FormControlLabel, Paper, TextField, Tooltip, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import { ResponsivePie } from "@nivo/pie"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { VictoryBar, VictoryChart, VictoryTooltip } from "victory"
@@ -228,7 +228,6 @@ const HouseCombosGraph = (props: { houseDeckCounts: ThreeHousesCount[] }) => {
 
 @observer
 class CardsGraph extends React.Component<{ cards: CardCounts[] }> {
-
     @observable
     cardFilter = ""
 
@@ -237,6 +236,11 @@ class CardsGraph extends React.Component<{ cards: CardCounts[] }> {
 
     @observable
     displayAllCards = false
+
+    constructor(props: { cards: CardCounts[] }) {
+        super(props)
+        makeObservable(this)
+    }
 
     render() {
 

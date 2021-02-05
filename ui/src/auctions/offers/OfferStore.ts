@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { log, prettyJson } from "../../config/Utils"
 import { DeckListingDto } from "../../generated-src/DeckListingDto"
@@ -10,7 +10,6 @@ import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 
 export class OfferStore {
-
     static readonly CONTEXT = HttpConfig.API + "/offers"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/offers/secured"
 
@@ -177,6 +176,9 @@ export class OfferStore {
         return this.offersFromMeIds.has(id)
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const offerStore = new OfferStore()

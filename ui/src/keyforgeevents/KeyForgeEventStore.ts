@@ -1,12 +1,11 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { KeyForgeEventDto } from "../generated-src/KeyForgeEventDto"
 import { KeyForgeEventFilters } from "../generated-src/KeyForgeEventFilters"
 import { messageStore } from "../ui/MessageStore"
 
 export class KeyForgeEventStore {
-
     static readonly PUBLIC_CONTEXT = HttpConfig.API + "/keyforge-events/public"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/keyforge-events/secured"
 
@@ -64,6 +63,10 @@ export class KeyForgeEventStore {
         await axios.delete(KeyForgeEventStore.SECURE_CONTEXT + "/" + eventId)
         this.deletingEvent = false
         messageStore.setSuccessMessage("Deleted your event. It will not appear on page reload.")
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

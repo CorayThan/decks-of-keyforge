@@ -1,7 +1,7 @@
 import { Grow, ListItem, ListItemText, MenuList, Paper, Popper } from "@material-ui/core"
 import { MenuItemProps } from "@material-ui/core/MenuItem"
 import { ArrowDropDown } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
@@ -43,6 +43,7 @@ export class LinkMenuStore {
     anchorElRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
 
     constructor(private name: MenuStoreName) {
+        makeObservable(this)
     }
 
     handleOpen = () => {

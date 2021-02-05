@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
@@ -10,7 +10,6 @@ import { TagDto } from "../generated-src/TagDto"
 import { messageStore } from "../ui/MessageStore"
 
 export class TagStore {
-
     static readonly CONTEXT = HttpConfig.API + "/tags"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/tags/secured"
 
@@ -124,6 +123,9 @@ export class TagStore {
         this.updatingTags = false
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const tagStore = new TagStore()

@@ -2,7 +2,7 @@ import { Tooltip } from "@material-ui/core"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Typography from "@material-ui/core/Typography"
 import FavoriteIcon from "@material-ui/icons/Favorite"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
@@ -15,9 +15,13 @@ interface WishlistDeckProps {
 
 @observer
 export class FavoriteDeck extends React.Component<WishlistDeckProps> {
-
     @observable
     favoriteCount = 0
+
+    constructor(props: WishlistDeckProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount(): void {
         this.favoriteCount = this.props.favoriteCount

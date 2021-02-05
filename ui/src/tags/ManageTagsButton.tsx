@@ -16,7 +16,7 @@ import {
     Typography
 } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -30,7 +30,6 @@ import { tagStore } from "./TagStore"
 
 @observer
 export class ManageTagsButton extends React.Component {
-
     @observable
     open = false
 
@@ -60,6 +59,11 @@ export class ManageTagsButton extends React.Component {
             public: this.publicityType
         })
         this.resetNoClose()
+    }
+
+    constructor(props: {}) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

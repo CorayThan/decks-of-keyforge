@@ -24,7 +24,7 @@ import {
 } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import * as History from "history"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
@@ -123,6 +123,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     constructor(props: MyProfileInnerProps) {
         super(props)
+        makeObservable(this)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
             sellerEmail, discord, storeName, currencySymbol, allowsTrades, autoRenewListings

@@ -2,7 +2,7 @@ import { Tooltip } from "@material-ui/core"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import Typography from "@material-ui/core/Typography"
 import TagFacesIcon from "@material-ui/icons/TagFaces"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
@@ -15,9 +15,13 @@ interface FunnyDeckProps {
 
 @observer
 export class FunnyDeck extends React.Component<FunnyDeckProps> {
-
     @observable
     funnyCount = 0
+
+    constructor(props: FunnyDeckProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount(): void {
         this.funnyCount = this.props.funnyCount

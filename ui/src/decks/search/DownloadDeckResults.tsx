@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@material-ui/core"
 import { GetApp } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useEffect, useState } from "react"
 import { spacing } from "../../config/MuiConfig"
@@ -28,6 +28,10 @@ class DownloadDeckResultsStore {
         this.loading1000 = false
         this.loading5000 = false
         this.open = false
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

@@ -1,6 +1,6 @@
 import { Button, IconButton, Paper, TextField, Typography } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { deckListingStore } from "../auctions/DeckListingStore"
@@ -31,6 +31,10 @@ class DeckTableViewStore {
         log.debug("Add price change for " + auctionId + " change: " + askingPrice)
         this.priceChanges = this.priceChanges.filter(priceChange => priceChange.auctionId !== auctionId)
         this.priceChanges.push({auctionId, askingPrice})
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 
@@ -290,6 +294,11 @@ interface SellerViewCellProps {
 class DeckPriceCell extends React.Component<SellerViewCellProps> {
     @observable
     price?: string
+
+    constructor(props: SellerViewCellProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount() {
         this.setPriceForSeller(this.props)

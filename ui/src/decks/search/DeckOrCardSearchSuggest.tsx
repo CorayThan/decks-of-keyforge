@@ -5,7 +5,7 @@ import Divider from "@material-ui/core/Divider"
 import ListSubheader from "@material-ui/core/ListSubheader"
 import { PopperPlacementType } from "@material-ui/core/Popper"
 import { Clear, Search } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
@@ -68,6 +68,10 @@ class SearchDeckNameStore {
         if (deckStore.deckNameSearchCancel != null) {
             deckStore.deckNameSearchCancel.cancel()
         }
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

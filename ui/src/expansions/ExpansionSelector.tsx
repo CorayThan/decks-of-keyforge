@@ -1,5 +1,5 @@
 import { MenuItem, TextField } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Expansion } from "../generated-src/Expansion"
@@ -13,6 +13,7 @@ export class SelectedExpansion {
     onlyThisExpansion = false
 
     constructor(expansions?: Expansion[], selectFinal?: boolean) {
+        makeObservable(this)
         if (expansions && expansions.length > 0) {
             this.expansion = expansions[selectFinal ? (expansions.length - 1) : 0]
         }

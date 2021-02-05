@@ -7,7 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem"
 import TextField from "@material-ui/core/TextField"
 import { differenceInDays, format } from "date-fns"
 import { startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { deckListingStore } from "../../auctions/DeckListingStore"
@@ -47,7 +47,6 @@ enum SaleType {
 
 @observer
 export class ListForSaleView extends React.Component<ListForSaleViewProps> {
-
     @observable
     open = false
 
@@ -78,6 +77,11 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
     @observable
     editAuctionId?: string
+
+    constructor(props: ListForSaleViewProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount(): void {
         this.auctionEndTime = format(TimeUtils.roundToNearestMinutes(new Date(), 15), "HH:mm")

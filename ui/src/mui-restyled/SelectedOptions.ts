@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 
 export class SelectedOptions {
 
@@ -6,6 +6,7 @@ export class SelectedOptions {
     selectedValues: string[] = []
 
     constructor(initial?: string[], private onChange?: (newValues: string[]) => void) {
+        makeObservable(this)
         if (initial != null) {
             this.selectedValues = initial
         }

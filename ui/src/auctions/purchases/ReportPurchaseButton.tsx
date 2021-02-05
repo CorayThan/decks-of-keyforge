@@ -4,7 +4,7 @@ import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import MenuItem from "@material-ui/core/MenuItem"
 import TextField from "@material-ui/core/TextField"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
@@ -24,7 +24,6 @@ interface ReportPurchaseButtonProps {
 
 @observer
 export class ReportPurchaseButton extends React.Component<ReportPurchaseButtonProps> {
-
     @observable
     open = false
 
@@ -45,6 +44,11 @@ export class ReportPurchaseButton extends React.Component<ReportPurchaseButtonPr
     handleOpen = () => this.open = true
 
     handleClose = () => this.open = false
+
+    constructor(props: ReportPurchaseButtonProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     render() {
         const {deckId, deckName} = this.props

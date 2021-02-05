@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, CancelTokenSource } from "axios"
 import { clone } from "lodash"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopbar"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -15,7 +15,6 @@ import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./mo
 import { DeckFilters } from "./search/DeckFilters"
 
 export class DeckStore {
-
     static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
     static readonly CONTEXT_SECURE = HttpConfig.API + "/decks/secured"
@@ -292,6 +291,10 @@ export class DeckStore {
         this.downloadingDecks = false
     }
 
+    constructor() {
+        makeObservable(this)
+    }
+
     @computed
     get searchingOrLoaded(): boolean {
         return this.searchingForDecks || this.decksToDisplay != null
@@ -328,7 +331,6 @@ export class DeckStore {
                 this.decksCount = response.data
             })
     }
-
 }
 
 export const deckStore = new DeckStore()

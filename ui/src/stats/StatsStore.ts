@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { cardStore } from "../cards/CardStore"
 import { HttpConfig } from "../config/HttpConfig"
 import { ExpansionNumber, expansionToBackendExpansion } from "../expansions/Expansions"
@@ -9,7 +9,6 @@ import { GlobalStatsWithExpansion } from "../generated-src/GlobalStatsWithExpans
 import { House } from "../generated-src/House"
 
 export class StatsStore {
-
     static readonly CONTEXT = HttpConfig.API + "/stats"
 
     @observable
@@ -60,6 +59,9 @@ export class StatsStore {
         }
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const statsStore = new StatsStore()

@@ -1,5 +1,5 @@
 import { Card, CardActions, CardContent, TextField, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -9,7 +9,6 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 
 @observer
 export class ForgotPasswordPage extends React.Component {
-
     @observable
     email = ""
 
@@ -24,6 +23,11 @@ export class ForgotPasswordPage extends React.Component {
             return
         }
         emailStore.sendReset(this.email.trim())
+    }
+
+    constructor(props: {}) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

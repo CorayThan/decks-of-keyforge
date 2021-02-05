@@ -24,7 +24,7 @@ import {
 } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import { sortBy } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "querystring"
 import * as React from "react"
@@ -91,6 +91,7 @@ export class UserSearchSortStore {
     filters: UserFilters
 
     constructor(filters: UserFilters) {
+        makeObservable(this)
         this.filters = filters
     }
 
@@ -449,7 +450,6 @@ const headCellsWithPatrons = [...headCells]
 headCellsWithPatrons.splice(2, 0, {id: "patreonTier", label: "Patreon Tier"})
 
 class AddPatreonStore {
-
     @observable
     open = false
 
@@ -459,6 +459,9 @@ class AddPatreonStore {
     @observable
     expiresInDays = "90"
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 const AddPatreon = observer((props: { username: string }) => {

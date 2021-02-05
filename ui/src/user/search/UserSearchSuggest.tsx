@@ -1,7 +1,7 @@
 import { Box, Fade, IconButton, List, Paper, Popper, TextField } from "@material-ui/core"
 import ClickAwayListener from "@material-ui/core/ClickAwayListener"
 import { Clear } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { spacing } from "../../config/MuiConfig"
@@ -47,6 +47,10 @@ class SearchUsernameStore {
         if (userStore.usernameSearchCancel != null) {
             userStore.usernameSearchCancel.cancel()
         }
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

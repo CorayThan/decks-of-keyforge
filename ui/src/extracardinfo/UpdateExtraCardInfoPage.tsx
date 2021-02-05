@@ -21,7 +21,7 @@ import {
 import { ChevronLeft, ChevronRight, Close, Delete, Edit, Save } from "@material-ui/icons"
 import { Autocomplete } from "@material-ui/lab"
 import { startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { ChangeEvent } from "react"
 import { RouteComponentProps } from "react-router-dom"
@@ -166,6 +166,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
 
     constructor(props: UpdateExtraCardInfoProps) {
         super(props)
+        makeObservable(this)
         this.reset(props.extraCardInfo)
     }
 
@@ -550,7 +551,6 @@ interface AddTraitProps {
 
 @observer
 class AddTrait extends React.Component<AddTraitProps> {
-
     cardTraitsStore = new SelectedOptions()
 
     @observable
@@ -637,6 +637,11 @@ class AddTrait extends React.Component<AddTraitProps> {
         this.groupMax = value.synergyGroupMax?.toString() ?? ""
         this.primaryGroup = value.primaryGroup
         this.notCardTraits = value.notCardTraits
+    }
+
+    constructor(props: AddTraitProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

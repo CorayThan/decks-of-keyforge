@@ -14,7 +14,7 @@ import {
     Typography
 } from "@material-ui/core"
 import History from "@material-ui/icons/History"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -29,7 +29,6 @@ interface BidHistoryButtonProps {
 
 @observer
 export class BidHistoryButton extends React.Component<BidHistoryButtonProps> {
-
     @observable
     open = false
 
@@ -37,6 +36,11 @@ export class BidHistoryButton extends React.Component<BidHistoryButtonProps> {
         deckListingStore.listingInfo = undefined
         deckListingStore.findDeckListingInfo(this.props.auctionId)
         this.open = true
+    }
+
+    constructor(props: BidHistoryButtonProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

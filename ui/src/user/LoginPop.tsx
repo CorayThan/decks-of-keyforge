@@ -1,6 +1,6 @@
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Popover, TextField } from "@material-ui/core"
 import { Visibility, VisibilityOff } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -13,7 +13,6 @@ import { userStore } from "./UserStore"
 
 @observer
 export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
-
     @observable
     popOpen = false
     anchorElement?: HTMLButtonElement
@@ -24,6 +23,11 @@ export class LoginPop extends React.Component<{ style?: React.CSSProperties }> {
     email = Utils.isDev() ? "coraythan@gmail.com" : ""
     @observable
     password = Utils.isDev() ? "stuffstuff" : ""
+
+    constructor(props: { style?: React.CSSProperties }) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount() {
         userStore.loginInProgress = false

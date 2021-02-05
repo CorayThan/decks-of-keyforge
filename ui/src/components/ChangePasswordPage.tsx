@@ -1,5 +1,5 @@
 import { Paper, TextField, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
@@ -17,7 +17,6 @@ export class ChangePasswordPage extends React.Component<RouteComponentProps<{res
 
 @observer
 export class ChangePasswordView extends React.Component<{resetCode: string}> {
-
     @observable
     password = ""
     @observable
@@ -36,6 +35,11 @@ export class ChangePasswordView extends React.Component<{resetCode: string}> {
             return
         }
         userStore.changePassword(this.props.resetCode, this.password.trim())
+    }
+
+    constructor(props: {resetCode: string}) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

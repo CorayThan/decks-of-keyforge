@@ -1,5 +1,5 @@
 import { Box, Card, Checkbox, FormControlLabel, Grid, MenuItem, TextField, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
@@ -19,7 +19,6 @@ import { userStore } from "./UserStore"
 
 @observer
 export class RegistrationPage extends React.Component {
-
     private static readonly USERNAME_REGEX = /^(\d|\w|-|_)+$/
 
     @observable
@@ -76,6 +75,11 @@ export class RegistrationPage extends React.Component {
             country,
             lastVersionSeen: latestVersion
         })
+    }
+
+    constructor(props: {}) {
+        super(props)
+        makeObservable(this)
     }
 
     componentDidMount() {

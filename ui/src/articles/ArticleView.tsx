@@ -18,7 +18,7 @@ import {
     TableRow,
     Typography
 } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { cardStore } from "../cards/CardStore"
@@ -51,6 +51,7 @@ export class ArticleView extends React.Component<ArticleViewProps> {
 
     constructor(props: ArticleViewProps) {
         super(props)
+        makeObservable(this)
         this.collapsed = !!props.snippet
     }
 
@@ -204,6 +205,11 @@ interface ArticleDeckProps {
 class ArticleDeck extends React.Component<ArticleDeckProps> {
     @observable
     open = false
+
+    constructor(props: ArticleDeckProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     render() {
         const deck = <SimpleDeckView deckId={this.props.deckId!}/>

@@ -16,7 +16,7 @@ import {
     Typography
 } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { RouteComponentProps, withRouter } from "react-router-dom"
@@ -95,7 +95,6 @@ let defaultCardRarity: "" | Rarity = Rarity.Common
 
 @observer
 class AddSpoiler extends React.Component<AddSpoilerProps> {
-
     @observable
     cardTitle = ""
     @observable
@@ -127,6 +126,11 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
     doubleCard = false
 
     spoilerId?: number
+
+    constructor(props: AddSpoilerProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount(): void {
         this.reset()
@@ -556,7 +560,6 @@ class AddSpoiler extends React.Component<AddSpoilerProps> {
 
 @observer
 class AddImage extends React.Component<{ spoilerId: number }> {
-
     @observable
     open = false
 
@@ -564,6 +567,11 @@ class AddImage extends React.Component<{ spoilerId: number }> {
         await spoilerStore.addImageToSpoiler(event.target.files![0], this.props.spoilerId)
         this.open = false
         messageStore.setSuccessMessage("Image added! Reload the page to see it.")
+    }
+
+    constructor(props: { spoilerId: number }) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

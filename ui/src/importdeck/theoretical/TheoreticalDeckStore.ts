@@ -1,12 +1,11 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { log } from "../../config/Utils"
 import { DeckWithSynergyInfo } from "../../decks/models/DeckSearchResult"
 import { DeckBuilderData } from "../DeckBuilderData"
 
 export class TheoreticalDeckStore {
-
     static readonly CONTEXT = HttpConfig.API + "/theoretical-decks"
     static readonly SECURED_CONTEXT = HttpConfig.API + "/theoretical-decks/secured"
 
@@ -49,6 +48,9 @@ export class TheoreticalDeckStore {
     }
 
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const theoreticalDeckStore = new TheoreticalDeckStore()

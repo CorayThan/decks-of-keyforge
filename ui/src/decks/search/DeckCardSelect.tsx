@@ -2,7 +2,7 @@ import { Button, IconButton, MenuItem } from "@material-ui/core"
 import TextField from "@material-ui/core/TextField/TextField"
 import { Delete } from "@material-ui/icons"
 import { Autocomplete } from "@material-ui/lab"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { ChangeEvent } from "react"
@@ -24,6 +24,7 @@ export class DeckCardSelectStore {
     cards: DeckCardQuantity[]
 
     constructor(initialCards: DeckCardQuantity[]) {
+        makeObservable(this)
         this.cards = initialCards.length === 0 ? this.defaultCardsSearch() : initialCards
     }
 

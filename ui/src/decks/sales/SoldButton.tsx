@@ -3,7 +3,7 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { deckListingStore } from "../../auctions/DeckListingStore"
@@ -25,7 +25,6 @@ interface SoldButtonProps {
 
 @observer
 export class SoldButton extends React.Component<SoldButtonProps> {
-
     @observable
     open = false
     @observable
@@ -53,6 +52,11 @@ export class SoldButton extends React.Component<SoldButtonProps> {
     }
 
     handleClose = () => this.open = false
+
+    constructor(props: SoldButtonProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     render() {
         const {deck, menuItem} = this.props

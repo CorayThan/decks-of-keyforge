@@ -1,7 +1,7 @@
 import Drawer from "@material-ui/core/Drawer"
 import Fab from "@material-ui/core/Fab/Fab"
 import { Search } from "@material-ui/icons"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -26,6 +26,10 @@ class KeyDrawerStoreImpl {
         if (screenStore.screenSizeSm()) {
             this.open = false
         }
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

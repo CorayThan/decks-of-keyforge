@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { CreateRating } from "../generated-src/CreateRating"
 import { SellerRatingDetails } from "../generated-src/SellerRatingDetails"
@@ -8,7 +8,6 @@ import { messageStore } from "../ui/MessageStore"
 
 
 export class SellerRatingsStore {
-
     static readonly CONTEXT = HttpConfig.API + "/seller-ratings"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/seller-ratings/secured"
 
@@ -72,6 +71,9 @@ export class SellerRatingsStore {
         messageStore.setSuccessMessage("Your review has been deleted.")
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const sellerRatingsStore = new SellerRatingsStore()

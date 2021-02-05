@@ -3,7 +3,7 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import MenuItem from "@material-ui/core/MenuItem"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { HouseAndCards } from "../generated-src/HouseAndCards"
@@ -19,7 +19,6 @@ interface CardsForDeckProps {
 
 @observer
 export class CardsForDeck extends React.Component<CardsForDeckProps> {
-
     @observable
     open = false
 
@@ -27,6 +26,11 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
     handleOpen = () => {
         this.open = true
         this.props.onClick()
+    }
+
+    constructor(props: CardsForDeckProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

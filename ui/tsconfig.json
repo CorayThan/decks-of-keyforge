@@ -17,10 +17,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": true
   },
   "include": [
     "src",

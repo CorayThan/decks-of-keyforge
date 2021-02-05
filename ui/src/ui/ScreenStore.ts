@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 
@@ -33,6 +33,7 @@ export class ScreenStore {
     }
 
     constructor() {
+        makeObservable(this)
         this.screenWidth = window.innerWidth
         this.screenHeight = window.innerHeight
         this.onResize()

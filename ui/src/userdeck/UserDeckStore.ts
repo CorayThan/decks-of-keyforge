@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
@@ -8,7 +8,6 @@ import { UserDeckDto } from "../generated-src/UserDeckDto"
 import { messageStore } from "../ui/MessageStore"
 
 export class UserDeckStore {
-
     static readonly CONTEXT = HttpConfig.API + "/userdeck/secured"
 
     @observable
@@ -95,6 +94,10 @@ export class UserDeckStore {
 
     notesForDeck = (deckId: number): string | undefined => {
         return this.userDeckByDeckId(deckId)?.notes
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

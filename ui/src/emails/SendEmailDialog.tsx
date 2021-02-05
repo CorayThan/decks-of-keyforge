@@ -3,7 +3,7 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -57,6 +57,10 @@ export class SendEmailDialogStore {
             await emailStore.sendOfferMessage(offerId, message.trim())
         }
         this.handleClose()
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

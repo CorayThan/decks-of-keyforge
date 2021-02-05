@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse, CancelTokenSource } from "axios"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { latestVersion } from "../about/ReleaseNotes"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
@@ -23,7 +23,6 @@ import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 
 export class UserStore {
-
     static readonly CONTEXT = HttpConfig.API + "/users"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/users/secured"
 
@@ -275,6 +274,10 @@ export class UserStore {
         }
     }
 
+    constructor() {
+        makeObservable(this)
+    }
+
     @computed
     get loggedInOrLoading(): boolean {
         return this.loginInProgress || this.loggedIn()
@@ -468,7 +471,6 @@ export class UserStore {
         }
         return false
     }
-
 }
 
 export const userStore = new UserStore()

@@ -2,7 +2,7 @@ import FormControl from "@material-ui/core/FormControl/FormControl"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import FormGroup from "@material-ui/core/FormGroup/FormGroup"
 import FormLabel from "@material-ui/core/FormLabel/FormLabel"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -84,6 +84,7 @@ export class SelectedOrExcludedExpansions {
     selectedExpansions: SelectedOrExcludedExpansion[]
 
     constructor(initialExpansionsSelected: Expansion[], initialExpansionsExcluded?: Expansion[]) {
+        makeObservable(this)
         this.selectedExpansions = activeExpansions.map(expansionValue => {
             const isSelected = initialExpansionsSelected.indexOf(expansionValue) !== -1
             const isExcluded = initialExpansionsExcluded == null ? false : (initialExpansionsExcluded?.indexOf(expansionValue) !== -1)

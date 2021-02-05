@@ -2,7 +2,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/
 import { blue } from "@material-ui/core/colors"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
@@ -53,6 +53,11 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
         this.open = true
     }
 
+    constructor(props: CardAsLineProps) {
+        super(props)
+        makeObservable(this)
+    }
+
     render() {
         const {card, cardActualHouse} = this.props
 
@@ -92,7 +97,6 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
 
 @observer
 class CardAsLineComplex extends React.Component<CardAsLineProps> {
-
     @observable
     popOpen = false
     anchorElement?: HTMLDivElement
@@ -105,6 +109,11 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     handlePopoverClose = () => {
         this.anchorElement = undefined
         this.popOpen = false
+    }
+
+    constructor(props: CardAsLineProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

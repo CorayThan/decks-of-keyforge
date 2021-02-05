@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -19,7 +19,6 @@ interface BuyItNowButtonProps {
 
 @observer
 export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
-
     @observable
     open = false
 
@@ -31,6 +30,11 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                 userDeckStore.refreshDeckInfo()
                 deckStore.refreshDeckSearch()
             })
+    }
+
+    constructor(props: BuyItNowButtonProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

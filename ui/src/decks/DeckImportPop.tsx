@@ -1,5 +1,5 @@
 import { Button, ListItem, ListItemText, Popover, TextField, Tooltip, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { Redirect } from "react-router"
@@ -15,13 +15,16 @@ import { deckStore } from "./DeckStore"
 class DeckImportPopStore {
     @observable
     popOpen = false
+
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const deckImportPopStore = new DeckImportPopStore()
 
 @observer
 export class DeckImportPop extends React.Component<{ style?: React.CSSProperties }> {
-
     anchorElement?: HTMLDivElement
 
     @observable
@@ -29,6 +32,11 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
 
     @observable
     error = false
+
+    constructor(props: { style?: React.CSSProperties }) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount() {
         deckStore.importedDeck = false

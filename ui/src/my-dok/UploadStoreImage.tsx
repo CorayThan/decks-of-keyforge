@@ -1,7 +1,7 @@
 import { Box, Link } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import imageCompression from "browser-image-compression"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
@@ -26,6 +26,10 @@ class StoreImageStore {
 
     @observable
     height = 0
+
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const UploadStoreImage = observer((props: UploadStoreImageProps) => {

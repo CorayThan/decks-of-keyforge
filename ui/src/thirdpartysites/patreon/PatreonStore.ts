@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
@@ -41,6 +41,10 @@ export class PatreonStore {
                     this.topPatrons = response.data
                 })
         }
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

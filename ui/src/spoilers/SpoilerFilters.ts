@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import * as React from "react"
 import { CardType } from "../cards/CardType"
 import { House } from "../generated-src/House"
@@ -35,4 +35,8 @@ export class SpoilerFilters {
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value
+
+    constructor() {
+        makeObservable(this)
+    }
 }

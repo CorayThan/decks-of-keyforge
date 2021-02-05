@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { messageStore } from "../../ui/MessageStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
@@ -9,7 +9,6 @@ import { Purchases } from "./Purchases"
 import { PurchaseStats } from "./PurchaseStats"
 
 export class PurchaseStore {
-
     static readonly CONTEXT = HttpConfig.API + "/purchases"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/purchases/secured"
 
@@ -46,6 +45,9 @@ export class PurchaseStore {
             })
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const purchaseStore = new PurchaseStore()

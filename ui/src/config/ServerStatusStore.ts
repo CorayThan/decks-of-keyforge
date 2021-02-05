@@ -1,10 +1,9 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { messageStore } from "../ui/MessageStore"
 import { HttpConfig } from "./HttpConfig"
 
 export class ServerStatusStore {
-
     static readonly CONTEXT =  HttpConfig.API + "/status"
 
     @observable
@@ -18,6 +17,9 @@ export class ServerStatusStore {
             this.siteUpdating = response.data.siteUpdating
         })
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const serverStatusStore = new ServerStatusStore()

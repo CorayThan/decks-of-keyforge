@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography"
 import { BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { cardStore } from "../../../cards/CardStore"
@@ -53,7 +53,6 @@ interface DecksSearchDrawerProps {
 
 @observer
 export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
-
     @observable
     displayHouses = false
     @observable
@@ -181,6 +180,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             log.debug("Sort not defined")
             filters.sort = DeckSorts.sas
         }
+    }
+
+    constructor(props: DecksSearchDrawerProps) {
+        super(props)
+        makeObservable(this)
     }
 
     @computed

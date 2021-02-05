@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton/IconButton"
 import { Delete } from "@material-ui/icons"
 import Image from "@material-ui/icons/Image"
 import imageCompression from "browser-image-compression"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
@@ -35,7 +35,6 @@ interface DeckOwnershipButtonsProps {
 
 @observer
 export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsProps> {
-
     @observable
     open = false
 
@@ -44,6 +43,11 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
         deckOwnershipStore.verificationDetails = undefined
         deckOwnershipStore.findDetailsForDeck(this.props.deckId)
         this.open = true
+    }
+
+    constructor(props: DeckOwnershipButtonsProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

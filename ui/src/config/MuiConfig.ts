@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core"
 import { amber, blue, grey } from "@material-ui/core/colors"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { VictoryTheme } from "victory"
 import { screenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
@@ -8,7 +8,6 @@ import { TextConfig } from "./TextConfig"
 export const darkModeKey = "DARK_MODE"
 
 export class ThemeStore {
-
     @observable
     darkMode = window.localStorage.getItem(darkModeKey) === "true"
 
@@ -16,6 +15,10 @@ export class ThemeStore {
         this.darkMode = !this.darkMode
         window.localStorage.setItem(darkModeKey, this.darkMode ? "true" : "false")
         updateTheme()
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 
     @computed

@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
@@ -23,7 +23,6 @@ interface OfferButtonProps {
 
 @observer
 export class OfferButton extends React.Component<OfferButtonProps> {
-
     @observable
     isOpen = false
 
@@ -81,6 +80,11 @@ export class OfferButton extends React.Component<OfferButtonProps> {
         }
 
         offerStore.makeOffer(deckName, offer)
+    }
+
+    constructor(props: OfferButtonProps) {
+        super(props)
+        makeObservable(this)
     }
 
     render() {

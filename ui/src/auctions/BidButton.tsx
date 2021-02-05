@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -24,12 +24,16 @@ interface BidButtonProps {
 
 @observer
 export class BidButton extends React.Component<BidButtonProps> {
-
     @observable
     open = false
 
     @observable
     currentBid = ""
+
+    constructor(props: BidButtonProps) {
+        super(props)
+        makeObservable(this)
+    }
 
     componentDidMount(): void {
         this.currentBid = this.props.nextValidBid.toString()

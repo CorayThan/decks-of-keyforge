@@ -7,7 +7,7 @@ import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
 import { ExpandLess, ExpandMore } from "@material-ui/icons"
 import MenuIcon from "@material-ui/icons/Menu"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps, withRouter } from "react-router"
@@ -34,6 +34,10 @@ import { ShareButton } from "./ShareButton"
 class KeyTopbarStore {
     @observable
     displayLeftHamburger = false
+
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const keyTopbarStore = new KeyTopbarStore()
@@ -231,6 +235,10 @@ class RightMenuStore {
         this.open = false
         this.aboutOpen = false
     }
+
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const rightMenuStore = new RightMenuStore()
@@ -386,9 +394,13 @@ const AppLinks = observer(() => (
 
 @observer
 class UserLinks extends React.Component {
-
     @observable
     buttonAnchor?: HTMLElement
+
+    constructor(props: {}) {
+        super(props)
+        makeObservable(this)
+    }
 
     render() {
         if (!userStore.loggedIn() && userStore.loginInProgress) {
@@ -446,9 +458,13 @@ class UserLinks extends React.Component {
 
 @observer
 class UserLinksDesktop extends React.Component {
-
     @observable
     buttonAnchor?: HTMLElement
+
+    constructor(props: {}) {
+        super(props)
+        makeObservable(this)
+    }
 
     render() {
         if (!userStore.loggedIn() && userStore.loginInProgress) {

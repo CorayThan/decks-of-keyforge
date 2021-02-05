@@ -1,13 +1,12 @@
 import axios, { AxiosResponse } from "axios"
 import imageCompression from "browser-image-compression"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { UserImg } from "../generated-src/UserImg"
 import { UserImgTag } from "../generated-src/UserImgTag"
 import { messageStore } from "../ui/MessageStore"
 
 export class UserImgStore {
-
     static readonly CONTEXT = HttpConfig.API + "/user-imgs"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/user-imgs/secured"
 
@@ -69,6 +68,10 @@ export class UserImgStore {
         }
 
         this.uploading = false
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

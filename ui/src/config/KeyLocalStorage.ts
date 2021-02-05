@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { DeckNameId } from "../decks/comparison/CompareDecks"
 import { ListingInfo } from "../generated-src/ListingInfo"
 import { log } from "./Utils"
@@ -67,6 +67,7 @@ class KeyLocalStorage {
     private localStorage = window.localStorage
 
     constructor() {
+        makeObservable(this)
         this.loadDeckListViewType()
         this.loadDeckPageSize()
         this.loadDisplayExtraDeckStats()

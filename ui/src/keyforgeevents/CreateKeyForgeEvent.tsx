@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core"
 import { format, isValid, subMinutes } from "date-fns"
 import { startCase } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing } from "../config/MuiConfig"
@@ -304,6 +304,7 @@ class CreateKeyForgeEventStore {
     }
 
     constructor(private originalEvent?: KeyForgeEventDto) {
+        makeObservable(this)
         this.reset()
     }
 

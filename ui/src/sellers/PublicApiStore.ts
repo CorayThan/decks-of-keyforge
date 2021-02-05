@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 
 export class PublicApiStore {
-
     static readonly API_KEYS_CONTEXT = "/public-api/api-keys/secured"
 
     @observable
@@ -20,6 +19,9 @@ export class PublicApiStore {
             })
     }
 
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const publicApiStore = new PublicApiStore()

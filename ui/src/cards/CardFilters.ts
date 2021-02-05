@@ -1,5 +1,5 @@
 import { isEqual } from "lodash"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import * as React from "react"
 import { Utils } from "../config/Utils"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
@@ -11,7 +11,6 @@ import { SortDirection } from "../generic/SortDirection"
 import { CardType } from "./CardType"
 
 export class CardFilters {
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static rehydrateFromQuery = (queryObject: any): CardFilters => {
         // log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
@@ -123,6 +122,10 @@ export class CardFilters {
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value
+
+    constructor() {
+        makeObservable(this)
+    }
 }
 
 export const prepareCardFiltersForQueryString = (filters: CardFilters): CardFilters => {

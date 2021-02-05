@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { log } from "../../config/Utils"
@@ -26,6 +26,7 @@ export class DeckSortSelectStore implements SelectedStore {
     completedAuctions: boolean
 
     constructor(forSaleOrTrade: boolean, forAuctionOnly: boolean, completedAuctions: boolean, initialSort?: string) {
+        makeObservable(this)
         if (initialSort) {
             this.selectedValue = allDeckSortOptions.filter(option => option.value === initialSort)[0].name
         } else {

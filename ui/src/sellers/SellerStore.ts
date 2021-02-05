@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { observable } from "mobx"
+import { makeObservable, observable } from "mobx"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { HttpConfig } from "../config/HttpConfig"
 import { log } from "../config/Utils"
@@ -9,7 +9,6 @@ import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 
 export class SellerStore {
-
     static readonly CONTEXT = HttpConfig.API + "/sellers"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/sellers/secured"
 
@@ -92,6 +91,10 @@ export class SellerStore {
         await axios.delete(`${SellerStore.SECURE_CONTEXT}/banner`)
         await userStore.loadLoggedInUser()
         this.addingStoreBanner = false
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 }
 

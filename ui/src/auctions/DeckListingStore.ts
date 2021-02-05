@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { computed, observable } from "mobx"
+import { computed, makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
@@ -11,7 +11,6 @@ import { userDeckStore } from "../userdeck/UserDeckStore"
 import { BidPlacementResult } from "./BidPlacementResult"
 
 export class DeckListingStore {
-
     static readonly CONTEXT = HttpConfig.API + "/deck-listings"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/deck-listings/secured"
 
@@ -100,6 +99,10 @@ export class DeckListingStore {
             return this.decksForSale[deckId]
         }
         return undefined
+    }
+
+    constructor() {
+        makeObservable(this)
     }
 
     @computed
