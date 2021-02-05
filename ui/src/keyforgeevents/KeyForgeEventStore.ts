@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log, prettyJson } from "../config/Utils"
 import { KeyForgeEventDto } from "../generated-src/KeyForgeEventDto"
 import { KeyForgeEventFilters } from "../generated-src/KeyForgeEventFilters"
 import { messageStore } from "../ui/MessageStore"
@@ -50,7 +49,6 @@ export class KeyForgeEventStore {
         this.searchingEvents = true
         const response: AxiosResponse<KeyForgeEventDto[]> = await axios.post(KeyForgeEventStore.PUBLIC_CONTEXT + "/search", filters)
         this.foundEvents = response.data
-        log.info(`Found events: ` + prettyJson(this.foundEvents))
         this.searchingEvents = false
     }
 
