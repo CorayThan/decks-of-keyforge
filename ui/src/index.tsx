@@ -1,4 +1,4 @@
-import "mobx-react/batchingForReactDom"
+import { configure } from "mobx"
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { App } from "./App"
@@ -11,6 +11,8 @@ import { sellerRatingsStore } from "./sellerratings/SellerRatingsStore"
 import { sellerStore } from "./sellers/SellerStore"
 import { statsStore } from "./stats/StatsStore"
 import { userStore } from "./user/UserStore"
+
+configure({enforceActions: "never"})
 
 monitoring.initialize()
 TextConfig.loadFonts()
