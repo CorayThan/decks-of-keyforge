@@ -7,7 +7,7 @@ import { Loader } from "../../mui-restyled/Loader"
 import { theoreticalDeckStore } from "./TheoreticalDeckStore"
 
 export const ViewTheoreticalDeck = observer(() => {
-    const {id} = useParams()
+    const {id} = useParams<{id: string}>()
 
     useEffect(() => {
         theoreticalDeckStore.findDeck(id)

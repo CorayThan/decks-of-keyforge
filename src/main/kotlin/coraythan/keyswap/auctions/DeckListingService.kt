@@ -121,7 +121,7 @@ class DeckListingService(
         val newListing = listingInfo.editAuctionId == null
 
         val auction = if (newListing) {
-            val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId, DeckListingStatus.COMPLETE)
+            val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId!!, DeckListingStatus.COMPLETE)
             if (preexistingListing.isNotEmpty()) throw BadRequestException("You've already listed this deck for sale.")
             DeckListing(
                     durationDays = listingInfo.expireInDays,

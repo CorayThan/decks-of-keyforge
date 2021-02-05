@@ -313,17 +313,11 @@ export class DeckStore {
         this.currentDeckPage = decks.page
     }
 
-    private findDecks = async (filters: DeckFilters) => new Promise<DeckPage>(resolve => {
-        axios.post(`${DeckStore.CONTEXT}/filter`, filters)
-            .then((response: AxiosResponse) => {
-                // log.debug(`With filters: ${prettyJson(filters)} Got the filtered decks. decks: ${prettyJson(response.data)}`)
-                const decks: DeckPage = response.data
-                resolve(decks)
-            })
-            .catch(() => {
-                resolve()
-            })
-    })
+    private findDecks = async (filters: DeckFilters) => {
+        const response: AxiosResponse<DeckPage> = await axios.post(`${DeckStore.CONTEXT}/filter`, filters)
+        return response.data
+    }
+
 
     private findDecksCount = (filters: DeckFilters) => {
         this.decksCount = undefined

@@ -9,7 +9,7 @@ import java.util.*
 
 @GenerateTs
 data class ListingInfo(
-        val deckId: Long,
+        val deckId: Long?,
         val acceptingOffers: Boolean,
         val forSaleInCountry: Country,
         val language: DeckLanguage = DeckLanguage.ENGLISH,

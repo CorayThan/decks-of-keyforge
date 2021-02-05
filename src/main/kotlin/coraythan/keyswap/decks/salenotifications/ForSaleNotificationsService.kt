@@ -48,7 +48,7 @@ class ForSaleNotificationsService(
             // Delay 30 seconds to make sure DB is finished saving the user deck
             delay(30000)
             try {
-                val deckId = listingInfo.deckId
+                val deckId = listingInfo.deckId!!
                 val deck = deckRepo.findByIdOrNull(deckId)!!
                 val toSend: List<SaleNotificationQueryDto> = queries!!
                         .filter { queryMatchesDeck(it, deckId) }
