@@ -259,7 +259,7 @@ const DisplayReviewsDialog = observer((props: UserRatingDialogProps) => {
 const CreateReviewDialog = observer((props: UserRatingDialogProps) => {
     const {sellerName, sellerId, store} = props
 
-    const canReview = userStore.contributedOrManual
+    const canReview = userStore.patron
 
     return (
         <>
@@ -311,8 +311,7 @@ const CreateReviewDialog = observer((props: UserRatingDialogProps) => {
                             variant={"subtitle1"}
                             color={"error"}
                         >
-                            To prevent false reviews, you must be a Patron who has paid at least $1 to
-                            leave a review. Patrons are charged on the 1st of the month.
+                            To prevent false reviews, you must be a Patron to leave reviews.
                         </Typography>
                         <Typography
                             variant={"body2"}

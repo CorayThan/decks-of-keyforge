@@ -150,6 +150,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                     disabled={deckOwnershipStore.addingDeckVerificationImage || !ownedByMe}
                                     handleUpload={async (event) => {
 
+                                        log.info("file upload clicked")
                                         if (event.target.files != null) {
                                             deckOwnershipStore.addingDeckVerificationImage = true
                                             const imgFile = event.target.files[0]
@@ -159,15 +160,13 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                                     maxWidthOrHeight: 2048,
                                                     useWebWorker: true
                                                 })
-                                                deckOwnershipStore.saveDeckVerificationImage(compressedImg, deckId, Utils.filenameExtension(imgFile))
+                                                await deckOwnershipStore.saveDeckVerificationImage(compressedImg, deckId, Utils.filenameExtension(imgFile))
                                             } catch (e) {
-
-                                                messageStore.setWarningMessage("Couldn't upload image.")
+                                                messageStore.setWarningMessage("Couldn't upload image. Please try a different image.")
                                             }
                                         } else {
                                             messageStore.setWarningMessage("No file added to upload.")
                                         }
-                                        log.info("file upload clicked")
                                     }}
                                 >
                                     Add Ownership Image

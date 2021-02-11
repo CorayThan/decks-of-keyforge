@@ -15,7 +15,7 @@ import {
     TextField,
     Typography
 } from "@material-ui/core"
-import { format, isValid, subMinutes } from "date-fns"
+import { addMinutes, format, isValid, subMinutes } from "date-fns"
 import { startCase } from "lodash"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
@@ -32,14 +32,19 @@ import { userStore } from "../user/UserStore"
 import { keyForgeEventStore } from "./KeyForgeEventStore"
 import { SelectEventImage } from "./SelectEventImage"
 
-export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEventDto }) => {
-    const {initialEvent} = props
+export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEventDto, copy?: boolean }) => {
+    const {initialEvent, copy} = props
 
-    const [store] = useState(new CreateKeyForgeEventStore(initialEvent))
+    const [store] = useState(new CreateKeyForgeEventStore(initialEvent, copy))
 
     const kfEvent = store.event
 
     const isPatron = userStore.patron
+
+    let buttonName = "Create an Event"
+    if (initialEvent != null) {
+        buttonName = copy ? "Copy" : "Update"
+    }
 
     return (
         <>
@@ -48,7 +53,7 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                 variant={initialEvent == null ? "outlined" : undefined}
                 color={initialEvent == null ? "primary" : undefined}
             >
-                {initialEvent == null ? "Create an Event" : "Update"}
+                {buttonName}
             </Button>
             <Dialog
                 open={store.open}
@@ -191,7 +196,7 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                         Cancel
                     </KeyButton>
                     <KeyButton
-                        onClick={store.reset}
+                        onClick={() => store.reset(false)}
                         disabled={keyForgeEventStore.savingEvent}
                     >
                         Reset
@@ -272,11 +277,17 @@ class CreateKeyForgeEventStore {
         event.description = event.description.trim()
         event.signupLink = event.signupLink?.trim()
         event.discordServer = event.discordServer?.trim()
+        event.entryFee = event.entryFee?.trim()
+        event.duration = event.duration?.trim()
         if (event.discordServer?.length === 0) {
             event.discordServer = undefined
         }
-        event.entryFee = event.entryFee?.trim()
-        event.duration = event.duration?.trim()
+        if (event.entryFee?.length === 0) {
+            event.entryFee = undefined
+        }
+        if (event.duration?.length === 0) {
+            event.duration = undefined
+        }
 
         if (!this.timeInUTC) {
             const modifiedDateTime = subMinutes(TimeUtils.parseDateTime(event.startDateTime), TimeUtils.currentTimeZoneOffset())
@@ -286,7 +297,7 @@ class CreateKeyForgeEventStore {
         return event
     }
 
-    reset = () => {
+    reset = (copy?: boolean) => {
         if (this.originalEvent == null) {
             this.event = {
                 name: "",
@@ -299,13 +310,27 @@ class CreateKeyForgeEventStore {
             }
         } else {
             this.event = Utils.jsonCopy(this.originalEvent)
+            if (copy) {
+                this.event.id = undefined
+            }
+            const modifiedDateTime = addMinutes(TimeUtils.parseDateTime(this.event.startDateTime), TimeUtils.currentTimeZoneOffset())
+            this.event.startDateTime = format(modifiedDateTime, TimeUtils.dateTimeFormat)
+            if (this.event.discordServer == null) {
+                this.event.discordServer = ""
+            }
+            if (this.event.entryFee == null) {
+                this.event.entryFee = ""
+            }
+            if (this.event.duration == null) {
+                this.event.duration = ""
+            }
         }
         this.saveAttempted = false
     }
 
-    constructor(private originalEvent?: KeyForgeEventDto) {
+    constructor(private originalEvent?: KeyForgeEventDto, private copy?: boolean) {
         makeObservable(this)
-        this.reset()
+        this.reset(copy)
     }
 
 }

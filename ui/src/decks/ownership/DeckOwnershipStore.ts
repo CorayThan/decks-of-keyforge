@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
+import { log } from "../../config/Utils"
 import { DeckOwnershipDto } from "./DeckOwnershipDto"
 
 export class DeckOwnershipStore {
@@ -23,6 +24,7 @@ export class DeckOwnershipStore {
         const imageData = new FormData()
         imageData.append("deckImage", deckImage)
 
+        log.info(`Posting new deck image for deck id ${deckId}`)
         await axios.post(
             `${DeckOwnershipStore.SECURE_CONTEXT}/${deckId}`,
             imageData,

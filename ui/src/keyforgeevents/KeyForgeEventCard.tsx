@@ -17,6 +17,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
 
     const width = 320
     const mediaHeight = 160
+    const isOwner = userStore.username === createdByUsername
 
     return (
         <Card style={{width}}>
@@ -53,13 +54,16 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                         <DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord
                     </LinkButtonSafe>
                 )}
-                {userStore.username === createdByUsername && (
-                    <>
-                        <CreateKeyForgeEvent initialEvent={event}/>
-                        <DeleteKeyForgeEvent event={event}/>
-                    </>
-                )}
             </CardActions>
+            {isOwner && (
+                <Box display={"flex"} p={1} pt={0}>
+                    <CreateKeyForgeEvent initialEvent={event}/>
+                    <Box pr={1}/>
+                    <CreateKeyForgeEvent initialEvent={event} copy={true}/>
+                    <Box pr={1}/>
+                    <DeleteKeyForgeEvent event={event}/>
+                </Box>
+            )}
         </Card>
     )
 })
