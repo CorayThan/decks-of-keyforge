@@ -188,12 +188,6 @@ class WebConfiguration(
                                 "Cards of KeyForge",
                                 "Search KeyForge cards. View their ratings in the SAS and AERC rating systems."
                         )
-                    } else if (uri.contains("/spoilers")) {
-                        transformIndexPage(
-                                resource,
-                                "New Cards of KeyForge",
-                                "Search spoilers for KeyForge cards from the upcoming set!"
-                        )
                     } else if (uri.contains("/stats")) {
                         transformIndexPage(
                                 resource,

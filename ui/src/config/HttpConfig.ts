@@ -55,13 +55,18 @@ export class HttpConfig {
         if (axios.isCancel(error)) {
             log.info("Canceled request")
             return
-        } else if (code === 401) {
-            messageStore.setErrorMessage("You are unauthorized to make this request.")
-        } else if (code === 417) {
-            const message = error.response && error.response.data && error.response.data.message
-            messageStore.setErrorMessage(message)
         } else {
-            messageStore.setRequestErrorMessage()
+            let message = error.response?.data?.message?.trim() ?? ""
+            if (message === "") {
+                message = undefined
+            }
+            if (code === 401) {
+                messageStore.setErrorMessage("You are unauthorized to make this request.")
+            } else if (message === undefined) {
+                messageStore.setRequestErrorMessage()
+            } else {
+                messageStore.setErrorMessage(message)
+            }
         }
 
         log.debug(`Reject the error with code ${code} message: ${error.message}`)

@@ -10,8 +10,6 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { log } from "../config/Utils"
 import { Loader } from "../mui-restyled/Loader"
-import { Spoiler } from "../spoilers/Spoiler"
-import { SpoilerView } from "../spoilers/SpoilerView"
 import { uiStore } from "../ui/UiStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters } from "./CardFilters"
@@ -130,8 +128,7 @@ class CardSearchContainer extends React.Component<CardSearchContainerProps> {
 }
 
 interface CardsContainerWithScrollProps {
-    allCards?: KCard[]
-    allSpoilers?: Spoiler[]
+    allCards: KCard[]
     showAllCards: boolean
     showHistory?: boolean
 }
@@ -141,9 +138,6 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
 
     @observable
     cardsToDisplay: KCard[] = []
-
-    @observable
-    spoilersToDisplay: Spoiler[] = []
 
     pageQuantity = 0
 
@@ -170,29 +164,17 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
     resetCardsToDisplay = (props: CardsContainerWithScrollProps) => {
         log.debug("Reset cards to display.")
         this.pageQuantity = 1
-        if (props.allCards == null) {
-            if (props.allSpoilers!.length < 101 || props.showAllCards) {
-                this.spoilersToDisplay = props.allSpoilers!.slice()
-            } else {
-                this.spoilersToDisplay = props.allSpoilers!.slice(0, 40 * this.pageQuantity)
-            }
+        log.debug(`All cards length: ${props.allCards.length}`)
+        if (props.allCards.length < 101 || props.showAllCards) {
+            this.cardsToDisplay = props.allCards.slice()
         } else {
-            log.debug(`All cards length: ${props.allCards.length}`)
-            if (props.allCards.length < 101 || props.showAllCards) {
-                this.cardsToDisplay = props.allCards.slice()
-            } else {
-                this.cardsToDisplay = props.allCards.slice(0, 40 * this.pageQuantity)
-            }
+            this.cardsToDisplay = props.allCards.slice(0, 40 * this.pageQuantity)
         }
     }
 
     updateCardsToDisplay = (props: CardsContainerWithScrollProps) => {
         this.pageQuantity++
-        if (props.allCards == null) {
-            this.spoilersToDisplay = props.allSpoilers!.slice(0, 40 * this.pageQuantity)
-        } else {
-            this.cardsToDisplay = props.allCards.slice(0, 40 * this.pageQuantity)
-        }
+        this.cardsToDisplay = props.allCards.slice(0, 40 * this.pageQuantity)
     }
 
     handleScroll = () => {
@@ -208,30 +190,21 @@ export class CardsContainerWithScroll extends React.Component<CardsContainerWith
     }
 
     render() {
-        const {allCards, allSpoilers, showHistory} = this.props
-        const allCardsLength = allCards == null ? allSpoilers!.length : allCards.length
-        const cardsDisplayedLength = allCards == null ? this.spoilersToDisplay.length : this.cardsToDisplay.length
+        const {allCards, showHistory} = this.props
+        const allCardsLength = allCards.length
+        const cardsDisplayedLength = this.cardsToDisplay.length
         return (
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}} onScroll={this.handleScroll}>
-                {allCards != null && (
-                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                        {this.cardsToDisplay.map(card => (
-                            <CardView
-                                card={card}
-                                key={card.id}
-                                simple={keyLocalStorage.cardListViewType === "image"}
-                                displayHistory={showHistory}
-                            />
-                        ))}
-                    </div>
-                )}
-                {allCards == null && (
-                    <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                        {this.spoilersToDisplay.map(spoiler => (
-                            <SpoilerView spoiler={spoiler} key={spoiler.id}/>
-                        ))}
-                    </div>
-                )}
+                <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                    {this.cardsToDisplay.map(card => (
+                        <CardView
+                            card={card}
+                            key={card.id}
+                            simple={keyLocalStorage.cardListViewType === "image"}
+                            displayHistory={showHistory}
+                        />
+                    ))}
+                </div>
                 {cardsDisplayedLength !== allCardsLength ? (
                     <div ref={this.loadMoreRef}>
                         <Loader/>

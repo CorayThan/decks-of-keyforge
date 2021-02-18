@@ -16,9 +16,6 @@ class ExtraCardInfoEndpoints(
     @GetMapping("/{infoId}")
     fun findInfo(@PathVariable infoId: UUID) = extraCardInfoService.findExtraCardInfo(infoId)
 
-    @GetMapping("/spoiler/{spoilerId}")
-    fun findOrCreateForSpoiler(@PathVariable spoilerId: Long) = extraCardInfoService.findOrCreateExtraCardInfoForSpoiler(spoilerId)
-
     @PostMapping("/secured")
     fun saveInfo(@RequestBody extraCardInfo: ExtraCardInfo) = extraCardInfoService.updateExtraCardInfo(extraCardInfo)
 }

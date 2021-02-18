@@ -37,11 +37,17 @@ object TsGeneratorObj {
     @ExperimentalStdlibApi
     fun generate() {
 
-        File(location).listFiles()?.forEach { it.delete() } ?: error("No directory to generate in: $location")
+        val genDir = File(location)
+
+        if (!genDir.isDirectory) {
+            genDir.mkdirs()
+        }
+
+        genDir.listFiles()?.forEach { it.delete() } ?: error("No directory to generate in: $location")
 
         val scanner = ClassPathScanningCandidateComponentProvider(false)
         scanner.addIncludeFilter(AnnotationTypeFilter(GenerateTs::class.java))
-        val toConvert = scanner.findCandidateComponents("coraythan.keyswap")
+        val toConvert = scanner.findCandidateComponents("coraythan")
                 .map { Class.forName(it.beanClassName) }
 
         for (clazz in toConvert) {

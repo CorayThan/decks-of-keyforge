@@ -10,7 +10,7 @@ import { Cap } from "../decks/search/ConstraintDropdowns"
 import { expansionInfos, expansionNumberForExpansion } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { Expansion } from "../generated-src/Expansion"
-import { includeCardOrSpoiler } from "../spoilers/SpoilerStore"
+import { Rarity } from "../generated-src/Rarity"
 import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
@@ -111,11 +111,14 @@ export class CardStore {
         const toSearch = this.allCards
         let filtered = toSearch.slice().filter(card => {
             const extraInfo = this.findExtraInfoToUse(card)
-            const cardNumsConverted = card.cardNumbers?.map(cardNum => cardNum.expansion === Expansion.ANOMALY_EXPANSION ? {expansion: Expansion.WORLDS_COLLIDE, cardNumber: cardNum.cardNumber} : cardNum)
+            const cardNumsConverted = card.cardNumbers?.map(cardNum => cardNum.expansion === Expansion.ANOMALY_EXPANSION ? {
+                expansion: Expansion.WORLDS_COLLIDE,
+                cardNumber: cardNum.cardNumber
+            } : cardNum)
             return (
                 (filters.aercHistoryDate == null || card.extraCardInfo.publishedDate === filters.aercHistoryDate)
                 &&
-                includeCardOrSpoiler(filters, card)
+                this.includeCard(filters, card)
                 &&
                 (filters.constraints.length === 0 || filters.constraints.every(constraint => {
                     const cardValue = extraInfo[constraint.property as keyof ExtraCardInfo] as number
@@ -394,8 +397,25 @@ export class CardStore {
         const {effectivePower, aercScore, aercScoreMax} = card
         const extraCardInfo = cardStore.findExtraInfoToUse(card)
         const {
-            amberControl, expectedAmber, creatureControl, artifactControl, efficiency, recursion, creatureProtection, disruption, other,
-            amberControlMax, expectedAmberMax, creatureControlMax, artifactControlMax, efficiencyMax, recursionMax, effectivePowerMax, creatureProtectionMax, disruptionMax, otherMax
+            amberControl,
+            expectedAmber,
+            creatureControl,
+            artifactControl,
+            efficiency,
+            recursion,
+            creatureProtection,
+            disruption,
+            other,
+            amberControlMax,
+            expectedAmberMax,
+            creatureControlMax,
+            artifactControlMax,
+            efficiencyMax,
+            recursionMax,
+            effectivePowerMax,
+            creatureProtectionMax,
+            disruptionMax,
+            otherMax
         } = extraCardInfo
 
         let averageAercScore = card.aercScore
@@ -432,6 +452,27 @@ export class CardStore {
 
     private cleanCardName = (cardName: string) => {
         return cardName.replace(this.nonAlphanumericSpaceRegex, "")
+    }
+
+    private includeCard = (filters: CardFilters, card: KCard): boolean => {
+        // Convert fixed rarity to Variant
+        const cardRarity = card.rarity == Rarity.Special || card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
+        const filtersRarities = filters.rarities.map(rarity => (rarity as Rarity | "Special") === "Special" ? Rarity.Variant : rarity)
+
+        return (!filters.title || Utils.cardNameIncludes(card.cardTitle, filters.title))
+            &&
+            (!filters.description || (
+                card.cardText.toLowerCase().includes(filters.description.toLowerCase().trim())
+                || (card.traits ?? []).join("").includes(filters.description.toLowerCase().trim())
+            ))
+            &&
+            (filters.houses.length === 0 || (card.houses != null && card.houses.length > 0 && filters.houses.some(house => card.houses!.includes(house))))
+            &&
+            (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
+            &&
+            (filtersRarities.length === 0 || (cardRarity != null && filtersRarities.indexOf(cardRarity) !== -1))
+            &&
+            (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
     }
 }
 

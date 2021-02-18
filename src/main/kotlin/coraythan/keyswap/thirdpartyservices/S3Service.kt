@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 @Service
@@ -37,18 +35,6 @@ class S3Service(
             )))
             .withRegion(Regions.US_WEST_2)
             .build()
-
-    fun addSpoilerCard(spoilerImage: MultipartFile, key: String) {
-        val spoilerImageNormalFile = File(spoilerImage.originalFilename!!)
-        val fileOutputStream = FileOutputStream(spoilerImageNormalFile)
-        fileOutputStream.write(spoilerImage.bytes)
-        fileOutputStream.close()
-        s3client.putObject(
-                "keyforge-card-images",
-                key,
-                spoilerImageNormalFile
-        )
-    }
 
     fun addDeckImage(deckImage: MultipartFile, deckId: Long, userId: UUID, extension: String): String {
         return addImage(deckImage, "deck-ownership", "$deckId-$userId", extension)

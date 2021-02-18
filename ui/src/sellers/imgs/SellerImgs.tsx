@@ -5,15 +5,11 @@ import { Routes } from "../../config/Routes"
 import { log } from "../../config/Utils"
 import { screenStore } from "../../ui/ScreenStore"
 import { sellerStore } from "../SellerStore"
-import abtabdn from "./abtabdn.png"
-import clint from "./clint-icon.jpg"
 import fifthPlanet from "./fifth-planet.jpg"
 import justiceBlinded from "./jb-logo.png"
 import lucabell from "./lucabell.png"
-import tiggerClone from "./protoman.jpg"
 import reapout from "./reapout.jpg"
 import robotrob3 from "./robotrob3.png"
-import septumus from "./septumuslogo.png"
 import ttc from "./ttc.jpg"
 
 export const sellerImgs: Map<string, string> = new Map()
@@ -22,12 +18,8 @@ sellerImgs.set("wyzman".toLowerCase(), reapout)
 sellerImgs.set("lucabell".toLowerCase(), lucabell)
 sellerImgs.set("jupiter".toLowerCase(), fifthPlanet)
 sellerImgs.set("robotrob3".toLowerCase(), robotrob3)
-sellerImgs.set("tiggerclone".toLowerCase(), tiggerClone)
-sellerImgs.set("septumus".toLowerCase(), septumus)
-sellerImgs.set("justiceblinded".toLowerCase(), justiceBlinded)
-sellerImgs.set("abtabdn".toLowerCase(), abtabdn)
 sellerImgs.set("ttc".toLowerCase(), ttc)
-sellerImgs.set("hida2230".toLowerCase(), clint)
+sellerImgs.set("justiceblinded".toLowerCase(), justiceBlinded)
 
 export const SellerImg = observer((props: { sellerUsername: string, style?: React.CSSProperties }) => {
     const featuredSellers = sellerStore.featuredSellers

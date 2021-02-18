@@ -1,6 +1,5 @@
 package coraythan.keyswap.cards
 
-import coraythan.keyswap.spoilers.SpoilerRepo
 import coraythan.keyswap.synergy.SynTraitValueRepo
 import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory
@@ -16,7 +15,6 @@ class ExtraCardInfoService(
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val currentUserService: CurrentUserService,
         private val synTraitValueRepo: SynTraitValueRepo,
-        private val spoilerRepo: SpoilerRepo
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -25,24 +23,6 @@ class ExtraCardInfoService(
 
         val info = extraCardInfoRepo.findByIdOrNull(id) ?: throw IllegalStateException("No extra card info for id $id")
         return findNextOrCurrentInfo(info)
-    }
-
-    fun findOrCreateExtraCardInfoForSpoiler(id: Long): ExtraCardInfo {
-        val spoiler = spoilerRepo.findByIdOrNull(id) ?: throw IllegalStateException("No spoiler for id $id")
-        val preexistingInfo = extraCardInfoRepo.findByCardName(spoiler.cardTitle)
-        if (preexistingInfo.isNotEmpty()) {
-            return preexistingInfo.first()
-        }
-
-        val extraInfo = ExtraCardInfo(
-                cardName = spoiler.cardTitle,
-                expectedAmber = spoiler.amber.toDouble(),
-                version = cardService.activeAercVersion + 1,
-                published = null,
-                active = true
-        )
-
-        return extraCardInfoRepo.save(extraInfo)
     }
 
     fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): UUID {

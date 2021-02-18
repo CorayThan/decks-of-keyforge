@@ -1,9 +1,9 @@
 import axios from "axios"
 import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
+import { SellerMessage } from "../generated-src/SellerMessage"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
-import { SellerMessage } from "./SellerMessage"
 
 class EmailStore {
     static readonly CONTEXT = HttpConfig.API + "/emails"
