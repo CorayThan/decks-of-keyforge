@@ -56,14 +56,14 @@ export class ReleaseNotes extends React.Component {
                         {
                             highlight: "Team Icons and Homepage Links!",
                             note: "Your team leader can now add an icon and homepage link for your team. This will display your team's icon next to your " +
-                                "name on DoK under certain circumstances, and your team name will be a link for users to visit your team's homepage."
+                                "name on DoK, and your team name will link to your team's homepage."
                         },
                         {
                             highlight: "Minor SAS Changes for Board Clears",
                             note: "I've decided to do an additional pass on board clear AERC scores to improve a couple poor scores from the previous update. " +
                                 "Negative Effective Power on board clears as been made more consistent, and lower for some where it was unusually high. " +
                                 "I've also reduced the excessively high score for Unlocked Gateway and made board clear scores a little more consistent with " +
-                                "each other in general."
+                                "each other in general. I've also made the usual slight adjustments to various SAS scores. "
                         },
                         {
                             highlight: "Offers on decks now public",
