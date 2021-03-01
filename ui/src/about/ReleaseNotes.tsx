@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.4"
+export const latestVersion = "6.5"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,20 +42,36 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
-                {/*<ReleaseNote*/}
-                {/*    releaseNumber={"6.5"}*/}
-                {/*    date={"2/4/2020"}*/}
-                {/*    expanded={true}*/}
-                {/*    releaseNotesWithHighlights={[*/}
-                {/*        {*/}
-                {/*            highlight: "Minor SAS Changes for Board Clears",*/}
-                {/*            note: "I've decided to do an additional pass on board clear AERC scores to improve a couple poor scores from the previous update. " +*/}
-                {/*                "Negative Effective Power on board clears as been made more consistent, and lower for some where it was unusually high. " +*/}
-                {/*                "I've also reduced the excessively high score for Unlocked Gateway and made board clear scores a little more consistent with " +*/}
-                {/*                "each other in general."*/}
-                {/*        },*/}
-                {/*    ]}*/}
-                {/*/>*/}
+                <ReleaseNote
+                    releaseNumber={"6.5"}
+                    date={"3/1/2020"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Experimental Efficiency Bonus Score!",
+                            note: "I've added a new score called 'Efficiency Bonus'. This score will be positive for decks with high SAS and " +
+                                "high efficiency, and negative for decks with low SAS and high efficiency. It represents the increased or decreased " +
+                                "value of playing extra cards based on a deck's SAS. Read more about it on the about SAS page."
+                        },
+                        {
+                            highlight: "Team Icons and Homepage Links!",
+                            note: "Your team leader can now add an icon and homepage link for your team. This will display your team's icon next to your " +
+                                "name on DoK under certain circumstances, and your team name will be a link for users to visit your team's homepage."
+                        },
+                        {
+                            highlight: "Minor SAS Changes for Board Clears",
+                            note: "I've decided to do an additional pass on board clear AERC scores to improve a couple poor scores from the previous update. " +
+                                "Negative Effective Power on board clears as been made more consistent, and lower for some where it was unusually high. " +
+                                "I've also reduced the excessively high score for Unlocked Gateway and made board clear scores a little more consistent with " +
+                                "each other in general."
+                        },
+                        {
+                            highlight: "Offers on decks now public",
+                            note: "When you make an offer to buy a deck through the offer system, the site will now show who has made each offer. This is " +
+                                "meant to increase transparency and trust. Note that bidders on auctions will continue to remain hidden."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.4"}
                     date={"2/1/2020"}
