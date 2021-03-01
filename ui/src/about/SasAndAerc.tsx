@@ -156,6 +156,16 @@ export class SasAndAerc extends React.Component {
                             <ListItem><Typography>3+ trait strength worth of board clears is worth 1 META.</Typography></ListItem>
                         </List>
                     ]}/>
+                    <div style={{marginBottom: spacing(4)}}/>
+                    <InfoListCard title={"Efficiency Bonus Score"} infos={[
+                        "The efficiency bonus score is a new experimental score for decks. I hope to take feedback on it for a period of time and eventually " +
+                        "incorporate it into SAS.",
+                        "It improves the scores of decks with high value and high efficiency, and lowers the scores of decks with low value and high " +
+                        "efficiency. This is meant to model the increased value of playing extra cards of higher value.",
+                        "To calculate this score, a positive or negative bonus is calculated for each source of positive efficiency in a deck. It uses the " +
+                        "following equation: ",
+                        "(F * (((SAS - CardAERC) / 35) * 0.4) / 0.75) - F = Efficiency Bonus"
+                    ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
                     <InfoListCard title={"How SASy is your deck?"} infos={[

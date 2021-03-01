@@ -204,6 +204,7 @@ data class Deck(
 
                 synergyDetails = if (includeDetails) synergies?.synergyCombos else synergies?.synergyCombos?.map { it.copy(synergies = listOf()) },
                 metaScores = synergies?.metaScores ?: mapOf(),
+                efficiencyBonus = synergies?.efficienyBonus ?: 0.0,
 
                 hasOwnershipVerification = hasOwnershipVerification.falseToNull(),
 

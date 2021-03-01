@@ -14,6 +14,7 @@ import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { roundToTens } from "../config/Utils"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { DeckListingStatus } from "../generated-src/DeckListingStatus"
@@ -242,6 +243,14 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                                 <ExpansionIcon expansion={expansion} size={40} white={true}/>
                             </div>
                         </Tooltip>
+                        <ExtraScore
+                            name={"FB"}
+                            score={deck.efficiencyBonus}
+                            tooltip={
+                                "Efficiency Bonus. An experiemental modifier for the efficiency score based " +
+                                "on the total SAS of a deck. Read more on the about SAS page."
+                            }
+                        />
                     </Box>
                     <DeckScoreView deck={deck} style={{marginLeft: spacing(4)}}/>
                 </Box>
@@ -264,13 +273,42 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                 >
                     <HouseBanner houses={houses} expansion={deck.expansion} extras={saleIcons}/>
                     <OrganizedPlayStats deck={deck}/>
-                    <EnhancementsInDeck deck={deck}/>
+                    <Box display={"flex"} justifyContent={"center"}>
+                        <ExtraScore
+                            name={"FB"}
+                            score={deck.efficiencyBonus}
+                            tooltip={
+                                "Efficiency Bonus. An experiemental modifier for the efficiency score based " +
+                                "on the total SAS of a deck. Read more on the about SAS page."
+                            }
+                            mr={4}
+                        />
+                        <EnhancementsInDeck deck={deck}/>
+                    </Box>
                 </Box>
                 <DeckScoreView deck={deck}/>
             </Box>
         )
     }
 })
+
+const ExtraScore = (props: { name: string, score: number, tooltip?: string, mr?: number }) => {
+    const {name, score, tooltip, mr} = props
+    return (
+        <Box mr={mr}>
+            <Tooltip
+                title={tooltip ?? ""}
+            >
+                <Box display={"flex"} alignItems={"flex-end"} justifyContent={"center"}>
+                    <Typography variant={"h5"} style={{fontSize: 30, marginRight: spacing(1), color: "#FFF"}}>
+                        {roundToTens(score)}
+                    </Typography>
+                    <Typography variant={"h5"} style={{fontSize: 20, marginBottom: 4, color: "#FFF"}} noWrap={true}>{name}</Typography>
+                </Box>
+            </Tooltip>
+        </Box>
+    )
+}
 
 const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props

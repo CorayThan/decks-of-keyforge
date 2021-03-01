@@ -1,7 +1,9 @@
-import { Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardType } from "../../cards/CardType"
 import { KCard } from "../../cards/KCard"
+import { spacing } from "../../config/MuiConfig"
+import { TimeUtils } from "../../config/TimeUtils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
 import { SynergyTrait } from "../../generated-src/SynergyTrait"
@@ -209,11 +211,22 @@ export const AercCategoryCounts = (props: AercCatProps) => {
     }
 
     return (
-        <AercCategory
-            name={"Counts"}
-            small={true}
-            infos={firstTwo.concat(secondTwo).concat(thirdTwo)}
-        />
+        <div>
+            <AercCategory
+                name={"Counts"}
+                small={true}
+                infos={firstTwo.concat(secondTwo).concat(thirdTwo)}
+            />
+            {!twoHigh && deck.dateAdded != null && (
+                <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>
+                    <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
+                        <Typography variant={"body2"} color={"textSecondary"} style={{fontSize: "0.75rem"}}>
+                            {TimeUtils.formatShortDate(deck.dateAdded)}
+                        </Typography>
+                    </div>
+                </Tooltip>
+            )}
+        </div>
     )
 }
 

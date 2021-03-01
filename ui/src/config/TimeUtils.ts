@@ -6,6 +6,7 @@ import { log } from "./Utils"
 export class TimeUtils {
 
     private static readonly readableDateFormat = "MMM d, yyyy"
+    private static readonly readableShortDateFormat = "MMM yyyy"
     private static readonly readableDateTimeFormat = "MMM d, yyyy, h:mm a"
     private static readonly eventTimeFormat = "h:mm a z"
     private static readonly eventDateFormat = "EEE MMM d, yy"
@@ -25,6 +26,15 @@ export class TimeUtils {
     static formatDate = (date: string) => {
         try {
             return format(TimeUtils.parseLocalDate(date), TimeUtils.readableDateFormat)
+        } catch (e) {
+            log.warn("Couldn't parse date from " + date)
+            return "bad date"
+        }
+    }
+
+    static formatShortDate = (date: string) => {
+        try {
+            return format(TimeUtils.parseLocalDate(date), TimeUtils.readableShortDateFormat)
         } catch (e) {
             log.warn("Couldn't parse date from " + date)
             return "bad date"

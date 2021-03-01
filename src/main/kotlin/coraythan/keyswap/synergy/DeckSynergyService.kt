@@ -353,8 +353,11 @@ object DeckSynergyService {
         val synergy = roundToInt(synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum(), RoundingMode.HALF_UP)
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
         val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
-        val newSas = roundToInt(a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4) + metaScore, RoundingMode.HALF_UP)
+        val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4)
+        val newSas = roundToInt(preMetaSas + metaScore, RoundingMode.HALF_UP)
         val rawAerc = newSas + antisynergy - synergy - metaScore
+
+        val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
@@ -376,8 +379,20 @@ object DeckSynergyService {
                 creatureProtection = cp,
                 other = o,
 
-                metaScores = metaScores
+                metaScores = metaScores,
+                efficienyBonus = efficiencyBonus,
         )
+    }
+
+    private fun calculateEfficiencyBonus(combos: List<SynergyCombo>, sas: Double): Double {
+        return combos
+                .filter { it.efficiency > 0 }
+                .map { combo ->
+                    val f = combo.efficiency
+                    val efficiencyBonus = (f * (((sas - combo.aercScore) / 35) * 0.4) / 0.75) - f
+                    efficiencyBonus * combo.copies
+                }
+                .sum()
     }
 
     private fun addOutOfHouseTraits(houses: List<House>, cards: List<Card>, traits: MutableMap<SynergyTrait, SynTraitValuesForTrait>) {

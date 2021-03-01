@@ -46,8 +46,8 @@ data class DeckSearchResult(
         val sasRating: Int = 0,
         val synergyRating: Int = 0,
         val antisynergyRating: Int = 0,
-        val adaptiveScore: Int = 0,
         val metaScores: Map<String, Int> = mapOf(),
+        val efficiencyBonus: Double = 0.0,
 
         val totalPower: Int = 0,
         val cardDrawCount: Int? = null,

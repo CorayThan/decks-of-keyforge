@@ -41,7 +41,8 @@ export interface DeckSearchResult {
     sasRating: number
     synergyRating: number
     antisynergyRating: number
-    adaptiveScore: number
+    metaScores?: { [key: string]: number }
+    efficiencyBonus: number
 
     totalPower: number
     cardDrawCount?: number
@@ -63,7 +64,6 @@ export interface DeckSearchResult {
     deckSaleInfo?: DeckSaleInfo[]
     owners?: string[]
     synergyDetails?: SynergyCombo[]
-    metaScores?: { [key: string]: number }
     hasOwnershipVerification: boolean
     dateAdded?: string
 

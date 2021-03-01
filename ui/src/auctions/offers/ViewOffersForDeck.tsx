@@ -38,7 +38,7 @@ const baseOfferTableHeaders = (currency: string, offerToMe: boolean, large?: boo
                 return null
             }
             return (
-                <UserLink username={username}/>
+                <UserLink username={username} plain={true}/>
             )
         }
     }

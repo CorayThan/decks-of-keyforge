@@ -1,9 +1,7 @@
-import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
-import { TimeUtils } from "../../config/TimeUtils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { HasAerc } from "../HasAerc"
 import {
@@ -108,15 +106,6 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
                 <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos}/>
             </div>
-            {deck.dateAdded != null && (
-                <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>
-                    <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
-                        <Typography variant={"body2"} color={"textSecondary"} style={{fontSize: "0.75rem"}}>
-                            {TimeUtils.formatDate(deck.dateAdded)}
-                        </Typography>
-                    </div>
-                </Tooltip>
-            )}
         </div>
     )
 }

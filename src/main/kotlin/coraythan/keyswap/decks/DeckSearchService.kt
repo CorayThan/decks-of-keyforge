@@ -156,25 +156,6 @@ class DeckSearchService(
                         filters.completedAuctions
                 ))
             }
-            if (filters.withOwners) {
-                if (!specialUsers.contains(userHolder.user?.username?.toLowerCase())) {
-                    throw BadRequestException("You do not have permission to see owners.")
-                }
-                val owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
-                    if (userDeck.ownedBy == null) {
-                        null
-                    } else {
-                        if (userDeck.user.allowUsersToSeeDeckOwnership) {
-                            userDeck.ownedBy
-                        } else {
-                            null
-                        }
-                    }
-                }
-                if (owners.isNotEmpty()) {
-                    searchResult = searchResult.copy(owners = owners)
-                }
-            }
             if (filters.teamDecks) {
                 val user = userHolder.user
                 val teamId = user?.teamId ?: throw BadRequestException("You aren't on a team.")
@@ -203,7 +184,32 @@ class DeckSearchService(
                     searchResult = searchResult.copy(owners = owners)
                 }
             }
-            searchResult
+
+            if (filters.withOwners) {
+                if (!specialUsers.contains(userHolder.user?.username?.toLowerCase())) {
+                    throw BadRequestException("You do not have permission to see owners.")
+                }
+                val owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
+                    if (userDeck.ownedBy == null) {
+                        null
+                    } else {
+                        if (userDeck.user.allowUsersToSeeDeckOwnership) {
+                            userDeck.ownedBy
+                        } else {
+                            null
+                        }
+                    }
+                }
+                if (owners.isNotEmpty()) {
+                    searchResult = searchResult.copy(owners = owners)
+                    searchResult
+                } else {
+                    null
+                }
+            } else {
+                searchResult
+            }
+
         }
 
         return DecksPage(
@@ -491,7 +497,6 @@ class DeckSearchService(
                         cardService.deckToHouseAndCards(deck),
                         cards,
                         stats = stats,
-                        // crucibleWins = deckWinsService.crucibleWins,
                         synergies = DeckSynergyService.fromDeckWithCards(deck, cards),
                         includeDetails = true
                 ),
