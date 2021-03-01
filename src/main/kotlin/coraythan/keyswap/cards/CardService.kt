@@ -48,8 +48,7 @@ class CardService(
     lateinit var extraInfo: Map<String, ExtraCardInfo>
     lateinit var nextExtraInfo: Map<String, ExtraCardInfo>
 
-    fun mostRecentUnpublishedVersion() = extraCardInfoRepo.findFirstByOrderByVersionDesc().version
-    fun mostRecentPublishedVersion() = extraCardInfoRepo.findFirstByOrderByVersionDesc().version
+    fun mostRecentPublishedVersion() = extraCardInfoRepo.findFirstByActiveTrueOrderByVersionDesc().version
 
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
@@ -57,12 +56,16 @@ class CardService(
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
-            val mostRecentlyPublished = mostRecentPublishedVersion()
+            val activeVersion = mostRecentPublishedVersion()
 
-            log.info("Most recently published version $mostRecentlyPublished published version $publishedAercVersion")
-            if (mostRecentlyPublished < publishedAercVersion) {
+            val infosToPublish = extraCardInfoRepo.findByPublishedNullAndVersionLessThanEqual(publishedAercVersion)
+            val toPublishCount = infosToPublish.size
+            val toPublishVersions = infosToPublish.groupBy { it.version }.map { "Publishing ${it.value.size} card updates of version ${it.key}" }
 
-                val toPublish = mapInfos(extraCardInfoRepo.findByVersion(mostRecentUnpublishedVersion()))
+            log.info("Highest active version $activeVersion new published version $publishedAercVersion toPublish Count $toPublishCount publishing $toPublishVersions")
+            if (toPublishCount > 0) {
+
+                val toPublish = mapInfos(infosToPublish)
                 val publishTime = ZonedDateTime.now()
                 toPublish.forEach {
                     it.value.active = true
@@ -77,7 +80,7 @@ class CardService(
                 val updated = toPublish.map { it.value }.plus(unpublish)
                 extraCardInfoRepo.saveAll(updated)
                 versionService.revVersion()
-                log.info("Publishing next extra info fully complete. Active aerc version $mostRecentlyPublished published verison $publishedAercVersion " +
+                log.info("Publishing next extra info fully complete. Active aerc version $activeVersion published verison $publishedAercVersion " +
                         "done publishing published " +
                         "${toPublish.size} unpublished ${unpublish.size}")
             }
@@ -92,7 +95,7 @@ class CardService(
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
-            this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(mostRecentUnpublishedVersion()))
+            this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByPublishedNull())
             val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(publishedAercVersion)
                     .groupBy { it.cardName }
                     .mapNotNull { it.value.maxByOrNull { infos -> infos.version } }
@@ -102,7 +105,7 @@ class CardService(
             log.error("Nothing is going to work because we couldn't load extra info!", exception)
             throw IllegalStateException(exception)
         }
-        log.info("Loading extra info fully complete for AERC version ${publishedAercVersion}")
+        log.info("Loading extra info fully complete for AERC version ${publishedAercVersion} found infos for ${this.extraInfo.size} cards")
     }
 
     private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos

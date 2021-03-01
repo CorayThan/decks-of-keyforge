@@ -375,7 +375,7 @@ export class CardStore {
         if (this.allCards != null) {
             const datesSet = new Set(this.allCards.map(card => card.extraCardInfo.publishedDate))
             log.debug("Update dates: " + Array.from(datesSet.values()).sort().reverse())
-            return Array.from(datesSet.values()).filter(date => date != null).sort().reverse()
+            return Array.from(datesSet.values()).filter(date => date != null).sort().slice(1).reverse()
         }
         return []
     }
