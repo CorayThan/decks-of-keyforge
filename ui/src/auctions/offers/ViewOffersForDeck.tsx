@@ -2,13 +2,12 @@ import { Paper, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
 import { OfferDto } from "../../generated-src/OfferDto"
 import { countryToLabel } from "../../generic/CountryUtils"
 import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
-import { KeyLink } from "../../mui-restyled/KeyLink"
 import { screenStore } from "../../ui/ScreenStore"
+import { UserLink } from "../../user/UserLink"
 import { userStore } from "../../user/UserStore"
 import { OfferActions } from "./OfferActions"
 
@@ -39,9 +38,7 @@ const baseOfferTableHeaders = (currency: string, offerToMe: boolean, large?: boo
                 return null
             }
             return (
-                <KeyLink to={Routes.userProfilePage(username)}>
-                    {username}
-                </KeyLink>
+                <UserLink username={username}/>
             )
         }
     }

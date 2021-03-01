@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Checkbox,
     Dialog,
@@ -19,18 +20,25 @@ import { observer } from "mobx-react"
 import React, { useState } from "react"
 import { spacing } from "../config/MuiConfig"
 import { MyDokSubPaths, Routes } from "../config/Routes"
+import { Utils } from "../config/Utils"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { TeamInfo } from "../generated-src/TeamInfo"
 import { UserSearchResult } from "../generated-src/UserSearchResult"
 import { HelperText } from "../generic/CustomTypographies"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { LinkButton } from "../mui-restyled/LinkButton"
+import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
+import { TeamIcon } from "./TeamIcon"
 import { teamStore } from "./TeamStore"
+import { UploadTeamImage } from "./UploadTeamImage"
 
 class TeamManagementStore {
     @observable
     username = ""
+
+    @observable
+    homepage = ""
 
     @observable
     manageTeam = false
@@ -47,8 +55,9 @@ class TeamManagementStore {
         return true
     }
 
-    constructor() {
+    constructor(initialHomepage: string) {
         makeObservable(this)
+        this.homepage = initialHomepage
     }
 }
 
@@ -92,9 +101,9 @@ const memberTableHeaders = (isLeader: boolean, leaderUsername: string, store: Te
 }
 
 export const MyTeamPage = observer((props: { team: TeamInfo }) => {
-    const {name, leader, invites, members} = props.team
+    const {name, leader, invites, members, teamImg, homepage} = props.team
 
-    const [teamManagementStore] = useState(new TeamManagementStore())
+    const [teamManagementStore] = useState(new TeamManagementStore(homepage ?? ""))
 
     const isLeader = leader === userStore.username
 
@@ -103,8 +112,16 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
 
     return (
         <div>
-            <div style={{display: "flex", marginBottom: spacing(4)}}>
+            <div style={{display: "flex", marginBottom: spacing(4), alignItems: "center"}}>
                 <Typography variant={"h4"}>{name}</Typography>
+                {isLeader ? (
+                    <UploadTeamImage
+                        teamImg={teamImg}
+                        style={{marginLeft: spacing(4)}}
+                    />
+                ) : (
+                    <TeamIcon size={36} teamImg={teamImg} style={{marginLeft: spacing(4)}}/>
+                )}
                 <LinkButton
                     variant={"outlined"}
                     color={"primary"}
@@ -135,7 +152,7 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
             </div>
             {isLeader && (
                 <Grid container={true} spacing={4}>
-                    <Grid item={true} sm={12} md={6}>
+                    <Grid item={true} xs={12} md={6} lg={4}>
 
                         <Paper style={{padding: spacing(2)}}>
                             <div style={{display: "flex", alignItems: "top"}}>
@@ -167,7 +184,7 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                             </HelperText>
                         </Paper>
                     </Grid>
-                    <Grid item={true} sm={12} md={6}>
+                    <Grid item={true} xs={12} md={6} lg={4}>
 
                         <Paper style={{padding: spacing(2)}}>
                             <Typography variant={"h6"} style={{marginBottom: spacing(2)}}>Active invites</Typography>
@@ -193,6 +210,33 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                             ) : (
                                 <Typography>Invite a new member to see open invites!</Typography>
                             )}
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} xs={12} lg={4}>
+                        <Paper style={{padding: spacing(2)}}>
+                            <Box display={"flex"} alignItems={"top"}>
+                                <TextField
+                                    value={teamManagementStore.homepage}
+                                    onChange={event => teamManagementStore.homepage = event.target.value}
+                                    label={"Team Homepage"}
+                                    variant={"outlined"}
+                                    fullWidth={true}
+                                    helperText={"Your team's URL homepage."}
+                                    error={teamManagementStore.homepage != "" && !Utils.validateUrl(teamManagementStore.homepage)}
+                                />
+                                <Box ml={2}>
+                                    <Button
+                                        disabled={teamManagementStore.homepage === homepage || (teamManagementStore.homepage != "" && !Utils.validateUrl(teamManagementStore.homepage))}
+                                        onClick={async () => {
+                                            await teamStore.updateHomepage(teamManagementStore.homepage)
+                                            await teamStore.findTeamInfo()
+                                            messageStore.setSuccessMessage("Updated team homepage!")
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                                </Box>
+                            </Box>
                         </Paper>
                     </Grid>
                 </Grid>

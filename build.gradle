@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.4.30'
+        kotlinVersion = '1.4.31'
         springBootVersion = '2.4.2'
         queryDslVersion = "4.4.0"
         shedlockVersion = "4.20.0"

@@ -79,14 +79,14 @@ class UserDeckService(
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val team = user.team
+        val teamId = user.teamId
         if (!mark && deckListingRepo.existsBySellerIdAndDeckIdAndStatusNot(user.id, deckId, DeckListingStatus.COMPLETE)) {
             throw BadRequestException("Please unlist the deck for sale before removing it from your decks.")
         }
         modOrCreateUserDeck(deckId, user, null) {
             it.copy(
                     ownedBy = if (mark) user.username else null,
-                    teamId = if (mark && team != null) team.id else null
+                    teamId = if (mark && teamId != null) teamId else null
             )
         }
 
@@ -137,5 +137,19 @@ class UserDeckService(
         return userDeckRepo.findByUserId(currentUser.id).map {
             it.toDto()
         }
+    }
+
+    fun removeAllOwned() {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        log.info("Start removing all owned decks for ${currentUser.username}")
+
+        var count = 0
+        userDeckRepo.findByUserId(currentUser.id).forEach {
+            count++
+            this.markAsOwned(it.deck.id, false)
+            if (count % 100 == 0) log.info("Removed $count decks from account for ${currentUser.username}")
+        }
+
+        log.info("Done removing all owned decks for ${currentUser.username}")
     }
 }

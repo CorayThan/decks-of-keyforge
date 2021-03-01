@@ -622,7 +622,7 @@ data class SynTraitValuesForTrait(
                     // For matching traits on the synergy
                     val synergyTraitsMatch = traitsOnSynergyMatch(synergyValue.cardTraits, traitsCard?.traits, synergyValue.notCardTraits)
                     // For matching traits on the trait
-                    val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits, traitsCard?.traits, it.value.notCardTraits)
+                    val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits, card.traits, it.value.notCardTraits)
                     val match = typeMatch && playerMatch && houseMatch && powerMatch && synergyTraitsMatch && traitsTraitMatch
 
                     // log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")

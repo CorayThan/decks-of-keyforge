@@ -53,6 +53,7 @@ export class FunnyDeck extends React.Component<FunnyDeckProps> {
                                 userDeckStore.funny(deckName, deckId, funny)
                             }}
                             disabled={!userDeckStore.userDecksLoaded()}
+                            size={"small"}
                         >
                             {funny ? <TagFacesIcon color={"primary"}/> : <TagFacesIcon/>}
                         </IconButton>

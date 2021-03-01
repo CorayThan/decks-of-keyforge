@@ -9,7 +9,7 @@ import { cardStore } from "../cards/CardStore"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths, MyDokSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
-import { DiscordButton, DiscordNamedButton } from "../thirdpartysites/discord/DiscordButton"
+import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
@@ -696,9 +696,6 @@ export class ReleaseNotes extends React.Component {
                                 "to see and search."
                         },
                         {
-                            note: (<NotesLink style={{marginRight: spacing(2)}} to={Routes.spoilers}>Mass Mutation Spoilers</NotesLink>)
-                        },
-                        {
                             highlight: "Help create spoilers",
                             note: "If you help add spoilers you can get kudos on the spoilers page, as well as a temporary free " +
                                 "$5 site subscription! Join the Discord server and message CorayThan in the Spoilers channel to help out."
@@ -1070,14 +1067,6 @@ export class ReleaseNotes extends React.Component {
                                 "on DoK! They were very generous in providing a data set to build the spoilers from. " +
                                 "Join their discord to discuss the new spoilers, and take a look at them here!"
                         },
-                        {
-                            note: (
-                                <div style={{display: "flex"}}>
-                                    <NotesLink to={Routes.spoilers}>Worlds Collide</NotesLink>
-                                    <DiscordNamedButton name={"Sanctumonius"} link={"https://discord.gg/3dSVb6v"} style={{marginLeft: spacing(2)}}/>
-                                </div>
-                            )
-                        }
                     ]}
                 />
                 <ReleaseNote

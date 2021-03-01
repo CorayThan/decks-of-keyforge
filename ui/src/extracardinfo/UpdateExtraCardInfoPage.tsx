@@ -39,9 +39,6 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SelectedOptions } from "../mui-restyled/SelectedOptions"
-import { Spoiler } from "../spoilers/Spoiler"
-import { spoilerStore } from "../spoilers/SpoilerStore"
-import { SpoilerView } from "../spoilers/SpoilerView"
 import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
 import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
@@ -77,15 +74,14 @@ export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfo
         if (extraCardInfo == null || !cardStore.cardsLoaded) {
             return <Loader/>
         }
-        const card = cardStore.fullCardFromCardName(extraCardInfo.cardName)
+        const card = cardStore.fullCardFromCardName(extraCardInfo.cardName)!
         return <UpdateExtraCardInfo extraCardInfo={extraCardInfo} card={card}/>
     }
 }
 
 interface UpdateExtraCardInfoProps {
     extraCardInfo: ExtraCardInfo
-    card?: KCard
-    spoiler?: Spoiler
+    card: KCard
 }
 
 @observer
@@ -280,28 +276,16 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     }
 
     render() {
-        const {card, spoiler} = this.props
+        const {card} = this.props
         let nextId
         let prevId
-        if (card != null) {
-            const filteredCards = cardStore.allCards
-            if (filteredCards.length > 0 && this.props.extraCardInfo != null) {
-                const findWith = filteredCards.find(filterCard => filterCard.id === card.id)
-                if (findWith != null) {
-                    const idx = filteredCards.indexOf(findWith)
-                    nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
-                    prevId = idx > 0 ? filteredCards[idx - 1].extraCardInfo.id : undefined
-                }
-            }
-        } else if (spoiler != null) {
-            const filteredSpoilers = spoilerStore.spoilers?.filter(filterSpoiler => !filterSpoiler.reprint)
-            if (filteredSpoilers != null && filteredSpoilers.length > 0) {
-                const findWith = filteredSpoilers.find(filterSpoiler => filterSpoiler.id === spoiler.id)
-                if (findWith != null) {
-                    const idx = filteredSpoilers.indexOf(findWith)
-                    nextId = idx > -1 && idx < filteredSpoilers.length - 1 ? filteredSpoilers[idx + 1].id : undefined
-                    prevId = idx > 0 ? filteredSpoilers[idx - 1].id : undefined
-                }
+        const filteredCards = cardStore.allCards
+        if (filteredCards.length > 0 && this.props.extraCardInfo != null) {
+            const findWith = filteredCards.find(filterCard => filterCard.id === card.id)
+            if (findWith != null) {
+                const idx = filteredCards.indexOf(findWith)
+                nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
+                prevId = idx > 0 ? filteredCards[idx - 1].extraCardInfo.id : undefined
             }
         }
         return (
@@ -312,26 +296,19 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                     justifyContent: "center"
                 }}
             >
-                {card && (
-                    <div>
-                        <CardView card={card}/>
-                    </div>
-                )}
-                {spoiler && (
-                    <div>
-                        <SpoilerView spoiler={spoiler}/>
-                    </div>
-                )}
+                <div>
+                    <CardView card={card}/>
+                </div>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
                             <Typography variant={"h4"}>
-                                {card?.cardTitle ?? spoiler?.cardTitle}'s AERC
+                                {card.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             {prevId != null && (
                                 <UnstyledLink
-                                    to={card != null ? Routes.editExtraCardInfo(prevId) : Routes.editSpoilerAerc(prevId)}
+                                    to={Routes.editExtraCardInfo(prevId)}
                                     style={{marginLeft: spacing(2)}}
                                 >
                                     <IconButton>
@@ -341,7 +318,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                             )}
                             {nextId != null && (
                                 <UnstyledLink
-                                    to={card != null ? Routes.editExtraCardInfo(nextId) : Routes.editSpoilerAerc(nextId)}
+                                    to={Routes.editExtraCardInfo(nextId)}
                                     style={{marginLeft: spacing(2)}}>
                                     <IconButton>
                                         <ChevronRight/>
@@ -546,7 +523,6 @@ interface AddTraitProps {
     synergies: SynTraitValue[]
     reset: (resetTo: ExtraCardInfo) => void
     extraCardId: string
-    spoilerId?: number
 }
 
 @observer
@@ -646,7 +622,7 @@ class AddTrait extends React.Component<AddTraitProps> {
 
     render() {
 
-        const {traits, synergies, reset, spoilerId, extraCardId} = this.props
+        const {traits, synergies, reset, extraCardId} = this.props
 
         const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
 
@@ -948,15 +924,9 @@ class AddTrait extends React.Component<AddTraitProps> {
                         onClick={async () => {
                             const cardName = this.cardName
                             if (cardName) {
-                                let spoilerInfo
-                                if (spoilerId != null) {
-                                    spoilerInfo = await extraCardInfoStore.findCreateSpoilerAercNoSet(spoilerId)
-                                }
                                 const nextInfo = cardStore.findNextExtraInfoForCard(cardName)
                                 let resetWith
-                                if (spoilerInfo != null) {
-                                    resetWith = spoilerInfo
-                                } else if (nextInfo != null) {
+                                if (nextInfo != null) {
                                     resetWith = nextInfo
                                 } else {
                                     const card = cardStore.fullCardFromCardName(cardName)!

@@ -40,6 +40,8 @@ import { UserType } from "../../generated-src/UserType"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerRatingView } from "../../sellerratings/SellerRatingView"
+import { TeamBadge } from "../../teams/TeamBadge"
+import { teamStore } from "../../teams/TeamStore"
 import { patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
@@ -65,7 +67,7 @@ export class UserSearchSortStore {
     page = 0
 
     @observable
-    orderBy: keyof UserSearchResult = "deckCount"
+    orderBy: keyof UserSearchResultWithTeamName = "deckCount"
 
     @observable
     order: SortOrder = "desc"
@@ -95,7 +97,7 @@ export class UserSearchSortStore {
         this.filters = filters
     }
 
-    createSortHandler = (property: keyof UserSearchResult) => () => {
+    createSortHandler = (property: keyof UserSearchResultWithTeamName) => () => {
         const isDesc = this.orderBy === property && this.order === "desc"
         this.order = isDesc ? "asc" : "desc"
         this.orderBy = property
@@ -157,7 +159,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         filteredUsers = filteredUsers.filter(user => user.username.toLowerCase().includes(username.trim().toLowerCase()))
     }
     if (withTeams) {
-        filteredUsers = filteredUsers.filter(user => user.teamName != null)
+        filteredUsers = filteredUsers.filter(user => user.teamId != null)
     }
     if (hasRatings) {
         filteredUsers = filteredUsers.filter(user => user.rating > 0)
@@ -322,7 +324,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                             </TableCell>
                                         )}
                                         <TableCell>
-                                            {user.teamName}
+                                            {user.teamId == null ? "" : <TeamBadge teamId={user.teamId} />}
                                         </TableCell>
                                         <TableCell align={"right"}>
                                             {user.deckCount}
@@ -397,7 +399,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
     )
 })
 
-const sortUsers = (users: UserSearchResult[], orderBy: keyof UserSearchResult, order: SortOrder): UserSearchResult[] => {
+const sortUsers = (users: UserSearchResult[], orderBy: keyof UserSearchResultWithTeamName, order: SortOrder): UserSearchResult[] => {
     let filtered: UserSearchResult[] = users
     if (orderBy === "forSaleCount") {
         filtered = users.filter(user => user.forSaleCount > 0)
@@ -417,16 +419,27 @@ const sortUsers = (users: UserSearchResult[], orderBy: keyof UserSearchResult, o
         filtered = users.filter(user => user.mavericks > 0)
     } else if (orderBy === "anomalies") {
         filtered = users.filter(user => user.anomalies > 0)
+    } else if (orderBy === "teamName") {
+        filtered = users.filter(user => user.teamId != null)
     }
-    const sorted = sortBy(filtered, [orderBy, "username"])
+    let sorted
+    if (orderBy === "teamName") {
+        sorted = sortBy(filtered, (user) => {
+            return teamStore.teamNames.get(user.teamId!)?.name + user.username
+        })
+    } else {
+        sorted = sortBy(filtered, [orderBy, "username"])
+    }
     if (order === "desc") {
         sorted.reverse()
     }
     return sorted
 }
 
+type UserSearchResultWithTeamName = UserSearchResult & { teamName: string }
+
 interface HeadCell {
-    id: keyof UserSearchResult
+    id: keyof UserSearchResultWithTeamName
     label: string
     numeric?: boolean
 }

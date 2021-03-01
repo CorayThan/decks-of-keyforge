@@ -1,0 +1,5 @@
+ALTER TABLE team
+    ADD COLUMN team_img VARCHAR(255);
+
+ALTER TABLE team
+    ADD COLUMN homepage VARCHAR(255);

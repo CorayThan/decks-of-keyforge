@@ -26,6 +26,7 @@ import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { HouseBanner } from "../houses/HouseBanner"
 import { HouseLabel } from "../houses/HouseUtils"
+import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { InlineDeckNote } from "../notes/DeckNote"
 import { DeckTagsView } from "../tags/DeckTagsView"
@@ -119,6 +120,14 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardContent>
                             {!hideActions && !fake && (
                                 <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
+                                    {fullVersion && !compact ? (
+                                        <KeyButton
+                                            href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
+                                            color={"primary"}
+                                        >
+                                            MV
+                                        </KeyButton>
+                                    ) : null}
                                     {compact ? null : (<CompareDeckButton deck={deck}/>)}
                                     {compact ? null : (<MyDecksButton deck={deck}/>)}
                                     <div style={{flexGrow: 1, margin: 0}}/>

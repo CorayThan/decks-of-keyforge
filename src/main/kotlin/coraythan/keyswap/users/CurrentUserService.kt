@@ -5,11 +5,13 @@ import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class CurrentUserService(
-        private val userRepo: KeyUserRepo
+        private val userRepo: KeyUserRepo,
+        private val bCryptPasswordEncoder: BCryptPasswordEncoder,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -53,5 +55,11 @@ class CurrentUserService(
     fun adminOrUnauthorized() {
         val userType = loggedInUser()?.type
         if (userType != UserType.ADMIN) throw UnauthorizedException("Unauthorized")
+    }
+
+    fun passwordMatches(password: String) {
+        log.info("Password: $password")
+        val user = loggedInUserOrUnauthorized()
+        if (!bCryptPasswordEncoder.matches(password, user.password)) throw UnauthorizedException("Incorrect password")
     }
 }

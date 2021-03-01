@@ -20,10 +20,8 @@ type CardViewType = "image" | "full" | "table"
 type DeckViewType = "graphs" | "grid" | "table"
 
 interface GenericStorage {
-    hideSpoilerKudosThree?: boolean
     showMoreDeckSearchOptions?: boolean
     userRows?: number
-    agreedToSpoilerCreatureRules?: boolean
     viewNotes?: boolean
     viewTags?: boolean
 

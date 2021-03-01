@@ -5,6 +5,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import org.junit.Assert.assertEquals
@@ -118,6 +119,67 @@ class CardTraitsTest {
         assertEquals(0.0, troopResults.synergyCombos.find { combo -> combo.cardName == "dust pixie" }?.expectedAmber ?: -100.0, 0.001)
         assertEquals(1.0, troopResults.synergyCombos.find { combo -> combo.cardName == "troop call" }?.other ?: -100.0, 0.001)
         assertEquals(1, troopResults.synergyRating)
+    }
+
+    val mutagenicCards = listOf<Card>()
+            .plus(
+                    basicCard().copy(
+                            id = "Subject Kirby",
+                            house = House.StarAlliance,
+                            traits = setOf("MUTANT"),
+                            cardTitle = "Subject Kirby",
+                            cardType = CardType.Creature,
+                            extraCardInfo = ExtraCardInfo(
+                                    efficiency = 2.0,
+                                    efficiencyMax = 4.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.causesReaping, 4)
+                                    )
+                            )
+                    )
+            )
+            .plus(
+                    basicCard().copy(
+                            id = "Commander Chan",
+                            house = House.StarAlliance,
+                            traits = setOf("HUMAN"),
+                            cardTitle = "Commander Chan",
+                            cardType = CardType.Creature,
+                            extraCardInfo = ExtraCardInfo(
+                                    expectedAmber = 2.0,
+                                    expectedAmberMax = 4.0,
+                                    synergies = listOf(
+                                            SynTraitValue(SynergyTrait.causesReaping, 4)
+                                    )
+                            )
+                    )
+            )
+            .plus(
+                    basicCard().copy(
+                            id = "Mutagenic Serum",
+                            house = House.Logos,
+                            cardTitle = "Mutagenic Serum",
+                            cardType = CardType.Artifact,
+                            extraCardInfo = ExtraCardInfo(
+                                    traits = listOf(
+                                            SynTraitValue(
+                                                    SynergyTrait.uses,
+                                                    4,
+                                                    cardTypesInitial = listOf(CardType.Creature),
+                                                    house = SynTraitHouse.continuous,
+                                                    cardTraitsString = "MUTANT"
+                                            )
+                                    )
+                            )
+                    )
+            )
+
+
+    @Test
+    fun testMutagenicSerum() {
+        val mutagenicResults = DeckSynergyService.fromDeckWithCards(boringDeck, mutagenicCards)
+        assertEquals(2.0, mutagenicResults.expectedAmber, 0.001)
+        assertEquals(3.0, mutagenicResults.efficiency, 0.001)
     }
 
 }

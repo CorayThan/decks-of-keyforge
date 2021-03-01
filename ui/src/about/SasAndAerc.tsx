@@ -211,7 +211,7 @@ export class SasAndAerc extends React.Component {
                                 aercScore: 60,
                                 sasRating: 63,
                                 synergyRating: 5,
-                                antisynergyRating: -2 ,
+                                antisynergyRating: 2,
                                 sasPercentile: 50.0
                             } as DeckSearchResult}
                         />,

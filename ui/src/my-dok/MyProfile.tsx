@@ -30,6 +30,7 @@ import * as QueryString from "query-string"
 import * as React from "react"
 import ReactDOM from "react-dom"
 import { RouteComponentProps } from "react-router"
+import { deckListingStore } from "../auctions/DeckListingStore"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, MyDokSubPaths, Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
@@ -41,6 +42,7 @@ import { countryToLabel, euCountries } from "../generic/CountryUtils"
 import { EventValue } from "../generic/EventValue"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { KeyCard } from "../generic/KeyCard"
+import { SafeKeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader, LoaderSize } from "../mui-restyled/Loader"
 import { LinkPatreon } from "../thirdpartysites/patreon/LinkPatreon"
@@ -499,6 +501,21 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                         </CardContent>
                         <CardActions>
                             <LinkButton href={Routes.userProfilePage(profile.username)}>Public Profile</LinkButton>
+                            <SafeKeyButton
+                                title={"Remove all decks from your account?"}
+                                description={
+                                    "This will unlist all decks for sale, and remove all decks you have marked as owned from your account. " +
+                                    "You cannot have any active auctions to perform this action."
+                                }
+                                warning={"All your decks will be gone!"}
+                                onConfirm={async (password) => {
+                                    await deckListingStore.removeAllDecks(password)
+                                }}
+                                image={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/destroy-them-all.png"}
+                                confirmButtonName={"Remove them all"}
+                            >
+                                Remove All Decks
+                            </SafeKeyButton>
                             <div style={{flexGrow: 1}}/>
                             <LinkPatreon redirectPath={MyDokSubPaths.profile}/>
                             <Button

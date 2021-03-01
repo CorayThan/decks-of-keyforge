@@ -8,6 +8,7 @@ interface DeckListingRepo : CrudRepository<DeckListing, UUID> {
     fun findAllByStatusEqualsAndEndDateTimeLessThanEqual(status: DeckListingStatus, endDateTimeLessThanOrEqualTo: ZonedDateTime): List<DeckListing>
 
     fun findAllBySellerIdAndStatus(sellerId: UUID, status: DeckListingStatus): List<DeckListing>
+    fun existsBySellerIdAndStatus(sellerId: UUID, status: DeckListingStatus): Boolean
     fun findAllBySellerIdAndStatusNot(sellerId: UUID, status: DeckListingStatus): List<DeckListing>
 
     fun findBySellerIdAndDeckIdAndStatusNot(sellerId: UUID, deckId: Long, status: DeckListingStatus): List<DeckListing>

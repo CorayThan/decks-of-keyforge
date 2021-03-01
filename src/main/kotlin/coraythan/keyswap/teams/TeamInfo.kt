@@ -15,11 +15,22 @@ data class TeamInfo(
         val members: List<UserSearchResult>,
         val invites: List<String>,
         val leader: String,
-        val name: String
+        val name: String,
+        val teamImg: String?,
+        val homepage: String?,
 )
 
 @GenerateTs
 data class TeamInviteInfo(
         val teamName: String,
         val teamId: UUID
+)
+
+@GenerateTs
+data class TeamName(
+        val id: UUID,
+        val name: String,
+        val teamImg: String?,
+        val homepage: String?,
+        val members: List<String>
 )

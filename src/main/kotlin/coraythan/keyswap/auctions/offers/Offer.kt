@@ -49,8 +49,7 @@ data class Offer(
 
     fun offerDetailsReadable() = "${auction.currencySymbol}${amount}"
 
-    fun toDto(currentUser: KeyUser?, offsetMinutes: Int): OfferDto {
-        val displaySentBy = currentUser?.id == this.sender.id || currentUser?.id == this.recipient.id
+    fun toDto(offsetMinutes: Int): OfferDto {
         return OfferDto(
                 deckListingId = this.auction.id,
                 deckId = this.auction.deck.keyforgeId,
@@ -59,7 +58,7 @@ data class Offer(
                 status = this.status,
                 recipientArchived = recipientArchived,
                 senderArchived = senderArchived,
-                sentBy = if (displaySentBy) this.sender.username else null,
+                sentBy = this.sender.username,
                 receivedBy = this.recipient.username,
                 expired = this.expiresTime.isBefore(LocalDateTime.now()),
                 sentTime = this.sentTime.toReadableStringWithOffsetMinutes(offsetMinutes, localDateTimeFormatterWithYear),
@@ -79,7 +78,7 @@ data class Offer(
     }
 }
 
-fun List<Offer>.toOffersForDeck(currentUser: KeyUser, offsetMinutes: Int): OffersForDeck {
+fun List<Offer>.toOffersForDeck(offsetMinutes: Int): OffersForDeck {
     val firstOffer = this.first()
     val auction = firstOffer.auction
     val deck = auction.deck
@@ -90,7 +89,7 @@ fun List<Offer>.toOffersForDeck(currentUser: KeyUser, offsetMinutes: Int): Offer
                     auction.currencySymbol,
                     deck.sasRating
             ),
-            this.sortedDescending().map { it.toDto(currentUser, offsetMinutes) }
+            this.sortedDescending().map { it.toDto(offsetMinutes) }
     )
 }
 

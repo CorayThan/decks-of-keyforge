@@ -32,4 +32,8 @@ class DeckListingEndpoints(
     @GetMapping("/secured/listings-for-user")
     fun activeListingsForUser() = deckListingService.findActiveListingsForUser()
 
+    @PostMapping("/secured/remove-all")
+    fun removeAllDecks(@RequestBody password: PasswordHolder) = deckListingService.removeAllDecks(password.password)
 }
+
+data class PasswordHolder(val password: String)

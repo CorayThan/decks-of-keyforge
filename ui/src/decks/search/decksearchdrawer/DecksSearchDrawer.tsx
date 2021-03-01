@@ -1,4 +1,4 @@
-import { Box, Divider, FormGroup, IconButton, Link, Tooltip } from "@material-ui/core"
+import { Box, Divider, FormGroup, IconButton, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -32,6 +32,7 @@ import { LinkButton } from "../../../mui-restyled/LinkButton"
 import { messageStore } from "../../../ui/MessageStore"
 import { screenStore } from "../../../ui/ScreenStore"
 import { UserSearchSuggest } from "../../../user/search/UserSearchSuggest"
+import { UserLink } from "../../../user/UserLink"
 import { userStore } from "../../../user/UserStore"
 import { deckStore } from "../../DeckStore"
 import { CreateForSaleQuery } from "../../salenotifications/CreateForSaleQuery"
@@ -289,10 +290,14 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     </div>
                                     {showDecksOwner && (
                                         <div style={{display: "flex", alignItems: "center"}}>
-                                            <Typography variant={"body2"}>
-                                                Owner: <Link href={Routes.userProfilePage(owner)} target={"_blank"}>{owner}</Link>
-                                            </Typography>
-                                            <IconButton onClick={() => this.props.filters.owner = ""}><Delete fontSize={"small"}/></IconButton>
+                                            <UserLink username={owner}/>
+                                            <IconButton
+                                                style={{marginLeft: spacing(1)}}
+                                                size={"small"}
+                                                onClick={() => this.props.filters.owner = ""}
+                                            >
+                                                <Close fontSize={"small"}/>
+                                            </IconButton>
                                         </div>
                                     )}
                                     {showLoginForCountry ? (
@@ -431,12 +436,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                         alignItems={"center"}
                                                         style={{margin: spacing(1, 1, 0, 0)}}
                                                     >
-                                                        <Link
-                                                            href={Routes.userProfilePage(ownedBy)}
-                                                            target={"_blank"}
-                                                        >
-                                                            {ownedBy}
-                                                        </Link>
+                                                        <UserLink username={ownedBy}/>
                                                         <IconButton
                                                             style={{marginLeft: spacing(1)}}
                                                             size={"small"}

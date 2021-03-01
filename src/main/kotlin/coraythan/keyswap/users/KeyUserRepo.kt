@@ -25,7 +25,7 @@ interface KeyUserRepo : JpaRepository<KeyUser, UUID>, QuerydslPredicateExecutor<
     fun existsByApiKey(apiKey: String): Boolean
 
     @Modifying
-    @Query("UPDATE KeyUser keyUser SET keyUser.team = null WHERE keyUser.id = ?1")
+    @Query("UPDATE KeyUser keyUser SET keyUser.teamId = null WHERE keyUser.id = ?1")
     fun removeTeam(id: UUID)
 
     @Modifying

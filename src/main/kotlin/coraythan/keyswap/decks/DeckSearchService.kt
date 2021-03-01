@@ -177,7 +177,7 @@ class DeckSearchService(
             }
             if (filters.teamDecks) {
                 val user = userHolder.user
-                val teamId = user?.team?.id ?: throw BadRequestException("You aren't on a team.")
+                val teamId = user?.teamId ?: throw BadRequestException("You aren't on a team.")
                 if (user.realPatreonTier() == null) throw BadRequestException("You do not have permission to view team decks.")
                 val owners = userDeckRepo.findByDeckIdAndTeamId(it.id, teamId).mapNotNull { userDeck ->
                     userDeck.ownedBy
@@ -188,7 +188,12 @@ class DeckSearchService(
             }
             if (filters.owners.isNotEmpty()) {
                 val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) filters.owners else filters.owners.filter { owner ->
-                    userService.findUserByUsername(owner)?.allowUsersToSeeDeckOwnership ?: false
+                    val foundUser = userService.findUserByUsername(owner)
+                    when {
+                        foundUser == null -> false
+                        foundUser.teamId != null && foundUser.teamId == userHolder.user?.teamId -> true
+                        else -> foundUser.allowUsersToSeeDeckOwnership
+                    }
                 }
 
                 val owners = userDeckRepo.findByDeckIdAndOwnedByIn(it.id, visibleUsers).mapNotNull { userDeck ->
@@ -252,7 +257,7 @@ class DeckSearchService(
         }
 
         if (filters.teamDecks) {
-            val teamId = userHolder.user?.team?.id
+            val teamId = userHolder.user?.teamId
             if (teamId != null) {
                 predicate.and(deckQ.userDecks.any().teamId.eq(teamId))
             }
@@ -304,8 +309,8 @@ class DeckSearchService(
                 // it's me
                 predicate.and(deckQ.userDecks.any().ownedBy.eq(username))
             } else if (filters.teamDecks) {
-                val searchedUserTeamId = userService.findUserByUsername(filters.owner)?.team?.id
-                val myTeamId = userHolder.user?.team?.id
+                val searchedUserTeamId = userService.findUserByUsername(filters.owner)?.teamId
+                val myTeamId = userHolder.user?.teamId
                 if (myTeamId == null || myTeamId != searchedUserTeamId) {
                     throw UnauthorizedException("You must be logged in and share teams with the searched user to see their decks.")
                 }

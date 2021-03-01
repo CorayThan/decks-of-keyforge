@@ -10,6 +10,8 @@ import { UserProfile } from "../generated-src/UserProfile"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SellerRatingView } from "../sellerratings/SellerRatingView"
+import { TeamBadge } from "../teams/TeamBadge"
+import { teamStore } from "../teams/TeamStore"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import { uiStore } from "../ui/UiStore"
 import { userStore } from "./UserStore"
@@ -80,17 +82,28 @@ export class ProfileView extends React.Component<ProfileViewProps> {
         forSaleFilters.forSale = true
         const forSaleLink = Routes.deckSearch(forSaleFilters)
 
+        const team = teamStore.userToTeam.get(profile.username)
+
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
-                <Card style={{padding: spacing(2), maxWidth: 400}}>
+                <Card style={{padding: spacing(2), maxWidth: 480}}>
                     <Box mb={2}>
-                        <Typography variant={"h4"} color={"primary"} style={{margin: spacing(0, 0, 2, 0)}}>{profile.username}</Typography>
-                        <SellerRatingView sellerId={profile.id} sellerName={profile.username}/>
+                        <Box display={"flex"} alignItems={"top"} flexWrap={"wrap"}>
+                            <Typography
+                                variant={"h4"}
+                                color={"primary"}
+                                style={{marginRight: spacing(2), marginBottom: spacing(1)}}
+                            >
+                                {profile.username}
+                            </Typography>
+                            <SellerRatingView sellerId={profile.id} sellerName={profile.username} style={{marginBottom: 8 + spacing(1)}}/>
+                        </Box>
+                        {team && (<TeamBadge teamId={team.id}/>)}
                     </Box>
 
                     {profile.searchResult != null && (
                         <>
-                            <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
+                            <Divider style={{marginBottom: spacing(2)}}/>
                             <Box
                                 display={"grid"}
                                 gridGap={spacing(1)}

@@ -43,14 +43,14 @@ export class DeckOwnershipStore {
     }
 
     findDetailsForDeck = async (id: number) => {
-        const spoiler: AxiosResponse<DeckOwnershipDto[]> = await axios.get(`${DeckOwnershipStore.CONTEXT}/${id}`)
-        this.verificationDetails = spoiler.data
+        const detailsForDeck: AxiosResponse<DeckOwnershipDto[]> = await axios.get(`${DeckOwnershipStore.CONTEXT}/${id}`)
+        this.verificationDetails = detailsForDeck.data
     }
 
     findOwnedDecks = async () => {
         if (keyLocalStorage.hasAuthKey()) {
-            const spoiler: AxiosResponse<number[]> = await axios.get(`${DeckOwnershipStore.SECURE_CONTEXT}/for-me`)
-            this.ownedDecks = spoiler.data
+            const ownedDecks: AxiosResponse<number[]> = await axios.get(`${DeckOwnershipStore.SECURE_CONTEXT}/for-me`)
+            this.ownedDecks = ownedDecks.data
         }
     }
 

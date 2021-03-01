@@ -145,7 +145,7 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                                 />
                                 <HelperText style={{marginBottom: spacing(1)}}>
                                     By making an offer on this deck you agree to pay the seller the that amount + the listed shipping amount if they accept your
-                                    offer.
+                                    offer. Your username and offer will be publicly visible on DoK.
                                     You can cancel your offer at any time. We will provide the seller with your email.
                                 </HelperText>
                                 <BuyingDisclaimer/>

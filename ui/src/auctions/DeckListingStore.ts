@@ -94,6 +94,12 @@ export class DeckListingStore {
             })
     }
 
+    removeAllDecks = async (password: string) => {
+        log.info("Start removing all decks.")
+        await axios.post(`${DeckListingStore.SECURE_CONTEXT}/remove-all`, {password})
+        messageStore.setSuccessMessage("All decks added to your account have been removed.")
+    }
+
     listingInfoForDeck = (deckId: number): UserDeckListingInfo | undefined => {
         if (this.decksForSale != null) {
             return this.decksForSale[deckId]

@@ -119,12 +119,12 @@ export const SellerRatingView = observer((props: UserRatingProps) => {
     }
 
     return (
-        <div style={style}>
+        <>
             <Box
                 display={"flex"}
                 alignItems={"flex-end"}
                 onClick={() => store.openReviews(sellerId)}
-                style={{cursor: "pointer"}}
+                style={{cursor: "pointer", ...style}}
             >
                 <Rating
                     name={"seller ratings"}
@@ -132,11 +132,11 @@ export const SellerRatingView = observer((props: UserRatingProps) => {
                     readOnly={true}
                     precision={0.1}
                     size={"small"}
-                    style={{marginRight: spacing(2)}}
+                    style={{marginRight: spacing(1)}}
                 />
                 <Link
                     variant={"subtitle2"}
-                    style={{height: 18, paddingTop: 1, fontSize: "0.812rem"}}
+                    style={{height: 18, paddingTop: 0, fontSize: "0.812rem"}}
                 >
                     {reviewsText}
                 </Link>
@@ -157,7 +157,7 @@ export const SellerRatingView = observer((props: UserRatingProps) => {
                     </Box>
                 </Dialog>
             )}
-        </div>
+        </>
     )
 })
 

@@ -427,6 +427,26 @@ class DeckListingService(
         )
     }
 
+    fun removeAllDecks(password: String) {
+        currentUserService.passwordMatches(password)
+        val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
+        val hasAuction = deckListingRepo.existsBySellerIdAndStatus(loggedInUser.id, DeckListingStatus.AUCTION)
+        if (hasAuction) throw BadRequestException("All auctions must be complete or canceled to remove all decks.")
+
+        log.info("Start removing all for sale decks for ${loggedInUser.username}")
+        val activeListings = deckListingRepo.findAllBySellerIdAndStatus(loggedInUser.id, DeckListingStatus.SALE)
+
+        var count = 0
+        activeListings.forEach {
+            count++
+            this.cancelListing(it.deck.id)
+            if (count % 100 == 0) log.info("Removed $count decks for sale for ${loggedInUser.username}")
+        }
+        log.info("Done removing all for sale decks for ${loggedInUser.username}")
+
+        userDeckService.removeAllOwned()
+    }
+
     private fun removeDeckListingStatus(listing: DeckListing, soldOnAuction: Boolean = false) {
         val auctionsForDeck = listing.deck.auctions
         val otherListingsForDeck = auctionsForDeck

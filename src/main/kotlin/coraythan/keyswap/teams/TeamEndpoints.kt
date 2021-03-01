@@ -3,38 +3,56 @@ package coraythan.keyswap.teams
 import coraythan.keyswap.Api
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
-@RequestMapping("${Api.base}/teams/secured")
+@RequestMapping("${Api.base}/teams")
 class TeamEndpoints(
         private val teamService: TeamService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/{name}")
+    @GetMapping("/all")
+    fun findTeamNames() = teamService.allTeams
+
+    @PostMapping("/secured/{name}")
     fun formOrUpdate(@PathVariable name: String) = teamService.formOrUpdateTeam(name)
 
-    @PostMapping("/invite/{username}")
+    @PostMapping("/secured/invite/{username}")
     fun inviteToTeam(@PathVariable username: String) = teamService.inviteToTeam(username)
 
-    @PostMapping("/remove/{username}")
+    @PostMapping("/secured/remove/{username}")
     fun removeFromTeam(@PathVariable username: String) = teamService.removeFromTeam(username)
 
-    @PostMapping("/remove-invite/{username}")
+    @PostMapping("/secured/remove-invite/{username}")
     fun removeInvite(@PathVariable username: String) = teamService.removeInvite(username)
 
-    @PostMapping("/join/{teamId}")
+    @PostMapping("/secured/join/{teamId}")
     fun joinTeam(@PathVariable teamId: UUID) = teamService.joinTeam(teamId)
 
-    @PostMapping("/disband")
+    @PostMapping("/secured/disband")
     fun disbandTeam() = teamService.disbandTeam()
 
-    @PostMapping("/leave")
+    @PostMapping("/secured/leave")
     fun leaveTeam() = teamService.leaveTeam()
 
-    @GetMapping
+    @GetMapping("/secured")
     fun findTeamInfo() = teamService.findTeamInfo()
 
+    @PostMapping("/secured/add-img")
+    fun addTeamImg(
+            @RequestParam("img")
+            img: MultipartFile,
+
+            @RequestHeader("Extension")
+            extension: String,
+
+            ) = teamService.addTeamImg(img, extension)
+
+    @PostMapping("/secured/homepage")
+    fun updateHomepage(@RequestBody homepage: TeamHomepage) = teamService.updateHomepage(homepage.homepage)
 }
+
+data class TeamHomepage(val homepage: String)

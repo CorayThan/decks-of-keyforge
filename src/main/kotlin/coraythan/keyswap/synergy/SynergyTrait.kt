@@ -106,6 +106,7 @@ enum class SynergyTrait {
 
     // Deck manip
     reorderDeck,
+    mills,
 
     // Playing
     dangerousRandomPlay,

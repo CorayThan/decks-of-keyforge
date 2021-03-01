@@ -10,6 +10,7 @@ import { TextConfig } from "./config/TextConfig"
 import { sellerRatingsStore } from "./sellerratings/SellerRatingsStore"
 import { sellerStore } from "./sellers/SellerStore"
 import { statsStore } from "./stats/StatsStore"
+import { teamStore } from "./teams/TeamStore"
 import { userStore } from "./user/UserStore"
 
 configure({enforceActions: "never"})
@@ -23,5 +24,6 @@ statsStore.findGlobalStats()
 sellerRatingsStore.findSellerRatings()
 sellerStore.findFeaturedSellers()
 userStore.loadUserInfo()
+teamStore.findAllTeamNames()
 
 ReactDOM.render(<App/>, document.getElementById("root"))

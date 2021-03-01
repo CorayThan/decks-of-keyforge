@@ -52,6 +52,10 @@ class S3Service(
         return addImage(img, "user-imgs", UUID.randomUUID().toString(), extension)
     }
 
+    fun addTeamImg(img: MultipartFile, extension: String, teamId: UUID): String {
+        return addImage(img, "teams", teamId.toString(), extension)
+    }
+
     fun deleteUserContent(key: String) {
         s3client.deleteObject(
                 userContentBucket,

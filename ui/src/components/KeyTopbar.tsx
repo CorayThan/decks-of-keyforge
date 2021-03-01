@@ -308,7 +308,6 @@ const AppLinks = observer(() => (
                 {to: Routes.aoaCards, text: "AoA Cards", mobileActive: false},
                 {to: Routes.wcCards, text: "WC Cards", mobileActive: false},
                 {to: Routes.mmCards, text: "MM Cards", mobileActive: false},
-                // {to: Routes.createSpoiler, text: "Create Spoiler", contentCreatorOnly: true, mobileActive: true},
             ]}
             linkMenuStore={cardsMenuStore}
         />

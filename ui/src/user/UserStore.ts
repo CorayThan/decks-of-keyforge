@@ -375,7 +375,7 @@ export class UserStore {
     @computed
     get hasTeam(): boolean {
         if (this.user) {
-            return this.user.teamName != null
+            return this.user.teamId != null
         }
         return false
     }

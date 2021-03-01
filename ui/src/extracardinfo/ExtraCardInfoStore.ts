@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
-import { log } from "../config/Utils"
 import { messageStore } from "../ui/MessageStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 
@@ -19,18 +18,6 @@ export class ExtraCardInfoStore {
         if (this.extraCardInfo) {
             this.extraCardInfo = undefined
         }
-    }
-
-    findCreateSpoilerAercNoSet = async (spoilerId: number) => {
-        const extraCardInfo: AxiosResponse<ExtraCardInfo> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/spoiler/${spoilerId}`)
-        return extraCardInfo.data
-    }
-
-    findOrCreateSpoilerAerc = async (spoilerId: number) => {
-        this.extraCardInfo = undefined
-        this.extraCardInfo = await this.findCreateSpoilerAercNoSet(spoilerId)
-        log.info(`Updated extra card info for ${this.extraCardInfo.cardName}`)
-        return this.extraCardInfo
     }
 
     findExtraCardInfo = async (extraCardInfoId: string) => {

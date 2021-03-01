@@ -74,7 +74,7 @@ export const ListItemLink = (props: ListItemLinkProps) => {
 }
 
 export const LinkButtonSafe = (props: ButtonProps) => {
-    const {href, onClick, ...rest} = props
+    const {href, onClick, style, ...rest} = props
     const [open, setOpen] = useState(false)
     return (
         <>
@@ -86,12 +86,13 @@ export const LinkButtonSafe = (props: ButtonProps) => {
                         onClick(event)
                     }
                 }}
+                style={{textTransform: "none", ...style}}
             />
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Head through the wormhole?</DialogTitle>
                 <DialogContent>
                     <Box display={"flex"} justifyContent={"center"} mb={2}>
-                        <img width={200} src={"https://dok-imgs.s3-us-west-2.amazonaws.com/wild-wormhole.jpg"}/>
+                        <img width={200} src={"https://dok-imgs.s3-us-west-2.amazonaws.com/wild-wormhole.jpg"} alt={"wild wormhole"}/>
                     </Box>
                     <DialogContentText gutterBottom={true}>
                         Click this link to leave DoK

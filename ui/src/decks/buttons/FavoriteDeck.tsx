@@ -54,6 +54,7 @@ export class FavoriteDeck extends React.Component<WishlistDeckProps> {
                                 userDeckStore.wishlist(deckName, deckId, wishlisted)
                             }}
                             disabled={!userDeckStore.userDecksLoaded()}
+                            size={"small"}
                         >
                             {wishlisted ? <FavoriteIcon color={"primary"}/> : <FavoriteIcon/>}
                         </IconButton>

@@ -24,7 +24,6 @@ import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearch
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
-import { UpdateSpoilerAerc } from "../extracardinfo/UpdateSpoilerAerc"
 import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
@@ -33,9 +32,6 @@ import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDe
 import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
 import { LandingPage } from "../landing/LandingPage"
 import { MyDokPage } from "../my-dok/MyDokPage"
-import { AddSpoilerPage, EditSpoilerPage } from "../spoilers/AddSpoilerPage"
-import { SpoilerPage } from "../spoilers/SpoilerPage"
-import { SpoilersPage } from "../spoilers/SpoilersPage"
 import { StatsPage } from "../stats/StatsPage"
 import { TagSearchPage } from "../tags/TagSearchPage"
 import { SnackMessage } from "../ui/MessageStore"
@@ -72,11 +68,7 @@ class Routes {
     static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
     static wcCards = "/cards?expansion=WORLDS_COLLIDE"
     static mmCards = "/cards?expansion=MASS_MUTATION"
-    static spoilers = "/spoilers"
     static extraCardInfo = "/extra-card-infos"
-    static createSpoiler = `/spoilers/create`
-    static editSpoiler = (spoilerId?: string | number) => `${Routes.spoilers}/edit/${spoilerId == null ? ":spoilerId" : spoilerId}`
-    static editSpoilerAerc = (spoilerId?: string | number) => `${Routes.spoilers}/edit-aerc/${spoilerId == null ? ":spoilerId" : spoilerId}`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
@@ -97,7 +89,6 @@ class Routes {
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
-    static spoilerPage = (spoilerId?: string | number) => `${Routes.spoilers}/${spoilerId == null ? ":spoilerId" : spoilerId}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
@@ -344,32 +335,8 @@ const KeyRouter = observer(() => {
                     />
                     <LoggedInRoute
                         exact={true}
-                        path={Routes.editSpoiler()}
-                        component={EditSpoilerPage}
-                    />
-                    <LoggedInRoute
-                        exact={true}
-                        path={Routes.editSpoilerAerc()}
-                        component={UpdateSpoilerAerc}
-                    />
-                    <LoggedInRoute
-                        exact={true}
                         path={Routes.editExtraCardInfo()}
                         component={UpdateExtraCardInfoPage}
-                    />
-                    <LoggedInRoute
-                        exact={true}
-                        path={Routes.createSpoiler}
-                        component={AddSpoilerPage}
-                    />
-                    <Route
-                        exact={true}
-                        path={Routes.spoilerPage()}
-                        component={SpoilerPage}
-                    />
-                    <Route
-                        path={Routes.spoilers}
-                        component={SpoilersPage}
                     />
                     <Route
                         path={Routes.landing}

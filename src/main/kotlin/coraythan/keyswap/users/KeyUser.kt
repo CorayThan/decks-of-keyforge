@@ -9,7 +9,6 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.tags.KTag
-import coraythan.keyswap.teams.Team
 import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.users.search.UserSearchResult
 import java.time.LocalDateTime
@@ -101,9 +100,7 @@ data class KeyUser(
         @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
         val sales: List<Purchase> = listOf(),
 
-        @JsonIgnoreProperties("members")
-        @ManyToOne(fetch = FetchType.LAZY)
-        val team: Team? = null,
+        val teamId: UUID? = null,
 
         val updateStats: Boolean = false,
 
@@ -165,7 +162,7 @@ data class KeyUser(
             storeBannerKey = storeBannerKey,
             forSaleCount = forSaleCount,
             shippingCost = shippingCost,
-            teamName = team?.name,
+            teamId = teamId,
             autoRenewListings = autoRenewListings,
             contributedOrManual = contributedOrManual(),
             agreedToTerms = agreedToTermsOfService
@@ -190,7 +187,7 @@ data class KeyUser(
                 this.type,
                 this.patreonTier,
                 this.manualPatreonTier,
-                this.team,
+                this.teamId,
                 !this.allowUsersToSeeDeckOwnership
         )
     }
@@ -286,7 +283,7 @@ data class KeyUserDto(
 
         val shippingCost: String? = null,
 
-        val teamName: String? = null,
+        val teamId: UUID? = null,
 
         val autoRenewListings: Boolean = false,
 

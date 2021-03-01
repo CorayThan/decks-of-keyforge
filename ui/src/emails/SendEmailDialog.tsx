@@ -9,7 +9,6 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { messageStore } from "../ui/MessageStore"
-import { userStore } from "../user/UserStore"
 import { emailStore } from "./EmailStore"
 
 interface SendSellerEmailDialogProps {
@@ -51,7 +50,6 @@ export class SendEmailDialogStore {
                 deckName: deckName!,
                 deckKeyforgeId: keyforgeId!,
                 message,
-                senderUsername: userStore.username!
             })
         } else {
             await emailStore.sendOfferMessage(offerId, message.trim())

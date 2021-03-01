@@ -1,6 +1,5 @@
 package coraythan.keyswap.teams
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.users.KeyUser
 import java.util.*
 import javax.persistence.*
@@ -10,8 +9,8 @@ data class Team(
 
         val name: String,
 
-        @JsonIgnoreProperties("team")
-        @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+        @OneToMany(fetch = FetchType.LAZY)
+        @JoinColumn(name = "teamId")
         val members: List<KeyUser> = listOf(),
 
         val teamLeaderId: UUID,
@@ -21,6 +20,9 @@ data class Team(
          */
         @ElementCollection
         val invites: List<UUID> = listOf(),
+
+        val homepage: String? = null,
+        val teamImg: String? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()
