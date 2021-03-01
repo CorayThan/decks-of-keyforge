@@ -390,6 +390,7 @@ object DeckSynergyService {
                 .map { combo ->
                     val f = combo.efficiency
                     val efficiencyBonus = (f * (((sas - combo.aercScore) / 35) * 0.4) / 0.75) - f
+                    // log.info("FB $efficiencyBonus x copies ${combo.copies}")
                     efficiencyBonus * combo.copies
                 }
                 .sum()

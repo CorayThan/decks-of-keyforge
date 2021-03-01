@@ -281,9 +281,8 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                                 "Efficiency Bonus. An experiemental modifier for the efficiency score based " +
                                 "on the total SAS of a deck. Read more on the about SAS page."
                             }
-                            mr={4}
                         />
-                        <EnhancementsInDeck deck={deck}/>
+                        <EnhancementsInDeck deck={deck} style={{marginLeft: spacing(4)}}/>
                     </Box>
                 </Box>
                 <DeckScoreView deck={deck}/>
@@ -292,10 +291,10 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
     }
 })
 
-const ExtraScore = (props: { name: string, score: number, tooltip?: string, mr?: number }) => {
-    const {name, score, tooltip, mr} = props
+const ExtraScore = (props: { name: string, score: number, tooltip?: string }) => {
+    const {name, score, tooltip} = props
     return (
-        <Box mr={mr}>
+        <Box>
             <Tooltip
                 title={tooltip ?? ""}
             >

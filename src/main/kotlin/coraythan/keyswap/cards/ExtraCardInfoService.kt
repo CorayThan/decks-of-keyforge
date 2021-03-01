@@ -11,7 +11,6 @@ import java.util.*
 @Transactional
 @Service
 class ExtraCardInfoService(
-        private val cardService: CardService,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
         private val currentUserService: CurrentUserService,
         private val synTraitValueRepo: SynTraitValueRepo,
@@ -30,12 +29,12 @@ class ExtraCardInfoService(
 
         val info = sourceInfo.nullMaxes()
 
-        val currentVersion = cardService.activeAercVersion
+        val currentVersion = publishedAercVersion
         val nextVersion = currentVersion + 1
 
         val latestExtraInfo = findNextOrCurrentInfo(info)
         val latestPreexistingVersion = latestExtraInfo.version
-        log.info("Current version $currentVersion latest extra info version ${latestPreexistingVersion} prev base syn = ${latestExtraInfo.baseSynPercent} new ${sourceInfo.baseSynPercent}")
+        log.info("Current version $currentVersion latest extra info version $latestPreexistingVersion prev base syn = ${latestExtraInfo.baseSynPercent} new ${sourceInfo.baseSynPercent}")
 
         check(nextVersion >= latestPreexistingVersion) { "latest pre existing version can't be more than next version!" }
 

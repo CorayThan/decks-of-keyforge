@@ -1,6 +1,6 @@
 package coraythan.keyswap.decks.pastsas
 
-import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.PastSas
 import coraythan.keyswap.synergy.DeckSynergyInfo
@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PastSasService(
         private val pastSasRepo: PastSasRepo,
-        private val cardService: CardService,
 ) {
 
     fun findByDeckId(id: Long) = pastSasRepo.findByDeckId(id)
@@ -43,6 +42,6 @@ class PastSasService(
             antisynergyRating = synergies.antisynergyRating,
             meta = synergies.metaScores.values.sum(),
 
-            aercVersion = cardService.activeAercVersion,
+            aercVersion = publishedAercVersion,
     )
 }

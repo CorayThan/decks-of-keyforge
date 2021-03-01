@@ -49,8 +49,11 @@ export class ReleaseNotes extends React.Component {
                     releaseNotesWithHighlights={[
                         {
                             highlight: "Experimental Efficiency Bonus Score!",
-                            note: "I've added a new score called 'Efficiency Bonus'. This score will be positive for decks with high SAS and " +
-                                "high efficiency, and negative for decks with low SAS and high efficiency. It represents the increased or decreased " +
+                            note: "I've added a new score called 'Efficiency Bonus'. " +
+                                "67 SAS is the baseline SAS for the score, so decks with that SAS should have an efficiency bonus near 0. " +
+                                "Decks with higher SAS " +
+                                "and high efficiency will have a positive score, and decks with lower SAS and high efficiency will have a negative score. " +
+                                "It represents the increased or decreased " +
                                 "value of playing extra cards based on a deck's SAS. Read more about it on the about SAS page."
                         },
                         {

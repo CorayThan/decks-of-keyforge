@@ -10,9 +10,9 @@ import { LargeValueIconsRow } from "../generic/LargeValueIcon"
 import { DeckSearchResult } from "./models/DeckSearchResult"
 
 
-export const EnhancementsInDeck = (props: { deck: DeckSearchResult }) => {
+export const EnhancementsInDeck = (props: { deck: DeckSearchResult, style?: React.CSSProperties }) => {
 
-    const {deck} = props
+    const {deck, style} = props
 
     if (!ExtendedExpansionUtils.allowsEnhancements(deck.expansion)) {
         return null
@@ -44,6 +44,7 @@ export const EnhancementsInDeck = (props: { deck: DeckSearchResult }) => {
                 {value: enhancedDamage, iconSrc: EnhancedDamage},
                 {value: enhancedDraw, iconSrc: EnhancedDraw},
             ]}
+            style={style}
         />
     )
 }

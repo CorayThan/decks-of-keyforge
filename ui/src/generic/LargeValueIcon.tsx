@@ -9,13 +9,14 @@ interface LargeValueIconProps {
     tooltip?: string
 }
 
-export const LargeValueIconsRow = (props: { values: LargeValueIconProps[] }) => {
+export const LargeValueIconsRow = (props: { values: LargeValueIconProps[], style?: React.CSSProperties }) => {
     return (
         <Box
             display={"grid"}
             gridGap={spacing(2)}
             gridAutoFlow={"column"}
             justifyContent={"center"}
+            style={props.style}
         >
             {props.values.map((valueProps, idx) => (
                 <LargeValueIcon {...valueProps} key={idx}/>

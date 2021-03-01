@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 34
+val publishedAercVersion = 36
 val majorRevision = false
 
 @Transactional
@@ -47,22 +47,26 @@ class CardService(
     lateinit var previousExtraInfo: Map<String, ExtraCardInfo>
     lateinit var extraInfo: Map<String, ExtraCardInfo>
     lateinit var nextExtraInfo: Map<String, ExtraCardInfo>
-    var activeAercVersion: Int = 0
+
+    fun mostRecentUnpublishedVersion() = extraCardInfoRepo.findFirstByOrderByVersionDesc().version
+    fun mostRecentPublishedVersion() = extraCardInfoRepo.findFirstByOrderByVersionDesc().version
 
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
 
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
-            this.activeAercVersion = currentInfo.maxByOrNull { it.value.version }?.value?.version ?: 0
 
-            log.info("Active aerc version $activeAercVersion published version $publishedAercVersion")
-            if (activeAercVersion < publishedAercVersion) {
+            val mostRecentlyPublished = mostRecentPublishedVersion()
 
-                val toPublish = mapInfos(extraCardInfoRepo.findByVersion(publishedAercVersion))
+            log.info("Most recently published version $mostRecentlyPublished published version $publishedAercVersion")
+            if (mostRecentlyPublished < publishedAercVersion) {
+
+                val toPublish = mapInfos(extraCardInfoRepo.findByVersion(mostRecentUnpublishedVersion()))
+                val publishTime = ZonedDateTime.now()
                 toPublish.forEach {
                     it.value.active = true
-                    it.value.published = ZonedDateTime.now()
+                    it.value.published = publishTime
                 }
                 val unpublish = toPublish.mapNotNull {
                     val oldInfo = currentInfo[it.key]
@@ -73,7 +77,7 @@ class CardService(
                 val updated = toPublish.map { it.value }.plus(unpublish)
                 extraCardInfoRepo.saveAll(updated)
                 versionService.revVersion()
-                log.info("Publishing next extra info fully complete. Active aerc version $activeAercVersion published verison $publishedAercVersion " +
+                log.info("Publishing next extra info fully complete. Active aerc version $mostRecentlyPublished published verison $publishedAercVersion " +
                         "done publishing published " +
                         "${toPublish.size} unpublished ${unpublish.size}")
             }
@@ -88,10 +92,8 @@ class CardService(
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
-            this.activeAercVersion = this.extraInfo.maxByOrNull { it.value.version }?.value?.version ?: 0
-            this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(this.activeAercVersion + 1))
-            val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(this.activeAercVersion)
-                    .filter { it.version < this.activeAercVersion }
+            this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByVersion(mostRecentUnpublishedVersion()))
+            val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(publishedAercVersion)
                     .groupBy { it.cardName }
                     .mapNotNull { it.value.maxByOrNull { infos -> infos.version } }
             this.previousExtraInfo = mapInfos(previousOnes)
@@ -100,7 +102,7 @@ class CardService(
             log.error("Nothing is going to work because we couldn't load extra info!", exception)
             throw IllegalStateException(exception)
         }
-        log.info("Loading extra info fully complete for AERC version ${this.activeAercVersion}")
+        log.info("Loading extra info fully complete for AERC version ${publishedAercVersion}")
     }
 
     private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
@@ -346,7 +348,7 @@ class CardService(
     }
 
     private fun cardsFromCardIds(cardIdsString: String, deckId: String? = null): List<Card> {
-        require(!cardIdsString.isBlank()) { "Card id string was blank! deck id: $deckId" }
+        require(cardIdsString.isNotBlank()) { "Card id string was blank! deck id: $deckId" }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->

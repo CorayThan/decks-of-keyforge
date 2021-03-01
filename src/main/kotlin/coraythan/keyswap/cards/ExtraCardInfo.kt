@@ -115,7 +115,8 @@ data class ExtraCardInfo(
                 active = false,
                 synergies = mutableListOf(),
                 traits = mutableListOf(),
-                id = UUID.randomUUID()
+                id = UUID.randomUUID(),
+                published = null,
         )
     }
 
