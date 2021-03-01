@@ -48,15 +48,13 @@ class CardService(
     lateinit var extraInfo: Map<String, ExtraCardInfo>
     lateinit var nextExtraInfo: Map<String, ExtraCardInfo>
 
-    fun mostRecentPublishedVersion() = extraCardInfoRepo.findFirstByActiveTrueOrderByVersionDesc().version
-
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
 
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
-            val activeVersion = mostRecentPublishedVersion()
+            val activeVersion = extraCardInfoRepo.findFirstByActiveTrueOrderByVersionDesc().version
 
             val infosToPublish = extraCardInfoRepo.findByPublishedNullAndVersionLessThanEqual(publishedAercVersion)
             val toPublishCount = infosToPublish.size

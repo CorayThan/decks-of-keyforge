@@ -8,9 +8,7 @@ import java.util.*
 
 interface ExtraCardInfoRepo : JpaRepository<ExtraCardInfo, UUID>, QuerydslPredicateExecutor<ExtraCardInfo> {
     fun findByActiveTrue(): List<ExtraCardInfo>
-    fun findByVersion(version: Int): List<ExtraCardInfo>
     fun findFirstByActiveTrueOrderByVersionDesc(): ExtraCardInfo
-    fun findFirstByOrderByVersionDesc(): ExtraCardInfo
     fun findByVersionLessThanAndActiveFalse(version: Int): List<ExtraCardInfo>
     fun findByCardName(cardName: String): List<ExtraCardInfo>
 
