@@ -96,7 +96,7 @@ class WebConfiguration(
 
                         val transformed = transformIndexPage(
                                 resource,
-                                if (queryStringValues.contains("forSale")) "$owner's Decks for Sale" else "$owner's Decks",
+                                if (queryStringValues.contains("forSale=true")) "$owner's Decks for Sale" else "$owner's Decks",
                                 userInfoFromStats(userStats, queryStringValues.contains("forSale"))
                         )
 

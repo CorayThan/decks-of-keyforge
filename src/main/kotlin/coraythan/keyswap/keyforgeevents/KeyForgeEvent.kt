@@ -1,8 +1,10 @@
 package coraythan.keyswap.keyforgeevents
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.generic.USState
+import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentRound
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDateTime
@@ -34,7 +36,14 @@ data class KeyForgeEvent(
         val createdBy: KeyUser,
         val promoted: Boolean,
 
+        val runTounament: Boolean,
+        val privateTournament: Boolean,
+
         val created: LocalDateTime = nowLocal(),
+
+        @JsonIgnoreProperties("tourney")
+        @OneToMany(mappedBy = "tourney", fetch = FetchType.LAZY)
+        val rounds: List<TournamentRound> = listOf(),
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

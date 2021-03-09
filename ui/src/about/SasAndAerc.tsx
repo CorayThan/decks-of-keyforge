@@ -163,9 +163,9 @@ export class SasAndAerc extends React.Component {
                         "It improves the scores of decks with high value and high efficiency, and lowers the scores of decks with low value and high " +
                         "efficiency. This is meant to model the increased value of playing extra cards of higher value.",
                         "67 SAS is the baseline SAS score for this value, so decks with that score should have near 0 efficiency bonus.",
-                        "To calculate this score, a positive or negative bonus is calculated for each source of positive efficiency in a deck. It uses the " +
-                        "following equation: ",
-                        "(F * (((SAS - CardAERC) / 35) * 0.4) / 0.75) - F = Efficiency Bonus"
+                        "To calculate this score, a positive or negative bonus is calculated for each source of positive efficiency in a deck.",
+                        "To see the equation used and a full explanation please join the DoK discord server and look at the pinned " +
+                        "messages in the #sas-discussion channel!",
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>

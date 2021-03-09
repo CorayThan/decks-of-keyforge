@@ -13,5 +13,6 @@ enum class DeckLanguage {
     CHINESE,
     THAI,
     RUSSIAN,
+    KOREAN,
     OTHER
 }

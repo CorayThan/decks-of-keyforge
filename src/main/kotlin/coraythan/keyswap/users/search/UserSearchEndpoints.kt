@@ -19,7 +19,7 @@ class UserSearchEndpoints(
 
     @GetMapping("/with-hidden")
     fun usersWithHidden(): UserSearchResults {
-      val users = userSearchService.searchUsers(UserFilters(), true)
+        val users = userSearchService.searchUsers(UserFilters(), true)
         return UserSearchResults(0, users)
     }
 }
