@@ -92,24 +92,19 @@ data class DeckSearchResult(
                 forSaleMessage
     }
 
-    fun printDeck(): String {
+    fun printDeck(saleInfo: DeckListing? = null): String {
         return """
-            ${printDeckSimple()}
-            
-            ${if ((powerLevel ?: 0) > 0 || (chains ?: 0) > 0 || (wins ?: 0) > 0 || (losses ?: 0) > 0) "Power Level ${powerLevel ?: 0} • ${chains ?: 0} Chains • ${wins ?: 0} / ${losses ?: 0} OP Wins / Losses\n" else ""}
-            ${amberControl.roundToOneSigDig()} Aember Control (A)
-            ${expectedAmber.roundToOneSigDig()} Expected Aember (E)
-            ${(artifactControl ?: 0.0).roundToOneSigDig()} Artifact Control (R)
-            ${creatureControl.roundToOneSigDig()} Creature Control (C)
-            ${(efficiency ?: 0.0).roundToOneSigDig()} Efficiency (F)
-            ${(recursion ?: 0.0).roundToOneSigDig()} Recursion (U)
-            ${(disruption ?: 0.0).roundToOneSigDig()} Disruption (D)
-            
-            $actionCount Actions
-            $creatureCount Creatures
-            $artifactCount Artifacts
-            $upgradeCount Upgrades
+            ${printDeckSimple(saleInfo)}
+            ${amberControl.roundToOneSigDig()} A • ${expectedAmber.roundToOneSigDig()} E
+            ${(artifactControl ?: 0.0).roundToOneSigDig()} R • ${creatureControl.roundToOneSigDig()} C
+            ${(efficiency ?: 0.0).roundToOneSigDig()} F • ${(recursion ?: 0.0).roundToOneSigDig()} U • ${(disruption ?: 0.0).roundToOneSigDig()} D
         """.trimIndent()
+
+//            ${if ((powerLevel ?: 0) > 0 || (chains ?: 0) > 0 || (wins ?: 0) > 0 || (losses ?: 0) > 0) "Power Level ${powerLevel ?: 0} • ${chains ?: 0} Chains • ${wins ?: 0} / ${losses ?: 0} OP Wins / Losses\n" else ""}
+//            $actionCount Actions
+//            $creatureCount Creatures
+//            $artifactCount Artifacts
+//            $upgradeCount Upgrades
     }
 
     fun toSimpleResult() = SimpleDeckSearchResult(

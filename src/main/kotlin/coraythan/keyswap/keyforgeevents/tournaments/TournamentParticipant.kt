@@ -22,13 +22,16 @@ data class TournamentParticipant(
 interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long> {
         fun findByEventIdAndParticipantId(eventId: Long, participantId: UUID): TournamentParticipant?
         fun findAllByEventIdAndDroppedFalse(eventId: Long): List<TournamentParticipant>
+        fun findAllByEventId(eventId: Long): List<TournamentParticipant>
 }
 
 data class ParticipantStats(
         val participant: TournamentParticipant,
-        var wins: Int = 0,
-        var losses: Int = 0,
+        val wins: Int = 0,
+        val losses: Int = 0,
+        val byes: Int = 0,
         var strengthOfSchedule: Double = 0.0,
         var extendedStrengthOfSchedule: Double = 0.0,
         val keys: Int = 0,
+        val opponentKeys: Int = 0,
 )

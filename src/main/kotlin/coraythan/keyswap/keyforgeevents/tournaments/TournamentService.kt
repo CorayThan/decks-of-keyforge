@@ -27,8 +27,62 @@ class TournamentService(
         private val keyUserRepo: KeyUserRepo,
 ) {
 
-    fun findTourneyInfo(id: Long) {
+    fun findTourneyInfo(id: Long): TournamentInfo {
+        val tourney = keyForgeEventRepo.findByIdOrNull(id) ?: throw BadRequestException("No event for id $id")
 
+        val participants = tournamentParticipantRepo.findAllByEventId(id)
+        val pairings = tournamentPairingRepo.findAllByEventId(id)
+        val participantNames = participants
+                .map { it.id to keyUserRepo.findByIdOrNull(it.participantId) }
+                .toMap()
+        val participantStats = calculateParticipantStats(participants, pairings)
+                .map { it.participant.id to it }
+                .toMap()
+
+        return TournamentInfo(
+                tourneyId = id,
+                organizerUsername = tourney.createdBy.username,
+                rounds = tourney.rounds.map { round ->
+                    TournamentRoundInfo(
+                            roundNumber = round.roundNumber,
+                            roundId = round.id,
+                            pairings = tournamentPairingRepo.findAllByRoundId(round.id).map {
+                                TournamentPairingInfo(
+                                        pairId = it.id,
+                                        playerOneId = it.playerOneId,
+                                        playerOneUsername = participantNames[it.playerOneId]?.username ?: "No User",
+                                        playerTwoId = it.playerTwoId,
+                                        playerTwoUsername = participantNames[it.playerOneId]?.username ?: "No User",
+                                        playerOneKeys = it.playerOneKeys,
+                                        playerTwoKeys = it.playerTwoKeys,
+                                        playerOneWon = it.playerOneWon,
+                                        tcoLink = it.tcoLink,
+                                )
+                            }
+                    )
+                },
+                rankings = participants
+                        .mapNotNull {
+                            val stats = participantStats[it.id]
+                            if (stats == null) {
+                                null
+                            } else {
+                                TournamentRanking(
+                                        username = participantNames[it.id]?.username ?: "No User",
+                                        participantId = it.id,
+                                        wins = stats.wins,
+                                        losses = stats.losses,
+                                        byes = stats.byes,
+                                        strengthOfSchedule = stats.strengthOfSchedule,
+                                        extendedStrengthOfSchedule = stats.extendedStrengthOfSchedule,
+                                        keys = stats.keys,
+                                        opponentKeys = stats.opponentKeys,
+                                )
+                            }
+                        }
+                        .sortedBy { (it.wins * 100000) + (it.strengthOfSchedule * 1000) + it.extendedStrengthOfSchedule }
+                        .reversed(),
+        )
     }
 
     fun createTourney(tourneyId: Long, privateTournament: Boolean) {
@@ -147,13 +201,16 @@ class TournamentService(
                 .map { player ->
                     val games = pairings.filter { it.playerOneWon != null && (it.playerOneId == player.id || it.playerTwoId == player.id) }
                     val winCount = games.count { if (it.playerOneId == it.id) it.playerOneWon!! else !it.playerOneWon!! }
+                    val byeCount = games.count { it.playerTwoId == null }
                     player.id to ParticipantStats(
                             participant = player,
                             wins = winCount,
                             losses = games.size - winCount,
+                            byes = byeCount,
                             strengthOfSchedule = 0.0,
                             extendedStrengthOfSchedule = 0.0,
-                            keys = games.sumBy { if (it.playerOneId == player.id) it.playerOneKeys ?: 0 else it.playerTwoKeys ?: 0 }
+                            keys = games.sumBy { if (it.playerOneId == player.id) it.playerOneKeys ?: 0 else it.playerTwoKeys ?: 0 },
+                            opponentKeys = games.sumBy { if (it.playerOneId == player.id) it.playerTwoKeys ?: 0 else it.playerOneKeys ?: 0 },
                     )
                 }
                 .toMap()

@@ -30,4 +30,5 @@ data class TournamentPairing(
 
 interface TournamentPairingRepo : CrudRepository<TournamentPairing, Long> {
     fun findAllByEventId(eventId: Long): List<TournamentPairing>
+    fun findAllByRoundId(roundId: Long): List<TournamentPairing>
 }

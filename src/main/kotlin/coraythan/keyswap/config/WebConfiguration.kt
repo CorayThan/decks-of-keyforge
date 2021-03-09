@@ -137,7 +137,7 @@ class WebConfiguration(
                             transformIndexPage(
                                     resource,
                                     deck.deck.name,
-                                    deck.deck.printDeckSimple(listing)
+                                    deck.deck.printDeck(listing)
                             )
                         }
 
