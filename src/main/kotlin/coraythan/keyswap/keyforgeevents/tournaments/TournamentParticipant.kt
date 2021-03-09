@@ -10,7 +10,7 @@ import javax.persistence.Id
 @Entity
 data class TournamentParticipant(
         val eventId: Long,
-        val participantId: UUID,
+        val userId: UUID,
 
         val dropped: Boolean = false,
 
@@ -20,7 +20,7 @@ data class TournamentParticipant(
 )
 
 interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long> {
-        fun findByEventIdAndParticipantId(eventId: Long, participantId: UUID): TournamentParticipant?
+        fun findByEventIdAndUserId(eventId: Long, userId: UUID): TournamentParticipant?
         fun findAllByEventIdAndDroppedFalse(eventId: Long): List<TournamentParticipant>
         fun findAllByEventId(eventId: Long): List<TournamentParticipant>
 }

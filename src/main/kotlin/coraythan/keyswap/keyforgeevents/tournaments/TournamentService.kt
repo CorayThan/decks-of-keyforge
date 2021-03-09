@@ -33,7 +33,7 @@ class TournamentService(
         val participants = tournamentParticipantRepo.findAllByEventId(id)
         val pairings = tournamentPairingRepo.findAllByEventId(id)
         val participantNames = participants
-                .map { it.id to keyUserRepo.findByIdOrNull(it.participantId) }
+                .map { it.id to keyUserRepo.findByIdOrNull(it.userId) }
                 .toMap()
         val participantStats = calculateParticipantStats(participants, pairings)
                 .map { it.participant.id to it }
@@ -95,7 +95,7 @@ class TournamentService(
 
         keyForgeEventRepo.save(
                 tourney.copy(
-                        runTounament = true,
+                        runTournament = true,
                         privateTournament = privateTournament,
                         rounds = listOf(round),
                 )
@@ -150,14 +150,14 @@ class TournamentService(
 
         tournamentParticipantRepo.save(TournamentParticipant(
                 eventId = tourney.id,
-                participantId = participant.id,
+                userId = participant.id,
         ))
     }
 
     fun dropParticipant(tourneyId: Long, participantUsername: String) {
         val (_, participant, tourney) = verifyTournamentAdminOrParticipant(participantUsername, tourneyId)
 
-        val participantRecord = tournamentParticipantRepo.findByEventIdAndParticipantId(tourney.id, participant.id)
+        val participantRecord = tournamentParticipantRepo.findByEventIdAndUserId(tourney.id, participant.id)
                 ?: throw BadRequestException("No participant found.")
 
         tournamentParticipantRepo.save(participantRecord.copy(dropped = true))
@@ -171,7 +171,7 @@ class TournamentService(
 
         val ids: List<Long> = listOfNotNull(pairing.playerOneId, pairing.playerTwoId)
 
-        val userTourneyId: Long? = tournamentParticipantRepo.findByEventIdAndParticipantId(tourney.id, user.id)?.id
+        val userTourneyId: Long? = tournamentParticipantRepo.findByEventIdAndUserId(tourney.id, user.id)?.id
 
         val isOrganizer = user.id == tourney.createdBy.id
         val isResultsPlayer = userTourneyId != null && ids.contains(userTourneyId)

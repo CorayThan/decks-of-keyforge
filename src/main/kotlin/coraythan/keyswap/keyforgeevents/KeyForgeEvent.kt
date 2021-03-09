@@ -36,8 +36,8 @@ data class KeyForgeEvent(
         val createdBy: KeyUser,
         val promoted: Boolean,
 
-        val runTounament: Boolean,
-        val privateTournament: Boolean,
+        val runTournament: Boolean = false,
+        val privateTournament: Boolean = false,
 
         val created: LocalDateTime = nowLocal(),
 

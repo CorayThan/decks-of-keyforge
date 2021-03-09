@@ -100,7 +100,7 @@ class KeyForgeEventService(
                     country = event.country,
                     state = event.state,
                     createdBy = user,
-                    promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false
+                    promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false,
             )
 
             keyForgeEventRepo.save(toSave)
