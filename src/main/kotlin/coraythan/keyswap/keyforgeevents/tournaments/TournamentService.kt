@@ -28,6 +28,7 @@ class TournamentService(
 ) {
 
     fun findTourneyInfo(id: Long): TournamentInfo {
+        val user = currentUserService.loggedInUser()
         val tourney = keyForgeEventRepo.findByIdOrNull(id) ?: throw BadRequestException("No event for id $id")
 
         val participants = tournamentParticipantRepo.findAllByEventId(id)
@@ -41,7 +42,11 @@ class TournamentService(
 
         return TournamentInfo(
                 tourneyId = id,
+                name = tourney.name,
                 organizerUsername = tourney.createdBy.username,
+                privateTournament = tourney.privateTournament,
+                joined = user?.username != null && participantNames.values.any { it?.username == user.username },
+                stage = tourney.tournamentStage,
                 rounds = tourney.rounds.map { round ->
                     TournamentRoundInfo(
                             roundNumber = round.roundNumber,
@@ -131,10 +136,11 @@ class TournamentService(
     }
 
     fun startCurrentRound(tourneyId: Long) {
-        verifyTournamentAdmin(tourneyId)
+        val tourney = verifyTournamentAdmin(tourneyId)
 
         val lastRound = tournamentRoundRepo.findFirstByTourneyIdOrderByRoundNumberDesc(tourneyId) ?: throw BadRequestException("No round to start.")
         tournamentRoundRepo.save(lastRound.copy(active = true))
+        keyForgeEventRepo.save(tourney.copy(tournamentStage = TournamentStage.GAMES_IN_PROGRESS))
     }
 
     fun addParticipant(tourneyId: Long, participantUsername: String) {
@@ -144,7 +150,7 @@ class TournamentService(
             throw UnauthorizedException("Must be tournament organizer to add participant to private tourney.")
         }
 
-        if (tourney.rounds.size > 1 || tourney.rounds.first().active) {
+        if (tourney.tournamentStage != TournamentStage.TOURNAMENT_NOT_STARTED) {
             throw BadRequestException("Tournament has already started, participant cannot be added.")
         }
 
@@ -193,6 +199,10 @@ class TournamentService(
                 playerOneKeys = if (playerOneWinner) results.winnerKeys else results.loserKeys,
                 playerTwoKeys = if (playerOneWinner) results.loserKeys else results.winnerKeys,
         ))
+
+        if (!tournamentPairingRepo.existsByRoundIdAndPlayerOneWonIsNull(pairing.roundId)) {
+            keyForgeEventRepo.save(tourney.copy(tournamentStage = TournamentStage.VERIFYING_ROUND_RESULTS))
+        }
     }
 
     private fun calculateParticipantStats(participants: List<TournamentParticipant>, pairings: List<TournamentPairing>): List<ParticipantStats> {
@@ -318,4 +328,5 @@ class TournamentService(
         }
         return Triple(user, participant, tourney)
     }
+
 }

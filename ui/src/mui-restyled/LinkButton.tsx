@@ -73,8 +73,8 @@ export const ListItemLink = (props: ListItemLinkProps) => {
     )
 }
 
-export const LinkButtonSafe = (props: ButtonProps) => {
-    const {href, onClick, style, ...rest} = props
+export const LinkButtonSafe = (props: ButtonProps & {noCaps?: boolean}) => {
+    const {href, onClick, style, noCaps, ...rest} = props
     const [open, setOpen] = useState(false)
     return (
         <>
@@ -86,7 +86,7 @@ export const LinkButtonSafe = (props: ButtonProps) => {
                         onClick(event)
                     }
                 }}
-                style={{textTransform: "none", ...style}}
+                style={{textTransform: noCaps ? "none" : undefined, ...style}}
             />
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Head through the wormhole?</DialogTitle>

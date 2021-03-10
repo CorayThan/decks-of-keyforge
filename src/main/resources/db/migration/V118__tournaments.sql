@@ -58,11 +58,15 @@ ALTER TABLE key_forge_event
     ADD COLUMN run_tournament BOOLEAN;
 ALTER TABLE key_forge_event
     ADD COLUMN private_tournament BOOLEAN;
+ALTER TABLE key_forge_event
+    ADD COLUMN tournament_stage VARCHAR(255);
 
 UPDATE key_forge_event
-SET run_tournament = FALSE, private_tournament = FALSE;
+SET run_tournament = FALSE, private_tournament = FALSE, tournament_stage = 'TOURNAMENT_NOT_STARTED';
 
 ALTER TABLE key_forge_event
     ALTER COLUMN run_tournament SET NOT NULL;
 ALTER TABLE key_forge_event
     ALTER COLUMN private_tournament SET NOT NULL;
+ALTER TABLE key_forge_event
+    ALTER COLUMN tournament_stage SET NOT NULL;

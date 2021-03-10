@@ -451,6 +451,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     )}
                                     <UserSearchSuggest
                                         usernames={owners}
+                                        placeholderText={"Search decks owned by..."}
                                     />
                                 </SearchDrawerExpansionPanel>
                                 <DeckSearchDrawerTagsAndNotes

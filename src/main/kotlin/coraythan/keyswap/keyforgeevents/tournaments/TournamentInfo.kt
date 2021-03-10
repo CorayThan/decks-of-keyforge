@@ -5,7 +5,11 @@ import coraythan.keyswap.generatets.GenerateTs
 @GenerateTs
 data class TournamentInfo(
         val tourneyId: Long,
+        val name: String,
+        val privateTournament: Boolean,
         val organizerUsername: String,
+        val joined: Boolean,
+        val stage: TournamentStage,
         val rounds: List<TournamentRoundInfo>,
         val rankings: List<TournamentRanking>,
 )
@@ -46,3 +50,12 @@ data class TournamentRanking(
         val keys: Int,
         val opponentKeys: Int,
 )
+
+@GenerateTs
+enum class TournamentStage {
+    TOURNAMENT_NOT_STARTED,
+    PAIRING_IN_PROGRESS,
+    GAMES_IN_PROGRESS,
+    VERIFYING_ROUND_RESULTS,
+    TOURNAMENT_COMPLETE,
+}

@@ -30,6 +30,7 @@ import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoretic
 import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreticalDecks"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
+import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
 import { LandingPage } from "../landing/LandingPage"
 import { MyDokPage } from "../my-dok/MyDokPage"
 import { StatsPage } from "../stats/StatsPage"
@@ -61,6 +62,7 @@ class Routes {
     static users = "/users"
     static community = "/community"
     static events = "/events"
+    static tournaments = "/tournaments"
     static adminPanel = "/admin-panel"
     static myProfile = MyDokSubPaths.profile
     static cards = "/cards"
@@ -69,7 +71,6 @@ class Routes {
     static wcCards = "/cards?expansion=WORLDS_COLLIDE"
     static mmCards = "/cards?expansion=MASS_MUTATION"
     static extraCardInfo = "/extra-card-infos"
-    static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static about = "/about"
     static decks = "/decks"
     static tags = "/tags"
@@ -86,9 +87,11 @@ class Routes {
     static termsOfUse = "/terms-of-use"
     static codeOfConduct = "/code-of-conduct"
     static thirdPartyTools = "/third-party-tools"
+    static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
+    static tournamentPage = (id?: number) => `${Routes.tournaments}/${id == null ? ":id" : id}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
@@ -237,6 +240,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.cardPage()}
                         component={CardPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.tournamentPage()}
+                        component={TournamentPage}
                     />
                     <Route
                         exact={true}

@@ -5,6 +5,7 @@ import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.generic.USState
 import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentRound
+import coraythan.keyswap.keyforgeevents.tournaments.TournamentStage
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDateTime
@@ -39,6 +40,9 @@ data class KeyForgeEvent(
         val runTournament: Boolean = false,
         val privateTournament: Boolean = false,
 
+        @Enumerated(EnumType.STRING)
+        val tournamentStage: TournamentStage = TournamentStage.TOURNAMENT_NOT_STARTED,
+
         val created: LocalDateTime = nowLocal(),
 
         @JsonIgnoreProperties("tourney")
@@ -60,6 +64,8 @@ data class KeyForgeEvent(
                 discordServer,
                 online,
                 sealed,
+                runTournament,
+                tournamentStage,
                 format,
                 country,
                 state,
@@ -80,6 +86,8 @@ data class KeyForgeEventDto(
         val discordServer: String?,
         val online: Boolean,
         val sealed: Boolean,
+        val hasTournament: Boolean,
+        val tournamentStage: TournamentStage,
 
         val format: KeyForgeFormat,
         val country: Country?,

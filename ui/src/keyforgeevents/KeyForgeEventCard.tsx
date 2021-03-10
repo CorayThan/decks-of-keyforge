@@ -6,14 +6,15 @@ import { Routes } from "../config/Routes"
 import { TimeUtils } from "../config/TimeUtils"
 import { KeyForgeEventDto } from "../generated-src/KeyForgeEventDto"
 import { DiscordIcon } from "../generic/icons/DiscordIcon"
-import { LinkButtonSafe } from "../mui-restyled/LinkButton"
+import { LinkButton, LinkButtonSafe } from "../mui-restyled/LinkButton"
 import { userStore } from "../user/UserStore"
+import { AddTournamentToKeyForgeEvent } from "./AddTournamentToKeyForgeEvent"
 import { CreateKeyForgeEvent } from "./CreateKeyForgeEvent"
 import { DeleteKeyForgeEvent } from "./DeleteKeyForgeEvent"
 
 export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) => {
     const {event} = props
-    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername} = event
+    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername, hasTournament, id} = event
 
     const width = 320
     const mediaHeight = 160
@@ -54,14 +55,27 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                         <DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord
                     </LinkButtonSafe>
                 )}
+                {hasTournament && (
+                    <LinkButton
+                        href={Routes.tournamentPage(id!)}
+                    >
+                        Tournament
+                    </LinkButton>
+                )}
             </CardActions>
             {isOwner && (
-                <Box display={"flex"} p={1} pt={0}>
+                <Box display={"flex"} flexWrap={"wrap"} p={1} pt={0}>
                     <CreateKeyForgeEvent initialEvent={event}/>
                     <Box pr={1}/>
                     <CreateKeyForgeEvent initialEvent={event} copy={true}/>
                     <Box pr={1}/>
                     <DeleteKeyForgeEvent event={event}/>
+                    {!hasTournament && (
+                        <>
+                            <Box pr={1}/>
+                            <AddTournamentToKeyForgeEvent event={event}/>
+                        </>
+                    )}
                 </Box>
             )}
         </Card>

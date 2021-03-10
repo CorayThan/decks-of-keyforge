@@ -31,7 +31,7 @@ export const TeamBadge = observer((props: { teamId: string, style?: React.CSSPro
     }
 
     return (
-        <LinkButtonSafe href={team.homepage} style={style}>
+        <LinkButtonSafe href={team.homepage} style={style} noCaps={true}>
             {contents}
         </LinkButtonSafe>
     )

@@ -9,7 +9,7 @@ class TournamentEndpoints(
         private val tournamentService: TournamentService
 ) {
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     fun findTourneyInfo(@PathVariable id: Long) = tournamentService.findTourneyInfo(id)
 
     @PostMapping("/secured/{id}/{privateTournament}")

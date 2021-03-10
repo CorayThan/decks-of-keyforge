@@ -57,22 +57,30 @@ class SearchUsernameStore {
 const searchUsernameStore = new SearchUsernameStore()
 
 interface UsernameSearchSuggestProps {
-    usernames: string[]
+    usernames?: string[]
+    placeholderText: string
+    onClick?: (username: string) => void
 }
 
 export const UserSearchSuggest = observer((props: UsernameSearchSuggestProps) => {
-    const {usernames} = props
+    const {usernames, placeholderText, onClick} = props
     const menuOpen = userStore.foundUsers.length > 0
 
     return (
         <Box mb={1} mt={1}>
             <TextField
                 onChange={searchUsernameStore.handleSearchChange}
-                placeholder={"Search decks owned by..."}
+                placeholder={placeholderText}
                 value={searchUsernameStore.searchValue}
                 onKeyPress={(event) => {
                     if (event.key === "Enter" && userStore.foundUsers.length > 0) {
-                        usernames.push(userStore.foundUsers[0].username)
+                        const username = userStore.foundUsers[0].username
+                        if (usernames != null) {
+                            usernames.push(username)
+                        }
+                        if (onClick != null) {
+                            onClick(username)
+                        }
                         searchUsernameStore.reset()
                     }
                 }}
@@ -93,7 +101,7 @@ export const UserSearchSuggest = observer((props: UsernameSearchSuggestProps) =>
 })
 
 // eslint-disable-next-line
-const SuggestPopper = observer(React.forwardRef((props: { usernames: string[], menuOpen: boolean }, ref: React.Ref<HTMLDivElement>) => {
+const SuggestPopper = observer(React.forwardRef((props: { usernames?: string[], onClick?: (username: string) => void, menuOpen: boolean }, ref: React.Ref<HTMLDivElement>) => {
     return (
         <ClickAwayListener onClickAway={searchUsernameStore.reset}>
             <Popper
@@ -114,7 +122,12 @@ const SuggestPopper = observer(React.forwardRef((props: { usernames: string[], m
                                         key={user.username}
                                         user={user}
                                         onClick={() => {
-                                            props.usernames.push(user.username)
+                                            if (props.usernames != null) {
+                                                props.usernames.push(user.username)
+                                            }
+                                            if (props.onClick != null) {
+                                                props.onClick(user.username)
+                                            }
                                             searchUsernameStore.reset()
                                         }}
                                     />

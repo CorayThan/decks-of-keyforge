@@ -306,7 +306,8 @@ class CreateKeyForgeEventStore {
                 format: KeyForgeFormat.ARCHON,
                 online: true,
                 sealed: false,
-                startDateTime: TimeUtils.nowPlus1WeekDateTimeString()
+                startDateTime: TimeUtils.nowPlus1WeekDateTimeString(),
+                hasTournament: false
             }
         } else {
             this.event = Utils.jsonCopy(this.originalEvent)
