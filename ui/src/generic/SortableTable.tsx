@@ -53,10 +53,12 @@ interface SortableTableProps<T> {
      * Should be property or title of the header
      */
     defaultSort: string | keyof T
+    defaultSortDir?: SortOrder
     defaultSortFunction?: TransformTableData<T>
     noInitialSort?: boolean
     noOverflow?: boolean
     limit?: number
+    rowBackgroundColor?: (data: T) => string | undefined
 }
 
 @observer
@@ -71,6 +73,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
     }
 
     componentDidUpdate(prevProps: SortableTableProps<T>) {
+        log.info("In sortable table prev data " + prevProps.data.length + " now " + this.props.data.length)
         if (prevProps.data !== this.props.data) {
             this.updateStore(this.props)
         }
@@ -79,13 +82,20 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
     updateStore = (props: SortableTableProps<T>) => {
         const defaultSortHeader = props.headers.find(header => header.property === props.defaultSort || header.title === props.defaultSort)
         log.debug(`Update sortable table store with default sort ${props.defaultSort} found header ${defaultSortHeader?.property}, ${defaultSortHeader?.title}`)
-        this.store = new SortableTableStore<T>(props.data, defaultSortHeader!, !!props.noInitialSort)
+
+        if (this.store == null) {
+            this.store = new SortableTableStore<T>(props.data, defaultSortHeader!, !!props.noInitialSort, props.defaultSortDir)
+        } else {
+            this.store.update(props.data, defaultSortHeader!, !!props.noInitialSort, props.defaultSortDir)
+        }
     }
 
     render() {
         const store = this.store
-        const {headers, noOverflow, limit} = this.props
+        const {headers, noOverflow, limit, rowBackgroundColor} = this.props
         const usableHeaders = headers.filter(header => header.hide !== true)
+
+        log.info("sortable table data length " + store.sortedItems.length)
 
         return (
             <div style={{overflowX: noOverflow ? undefined : "auto"}}>
@@ -111,7 +121,10 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                     </TableHead>
                     <TableBody>
                         {(limit == null ? store.sortedItems : store.sortedItems.slice(0, limit)).map((datum, idx) => (
-                            <TableRow key={idx}>
+                            <TableRow
+                                key={idx}
+                                style={{backgroundColor: rowBackgroundColor == null ? undefined : rowBackgroundColor(datum)}}
+                            >
                                 {usableHeaders.map(header => {
                                     let value
                                     if (header.transform != null) {
@@ -156,12 +169,19 @@ class SortableTableStore<T> {
         // @ts-ignore
     sortedItems: T[]
 
-    constructor(private data: T[], private defaultSortHeader: SortableTableHeaderInfo<T>, private noInitialSort: boolean) {
+    constructor(private data: T[], private defaultSortHeader: SortableTableHeaderInfo<T>, private noInitialSort: boolean, private initialSortOrder?: SortOrder) {
         makeObservable(this)
-        this.update(data, defaultSortHeader, noInitialSort)
+        this.update(data, defaultSortHeader, noInitialSort, initialSortOrder)
     }
 
-    update = (data: T[], defaultSortHeader: SortableTableHeaderInfo<T>, noInitialSort: boolean) => {
+    update = (data: T[], defaultSortHeader: SortableTableHeaderInfo<T>, noInitialSort: boolean, initialSortOrder?: SortOrder) => {
+        if (initialSortOrder != null) {
+            this.tableSortDir = initialSortOrder
+        }
+        this.activeTableSort = undefined
+
+        log.info("initial sort order: " + initialSortOrder)
+
         this.sortedItems = data
         const sortHandler = this.changeSortHandler(defaultSortHeader)
         sortHandler(noInitialSort)
@@ -181,7 +201,9 @@ class SortableTableStore<T> {
         return (noResort?: boolean) => {
             if ((property != null && this.activeTableSort === property) || (title != null && this.sortFunctionName === title)) {
                 this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
+                log.info("found table sort dir as " + this.tableSortDir)
             }
+
             if (this.tableSortDir == null) {
                 this.tableSortDir = "desc"
             }

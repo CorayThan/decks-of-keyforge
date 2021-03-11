@@ -125,9 +125,8 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 label={"Signup Link"}
                                 value={kfEvent.signupLink}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => kfEvent.signupLink = event.target.value}
-                                helperText={"Required url, e.g. https://coolkeyforge.com/my-event"}
+                                helperText={"URL, e.g. https://coolkeyforge.com/my-event"}
                                 fullWidth={true}
-                                required={true}
                                 error={!store.signupLinkValid() && store.saveAttempted}
                             />
                         </Grid>
@@ -263,7 +262,7 @@ class CreateKeyForgeEventStore {
     }
 
     signupLinkValid = () => {
-        return Utils.validateUrl(this.event.signupLink)
+        return this.event.signupLink.trim().length === 0 || Utils.validateUrl(this.event.signupLink)
     }
 
     discordServerValid = () => {
@@ -307,7 +306,6 @@ class CreateKeyForgeEventStore {
                 online: true,
                 sealed: false,
                 startDateTime: TimeUtils.nowPlus1WeekDateTimeString(),
-                hasTournament: false
             }
         } else {
             this.event = Utils.jsonCopy(this.originalEvent)

@@ -31,6 +31,9 @@ data class TournamentPairing(
 interface TournamentPairingRepo : CrudRepository<TournamentPairing, Long> {
     fun findAllByEventId(eventId: Long): List<TournamentPairing>
     fun findAllByRoundId(roundId: Long): List<TournamentPairing>
+    fun deleteAllByRoundId(roundId: Long)
 
     fun existsByRoundIdAndPlayerOneWonIsNull(roundId: Long): Boolean
+
+    fun findByRoundIdAndPlayerTwoIdIsNull(roundId: Long): TournamentPairing?
 }

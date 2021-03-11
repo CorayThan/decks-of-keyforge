@@ -14,7 +14,7 @@ import { DeleteKeyForgeEvent } from "./DeleteKeyForgeEvent"
 
 export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) => {
     const {event} = props
-    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername, hasTournament, id} = event
+    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername, tourneyId, id} = event
 
     const width = 320
     const mediaHeight = 160
@@ -49,15 +49,17 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                 <EventDescriptionLine name={"Description"} value={description}/>
             </CardContent>
             <CardActions>
-                <LinkButtonSafe color={"primary"} href={signupLink}>Sign Up</LinkButtonSafe>
+                {signupLink.length > 0 && (
+                    <LinkButtonSafe color={"primary"} href={signupLink}>Sign Up</LinkButtonSafe>
+                )}
                 {discordServer && (
                     <LinkButtonSafe color={"primary"} href={discordServer}>
                         <DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord
                     </LinkButtonSafe>
                 )}
-                {hasTournament && (
+                {tourneyId != null && (
                     <LinkButton
-                        href={Routes.tournamentPage(id!)}
+                        href={Routes.tournamentPage(tourneyId)}
                     >
                         Tournament
                     </LinkButton>
@@ -70,7 +72,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                     <CreateKeyForgeEvent initialEvent={event} copy={true}/>
                     <Box pr={1}/>
                     <DeleteKeyForgeEvent event={event}/>
-                    {!hasTournament && (
+                    {tourneyId == null && (
                         <>
                             <Box pr={1}/>
                             <AddTournamentToKeyForgeEvent event={event}/>

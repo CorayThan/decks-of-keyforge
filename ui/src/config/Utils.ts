@@ -149,6 +149,17 @@ export class Utils {
     static removeLineBreaks = (toModify: string) => {
         return toModify.replace(/(\r\n|\n|\r)/gm, " ")
     }
+
+    static enumNameToReadable = (enumName: string) => {
+        let lowered = enumName.toLowerCase()
+        lowered = lowered.slice(0, 1).toUpperCase() + lowered.slice(1)
+        for (let x = 0; x < lowered.length; x++) {
+            if (lowered[x] === "_" && lowered.length > x + 1) {
+                lowered = lowered.slice(0, x) + " " + lowered[x + 1].toUpperCase() + lowered.slice(x + 2)
+            }
+        }
+        return lowered
+    }
 }
 
 type EnumType = string | number

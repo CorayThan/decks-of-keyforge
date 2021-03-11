@@ -1,7 +1,7 @@
 package coraythan.keyswap.keyforgeevents.tournamentdecks
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.keyforgeevents.KeyForgeEvent
+import coraythan.keyswap.keyforgeevents.tournaments.Tournament
 import org.springframework.data.repository.CrudRepository
 import javax.persistence.*
 
@@ -10,7 +10,7 @@ data class TournamentRound(
 
         @JsonIgnoreProperties("rounds")
         @ManyToOne
-        val tourney: KeyForgeEvent,
+        val tourney: Tournament,
 
         val roundNumber: Int,
 
@@ -22,5 +22,5 @@ data class TournamentRound(
 )
 
 interface TournamentRoundRepo : CrudRepository<TournamentRound, Long> {
-        fun findFirstByTourneyIdOrderByRoundNumberDesc(id: Long): TournamentRound?
+    fun findFirstByTourneyIdOrderByRoundNumberDesc(id: Long): TournamentRound?
 }

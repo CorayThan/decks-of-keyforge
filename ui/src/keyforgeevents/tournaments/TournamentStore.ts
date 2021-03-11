@@ -18,6 +18,9 @@ export class TournamentStore {
     @observable
     loadingTournament = false
 
+    @observable
+    reportingResults = false
+
     findTourneyInfo = async (id: number) => {
         this.loadingTournament = true
         const response: AxiosResponse<TournamentInfo> = await axios.get(`${TournamentStore.CONTEXT}/${id}`)
@@ -27,20 +30,27 @@ export class TournamentStore {
 
     createTourney = async (id: number, privateTournament: boolean) => {
         this.creatingTourney = true
-        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/${privateTournament}`)
+        const response: AxiosResponse<number> = await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/${privateTournament}`)
         this.creatingTourney = false
+        return response.data
     }
 
     pairNextRound = async (id: number) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/pair-next-round`)
         await this.findTourneyInfo(id)
-        messageStore.setSuccessMessage("Paired next round!")
+        messageStore.setSuccessMessage("Paired round!")
     }
 
     startCurrentRound = async (id: number) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/start-current-round`)
         await this.findTourneyInfo(id)
-        messageStore.setSuccessMessage("Paired next round!")
+        messageStore.setSuccessMessage("Started round!")
+    }
+
+    endTournament = async (id: number) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/end-tournament`)
+        await this.findTourneyInfo(id)
+        messageStore.setSuccessMessage("Tournament ended.")
     }
 
     addParticipant = async (id: number, username: string) => {
@@ -54,8 +64,15 @@ export class TournamentStore {
     }
 
     reportResults = async (id: number, results: TournamentResults) => {
-        await axios.post(`${TournamentStore.SECURE_CONTEXT}/report-results`, results)
-        await this.findTourneyInfo(id)
+        this.reportingResults = true
+        try {
+            await axios.post(`${TournamentStore.SECURE_CONTEXT}/report-results`, results)
+            await this.findTourneyInfo(id)
+        } catch (e) {
+            // do not much
+        }
+
+        this.reportingResults = false
     }
 
     constructor() {

@@ -13,13 +13,16 @@ class TournamentEndpoints(
     fun findTourneyInfo(@PathVariable id: Long) = tournamentService.findTourneyInfo(id)
 
     @PostMapping("/secured/{id}/{privateTournament}")
-    fun createTourney(@PathVariable id: Long, @PathVariable privateTournament: Boolean) = tournamentService.createTourney(id, privateTournament)
+    fun createTourneyForEvent(@PathVariable id: Long, @PathVariable privateTournament: Boolean) = tournamentService.createTourneyForEvent(id, privateTournament)
 
     @PostMapping("/secured/{id}/pair-next-round")
     fun pairNextRound(@PathVariable id: Long) = tournamentService.pairNextRound(id)
 
     @PostMapping("/secured/{id}/start-current-round")
     fun startCurrentRound(@PathVariable id: Long) = tournamentService.startCurrentRound(id)
+
+    @PostMapping("/secured/{id}/end-tournament")
+    fun endTournament(@PathVariable id: Long) = tournamentService.endTournament(id)
 
     @PostMapping("/secured/{id}/add-participant/{username}")
     fun addParticipant(@PathVariable id: Long, @PathVariable username: String) = tournamentService.addParticipant(id, username)

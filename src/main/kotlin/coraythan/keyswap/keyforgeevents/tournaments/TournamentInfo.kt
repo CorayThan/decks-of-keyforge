@@ -7,7 +7,7 @@ data class TournamentInfo(
         val tourneyId: Long,
         val name: String,
         val privateTournament: Boolean,
-        val organizerUsername: String,
+        val organizerUsernames: List<String>,
         val joined: Boolean,
         val stage: TournamentStage,
         val rounds: List<TournamentRoundInfo>,
@@ -40,6 +40,7 @@ data class TournamentPairingInfo(
 
 @GenerateTs
 data class TournamentRanking(
+        val ranking: Int,
         val username: String,
         val participantId: Long,
         val wins: Int,
@@ -49,6 +50,7 @@ data class TournamentRanking(
         val extendedStrengthOfSchedule: Double,
         val keys: Int,
         val opponentKeys: Int,
+        val dropped: Boolean,
 )
 
 @GenerateTs

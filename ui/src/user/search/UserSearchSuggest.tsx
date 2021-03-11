@@ -95,7 +95,7 @@ export const UserSearchSuggest = observer((props: UsernameSearchSuggestProps) =>
                     </IconButton>
                 </>
             ) : null}
-            <SuggestPopper usernames={usernames} menuOpen={menuOpen} ref={searchUsernameStore.inputRef}/>
+            <SuggestPopper usernames={usernames} menuOpen={menuOpen} ref={searchUsernameStore.inputRef} onClick={onClick}/>
         </Box>
     )
 })
@@ -122,10 +122,12 @@ const SuggestPopper = observer(React.forwardRef((props: { usernames?: string[], 
                                         key={user.username}
                                         user={user}
                                         onClick={() => {
+                                            log.info("Clickedddddd!")
                                             if (props.usernames != null) {
                                                 props.usernames.push(user.username)
                                             }
                                             if (props.onClick != null) {
+                                            log.info("Clickedddddd! in onclick")
                                                 props.onClick(user.username)
                                             }
                                             searchUsernameStore.reset()
