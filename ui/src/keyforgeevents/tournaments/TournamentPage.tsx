@@ -12,6 +12,7 @@ import {
     Paper,
     Radio,
     RadioGroup,
+    TextField,
     Typography
 } from "@material-ui/core"
 import { red } from "@material-ui/core/colors"
@@ -23,6 +24,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { spacing } from "../../config/MuiConfig"
 import { roundToHundreds, Utils } from "../../config/Utils"
+import { MiniDeckLink } from "../../decks/buttons/MiniDeckLink"
 import { TournamentInfo } from "../../generated-src/TournamentInfo"
 import { TournamentPairingInfo } from "../../generated-src/TournamentPairingInfo"
 import { TournamentRanking } from "../../generated-src/TournamentRanking"
@@ -60,7 +62,7 @@ export const TournamentPage = observer(() => {
 const TournamentView = observer((props: { info: TournamentInfo }) => {
     const {info} = props
 
-    const {name, organizerUsernames, rankings, rounds, tourneyId, joined, privateTournament, stage} = info
+    const {name, organizerUsernames, rankings, rounds, tourneyId, joined, privateTournament, stage, containsDecks} = info
 
     useEffect(() => {
         uiStore.setTopbarValues(name, name, "A KeyForge tournament")
@@ -75,7 +77,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     if (stage === TournamentStage.TOURNAMENT_NOT_STARTED) {
         pairMessage = "Pair First Round"
     } else if (stage === TournamentStage.PAIRING_IN_PROGRESS) {
-        pairMessage = "Repair Round"
+        pairMessage = "Redo pairings"
     }
 
     return (
@@ -121,13 +123,14 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                             </Button>
                                         </Grid>
                                         <Grid item={true}>
-                                            <Button
+                                            <KeyButton
                                                 variant={"contained"}
-                                                onClick={() => tournamentStore.startCurrentRound(tourneyId)}
-                                                disabled={stage !== TournamentStage.VERIFYING_ROUND_RESULTS}
+                                                onClick={() => tournamentStore.endTournament(tourneyId, stage === TournamentStage.VERIFYING_ROUND_RESULTS)}
+                                                disabled={stage !== TournamentStage.VERIFYING_ROUND_RESULTS && stage !== TournamentStage.TOURNAMENT_COMPLETE}
+                                                loading={tournamentStore.endingTournament}
                                             >
-                                                End Tournament
-                                            </Button>
+                                                {stage === TournamentStage.TOURNAMENT_COMPLETE ? "Reopen Tournament" : "End Tournament"}
+                                            </KeyButton>
                                         </Grid>
                                         {stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
                                             <Grid item={true}>
@@ -155,7 +158,8 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                             stage,
                                             isOrganizer,
                                             stage !== TournamentStage.PAIRING_IN_PROGRESS || idx !== rounds.length - 1,
-                                            username
+                                            containsDecks,
+                                            username,
                                         )}
                                         data={round.pairings}
                                         defaultSort={"table"}
@@ -176,7 +180,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                 <Typography variant={"h5"}>Player Rankings</Typography>
                             </Box>
                             <SortableTable
-                                headers={participantResultsTableHeaders(tourneyId, isOrganizer, username)}
+                                headers={participantResultsTableHeaders(tourneyId, isOrganizer, stage, containsDecks, username)}
                                 data={rankings}
                                 defaultSort={"ranking"}
                                 rowBackgroundColor={(ranking) => {
@@ -200,42 +204,9 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     )
 })
 
-const participantResultsTableHeaders = (id: number, isOrganizer: boolean, username?: string): SortableTableHeaderInfo<TournamentRanking>[] => {
-
-    return [
-        {property: "ranking", sortable: true},
-        {property: "username", sortable: true, transform: (data) => <UserLink username={data.username}/>},
-        {property: "wins", sortable: true},
-        {property: "losses", sortable: true},
-        {property: "byes", sortable: true},
-        {property: "strengthOfSchedule", title: "SOS", sortable: true, transform: data => roundToHundreds(data.strengthOfSchedule)},
-        {property: "extendedStrengthOfSchedule", title: "Extended SOS", sortable: true, transform: data => roundToHundreds(data.extendedStrengthOfSchedule)},
-        {property: "score", sortable: true},
-        {property: "opponentsScore", sortable: true},
-        {
-            title: "Dropped",
-            transform: (data) => {
-                if (data.dropped) {
-                    return "Dropped"
-                }
-                if (!isOrganizer && username != data.username) {
-                    return null
-                }
-                return (
-                    <Button
-                        onClick={() => tournamentStore.dropParticipant(id, data.username)}
-                        size={"small"}
-                    >
-                        Drop
-                    </Button>
-                )
-            }
-        },
-
-    ]
-}
-
-const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, isOrganizer: boolean, reportAvailable: boolean, username?: string): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
+const roundPairingsTableHeaders = (
+    tourneyId: number, stage: TournamentStage, isOrganizer: boolean, reportAvailable: boolean, containsDecks: boolean, username?: string
+): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
 
     return [
         {property: "table", sortable: true},
@@ -249,6 +220,7 @@ const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, is
                 )
             }
         },
+        {property: "playerOneWins", title: "Wins"},
         {
             property: "playerTwoUsername",
             title: "Player Two",
@@ -262,7 +234,7 @@ const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, is
                 )
             }
         },
-        {property: "tcoLink", sortable: false},
+        {property: "playerTwoWins", title: "Wins"},
         {
             transform: (data) => {
 
@@ -290,7 +262,73 @@ const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, is
     ]
 }
 
-const BoxScore = (props: {username: string, winner?: boolean}) => {
+const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage: TournamentStage, containsDecks: boolean, username?: string): SortableTableHeaderInfo<TournamentRanking>[] => {
+
+    const columns: SortableTableHeaderInfo<TournamentRanking>[] = [
+        {property: "ranking", title: "Rank", sortable: true},
+        {property: "username", sortable: true, transform: (data) => <UserLink username={data.username}/>},
+        {property: "wins", sortable: true},
+        {property: "losses", sortable: true},
+        {property: "byes", sortable: true},
+        {property: "strengthOfSchedule", title: "SOS", sortable: true, transform: data => roundToHundreds(data.strengthOfSchedule)},
+        {property: "extendedStrengthOfSchedule", title: "SOS+", sortable: true, transform: data => roundToHundreds(data.extendedStrengthOfSchedule)},
+        {property: "score", sortable: true},
+        {property: "opponentsScore", title: "Opp. Score", sortable: true},
+    ]
+
+    if (stage === TournamentStage.TOURNAMENT_NOT_STARTED) {
+        columns.push(
+            {
+                title: "Add Deck",
+                transform: (data) => {
+                    if (!isOrganizer && username != data.username) {
+                        return null
+                    }
+                    return <AddDeckButton eventId={id} username={data.username}/>
+                }
+            },
+        )
+    }
+
+    if (containsDecks) {
+        columns.push(
+            {
+                title: "Decks",
+                transform: (data) => {
+                    return (
+                        <Box>
+                            {data.decks.map(deck => (
+                                <MiniDeckLink deck={deck}/>
+                            ))}
+                        </Box>
+                    )
+                }
+            },
+        )
+    }
+
+    if (isOrganizer) {
+        columns.push(
+            {
+                title: "",
+                transform: (data) => {
+                    return (
+                        <Button
+                            onClick={() => tournamentStore.dropParticipant(id, data.username, !data.dropped)}
+                            size={"small"}
+                        >
+                            {data.dropped ? "Undrop" : "Drop"}
+                        </Button>
+                    )
+                }
+            },
+        )
+    }
+
+    return columns
+}
+
+const BoxScore = (props: { username: string, winner?: boolean }) => {
     return (
         <Box display={"flex"} alignItems={"center"}>
             <UserLink username={props.username}/>
@@ -312,19 +350,37 @@ class ResultsStore {
     @observable
     playerTwoScore = 0
 
+    @observable
+    error = ""
+
     openResults = () => {
         this.open = true
         this.playerOneWon = true
         this.playerOneScore = 0
         this.playerTwoScore = 0
+        this.error = ""
     }
 
     constructor() {
         makeObservable(this)
     }
+
+    validate = () => {
+        if ((this.playerOneWon && this.playerOneScore < this.playerTwoScore) || (this.playerOneWon && this.playerOneScore < this.playerTwoScore)) {
+            this.error = "Loser should not have higher score."
+            return false
+        }
+        return true
+    }
 }
 
-const ReportResults = observer((props: { tourneyId: number, pairingId: number, update: boolean, playerOne: string, playerTwo: string }) => {
+const ReportResults = observer((props: {
+    tourneyId: number,
+    pairingId: number,
+    update: boolean,
+    playerOne: string,
+    playerTwo: string,
+}) => {
     const {tourneyId, pairingId, update, playerOne, playerTwo} = props
 
     const [store] = useState(new ResultsStore())
@@ -343,6 +399,7 @@ const ReportResults = observer((props: { tourneyId: number, pairingId: number, u
                 <DialogTitle>{resultName} for {playerOne} and {playerTwo ?? "Bye"}</DialogTitle>
 
                 <DialogContent>
+                    {store.error.length > 0 && <Typography color={"error"} style={{marginBottom: spacing(2)}}>{store.error}</Typography>}
                     <FormControl style={{marginRight: spacing(2)}}>
                         <FormLabel>Winner</FormLabel>
                         <RadioGroup value={store.playerOneWon} onChange={event => store.playerOneWon = event.target.value === "true"}>
@@ -375,13 +432,15 @@ const ReportResults = observer((props: { tourneyId: number, pairingId: number, u
                     <KeyButton
                         color={"primary"}
                         onClick={async () => {
-                            await tournamentStore.reportResults(tourneyId, {
-                                pairingId,
-                                playerOneWon: store.playerOneWon,
-                                playerOneScore: store.playerOneScore,
-                                playerTwoScore: store.playerTwoScore,
-                            })
-                            store.open = false
+                            if (store.validate()) {
+                                await tournamentStore.reportResults(tourneyId, {
+                                    pairingId,
+                                    playerOneWon: store.playerOneWon,
+                                    playerOneScore: store.playerOneScore,
+                                    playerTwoScore: store.playerTwoScore,
+                                })
+                                store.open = false
+                            }
                         }}
                         loading={tournamentStore.reportingResults}
                     >
@@ -390,5 +449,33 @@ const ReportResults = observer((props: { tourneyId: number, pairingId: number, u
                 </DialogActions>
             </Dialog>
         </>
+    )
+})
+
+const AddDeckButton = observer((props: { eventId: number, username: string }) => {
+
+    const [deckId, setDeckId] = useState("")
+    return (
+        <Box display={"flex"} alignItems={"center"}>
+            <TextField
+                value={deckId}
+                onChange={event => setDeckId(event.target.value)}
+                label={"Deck ID / URL"}
+                style={{width: 120}}
+            />
+            <Box ml={1}>
+                <KeyButton
+                    onClick={async () => {
+                        const deckUuid = Utils.findUuid(deckId)
+                        await tournamentStore.addDeck(props.eventId, deckUuid, props.username)
+                        setDeckId("")
+                    }}
+                    size={"small"}
+                    loading={tournamentStore.addingDeck}
+                >
+                    Add Deck
+                </KeyButton>
+            </Box>
+        </Box>
     )
 })

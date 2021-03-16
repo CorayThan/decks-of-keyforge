@@ -44,8 +44,8 @@ export const AddTournamentToKeyForgeEvent = observer((props: { event: KeyForgeEv
                     <KeyButton
                         loading={tournamentStore.creatingTourney}
                         onClick={async () => {
-                            await tournamentStore.createTourney(event.id!, true)
-                            history.push(Routes.tournamentPage(event.id!))
+                            const tourneyId = await tournamentStore.createTourney(event.id!, true)
+                            history.push(Routes.tournamentPage(tourneyId))
                             setOpen(false)
                         }}
                     >

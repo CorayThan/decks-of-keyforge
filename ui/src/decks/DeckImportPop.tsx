@@ -6,6 +6,7 @@ import { Redirect } from "react-router"
 import { closeAllMenuStoresExcept } from "../components/KeyTopbar"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
+import { Utils } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
@@ -48,7 +49,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
 
     import = () => {
         this.error = false
-        const importWith = this.deckIdFromUserInput()
+        const importWith = Utils.findUuid(this.deckId)
         if (importWith.length !== 36) {
             this.error = true
             return
@@ -58,7 +59,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
 
     importAndAdd = () => {
         this.error = false
-        const importWith = this.deckIdFromUserInput()
+        const importWith = Utils.findUuid(this.deckId)
         if (importWith.length !== 36) {
             this.error = true
             return
@@ -66,10 +67,6 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
         deckStore.importDeckAndAddToMyDecks(importWith)
     }
 
-    deckIdFromUserInput = (): string => {
-        const splitOnSlash = this.deckId.split("/")
-        return splitOnSlash[splitOnSlash.length - 1]
-    }
     handlePopoverOpen = () => {
         deckImportPopStore.popOpen = true
         this.deckId = ""
@@ -83,7 +80,7 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
     render() {
 
         if (deckStore.importedDeck) {
-            return <Redirect to={Routes.deckPage(this.deckIdFromUserInput())}/>
+            return <Redirect to={Routes.deckPage(Utils.findUuid(this.deckId))}/>
         }
 
         return (

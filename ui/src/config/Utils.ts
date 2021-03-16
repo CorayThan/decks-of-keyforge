@@ -160,6 +160,12 @@ export class Utils {
         }
         return lowered
     }
+
+    static findUuid = (findIn: string) => {
+        // only works for simple urls atm
+        const splitOnSlash = findIn.split("/")
+        return splitOnSlash[splitOnSlash.length - 1]
+    }
 }
 
 type EnumType = string | number

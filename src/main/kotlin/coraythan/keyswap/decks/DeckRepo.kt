@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> {
     fun findByKeyforgeId(keyforgeId: String): Deck?
+    fun existsByKeyforgeId(keyforgeId: String): Boolean
 
     @Query("SELECT d from Deck d where LOWER(name) LIKE ?1")
     fun findByNameIgnoreCase(@Param("name") name: String): List<Deck>
@@ -21,5 +22,4 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
             nativeQuery = true
     )
     fun estimateRowCount(): Long
-
 }

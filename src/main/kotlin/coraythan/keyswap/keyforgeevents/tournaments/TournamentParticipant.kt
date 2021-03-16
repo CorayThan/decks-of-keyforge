@@ -24,6 +24,7 @@ data class TournamentParticipant(
 
 interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long> {
     fun findByEventIdAndUserId(eventId: Long, userId: UUID): TournamentParticipant?
+    fun existsByEventIdAndUserId(eventId: Long, userId: UUID): Boolean
     fun findAllByEventId(eventId: Long): List<TournamentParticipant>
 }
 

@@ -19,6 +19,8 @@ data class TournamentPairing(
 
         val playerOneScore: Int? = null,
         val playerTwoScore: Int? = null,
+        val playerOneWins: Int = 0,
+        val playerTwoWins: Int = 0,
 
         val playerOneWon: Boolean? = null,
 

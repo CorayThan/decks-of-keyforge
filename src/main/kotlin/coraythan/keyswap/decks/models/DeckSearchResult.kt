@@ -95,8 +95,7 @@ data class DeckSearchResult(
     fun printDeck(saleInfo: DeckListing? = null): String {
         return """
             ${printDeckSimple(saleInfo)}
-            ${amberControl.roundToOneSigDig()} A • ${expectedAmber.roundToOneSigDig()} E
-            ${(artifactControl ?: 0.0).roundToOneSigDig()} R • ${creatureControl.roundToOneSigDig()} C
+            ${amberControl.roundToOneSigDig()} A • ${expectedAmber.roundToOneSigDig()} E • ${(artifactControl ?: 0.0).roundToOneSigDig()} R • ${creatureControl.roundToOneSigDig()} C
             ${(efficiency ?: 0.0).roundToOneSigDig()} F • ${(recursion ?: 0.0).roundToOneSigDig()} U • ${(disruption ?: 0.0).roundToOneSigDig()} D
         """.trimIndent()
 
@@ -119,6 +118,6 @@ data class DeckSearchResult(
 data class SimpleDeckSearchResult(
         val name: String,
         val keyforgeId: String,
-        val houses: List<House>,
-        val sas: Int,
+        val houses: List<House> = listOf(),
+        val sas: Int = 0,
 )

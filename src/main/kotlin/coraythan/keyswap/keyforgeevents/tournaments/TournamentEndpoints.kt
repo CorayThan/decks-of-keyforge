@@ -21,14 +21,17 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/start-current-round")
     fun startCurrentRound(@PathVariable id: Long) = tournamentService.startCurrentRound(id)
 
-    @PostMapping("/secured/{id}/end-tournament")
-    fun endTournament(@PathVariable id: Long) = tournamentService.endTournament(id)
+    @PostMapping("/secured/{id}/end-tournament/{end}")
+    fun endTournament(@PathVariable id: Long, @PathVariable end: Boolean) = tournamentService.endTournament(id, end)
+
+    @PostMapping("/secured/{id}/add-deck/{deckId}/{username}")
+    fun addDeck(@PathVariable id: Long, @PathVariable deckId: String, @PathVariable username: String) = tournamentService.addDeck(id, deckId, username)
 
     @PostMapping("/secured/{id}/add-participant/{username}")
     fun addParticipant(@PathVariable id: Long, @PathVariable username: String) = tournamentService.addParticipant(id, username)
 
-    @PostMapping("/secured/{id}/drop-participant/{username}")
-    fun dropParticipant(@PathVariable id: Long, @PathVariable username: String) = tournamentService.dropParticipant(id, username)
+    @PostMapping("/secured/{id}/drop-participant/{username}/{drop}")
+    fun dropParticipant(@PathVariable id: Long, @PathVariable username: String, @PathVariable drop: Boolean) = tournamentService.dropParticipant(id, username, drop)
 
     @PostMapping("/secured/report-results")
     fun reportResults(@RequestBody results: TournamentResults) = tournamentService.reportResults(results)

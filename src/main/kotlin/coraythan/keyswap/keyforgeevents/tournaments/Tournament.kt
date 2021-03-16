@@ -13,6 +13,9 @@ data class Tournament(
         val privateTourney: Boolean = false,
 
         @Enumerated(EnumType.STRING)
+        val type: TournamentType = TournamentType.SWISS,
+
+        @Enumerated(EnumType.STRING)
         val stage: TournamentStage = TournamentStage.TOURNAMENT_NOT_STARTED,
 
         @JsonIgnoreProperties("tourney")
@@ -29,3 +32,8 @@ data class Tournament(
 )
 
 interface TournamentRepo : CrudRepository<Tournament, Long>
+
+enum class TournamentType {
+        SWISS,
+        SINGLE_ELIMINATION,
+}
