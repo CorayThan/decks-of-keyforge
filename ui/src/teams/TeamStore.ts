@@ -20,9 +20,9 @@ export class TeamStore {
     uploadingImg = false
 
     @observable
-    teamNames: Map<string, TeamName> = new Map()
+    teamNamesLoaded = false
 
-    @observable
+    teamNames: Map<string, TeamName> = new Map()
     userToTeam: Map<string, TeamName> = new Map()
 
     findAllTeamNames = async () => {
@@ -33,6 +33,7 @@ export class TeamStore {
             this.teamNames.set(teamName.id, teamName)
             teamName.members.forEach(member => this.userToTeam.set(member, teamName))
         })
+        this.teamNamesLoaded = true
     }
 
     formOrUpdate = (teamName: string) => {

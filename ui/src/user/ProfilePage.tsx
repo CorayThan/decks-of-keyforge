@@ -82,7 +82,10 @@ export class ProfileView extends React.Component<ProfileViewProps> {
         forSaleFilters.forSale = true
         const forSaleLink = Routes.deckSearch(forSaleFilters)
 
-        const team = teamStore.userToTeam.get(profile.username)
+        let team
+        if (teamStore.teamNamesLoaded) {
+            team = teamStore.userToTeam.get(profile.username)
+        }
 
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>

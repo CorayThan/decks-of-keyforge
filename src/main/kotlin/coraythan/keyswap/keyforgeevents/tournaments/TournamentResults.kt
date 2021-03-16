@@ -6,6 +6,6 @@ import coraythan.keyswap.generatets.GenerateTs
 data class TournamentResults(
         val pairingId: Long,
         val playerOneWon: Boolean,
-        val playerOneKeys: Int,
-        val playerTwoKeys: Int,
+        val playerOneScore: Int,
+        val playerTwoScore: Int,
 )

@@ -1,5 +1,6 @@
 package coraythan.keyswap.keyforgeevents.tournamentparticipants
 
+import coraythan.keyswap.roundToTwoSigDig
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 import javax.persistence.Entity
@@ -14,15 +15,16 @@ data class TournamentParticipant(
 
         val dropped: Boolean = false,
 
+        val pairedDown: Boolean = false,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1,
 )
 
 interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long> {
-        fun findByEventIdAndUserId(eventId: Long, userId: UUID): TournamentParticipant?
-        fun findAllByEventIdAndDroppedFalse(eventId: Long): List<TournamentParticipant>
-        fun findAllByEventId(eventId: Long): List<TournamentParticipant>
+    fun findByEventIdAndUserId(eventId: Long, userId: UUID): TournamentParticipant?
+    fun findAllByEventId(eventId: Long): List<TournamentParticipant>
 }
 
 data class ParticipantStats(
@@ -32,6 +34,11 @@ data class ParticipantStats(
         val byes: Int = 0,
         var strengthOfSchedule: Double = 0.0,
         var extendedStrengthOfSchedule: Double = 0.0,
-        val keys: Int = 0,
-        val opponentKeys: Int = 0,
-)
+        val score: Int = 0,
+        val opponentsScore: Int = 0,
+        val dropped: Boolean = false,
+) {
+    fun totalSosScore() = (wins * 100 + strengthOfSchedule * 10 + extendedStrengthOfSchedule).roundToTwoSigDig()
+}
+
+val participantStatsComparator = compareBy<ParticipantStats>({it.wins}, {it.strengthOfSchedule}, {it.extendedStrengthOfSchedule})

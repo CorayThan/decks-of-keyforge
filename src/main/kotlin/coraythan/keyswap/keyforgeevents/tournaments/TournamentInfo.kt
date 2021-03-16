@@ -23,15 +23,18 @@ data class TournamentRoundInfo(
 
 @GenerateTs
 data class TournamentPairingInfo(
+        val table: Int,
         val pairId: Long,
         val playerOneId: Long,
         val playerOneUsername: String,
+        val playerOneWins: Int,
 
         val playerTwoId: Long?,
         val playerTwoUsername: String?,
+        val playerTwoWins: Int?,
 
-        val playerOneKeys: Int? = null,
-        val playerTwoKeys: Int? = null,
+        val playerOneScore: Int? = null,
+        val playerTwoScore: Int? = null,
 
         val playerOneWon: Boolean? = null,
 
@@ -48,10 +51,12 @@ data class TournamentRanking(
         val byes: Int,
         val strengthOfSchedule: Double,
         val extendedStrengthOfSchedule: Double,
-        val keys: Int,
-        val opponentKeys: Int,
+        val score: Int,
+        val opponentsScore: Int,
         val dropped: Boolean,
-)
+) {
+    fun fullRankValue() = (wins * 10000) + (strengthOfSchedule * 100) + extendedStrengthOfSchedule
+}
 
 @GenerateTs
 enum class TournamentStage {

@@ -1,4 +1,4 @@
-import { TableSortLabel } from "@material-ui/core"
+import { Box, Paper, TableSortLabel, Typography } from "@material-ui/core"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
@@ -8,7 +8,7 @@ import { sortBy, startCase } from "lodash"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { log, SortOrder } from "../config/Utils"
+import { SortOrder } from "../config/Utils"
 
 
 export interface SortableTableHeaderInfo<T> {
@@ -73,7 +73,6 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
     }
 
     componentDidUpdate(prevProps: SortableTableProps<T>) {
-        log.info("In sortable table prev data " + prevProps.data.length + " now " + this.props.data.length)
         if (prevProps.data !== this.props.data) {
             this.updateStore(this.props)
         }
@@ -81,7 +80,6 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
 
     updateStore = (props: SortableTableProps<T>) => {
         const defaultSortHeader = props.headers.find(header => header.property === props.defaultSort || header.title === props.defaultSort)
-        log.debug(`Update sortable table store with default sort ${props.defaultSort} found header ${defaultSortHeader?.property}, ${defaultSortHeader?.title}`)
 
         if (this.store == null) {
             this.store = new SortableTableStore<T>(props.data, defaultSortHeader!, !!props.noInitialSort, props.defaultSortDir)
@@ -94,8 +92,6 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
         const store = this.store
         const {headers, noOverflow, limit, rowBackgroundColor} = this.props
         const usableHeaders = headers.filter(header => header.hide !== true)
-
-        log.info("sortable table data length " + store.sortedItems.length)
 
         return (
             <div style={{overflowX: noOverflow ? undefined : "auto"}}>
@@ -163,7 +159,7 @@ class SortableTableStore<T> {
     sortFunctionName?: React.ReactNode
 
     @observable
-    tableSortDir: SortOrder = "desc"
+    tableSortDir: SortOrder = "asc"
 
     @observable
         // @ts-ignore
@@ -180,11 +176,9 @@ class SortableTableStore<T> {
         }
         this.activeTableSort = undefined
 
-        log.info("initial sort order: " + initialSortOrder)
-
         this.sortedItems = data
         const sortHandler = this.changeSortHandler(defaultSortHeader)
-        sortHandler(noInitialSort)
+        sortHandler(noInitialSort, true)
     }
 
     resort = () => {
@@ -198,10 +192,11 @@ class SortableTableStore<T> {
 
     changeSortHandler = (header: SortableTableHeaderInfo<T>) => {
         const {property, sortFunction, title} = header
-        return (noResort?: boolean) => {
+        return (noResort?: boolean, noSwapDir?: boolean) => {
             if ((property != null && this.activeTableSort === property) || (title != null && this.sortFunctionName === title)) {
-                this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
-                log.info("found table sort dir as " + this.tableSortDir)
+                if (!noSwapDir) {
+                    this.tableSortDir = this.tableSortDir === "desc" ? "asc" : "desc"
+                }
             }
 
             if (this.tableSortDir == null) {
@@ -215,4 +210,18 @@ class SortableTableStore<T> {
             }
         }
     }
+}
+
+export const SortableTableContainer = (props: { title: string, children: React.ReactNode }) => {
+    const {title, children} = props
+    return (
+        <Box>
+            <Paper style={{overflowX: "auto"}}>
+                <Box p={2}>
+                    <Typography variant={"h5"}>{title}</Typography>
+                </Box>
+                {children}
+            </Paper>
+        </Box>
+    )
 }

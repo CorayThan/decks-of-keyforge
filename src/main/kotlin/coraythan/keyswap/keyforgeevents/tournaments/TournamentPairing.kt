@@ -9,15 +9,16 @@ import javax.persistence.Id
 @Entity
 data class TournamentPairing(
 
-        val playerOneId: Long,
+        val pairingTable: Int,
 
+        val playerOneId: Long,
         val playerTwoId: Long?,
 
         val eventId: Long,
         val roundId: Long,
 
-        val playerOneKeys: Int? = null,
-        val playerTwoKeys: Int? = null,
+        val playerOneScore: Int? = null,
+        val playerTwoScore: Int? = null,
 
         val playerOneWon: Boolean? = null,
 
@@ -34,6 +35,4 @@ interface TournamentPairingRepo : CrudRepository<TournamentPairing, Long> {
     fun deleteAllByRoundId(roundId: Long)
 
     fun existsByRoundIdAndPlayerOneWonIsNull(roundId: Long): Boolean
-
-    fun findByRoundIdAndPlayerTwoIdIsNull(roundId: Long): TournamentPairing?
 }

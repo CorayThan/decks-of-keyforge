@@ -21,23 +21,25 @@ CREATE TABLE tournament_deck (
 );
 
 CREATE TABLE tournament_pairing (
-    id              INT8 NOT NULL,
-    event_id        INT8 NOT NULL,
-    player_one_id   INT8 NOT NULL,
-    player_one_keys INT4,
-    player_one_won  BOOLEAN,
-    player_two_id   INT8,
-    player_two_keys INT4,
-    round_id        INT8 NOT NULL,
-    tco_link        VARCHAR(255),
+    id               INT8 NOT NULL,
+    event_id         INT8 NOT NULL,
+    pairing_table    INT4 NOT NULL,
+    player_one_id    INT8 NOT NULL,
+    player_one_score INT4,
+    player_one_won   BOOLEAN,
+    player_two_id    INT8,
+    player_two_score INT4,
+    round_id         INT8 NOT NULL,
+    tco_link         VARCHAR(255),
     PRIMARY KEY (id)
 );
 
 CREATE TABLE tournament_participant (
-    id       INT8    NOT NULL,
-    dropped  BOOLEAN NOT NULL,
-    event_id INT8    NOT NULL,
-    user_id  UUID    NOT NULL,
+    id          INT8    NOT NULL,
+    dropped     BOOLEAN NOT NULL,
+    paired_down BOOLEAN NOT NULL,
+    event_id    INT8    NOT NULL,
+    user_id     UUID    NOT NULL,
     PRIMARY KEY (id)
 );
 

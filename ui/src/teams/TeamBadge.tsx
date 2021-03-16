@@ -9,6 +9,10 @@ import { teamStore } from "./TeamStore"
 export const TeamBadge = observer((props: { teamId: string, style?: React.CSSProperties }) => {
     const {teamId, style} = props
 
+    if (!teamStore.teamNamesLoaded) {
+        return null
+    }
+
     const team = teamStore.teamNames.get(teamId)
 
     if (team == null) {

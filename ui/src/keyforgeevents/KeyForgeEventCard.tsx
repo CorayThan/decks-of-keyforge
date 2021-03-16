@@ -57,7 +57,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                         <DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord
                     </LinkButtonSafe>
                 )}
-                {tourneyId != null && (
+                {userStore.contentCreator && tourneyId != null && (
                     <LinkButton
                         href={Routes.tournamentPage(tourneyId)}
                     >
@@ -72,7 +72,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                     <CreateKeyForgeEvent initialEvent={event} copy={true}/>
                     <Box pr={1}/>
                     <DeleteKeyForgeEvent event={event}/>
-                    {tourneyId == null && (
+                    {userStore.contentCreator && tourneyId == null && (
                         <>
                             <Box pr={1}/>
                             <AddTournamentToKeyForgeEvent event={event}/>

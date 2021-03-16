@@ -8,24 +8,26 @@ import {
     FormControl,
     FormControlLabel,
     FormLabel,
+    Grid,
     Paper,
     Radio,
     RadioGroup,
     Typography
 } from "@material-ui/core"
 import { red } from "@material-ui/core/colors"
+import { Star } from "@material-ui/icons"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { spacing } from "../../config/MuiConfig"
-import { log, roundToHundreds, Utils } from "../../config/Utils"
+import { roundToHundreds, Utils } from "../../config/Utils"
 import { TournamentInfo } from "../../generated-src/TournamentInfo"
 import { TournamentPairingInfo } from "../../generated-src/TournamentPairingInfo"
 import { TournamentRanking } from "../../generated-src/TournamentRanking"
 import { TournamentStage } from "../../generated-src/TournamentStage"
-import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
+import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "../../generic/SortableTable"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { LoaderBar } from "../../mui-restyled/Loader"
 import { uiStore } from "../../ui/UiStore"
@@ -69,8 +71,6 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
 
     const canJoin = !privateTournament && !joined && !isOrganizer && username != null
 
-    log.info("rankings count " + rankings.length)
-
     let pairMessage = "Pair Next Round"
     if (stage === TournamentStage.TOURNAMENT_NOT_STARTED) {
         pairMessage = "Pair First Round"
@@ -79,107 +79,122 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     }
 
     return (
-        <Box p={2} display={"flex"} alignItems={"center"} flexDirection={"column"}>
-            {canJoin && (
-                <Box display={"flex"} justifyContent={"center"} mb={2}>
-                    <Button
-                        size={"large"}
-                        color={"primary"}
-                        variant={"contained"}
-                        onClick={() => tournamentStore.addParticipant(tourneyId, username!)}
-                    >
-                        Join this Tournament!
-                    </Button>
-                </Box>
-            )}
-            <Typography color={"primary"} variant={"h4"} style={{marginBottom: spacing(2)}}>{Utils.enumNameToReadable(stage)}</Typography>
-            {isOrganizer && (
-                <Paper>
-                    <Box p={2} display={"flex"} flexWrap={"wrap"}>
-                        <Box mr={2}>
+        <Box display={"flex"} justifyContent={"center"}>
+            <Box width={1632} padding={2} style={{overflowX: "hidden"}}>
+                <Grid container={true} spacing={2}>
+                    {canJoin && (
+                        <Grid item={true} xs={12}>
                             <Button
+                                size={"large"}
+                                color={"primary"}
                                 variant={"contained"}
-                                onClick={() => tournamentStore.pairNextRound(tourneyId)}
-                                disabled={stage === TournamentStage.GAMES_IN_PROGRESS || stage === TournamentStage.TOURNAMENT_COMPLETE}
+                                onClick={() => tournamentStore.addParticipant(tourneyId, username!)}
                             >
-                                {pairMessage}
+                                Join this Tournament!
                             </Button>
-                        </Box>
-                        <Box mr={2}>
-                            <Button
-                                variant={"contained"}
-                                onClick={() => tournamentStore.startCurrentRound(tourneyId)}
-                                disabled={stage !== TournamentStage.PAIRING_IN_PROGRESS}
-                            >
-                                Lock Pairings and Start Round
-                            </Button>
-                        </Box>
-                        <Box mr={2}>
-                            <Button
-                                variant={"contained"}
-                                onClick={() => tournamentStore.startCurrentRound(tourneyId)}
-                                disabled={stage !== TournamentStage.VERIFYING_ROUND_RESULTS}
-                            >
-                                End Tournament
-                            </Button>
-                        </Box>
-                        {stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
-                            <Box width={280} mr={2}>
-                                <UserSearchSuggest
-                                    placeholderText={"Add participant with username..."}
-                                    onClick={(username) => tournamentStore.addParticipant(tourneyId, username)}
-                                />
+                        </Grid>
+                    )}
+                    <Grid item={true} xs={12}>
+                        <Typography color={"primary"} variant={"h4"}>{Utils.enumNameToReadable(stage)}</Typography>
+                    </Grid>
+                    {isOrganizer && (
+                        <Grid item={true} xs={12}>
+                            <Box display={"flex"}>
+                                <Paper style={{padding: spacing(2)}}>
+                                    <Grid container={true} spacing={2}>
+                                        <Grid item={true}>
+                                            <Button
+                                                variant={"contained"}
+                                                onClick={() => tournamentStore.pairNextRound(tourneyId)}
+                                                disabled={stage === TournamentStage.GAMES_IN_PROGRESS || stage === TournamentStage.TOURNAMENT_COMPLETE}
+                                            >
+                                                {pairMessage}
+                                            </Button>
+                                        </Grid>
+                                        <Grid item={true}>
+                                            <Button
+                                                variant={"contained"}
+                                                onClick={() => tournamentStore.startCurrentRound(tourneyId)}
+                                                disabled={stage !== TournamentStage.PAIRING_IN_PROGRESS}
+                                            >
+                                                Lock Pairings and Start Round
+                                            </Button>
+                                        </Grid>
+                                        <Grid item={true}>
+                                            <Button
+                                                variant={"contained"}
+                                                onClick={() => tournamentStore.startCurrentRound(tourneyId)}
+                                                disabled={stage !== TournamentStage.VERIFYING_ROUND_RESULTS}
+                                            >
+                                                End Tournament
+                                            </Button>
+                                        </Grid>
+                                        {stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
+                                            <Grid item={true}>
+                                                <Box width={280}>
+                                                    <UserSearchSuggest
+                                                        placeholderText={"Add participant with username..."}
+                                                        onClick={(username) => tournamentStore.addParticipant(tourneyId, username)}
+                                                    />
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </Paper>
                             </Box>
-                        )}
-                    </Box>
-                </Paper>
-            )}
+                        </Grid>
+                    )}
 
-            <Box>
-                {rounds.map(round => (
-                    <Box mt={2} key={round.roundId}>
+                    {rounds.map((round, idx) => (
+                        <Grid item={true} xs={12} xl={6} key={round.roundId}>
+                            <Box maxWidth={880}>
+                                <SortableTableContainer title={`Round ${round.roundNumber} Pairings`}>
+                                    <SortableTable
+                                        headers={roundPairingsTableHeaders(
+                                            tourneyId,
+                                            stage,
+                                            isOrganizer,
+                                            stage !== TournamentStage.PAIRING_IN_PROGRESS || idx !== rounds.length - 1,
+                                            username
+                                        )}
+                                        data={round.pairings}
+                                        defaultSort={"table"}
+                                    />
+                                    {round.pairings.length === 0 && (
+                                        <Box p={2}>
+                                            <Typography color={"textSecondary"}>This round has not yet been paired.</Typography>
+                                        </Box>
+                                    )}
+                                </SortableTableContainer>
+                            </Box>
+                        </Grid>
+                    ))}
+
+                    <Grid item={true} xs={12}>
                         <Paper>
                             <Box p={2}>
-                                <Typography variant={"h5"}>Round {round.roundNumber} Pairings</Typography>
+                                <Typography variant={"h5"}>Player Rankings</Typography>
                             </Box>
                             <SortableTable
-                                headers={roundPairingsTableHeaders(tourneyId, stage, isOrganizer, username)}
-                                data={round.pairings}
-                                defaultSort={"playerOneUsername"}
+                                headers={participantResultsTableHeaders(tourneyId, isOrganizer, username)}
+                                data={rankings}
+                                defaultSort={"ranking"}
+                                rowBackgroundColor={(ranking) => {
+                                    if (ranking.dropped) {
+                                        return red["100"]
+                                    }
+                                    return undefined
+                                }}
+                                defaultSortDir={"asc"}
                             />
-                            {round.pairings.length === 0 && (
+                            {rankings.length === 0 && (
                                 <Box p={2}>
-                                    <Typography color={"textSecondary"}>This round has not yet been paired.</Typography>
+                                    <Typography color={"textSecondary"}>No players have joined this tournament yet.</Typography>
                                 </Box>
                             )}
                         </Paper>
-                    </Box>
-                ))}
-            </Box>
-
-            <Box mt={2}>
-                <Paper>
-                    <Box p={2}>
-                        <Typography variant={"h5"}>Players</Typography>
-                    </Box>
-                    <SortableTable
-                        headers={participantResultsTableHeaders(tourneyId, isOrganizer, username)}
-                        data={rankings}
-                        defaultSort={"ranking"}
-                        rowBackgroundColor={(ranking) => {
-                            if (ranking.dropped) {
-                                return red["100"]
-                            }
-                            return undefined
-                        }}
-                        defaultSortDir={"asc"}
-                    />
-                    {rankings.length === 0 && (
-                        <Box p={2}>
-                            <Typography color={"textSecondary"}>No players have joined this tournament yet.</Typography>
-                        </Box>
-                    )}
-                </Paper>
+                    </Grid>
+                </Grid>
             </Box>
         </Box>
     )
@@ -195,8 +210,8 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, userna
         {property: "byes", sortable: true},
         {property: "strengthOfSchedule", title: "SOS", sortable: true, transform: data => roundToHundreds(data.strengthOfSchedule)},
         {property: "extendedStrengthOfSchedule", title: "Extended SOS", sortable: true, transform: data => roundToHundreds(data.extendedStrengthOfSchedule)},
-        {property: "keys", sortable: true},
-        {property: "opponentKeys", sortable: true},
+        {property: "score", sortable: true},
+        {property: "opponentsScore", sortable: true},
         {
             title: "Dropped",
             transform: (data) => {
@@ -209,6 +224,7 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, userna
                 return (
                     <Button
                         onClick={() => tournamentStore.dropParticipant(id, data.username)}
+                        size={"small"}
                     >
                         Drop
                     </Button>
@@ -219,20 +235,20 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, userna
     ]
 }
 
-const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, isOrganizer: boolean, username?: string): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
+const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, isOrganizer: boolean, reportAvailable: boolean, username?: string): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
 
     return [
+        {property: "table", sortable: true},
         {
             property: "playerOneUsername",
             title: "Player One",
             sortable: true,
             transform: (data) => {
                 return (
-                    <UserLink username={data.playerOneUsername}/>
+                    <BoxScore username={data.playerOneUsername} winner={data.playerOneWon === true}/>
                 )
             }
         },
-        {property: "playerOneKeys", title: "Keys", sortable: true},
         {
             property: "playerTwoUsername",
             title: "Player Two",
@@ -242,29 +258,17 @@ const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, is
                     return "Bye"
                 }
                 return (
-                    <UserLink username={data.playerTwoUsername}/>
+                    <BoxScore username={data.playerTwoUsername} winner={data.playerOneWon === false}/>
                 )
-            }
-        },
-        {property: "playerTwoKeys", title: "Keys", sortable: true},
-        {
-            property: "playerOneWon",
-            title: "Winner",
-            sortable: false,
-            transform: (data) => {
-                if (data.playerOneWon === true) {
-                    return data.playerOneUsername
-                } else if (data.playerOneWon === false) {
-                    return data.playerTwoUsername
-                } else {
-                    return ""
-                }
             }
         },
         {property: "tcoLink", sortable: false},
         {
             transform: (data) => {
 
+                if (!reportAvailable) {
+                    return null
+                }
                 if (username == null || (!isOrganizer && !(username === data.playerOneUsername || username === data.playerTwoUsername))) {
                     return null
                 }
@@ -286,6 +290,15 @@ const roundPairingsTableHeaders = (tourneyId: number, stage: TournamentStage, is
     ]
 }
 
+const BoxScore = (props: {username: string, winner?: boolean}) => {
+    return (
+        <Box display={"flex"} alignItems={"center"}>
+            <UserLink username={props.username}/>
+            {props.winner && <Star color={"primary"} style={{marginLeft: spacing(1)}}/>}
+        </Box>
+    )
+}
+
 class ResultsStore {
     @observable
     open = false
@@ -294,79 +307,81 @@ class ResultsStore {
     playerOneWon = true
 
     @observable
-    playerOneKeys = 0
+    playerOneScore = 0
 
     @observable
-    playerTwoKeys = 0
+    playerTwoScore = 0
 
     openResults = () => {
         this.open = true
         this.playerOneWon = true
-        this.playerOneKeys = 0
-        this.playerTwoKeys = 0
+        this.playerOneScore = 0
+        this.playerTwoScore = 0
     }
-
-    close = () => this.open = false
 
     constructor() {
         makeObservable(this)
     }
 }
 
-const resultsStore = new ResultsStore()
-
 const ReportResults = observer((props: { tourneyId: number, pairingId: number, update: boolean, playerOne: string, playerTwo: string }) => {
     const {tourneyId, pairingId, update, playerOne, playerTwo} = props
 
-    const resultName = update ? "Update Results" : "Report Results"
+    const [store] = useState(new ResultsStore())
+
+    const resultName = update ? "Update" : "Report"
+
     return (
         <>
-            <Button onClick={resultsStore.openResults}>
+            <Button
+                size={"small"}
+                onClick={store.openResults}
+            >
                 {resultName}
             </Button>
-            <Dialog open={resultsStore.open} onClose={resultsStore.close}>
+            <Dialog open={store.open} onClose={() => store.open = false}>
                 <DialogTitle>{resultName} for {playerOne} and {playerTwo ?? "Bye"}</DialogTitle>
 
                 <DialogContent>
                     <FormControl style={{marginRight: spacing(2)}}>
                         <FormLabel>Winner</FormLabel>
-                        <RadioGroup value={resultsStore.playerOneWon} onChange={event => resultsStore.playerOneWon = event.target.value === "true"}>
+                        <RadioGroup value={store.playerOneWon} onChange={event => store.playerOneWon = event.target.value === "true"}>
                             <FormControlLabel value={true} control={<Radio/>} label={playerOne}/>
                             <FormControlLabel value={false} control={<Radio/>} label={playerTwo}/>
                         </RadioGroup>
                     </FormControl>
                     <FormControl style={{marginRight: spacing(2)}}>
-                        <FormLabel>{playerOne} Keys</FormLabel>
-                        <RadioGroup value={resultsStore.playerOneKeys} onChange={event => resultsStore.playerOneKeys = Number(event.target.value)}>
-                            <FormControlLabel value={0} control={<Radio/>} label={"Zero Keys"}/>
-                            <FormControlLabel value={1} control={<Radio/>} label={"One Key"}/>
-                            <FormControlLabel value={2} control={<Radio/>} label={"Two Keys"}/>
-                            <FormControlLabel value={3} control={<Radio/>} label={"Three Keys"}/>
+                        <FormLabel>{playerOne} Score</FormLabel>
+                        <RadioGroup value={store.playerOneScore} onChange={event => store.playerOneScore = Number(event.target.value)}>
+                            <FormControlLabel value={0} control={<Radio/>} label={"Zero"}/>
+                            <FormControlLabel value={1} control={<Radio/>} label={"One"}/>
+                            <FormControlLabel value={2} control={<Radio/>} label={"Two"}/>
+                            <FormControlLabel value={3} control={<Radio/>} label={"Three"}/>
                         </RadioGroup>
                     </FormControl>
                     <FormControl>
-                        <FormLabel>{playerTwo} Keys</FormLabel>
-                        <RadioGroup value={resultsStore.playerTwoKeys} onChange={event => resultsStore.playerTwoKeys = Number(event.target.value)}>
-                            <FormControlLabel value={0} control={<Radio/>} label={"Zero Keys"}/>
-                            <FormControlLabel value={1} control={<Radio/>} label={"One Key"}/>
-                            <FormControlLabel value={2} control={<Radio/>} label={"Two Keys"}/>
-                            <FormControlLabel value={3} control={<Radio/>} label={"Three Keys"}/>
+                        <FormLabel>{playerTwo} Score</FormLabel>
+                        <RadioGroup value={store.playerTwoScore} onChange={event => store.playerTwoScore = Number(event.target.value)}>
+                            <FormControlLabel value={0} control={<Radio/>} label={"Zero"}/>
+                            <FormControlLabel value={1} control={<Radio/>} label={"One"}/>
+                            <FormControlLabel value={2} control={<Radio/>} label={"Two"}/>
+                            <FormControlLabel value={3} control={<Radio/>} label={"Three"}/>
                         </RadioGroup>
                     </FormControl>
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={resultsStore.close}>Cancel</Button>
+                    <Button onClick={() => store.open = false}>Cancel</Button>
                     <KeyButton
                         color={"primary"}
                         onClick={async () => {
                             await tournamentStore.reportResults(tourneyId, {
                                 pairingId,
-                                playerOneWon: resultsStore.playerOneWon,
-                                playerOneKeys: resultsStore.playerOneKeys,
-                                playerTwoKeys: resultsStore.playerTwoKeys,
+                                playerOneWon: store.playerOneWon,
+                                playerOneScore: store.playerOneScore,
+                                playerTwoScore: store.playerTwoScore,
                             })
-                            resultsStore.close()
+                            store.open = false
                         }}
                         loading={tournamentStore.reportingResults}
                     >
