@@ -1,22 +1,46 @@
 import { Box, Fade, IconButton, List, Paper, Popper, TextField } from "@material-ui/core"
 import ClickAwayListener from "@material-ui/core/ClickAwayListener"
 import { Clear } from "@material-ui/icons"
+import axios, { AxiosResponse, CancelTokenSource } from "axios"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
-import React from "react"
+import React, { useState } from "react"
 import { spacing } from "../../config/MuiConfig"
 import { log } from "../../config/Utils"
+import { UserSearchResult } from "../../generated-src/UserSearchResult"
 import { screenStore } from "../../ui/ScreenStore"
-import { userStore } from "../UserStore"
+import { UserStore } from "../UserStore"
 import { UserListItem } from "./UserListItem"
 
 class SearchUsernameStore {
     @observable
     searchValue = ""
 
+    @observable
+    foundUsers: UserSearchResult[] = []
+
     quietPeriodTimeoutId?: number
 
+    usernameSearchCancel: CancelTokenSource | undefined
+
     inputRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
+
+    findUsernames = (name: string) => {
+        if (this.usernameSearchCancel != null) {
+            this.usernameSearchCancel.cancel()
+        }
+        this.usernameSearchCancel = axios.CancelToken.source()
+        axios.get(`${UserStore.CONTEXT}/by-name/${name}`, {
+            cancelToken: this.usernameSearchCancel.token
+        })
+            .then((response: AxiosResponse<UserSearchResult[]>) => {
+                this.foundUsers = response.data
+                this.usernameSearchCancel = undefined
+            })
+            .catch(error => {
+                log.debug("Canceled request to find decks by name with message: " + error.message)
+            })
+    }
 
     handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.searchValue = event.target.value
@@ -30,11 +54,11 @@ class SearchUsernameStore {
             this.quietPeriodTimeoutId = window.setTimeout(() => {
                 log.debug(`Delayed search with ${trimmed}`)
                 if (trimmed.length > 3) {
-                    userStore.findUsernames(trimmed)
+                    this.findUsernames(trimmed)
                 }
             }, 500)
         } else {
-            userStore.foundUsers = []
+            this.foundUsers = []
         }
     }
 
@@ -43,9 +67,9 @@ class SearchUsernameStore {
             window.clearTimeout(this.quietPeriodTimeoutId)
         }
         this.searchValue = ""
-        userStore.foundUsers = []
-        if (userStore.usernameSearchCancel != null) {
-            userStore.usernameSearchCancel.cancel()
+        this.foundUsers = []
+        if (this.usernameSearchCancel != null) {
+            this.usernameSearchCancel.cancel()
         }
     }
 
@@ -53,8 +77,6 @@ class SearchUsernameStore {
         makeObservable(this)
     }
 }
-
-const searchUsernameStore = new SearchUsernameStore()
 
 interface UsernameSearchSuggestProps {
     usernames?: string[]
@@ -64,46 +86,49 @@ interface UsernameSearchSuggestProps {
 
 export const UserSearchSuggest = observer((props: UsernameSearchSuggestProps) => {
     const {usernames, placeholderText, onClick} = props
-    const menuOpen = userStore.foundUsers.length > 0
+
+    const [store] = useState(new SearchUsernameStore())
+
+    const menuOpen = store.foundUsers.length > 0
 
     return (
         <Box mb={1} mt={1}>
             <TextField
-                onChange={searchUsernameStore.handleSearchChange}
+                onChange={store.handleSearchChange}
                 placeholder={placeholderText}
-                value={searchUsernameStore.searchValue}
+                value={store.searchValue}
                 onKeyPress={(event) => {
-                    if (event.key === "Enter" && userStore.foundUsers.length > 0) {
-                        const username = userStore.foundUsers[0].username
+                    if (event.key === "Enter" && store.foundUsers.length > 0) {
+                        const username = store.foundUsers[0].username
                         if (usernames != null) {
                             usernames.push(username)
                         }
                         if (onClick != null) {
                             onClick(username)
                         }
-                        searchUsernameStore.reset()
+                        store.reset()
                     }
                 }}
                 fullWidth={true}
-                ref={searchUsernameStore.inputRef}
+                ref={store.inputRef}
             />
-            {searchUsernameStore.searchValue.trim().length > 0 ? (
+            {store.searchValue.trim().length > 0 ? (
                 <>
                     <div style={{flexGrow: 1}}/>
-                    <IconButton size={"small"} style={{marginLeft: spacing(1)}} onClick={searchUsernameStore.reset}>
+                    <IconButton size={"small"} style={{marginLeft: spacing(1)}} onClick={store.reset}>
                         <Clear style={{color: "white"}}/>
                     </IconButton>
                 </>
             ) : null}
-            <SuggestPopper usernames={usernames} menuOpen={menuOpen} ref={searchUsernameStore.inputRef} onClick={onClick}/>
+            <SuggestPopper store={store} usernames={usernames} menuOpen={menuOpen} ref={store.inputRef} onClick={onClick}/>
         </Box>
     )
 })
 
 // eslint-disable-next-line
-const SuggestPopper = observer(React.forwardRef((props: { usernames?: string[], onClick?: (username: string) => void, menuOpen: boolean }, ref: React.Ref<HTMLDivElement>) => {
+const SuggestPopper = observer(React.forwardRef((props: { store: SearchUsernameStore, usernames?: string[], onClick?: (username: string) => void, menuOpen: boolean }, ref: React.Ref<HTMLDivElement>) => {
     return (
-        <ClickAwayListener onClickAway={searchUsernameStore.reset}>
+        <ClickAwayListener onClickAway={props.store.reset}>
             <Popper
                 open={props.menuOpen}
                 anchorEl={
@@ -117,7 +142,7 @@ const SuggestPopper = observer(React.forwardRef((props: { usernames?: string[], 
                     <Fade {...TransitionProps} timeout={350}>
                         <Paper>
                             <List>
-                                {userStore.foundUsers.map(user => (
+                                {props.store.foundUsers.map(user => (
                                     <UserListItem
                                         key={user.username}
                                         user={user}
@@ -130,7 +155,7 @@ const SuggestPopper = observer(React.forwardRef((props: { usernames?: string[], 
                                             log.info("Clickedddddd! in onclick")
                                                 props.onClick(user.username)
                                             }
-                                            searchUsernameStore.reset()
+                                            props.store.reset()
                                         }}
                                     />
                                 ))}

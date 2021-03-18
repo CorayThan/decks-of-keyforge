@@ -74,7 +74,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         sasInfo = (
             <Tooltip title={`Previous SAS rating: ${previousSasRating}`} enterTouchDelay={100}>
                 <div style={{marginLeft: spacing(1)}}>
-                    <PastSasButton name={name} deckId={id}/>
+                    <PastSasButton name={name} deckId={id} color={"#FFFFFF"} size={"small"}/>
                 </div>
             </Tooltip>
         )

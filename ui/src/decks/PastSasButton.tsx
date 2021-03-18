@@ -8,23 +8,23 @@ import { SortableTable } from "../generic/SortableTable"
 import { Loader } from "../mui-restyled/Loader"
 import { deckStore } from "./DeckStore"
 
-export const PastSasButton = observer((props: { name: string, deckId: number }) => {
-    const {name, deckId} = props
+export const PastSasButton = observer((props: { name: string, deckId: number, size?: "small" | "medium", color?: string, style?: React.CSSProperties }) => {
+    const {name, size, deckId, color, style} = props
 
     const [open, setOpen] = useState<boolean>(false)
 
     const pastSas = deckStore.pastSas
 
     return (
-        <div>
+        <div style={style}>
             <IconButton
-                size={"small"}
+                size={size}
                 onClick={() => {
                     setOpen(true)
                     deckStore.findPastSas(deckId)
                 }}
             >
-                <HistoryIcon style={{color: "#FFFFFF", width: 20, height: 20}}/>
+                <HistoryIcon style={{color, width: 20, height: 20}}/>
             </IconButton>
             {open && (
                 <Dialog

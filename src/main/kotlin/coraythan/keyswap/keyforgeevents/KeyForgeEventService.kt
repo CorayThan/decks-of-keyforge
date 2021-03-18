@@ -31,6 +31,8 @@ class KeyForgeEventService(
         val predicate = BooleanBuilder()
         val now = nowLocal()
 
+        predicate.and(eventQ.tournamentOnly.isFalse)
+
         when (filters.timeRange) {
             EventTimeRange.PAST -> predicate.and(eventQ.startDateTime.before(now))
             EventTimeRange.FUTURE -> predicate.and(eventQ.startDateTime.after(now))
@@ -51,6 +53,13 @@ class KeyForgeEventService(
         if (filters.formats.isNotEmpty()) {
             predicate.and(eventQ.format.`in`(filters.formats))
         }
+        if (filters.withTournaments != null) {
+            if (filters.withTournaments) {
+                predicate.and(eventQ.tourneyId.isNotNull)
+            } else {
+                predicate.and(eventQ.tourneyId.isNull)
+            }
+        }
 
         return query.selectFrom(eventQ)
                 .where(predicate)
@@ -59,7 +68,7 @@ class KeyForgeEventService(
                 .map { it.toDto() }
     }
 
-    fun saveEvent(event: KeyForgeEventDto) {
+    fun saveEvent(event: KeyForgeEventDto): KeyForgeEvent {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
 
         if (event.id != null) {
@@ -80,10 +89,11 @@ class KeyForgeEventService(
                     format = event.format,
                     country = event.country,
                     state = event.state,
-                    promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false
+                    promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false,
+                    tournamentOnly = event.tournamentOnly
             )
 
-            keyForgeEventRepo.save(toUpdate)
+            return keyForgeEventRepo.save(toUpdate)
         } else {
             val toSave = KeyForgeEvent(
                     name = event.name,
@@ -101,9 +111,10 @@ class KeyForgeEventService(
                     state = event.state,
                     createdBy = user,
                     promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false,
+                    tournamentOnly = event.tournamentOnly
             )
 
-            keyForgeEventRepo.save(toSave)
+            return keyForgeEventRepo.save(toSave)
         }
     }
 

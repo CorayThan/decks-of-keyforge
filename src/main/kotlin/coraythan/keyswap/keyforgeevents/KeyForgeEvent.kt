@@ -34,6 +34,8 @@ data class KeyForgeEvent(
         val createdBy: KeyUser,
         val promoted: Boolean,
 
+        val tournamentOnly: Boolean = false,
+
         val tourneyId: Long? = null,
 
         val created: LocalDateTime = nowLocal(),
@@ -53,6 +55,7 @@ data class KeyForgeEvent(
                 discordServer,
                 online,
                 sealed,
+                tournamentOnly,
                 tourneyId,
                 format,
                 country,
@@ -74,6 +77,7 @@ data class KeyForgeEventDto(
         val discordServer: String?,
         val online: Boolean,
         val sealed: Boolean,
+        val tournamentOnly: Boolean,
         val tourneyId: Long?,
 
         val format: KeyForgeFormat,

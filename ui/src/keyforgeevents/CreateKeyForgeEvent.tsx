@@ -31,9 +31,10 @@ import { PatreonRequired } from "../thirdpartysites/patreon/PatreonRequired"
 import { userStore } from "../user/UserStore"
 import { keyForgeEventStore } from "./KeyForgeEventStore"
 import { SelectEventImage } from "./SelectEventImage"
+import { tournamentStore } from "./tournaments/TournamentStore"
 
-export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEventDto, copy?: boolean }) => {
-    const {initialEvent, copy} = props
+export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEventDto, copy?: boolean, tournament?: boolean }) => {
+    const {initialEvent, copy, tournament} = props
 
     const [store] = useState(new CreateKeyForgeEventStore(initialEvent, copy))
 
@@ -42,8 +43,14 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
     const isPatron = userStore.patron
 
     let buttonName = "Create an Event"
+    let dialogTitle = "Create a new Event"
     if (initialEvent != null) {
         buttonName = copy ? "Copy" : "Update"
+        dialogTitle = "Update an Event"
+    }
+    if (tournament) {
+        buttonName = "Make Tournament"
+        dialogTitle = "Make a Tournament without an Event"
     }
 
     return (
@@ -58,11 +65,11 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
             <Dialog
                 open={store.open}
             >
-                <DialogTitle>{initialEvent == null ? "Create a new Event" : "Update an Event"}</DialogTitle>
+                <DialogTitle>{dialogTitle}</DialogTitle>
                 <DialogContent>
                     <PatreonRequired
                         requiredLevel={PatreonRewardsTier.NOTICE_BARGAINS}
-                        message={"Please become a Patron of the site to list upcoming KeyForge events!"}
+                        message={"Please become a Patron of the site to create KeyForge events and tournaments!"}
                         style={{marginBottom: spacing(2)}}
                     />
                     <Grid container={true} spacing={2}>
@@ -190,19 +197,19 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                 <DialogActions>
                     <KeyButton
                         onClick={store.toggleOpen}
-                        disabled={keyForgeEventStore.savingEvent}
+                        disabled={keyForgeEventStore.savingEvent || tournamentStore.savingTournament}
                     >
                         Cancel
                     </KeyButton>
                     <KeyButton
                         onClick={() => store.reset(false)}
-                        disabled={keyForgeEventStore.savingEvent}
+                        disabled={keyForgeEventStore.savingEvent || tournamentStore.savingTournament}
                     >
                         Reset
                     </KeyButton>
                     <KeyButton
                         color={"primary"}
-                        loading={keyForgeEventStore.savingEvent}
+                        loading={keyForgeEventStore.savingEvent || tournamentStore.savingTournament}
                         disabled={!isPatron}
                         onClick={async () => {
                             if (!store.valid()) {
@@ -210,7 +217,11 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                             } else {
                                 store.saveAttempted = false
                                 const eventToSend = store.cleanEvent()
-                                keyForgeEventStore.saveEvent(eventToSend)
+                                if (tournament) {
+                                    await tournamentStore.createTournament(eventToSend)
+                                } else {
+                                    await keyForgeEventStore.saveEvent(eventToSend)
+                                }
                                 store.toggleOpen()
                             }
                         }}

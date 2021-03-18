@@ -8,6 +8,7 @@ data class KeyForgeEventFilters(
         val formats: List<KeyForgeFormat>,
         val promoted: Boolean,
         val sealed: Boolean?,
+        val withTournaments: Boolean?,
 )
 
 @GenerateTs

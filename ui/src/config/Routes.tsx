@@ -31,6 +31,7 @@ import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreti
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
 import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
+import { TournamentSearchPage } from "../keyforgeevents/tournaments/TournamentSearchPage"
 import { LandingPage } from "../landing/LandingPage"
 import { MyDokPage } from "../my-dok/MyDokPage"
 import { StatsPage } from "../stats/StatsPage"
@@ -240,6 +241,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.cardPage()}
                         component={CardPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.tournaments}
+                        component={TournamentSearchPage}
                     />
                     <Route
                         exact={true}

@@ -1,7 +1,8 @@
 package coraythan.keyswap.keyforgeevents.tournaments
 
-import coraythan.keyswap.decks.models.SimpleDeckSearchResult
+import coraythan.keyswap.House
 import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.keyforgeevents.KeyForgeEventDto
 
 @GenerateTs
 data class TournamentInfo(
@@ -10,10 +11,11 @@ data class TournamentInfo(
         val privateTournament: Boolean,
         val organizerUsernames: List<String>,
         val joined: Boolean,
-        val containsDecks: Boolean,
         val stage: TournamentStage,
+        val event: KeyForgeEventDto,
         val rounds: List<TournamentRoundInfo>,
         val rankings: List<TournamentRanking>,
+        val tournamentDecks: List<TournamentDeckInfo>,
 )
 
 @GenerateTs
@@ -56,7 +58,7 @@ data class TournamentRanking(
         val score: Int,
         val opponentsScore: Int,
         val dropped: Boolean,
-        val decks: List<SimpleDeckSearchResult>,
+        val decks: List<TournamentDeckInfo>,
 ) {
     fun fullRankValue() = (wins * 10000) + (strengthOfSchedule * 100) + extendedStrengthOfSchedule
 }
@@ -69,3 +71,14 @@ enum class TournamentStage {
     VERIFYING_ROUND_RESULTS,
     TOURNAMENT_COMPLETE,
 }
+
+@GenerateTs
+data class TournamentDeckInfo(
+        val id: Long,
+        val keyforgeId: String,
+        val name: String,
+        val sas: Int,
+        val houses: List<House>,
+        val username: String,
+        val hasVerificationImage: Boolean,
+)

@@ -450,6 +450,14 @@ class DeckSearchService(
             }
         }
 
+        if (filters.tournamentIds.isNotEmpty()) {
+            predicate.andAnyOf(
+                    *filters.tournamentIds.map {
+                        deckQ.tournamentDecks.any().tourneyId.eq(it)
+                    }.toTypedArray()
+            )
+        }
+
         return predicate
     }
 

@@ -82,6 +82,7 @@ data class KeyUser(
         val sellerEmail: String? = null,
         val sellerEmailVerified: Boolean = false,
         val discord: String? = null,
+        val tcoUsername: String? = null,
         val storeName: String? = null,
         val shippingCost: String? = null,
         val allowsTrades: Boolean = false,

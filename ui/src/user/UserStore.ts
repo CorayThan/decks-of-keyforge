@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse, CancelTokenSource } from "axios"
+import axios, { AxiosError, AxiosResponse } from "axios"
 import { computed, makeObservable, observable } from "mobx"
 import { latestVersion } from "../about/ReleaseNotes"
 import { deckListingStore } from "../auctions/DeckListingStore"
@@ -15,7 +15,6 @@ import { UserLogin } from "../generated-src/UserLogin"
 import { UserProfile } from "../generated-src/UserProfile"
 import { UserProfileUpdate } from "../generated-src/UserProfileUpdate"
 import { UserRegistration } from "../generated-src/UserRegistration"
-import { UserSearchResult } from "../generated-src/UserSearchResult"
 import { UserType } from "../generated-src/UserType"
 import { tagStore } from "../tags/TagStore"
 import { findPatronRewardLevel, patronForSaleLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
@@ -46,11 +45,6 @@ export class UserStore {
 
     @observable
     agreeingToTerms = false
-
-    @observable
-    foundUsers: UserSearchResult[] = []
-
-    usernameSearchCancel: CancelTokenSource | undefined
 
     loadLoggedInUser = async () => {
         if (!keyLocalStorage.hasAuthKey()) {
@@ -83,23 +77,6 @@ export class UserStore {
             }
             this.loginInProgress = false
         }
-    }
-
-    findUsernames = (name: string) => {
-        if (this.usernameSearchCancel != null) {
-            this.usernameSearchCancel.cancel()
-        }
-        this.usernameSearchCancel = axios.CancelToken.source()
-        axios.get(`${UserStore.CONTEXT}/by-name/${name}`, {
-            cancelToken: this.usernameSearchCancel.token
-        })
-            .then((response: AxiosResponse<UserSearchResult[]>) => {
-                this.foundUsers = response.data
-                this.usernameSearchCancel = undefined
-            })
-            .catch(error => {
-                log.debug("Canceled request to find decks by name with message: " + error.message)
-            })
     }
 
     checkLastSeenVersion = () => {

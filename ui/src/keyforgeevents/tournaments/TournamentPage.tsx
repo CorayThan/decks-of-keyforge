@@ -1,41 +1,25 @@
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    Grid,
-    Paper,
-    Radio,
-    RadioGroup,
-    TextField,
-    Typography
-} from "@material-ui/core"
+import { Box, Button, Grid, Paper, Typography } from "@material-ui/core"
 import { red } from "@material-ui/core/colors"
-import { Star } from "@material-ui/icons"
-import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { spacing } from "../../config/MuiConfig"
 import { roundToHundreds, Utils } from "../../config/Utils"
-import { MiniDeckLink } from "../../decks/buttons/MiniDeckLink"
 import { TournamentInfo } from "../../generated-src/TournamentInfo"
-import { TournamentPairingInfo } from "../../generated-src/TournamentPairingInfo"
 import { TournamentRanking } from "../../generated-src/TournamentRanking"
 import { TournamentStage } from "../../generated-src/TournamentStage"
-import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "../../generic/SortableTable"
-import { KeyButton } from "../../mui-restyled/KeyButton"
+import { SortableTable, SortableTableHeaderInfo } from "../../generic/SortableTable"
+import { ConfirmKeyButton, KeyButton } from "../../mui-restyled/KeyButton"
 import { LoaderBar } from "../../mui-restyled/Loader"
 import { uiStore } from "../../ui/UiStore"
 import { UserSearchSuggest } from "../../user/search/UserSearchSuggest"
 import { UserLink } from "../../user/UserLink"
 import { userStore } from "../../user/UserStore"
+import { KeyForgeEventCard } from "../KeyForgeEventCard"
+import { AddTournamentDeckButton } from "./AddTournamentDeckButton"
+import { PairingsView } from "./PairingsView"
+import { TournamentDecksList } from "./TournamentDecksList"
 import { tournamentStore } from "./TournamentStore"
 
 export const TournamentPage = observer(() => {
@@ -62,7 +46,7 @@ export const TournamentPage = observer(() => {
 const TournamentView = observer((props: { info: TournamentInfo }) => {
     const {info} = props
 
-    const {name, organizerUsernames, rankings, rounds, tourneyId, joined, privateTournament, stage, containsDecks} = info
+    const {name, organizerUsernames, rankings, rounds, tourneyId, joined, privateTournament, stage, tournamentDecks, event} = info
 
     useEffect(() => {
         uiStore.setTopbarValues(name, name, "A KeyForge tournament")
@@ -79,6 +63,9 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     } else if (stage === TournamentStage.PAIRING_IN_PROGRESS) {
         pairMessage = "Redo pairings"
     }
+
+    const currentRound = rounds.length > 0 ? rounds[rounds.length - 1] : undefined
+    const pastRounds = rounds.length > 1 ? rounds.slice(0, rounds.length - 1) : []
 
     return (
         <Box display={"flex"} justifyContent={"center"}>
@@ -148,31 +135,16 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                         </Grid>
                     )}
 
-                    {rounds.map((round, idx) => (
-                        <Grid item={true} xs={12} xl={6} key={round.roundId}>
-                            <Box maxWidth={880}>
-                                <SortableTableContainer title={`Round ${round.roundNumber} Pairings`}>
-                                    <SortableTable
-                                        headers={roundPairingsTableHeaders(
-                                            tourneyId,
-                                            stage,
-                                            isOrganizer,
-                                            stage !== TournamentStage.PAIRING_IN_PROGRESS || idx !== rounds.length - 1,
-                                            containsDecks,
-                                            username,
-                                        )}
-                                        data={round.pairings}
-                                        defaultSort={"table"}
-                                    />
-                                    {round.pairings.length === 0 && (
-                                        <Box p={2}>
-                                            <Typography color={"textSecondary"}>This round has not yet been paired.</Typography>
-                                        </Box>
-                                    )}
-                                </SortableTableContainer>
-                            </Box>
-                        </Grid>
-                    ))}
+                    {currentRound != null && (
+                        <PairingsView
+                            round={currentRound}
+                            tourneyId={tourneyId}
+                            stage={stage}
+                            isOrganizer={isOrganizer}
+                            containsDecks={tournamentDecks.length > 0}
+                            username={username}
+                        />
+                    )}
 
                     <Grid item={true} xs={12}>
                         <Paper>
@@ -180,7 +152,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                 <Typography variant={"h5"}>Player Rankings</Typography>
                             </Box>
                             <SortableTable
-                                headers={participantResultsTableHeaders(tourneyId, isOrganizer, stage, containsDecks, username)}
+                                headers={participantResultsTableHeaders(tourneyId, isOrganizer, stage, tournamentDecks.length > 0, username)}
                                 data={rankings}
                                 defaultSort={"ranking"}
                                 rowBackgroundColor={(ranking) => {
@@ -198,75 +170,70 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                             )}
                         </Paper>
                     </Grid>
+
+                    {pastRounds.map((round) => (
+                        <PairingsView
+                            round={round}
+                            tourneyId={tourneyId}
+                            stage={stage}
+                            isOrganizer={isOrganizer}
+                            containsDecks={tournamentDecks.length > 0}
+                            username={username}
+                        />
+                    ))}
+
+                    <Grid item={true} xs={12}>
+                        <Box display={"flex"}>
+                            <TournamentDecksList tourneyId={tourneyId} decks={tournamentDecks} isOrganizer={isOrganizer} stage={stage} username={username}/>
+                        </Box>
+                    </Grid>
+
+                    <Grid item={true} xs={12}>
+                        <Box display={"flex"}>
+                            <KeyForgeEventCard event={event} style={{marginRight: spacing(2)}} noTournamentLink={true}/>
+                            <Paper>
+                                <Box p={2}>
+                                    <Typography variant={"h5"}>Tournament Organizers</Typography>
+                                    {isOrganizer && (
+                                        <Box width={280} mt={2}>
+                                            <UserSearchSuggest
+                                                placeholderText={"Add TO with username..."}
+                                                onClick={(username) => tournamentStore.addTO(tourneyId, username)}
+                                            />
+                                        </Box>
+                                    )}
+                                    <Box display={"flex"} flexWrap={"wrap"} mt={2}>
+                                        {organizerUsernames.map(username => (
+                                            <Box mr={2}>
+                                                <UserLink username={username}/>
+                                                {isOrganizer && organizerUsernames.length > 1 && (
+                                                    <ConfirmKeyButton
+                                                        title={"Remove Tournament Organizer"}
+                                                        description={`Do you want to remove ${username} from having admin rights to this tournament?`}
+                                                        onConfirm={() => tournamentStore.removeTo(tourneyId, username)}
+                                                        style={{marginLeft: spacing(2)}}
+                                                    >
+                                                        Remove TO
+                                                    </ConfirmKeyButton>
+                                                )}
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                </Box>
+                            </Paper>
+                        </Box>
+                    </Grid>
                 </Grid>
             </Box>
         </Box>
     )
 })
 
-const roundPairingsTableHeaders = (
-    tourneyId: number, stage: TournamentStage, isOrganizer: boolean, reportAvailable: boolean, containsDecks: boolean, username?: string
-): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
-
-    return [
-        {property: "table", sortable: true},
-        {
-            property: "playerOneUsername",
-            title: "Player One",
-            sortable: true,
-            transform: (data) => {
-                return (
-                    <BoxScore username={data.playerOneUsername} winner={data.playerOneWon === true}/>
-                )
-            }
-        },
-        {property: "playerOneWins", title: "Wins"},
-        {
-            property: "playerTwoUsername",
-            title: "Player Two",
-            sortable: true,
-            transform: (data) => {
-                if (data.playerTwoUsername == null) {
-                    return "Bye"
-                }
-                return (
-                    <BoxScore username={data.playerTwoUsername} winner={data.playerOneWon === false}/>
-                )
-            }
-        },
-        {property: "playerTwoWins", title: "Wins"},
-        {
-            transform: (data) => {
-
-                if (!reportAvailable) {
-                    return null
-                }
-                if (username == null || (!isOrganizer && !(username === data.playerOneUsername || username === data.playerTwoUsername))) {
-                    return null
-                }
-                if (data.playerTwoUsername == null) {
-                    return null
-                }
-                return (
-                    <ReportResults
-                        tourneyId={tourneyId}
-                        pairingId={data.pairId}
-                        update={data.playerOneWon != null}
-                        playerOne={data.playerOneUsername}
-                        playerTwo={data.playerTwoUsername!}
-                    />
-                )
-            }
-        },
-
-    ]
-}
-
 const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage: TournamentStage, containsDecks: boolean, username?: string): SortableTableHeaderInfo<TournamentRanking>[] => {
 
     const columns: SortableTableHeaderInfo<TournamentRanking>[] = [
         {property: "ranking", title: "Rank", sortable: true},
-        {property: "username", sortable: true, transform: (data) => <UserLink username={data.username}/>},
+        {property: "username", title: "Player", transform: (data) => <UserLink username={data.username}/>},
         {property: "wins", sortable: true},
         {property: "losses", sortable: true},
         {property: "byes", sortable: true},
@@ -276,32 +243,12 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage:
         {property: "opponentsScore", title: "Opp. Score", sortable: true},
     ]
 
-    if (stage === TournamentStage.TOURNAMENT_NOT_STARTED) {
+    if (stage === TournamentStage.TOURNAMENT_NOT_STARTED && isOrganizer) {
         columns.push(
             {
                 title: "Add Deck",
                 transform: (data) => {
-                    if (!isOrganizer && username != data.username) {
-                        return null
-                    }
-                    return <AddDeckButton eventId={id} username={data.username}/>
-                }
-            },
-        )
-    }
-
-    if (containsDecks) {
-        columns.push(
-            {
-                title: "Decks",
-                transform: (data) => {
-                    return (
-                        <Box>
-                            {data.decks.map(deck => (
-                                <MiniDeckLink deck={deck}/>
-                            ))}
-                        </Box>
-                    )
+                    return <AddTournamentDeckButton eventId={id} username={data.username}/>
                 }
             },
         )
@@ -327,155 +274,3 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage:
 
     return columns
 }
-
-const BoxScore = (props: { username: string, winner?: boolean }) => {
-    return (
-        <Box display={"flex"} alignItems={"center"}>
-            <UserLink username={props.username}/>
-            {props.winner && <Star color={"primary"} style={{marginLeft: spacing(1)}}/>}
-        </Box>
-    )
-}
-
-class ResultsStore {
-    @observable
-    open = false
-
-    @observable
-    playerOneWon = true
-
-    @observable
-    playerOneScore = 0
-
-    @observable
-    playerTwoScore = 0
-
-    @observable
-    error = ""
-
-    openResults = () => {
-        this.open = true
-        this.playerOneWon = true
-        this.playerOneScore = 0
-        this.playerTwoScore = 0
-        this.error = ""
-    }
-
-    constructor() {
-        makeObservable(this)
-    }
-
-    validate = () => {
-        if ((this.playerOneWon && this.playerOneScore < this.playerTwoScore) || (this.playerOneWon && this.playerOneScore < this.playerTwoScore)) {
-            this.error = "Loser should not have higher score."
-            return false
-        }
-        return true
-    }
-}
-
-const ReportResults = observer((props: {
-    tourneyId: number,
-    pairingId: number,
-    update: boolean,
-    playerOne: string,
-    playerTwo: string,
-}) => {
-    const {tourneyId, pairingId, update, playerOne, playerTwo} = props
-
-    const [store] = useState(new ResultsStore())
-
-    const resultName = update ? "Update" : "Report"
-
-    return (
-        <>
-            <Button
-                size={"small"}
-                onClick={store.openResults}
-            >
-                {resultName}
-            </Button>
-            <Dialog open={store.open} onClose={() => store.open = false}>
-                <DialogTitle>{resultName} for {playerOne} and {playerTwo ?? "Bye"}</DialogTitle>
-
-                <DialogContent>
-                    {store.error.length > 0 && <Typography color={"error"} style={{marginBottom: spacing(2)}}>{store.error}</Typography>}
-                    <FormControl style={{marginRight: spacing(2)}}>
-                        <FormLabel>Winner</FormLabel>
-                        <RadioGroup value={store.playerOneWon} onChange={event => store.playerOneWon = event.target.value === "true"}>
-                            <FormControlLabel value={true} control={<Radio/>} label={playerOne}/>
-                            <FormControlLabel value={false} control={<Radio/>} label={playerTwo}/>
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl style={{marginRight: spacing(2)}}>
-                        <FormLabel>{playerOne} Score</FormLabel>
-                        <RadioGroup value={store.playerOneScore} onChange={event => store.playerOneScore = Number(event.target.value)}>
-                            <FormControlLabel value={0} control={<Radio/>} label={"Zero"}/>
-                            <FormControlLabel value={1} control={<Radio/>} label={"One"}/>
-                            <FormControlLabel value={2} control={<Radio/>} label={"Two"}/>
-                            <FormControlLabel value={3} control={<Radio/>} label={"Three"}/>
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>{playerTwo} Score</FormLabel>
-                        <RadioGroup value={store.playerTwoScore} onChange={event => store.playerTwoScore = Number(event.target.value)}>
-                            <FormControlLabel value={0} control={<Radio/>} label={"Zero"}/>
-                            <FormControlLabel value={1} control={<Radio/>} label={"One"}/>
-                            <FormControlLabel value={2} control={<Radio/>} label={"Two"}/>
-                            <FormControlLabel value={3} control={<Radio/>} label={"Three"}/>
-                        </RadioGroup>
-                    </FormControl>
-                </DialogContent>
-
-                <DialogActions>
-                    <Button onClick={() => store.open = false}>Cancel</Button>
-                    <KeyButton
-                        color={"primary"}
-                        onClick={async () => {
-                            if (store.validate()) {
-                                await tournamentStore.reportResults(tourneyId, {
-                                    pairingId,
-                                    playerOneWon: store.playerOneWon,
-                                    playerOneScore: store.playerOneScore,
-                                    playerTwoScore: store.playerTwoScore,
-                                })
-                                store.open = false
-                            }
-                        }}
-                        loading={tournamentStore.reportingResults}
-                    >
-                        Report
-                    </KeyButton>
-                </DialogActions>
-            </Dialog>
-        </>
-    )
-})
-
-const AddDeckButton = observer((props: { eventId: number, username: string }) => {
-
-    const [deckId, setDeckId] = useState("")
-    return (
-        <Box display={"flex"} alignItems={"center"}>
-            <TextField
-                value={deckId}
-                onChange={event => setDeckId(event.target.value)}
-                label={"Deck ID / URL"}
-                style={{width: 120}}
-            />
-            <Box ml={1}>
-                <KeyButton
-                    onClick={async () => {
-                        const deckUuid = Utils.findUuid(deckId)
-                        await tournamentStore.addDeck(props.eventId, deckUuid, props.username)
-                        setDeckId("")
-                    }}
-                    size={"small"}
-                    loading={tournamentStore.addingDeck}
-                >
-                    Add Deck
-                </KeyButton>
-            </Box>
-        </Box>
-    )
-})

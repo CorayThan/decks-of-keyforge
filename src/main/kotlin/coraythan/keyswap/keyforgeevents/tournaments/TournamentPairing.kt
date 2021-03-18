@@ -14,7 +14,7 @@ data class TournamentPairing(
         val playerOneId: Long,
         val playerTwoId: Long?,
 
-        val eventId: Long,
+        val tournamentId: Long,
         val roundId: Long,
 
         val playerOneScore: Int? = null,
@@ -32,7 +32,7 @@ data class TournamentPairing(
 )
 
 interface TournamentPairingRepo : CrudRepository<TournamentPairing, Long> {
-    fun findAllByEventId(eventId: Long): List<TournamentPairing>
+    fun findAllByTournamentId(tournamentId: Long): List<TournamentPairing>
     fun findAllByRoundId(roundId: Long): List<TournamentPairing>
     fun deleteAllByRoundId(roundId: Long)
 

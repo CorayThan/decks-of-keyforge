@@ -31,6 +31,8 @@ interface DeckQuery {
     val owner: String
     val owners: List<String>
     val previousOwner: String
+
+    val tournamentIds: List<Long>
 }
 
 data class DeckFilters(
@@ -62,6 +64,8 @@ data class DeckFilters(
         override val owner: String = "",
         override val owners: List<String> = listOf(),
         override val previousOwner: String = "",
+        override val tournamentIds: List<Long> = listOf(),
+
         val pageSize: Long = 20,
 
         val sort: DeckSortOptions = DeckSortOptions.SAS_RATING,

@@ -128,3 +128,56 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
     )
 }
 
+interface ConfirmButtonProps extends ButtonProps {
+    title: string
+    description: string
+    image?: string
+    onConfirm: () => void
+    confirmButtonName?: string
+}
+
+export const ConfirmKeyButton = (props: ConfirmButtonProps) => {
+    const {title, description, image, onConfirm, confirmButtonName, ...rest} = props
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+    return (
+        <>
+            <Button
+                {...rest}
+                onClick={(event) => {
+                    setOpen(true)
+                }}
+            />
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogContent>
+                    {image && (
+                        <Box display={"flex"} justifyContent={"center"} mb={2}>
+                            <img width={200} src={image}/>
+                        </Box>
+                    )}
+                    <DialogContentText gutterBottom={true}>
+                        {description}
+                    </DialogContentText>
+
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Close</Button>
+                    <KeyButton
+                        loading={loading}
+                        color={"primary"}
+                        onClick={async () => {
+                            setLoading(true)
+                            await onConfirm()
+                            setOpen(false)
+                            setLoading(false)
+                        }}
+                    >
+                        {confirmButtonName ?? "Confirm"}
+                    </KeyButton>
+                </DialogActions>
+            </Dialog>
+        </>
+    )
+}
+

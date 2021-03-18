@@ -1,8 +1,12 @@
 import axios, { AxiosResponse } from "axios"
 import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../../config/HttpConfig"
+import { Utils } from "../../config/Utils"
+import { KeyForgeEventDto } from "../../generated-src/KeyForgeEventDto"
+import { KeyForgeEventFilters } from "../../generated-src/KeyForgeEventFilters"
 import { TournamentInfo } from "../../generated-src/TournamentInfo"
 import { TournamentResults } from "../../generated-src/TournamentResults"
+import { TournamentSearchResult } from "../../generated-src/TournamentSearchResult"
 import { messageStore } from "../../ui/MessageStore"
 
 export class TournamentStore {
@@ -27,6 +31,27 @@ export class TournamentStore {
     @observable
     endingTournament = false
 
+    currentFilters?: KeyForgeEventFilters
+
+    @observable
+    searching = false
+
+    @observable
+    foundTournaments: TournamentSearchResult[] = []
+
+    @observable
+    savingTournament = false
+
+    searchTournaments = async (filters: KeyForgeEventFilters) => {
+        this.searching = true
+        const filtersCopied = Utils.jsonCopy(filters)
+        filtersCopied.withTournaments = true
+        this.currentFilters = filtersCopied
+        const response: AxiosResponse<TournamentSearchResult[]> = await axios.post(TournamentStore.CONTEXT + "/search", filters)
+        this.foundTournaments = response.data
+        this.searching = false
+    }
+
     findTourneyInfo = async (id: number) => {
         this.loadingTournament = true
         const response: AxiosResponse<TournamentInfo> = await axios.get(`${TournamentStore.CONTEXT}/${id}`)
@@ -34,11 +59,21 @@ export class TournamentStore {
         this.loadingTournament = false
     }
 
-    createTourney = async (id: number, privateTournament: boolean) => {
+    addTourneyToEvent = async (id: number, privateTournament: boolean) => {
         this.creatingTourney = true
         const response: AxiosResponse<number> = await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/${privateTournament}`)
         this.creatingTourney = false
         return response.data
+    }
+
+    createTournament = async (event: KeyForgeEventDto) => {
+        this.savingTournament = true
+        await axios.post(TournamentStore.SECURE_CONTEXT, event)
+        if (this.currentFilters != null) {
+            await this.searchTournaments(this.currentFilters)
+        }
+        this.savingTournament = false
+        messageStore.setSuccessMessage("Created your new tournament!")
     }
 
     pairNextRound = async (id: number) => {
@@ -65,6 +100,16 @@ export class TournamentStore {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/add-deck/${deckId}/${username}`)
         await this.findTourneyInfo(id)
         this.addingDeck = false
+    }
+
+    addTO = async (id: number, username: string) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/add-to/${username}`)
+        await this.findTourneyInfo(id)
+    }
+
+    removeTo = async (id: number, username: string) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/remove-to/${username}`)
+        await this.findTourneyInfo(id)
     }
 
     addParticipant = async (id: number, username: string) => {

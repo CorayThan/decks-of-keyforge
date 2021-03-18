@@ -18,7 +18,7 @@ import { SortDirectionView } from "../../../components/SortDirectionView"
 import { keyLocalStorage } from "../../../config/KeyLocalStorage"
 import { spacing } from "../../../config/MuiConfig"
 import { Routes } from "../../../config/Routes"
-import { log } from "../../../config/Utils"
+import { log, Utils } from "../../../config/Utils"
 import { expansionInfoMapNumbers } from "../../../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../../expansions/ExpansionSelectOrExclude"
 import { PatreonRewardsTier } from "../../../generated-src/PatreonRewardsTier"
@@ -197,7 +197,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         const {
             title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, owner, forSale, forTrade, forAuction,
             forSaleInCountry, notes, notesUser, completedAuctions, teamDecks, withOwners, handleMyPreviouslyOwnedDecksUpdate,
-            tags, notTags, owners
+            tags, notTags, owners, tournamentIds
         } = this.props.filters
 
         const analyze = this.props.location.pathname.includes(Routes.collectionStats)
@@ -299,6 +299,24 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 <Close fontSize={"small"}/>
                                             </IconButton>
                                         </div>
+                                    )}
+                                    {tournamentIds.length > 0 && (
+                                        <>
+                                            {tournamentIds.map(id => (
+                                                <Box display={"flex"} key={id} mt={2}>
+                                                    <LinkButton href={Routes.tournamentPage(id)}>Tournament</LinkButton>
+                                                    <IconButton
+                                                        style={{marginLeft: spacing(1)}}
+                                                        size={"small"}
+                                                        onClick={() => {
+                                                            Utils.removeFromArray(tournamentIds, id)
+                                                        }}
+                                                    >
+                                                        <Close fontSize={"small"}/>
+                                                    </IconButton>
+                                                </Box>
+                                            ))}
+                                        </>
                                     )}
                                     {showLoginForCountry ? (
                                         <div style={{display: "flex"}}>

@@ -14,7 +14,9 @@ class KeyForgeEventEndpoints(
     fun searchEvents(@RequestBody filters: KeyForgeEventFilters) = keyForgeEventService.searchEvents(filters)
 
     @PostMapping("/secured")
-    fun saveEvent(@RequestBody event: KeyForgeEventDto) = keyForgeEventService.saveEvent(event)
+    fun saveEvent(@RequestBody event: KeyForgeEventDto) {
+        keyForgeEventService.saveEvent(event)
+    }
 
     @DeleteMapping("/secured/{id}")
     fun deleteEvent(@PathVariable id: Long) = keyForgeEventService.deleteEvent(id)

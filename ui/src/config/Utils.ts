@@ -166,6 +166,11 @@ export class Utils {
         const splitOnSlash = findIn.split("/")
         return splitOnSlash[splitOnSlash.length - 1]
     }
+
+    static removeFromArray = <T>(array: T[], toRemove: T) => {
+        const idx = array.indexOf(toRemove)
+        array.splice(idx, 1)
+    }
 }
 
 type EnumType = string | number

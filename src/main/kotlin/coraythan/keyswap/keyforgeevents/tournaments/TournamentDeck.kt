@@ -1,17 +1,16 @@
 package coraythan.keyswap.keyforgeevents.tournamentdecks
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.decks.models.Deck
 import org.springframework.data.repository.CrudRepository
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class TournamentDeck(
 
-        val deckName: String,
-
-        val keyforgeDeckId: String,
+        @JsonIgnoreProperties("tournamentDecks")
+        @ManyToOne
+        val deck: Deck,
 
         val participantId: Long,
 

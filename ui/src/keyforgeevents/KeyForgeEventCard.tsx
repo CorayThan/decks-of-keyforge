@@ -12,8 +12,8 @@ import { AddTournamentToKeyForgeEvent } from "./AddTournamentToKeyForgeEvent"
 import { CreateKeyForgeEvent } from "./CreateKeyForgeEvent"
 import { DeleteKeyForgeEvent } from "./DeleteKeyForgeEvent"
 
-export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) => {
-    const {event} = props
+export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto, noTournamentLink?: boolean, style?: React.CSSProperties }) => {
+    const {event, noTournamentLink, style} = props
     const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername, tourneyId, id} = event
 
     const width = 320
@@ -21,7 +21,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
     const isOwner = userStore.username === createdByUsername
 
     return (
-        <Card style={{width}}>
+        <Card style={{width, ...style}}>
             {banner != null && (
                 <CardMedia
                     style={{height: mediaHeight}}
@@ -57,7 +57,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                         <DiscordIcon height={24} style={{marginRight: spacing(0.5)}}/>Discord
                     </LinkButtonSafe>
                 )}
-                {userStore.contentCreator && tourneyId != null && (
+                {userStore.contentCreator && tourneyId != null && !noTournamentLink && (
                     <LinkButton
                         href={Routes.tournamentPage(tourneyId)}
                     >
@@ -65,7 +65,7 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto }) =
                     </LinkButton>
                 )}
             </CardActions>
-            {isOwner && (
+            {isOwner && !noTournamentLink && (
                 <Box display={"flex"} flexWrap={"wrap"} p={1} pt={0}>
                     <CreateKeyForgeEvent initialEvent={event}/>
                     <Box pr={1}/>

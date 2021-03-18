@@ -212,13 +212,15 @@ class SortableTableStore<T> {
     }
 }
 
-export const SortableTableContainer = (props: { title: string, children: React.ReactNode }) => {
-    const {title, children} = props
+export const SortableTableContainer = (props: { title: string, children: React.ReactNode, controls?: React.ReactNode }) => {
+    const {title, children, controls} = props
     return (
         <Box>
             <Paper style={{overflowX: "auto"}}>
-                <Box p={2}>
+                <Box display={"flex"} p={2}>
                     <Typography variant={"h5"}>{title}</Typography>
+                    <Box flexGrow={1}/>
+                    {controls}
                 </Box>
                 {children}
             </Paper>

@@ -47,6 +47,11 @@ export class DeckFilters {
                 queryObject.owners = [queryObject.owners]
             }
         }
+        if (queryObject.tournamentIds != null) {
+            if (queryObject.tournamentIds.constructor !== Array) {
+                queryObject.tournamentIds = [queryObject.tournamentIds]
+            }
+        }
         if (queryObject.notTags != null) {
             if (queryObject.notTags.constructor === Array) {
                 queryObject.notTags = queryObject.notTags.map((expansion: string) => Number(expansion))
@@ -176,6 +181,8 @@ export class DeckFilters {
     @observable
     owners: string[] = []
     @observable
+    tournamentIds: number[] = []
+    @observable
     previousOwner = ""
     pageSize = 20
 
@@ -203,6 +210,7 @@ export class DeckFilters {
         this.previousOwner = ""
         this.withOwners = false
         this.teamDecks = false
+        this.tournamentIds = []
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value

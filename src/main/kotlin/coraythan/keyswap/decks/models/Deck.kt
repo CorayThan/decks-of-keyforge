@@ -7,6 +7,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentDeck
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynTraitPlayer
@@ -86,6 +87,10 @@ data class Deck(
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         val userDecks: List<UserDeck> = listOf(),
+
+        @JsonIgnoreProperties("deck")
+        @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        val tournamentDecks: List<TournamentDeck> = listOf(),
 
         @JsonIgnoreProperties("deck")
         @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
