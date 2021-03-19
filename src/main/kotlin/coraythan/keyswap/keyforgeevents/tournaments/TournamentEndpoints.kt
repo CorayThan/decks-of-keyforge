@@ -35,6 +35,9 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/add-deck/{deckId}/{username}")
     fun addDeck(@PathVariable id: Long, @PathVariable deckId: String, @PathVariable username: String) = tournamentService.addDeck(id, deckId, username)
 
+    @PostMapping("/secured/{id}/remove-deck/{tournamentDeckId}")
+    fun removeDeck(@PathVariable id: Long, @PathVariable tournamentDeckId: Long) = tournamentService.removeDeck(id, tournamentDeckId)
+
     @PostMapping("/secured/{id}/add-to/{username}")
     fun addTo(@PathVariable id: Long, @PathVariable username: String) = tournamentService.addTo(id, username)
 

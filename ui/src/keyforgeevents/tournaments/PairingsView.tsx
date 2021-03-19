@@ -3,10 +3,12 @@ import { blue } from "@material-ui/core/colors"
 import { Star } from "@material-ui/icons"
 import * as React from "react"
 import { spacing } from "../../config/MuiConfig"
+import { Routes } from "../../config/Routes"
 import { TournamentPairingInfo } from "../../generated-src/TournamentPairingInfo"
 import { TournamentRoundInfo } from "../../generated-src/TournamentRoundInfo"
 import { TournamentStage } from "../../generated-src/TournamentStage"
 import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "../../generic/SortableTable"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { UserLink } from "../../user/UserLink"
 import { ReportResults } from "./ReportResults"
 
@@ -49,7 +51,7 @@ const roundPairingsTableHeaders = (
     tourneyId: number, stage: TournamentStage, isOrganizer: boolean, reportAvailable: boolean, containsDecks: boolean, username?: string
 ): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
 
-    return [
+    const headers: SortableTableHeaderInfo<TournamentPairingInfo>[] = [
         {property: "table", sortable: true},
         {
             property: "playerOneUsername",
@@ -101,6 +103,30 @@ const roundPairingsTableHeaders = (
         },
 
     ]
+
+    if (containsDecks) {
+        headers.push(
+            {
+                title: "Decks",
+                sortable: false,
+                transform: (data) => {
+                    if (data.deckIds.length === 0) {
+                        return null
+                    }
+                    return (
+                        <LinkButton
+                            href={Routes.compareDecksWithIds(data.deckIds)}
+                            newWindow={true}
+                        >
+                            Decks
+                        </LinkButton>
+                    )
+                }
+            },
+        )
+    }
+
+    return headers
 }
 
 const BoxScore = (props: { username: string, winner?: boolean }) => {

@@ -102,6 +102,13 @@ export class TournamentStore {
         this.addingDeck = false
     }
 
+    removeDeck = async (id: number, tournamentDeckId: number) => {
+        this.addingDeck = true
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/remove-deck/${tournamentDeckId}`)
+        await this.findTourneyInfo(id)
+        this.addingDeck = false
+    }
+
     addTO = async (id: number, username: string) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/add-to/${username}`)
         await this.findTourneyInfo(id)

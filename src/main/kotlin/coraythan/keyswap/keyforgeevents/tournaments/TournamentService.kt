@@ -82,10 +82,16 @@ class TournamentService(
                     sas = it.deck.sasRating,
                     houses = it.deck.houses,
                     username = participantNames[it.participantId]!!.username,
-                    hasVerificationImage = it.deck.hasOwnershipVerification == true
+                    hasVerificationImage = it.deck.hasOwnershipVerification == true,
+                    tournamentDeckId = it.id,
             )
         }
                 .sortedBy { it.username }
+
+        val participantToDeckId: Map<String, List<String>> = tournamentDeckInfos
+                .groupBy { it.username }
+                .map { it.key to it.value.map { deck -> deck.keyforgeId } }
+                .toMap()
 
         val tournamentDecksByUserName = tournamentDeckInfos.groupBy { it.username }
 
@@ -103,19 +109,30 @@ class TournamentService(
                             roundId = round.id,
                             pairings = tournamentPairingRepo.findAllByRoundId(round.id)
                                     .map {
+                                        val firstUsername = participantNames[it.playerOneId]!!.username
+                                        val secondUsername = participantNames[it.playerTwoId]?.username
                                         TournamentPairingInfo(
                                                 table = it.pairingTable,
                                                 pairId = it.id,
                                                 playerOneId = it.playerOneId,
-                                                playerOneUsername = participantNames[it.playerOneId]!!.username,
+                                                playerOneUsername = firstUsername,
                                                 playerOneWins = it.playerOneWins,
                                                 playerTwoId = it.playerTwoId,
-                                                playerTwoUsername = participantNames[it.playerTwoId]?.username,
+                                                playerTwoUsername = secondUsername,
                                                 playerTwoWins = if (it.playerTwoId == null) null else it.playerTwoWins,
                                                 playerOneScore = it.playerOneScore,
                                                 playerTwoScore = it.playerTwoScore,
                                                 playerOneWon = it.playerOneWon,
                                                 tcoLink = it.tcoLink,
+                                                deckIds = participantToDeckId[firstUsername]
+                                                        ?.let { deckIds ->
+                                                            if (secondUsername != null) {
+                                                                deckIds.plus(participantToDeckId[secondUsername] ?: listOf())
+                                                            } else {
+                                                                deckIds
+                                                            }
+                                                        }
+                                                        ?: listOf()
                                         )
                                     }
                                     .sortedBy {
@@ -341,6 +358,7 @@ class TournamentService(
                 ?: throw BadRequestException("No participant found.")
 
         if (tourney.stage == TournamentStage.TOURNAMENT_NOT_STARTED) {
+            tournamentDeckRepo.deleteByParticipantId(participantRecord.id)
             tournamentParticipantRepo.delete(participantRecord)
         } else {
             tournamentParticipantRepo.save(participantRecord.copy(dropped = drop))
@@ -398,6 +416,11 @@ class TournamentService(
                 tourneyId = tourney.id,
                 deckOrder = nextOrder,
         ))
+    }
+
+    fun removeDeck(tourneyId: Long, tournamentDeckId: Long) {
+        verifyTournamentAdmin(tourneyId)
+        tournamentDeckRepo.deleteById(tournamentDeckId)
     }
 
     private fun calculateParticipantStats(allParticipants: List<TournamentParticipant>, pairings: List<TournamentPairing>): List<ParticipantStats> {

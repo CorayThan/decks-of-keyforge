@@ -182,11 +182,13 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                         />
                     ))}
 
-                    <Grid item={true} xs={12}>
-                        <Box display={"flex"}>
-                            <TournamentDecksList tourneyId={tourneyId} decks={tournamentDecks} isOrganizer={isOrganizer} stage={stage} username={username}/>
-                        </Box>
-                    </Grid>
+                    {tournamentDecks.length > 0 && (
+                        <Grid item={true} xs={12}>
+                            <Box display={"flex"}>
+                                <TournamentDecksList tourneyId={tourneyId} decks={tournamentDecks} isOrganizer={isOrganizer} stage={stage} username={username}/>
+                            </Box>
+                        </Grid>
+                    )}
 
                     <Grid item={true} xs={12}>
                         <Box display={"flex"}>
@@ -243,7 +245,7 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage:
         {property: "opponentsScore", title: "Opp. Score", sortable: true},
     ]
 
-    if (stage === TournamentStage.TOURNAMENT_NOT_STARTED && isOrganizer) {
+    if (isOrganizer) {
         columns.push(
             {
                 title: "Add Deck",
@@ -252,9 +254,6 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage:
                 }
             },
         )
-    }
-
-    if (isOrganizer) {
         columns.push(
             {
                 title: "",

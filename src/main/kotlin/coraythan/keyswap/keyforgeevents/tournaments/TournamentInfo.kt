@@ -43,6 +43,7 @@ data class TournamentPairingInfo(
         val playerOneWon: Boolean? = null,
 
         val tcoLink: String? = null,
+        val deckIds: List<String> = listOf(),
 )
 
 @GenerateTs
@@ -81,4 +82,5 @@ data class TournamentDeckInfo(
         val houses: List<House>,
         val username: String,
         val hasVerificationImage: Boolean,
+        val tournamentDeckId: Long,
 )

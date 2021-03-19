@@ -1,4 +1,5 @@
-import { Box } from "@material-ui/core"
+import { Box, IconButton } from "@material-ui/core"
+import { Delete } from "@material-ui/icons"
 import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
@@ -13,6 +14,7 @@ import { KeyLink } from "../../mui-restyled/KeyLink"
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { UserLink } from "../../user/UserLink"
 import { AddTournamentDeckButton } from "./AddTournamentDeckButton"
+import { tournamentStore } from "./TournamentStore"
 
 export const TournamentDecksList = (props: { tourneyId: number, stage: TournamentStage, isOrganizer: boolean, decks: TournamentDeckInfo[], username?: string }) => {
     const {tourneyId, stage, isOrganizer, decks, username} = props
@@ -32,7 +34,7 @@ export const TournamentDecksList = (props: { tourneyId: number, stage: Tournamen
             )}
         >
             <SortableTable
-                headers={playerDecksTableHeaders()}
+                headers={playerDecksTableHeaders(tourneyId, isOrganizer)}
                 data={decks}
                 defaultSort={"username"}
             />
@@ -40,9 +42,9 @@ export const TournamentDecksList = (props: { tourneyId: number, stage: Tournamen
     )
 }
 
-const playerDecksTableHeaders = (): SortableTableHeaderInfo<TournamentDeckInfo>[] => {
+const playerDecksTableHeaders = (tourneyId: number, isTo: boolean): SortableTableHeaderInfo<TournamentDeckInfo>[] => {
 
-    return [
+    const headers: SortableTableHeaderInfo<TournamentDeckInfo>[] = [
         {
             property: "username",
             title: "Player",
@@ -82,4 +84,25 @@ const playerDecksTableHeaders = (): SortableTableHeaderInfo<TournamentDeckInfo>[
             transform: deck => (<DeckOwnershipButton deckName={deck.name} deckId={deck.id} hasVerification={deck.hasVerificationImage}/>)
         }
     ]
+
+    if (isTo) {
+        headers.push(
+            {
+                title: "Remove",
+                transform: deck => (
+                    <IconButton
+                        onClick={async () => {
+                            await tournamentStore.removeDeck(tourneyId, deck.tournamentDeckId)
+                        }}
+                        disabled={tournamentStore.addingDeck}
+                    >
+                        <Delete/>
+                    </IconButton>
+                )
+            }
+        )
+    }
+
+    return headers
+
 }

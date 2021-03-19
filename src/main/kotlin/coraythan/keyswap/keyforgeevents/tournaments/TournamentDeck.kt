@@ -27,4 +27,5 @@ interface TournamentDeckRepo : CrudRepository<TournamentDeck, Long> {
     fun findByTourneyId(tourneyId: Long): List<TournamentDeck>
     fun findByParticipantId(participantId: Long): List<TournamentDeck>
     fun existsByTourneyId(tourneyId: Long): Boolean
+    fun deleteByParticipantId(participantId: Long)
 }
