@@ -36,7 +36,7 @@ import { tournamentStore } from "./tournaments/TournamentStore"
 export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEventDto, copy?: boolean, tournament?: boolean }) => {
     const {initialEvent, copy, tournament} = props
 
-    const [store] = useState(new CreateKeyForgeEventStore(initialEvent, copy))
+    const [store] = useState(new CreateKeyForgeEventStore(initialEvent, copy, tournament))
 
     const kfEvent = store.event
 
@@ -202,7 +202,7 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                         Cancel
                     </KeyButton>
                     <KeyButton
-                        onClick={() => store.reset(false)}
+                        onClick={() => store.reset(false, tournament)}
                         disabled={keyForgeEventStore.savingEvent || tournamentStore.savingTournament}
                     >
                         Reset
@@ -307,7 +307,7 @@ class CreateKeyForgeEventStore {
         return event
     }
 
-    reset = (copy?: boolean) => {
+    reset = (copy?: boolean, tournament?: boolean) => {
         if (this.originalEvent == null) {
             this.event = {
                 name: "",
@@ -317,6 +317,7 @@ class CreateKeyForgeEventStore {
                 online: true,
                 sealed: false,
                 startDateTime: TimeUtils.nowPlus1WeekDateTimeString(),
+                tournamentOnly: tournament === true
             }
         } else {
             this.event = Utils.jsonCopy(this.originalEvent)
@@ -338,9 +339,9 @@ class CreateKeyForgeEventStore {
         this.saveAttempted = false
     }
 
-    constructor(private originalEvent?: KeyForgeEventDto, private copy?: boolean) {
+    constructor(private originalEvent?: KeyForgeEventDto, private copy?: boolean, private tournament?: boolean) {
         makeObservable(this)
-        this.reset(copy)
+        this.reset(copy, tournament)
     }
 
 }

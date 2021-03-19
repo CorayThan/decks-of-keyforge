@@ -10,5 +10,5 @@ data class TournamentSearchResult(
         val name: String,
         val private: Boolean,
         val ended: LocalDateTime?,
-        val event: KeyForgeEventDto,
+        val event: KeyForgeEventDto?,
 )

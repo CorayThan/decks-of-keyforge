@@ -43,15 +43,17 @@ class TournamentService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun searchTournaments(filters: KeyForgeEventFilters): List<TournamentSearchResult> {
-        val events = keyForgeEventService.searchEvents(filters)
-        return events.map {
-            val tournament = tourneyRepo.findByIdOrNull(it.tourneyId!!)!!
+        val tournaments = tourneyRepo.findAll()
+
+        // val events = keyForgeEventService.searchEvents(filters)
+        return tournaments.map { tournament ->
+            val event = eventRepo.findByTourneyId(tournament.id)?.toDto()
             TournamentSearchResult(
                     id = tournament.id,
                     name = tournament.name,
                     private = tournament.privateTourney,
                     ended = tournament.ended,
-                    event = it
+                    event = event
             )
         }
     }

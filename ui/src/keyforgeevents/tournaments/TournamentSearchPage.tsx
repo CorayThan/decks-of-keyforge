@@ -1,15 +1,12 @@
-import { Box, Button, FormControl, Input, InputLabel, MenuItem, Select } from "@material-ui/core"
-import { startCase } from "lodash"
+import { Box } from "@material-ui/core"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect } from "react"
-import { spacing, themeStore } from "../../config/MuiConfig"
+import { themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
-import { Utils } from "../../config/Utils"
 import { EventTimeRange } from "../../generated-src/EventTimeRange"
 import { KeyForgeEventFilters } from "../../generated-src/KeyForgeEventFilters"
-import { KeyForgeFormat } from "../../generated-src/KeyForgeFormat"
 import { TournamentSearchResult } from "../../generated-src/TournamentSearchResult"
 import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "../../generic/SortableTable"
 import { KeyLink } from "../../mui-restyled/KeyLink"
@@ -73,54 +70,54 @@ const TournamentsListView = observer((props: { tournaments: TournamentSearchResu
             title={"Tournaments"}
             controls={(
                 <Box display={"flex"} alignItems={"center"}>
-                    <FormControl style={{marginRight: spacing(2)}}>
-                        <InputLabel>Date Range</InputLabel>
-                        <Select
-                            value={tournamentSearchStore.search.timeRange}
-                            onChange={(event) => {
-                                tournamentSearchStore.search.timeRange = event.target.value as EventTimeRange
-                            }}
-                        >
-                            <MenuItem value={EventTimeRange.NEXT_MONTH}>Next Month</MenuItem>
-                            <MenuItem value={EventTimeRange.NEXT_THREE_MONTHS}>Next Three Months</MenuItem>
-                            <MenuItem value={EventTimeRange.FUTURE}>All Future Events</MenuItem>
-                            <MenuItem value={EventTimeRange.PAST}>Past Events</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl style={{marginRight: spacing(2), minWidth: 80}}>
-                        <InputLabel>Format</InputLabel>
-                        <Select
-                            value={tournamentSearchStore.sealedValue()}
-                            onChange={(event) => {
-                                const value = event.target.value
-                                if (value == "") {
-                                    tournamentSearchStore.search.sealed = undefined
-                                } else {
-                                    tournamentSearchStore.search.sealed = value !== "archon"
-                                }
-                            }}
-                        >
-                            <MenuItem value={""}>Any</MenuItem>
-                            <MenuItem value={"archon"}>Archon</MenuItem>
-                            <MenuItem value={"sealed"}>Sealed</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl style={{marginRight: spacing(2), minWidth: 80}}>
-                        <InputLabel>Variants</InputLabel>
-                        <Select
-                            input={<Input/>}
-                            multiple={true}
-                            value={tournamentSearchStore.search.formats}
-                            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                                tournamentSearchStore.search.formats = event.target.value as KeyForgeFormat[]
-                            }}
-                        >
-                            {Utils.enumValues(KeyForgeFormat).map(format => (
-                                <MenuItem key={format} value={format}>{startCase((format as string).toLowerCase())}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <Button style={{marginRight: spacing(2)}} onClick={tournamentSearchStore.performSearch}>Search Tournaments</Button>
+                    {/*<FormControl style={{marginRight: spacing(2)}}>*/}
+                    {/*    <InputLabel>Date Range</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        value={tournamentSearchStore.search.timeRange}*/}
+                    {/*        onChange={(event) => {*/}
+                    {/*            tournamentSearchStore.search.timeRange = event.target.value as EventTimeRange*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        <MenuItem value={EventTimeRange.NEXT_MONTH}>Next Month</MenuItem>*/}
+                    {/*        <MenuItem value={EventTimeRange.NEXT_THREE_MONTHS}>Next Three Months</MenuItem>*/}
+                    {/*        <MenuItem value={EventTimeRange.FUTURE}>All Future Events</MenuItem>*/}
+                    {/*        <MenuItem value={EventTimeRange.PAST}>Past Events</MenuItem>*/}
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
+                    {/*<FormControl style={{marginRight: spacing(2), minWidth: 80}}>*/}
+                    {/*    <InputLabel>Format</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        value={tournamentSearchStore.sealedValue()}*/}
+                    {/*        onChange={(event) => {*/}
+                    {/*            const value = event.target.value*/}
+                    {/*            if (value == "") {*/}
+                    {/*                tournamentSearchStore.search.sealed = undefined*/}
+                    {/*            } else {*/}
+                    {/*                tournamentSearchStore.search.sealed = value !== "archon"*/}
+                    {/*            }*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        <MenuItem value={""}>Any</MenuItem>*/}
+                    {/*        <MenuItem value={"archon"}>Archon</MenuItem>*/}
+                    {/*        <MenuItem value={"sealed"}>Sealed</MenuItem>*/}
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
+                    {/*<FormControl style={{marginRight: spacing(2), minWidth: 80}}>*/}
+                    {/*    <InputLabel>Variants</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        input={<Input/>}*/}
+                    {/*        multiple={true}*/}
+                    {/*        value={tournamentSearchStore.search.formats}*/}
+                    {/*        onChange={(event: React.ChangeEvent<{ value: unknown }>) => {*/}
+                    {/*            tournamentSearchStore.search.formats = event.target.value as KeyForgeFormat[]*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        {Utils.enumValues(KeyForgeFormat).map(format => (*/}
+                    {/*            <MenuItem key={format} value={format}>{startCase((format as string).toLowerCase())}</MenuItem>*/}
+                    {/*        ))}*/}
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
+                    {/*<Button style={{marginRight: spacing(2)}} onClick={tournamentSearchStore.performSearch}>Search Tournaments</Button>*/}
                     <CreateKeyForgeEvent tournament={true}/>
                 </Box>
             )}
@@ -145,6 +142,6 @@ const tournamentsTableHeaders = (): SortableTableHeaderInfo<TournamentSearchResu
                 </KeyLink>
             )
         },
-        {title: "Start Date", transform: tournament => tournament.event.startDateTime}
+        {title: "Start Date", transform: tournament => tournament.event?.startDateTime}
     ]
 }
