@@ -23,7 +23,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
-import { CardSearchLink, DeckSearchLink } from "./DeckSearchLink"
+import { DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
 
 const topSas = new DeckFilters()
 const cota = new DeckFilters()
@@ -99,12 +99,22 @@ export class LandingPage extends React.Component<{}> {
                             </div>
                             <Divider/>
                             <ListSubheader>
-                                Top Decks
+                                Community
                             </ListSubheader>
                             <div style={{display: "flex", flexWrap: "wrap", paddingRight: spacing(1)}}>
-                                <DeckSearchLink name={"SAS"} filters={topSas} color={"secondary"} style={{marginBottom: spacing(2)}}/>
-                                <DeckSearchLink name={"Chains"} filters={topChains} color={"secondary"} style={{marginBottom: spacing(2)}}/>
-                                <DeckSearchLink name={"Power Level"} filters={topPowerLevel} color={"secondary"} style={{marginBottom: spacing(2)}}/>
+                                <LandingPageLink
+                                    name={"Tourneys"}
+                                    to={Routes.tournaments}
+                                    color={"secondary"}
+                                    style={{marginBottom: spacing(2)}}
+
+                                />
+                                <LandingPageLink
+                                    name={"Users"}
+                                    to={Routes.users}
+                                    color={"secondary"}
+                                    style={{marginBottom: spacing(2)}}
+                                />
                             </div>
                             <Divider/>
                             <ListSubheader>
@@ -119,20 +129,25 @@ export class LandingPage extends React.Component<{}> {
                                 Cards
                             </ListSubheader>
                             <div style={{display: "flex", flexWrap: "wrap", paddingRight: spacing(1)}}>
-                                <CardSearchLink name={"Search Cards"} color={"secondary"} style={{marginBottom: spacing(2)}}/>
-                                <CardSearchLink
+                                <LandingPageLink
+                                    name={"Search Cards"}
+                                    to={Routes.cards}
+                                    color={"secondary"}
+                                    style={{marginBottom: spacing(2)}}
+                                />
+                                <LandingPageLink
                                     name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={false}/>} color={"secondary"}
                                     to={Routes.mmCards} style={{marginBottom: spacing(2)}}
                                 />
-                                <CardSearchLink
+                                <LandingPageLink
                                     name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
                                     to={Routes.cotaCards} style={{marginBottom: spacing(2)}}
                                 />
-                                <CardSearchLink
+                                <LandingPageLink
                                     name={<ExpansionIcon expansion={Expansion.AGE_OF_ASCENSION} white={false}/>} color={"secondary"}
                                     to={Routes.aoaCards} style={{marginBottom: spacing(2)}}
                                 />
-                                <CardSearchLink
+                                <LandingPageLink
                                     name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={false}/>} color={"secondary"}
                                     to={Routes.wcCards} style={{marginBottom: spacing(2)}}
                                 />
@@ -142,7 +157,7 @@ export class LandingPage extends React.Component<{}> {
                                 Fun Searches
                             </ListSubheader>
                             <DeckSearchLink name={"Reversal"} filters={worstSas}/>
-                            <DeckSearchLink name={"Funniest"} filters={topFunny} style={{marginTop: spacing(2)}}/>
+                            <DeckSearchLink name={"Funny"} filters={topFunny} style={{marginTop: spacing(2)}}/>
                         </List>
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>

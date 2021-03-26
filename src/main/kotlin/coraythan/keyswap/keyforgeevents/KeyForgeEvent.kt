@@ -40,6 +40,8 @@ data class KeyForgeEvent(
 
         val created: LocalDateTime = nowLocal(),
 
+        val minutesPerRound: Int? = null,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1,
@@ -57,6 +59,7 @@ data class KeyForgeEvent(
                 sealed,
                 tournamentOnly,
                 tourneyId,
+                minutesPerRound,
                 format,
                 country,
                 state,
@@ -79,6 +82,7 @@ data class KeyForgeEventDto(
         val sealed: Boolean,
         val tournamentOnly: Boolean,
         val tourneyId: Long?,
+        val minutesPerRound: Int?,
 
         val format: KeyForgeFormat,
         val country: Country?,

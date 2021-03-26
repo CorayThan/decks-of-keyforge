@@ -90,7 +90,8 @@ class KeyForgeEventService(
                     country = event.country,
                     state = event.state,
                     promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false,
-                    tournamentOnly = event.tournamentOnly
+                    tournamentOnly = event.tournamentOnly,
+                    minutesPerRound = event.minutesPerRound,
             )
 
             return keyForgeEventRepo.save(toUpdate)
@@ -111,7 +112,8 @@ class KeyForgeEventService(
                     state = event.state,
                     createdBy = user,
                     promoted = user.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) ?: false,
-                    tournamentOnly = event.tournamentOnly
+                    tournamentOnly = event.tournamentOnly,
+                    minutesPerRound = event.minutesPerRound,
             )
 
             return keyForgeEventRepo.save(toSave)

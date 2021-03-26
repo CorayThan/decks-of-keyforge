@@ -329,6 +329,7 @@ const AppLinks = observer(() => (
                 {to: Routes.users, text: "Users", mobileActive: true},
                 {to: Routes.tags, text: "Tagged Decks", mobileActive: true},
                 {to: Routes.events, text: "Events", mobileActive: true},
+                {to: Routes.tournaments, text: "Tournaments", mobileActive: true},
                 {to: Routes.articles, text: "Articles", mobileActive: true},
                 {to: Routes.thirdPartyTools, text: "3rd Party Tools", mobileActive: false},
             ]}

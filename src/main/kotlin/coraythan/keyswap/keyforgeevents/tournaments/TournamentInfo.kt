@@ -3,6 +3,7 @@ package coraythan.keyswap.keyforgeevents.tournaments
 import coraythan.keyswap.House
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.keyforgeevents.KeyForgeEventDto
+import java.time.LocalDateTime
 
 @GenerateTs
 data class TournamentInfo(
@@ -12,6 +13,11 @@ data class TournamentInfo(
         val organizerUsernames: List<String>,
         val joined: Boolean,
         val stage: TournamentStage,
+        val registrationClosed: Boolean,
+        val deckChoicesLocked: Boolean,
+        val verifyParticipants: Boolean,
+        val pairingStrategy: PairingStrategy,
+        val roundEndsAt: LocalDateTime?,
         val event: KeyForgeEventDto,
         val rounds: List<TournamentRoundInfo>,
         val rankings: List<TournamentRanking>,
@@ -22,7 +28,8 @@ data class TournamentInfo(
 data class TournamentRoundInfo(
         val roundNumber: Int,
         val roundId: Long,
-        val pairings: List<TournamentPairingInfo>
+        val pairings: List<TournamentPairingInfo>,
+        val pairingStrategy: PairingStrategy,
 )
 
 @GenerateTs
@@ -59,6 +66,9 @@ data class TournamentRanking(
         val score: Int,
         val opponentsScore: Int,
         val dropped: Boolean,
+        val verified: Boolean,
+        val discord: String?,
+        val tcoUsername: String?,
         val decks: List<TournamentDeckInfo>,
 ) {
     fun fullRankValue() = (wins * 10000) + (strengthOfSchedule * 100) + extendedStrengthOfSchedule

@@ -1,5 +1,6 @@
 package coraythan.keyswap.keyforgeevents.tournamentdecks
 
+import coraythan.keyswap.generatets.GenerateTs
 import org.springframework.data.repository.CrudRepository
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -37,4 +38,14 @@ interface TournamentPairingRepo : CrudRepository<TournamentPairing, Long> {
     fun deleteAllByRoundId(roundId: Long)
 
     fun existsByRoundIdAndPlayerOneWonIsNull(roundId: Long): Boolean
+
+    fun deleteAllByTournamentId(tournamentId: Long)
 }
+
+@GenerateTs
+data class TournamentPairingPlayers(
+        val pairingTable: Int,
+        val playerOneId: Long,
+        val playerTwoId: Long?,
+        val bye: Boolean,
+)

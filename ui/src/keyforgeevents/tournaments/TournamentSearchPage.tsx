@@ -1,17 +1,25 @@
-import { Box } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect } from "react"
-import { themeStore } from "../../config/MuiConfig"
+import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { TimeUtils } from "../../config/TimeUtils"
+import { Utils } from "../../config/Utils"
 import { EventTimeRange } from "../../generated-src/EventTimeRange"
 import { KeyForgeEventFilters } from "../../generated-src/KeyForgeEventFilters"
 import { TournamentSearchResult } from "../../generated-src/TournamentSearchResult"
+import { AnnouncementPaper } from "../../generic/AnnouncementPaper"
 import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "../../generic/SortableTable"
+import { SafeKeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { Loader } from "../../mui-restyled/Loader"
+import { DiscordButton } from "../../thirdpartysites/discord/DiscordButton"
+import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
+import { userStore } from "../../user/UserStore"
 import { CreateKeyForgeEvent } from "../CreateKeyForgeEvent"
 import { tournamentStore } from "./TournamentStore"
 
@@ -27,9 +35,33 @@ export const TournamentSearchPage = observer(() => {
         return <Loader/>
     }
 
-    return (
-        <Box m={4}>
+    const contents = (
+        <>
+            <AnnouncementPaper maxWidth={800} style={{marginBottom: spacing(2)}}>
+                <Typography variant={"h5"} gutterBottom={true}>
+                    Work in Progress!
+                </Typography>
+                <Typography variant={"body1"} style={{marginBottom: spacing(2)}}>
+                    If you intend to create and run a tournament through Decks of KeyForge, please
+                    test it out first! You can message me on Discord to get your test tournament deleted after you've verified it works as expected.
+                </Typography>
+                <DiscordButton/>
+            </AnnouncementPaper>
             <TournamentsListView tournaments={tournamentStore.foundTournaments}/>
+        </>
+    )
+
+    if (screenStore.screenSizeSm()) {
+        return (
+            <Box m={2} mt={3}>
+                {contents}
+            </Box>
+        )
+    }
+
+    return (
+        <Box m={4} display={"flex"} flexDirection={"column"} alignItems={"center"}>
+            {contents}
         </Box>
     )
 })
@@ -70,60 +102,12 @@ const TournamentsListView = observer((props: { tournaments: TournamentSearchResu
             title={"Tournaments"}
             controls={(
                 <Box display={"flex"} alignItems={"center"}>
-                    {/*<FormControl style={{marginRight: spacing(2)}}>*/}
-                    {/*    <InputLabel>Date Range</InputLabel>*/}
-                    {/*    <Select*/}
-                    {/*        value={tournamentSearchStore.search.timeRange}*/}
-                    {/*        onChange={(event) => {*/}
-                    {/*            tournamentSearchStore.search.timeRange = event.target.value as EventTimeRange*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        <MenuItem value={EventTimeRange.NEXT_MONTH}>Next Month</MenuItem>*/}
-                    {/*        <MenuItem value={EventTimeRange.NEXT_THREE_MONTHS}>Next Three Months</MenuItem>*/}
-                    {/*        <MenuItem value={EventTimeRange.FUTURE}>All Future Events</MenuItem>*/}
-                    {/*        <MenuItem value={EventTimeRange.PAST}>Past Events</MenuItem>*/}
-                    {/*    </Select>*/}
-                    {/*</FormControl>*/}
-                    {/*<FormControl style={{marginRight: spacing(2), minWidth: 80}}>*/}
-                    {/*    <InputLabel>Format</InputLabel>*/}
-                    {/*    <Select*/}
-                    {/*        value={tournamentSearchStore.sealedValue()}*/}
-                    {/*        onChange={(event) => {*/}
-                    {/*            const value = event.target.value*/}
-                    {/*            if (value == "") {*/}
-                    {/*                tournamentSearchStore.search.sealed = undefined*/}
-                    {/*            } else {*/}
-                    {/*                tournamentSearchStore.search.sealed = value !== "archon"*/}
-                    {/*            }*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        <MenuItem value={""}>Any</MenuItem>*/}
-                    {/*        <MenuItem value={"archon"}>Archon</MenuItem>*/}
-                    {/*        <MenuItem value={"sealed"}>Sealed</MenuItem>*/}
-                    {/*    </Select>*/}
-                    {/*</FormControl>*/}
-                    {/*<FormControl style={{marginRight: spacing(2), minWidth: 80}}>*/}
-                    {/*    <InputLabel>Variants</InputLabel>*/}
-                    {/*    <Select*/}
-                    {/*        input={<Input/>}*/}
-                    {/*        multiple={true}*/}
-                    {/*        value={tournamentSearchStore.search.formats}*/}
-                    {/*        onChange={(event: React.ChangeEvent<{ value: unknown }>) => {*/}
-                    {/*            tournamentSearchStore.search.formats = event.target.value as KeyForgeFormat[]*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        {Utils.enumValues(KeyForgeFormat).map(format => (*/}
-                    {/*            <MenuItem key={format} value={format}>{startCase((format as string).toLowerCase())}</MenuItem>*/}
-                    {/*        ))}*/}
-                    {/*    </Select>*/}
-                    {/*</FormControl>*/}
-                    {/*<Button style={{marginRight: spacing(2)}} onClick={tournamentSearchStore.performSearch}>Search Tournaments</Button>*/}
                     <CreateKeyForgeEvent tournament={true}/>
                 </Box>
             )}
         >
             <SortableTable
-                headers={tournamentsTableHeaders()}
+                headers={tournamentsTableHeaders(userStore.isAdmin)}
                 data={tournaments}
                 defaultSort={"name"}
             />
@@ -131,17 +115,54 @@ const TournamentsListView = observer((props: { tournaments: TournamentSearchResu
     )
 })
 
-const tournamentsTableHeaders = (): SortableTableHeaderInfo<TournamentSearchResult>[] => {
+const tournamentsTableHeaders = (isAdmin: boolean): SortableTableHeaderInfo<TournamentSearchResult>[] => {
 
-    return [
+    const headers: SortableTableHeaderInfo<TournamentSearchResult>[] = [
         {
             property: "name",
             transform: tournament => (
-                <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.tournamentPage(tournament.id)} newWindow={true}>
+                <KeyLink to={Routes.tournamentPage(tournament.id)} newWindow={true}>
                     {tournament.name}
                 </KeyLink>
             )
         },
-        {title: "Start Date", transform: tournament => tournament.event?.startDateTime}
+        {
+            title: "Start Date",
+            transform: tournament => TimeUtils.tournamentDate(tournament.event.startDateTime),
+            sortFunction: tournament => tournament.event.startDateTime
+        },
+        {
+            title: "Format",
+            transform: tournament => Utils.enumNameToReadable(tournament.event.format),
+            sortFunction: tournament => tournament.event.format
+        },
+        {property: "stage", transform: tournament => Utils.enumNameToReadable(tournament.stage)},
+        {property: "participants"},
+        {
+            transform: tournament => (
+                <Box display={"flex"}>
+                    <LinkButton href={Routes.tournamentPage(tournament.id)} newWindow={true}>Tournament</LinkButton>
+                    <LinkButton href={Routes.tournamentDecksSearch(tournament.id)} newWindow={true} style={{marginLeft: spacing(2)}}>Decks</LinkButton>
+                    {isAdmin && <DeleteTournament tournament={tournament}/>}
+                </Box>
+            )
+        }
     ]
+
+    return headers
+}
+
+const DeleteTournament = (props: { tournament: TournamentSearchResult }) => {
+    const {tournament} = props
+    return (
+        <SafeKeyButton
+            title={`Delete ${tournament.name}?`}
+            description={"Delete this tournament?"}
+            warning={"This will also delete the event."}
+            onConfirm={() => tournamentStore.deleteTournament(tournament.id)}
+            style={{marginLeft: spacing(2)}}
+        >
+            Delete
+        </SafeKeyButton>
+    )
 }

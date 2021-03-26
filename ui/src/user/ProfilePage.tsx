@@ -13,6 +13,7 @@ import { SellerRatingView } from "../sellerratings/SellerRatingView"
 import { TeamBadge } from "../teams/TeamBadge"
 import { teamStore } from "../teams/TeamStore"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
+import { TcoUser } from "../thirdpartysites/TcoUser"
 import { uiStore } from "../ui/UiStore"
 import { userStore } from "./UserStore"
 
@@ -143,6 +144,9 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                     )}
                     {profile.discord && (
                         <DiscordUser style={{marginTop: spacing(2)}} discord={profile.discord}/>
+                    )}
+                    {profile.tcoUsername && (
+                        <TcoUser style={{marginTop: spacing(2)}} tcoUsername={profile.tcoUsername} />
                     )}
                     <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
 

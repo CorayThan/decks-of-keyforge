@@ -24,4 +24,5 @@ data class TournamentOrganizer(
 interface TournamentOrganizerRepo : CrudRepository<TournamentOrganizer, Long> {
         fun findByTourneyId(tourneyId: Long): List<TournamentOrganizer>
         fun existsByTourneyIdAndOrganizerId(tourneyId: Long, organizerId: UUID): Boolean
+        fun deleteAllByTourneyId(tourneyId: Long)
 }

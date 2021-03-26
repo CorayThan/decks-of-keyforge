@@ -3,6 +3,7 @@ package coraythan.keyswap.keyforgeevents.tournaments
 import coraythan.keyswap.Api
 import coraythan.keyswap.keyforgeevents.KeyForgeEventDto
 import coraythan.keyswap.keyforgeevents.KeyForgeEventFilters
+import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentPairingPlayers
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -23,8 +24,12 @@ class TournamentEndpoints(
     @PostMapping("/secured")
     fun createTourneyWithPrivateEvent(@RequestBody event: KeyForgeEventDto) = tournamentService.createTourneyWithPrivateEvent(event)
 
+    @DeleteMapping("/secured/{id}")
+    fun deleteTournament(@PathVariable id: Long) = tournamentService.deleteTournament(id)
+
     @PostMapping("/secured/{id}/pair-next-round")
-    fun pairNextRound(@PathVariable id: Long) = tournamentService.pairNextRound(id)
+    fun pairNextRound(@PathVariable id: Long, @RequestBody manualPairings: List<TournamentPairingPlayers>? = null) =
+            tournamentService.pairNextRound(id, manualPairings)
 
     @PostMapping("/secured/{id}/start-current-round")
     fun startCurrentRound(@PathVariable id: Long) = tournamentService.startCurrentRound(id)
@@ -50,6 +55,22 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/drop-participant/{username}/{drop}")
     fun dropParticipant(@PathVariable id: Long, @PathVariable username: String, @PathVariable drop: Boolean) = tournamentService.dropParticipant(id, username, drop)
 
+    @PostMapping("/secured/{id}/verify-participant/{username}/{verify}")
+    fun verifyParticipant(@PathVariable id: Long, @PathVariable username: String, @PathVariable verify: Boolean) = tournamentService.verifyParticipant(id, username, verify)
+
     @PostMapping("/secured/report-results")
     fun reportResults(@RequestBody results: TournamentResults) = tournamentService.reportResults(results)
+
+    @PostMapping("/secured/{id}/lock-registration/{lock}")
+    fun lockRegistration(@PathVariable id: Long, @PathVariable lock: Boolean) = tournamentService.lockRegistration(id, lock)
+
+    @PostMapping("/secured/{id}/lock-deck-registration/{lock}")
+    fun lockDeckRegistration(@PathVariable id: Long, @PathVariable lock: Boolean) = tournamentService.lockDeckRegistration(id, lock)
+
+    @PostMapping("/secured/{id}/change-pairing-strategy/{strategy}")
+    fun changePairingStrategy(@PathVariable id: Long, @PathVariable strategy: PairingStrategy) = tournamentService.changingPairingStrategy(id, strategy)
+
+    @PostMapping("/secured/{id}/change-tournament-participant/{previousUsername}/{newUsername}")
+    fun changeTournamentParticipant(@PathVariable id: Long, @PathVariable previousUsername: String, @PathVariable newUsername: String) =
+            tournamentService.changeTournamentParticipant(id, previousUsername, newUsername)
 }

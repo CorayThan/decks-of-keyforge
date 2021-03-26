@@ -18,7 +18,7 @@ export const KeyForgeEventCalendar = (props: { events: KeyForgeEventDto[] }) => 
     let currentWeekStart: string | undefined = undefined
 
     events.forEach(event => {
-        const eventStartDateTime = TimeUtils.eventDateTime(event.startDateTime)
+        const eventStartDateTime = TimeUtils.eventDateTime(event.startDateTime)!
         const thisEventWeekStart = TimeUtils.weekDescriptionForEvent(eventStartDateTime)
 
         if (thisEventWeekStart !== currentWeekStart) {

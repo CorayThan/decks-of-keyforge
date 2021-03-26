@@ -17,6 +17,8 @@ data class TournamentParticipant(
 
         val pairedDown: Boolean = false,
 
+        val verified: Boolean = false,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1,
@@ -26,6 +28,8 @@ interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long
     fun findByTournamentIdAndUserId(eventId: Long, userId: UUID): TournamentParticipant?
     fun existsByTournamentIdAndUserId(tournamentId: Long, userId: UUID): Boolean
     fun findAllByTournamentId(tournamentId: Long): List<TournamentParticipant>
+    fun countByTournamentId(tournamentId: Long): Long
+    fun deleteAllByTournamentId(tournamentId: Long)
 }
 
 data class ParticipantStats(

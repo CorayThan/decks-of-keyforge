@@ -103,7 +103,7 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
                                     </IconButton>
                                 </InputAdornment>
                             }
-                            labelWidth={70}
+                            labelWidth={136}
                         />
                     </FormControl>
                 </DialogContent>

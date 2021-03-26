@@ -1,6 +1,7 @@
 package coraythan.keyswap.keyforgeevents.tournaments
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentRound
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
@@ -13,8 +14,14 @@ data class Tournament(
 
         val privateTourney: Boolean = false,
 
+        val registrationClosed: Boolean = false,
+
+        val deckChoicesLocked: Boolean = false,
+
+        val verifyParticipants: Boolean = false,
+
         @Enumerated(EnumType.STRING)
-        val type: TournamentType = TournamentType.SWISS,
+        val pairingStrategy: PairingStrategy = PairingStrategy.SWISS_SOS,
 
         @Enumerated(EnumType.STRING)
         val stage: TournamentStage = TournamentStage.TOURNAMENT_NOT_STARTED,
@@ -37,7 +44,9 @@ data class Tournament(
 
 interface TournamentRepo : CrudRepository<Tournament, Long>
 
-enum class TournamentType {
-    SWISS,
-    SINGLE_ELIMINATION,
+@GenerateTs
+enum class PairingStrategy {
+    SWISS_SOS,
+    SWISS_RANDOM,
+    MANUAL_PAIRING,
 }

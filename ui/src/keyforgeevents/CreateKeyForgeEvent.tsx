@@ -176,7 +176,7 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 label={"Sealed Event"}
                             />
                         </Grid>
-                        <Grid item={true} xs={12} sm={6}>
+                        <Grid item={true} xs={12} sm={4}>
                             <TextField
                                 label={"Entry Fee"}
                                 value={kfEvent.entryFee}
@@ -184,11 +184,19 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                                 fullWidth={true}
                             />
                         </Grid>
-                        <Grid item={true} xs={12} sm={6}>
+                        <Grid item={true} xs={12} sm={4}>
                             <TextField
                                 label={"Expected Duration"}
                                 value={kfEvent.duration}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => kfEvent.duration = event.target.value}
+                                fullWidth={true}
+                            />
+                        </Grid>
+                        <Grid item={true} xs={12} sm={4}>
+                            <TextField
+                                label={"Minutes Per Round"}
+                                value={kfEvent.minutesPerRound}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => kfEvent.minutesPerRound = Number(event.target.value)}
                                 fullWidth={true}
                             />
                         </Grid>

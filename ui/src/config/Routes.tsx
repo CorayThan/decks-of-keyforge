@@ -135,6 +135,12 @@ class Routes {
         return `${Routes.decks}?${stringified}`
     }
 
+    static tournamentDecksSearch = (tournamentId: number) => {
+        const filters = new DeckFilters()
+        filters.tournamentIds = [tournamentId]
+        return Routes.deckSearch(filters)
+    }
+
     static decksForUser = (username: string) => {
         const filters = new DeckFilters()
         filters.owner = username

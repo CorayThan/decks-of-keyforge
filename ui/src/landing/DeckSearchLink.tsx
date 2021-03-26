@@ -22,7 +22,7 @@ export const DeckSearchLink = (props: { name: React.ReactNode, filters: DeckFilt
     )
 }
 
-export const CardSearchLink = (props: { name: React.ReactNode, to?: string, color?: "secondary", style?: React.CSSProperties }) => {
+export const LandingPageLink = (props: { name: React.ReactNode, to: string, color?: "secondary", style?: React.CSSProperties }) => {
     const {name, color, style, to} = props
 
     return (
@@ -31,7 +31,7 @@ export const CardSearchLink = (props: { name: React.ReactNode, to?: string, colo
                 variant={"contained"}
                 size={"large"}
                 color={color ? color : "primary"}
-                href={to == null ? Routes.cards : to}
+                href={to}
                 style={{marginLeft: spacing(2)}}
             >
                 {name}

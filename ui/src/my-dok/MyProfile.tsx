@@ -108,6 +108,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
 
     @observable
     discord: string
+    @observable
+    tcoUsername: string
 
     @observable
     storeName: string
@@ -128,7 +130,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         makeObservable(this)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
-            sellerEmail, discord, storeName, currencySymbol, allowsTrades, autoRenewListings
+            sellerEmail, discord, tcoUsername, storeName, currencySymbol, allowsTrades, autoRenewListings
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
@@ -139,6 +141,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.preferredCountries = preferredCountries ? preferredCountries : []
         this.sellerEmail = sellerEmail ? sellerEmail : ""
         this.discord = discord ? discord : ""
+        this.tcoUsername = tcoUsername ? tcoUsername : ""
         this.storeName = storeName ? storeName : ""
         this.currencySymbol = currencySymbol
         this.autoRenewListings = autoRenewListings
@@ -191,6 +194,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             return
         }
 
+        const tcoUsernameTrimmed = this.tcoUsername.trim()
+        const tcoUsername = tcoUsernameTrimmed.length === 0 ? undefined : tcoUsernameTrimmed
+
         const storeNameTrimmed = this.storeName.trim()
         const storeName = storeNameTrimmed.length === 0 ? undefined : storeNameTrimmed
         if (storeNameTrimmed.length > 30) {
@@ -211,6 +217,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             publicContactInfo,
             sellerEmail,
             discord,
+            tcoUsername,
             storeName,
             shippingCost,
             currencySymbol: currencySymbolTrimmed,
@@ -310,9 +317,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                             <Grid container={true} spacing={2}>
                                 <Grid item={true} sm={12} md={6}>
                                     <Grid container={true} spacing={2}>
-                                        <Grid item={true} xs={12}>
-                                            <Typography variant={"h6"}>User Settings</Typography>
-                                        </Grid>
                                         {profile.patreonTier != null && (
                                             <Grid item={true} xs={12}>
                                                 <PatreonSupporter profile={profile}/>
@@ -438,9 +442,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                 </Grid>
                                 <Grid item={true} sm={12} md={6}>
                                     <Grid container={true} spacing={2}>
-                                        <Grid item={true} xs={12}>
-                                            <Typography variant={"h6"}>Seller Settings</Typography>
-                                        </Grid>
                                         <Grid item={true} xs={12} sm={6}>
                                             <TextField
                                                 label={"public contact email"}
@@ -457,6 +458,26 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 onChange={(event: EventValue) => this.discord = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
+                                            />
+                                        </Grid>
+                                        <Grid item={true} xs={6}>
+                                            <TextField
+                                                label={"Currency Symbol"}
+                                                value={this.currencySymbol}
+                                                onChange={(event: EventValue) => this.currencySymbol = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                helperText={"For selling decks. e.g. $, €"}
+                                            />
+                                        </Grid>
+                                        <Grid item={true} xs={12} sm={6}>
+                                            <TextField
+                                                label={"TCO username"}
+                                                value={this.tcoUsername}
+                                                onChange={(event: EventValue) => this.tcoUsername = event.target.value}
+                                                fullWidth={true}
+                                                variant={"outlined"}
+                                                helperText={"Case sensitive"}
                                             />
                                         </Grid>
                                         <Grid item={true} xs={12}>
@@ -483,16 +504,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     "Include cost to ship in your country, whether you ship internationally, and approximate cost " +
                                                     "to ship internationally"
                                                 }
-                                            />
-                                        </Grid>
-                                        <Grid item={true} xs={6}>
-                                            <TextField
-                                                label={"Currency Symbol"}
-                                                value={this.currencySymbol}
-                                                onChange={(event: EventValue) => this.currencySymbol = event.target.value}
-                                                fullWidth={true}
-                                                variant={"outlined"}
-                                                helperText={"For selling decks. e.g. $, €"}
                                             />
                                         </Grid>
                                     </Grid>

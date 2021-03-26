@@ -1,4 +1,4 @@
-import { Box, Paper, TableSortLabel, Typography } from "@material-ui/core"
+import { Box, Paper, TableSortLabel, Tooltip, Typography } from "@material-ui/core"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
@@ -42,7 +42,8 @@ export interface SortableTableHeaderInfo<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transformProperty?: (propertyValue: any) => any
     width?: number,
-    hide?: boolean
+    hide?: boolean,
+    padding?: "checkbox" | "default" | "none"
 }
 
 interface SortableTableProps<T> {
@@ -99,7 +100,11 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                     <TableHead>
                         <TableRow>
                             {usableHeaders.map((header, idx) => (
-                                <TableCell key={header.property?.toString() ?? header.title?.toString() ?? idx} style={{width: header.width}}>
+                                <TableCell
+                                    key={header.property?.toString() ?? header.title?.toString() ?? idx}
+                                    style={{width: header.width}}
+                                    padding={header.padding}
+                                >
                                     {(header.property != null || header.sortFunction != null) && header.sortable !== false ? (
                                         <TableSortLabel
                                             active={store.activeTableSort === header.property && store.sortFunctionName === header.title}
@@ -131,7 +136,10 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                                         value = datum[header.property!]
                                     }
                                     return (
-                                        <TableCell key={header.property?.toString() ?? header.title?.toString() ?? idx}>
+                                        <TableCell
+                                            key={header.property?.toString() ?? header.title?.toString() ?? idx}
+                                            padding={header.padding}
+                                        >
                                             <div style={{width: header.width}}>
                                                 {value}
                                             </div>
@@ -212,13 +220,15 @@ class SortableTableStore<T> {
     }
 }
 
-export const SortableTableContainer = (props: { title: string, children: React.ReactNode, controls?: React.ReactNode }) => {
-    const {title, children, controls} = props
+export const SortableTableContainer = (props: { title: string, children: React.ReactNode, controls?: React.ReactNode, titleTooltip?: string }) => {
+    const {title, children, controls, titleTooltip} = props
     return (
         <Box>
             <Paper style={{overflowX: "auto"}}>
                 <Box display={"flex"} p={2}>
-                    <Typography variant={"h5"}>{title}</Typography>
+                    <Tooltip title={titleTooltip ?? ""}>
+                        <Typography variant={"h5"}>{title}</Typography>
+                    </Tooltip>
                     <Box flexGrow={1}/>
                     {controls}
                 </Box>

@@ -65,17 +65,21 @@ export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto, noT
                     </LinkButton>
                 )}
             </CardActions>
-            {isOwner && !noTournamentLink && (
+            {isOwner && (
                 <Box display={"flex"} flexWrap={"wrap"} p={1} pt={0}>
                     <CreateKeyForgeEvent initialEvent={event}/>
-                    <Box pr={1}/>
-                    <CreateKeyForgeEvent initialEvent={event} copy={true}/>
-                    <Box pr={1}/>
-                    <DeleteKeyForgeEvent event={event}/>
-                    {userStore.contentCreator && tourneyId == null && (
+                    {!noTournamentLink && (
                         <>
                             <Box pr={1}/>
-                            <AddTournamentToKeyForgeEvent event={event}/>
+                            <CreateKeyForgeEvent initialEvent={event} copy={true}/>
+                            <Box pr={1}/>
+                            <DeleteKeyForgeEvent event={event}/>
+                            {userStore.contentCreator && tourneyId == null && (
+                                <>
+                                    <Box pr={1}/>
+                                    <AddTournamentToKeyForgeEvent event={event}/>
+                                </>
+                            )}
                         </>
                     )}
                 </Box>

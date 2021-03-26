@@ -4,7 +4,9 @@ import { HttpConfig } from "../../config/HttpConfig"
 import { Utils } from "../../config/Utils"
 import { KeyForgeEventDto } from "../../generated-src/KeyForgeEventDto"
 import { KeyForgeEventFilters } from "../../generated-src/KeyForgeEventFilters"
+import { PairingStrategy } from "../../generated-src/PairingStrategy"
 import { TournamentInfo } from "../../generated-src/TournamentInfo"
+import { TournamentPairingPlayers } from "../../generated-src/TournamentPairingPlayers"
 import { TournamentResults } from "../../generated-src/TournamentResults"
 import { TournamentSearchResult } from "../../generated-src/TournamentSearchResult"
 import { messageStore } from "../../ui/MessageStore"
@@ -76,8 +78,18 @@ export class TournamentStore {
         messageStore.setSuccessMessage("Created your new tournament!")
     }
 
-    pairNextRound = async (id: number) => {
-        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/pair-next-round`)
+    deleteTournament = async (id: number) => {
+        this.savingTournament = true
+        await axios.delete(TournamentStore.SECURE_CONTEXT + "/" + id)
+        if (this.currentFilters != null) {
+            await this.searchTournaments(this.currentFilters)
+        }
+        this.savingTournament = false
+        messageStore.setSuccessMessage("Tournament deleted.")
+    }
+
+    pairNextRound = async (id: number, manualPairings?: TournamentPairingPlayers[]) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/pair-next-round`, manualPairings)
         await this.findTourneyInfo(id)
         messageStore.setSuccessMessage("Paired round!")
     }
@@ -129,6 +141,11 @@ export class TournamentStore {
         await this.findTourneyInfo(id)
     }
 
+    verifyParticipant = async (id: number, username: string, verify: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/verify-participant/${username}/${verify}`)
+        await this.findTourneyInfo(id)
+    }
+
     reportResults = async (id: number, results: TournamentResults) => {
         this.reportingResults = true
         try {
@@ -139,6 +156,26 @@ export class TournamentStore {
         }
 
         this.reportingResults = false
+    }
+
+    lockRegistration = async (id: number, lock: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/lock-registration/${lock}`)
+        await this.findTourneyInfo(id)
+    }
+
+    lockDeckRegistration = async (id: number, lock: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/lock-deck-registration/${lock}`)
+        await this.findTourneyInfo(id)
+    }
+
+    changePairingStrategy = async (id: number, strategy: PairingStrategy) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/change-pairing-strategy/${strategy}`)
+        await this.findTourneyInfo(id)
+    }
+
+    changeTournamentParticipant = async (id: number, previousUsername: string, newUsername: string) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/change-tournament-participant/${previousUsername}/${newUsername}`)
+        await this.findTourneyInfo(id)
     }
 
     constructor() {

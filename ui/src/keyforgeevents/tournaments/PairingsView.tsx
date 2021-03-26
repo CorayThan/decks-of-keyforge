@@ -2,8 +2,9 @@ import { Box, Grid, Typography } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import { Star } from "@material-ui/icons"
 import * as React from "react"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
+import { Utils } from "../../config/Utils"
 import { TournamentPairingInfo } from "../../generated-src/TournamentPairingInfo"
 import { TournamentRoundInfo } from "../../generated-src/TournamentRoundInfo"
 import { TournamentStage } from "../../generated-src/TournamentStage"
@@ -12,12 +13,19 @@ import { LinkButton } from "../../mui-restyled/LinkButton"
 import { UserLink } from "../../user/UserLink"
 import { ReportResults } from "./ReportResults"
 
-export const PairingsView = (props: {round: TournamentRoundInfo, tourneyId: number, stage: TournamentStage, isOrganizer: boolean, containsDecks: boolean, username?: string}) => {
+export const PairingsView = (props: {
+    round: TournamentRoundInfo, tourneyId: number, stage: TournamentStage,
+    isOrganizer: boolean, containsDecks: boolean, username?: string ,
+}) => {
+
     const {round, tourneyId, stage, isOrganizer, containsDecks, username} = props
     return (
-        <Grid item={true} xs={12} xl={6}>
+        <Grid item={true} xs={12} md={9} lg={8} xl={6}>
             <Box maxWidth={880}>
-                <SortableTableContainer title={`Round ${round.roundNumber} Pairings`}>
+                <SortableTableContainer
+                    title={`Round ${round.roundNumber} Pairings`}
+                    titleTooltip={`Paired with ${Utils.enumNameToReadable(round.pairingStrategy)}`}
+                >
                     <SortableTable
                         headers={roundPairingsTableHeaders(
                             tourneyId,
@@ -31,7 +39,7 @@ export const PairingsView = (props: {round: TournamentRoundInfo, tourneyId: numb
                         defaultSort={"table"}
                         rowBackgroundColor={(pairing) => {
                             if (stage == TournamentStage.GAMES_IN_PROGRESS && pairing.playerOneWon == null) {
-                                return blue["50"]
+                                return themeStore.darkMode ? blue["900"] : blue["50"]
                             }
                             return undefined
                         }}
@@ -52,7 +60,7 @@ const roundPairingsTableHeaders = (
 ): SortableTableHeaderInfo<TournamentPairingInfo>[] => {
 
     const headers: SortableTableHeaderInfo<TournamentPairingInfo>[] = [
-        {property: "table", sortable: true},
+        {property: "table", sortable: true, padding: "checkbox"},
         {
             property: "playerOneUsername",
             title: "Player One",
@@ -63,7 +71,6 @@ const roundPairingsTableHeaders = (
                 )
             }
         },
-        {property: "playerOneWins", title: "Wins"},
         {
             property: "playerTwoUsername",
             title: "Player Two",
@@ -77,8 +84,49 @@ const roundPairingsTableHeaders = (
                 )
             }
         },
-        {property: "playerTwoWins", title: "Wins"},
         {
+            title: "Wins",
+            transform: pairing => {
+                if (pairing.playerTwoUsername == null) return pairing.playerOneWins
+                return `${pairing.playerOneWins} – ${pairing.playerTwoWins}`
+            }
+        },
+        {
+            title: "Score",
+            sortable: false,
+            transform: pairing => {
+                if (pairing.playerOneScore == null) return ""
+                return `${pairing.playerOneScore} – ${pairing.playerTwoScore ?? "None"}`
+            }
+        },
+    ]
+
+    if (containsDecks) {
+        headers.push(
+            {
+                title: "Decks",
+                sortable: false,
+                padding: "checkbox",
+                transform: (data) => {
+                    if (data.deckIds.length === 0) {
+                        return null
+                    }
+                    return (
+                        <LinkButton
+                            href={Routes.compareDecksWithIds(data.deckIds)}
+                            newWindow={true}
+                        >
+                            Decks
+                        </LinkButton>
+                    )
+                }
+            },
+        )
+    }
+
+    headers.push(
+        {
+            padding: "checkbox",
             transform: (data) => {
 
                 if (!reportAvailable) {
@@ -101,30 +149,7 @@ const roundPairingsTableHeaders = (
                 )
             }
         },
-
-    ]
-
-    if (containsDecks) {
-        headers.push(
-            {
-                title: "Decks",
-                sortable: false,
-                transform: (data) => {
-                    if (data.deckIds.length === 0) {
-                        return null
-                    }
-                    return (
-                        <LinkButton
-                            href={Routes.compareDecksWithIds(data.deckIds)}
-                            newWindow={true}
-                        >
-                            Decks
-                        </LinkButton>
-                    )
-                }
-            },
-        )
-    }
+    )
 
     return headers
 }

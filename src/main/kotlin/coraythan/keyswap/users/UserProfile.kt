@@ -12,6 +12,7 @@ data class UserProfile(
         val email: String?,
         val sellerEmail: String?,
         val discord: String?,
+        val tcoUsername: String?,
         val publicContactInfo: String?,
         val allowUsersToSeeDeckOwnership: Boolean,
         val country: Country?,
@@ -31,6 +32,7 @@ data class UserProfileUpdate(
         val preferredCountries: List<Country>? = null,
         val sellerEmail: String? = null,
         val discord: String? = null,
+        val tcoUsername: String? = null,
         val storeName: String? = null,
         val shippingCost: String? = null,
         val autoRenewListings: Boolean

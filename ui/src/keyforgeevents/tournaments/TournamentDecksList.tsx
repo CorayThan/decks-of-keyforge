@@ -5,7 +5,6 @@ import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { DeckOwnershipButton } from "../../decks/ownership/DeckOwnershipButton"
 import { PastSasButton } from "../../decks/PastSasButton"
-import { DeckFilters } from "../../decks/search/DeckFilters"
 import { TournamentDeckInfo } from "../../generated-src/TournamentDeckInfo"
 import { TournamentStage } from "../../generated-src/TournamentStage"
 import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "../../generic/SortableTable"
@@ -16,20 +15,21 @@ import { UserLink } from "../../user/UserLink"
 import { AddTournamentDeckButton } from "./AddTournamentDeckButton"
 import { tournamentStore } from "./TournamentStore"
 
-export const TournamentDecksList = (props: { tourneyId: number, stage: TournamentStage, isOrganizer: boolean, decks: TournamentDeckInfo[], username?: string }) => {
-    const {tourneyId, stage, isOrganizer, decks, username} = props
-    const filters = new DeckFilters()
-    filters.tournamentIds = [tourneyId]
-    const link = Routes.deckSearch(filters)
+export const TournamentDecksList = (props: {
+    tourneyId: number, stage: TournamentStage, isOrganizer: boolean, deckChoicesLocked: boolean, decks: TournamentDeckInfo[], username?: string
+}) => {
+
+    const {tourneyId, stage, isOrganizer, decks, username, deckChoicesLocked} = props
+
     return (
         <SortableTableContainer
             title={`Player Decks`}
             controls={(
                 <>
-                    {username != null && !isOrganizer && stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
+                    {!deckChoicesLocked && username != null && !isOrganizer && stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
                         <AddTournamentDeckButton eventId={tourneyId} username={username}/>
                     )}
-                    <LinkButton href={link} newWindow={true} style={{marginLeft: spacing(2)}}>View Decks</LinkButton>
+                    <LinkButton href={Routes.tournamentDecksSearch(tourneyId)} newWindow={true} style={{marginLeft: spacing(2)}}>View Decks</LinkButton>
                 </>
             )}
         >

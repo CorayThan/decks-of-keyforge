@@ -132,6 +132,7 @@ data class KeyUser(
             email = if (isUser) email else null,
             sellerEmail = sellerEmail,
             discord = discord,
+            tcoUsername = tcoUsername,
             publicContactInfo = publicContactInfo,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             country = country,
@@ -158,6 +159,7 @@ data class KeyUser(
             patreonTier = realPatreonTier(),
             sellerEmail = sellerEmail,
             discord = discord,
+            tcoUsername = tcoUsername,
             storeName = storeName,
             storeIconKey = storeIconKey,
             storeBannerKey = storeBannerKey,
@@ -276,6 +278,7 @@ data class KeyUserDto(
 
         val sellerEmail: String? = null,
         val discord: String? = null,
+        val tcoUsername: String? = null,
         val storeName: String? = null,
         val storeIconKey: String? = null,
         val storeBannerKey: String? = null,

@@ -149,6 +149,7 @@ class KeyUserService(
                 sellerEmail = sellerEmail,
                 sellerEmailVerified = sellerEmailVerified,
                 discord = update.discord,
+                tcoUsername = update.tcoUsername,
                 storeName = update.storeName,
                 shippingCost = update.shippingCost,
                 autoRenewListings = update.autoRenewListings
