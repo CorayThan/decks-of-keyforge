@@ -90,6 +90,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     allowsTrades: boolean
     @observable
+    allowsMessages: boolean
+    @observable
     country: Country | ""
 
     @observable
@@ -130,13 +132,14 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         makeObservable(this)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
-            sellerEmail, discord, tcoUsername, storeName, currencySymbol, allowsTrades, autoRenewListings
+            sellerEmail, discord, tcoUsername, storeName, currencySymbol, allowsTrades, allowsMessages, autoRenewListings
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
         this.shippingCost = shippingCost ? shippingCost : ""
         this.allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership
         this.allowsTrades = allowsTrades
+        this.allowsMessages = allowsMessages
         this.country = country ? country : ""
         this.preferredCountries = preferredCountries ? preferredCountries : []
         this.sellerEmail = sellerEmail ? sellerEmail : ""
@@ -158,7 +161,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         if (patreonCode != null) {
             log.debug(`Linking patreon account with access code ${patreonCode}`)
             patreonStore.linkAccount(patreonCode)
-            history.replace(Routes.myProfile)
+            history.replace(MyDokSubPaths.profile)
         }
     }
 
@@ -222,6 +225,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             shippingCost,
             currencySymbol: currencySymbolTrimmed,
             allowsTrades: this.allowsTrades,
+            allowsMessages: this.allowsMessages,
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country as Country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
@@ -414,6 +418,16 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                     />
                                                 }
                                                 label={"Open to trading decks for sale"}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={this.allowsMessages}
+                                                        onChange={(event) => this.allowsMessages = event.target.checked}
+                                                        tabIndex={7}
+                                                    />
+                                                }
+                                                label={"Allow messages from any DoK user"}
                                             />
                                             <FormControlLabel
                                                 control={

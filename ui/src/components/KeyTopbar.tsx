@@ -1,4 +1,4 @@
-import { Button, Divider, IconButton, List, ListItem, ListItemText } from "@material-ui/core"
+import { Button, Divider, IconButton, List, ListItem, ListItemText, Tabs } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Collapse from "@material-ui/core/Collapse"
 import { blue } from "@material-ui/core/colors"
@@ -21,6 +21,7 @@ import { DeckOrCardSearchSuggest } from "../decks/search/DeckOrCardSearchSuggest
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu, LinkMenuStore } from "../generic/LinkMenu"
+import { LinkTab } from "../generic/LinkTab"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { LinkButton, ListItemLink } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -203,6 +204,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             )
         }
 
+        const onMyDok = this.props.location.pathname.includes(Routes.myDok)
+        const onAboutPage = this.props.location.pathname.includes(Routes.about)
+        const onStatsPage = this.props.location.pathname.includes(Routes.stats)
+
         return (
             <div>
                 <AppBar
@@ -217,6 +222,50 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                     >
                         {menuContents}
                     </Toolbar>
+                    {(onMyDok || onAboutPage || onStatsPage) && (
+                        <>
+                            <Divider style={{backgroundColor: "rgb(255, 255, 255, 0.25)"}}/>
+                            <Toolbar variant={"dense"}>
+                                {onMyDok && (
+                                    <Tabs
+                                        value={this.props.location.pathname}
+                                        variant={"scrollable"}
+                                    >
+                                        <LinkTab label="Messages" to={MyDokSubPaths.messages} value={MyDokSubPaths.messages}/>
+                                        <LinkTab label="Profile" to={MyDokSubPaths.profile} value={MyDokSubPaths.profile}/>
+                                        <LinkTab label="Offers" to={MyDokSubPaths.offers} value={MyDokSubPaths.offers}/>
+                                        <LinkTab label="Bought / Sold" to={MyDokSubPaths.purchases} value={MyDokSubPaths.purchases}/>
+                                        <LinkTab label="Notifications" to={MyDokSubPaths.notifications} value={MyDokSubPaths.notifications}/>
+                                        <LinkTab label="My Team" to={MyDokSubPaths.team} value={MyDokSubPaths.team}/>
+                                    </Tabs>
+                                )}
+                                {onAboutPage && (
+                                    <Tabs
+                                        value={this.props.location.pathname}
+                                        variant={"scrollable"}
+                                    >
+                                        <LinkTab label="SAS and AERC" to={AboutSubPaths.sas} value={AboutSubPaths.sas}/>
+                                        <LinkTab label="Patron Rewards" to={AboutSubPaths.patreon} value={AboutSubPaths.patreon}/>
+                                        <LinkTab label="Contact Me" to={AboutSubPaths.contact} value={AboutSubPaths.contact}/>
+                                        <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
+                                        <LinkTab label="API" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
+                                        <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
+                                    </Tabs>
+                                )}
+                                {onStatsPage && (
+                                    <Tabs
+                                        value={this.props.location.pathname}
+                                        variant={"scrollable"}
+                                    >
+                                        <LinkTab label="Win Rates" to={StatsSubPaths.winRates} value={StatsSubPaths.winRates}/>
+                                        <LinkTab label="Decks" to={StatsSubPaths.deckStats} value={StatsSubPaths.deckStats}/>
+                                        <LinkTab label="AERC" to={StatsSubPaths.aercStats} value={StatsSubPaths.aercStats}/>
+                                        <LinkTab label="Purchases" to={StatsSubPaths.purchaseStats} value={StatsSubPaths.purchaseStats}/>
+                                    </Tabs>
+                                )}
+                            </Toolbar>
+                        </>
+                    )}
                 </AppBar>
                 <ToolbarSpacer/>
             </div>
@@ -414,7 +463,7 @@ class UserLinks extends React.Component {
                         linkMenuStore={myDecksMenuStore}
                     />
                     <ListItemLink
-                        to={Routes.myProfile}
+                        to={MyDokSubPaths.profile}
                         onClick={rightMenuStore.close}
                         primary={"My DoK"}
                     />
@@ -520,8 +569,9 @@ class UserLinksDesktop extends React.Component {
 const MyDokDropdown = () => {
 
     const links = [
-        {to: Routes.myProfile, text: "My DoK", mobileActive: true},
-        {to: Routes.myProfile, text: "Profile", mobileActive: false},
+        {to: MyDokSubPaths.profile, text: "My DoK", mobileActive: true},
+        {to: MyDokSubPaths.messages, text: "Messages", mobileActive: true},
+        {to: MyDokSubPaths.profile, text: "Profile", mobileActive: false},
         {to: MyDokSubPaths.offers, text: "Offers", mobileActive: false},
         {to: MyDokSubPaths.purchases, text: "Bought / Sold", mobileActive: false},
         {to: MyDokSubPaths.notifications, text: "Notifications", mobileActive: false},

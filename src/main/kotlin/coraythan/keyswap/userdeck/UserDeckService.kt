@@ -1,5 +1,7 @@
 package coraythan.keyswap.userdeck
 
+import com.querydsl.core.BooleanBuilder
+import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
@@ -18,6 +20,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
+import kotlin.system.measureTimeMillis
 
 @Transactional
 @Service
@@ -28,10 +32,59 @@ class UserDeckService(
         private val userSearchService: UserSearchService,
         private val userDeckRepo: UserDeckRepo,
         private val deckListingRepo: DeckListingRepo,
-        private val previouslyOwnedDeckRepo: PreviouslyOwnedDeckRepo
+        private val previouslyOwnedDeckRepo: PreviouslyOwnedDeckRepo,
+        private val ownedDeckRepo: OwnedDeckRepo,
+        private val favoritedDeckRepo: FavoritedDeckRepo,
+        private val funnyDeckRepo: FunnyDeckRepo,
+        private val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+
+
+    private val query = JPAQueryFactory(entityManager)
+
+    @Scheduled(fixedDelayString = "PT5S")
+    fun migrateUserDecks() {
+        val remaining = userDeckRepo.countByMigratedIsNull()
+
+        if (remaining == 0L) {
+            log.info("Done with migrating user decks")
+            return
+        }
+
+        val userDeckCount = userDeckRepo.count()
+
+        log.info("Start user deck conversion. $remaining out of $userDeckCount left to migrate.")
+
+        val pageSize = 1000L
+        val millis = measureTimeMillis {
+
+            val toConvert = query
+                    .selectFrom(QUserDeck.userDeck)
+                    .where(BooleanBuilder().and(QUserDeck.userDeck.migrated.isNull))
+                    .limit(pageSize)
+                    .orderBy(QUserDeck.userDeck.id.asc())
+                    .fetch()
+
+            toConvert.forEach {
+                if (it.funny && !funnyDeckRepo.existsByDeckIdAndUserId(it.deck.id, it.user.id)) {
+                    funnyDeckRepo.save(FunnyDeck(it.user, it.deck))
+                }
+                if (it.wishlist && !favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, it.user.id)) {
+                    favoritedDeckRepo.save(FavoritedDeck(it.user, it.deck))
+                }
+                if (it.ownedBy != null && !ownedDeckRepo.existsByDeckIdAndOwnerId(it.deck.id, it.user.id)) {
+                    ownedDeckRepo.save(OwnedDeck(it.user, it.deck, it.teamId))
+                }
+                userDeckRepo.save(it.copy(migrated = true))
+            }
+
+        }
+
+        log.info("Done converting $pageSize user decks in $millis.")
+    }
+
 
     // Don't want this running regularly
     @Scheduled(fixedDelayString = "PT24H", initialDelayString = SchedulingConfig.correctCountsInitialDelay)
@@ -56,33 +109,59 @@ class UserDeckService(
     }
 
     fun addToWishlist(deckId: Long, add: Boolean = true) {
-        modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), {
+
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val deck = deckRepo.findByIdOrNull(deckId) ?: throw BadRequestException("No deck with id $deckId")
+        // To delete
+        modOrCreateUserDeck(deckId, user, {
             it.copy(wishlistCount = it.wishlistCount + if (add) 1 else -1)
         }) {
             it.copy(wishlist = add)
         }
+
+        // new code
+        if (add) {
+            favoritedDeckRepo.save(FavoritedDeck(user, deck))
+        } else {
+            favoritedDeckRepo.deleteByDeckIdAndUserId(deckId, user.id)
+        }
     }
 
     fun updateNotes(deckId: Long, notes: String) {
+
         modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), null) {
             it.copy(notes = notes)
         }
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
-        modOrCreateUserDeck(deckId, currentUserService.loggedInUserOrUnauthorized(), {
+
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val deck = deckRepo.findByIdOrNull(deckId) ?: throw BadRequestException("No deck with id $deckId")
+        // To delete
+        modOrCreateUserDeck(deckId, user, {
             it.copy(funnyCount = it.funnyCount + if (mark) 1 else -1)
         }) {
             it.copy(funny = mark)
         }
+
+        // new code
+        if (mark) {
+            funnyDeckRepo.save(FunnyDeck(user, deck))
+        } else {
+            funnyDeckRepo.deleteByDeckIdAndUserId(deckId, user.id)
+        }
     }
 
     fun markAsOwned(deckId: Long, mark: Boolean = true) {
+
         val user = currentUserService.loggedInUserOrUnauthorized()
         val teamId = user.teamId
         if (!mark && deckListingRepo.existsBySellerIdAndDeckIdAndStatusNot(user.id, deckId, DeckListingStatus.COMPLETE)) {
             throw BadRequestException("Please unlist the deck for sale before removing it from your decks.")
         }
+
+        // Delete this eventually
         modOrCreateUserDeck(deckId, user, null) {
             it.copy(
                     ownedBy = if (mark) user.username else null,
@@ -90,21 +169,32 @@ class UserDeckService(
             )
         }
 
-        val deck = deckRepo.findByIdOrNull(deckId)
+        val deck = deckRepo.findByIdOrNull(deckId) ?: throw BadRequestException("No deck for id $deckId")
+
+        // new ownership code
+        if (mark) {
+            ownedDeckRepo.save(OwnedDeck(
+                    owner = user,
+                    deck = deck,
+                    teamId = teamId,
+            ))
+        } else {
+            ownedDeckRepo.deleteByDeckIdAndOwnerId(deck.id, user.id)
+        }
+
         val previouslyOwned = previouslyOwnedDeckRepo.existsByDeckIdAndPreviousOwnerId(deckId, user.id)
         if (mark) {
             if (previouslyOwned) {
                 previouslyOwnedDeckRepo.deleteByDeckIdAndPreviousOwnerId(deckId, user.id)
             }
-        } else {
-            if (deck != null && !previouslyOwned) {
-                previouslyOwnedDeckRepo.save(PreviouslyOwnedDeck(user, deck))
-            }
+        } else if (!previouslyOwned) {
+            previouslyOwnedDeckRepo.save(PreviouslyOwnedDeck(user, deck))
         }
         userSearchService.scheduleUserForUpdate(user)
     }
 
     fun removePreviouslyOwned(deckId: Long) {
+
         val user = currentUserService.loggedInUserOrUnauthorized()
         if (previouslyOwnedDeckRepo.existsByDeckIdAndPreviousOwnerId(deckId, user.id)) {
             previouslyOwnedDeckRepo.deleteByDeckIdAndPreviousOwnerId(deckId, user.id)
@@ -140,6 +230,7 @@ class UserDeckService(
     }
 
     fun removeAllOwned() {
+
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         log.info("Start removing all owned decks for ${currentUser.username}")
 

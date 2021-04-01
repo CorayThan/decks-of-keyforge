@@ -18,7 +18,8 @@ data class UserProfile(
         val country: Country?,
         val preferredCountries: List<Country>? = null,
         val lastVersionSeen: String?,
-        val searchResult: UserSearchResult?
+        val searchResult: UserSearchResult?,
+        val allowsMessages: Boolean,
 )
 
 @GenerateTs
@@ -35,5 +36,6 @@ data class UserProfileUpdate(
         val tcoUsername: String? = null,
         val storeName: String? = null,
         val shippingCost: String? = null,
-        val autoRenewListings: Boolean
+        val autoRenewListings: Boolean,
+        val allowsMessages: Boolean,
 )

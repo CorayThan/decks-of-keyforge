@@ -39,7 +39,6 @@ import { FavoriteDeck } from "./buttons/FavoriteDeck"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
-import { DeckScoreView } from "./DeckScoreView"
 import { EnhancementsInDeck } from "./EnhancementsInDeck"
 import { DeckSearchResult } from "./models/DeckSearchResult"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
@@ -91,7 +90,11 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         margin: margin ? margin : spacing(2),
                         ...style
                     }}
-                    topContents={<DeckViewTopContents deck={deck} compact={compact}/>}
+                    topContents={(
+                        <Box display={"flex"} justifyContent={"center"}>
+                            <DeckViewTopContents deck={deck} compact={compact}/>
+                        </Box>
+                    )}
                     rightContents={!displaySalesSeparately && saleInfoView}
                     id={deck.keyforgeId}
                 >
@@ -243,16 +246,16 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                                 <ExpansionIcon expansion={expansion} size={40} white={true}/>
                             </div>
                         </Tooltip>
-                        <ExtraScore
-                            name={"FB"}
-                            score={deck.efficiencyBonus}
-                            tooltip={
-                                "Efficiency Bonus. An experiemental modifier for the efficiency score based " +
-                                "on the total SAS of a deck. Read more on the about SAS page."
-                            }
-                        />
+                        {/*<ExtraScore*/}
+                        {/*    name={"FB"}*/}
+                        {/*    score={deck.efficiencyBonus}*/}
+                        {/*    tooltip={*/}
+                        {/*        "Efficiency Bonus. An experiemental modifier for the efficiency score based " +*/}
+                        {/*        "on the total SAS of a deck. Read more on the about SAS page."*/}
+                        {/*    }*/}
+                        {/*/>*/}
                     </Box>
-                    <DeckScoreView deck={deck} style={{marginLeft: spacing(4)}}/>
+                    {/*<DeckScoreView deck={deck} style={{marginLeft: spacing(4)}}/>*/}
                 </Box>
                 <OrganizedPlayStats deck={deck}/>
                 <EnhancementsInDeck deck={deck}/>
@@ -274,18 +277,18 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
                     <HouseBanner houses={houses} expansion={deck.expansion} extras={saleIcons}/>
                     <OrganizedPlayStats deck={deck}/>
                     <Box display={"flex"} justifyContent={"center"}>
-                        <ExtraScore
-                            name={"FB"}
-                            score={deck.efficiencyBonus}
-                            tooltip={
-                                "Efficiency Bonus. An experiemental modifier for the efficiency score based " +
-                                "on the total SAS of a deck. Read more on the about SAS page."
-                            }
-                        />
+                        {/*<ExtraScore*/}
+                        {/*    name={"FB"}*/}
+                        {/*    score={deck.efficiencyBonus}*/}
+                        {/*    tooltip={*/}
+                        {/*        "Efficiency Bonus. An experiemental modifier for the efficiency score based " +*/}
+                        {/*        "on the total SAS of a deck. Read more on the about SAS page."*/}
+                        {/*    }*/}
+                        {/*/>*/}
                         <EnhancementsInDeck deck={deck} style={{marginLeft: spacing(4)}}/>
                     </Box>
                 </Box>
-                <DeckScoreView deck={deck}/>
+                {/*<DeckScoreView deck={deck}/>*/}
             </Box>
         )
     }

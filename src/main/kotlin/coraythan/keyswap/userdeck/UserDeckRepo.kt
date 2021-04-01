@@ -26,4 +26,5 @@ interface UserDeckRepo : JpaRepository<UserDeck, UUID>, QuerydslPredicateExecuto
     @Query("UPDATE UserDeck userDeck SET userDeck.teamId = ?1 WHERE userDeck.ownedBy = ?2")
     fun addTeamForUser(teamId: UUID, username: String)
 
+    fun countByMigratedIsNull(): Long
 }

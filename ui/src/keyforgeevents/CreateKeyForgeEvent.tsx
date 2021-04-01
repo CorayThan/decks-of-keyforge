@@ -151,10 +151,9 @@ export const CreateKeyForgeEvent = observer((props: { initialEvent?: KeyForgeEve
                             <FormControl
                                 fullWidth={true}
                             >
-                                <InputLabel id="demo-simple-select-label">Variant</InputLabel>
+                                <InputLabel id="variant-label-id">Variant</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
+                                    labelId="variant-label-id"
                                     value={kfEvent.format}
                                     onChange={(event: React.ChangeEvent<{ value: unknown }>) => kfEvent.format = event.target.value as KeyForgeFormat}
                                 >

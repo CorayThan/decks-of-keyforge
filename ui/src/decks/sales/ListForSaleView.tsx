@@ -13,7 +13,7 @@ import * as React from "react"
 import { deckListingStore } from "../../auctions/DeckListingStore"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
+import { MyDokSubPaths } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
@@ -298,7 +298,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         <SendEmailVerification message={"Please verify your email to list decks for sale or trade."}/>
                         {!userStore.hasCountryAndShippingCost && (
                             <Typography variant={"subtitle2"} color={"error"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}>
-                                Please add a country and shipping costs to your <Link href={Routes.myProfile}>profile</Link>.
+                                Please add a country and shipping costs to your <Link href={MyDokSubPaths.profile}>profile</Link>.
                             </Typography>
                         )}
                         {auction ? (
@@ -490,7 +490,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             style={{marginTop: spacing(2)}}
                         />
                         <HelperText style={{marginTop: spacing(2)}}>
-                            Add seller info and toggle trades on your <Link href={Routes.myProfile}>profile</Link>.
+                            Add seller info and toggle trades on your <Link href={MyDokSubPaths.profile}>profile</Link>.
                         </HelperText>
                         {auction ? (
                             <>

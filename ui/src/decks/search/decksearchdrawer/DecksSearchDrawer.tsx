@@ -17,7 +17,7 @@ import { SearchDrawerExpansionPanel } from "../../../components/SearchDrawerExpa
 import { SortDirectionView } from "../../../components/SortDirectionView"
 import { keyLocalStorage } from "../../../config/KeyLocalStorage"
 import { spacing } from "../../../config/MuiConfig"
-import { Routes } from "../../../config/Routes"
+import { MyDokSubPaths, Routes } from "../../../config/Routes"
 import { log, Utils } from "../../../config/Utils"
 import { expansionInfoMapNumbers } from "../../../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../../expansions/ExpansionSelectOrExclude"
@@ -320,7 +320,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     )}
                                     {showLoginForCountry ? (
                                         <div style={{display: "flex"}}>
-                                            <KeyLink to={userStore.loggedIn() ? Routes.myProfile : Routes.registration}>
+                                            <KeyLink to={userStore.loggedIn() ? MyDokSubPaths.profile : Routes.registration}>
                                                 <Typography variant={"body2"}>
                                                     Select your country
                                                 </Typography>

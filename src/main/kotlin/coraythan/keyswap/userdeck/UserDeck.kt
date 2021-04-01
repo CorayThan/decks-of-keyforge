@@ -27,6 +27,8 @@ data class UserDeck(
 
         val notes: String? = null,
 
+        val migrated: Boolean? = true,
+
         @Id
         val id: UUID = UUID.randomUUID()
 ) {

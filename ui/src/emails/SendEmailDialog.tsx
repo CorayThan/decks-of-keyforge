@@ -96,7 +96,7 @@ export class SendEmailDialog extends React.Component<SendSellerEmailDialogProps>
                 >
                     <DialogTitle>
                         {offerId == null ? (
-                            `Send a message to ${recipientUsername}`
+                            `Send an email to ${recipientUsername}`
                         ) : (
                             `Send a message about an offer`
                         )}

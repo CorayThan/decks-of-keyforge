@@ -24,6 +24,7 @@ import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearch
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
+import { FearPage } from "../FearPage"
 import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
@@ -48,24 +49,17 @@ import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 import { serverStatusStore } from "./ServerStatusStore"
 
-export class MyDokSubPaths {
-    static base = "/my-dok"
-    static profile = MyDokSubPaths.base + "/my-profile"
-    static notifications = MyDokSubPaths.base + "/notifications"
-    static offers = MyDokSubPaths.base + "/offers"
-    static purchases = MyDokSubPaths.base + "/bought-and-sold"
-    static team = MyDokSubPaths.base + "/my-team"
-}
-
 class Routes {
 
+    static sasFools = "/isThisTheEnd"
     static landing = ""
     static users = "/users"
     static community = "/community"
     static events = "/events"
+    static myDok = "/my-dok"
     static tournaments = "/tournaments"
+    static messages = "/messages"
     static adminPanel = "/admin-panel"
-    static myProfile = MyDokSubPaths.profile
     static cards = "/cards"
     static cotaCards = "/cards?expansion=CALL_OF_THE_ARCHONS"
     static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
@@ -211,9 +205,18 @@ const KeyRouter = observer(() => {
     return (
         <BrowserRouter>
             <div>
-                <KeyTopbar/>
-                <div style={{marginBottom: spacing(2)}}/>
+                {!window.location.href.includes(Routes.sasFools) && (
+                    <>
+                        <KeyTopbar/>
+                        <div style={{marginBottom: spacing(2)}}/>
+                    </>
+                )}
                 <Switch>
+                    <Route
+                        exact={true}
+                        path={Routes.sasFools}
+                        component={FearPage}
+                    />
                     <LoggedInRoute
                         exact={true}
                         path={Routes.adminPanel}
@@ -268,7 +271,7 @@ const KeyRouter = observer(() => {
                         component={AboutPage}
                     />
                     <LoggedInRoute
-                        path={MyDokSubPaths.base}
+                        path={Routes.myDok}
                         component={MyDokPage}
                     />
                     <Route
@@ -385,6 +388,15 @@ export class StatsSubPaths {
     static deckStats = Routes.stats + "/deck-stats"
     static aercStats = Routes.stats + "/aerc-stats"
     static purchaseStats = Routes.stats + "/purchase-stats"
+}
+
+export class MyDokSubPaths {
+    static messages = Routes.myDok + "/messages"
+    static profile = Routes.myDok + "/my-profile"
+    static notifications = Routes.myDok + "/notifications"
+    static offers = Routes.myDok + "/offers"
+    static purchases = Routes.myDok + "/bought-and-sold"
+    static team = Routes.myDok + "/my-team"
 }
 
 export {

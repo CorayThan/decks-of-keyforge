@@ -16,6 +16,7 @@ import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { countryToLabel } from "../../generic/CountryUtils"
 import { HelperText } from "../../generic/CustomTypographies"
+import { SendMessageButton } from "../../messages/SendMessageButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { WhiteSpaceTypography } from "../../mui-restyled/WhiteSpaceTypography"
 import { SellerRatingView } from "../../sellerratings/SellerRatingView"
@@ -225,6 +226,14 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                     <Box mb={2} mx={2} display={"flex"} flexWrap={"wrap"} alignItems={"center"}>
 
                         <DiscordUser discord={discord} style={{marginRight: spacing(2), marginTop: spacing(2)}}/>
+                        {userStore.loggedIn() && (
+                            <SendMessageButton
+                                toUsername={username}
+                                deckId={deckId}
+                                deckName={deckName}
+                                style={{marginTop: spacing(2), marginRight: spacing(2)}}
+                            />
+                        )}
                         <Box mt={2}>
                             {allowEmail ? (
                                 <SendEmailDialog

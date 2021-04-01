@@ -3,7 +3,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
 import { spacing } from "../config/MuiConfig"
-import { AboutSubPaths, Routes } from "../config/Routes"
+import { AboutSubPaths, MyDokSubPaths, Routes } from "../config/Routes"
 import CollectionAnalysis from "../generic/imgs/patron-benefits/collection-analysis.png"
 import DarkMode from "../generic/imgs/patron-benefits/dark-mode.png"
 import DeckComparison from "../generic/imgs/patron-benefits/deck-comparison.png"
@@ -61,7 +61,7 @@ export class PatreonRewards extends React.Component {
                                 After becoming a patron link your account with the above "Link Patreon" button.
                             </Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Dark Mode – $3+</Typography>,
-                            <Typography>Go to your <Link href={Routes.myProfile}>profile</Link> to toggle on dark mode.</Typography>,
+                            <Typography>Go to your <Link href={MyDokSubPaths.profile}>profile</Link> to toggle on dark mode.</Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck for sale notifications – $6+</Typography>,
                             <Typography>
                                 Search <Link href={Routes.decksForSale()}>decks for sale</Link> and you will see a "Notify" button appear next to
@@ -70,7 +70,7 @@ export class PatreonRewards extends React.Component {
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Store listing on the landing page – $12+</Typography>,
                             <Typography>
                                 You must have 10 or more decks listed for sale or trade for your store to show. You can change your store name,
-                                icon and banner from your <Link href={Routes.myProfile}>profile</Link>.
+                                icon and banner from your <Link href={MyDokSubPaths.profile}>profile</Link>.
                             </Typography>,
                         ]}
                     />

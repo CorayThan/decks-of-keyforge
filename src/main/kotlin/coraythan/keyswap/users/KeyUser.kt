@@ -39,6 +39,7 @@ data class KeyUser(
 
         val publicContactInfo: String? = null,
         val allowUsersToSeeDeckOwnership: Boolean,
+        val allowsMessages: Boolean = true,
 
         val currencySymbol: String,
 
@@ -138,7 +139,8 @@ data class KeyUser(
             country = country,
             preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen,
-            searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult() else null
+            searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult() else null,
+            allowsMessages = allowsMessages,
     )
 
     fun toDto() = KeyUserDto(
@@ -150,6 +152,7 @@ data class KeyUser(
             type = type,
             publicContactInfo = publicContactInfo,
             allowsTrades = allowsTrades,
+            allowsMessages = allowsMessages,
             allowUsersToSeeDeckOwnership = allowUsersToSeeDeckOwnership,
             currencySymbol = currencySymbol,
             country = country,
@@ -264,6 +267,7 @@ data class KeyUserDto(
 
         val publicContactInfo: String? = null,
         val allowsTrades: Boolean,
+        val allowsMessages: Boolean,
         val allowUsersToSeeDeckOwnership: Boolean,
 
         val currencySymbol: String = "$",

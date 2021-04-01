@@ -43,8 +43,20 @@ export class ReleaseNotes extends React.Component {
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
+                    releaseNumber={"-1.0"}
+                    date={"4/1/2021"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS No More",
+                            note: "I got some feedback that SAS rates some decks badly, so I decided to remove it. No worries, DoK will stick around, happy " +
+                                "forging y'all!"
+                        },
+                    ]}
+                />
+                <ReleaseNote
                     releaseNumber={"6.5"}
-                    date={"3/1/2020"}
+                    date={"3/1/2021"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
@@ -77,7 +89,7 @@ export class ReleaseNotes extends React.Component {
                 />
                 <ReleaseNote
                     releaseNumber={"6.4"}
-                    date={"2/1/2020"}
+                    date={"2/1/2021"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
@@ -104,7 +116,7 @@ export class ReleaseNotes extends React.Component {
                 />
                 <ReleaseNote
                     releaseNumber={"6.3"}
-                    date={"1/11/2020"}
+                    date={"1/11/2021"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
@@ -120,7 +132,7 @@ export class ReleaseNotes extends React.Component {
                 />
                 <ReleaseNote
                     releaseNumber={"6.2"}
-                    date={"1/4/2020"}
+                    date={"1/4/2021"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
@@ -768,7 +780,7 @@ export class ReleaseNotes extends React.Component {
                             highlight: "Dark Mode for Patrons: Celebrate DoK's 1 year anniversary by supporting the site and saving your eyes at night!",
                         },
                         {
-                            note: <NotesLink to={Routes.myProfile}>Switch on your Profile</NotesLink>
+                            note: <NotesLink to={MyDokSubPaths.profile}>Switch on your Profile</NotesLink>
                         },
                         {
                             note: <NotesLink to={AboutSubPaths.patreon}>Patron Benefits</NotesLink>
@@ -1102,7 +1114,7 @@ export class ReleaseNotes extends React.Component {
                         {
                             note: (
                                 <div style={{display: "flex"}}>
-                                    <NotesLink to={Routes.myProfile}>Profile</NotesLink>
+                                    <NotesLink to={MyDokSubPaths.profile}>Profile</NotesLink>
                                 </div>
                             )
                         }

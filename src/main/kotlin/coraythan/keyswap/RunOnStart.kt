@@ -4,6 +4,10 @@ import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.synergy.FixSynergies
+import coraythan.keyswap.userdeck.FavoritedDeckRepo
+import coraythan.keyswap.userdeck.FunnyDeckRepo
+import coraythan.keyswap.userdeck.OwnedDeckRepo
+import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
@@ -23,7 +27,11 @@ class RunOnStart(
         private val fixSynergies: FixSynergies,
         private val userSearchService: UserSearchService,
         private val cardRepo: CardRepo,
-        private val restTemplate: RestTemplate
+        private val restTemplate: RestTemplate,
+        private val userDeckRepo: UserDeckRepo,
+        private val ownedDeckRepo: OwnedDeckRepo,
+        private val funnyDeckRepo: FunnyDeckRepo,
+        private val favoritedDeckRepo: FavoritedDeckRepo,
 ) : CommandLineRunner {
 
     private val log = LoggerFactory.getLogger(this::class.java)
