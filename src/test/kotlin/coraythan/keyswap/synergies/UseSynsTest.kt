@@ -64,7 +64,7 @@ class UseSynsTest {
 
         val results = DeckSynergyService.fromDeckWithCards(boringDeck, woteCards)
         assertEquals(2.0, results.efficiency, 0.001)
-        assertEquals(1, results.synergyRating)
+        assertEquals(1.0, results.synergyCombos.find { it.cardName == "wote" }!!.netSynergy, 0.001)
     }
 
 }

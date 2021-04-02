@@ -8,6 +8,7 @@ import coraythan.keyswap.synergy.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
+import kotlin.math.roundToInt
 
 class BasicSynsTest {
 
@@ -165,7 +166,7 @@ class BasicSynsTest {
 
         val basicSynAntisynResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicSynAndAntisyn)
         assertEquals(0, basicSynAntisynResults.synergyRating)
-        assertEquals(2, basicSynAntisynResults.sasRating - basicSynAntisynResults.metaScores.values.sum())
+        assertEquals(2, basicSynAntisynResults.sasRating - basicSynAntisynResults.metaScores.values.sum().roundToInt())
         assertEquals(2, basicSynAntisynResults.rawAerc)
     }
 
@@ -237,7 +238,7 @@ class BasicSynsTest {
         val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlyAntisynergies)
         assertEquals(0, hasOnlySynergiesResults.synergyRating)
         assertEquals(36, hasOnlySynergiesResults.antisynergyRating)
-        assertEquals(0, hasOnlySynergiesResults.sasRating - hasOnlySynergiesResults.metaScores.values.sum())
+        assertEquals(0, hasOnlySynergiesResults.sasRating - hasOnlySynergiesResults.metaScores.values.sum().roundToInt())
         assertEquals(36, hasOnlySynergiesResults.rawAerc)
     }
 
@@ -287,7 +288,7 @@ class BasicSynsTest {
         val shooler = DeckSynergyService.fromDeckWithCards(boringDeck, shoolerHyseriaKeyA)
         log.info("Combos: ${shooler.synergyCombos}")
         assertEquals(5, shooler.synergyRating)
-        assertEquals(5, shooler.sasRating - shooler.metaScores.values.sum())
+        assertEquals(5, shooler.sasRating - shooler.metaScores.values.sum().roundToInt())
         assertEquals(0, shooler.rawAerc)
         assertEquals(5.28, shooler.amberControl, 0.001)
         val combo = shooler.synergyCombos.find { it.netSynergy > 0 }!!
@@ -362,7 +363,7 @@ class BasicSynsTest {
         assertEquals(0.0, kirby.efficiency, 0.001)
 
         val twoKirby = DeckSynergyService.fromDeckWithCards(boringDeck, selfSynergy.plus(selfSynergy))
-        assertEquals(2, twoKirby.synergyRating)
+        assertEquals(1.0, twoKirby.synergyCombos.find { it.cardName == "kirby" }!!.netSynergy, 0.001)
         assertEquals(2.0, twoKirby.efficiency, 0.001)
     }
 
@@ -403,7 +404,7 @@ class BasicSynsTest {
     @Test
     fun testSelfSynergyInHouse() {
         val twoKirby = DeckSynergyService.fromDeckWithCards(boringDeck, selfSynergyInHouse)
-        assertEquals(2, twoKirby.synergyRating)
+        assertEquals(1.0, twoKirby.synergyCombos.find { it.cardName == "kirby" }!!.netSynergy, 0.001)
         assertEquals(5.0, twoKirby.efficiency, 0.001)
     }
 }

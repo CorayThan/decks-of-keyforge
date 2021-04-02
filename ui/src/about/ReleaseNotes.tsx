@@ -59,7 +59,7 @@ export class ReleaseNotes extends React.Component {
                             note: "I've now publicly released DoK's new tournament feature! This allows Tournament Organizers to use DoK to organize " +
                                 "tournaments instead of tools like Challonge. It has a number of custom integrations with DoK that should make it better " +
                                 "for KeyForge than any other option! Depending on how much use this sees, I'll possibly add more features, like special " +
-                                "score reporting tools for survival, support for KeyForge league play, etc. Find it under the Community tab."
+                                "score reporting tools for survival, support for KeyForge league play, etc. Find it under the Community menu."
                         },
                         {
                             highlight: "Efficiency Bonus added to SAS",
