@@ -362,7 +362,7 @@ object DeckSynergyService {
 
         val synergy = (synergyUnroundedRaw + efficiencyBonus ).roundToInt()
 
-        val newSas = (preMetaSas + metaScore).roundToInt()
+        val newSas = (preMetaSas + metaScore + efficiencyBonus).roundToInt()
         val rawAerc = newSas + antisynergy - synergy - metaScore.roundToInt()
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")

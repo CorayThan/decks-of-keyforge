@@ -1,7 +1,5 @@
 package coraythan.keyswap.userdeck
 
-import com.querydsl.core.BooleanBuilder
-import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
@@ -20,8 +18,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityManager
-import kotlin.system.measureTimeMillis
 
 @Transactional
 @Service
@@ -36,55 +32,9 @@ class UserDeckService(
         private val ownedDeckRepo: OwnedDeckRepo,
         private val favoritedDeckRepo: FavoritedDeckRepo,
         private val funnyDeckRepo: FunnyDeckRepo,
-        private val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-
-
-    private val query = JPAQueryFactory(entityManager)
-
-    @Scheduled(fixedDelayString = "PT5S")
-    fun migrateUserDecks() {
-        val remaining = userDeckRepo.countByMigratedIsNull()
-
-        if (remaining == 0L) {
-            log.info("Done with migrating user decks")
-            return
-        }
-
-        val userDeckCount = userDeckRepo.count()
-
-        log.info("Start user deck conversion. $remaining out of $userDeckCount left to migrate.")
-
-        val pageSize = 1000L
-        val millis = measureTimeMillis {
-
-            val toConvert = query
-                    .selectFrom(QUserDeck.userDeck)
-                    .where(BooleanBuilder().and(QUserDeck.userDeck.migrated.isNull))
-                    .limit(pageSize)
-                    .orderBy(QUserDeck.userDeck.id.asc())
-                    .fetch()
-
-            toConvert.forEach {
-                if (it.funny && !funnyDeckRepo.existsByDeckIdAndUserId(it.deck.id, it.user.id)) {
-                    funnyDeckRepo.save(FunnyDeck(it.user, it.deck))
-                }
-                if (it.wishlist && !favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, it.user.id)) {
-                    favoritedDeckRepo.save(FavoritedDeck(it.user, it.deck))
-                }
-                if (it.ownedBy != null && !ownedDeckRepo.existsByDeckIdAndOwnerId(it.deck.id, it.user.id)) {
-                    ownedDeckRepo.save(OwnedDeck(it.user, it.deck, it.teamId))
-                }
-                userDeckRepo.save(it.copy(migrated = true))
-            }
-
-        }
-
-        log.info("Done converting $pageSize user decks in $millis.")
-    }
-
 
     // Don't want this running regularly
     @Scheduled(fixedDelayString = "PT24H", initialDelayString = SchedulingConfig.correctCountsInitialDelay)
