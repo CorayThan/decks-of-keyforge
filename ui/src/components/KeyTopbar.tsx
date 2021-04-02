@@ -5,7 +5,7 @@ import { blue } from "@material-ui/core/colors"
 import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
-import { ExpandLess, ExpandMore } from "@material-ui/icons"
+import { ArrowBack, ExpandLess, ExpandMore } from "@material-ui/icons"
 import MenuIcon from "@material-ui/icons/Menu"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
@@ -138,6 +138,11 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         if (screenStore.smallScreenTopBar()) {
             menuContents = (
                 <>
+                    {uiStore.displayBack && (
+                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}} color={"inherit"}>
+                            <ArrowBack color={"inherit"}/>
+                        </IconButton>
+                    )}
                     <div style={{marginRight: spacing(2)}}>
                         <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
                     </div>
@@ -187,6 +192,11 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         } else {
             menuContents = (
                 <>
+                    {uiStore.displayBack && (
+                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}} color={"inherit"}>
+                            <ArrowBack color={"inherit"}/>
+                        </IconButton>
+                    )}
                     <UnstyledLink to={Routes.landing}><DokIcon/></UnstyledLink>
                     <Typography
                         variant={"h4"}
@@ -466,6 +476,11 @@ class UserLinks extends React.Component {
                         to={MyDokSubPaths.profile}
                         onClick={rightMenuStore.close}
                         primary={"My DoK"}
+                    />
+                    <ListItemLink
+                        to={MyDokSubPaths.messages}
+                        onClick={rightMenuStore.close}
+                        primary={"Messages"}
                     />
                     <ListItemLink
                         to={AboutSubPaths.patreon}

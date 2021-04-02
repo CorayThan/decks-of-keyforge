@@ -9,6 +9,9 @@ class MessageEndpoints(
         private val messageService: PrivateMessageService,
 ) {
 
+    @GetMapping("/{id}")
+    fun findMessage(@PathVariable id: Long) = messageService.findMessage(id)
+
     @GetMapping("/unread-count")
     fun unreadCount() = messageService.unreadCount()
 
@@ -20,4 +23,10 @@ class MessageEndpoints(
 
     @PostMapping("/send")
     fun sendMessage(@RequestBody message: SendMessage) = messageService.sendMessage(message)
+
+    @PostMapping("/{id}/archive/{archive}")
+    fun archiveMessage(@PathVariable id: Long, @PathVariable archive: Boolean) = messageService.archiveMessage(id, archive)
+
+    @PostMapping("/{id}/mark-read")
+    fun markRead(@PathVariable id: Long) = messageService.markRead(id)
 }

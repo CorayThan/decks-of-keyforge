@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Link } from "@material-ui/core"
+import { Box, Card, CardActions, Divider, Link } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -7,6 +7,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { UserProfile } from "../generated-src/UserProfile"
+import { SendMessageButton } from "../messages/SendMessageButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SellerRatingView } from "../sellerratings/SellerRatingView"
@@ -90,7 +91,7 @@ export class ProfileView extends React.Component<ProfileViewProps> {
 
         return (
             <div style={{margin: spacing(2), marginTop: spacing(4), display: "flex", justifyContent: "center"}}>
-                <Card style={{padding: spacing(2), maxWidth: 480}}>
+                <Card style={{padding: spacing(2), paddingBottom: 0, maxWidth: 480}}>
                     <Box mb={2}>
                         <Box display={"flex"} alignItems={"top"} flexWrap={"wrap"}>
                             <Typography
@@ -127,16 +128,21 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                         </>
                     )}
 
-                    <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
-                    <Typography color={"textSecondary"} variant={"subtitle2"}>Public Contact Info</Typography>
+                    {!(!profile.publicContactInfo && !profile.sellerEmail && !profile.discord && profile.allowsMessages) && (
+                        <>
+                            <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
+                            <Typography color={"textSecondary"} variant={"subtitle2"}>Public Contact Info</Typography>
+                        </>
+                    )}
 
-                    {!profile.publicContactInfo && !profile.sellerEmail && !profile.discord && (
+                    {!profile.publicContactInfo && !profile.sellerEmail && !profile.discord && !profile.allowsMessages && (
                         <Typography style={{marginTop: spacing(1)}}>None available</Typography>
                     )}
 
                     {profile.publicContactInfo && (
                         <Typography style={{whiteSpace: "pre-wrap", marginTop: spacing(1)}}>{profile.publicContactInfo}</Typography>
                     )}
+
                     {profile.sellerEmail && (
                         <Box mt={2}>
                             <Link href={`mailto:${profile.sellerEmail}`}>{profile.sellerEmail}</Link>
@@ -146,18 +152,23 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                         <DiscordUser style={{marginTop: spacing(2)}} discord={profile.discord}/>
                     )}
                     {profile.tcoUsername && (
-                        <TcoUser style={{marginTop: spacing(2)}} tcoUsername={profile.tcoUsername} />
+                        <TcoUser style={{marginTop: spacing(2)}} tcoUsername={profile.tcoUsername}/>
                     )}
-                    <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
 
-                    {profile.allowUsersToSeeDeckOwnership && (
-                        <LinkButton color={"primary"} href={decksLink}>
-                            {profile.username}'s Decks
+                    <Box mt={2}/>
+                    <CardActions>
+                        {profile.allowUsersToSeeDeckOwnership && (
+                            <LinkButton href={decksLink}>
+                                Decks
+                            </LinkButton>
+                        )}
+                        <LinkButton href={forSaleLink}>
+                            Decks For Sale
                         </LinkButton>
-                    )}
-                    <LinkButton color={"primary"} href={forSaleLink}>
-                        {profile.username}'s Decks for Sale
-                    </LinkButton>
+                        {profile.allowsMessages && (
+                            <SendMessageButton toUsername={profile.username} variant={"outlined"} color={"primary"}/>
+                        )}
+                    </CardActions>
                 </Card>
             </div>
         )

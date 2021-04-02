@@ -1,14 +1,17 @@
 package coraythan.keyswap.messages
 
 import com.querydsl.core.BooleanBuilder
+import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,7 +29,15 @@ class PrivateMessageService(
         private val entityManager: EntityManager,
 ) {
 
+    private val log = LoggerFactory.getLogger(this::class.java)
     private val query = JPAQueryFactory(entityManager)
+
+    fun findMessage(id: Long): PrivateMessageDto {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val message = messageRepo.findByIdOrNull(id) ?: throw BadRequestException("No message with id $id")
+
+        return message.toDto(user, userRepo.findByIdOrNull(if (user.id == message.toId) message.fromId else message.toId)!!)
+    }
 
     fun unreadCount(): Long {
         val user = currentUserService.loggedInUserOrUnauthorized()
@@ -37,37 +48,41 @@ class PrivateMessageService(
 
         val user = currentUserService.loggedInUserOrUnauthorized()
 
-        val isSender = filters.fromId == user.id
-        val isRecipient = filters.toId == user.id
-
-        if (!isSender && !isRecipient) {
-            throw UnauthorizedException("You must be the sender or recipient of the messages you search.")
-        }
-
         val messageQ = QPrivateMessage.privateMessage
 
         val predicate = BooleanBuilder()
 
-        if (filters.toId != null) {
-            predicate.and(messageQ.to.id.eq(filters.toId))
-        }
-        if (filters.fromId != null) {
-            predicate.and(messageQ.from.id.eq(filters.fromId))
-        }
-        if (isRecipient && filters.unreadOnly) {
-            predicate.and(messageQ.viewed.isNull)
-        }
+        predicate.and(messageQ.replyTo.isNull)
 
-        if (!filters.includeHidden) {
-            if (isSender) {
-                predicate.and(messageQ.senderHidden.isFalse)
-            } else {
+        when (filters.category) {
+            MailCategory.INBOX -> {
+                predicate.and(messageQ.toId.eq(user.id))
                 predicate.and(messageQ.recipientHidden.isFalse)
             }
-        }
-
-        if (filters.conversationMessageId != null) {
-            predicate.and(messageQ.replyToId.eq(filters.conversationMessageId))
+            MailCategory.SENT -> {
+                predicate.and(messageQ.fromId.eq(user.id))
+                predicate.and(messageQ.senderHidden.isFalse)
+            }
+            MailCategory.ALL_MAIL -> {
+            }
+            MailCategory.ARCHIVED -> {
+                predicate.andAnyOf(
+                        BooleanBuilder().and(messageQ.toId.eq(user.id)).and(messageQ.recipientHidden.isTrue),
+                        BooleanBuilder().and(messageQ.fromId.eq(user.id)).and(messageQ.senderHidden.isTrue),
+                )
+            }
+            MailCategory.UNREAD -> {
+                predicate.andAnyOf(
+                        BooleanBuilder().and(messageQ.viewed.isNull).and(messageQ.toId.eq(user.id)),
+                        messageQ.replies.any().`in`(
+                                JPAExpressions.selectFrom(messageQ)
+                                        .where(
+                                                messageQ.viewed.isNull,
+                                                messageQ.toId.eq(user.id)
+                                        )
+                        )
+                )
+            }
         }
 
         return query.selectFrom(messageQ)
@@ -76,7 +91,10 @@ class PrivateMessageService(
                 .offset(filters.page)
                 .orderBy(messageQ.sent.desc())
                 .fetch()
-                .map { it.toDto() }
+                .map {
+                    val otherUserId = if (it.toId == user.id) it.fromId else it.toId
+                    it.toDto(user, userRepo.findByIdOrNull(otherUserId)!!)
+                }
     }
 
     fun sendMessage(send: SendMessage) {
@@ -93,13 +111,15 @@ class PrivateMessageService(
 
         if (!deckIsForSale && !to.allowsMessages) throw UnauthorizedException("This user does not accept unsolicited messages.")
 
+        log.info("About to send message to ${to.username} from ${from.username}")
+
         messageRepo.save(PrivateMessage(
-                to,
-                from,
+                toId = to.id,
+                fromId = from.id,
                 deck = deck,
                 subject = send.subject,
                 message = send.message,
-                replyToId = send.replyToId,
+                replyTo = if (send.replyToId == null) null else messageRepo.findByIdOrNull(send.replyToId),
         ))
     }
 
@@ -110,5 +130,34 @@ class PrivateMessageService(
                 blockId = toBlock.id,
                 blockedById = user.id
         ))
+    }
+
+    fun archiveMessage(id: Long, archive: Boolean) {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val message = messageRepo.findByIdOrNull(id) ?: throw BadRequestException("No message with id $id")
+        if (message.toId != user.id && message.fromId != user.id) throw UnauthorizedException("You are not the sender or recipient of this message")
+
+        val toArchive = if (message.toId == user.id) {
+            message.copy(recipientHidden = archive)
+        } else {
+            message.copy(senderHidden = archive)
+        }
+
+        messageRepo.save(toArchive)
+    }
+
+    fun markRead(id: Long) {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        val message = messageRepo.findByIdOrNull(id) ?: throw BadRequestException("No message with id $id")
+
+        message.replies.forEach {
+            if (it.viewed == null && it.toId == user.id) {
+                messageRepo.save(it.copy(viewed = nowLocal()))
+            }
+        }
+
+        if (message.viewed == null && message.toId == user.id) {
+            messageRepo.save(message.copy(viewed = nowLocal()))
+        }
     }
 }

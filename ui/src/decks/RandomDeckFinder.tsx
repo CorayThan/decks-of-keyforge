@@ -35,7 +35,7 @@ export class RandomDeckMenuItem extends React.Component<MenuItemProps> {
 
 export const randomDeckMenuItem: LinkInfo = {
     text: "I Feel Lucky",
-    mobileActive: true,
+    mobileActive: false,
     component: RandomDeckMenuItem,
     randomDeck: true
 }

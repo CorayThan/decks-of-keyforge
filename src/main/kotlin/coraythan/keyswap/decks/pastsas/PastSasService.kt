@@ -6,6 +6,7 @@ import coraythan.keyswap.decks.models.PastSas
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.roundToInt
 
 @Transactional
 @Service
@@ -40,7 +41,7 @@ class PastSasService(
             sasRating = synergies.sasRating,
             synergyRating = synergies.synergyRating,
             antisynergyRating = synergies.antisynergyRating,
-            meta = synergies.metaScores.values.sum(),
+            meta = synergies.metaScores.values.sum().roundToInt(),
 
             aercVersion = publishedAercVersion,
     )

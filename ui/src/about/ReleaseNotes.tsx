@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.5"
+export const latestVersion = "6.6"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,14 +43,33 @@ export class ReleaseNotes extends React.Component {
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
-                    releaseNumber={"-1.0"}
-                    date={"4/1/2021"}
+                    releaseNumber={"6.6"}
+                    date={"4/1ish/2021"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
-                            highlight: "SAS No More",
-                            note: "I got some feedback that SAS rates some decks badly, so I decided to remove it. No worries, DoK will stick around, happy " +
-                                "forging y'all!"
+                            highlight: "On site messaging!",
+                            note: "I'm pretty excited about this one. I've added on-site messaging to other users! I recommend using this to " +
+                                "contact users to buy decks instead of the system's email system. Emails can go to spam, but on site messages will " +
+                                "always be there for the recipient to read when they visit the site. The basic functionality of this feature is all there, " +
+                                "but some important parts are still INC, like replies and notification dots for unread messages."
+                        },
+                        {
+                            highlight: "Tournaments!",
+                            note: "I've now publicly released DoK's new tournament feature! This allows Tournament Organizers to use DoK to organize " +
+                                "tournaments instead of tools like Challonge. It has a number of custom integrations with DoK that should make it better " +
+                                "for KeyForge than any other option! Depending on how much use this sees, I'll possibly add more features, like special " +
+                                "score reporting tools for survival, support for KeyForge league play, etc. Find it under the Community tab."
+                        },
+                        {
+                            highlight: "Efficiency Bonus added to SAS",
+                            note: "I've now added the Efficiency Bonus to SAS. In the calculation it is added to the Synergy score, and you can mouse over " +
+                                "the synergy score to see a deck's efficiency bonus. I've also pushed the normal update to various cards I've received " +
+                                "feedback on."
+                        },
+                        {
+                            highlight: "SAS No More No More",
+                            note: "I got some feedback that no one really believed I was gonna delete SAS, so it's back now. GL and Forge on!"
                         },
                     ]}
                 />

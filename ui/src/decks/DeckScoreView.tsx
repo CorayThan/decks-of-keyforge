@@ -6,7 +6,7 @@ import * as React from "react"
 import { Fragment } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { roundToThousands } from "../config/Utils"
+import { roundToInt, roundToTens, roundToThousands } from "../config/Utils"
 import { activeExpansions } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -57,10 +57,11 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         synergyRating,
         antisynergyRating,
         sasPercentile,
-        expansion
+        expansion,
+        efficiencyBonus,
     } = deck
 
-    const metaScore = DeckUtils.calculateMetaScore(deck)
+    const metaScore = roundToInt(DeckUtils.calculateMetaScore(deck))
 
     if (expansion != null && !activeExpansions.includes(expansion)) {
         return (
@@ -82,7 +83,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     }
 
     const sasName = "SAS"
-    const sasTooltip =  "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
+    const sasTooltip = "Synergy and Antisynergy Rating. All the synergized AERC scores for each card added together. Read more on the about page."
 
     return (
         <Box display={"flex"} className={"deck-score-box"}>
@@ -92,7 +93,11 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                         <RatingRow value={aercScore} name={"BASE AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                     </div>
                 </Tooltip>
-                <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                <Tooltip title={`Synergies + Efficiency Bonus. EB = ${roundToTens(efficiencyBonus)}`}>
+                    <div>
+                        <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                    </div>
+                </Tooltip>
                 <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <SasTip
                     title={<Typography variant={"subtitle1"}>META Score</Typography>}
@@ -102,7 +107,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                                 .map(meta => (
                                     <Fragment key={meta[0]}>
                                         <Typography variant={"body2"}>{meta[0]}</Typography>
-                                        <Typography variant={"body2"}>{meta[1]}</Typography>
+                                        <Typography variant={"body2"}>{roundToTens(meta[1])}</Typography>
                                     </Fragment>
                                 ))}
                         </Box>

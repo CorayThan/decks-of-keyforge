@@ -213,7 +213,7 @@ class StatsService(
                         stats.other.incrementValue(ratedDeck.other.roundToInt())
                         stats.effectivePower.incrementValue(ratedDeck.effectivePower)
                         stats.sas.incrementValue(ratedDeck.sasRating)
-                        stats.meta.incrementValue(deckWithSyns.meta())
+                        stats.meta.incrementValue(deckWithSyns.meta().roundToInt())
                         stats.synergy.incrementValue(ratedDeck.synergyRating)
                         stats.antisynergy.incrementValue(ratedDeck.antisynergyRating)
                         stats.creatureCount.incrementValue(ratedDeck.creatureCount)
@@ -231,7 +231,7 @@ class StatsService(
                         if (ratedDeck.wins != 0 || ratedDeck.losses != 0) {
                             val wins = Wins(ratedDeck.wins, ratedDeck.losses)
                             stats.sasToWinsLosses.addWinsLosses(ratedDeck.sasRating, wins)
-                            stats.metaToWinsLosses.addWinsLosses(deckWithSyns.meta(), wins)
+                            stats.metaToWinsLosses.addWinsLosses(deckWithSyns.meta().roundToInt(), wins)
                             stats.synergyToWinsLosses.addWinsLosses(ratedDeck.synergyRating, wins)
                             stats.antisynergyToWinsLosses.addWinsLosses(ratedDeck.antisynergyRating, wins)
                             stats.aercToWinsLosses.addWinsLosses(ratedDeck.aercScore.roundToInt(), wins)

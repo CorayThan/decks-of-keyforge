@@ -8,11 +8,9 @@ import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
 import { spacing } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
 import { log, Utils } from "../../config/Utils"
 import { SellerDetails } from "../../generated-src/SellerDetails"
 import { KeyButton } from "../../mui-restyled/KeyButton"
-import { LinkButton } from "../../mui-restyled/LinkButton"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerBanner } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
@@ -178,15 +176,6 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
                         {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
                         {filters.isForSaleOrTrade && filters.owner != null && <SellerBanner sellerUsername={filters.owner}/>}
-                        {decksToDisplay != null && (
-                            <LinkButton
-                                color={"secondary"}
-                                variant={"contained"}
-                                href={Routes.sasFools}
-                            >
-                                Where did SAS go?
-                            </LinkButton>
-                        )}
                         {decksView}
                         {showMoreButton}
                     </div>

@@ -17,26 +17,26 @@ class UserMessageStore {
     sentSellerMessage = false
 
     @observable
-    messages: PrivateMessageDto[] = []
+    messages?: PrivateMessageDto[]
+
+    @observable
+    message?: PrivateMessageDto
 
     @observable
     searchingMessages = false
 
-    searchMessages = async () => {
+    findMessage = async (id: number) => {
+        const messageResponse = await axios.get(`${UserMessageStore.SECURE_CONTEXT}/${id}`)
+        this.message = messageResponse.data
+    }
+
+    searchMessages = async (filters: MessagesSearchFilters) => {
 
         this.searchingMessages = true
         const userId = userStore.userId
 
         if (userId == null) {
             return
-        }
-
-        const filters: MessagesSearchFilters = {
-            fromId: userStore.userId,
-            unreadOnly: false,
-            includeHidden: false,
-            page: 0,
-            pageSize: 10000
         }
 
         const messagesResponse = await axios.post(`${UserMessageStore.SECURE_CONTEXT}/search`, filters)
@@ -59,6 +59,14 @@ class UserMessageStore {
         }
 
         messageStore.setSuccessMessage(successMessage)
+    }
+
+    archiveMessage = async (id: number, archive: boolean) => {
+        await axios.post(`${UserMessageStore.SECURE_CONTEXT}/${id}/archive/${archive}`)
+    }
+
+    markRead = async (id: number) => {
+        await axios.post(`${UserMessageStore.SECURE_CONTEXT}/${id}/mark-read`)
     }
 
     constructor() {

@@ -25,7 +25,7 @@ annotation class TsOptional
 annotation class TsIgnore
 
 @ExperimentalStdlibApi
-fun main(args: Array<String>) {
+fun main() {
     println("Starting TS generation")
     TsGeneratorObj.generate()
     println("Finished generating TS")
@@ -101,7 +101,7 @@ export class ${name}Utils {
     private fun writeInterface(name: String, fields: List<TsField>) {
 
         val imports = fields
-                .filter { !listOf("boolean", "string", "number", "any").contains(it.type) }
+                .filter { !listOf("boolean", "string", "number", "any", name).contains(it.type) }
                 .distinctBy { it.type }
                 .joinToString("\n") { "import { ${it.type} } from \"./${it.type}\"" }
                 .let { if (it.isBlank()) "" else it + "\n\n" }

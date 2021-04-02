@@ -15,16 +15,23 @@ import { messageStore } from "../ui/MessageStore"
 import { userMessageStore } from "./UserMessageStore"
 
 
-export const SendMessageButton = observer((props: { toUsername: string, deckId?: number, deckName?: string, replyToId?: number, style?: React.CSSProperties }) => {
-    const {toUsername, deckId, deckName, replyToId, style} = props
+export const SendMessageButton = observer((props: {
+    toUsername: string,
+    deckId?: number,
+    deckName?: string,
+    replyToId?: number,
+    color?: "primary" | undefined,
+    variant?: "outlined" | undefined,
+    style?: React.CSSProperties,
+}) => {
+
+    const {toUsername, deckId, deckName, replyToId, color, variant, style} = props
 
     const [store] = useState(new SendMessageStore(toUsername, deckId, deckName, replyToId))
 
-    return null
-
     return (
         <>
-            <Button style={style} onClick={() => store.open = true}>
+            <Button style={style} onClick={() => store.open = true} color={color} variant={variant}>
                 Send Message
             </Button>
             <Dialog
@@ -95,7 +102,11 @@ class SendMessageStore {
     @observable
     message = ""
 
-    handleClose = () => this.open = false
+    handleClose = () => {
+        this.open = false
+        this.subject = ""
+        this.message = ""
+    }
 
     subjectValid = () => {
         return this.subject.trim.length <= this.subjectMaxLength

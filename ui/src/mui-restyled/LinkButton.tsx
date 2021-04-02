@@ -66,8 +66,10 @@ export const ListItemLink = (props: ListItemLinkProps) => {
             {...rest}
         >
             <Link href={to} underline={"none"} noWrap={true} color={"inherit"}>
-                {icon ? <div style={{marginRight: spacing(2)}}>{icon}</div> : null}
-                <ListItemText primary={primary}/>
+                <Box display={"flex"} alignItems={"center"}>
+                    {icon ? <div style={{marginRight: spacing(1)}}>{icon}</div> : null}
+                    <ListItemText primary={primary}/>
+                </Box>
             </Link>
         </ListItem>
     )

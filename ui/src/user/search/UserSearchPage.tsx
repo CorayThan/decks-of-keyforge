@@ -31,13 +31,11 @@ import * as React from "react"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing, themeStore } from "../../config/MuiConfig"
-import { Routes } from "../../config/Routes"
+import { spacing } from "../../config/MuiConfig"
 import { log, SortOrder } from "../../config/Utils"
 import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
 import { UserSearchResult } from "../../generated-src/UserSearchResult"
 import { UserType } from "../../generated-src/UserType"
-import { KeyLink } from "../../mui-restyled/KeyLink"
 import { Loader } from "../../mui-restyled/Loader"
 import { SellerRatingView } from "../../sellerratings/SellerRatingView"
 import { TeamBadge } from "../../teams/TeamBadge"
@@ -45,6 +43,7 @@ import { teamStore } from "../../teams/TeamStore"
 import { patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
+import { UserLink } from "../UserLink"
 import { userStore } from "../UserStore"
 import { UserFilters } from "./UserFilters"
 import { userSearchStore } from "./UserSearchStore"
@@ -311,9 +310,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                             {(page * rowsPerPage) + idx + 1}
                                         </TableCell>
                                         <TableCell>
-                                            <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.decksForUser(user.username)}>
-                                                {user.username}
-                                            </KeyLink>
+                                            <UserLink username={user.username}/>
                                         </TableCell>
                                         <TableCell>
                                             <SellerRatingView sellerId={user.id} sellerName={user.username} countOnly={true}/>

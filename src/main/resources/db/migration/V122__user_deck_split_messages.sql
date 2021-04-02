@@ -102,3 +102,5 @@ CREATE UNIQUE INDEX blocked_user_blocked_by_blocked_idx ON blocked_user(blocked_
 CREATE INDEX private_message_from_id_idx ON private_message(from_id);
 CREATE INDEX private_message_to_id_idx ON private_message(to_id);
 CREATE INDEX private_message_reply_to_id_idx ON private_message(reply_to_id);
+
+CREATE SEQUENCE message_id_sequence START 1 INCREMENT 1;

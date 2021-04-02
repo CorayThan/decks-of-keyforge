@@ -43,8 +43,8 @@ data class DeckSynergyInfo(
         val disruption: Double,
         val other: Double,
 
-        val metaScores: Map<String, Int>,
-        val efficienyBonus: Double,
+        val metaScores: Map<String, Double>,
+        val efficiencyBonus: Double,
 ) {
     fun meta() = metaScores.map { it.value }.sum()
 }

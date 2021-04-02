@@ -10,6 +10,9 @@ export class UiStore {
     @observable
     topbarSubheader?: string
 
+    @observable
+    displayBack = false
+
     setTopbarValues = (name: string, shortName: string, subheader: string) => {
 
         this.setDocTitleAndDescription(name)

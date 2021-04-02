@@ -9,6 +9,7 @@ import coraythan.keyswap.roundToTwoSigDig
 import org.slf4j.LoggerFactory
 import java.math.RoundingMode
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 
 object DeckSynergyService {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -301,6 +302,16 @@ object DeckSynergyService {
         val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
         val powerValue = p / 10
 
+
+        // Remember! When updating this also update Card
+        val synergyUnroundedRaw = synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum()
+
+        val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
+        val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
+        val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4)
+
+        val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
+
         val scalingAemberControlTraits = traitsMap[SynergyTrait.scalingAmberControl]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0
         val destroys = traitsMap[SynergyTrait.destroys]?.traitValues ?: listOf()
         val purges = traitsMap[SynergyTrait.purges]?.traitValues ?: listOf()
@@ -318,46 +329,41 @@ object DeckSynergyService {
         val hardRScore = artifactDestroyTraits.plus(artifactPurgeTraits).map { it.value.rating }.sum()
         val boardWipeScore = traitsMap[SynergyTrait.boardClear]?.traitValues?.map { it.value.strength().value }?.sum() ?: 0
 
-        val metaScores = mapOf<String, Int>(
+        val metaScores = mapOf<String, Double>(
                 "Aember Control" to when {
-                    a < 2 -> -4
-                    a < 3 -> -3
-                    a < 4 -> -2
-                    a < 5 -> -1
-                    else -> 0
+                    a < 2 -> -4.0
+                    a < 3 -> -3.0
+                    a < 4 -> -2.0
+                    a < 5 -> -1.0
+                    else -> 0.0
                 },
                 "Creature Control" to when {
-                    c < 2 -> -4
-                    c < 4 -> -3
-                    c < 6 -> -2
-                    c < 7 -> -1
-                    else -> 0
+                    c < 2 -> -4.0
+                    c < 4 -> -3.0
+                    c < 6 -> -2.0
+                    c < 7 -> -1.0
+                    else -> 0.0
                 },
                 "Artifact Control" to when {
-                    hardRScore > 2 -> 1
-                    else -> 0
+                    hardRScore > 2 -> 1.0
+                    else -> 0.0
                 },
                 "Board Clears" to when {
-                    boardWipeScore > 2 -> 1
-                    else -> 0
+                    boardWipeScore > 2 -> 1.0
+                    else -> 0.0
                 },
                 "Scaling Aember Control" to when {
-                    scalingAemberControlTraits > 2 -> 1
-                    else -> 0
+                    scalingAemberControlTraits > 2 -> 1.0
+                    else -> 0.0
                 },
         )
 
         val metaScore = metaScores.values.sum()
 
-        // Remember! When updating this also update Card
-        val synergy = roundToInt(synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum(), RoundingMode.HALF_UP)
-        val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
-        val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
-        val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4)
-        val newSas = roundToInt(preMetaSas + metaScore, RoundingMode.HALF_UP)
-        val rawAerc = newSas + antisynergy - synergy - metaScore
+        val synergy = (synergyUnroundedRaw + efficiencyBonus ).roundToInt()
 
-        val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
+        val newSas = (preMetaSas + metaScore).roundToInt()
+        val rawAerc = newSas + antisynergy - synergy - metaScore.roundToInt()
 
         // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
 
@@ -380,7 +386,7 @@ object DeckSynergyService {
                 other = o,
 
                 metaScores = metaScores,
-                efficienyBonus = efficiencyBonus,
+                efficiencyBonus = efficiencyBonus,
         )
     }
 

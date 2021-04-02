@@ -24,7 +24,6 @@ import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearch
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
-import { FearPage } from "../FearPage"
 import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
@@ -34,6 +33,7 @@ import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
 import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
 import { TournamentSearchPage } from "../keyforgeevents/tournaments/TournamentSearchPage"
 import { LandingPage } from "../landing/LandingPage"
+import { ViewMessagePage } from "../messages/ViewMessage"
 import { MyDokPage } from "../my-dok/MyDokPage"
 import { StatsPage } from "../stats/StatsPage"
 import { TagSearchPage } from "../tags/TagSearchPage"
@@ -51,7 +51,6 @@ import { serverStatusStore } from "./ServerStatusStore"
 
 class Routes {
 
-    static sasFools = "/isThisTheEnd"
     static landing = ""
     static users = "/users"
     static community = "/community"
@@ -84,6 +83,7 @@ class Routes {
     static thirdPartyTools = "/third-party-tools"
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
+    static messagePage = (id?: number) => `${Routes.messages}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
     static tournamentPage = (id?: number) => `${Routes.tournaments}/${id == null ? ":id" : id}`
@@ -205,18 +205,9 @@ const KeyRouter = observer(() => {
     return (
         <BrowserRouter>
             <div>
-                {!window.location.href.includes(Routes.sasFools) && (
-                    <>
-                        <KeyTopbar/>
-                        <div style={{marginBottom: spacing(2)}}/>
-                    </>
-                )}
+                <KeyTopbar/>
+                <div style={{marginBottom: spacing(2)}}/>
                 <Switch>
-                    <Route
-                        exact={true}
-                        path={Routes.sasFools}
-                        component={FearPage}
-                    />
                     <LoggedInRoute
                         exact={true}
                         path={Routes.adminPanel}
@@ -260,6 +251,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.tournamentPage()}
                         component={TournamentPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.messagePage()}
+                        component={ViewMessagePage}
                     />
                     <Route
                         exact={true}

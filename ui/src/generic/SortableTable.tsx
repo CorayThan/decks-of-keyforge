@@ -175,7 +175,7 @@ class SortableTableStore<T> {
 
     constructor(private data: T[], private defaultSortHeader: SortableTableHeaderInfo<T>, private noInitialSort: boolean, private initialSortOrder?: SortOrder) {
         makeObservable(this)
-        this.update(data, defaultSortHeader, noInitialSort, initialSortOrder)
+        this.update(data, defaultSortHeader, noInitialSort, initialSortOrder == null ? "desc" : initialSortOrder)
     }
 
     update = (data: T[], defaultSortHeader: SortableTableHeaderInfo<T>, noInitialSort: boolean, initialSortOrder?: SortOrder) => {

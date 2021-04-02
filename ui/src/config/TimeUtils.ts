@@ -43,6 +43,16 @@ export class TimeUtils {
         }
     }
 
+    static formatLocalUTCToReadableDateTime = (dateTimeInUTC: string) => {
+        try {
+            const parsed = TimeUtils.eventDateTime(dateTimeInUTC)!
+            return format(parsed, TimeUtils.readableDateTimeFormat)
+        } catch (e) {
+            log.warn("Couldn't parse date from " + dateTimeInUTC)
+            return "bad date"
+        }
+    }
+
     static eventTime = (dateTimeInUTC?: string) => {
         if (dateTimeInUTC == null) {
             return ""
