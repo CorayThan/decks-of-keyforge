@@ -51,8 +51,7 @@ export class ReleaseNotes extends React.Component {
                             highlight: "On site messaging!",
                             note: "I'm pretty excited about this one. I've added on-site messaging to other users! I recommend using this to " +
                                 "contact users to buy decks instead of the system's email system. Emails can go to spam, but on site messages will " +
-                                "always be there for the recipient to read when they visit the site. The basic functionality of this feature is all there, " +
-                                "but some important parts are still INC, like replies and notification dots for unread messages."
+                                "always be there for the recipient to read when they visit the site."
                         },
                         {
                             highlight: "Tournaments!",

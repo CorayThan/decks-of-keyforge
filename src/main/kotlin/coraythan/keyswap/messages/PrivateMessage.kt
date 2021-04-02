@@ -70,6 +70,6 @@ data class PrivateMessage(
 }
 
 interface PrivateMessageRepo : CrudRepository<PrivateMessage, Long> {
-    fun countByToIdAndViewedFalse(toId: UUID): Long
+    fun countByToIdAndViewedIsNullAndRecipientHiddenIsFalse(toId: UUID): Long
     fun findByReplyToId(replyToId: Long): List<PrivateMessage>
 }

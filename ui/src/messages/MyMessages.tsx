@@ -15,6 +15,7 @@ import { MarkEmailReadIcon } from "../generic/icons/MarkEmailReadIcon"
 import { Loader } from "../mui-restyled/Loader"
 import { UserLink } from "../user/UserLink"
 import { userStore } from "../user/UserStore"
+import { SendMessageButton } from "./SendMessageButton"
 import { userMessageStore } from "./UserMessageStore"
 
 export const MyMessages = observer(() => {
@@ -33,7 +34,6 @@ export const MyMessages = observer(() => {
 
     return (
         <TableContainer component={Paper}>
-
             <Box m={2}>
                 <ToggleButtonGroup
                     value={category}
@@ -68,7 +68,6 @@ export const MyMessages = observer(() => {
                             <Delete style={{marginRight: spacing(1)}}/> Archived
                         </Box>
                     </ToggleButton>
-
                 </ToggleButtonGroup>
             </Box>
 
@@ -82,22 +81,27 @@ export const MyMessages = observer(() => {
                         <TableBody>
                             {userMessageStore.messages.map(message => {
                                 const toMe = message.toUsername === userStore.username
+                                const replyToUsername = toMe ? message.fromUsername : message.toUsername
                                 return (
                                     <TableRow key={message.id} style={{backgroundColor: message.fullyViewed ? grey[100] : undefined}}>
                                         <TableCell>
-                                            {toMe ? <UserLink username={message.fromUsername}/> : (
-                                                <Box display={"flex"} alignItems={"center"}>
-                                                    <Typography variant={"body2"}>
-                                                        To:
-                                                    </Typography>
-                                                    <UserLink username={message.toUsername} style={{marginLeft: spacing(1)}}/>
-                                                </Box>
-                                            )}
-                                            {message.replies.length > 0 && (
-                                                <Typography variant={"body2"} color={"textSecondary"}>
-                                                    {message.replies.length}
-                                                </Typography>
-                                            )}
+                                            <Box display={"flex"} alignItems={"center"}>
+                                                {toMe ? <UserLink username={message.fromUsername}/> : (
+                                                    <Box display={"flex"} alignItems={"center"}>
+                                                        <Typography variant={"body2"}>
+                                                            To:
+                                                        </Typography>
+                                                        <UserLink username={message.toUsername} style={{marginLeft: spacing(1)}}/>
+                                                    </Box>
+                                                )}
+                                                {message.replies.length > 0 && (
+                                                    <Tooltip title={"Reply count"}>
+                                                        <Typography variant={"body1"} color={"textSecondary"} style={{marginLeft: spacing(1)}}>
+                                                            {message.replies.length}
+                                                        </Typography>
+                                                    </Tooltip>
+                                                )}
+                                            </Box>
                                         </TableCell>
                                         <TableCell>
                                             <ButtonBase href={Routes.messagePage(message.id)} disableRipple={true} disableTouchRipple={true}>
@@ -127,11 +131,11 @@ export const MyMessages = observer(() => {
                                         </TableCell>
                                         <TableCell align={"right"}>
                                             <Box display={"flex"} justifyContent={"flex-end"}>
-                                                {/*<Tooltip title={"Reply"}>*/}
-                                                {/*    <IconButton>*/}
-                                                {/*        <Reply/>*/}
-                                                {/*    </IconButton>*/}
-                                                {/*</Tooltip>*/}
+                                                <SendMessageButton
+                                                    toUsername={replyToUsername}
+                                                    replyToId={message.id}
+                                                    onSent={store.search}
+                                                />
                                                 {message.hidden ? (
                                                     <Tooltip title={"Unarchive message"}>
                                                         <IconButton

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import javax.persistence.EntityManager
 
 @Service
@@ -41,7 +42,7 @@ class PrivateMessageService(
 
     fun unreadCount(): Long {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        return messageRepo.countByToIdAndViewedFalse(user.id)
+        return messageRepo.countByToIdAndViewedIsNullAndRecipientHiddenIsFalse(user.id)
     }
 
     fun searchMessages(filters: MessagesSearchFilters): List<PrivateMessageDto> {
@@ -56,14 +57,23 @@ class PrivateMessageService(
 
         when (filters.category) {
             MailCategory.INBOX -> {
-                predicate.and(messageQ.toId.eq(user.id))
                 predicate.and(messageQ.recipientHidden.isFalse)
+                predicate.andAnyOf(
+                        BooleanBuilder().and(messageQ.toId.eq(user.id)),
+                        messageQ.replies.any().toId.eq(user.id)
+                )
             }
             MailCategory.SENT -> {
                 predicate.and(messageQ.fromId.eq(user.id))
                 predicate.and(messageQ.senderHidden.isFalse)
             }
             MailCategory.ALL_MAIL -> {
+                predicate.andAnyOf(
+                        predicate.andAnyOf(
+                                BooleanBuilder().and(messageQ.toId.eq(user.id)),
+                                BooleanBuilder().and(messageQ.fromId.eq(user.id)),
+                        )
+                )
             }
             MailCategory.ARCHIVED -> {
                 predicate.andAnyOf(
@@ -111,7 +121,11 @@ class PrivateMessageService(
 
         if (!deckIsForSale && !to.allowsMessages) throw UnauthorizedException("This user does not accept unsolicited messages.")
 
-        log.info("About to send message to ${to.username} from ${from.username}")
+        val replyTo = if (send.replyToId == null) null else messageRepo.findByIdOrNull(send.replyToId)
+
+        if (replyTo != null && replyTo.viewed == null && replyTo.toId == from.id) {
+            markRead(replyTo.id)
+        }
 
         messageRepo.save(PrivateMessage(
                 toId = to.id,
@@ -119,7 +133,7 @@ class PrivateMessageService(
                 deck = deck,
                 subject = send.subject,
                 message = send.message,
-                replyTo = if (send.replyToId == null) null else messageRepo.findByIdOrNull(send.replyToId),
+                replyTo = replyTo,
         ))
     }
 
@@ -146,18 +160,21 @@ class PrivateMessageService(
         messageRepo.save(toArchive)
     }
 
-    fun markRead(id: Long) {
+    fun markRead(id: Long): LocalDateTime {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val message = messageRepo.findByIdOrNull(id) ?: throw BadRequestException("No message with id $id")
 
+        val now = nowLocal()
+
         message.replies.forEach {
             if (it.viewed == null && it.toId == user.id) {
-                messageRepo.save(it.copy(viewed = nowLocal()))
+                messageRepo.save(it.copy(viewed = now))
             }
         }
 
         if (message.viewed == null && message.toId == user.id) {
-            messageRepo.save(message.copy(viewed = nowLocal()))
+            messageRepo.save(message.copy(viewed = now))
         }
+        return now
     }
 }

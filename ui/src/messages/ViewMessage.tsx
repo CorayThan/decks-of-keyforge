@@ -10,9 +10,11 @@ import { deckStore } from "../decks/DeckStore"
 import { DeckViewSmall } from "../decks/DeckViewSmall"
 import { PrivateMessageDto } from "../generated-src/PrivateMessageDto"
 import { Loader } from "../mui-restyled/Loader"
+import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { UserLink } from "../user/UserLink"
 import { userStore } from "../user/UserStore"
+import { SendMessageButton } from "./SendMessageButton"
 import { userMessageStore } from "./UserMessageStore"
 
 export const ViewMessagePage = observer(() => {
@@ -46,7 +48,9 @@ const ViewMessage = observer((props: { message: PrivateMessageDto }) => {
     }, [message.deck?.keyforgeId])
 
     useEffect(() => {
-        if (message.viewed === null && message.toUsername === userStore.username) {
+        if (message.viewed === null && message.toUsername === userStore.username ||
+            (message.replies.find(reply => reply.viewed === null && reply.toUsername === userStore.username))
+        ) {
             userMessageStore.markRead(message.id)
         }
 
@@ -77,46 +81,48 @@ const ViewMessage = observer((props: { message: PrivateMessageDto }) => {
 
 const IndividualMessage = observer((props: { message: PrivateMessageDto, actions?: boolean }) => {
     const {message, actions} = props
-    const fromWidth = 48
+
+    const recipientUsername = message.toUsername === userStore.username ? message.fromUsername : message.toUsername
+
+    let viewedTime = message.viewed
+    if (viewedTime == null) {
+        viewedTime = userMessageStore.readTimes.get(message.id)
+    }
 
     return (
-        <Card style={{maxWidth: 800}}>
+        <Card style={{maxWidth: 800, marginBottom: spacing(2)}}>
             <CardContent>
-                <Typography variant={"h5"}>{message.subject}</Typography>
-                <Box display={"flex"} alignItems={"center"} mb={1} mt={2}>
-                    <Box mr={2} width={fromWidth}>
-                        <Typography variant={"overline"} color={"textSecondary"}>From</Typography>
-                    </Box>
-                    <UserLink username={message.fromUsername}/>
-                </Box>
-                <Box display={"flex"} alignItems={"center"} mb={2}>
-                    <Box mr={2} width={fromWidth}>
-                        <Typography variant={"overline"} color={"textSecondary"}>To</Typography>
-                    </Box>
-                    <UserLink username={message.toUsername}/>
-                </Box>
+                {message.subject.length > 0 && (
+                    <Typography variant={"h5"} style={{marginBottom: spacing(2)}}>{message.subject}</Typography>
+                )}
 
-                <Box display={"flex"} alignItems={"center"} mt={2}>
-                    <Box mr={2} width={fromWidth}>
-                        <Typography variant={"overline"} color={"textSecondary"}>
-                            Sent
-                        </Typography>
+                <Box
+                    display={"grid"}
+                    gridTemplateColumns={screenStore.screenSizeXs() ? "1fr 3fr" : "1fr 3fr 1fr 4fr"}
+                    gridGap={spacing(1)}
+                    alignItems={"center"}
+                >
+                    <Typography variant={"overline"} color={"textSecondary"}>From</Typography>
+                    <Box>
+                        <UserLink username={message.fromUsername}/>
                     </Box>
+                    <Typography variant={"overline"} color={"textSecondary"}>
+                        Sent
+                    </Typography>
                     <Typography variant={"body2"} color={"textSecondary"}>
                         {TimeUtils.formatLocalUTCToReadableDateTime(message.sent)}
                     </Typography>
-                </Box>
-                <Box display={"flex"} alignItems={"center"} mt={1}>
-                    <Box mr={2} width={fromWidth}>
-                        <Typography variant={"overline"} color={"textSecondary"}>
-                            Viewed
-                        </Typography>
+                    <Typography variant={"overline"} color={"textSecondary"}>To</Typography>
+                    <Box>
+                        <UserLink username={message.toUsername}/>
                     </Box>
+                    <Typography variant={"overline"} color={"textSecondary"}>
+                        Viewed
+                    </Typography>
                     <Typography variant={"body2"} color={"textSecondary"}>
-                        {message.viewed == null ? "Not yet viewed" : TimeUtils.formatLocalUTCToReadableDateTime(message.viewed)}
+                        {viewedTime == null ? "Not yet viewed" : TimeUtils.formatLocalUTCToReadableDateTime(viewedTime)}
                     </Typography>
                 </Box>
-
                 <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                 <Typography variant={"overline"} color={"textSecondary"}>Message</Typography>
                 <Typography>{message.message}</Typography>
@@ -124,11 +130,7 @@ const IndividualMessage = observer((props: { message: PrivateMessageDto, actions
 
             {actions && (
                 <CardActions>
-                    {/*<Tooltip title={"Reply"}>*/}
-                    {/*    <IconButton>*/}
-                    {/*        <Reply/>*/}
-                    {/*    </IconButton>*/}
-                    {/*</Tooltip>*/}
+                    <SendMessageButton toUsername={recipientUsername} replyToId={message.id} onSent={() => userMessageStore.findMessage(message.id)}/>
                     {message.hidden ? (
                         <Tooltip title={"Unarchive message"}>
                             <IconButton

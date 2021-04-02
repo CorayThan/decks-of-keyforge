@@ -1,6 +1,10 @@
+import { Button } from "@material-ui/core"
 import axios from "axios"
 import { makeObservable, observable } from "mobx"
+import * as React from "react"
 import { HttpConfig } from "../config/HttpConfig"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { MyDokSubPaths } from "../config/Routes"
 import { MessagesSearchFilters } from "../generated-src/MessagesSearchFilters"
 import { PrivateMessageDto } from "../generated-src/PrivateMessageDto"
 import { SendMessage } from "../generated-src/SendMessage"
@@ -24,6 +28,9 @@ class UserMessageStore {
 
     @observable
     searchingMessages = false
+
+    @observable
+    readTimes: Map<number, string> = new Map()
 
     findMessage = async (id: number) => {
         const messageResponse = await axios.get(`${UserMessageStore.SECURE_CONTEXT}/${id}`)
@@ -66,7 +73,35 @@ class UserMessageStore {
     }
 
     markRead = async (id: number) => {
-        await axios.post(`${UserMessageStore.SECURE_CONTEXT}/${id}/mark-read`)
+        const readResponse = await axios.post(`${UserMessageStore.SECURE_CONTEXT}/${id}/mark-read`)
+        const readTime: string = readResponse.data
+        this.readTimes.set(id, readTime)
+    }
+
+    checkUnreadMessages = async () => {
+        if (keyLocalStorage.hasAuthKey()) {
+
+            const unreadResponse = await axios.get(`${UserMessageStore.SECURE_CONTEXT}/unread-count`)
+            const unreadCount: number = unreadResponse.data
+
+            if (unreadCount > 0) {
+                messageStore.setMessage(
+                    `You have ${unreadCount} unread message${unreadCount > 1 ? "s" : ""}. `,
+                    "Success",
+                    (
+                        <Button
+                            color={"inherit"}
+                            href={MyDokSubPaths.messages}
+                            key={"messages"}
+                            onClick={() => messageStore.open = false}
+                        >
+                            Messages
+                        </Button>
+                    ),
+                    20000
+                )
+            }
+        }
     }
 
     constructor() {

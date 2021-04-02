@@ -116,7 +116,6 @@ export class UserStore {
 
     login = (userLogin: UserLogin) => {
         log.info("user store login")
-        log.info("user store login")
         this.loginInProgress = true
         axiosWithoutErrors
             .post(UserStore.CONTEXT + "/login", userLogin)

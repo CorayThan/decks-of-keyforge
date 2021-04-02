@@ -19,6 +19,7 @@ import { Loader } from "../../mui-restyled/Loader"
 import { DiscordButton } from "../../thirdpartysites/discord/DiscordButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { uiStore } from "../../ui/UiStore"
+import { UserLink } from "../../user/UserLink"
 import { userStore } from "../../user/UserStore"
 import { CreateKeyForgeEvent } from "../CreateKeyForgeEvent"
 import { tournamentStore } from "./TournamentStore"
@@ -138,6 +139,16 @@ const tournamentsTableHeaders = (isAdmin: boolean): SortableTableHeaderInfo<Tour
         },
         {property: "stage", transform: tournament => Utils.enumNameToReadable(tournament.stage)},
         {property: "participants"},
+        {
+            property: "organizerUsernames",
+            title: "Organizers",
+            sortable: false,
+            transform: tournament => (
+                <>
+                    {tournament.organizerUsernames.map(username => <UserLink username={username}/>)}
+                </>
+            )
+        },
         {
             transform: tournament => (
                 <Box display={"flex"}>

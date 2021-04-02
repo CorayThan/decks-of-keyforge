@@ -55,6 +55,7 @@ class TournamentService(
                     ended = tournament.ended,
                     event = event,
                     participants = tournamentParticipantRepo.countByTournamentId(tournament.id).toInt(),
+                    organizerUsernames = tournament.organizers.map { it.organizer.username },
                     stage = tournament.stage,
             )
         }

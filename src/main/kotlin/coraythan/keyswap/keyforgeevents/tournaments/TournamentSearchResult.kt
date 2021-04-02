@@ -10,6 +10,7 @@ data class TournamentSearchResult(
         val name: String,
         val private: Boolean,
         val participants: Int,
+        val organizerUsernames: List<String>,
         val stage: TournamentStage,
         val ended: LocalDateTime?,
         val event: KeyForgeEventDto,
