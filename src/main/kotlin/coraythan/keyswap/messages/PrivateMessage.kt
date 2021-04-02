@@ -36,9 +36,7 @@ data class PrivateMessage(
         val senderHidden: Boolean = false,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO
-        //        , generator = "message_id_sequence"
-        )
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "message_id_sequence")
         val id: Long = -1,
 ) {
     fun toDto(user: KeyUser, otherUser: KeyUser): PrivateMessageDto {
