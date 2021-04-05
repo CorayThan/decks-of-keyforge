@@ -138,6 +138,7 @@ const tournamentsTableHeaders = (isAdmin: boolean): SortableTableHeaderInfo<Tour
             sortFunction: tournament => tournament.event.format
         },
         {property: "stage", transform: tournament => Utils.enumNameToReadable(tournament.stage)},
+        {property: "private", title: "Registration", transform: tournament => tournament.private ? "Private" : "Public"},
         {property: "participants"},
         {
             property: "organizerUsernames",

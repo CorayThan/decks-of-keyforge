@@ -491,6 +491,11 @@ class TournamentService(
         tourneyRepo.save(tourney.copy(registrationClosed = lock))
     }
 
+    fun togglePrivate(tourneyId: Long, privateTourney: Boolean) {
+        val tourney = verifyTournamentAdmin(tourneyId)
+        tourneyRepo.save(tourney.copy(privateTourney = privateTourney))
+    }
+
     fun lockDeckRegistration(tourneyId: Long, lock: Boolean) {
         val tourney = verifyTournamentAdmin(tourneyId)
         tourneyRepo.save(tourney.copy(deckChoicesLocked = lock))

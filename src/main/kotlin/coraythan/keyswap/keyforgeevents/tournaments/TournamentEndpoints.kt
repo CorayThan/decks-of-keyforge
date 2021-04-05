@@ -64,6 +64,9 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/lock-registration/{lock}")
     fun lockRegistration(@PathVariable id: Long, @PathVariable lock: Boolean) = tournamentService.lockRegistration(id, lock)
 
+    @PostMapping("/secured/{id}/toggle-private/{privateTourney}")
+    fun togglePrivate(@PathVariable id: Long, @PathVariable privateTourney: Boolean) = tournamentService.togglePrivate(id, privateTourney)
+
     @PostMapping("/secured/{id}/lock-deck-registration/{lock}")
     fun lockDeckRegistration(@PathVariable id: Long, @PathVariable lock: Boolean) = tournamentService.lockDeckRegistration(id, lock)
 
@@ -73,4 +76,6 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/change-tournament-participant/{previousUsername}/{newUsername}")
     fun changeTournamentParticipant(@PathVariable id: Long, @PathVariable previousUsername: String, @PathVariable newUsername: String) =
             tournamentService.changeTournamentParticipant(id, previousUsername, newUsername)
+
+
 }

@@ -124,7 +124,7 @@ class UserDeckService(
         // new ownership code
         if (mark) {
             ownedDeckRepo.save(OwnedDeck(
-                    owner = user,
+                    ownerId = user.id,
                     deck = deck,
                     teamId = teamId,
             ))

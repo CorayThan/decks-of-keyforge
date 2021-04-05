@@ -157,7 +157,7 @@ data class Deck(
 
 
     fun toDeckSearchResult(
-            housesAndCards: List<HouseAndCards>,
+            housesAndCards: List<HouseAndCards>? = null,
             cards: List<Card>? = null,
             stats: DeckStatistics? = null,
             synergies: DeckSynergyInfo? = null,
@@ -211,7 +211,7 @@ data class Deck(
                 forAuction = forAuction.falseToNull(),
                 wishlistCount = wishlistCount.zeroToNull(),
                 funnyCount = funnyCount.zeroToNull(),
-                housesAndCards = housesAndCards,
+                housesAndCards = housesAndCards ?: listOf(),
 
                 lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString().emptyToNull(),
 

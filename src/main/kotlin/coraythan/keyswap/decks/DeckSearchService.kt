@@ -313,7 +313,7 @@ class DeckSearchService(
             val username = userHolder.user?.username
             if (username == filters.owner) {
                 // it's me
-                predicate.and(deckQ.userDecks.any().ownedBy.eq(username))
+                predicate.and(deckQ.ownedDecks.any().ownerId.eq(userHolder.user?.id))
             } else if (filters.teamDecks) {
                 val searchedUserTeamId = userService.findUserByUsername(filters.owner)?.teamId
                 val myTeamId = userHolder.user?.teamId
@@ -322,10 +322,11 @@ class DeckSearchService(
                 }
                 predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
             } else {
-                val allowToSeeAllDecks = userService.findUserByUsername(filters.owner)?.allowUsersToSeeDeckOwnership ?: false
+                val decksOwner = userService.findUserByUsername(filters.owner)
+                val allowToSeeAllDecks = decksOwner?.allowUsersToSeeDeckOwnership ?: false
 
                 if (allowToSeeAllDecks) {
-                    predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+                    predicate.and(deckQ.ownedDecks.any().ownerId.eq(decksOwner?.id))
                 } else {
                     val deckListingQ = QDeckListing.deckListing
                     predicate.and(

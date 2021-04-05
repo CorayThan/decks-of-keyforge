@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography } from "@material-ui/core"
+import { Box, Button, Checkbox, FormControlLabel, Grid, Paper, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
@@ -128,6 +128,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                             </KeyButton>
                                         </Grid>
                                         {stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
+                                            <>
                                             <Grid item={true}>
                                                 <Box width={280}>
                                                     <UserSearchSuggest
@@ -136,6 +137,21 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                                     />
                                                 </Box>
                                             </Grid>
+                                                <Grid item={true}>
+                                                    <Box width={184}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={!privateTournament}
+                                                                    onChange={() => tournamentStore.togglePrivate(tourneyId, !privateTournament)}
+                                                                    color="primary"
+                                                                />
+                                                            }
+                                                            label="Public Registration"
+                                                        />
+                                                    </Box>
+                                                </Grid>
+                                            </>
                                         )}
                                     </Grid>
                                 </Paper>

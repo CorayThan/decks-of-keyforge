@@ -10,6 +10,7 @@ import { deckStore } from "../decks/DeckStore"
 import { DeckViewSmall } from "../decks/DeckViewSmall"
 import { PrivateMessageDto } from "../generated-src/PrivateMessageDto"
 import { Loader } from "../mui-restyled/Loader"
+import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { UserLink } from "../user/UserLink"
@@ -125,7 +126,7 @@ const IndividualMessage = observer((props: { message: PrivateMessageDto, actions
                 </Box>
                 <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                 <Typography variant={"overline"} color={"textSecondary"}>Message</Typography>
-                <Typography>{message.message}</Typography>
+                <WhiteSpaceTypography>{message.message}</WhiteSpaceTypography>
             </CardContent>
 
             {actions && (

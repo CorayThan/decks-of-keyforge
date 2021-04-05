@@ -3,7 +3,6 @@ package coraythan.keyswap.userdeck
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.nowLocal
-import coraythan.keyswap.users.KeyUser
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import java.util.*
@@ -12,8 +11,7 @@ import javax.persistence.*
 @Entity
 data class OwnedDeck(
 
-        @ManyToOne
-        val owner: KeyUser,
+        val ownerId: UUID,
 
         @JsonIgnoreProperties("ownedDecks")
         @ManyToOne

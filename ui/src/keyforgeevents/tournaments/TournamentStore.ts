@@ -163,6 +163,11 @@ export class TournamentStore {
         await this.findTourneyInfo(id)
     }
 
+    togglePrivate = async (id: number, privateTourney: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/toggle-private/${privateTourney}`)
+        await this.findTourneyInfo(id)
+    }
+
     lockDeckRegistration = async (id: number, lock: boolean) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/lock-deck-registration/${lock}`)
         await this.findTourneyInfo(id)
