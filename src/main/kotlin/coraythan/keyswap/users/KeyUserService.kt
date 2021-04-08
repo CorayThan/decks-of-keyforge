@@ -29,7 +29,8 @@ class KeyUserService(
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
         private val passwordResetCodeService: PasswordResetCodeService,
         private val deckListingRepo: DeckListingRepo,
-        private val deckRepo: DeckRepo
+        private val deckRepo: DeckRepo,
+        private val keyUserSearchProjectionRepo: KeyUserSearchProjectionRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -97,6 +98,8 @@ class KeyUserService(
             userRepo.findByUsernameIgnoreCase(username)?.toProfile(currentUserService.loggedInUser()?.username == username)
 
     fun findUserByUsername(username: String) = userRepo.findByUsernameIgnoreCase(username)
+
+    fun findIdAndDeckVisibilityByUsername(username: String) = keyUserSearchProjectionRepo.findByUsernameIgnoreCase(username)
 
     fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 

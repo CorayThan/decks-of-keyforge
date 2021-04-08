@@ -265,7 +265,7 @@ class DeckSearchService(
         if (filters.teamDecks) {
             val teamId = userHolder.user?.teamId
             if (teamId != null) {
-                predicate.and(deckQ.userDecks.any().teamId.eq(teamId))
+                predicate.and(deckQ.ownedDecks.any().teamId.eq(teamId))
             }
         }
 
@@ -309,62 +309,54 @@ class DeckSearchService(
             }
         }
 
-        if (filters.owner.isNotBlank()) {
-            val username = userHolder.user?.username
-            if (username == filters.owner) {
-                // it's me
-                predicate.and(deckQ.ownedDecks.any().ownerId.eq(userHolder.user?.id))
-            } else if (filters.teamDecks) {
-                val searchedUserTeamId = userService.findUserByUsername(filters.owner)?.teamId
-                val myTeamId = userHolder.user?.teamId
-                if (myTeamId == null || myTeamId != searchedUserTeamId) {
-                    throw UnauthorizedException("You must be logged in and share teams with the searched user to see their decks.")
-                }
-                predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
-            } else {
-                val decksOwner = userService.findUserByUsername(filters.owner)
-                val allowToSeeAllDecks = decksOwner?.allowUsersToSeeDeckOwnership ?: false
+        if (filters.owners.isNotEmpty() || filters.owner.isNotBlank()) {
 
-                if (allowToSeeAllDecks) {
-                    predicate.and(deckQ.ownedDecks.any().ownerId.eq(decksOwner?.id))
-                } else {
-                    val deckListingQ = QDeckListing.deckListing
-                    predicate.and(
-                            deckQ.auctions.any().`in`(
-                                    JPAExpressions.selectFrom(deckListingQ)
-                                            .where(
-                                                    deckListingQ.seller.username.eq(filters.owner),
-                                                    deckListingQ.status.ne(DeckListingStatus.COMPLETE)
-                                            )
-                            )
-                    )
-                }
-            }
-        }
-        if (filters.owners.isNotEmpty()) {
-            val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) filters.owners else filters.owners.filter {
-                userService.findUserByUsername(it)?.allowUsersToSeeDeckOwnership ?: false
+            val allOwners = filters.owners.toSet().plus(filters.owner)
+                    .filter { it.isNotBlank() }
+                    .mapNotNull { userService.findIdAndDeckVisibilityByUsername(it) }
+
+            val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) allOwners else allOwners.filter {
+                it.allowUsersToSeeDeckOwnership
             }
 
             if (visibleUsers.isEmpty()) {
                 throw BadRequestException("None of the specified users have visible deck lists.")
             }
 
-            predicate.and(deckQ.userDecks.any().ownedBy.`in`(visibleUsers))
-        }
-        if (filters.myFavorites) {
-            val favsUserId = userHolder.user?.id
-            if (favsUserId != null) {
-                val userDeckQ = QUserDeck.userDeck
+            if (allOwners.size == 1 && allOwners[0].id == userHolder.user?.id) {
+                // it's me
+                predicate.and(deckQ.ownedDecks.any().ownerId.eq(userHolder.user?.id))
+            } else if (filters.teamDecks) {
+                // team decks
+                val myTeamId = userHolder.user?.teamId
+                if (myTeamId == null || allOwners.any { it.teamId != myTeamId }) {
+                    throw UnauthorizedException("You must be logged in and share teams with the searched user to see their decks.")
+                }
+                predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+            } else if (allOwners.size == 1 && !allOwners[0].allowUsersToSeeDeckOwnership){
+                // One user search and not public, show for sale
+
+                val deckListingQ = QDeckListing.deckListing
                 predicate.and(
-                        deckQ.userDecks.any().`in`(
-                                JPAExpressions.selectFrom(userDeckQ)
+                        deckQ.auctions.any().`in`(
+                                JPAExpressions.selectFrom(deckListingQ)
                                         .where(
-                                                userDeckQ.user.id.eq(favsUserId),
-                                                userDeckQ.wishlist.isTrue
+                                                deckListingQ.seller.id.eq(allOwners[0].id),
+                                                deckListingQ.status.ne(DeckListingStatus.COMPLETE)
                                         )
                         )
                 )
+            } else {
+                // just find the publicly owned ones
+                predicate.and(deckQ.ownedDecks.any().ownerId.`in`(visibleUsers.map { it.id }))
+            }
+
+        }
+
+        if (filters.myFavorites) {
+            val favsUserId = userHolder.user?.id
+            if (favsUserId != null) {
+                deckQ.favoritedDecks.any().user.id.eq(favsUserId)
             }
         }
         if (filters.completedAuctions) {

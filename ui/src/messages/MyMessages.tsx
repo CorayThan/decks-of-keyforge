@@ -6,7 +6,7 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect } from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { TimeUtils } from "../config/TimeUtils"
 import { MailCategory } from "../generated-src/MailCategory"
@@ -83,7 +83,7 @@ export const MyMessages = observer(() => {
                                 const toMe = message.toUsername === userStore.username
                                 const replyToUsername = toMe ? message.fromUsername : message.toUsername
                                 return (
-                                    <TableRow key={message.id} style={{backgroundColor: message.fullyViewed ? grey[100] : undefined}}>
+                                    <TableRow key={message.id} style={{backgroundColor: message.fullyViewed ? themeStore.lightBackgroundColor : undefined}}>
                                         <TableCell>
                                             <Box display={"flex"} alignItems={"center"}>
                                                 {toMe ? <UserLink username={message.fromUsername}/> : (

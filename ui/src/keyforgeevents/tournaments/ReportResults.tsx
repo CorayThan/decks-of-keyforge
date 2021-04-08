@@ -75,6 +75,8 @@ export const ReportResults = observer((props: {
             <Button
                 size={"small"}
                 onClick={store.openResults}
+                variant={update ? "outlined" : "contained"}
+                color={"primary"}
             >
                 {resultName}
             </Button>
