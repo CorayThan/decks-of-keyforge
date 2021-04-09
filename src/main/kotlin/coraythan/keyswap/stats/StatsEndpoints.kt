@@ -14,6 +14,9 @@ class StatsEndpoints(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @GetMapping("/completed-date")
+    fun findGlobalStatsCompletedDate() = statsService.findStatsCompleteDate()
+
     @GetMapping
     fun findGlobalStats() = statsService.findGlobalStats()
 

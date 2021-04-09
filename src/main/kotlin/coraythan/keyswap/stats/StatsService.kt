@@ -48,9 +48,11 @@ class StatsService(
 
     private var updateStats = true
 
-    private final val defaultGlobalStats = listOf(GlobalStatsWithExpansion(null, GlobalStats()))
+    private final val defaultGlobalStats = listOf(GlobalStatsWithExpansion(null, null, GlobalStats()))
     var cachedStats: DeckStatistics? = null
     var cachedGlobalStats: List<GlobalStatsWithExpansion> = defaultGlobalStats
+
+    fun findStatsCompleteDate() = cachedGlobalStats.find { it.completedDate != null }?.completedDate
 
     fun findGlobalStats(): List<GlobalStatsWithExpansion> {
         if (cachedGlobalStats != defaultGlobalStats) {
@@ -290,9 +292,12 @@ class StatsService(
     }
 
     private fun updateCachedStats() {
-        val statsToCache = deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(null)?.toDeckStatistics() ?: DeckStatistics()
+        val stats = deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(null)
+        val completedTime = stats?.completeDateTime
+        val statsToCache = stats?.toDeckStatistics() ?: DeckStatistics()
         cachedStats = statsToCache
         cachedGlobalStats = listOf(GlobalStatsWithExpansion(
+                completedTime,
                 null,
                 statsToCache.toGlobalStats()
                         .let {
@@ -300,7 +305,7 @@ class StatsService(
                         }
         ))
                 .plus(Expansion.values().map {
-                    GlobalStatsWithExpansion(it.expansionNumber,
+                    GlobalStatsWithExpansion(null, it.expansionNumber,
                             (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)?.toDeckStatistics() ?: DeckStatistics())
                                     .toGlobalStats()
                     )

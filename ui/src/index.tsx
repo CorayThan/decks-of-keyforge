@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom"
 import { App } from "./App"
 import { cardStore } from "./cards/CardStore"
 import { HttpConfig } from "./config/HttpConfig"
+import { IdbUtils } from "./config/IdbUtils"
 import { monitoring } from "./config/Monitoring"
 import { serverStatusStore } from "./config/ServerStatusStore"
 import { TextConfig } from "./config/TextConfig"
@@ -16,16 +17,21 @@ import { userStore } from "./user/UserStore"
 
 configure({enforceActions: "never"})
 
-monitoring.initialize()
-TextConfig.loadFonts()
-HttpConfig.setupAxios()
-serverStatusStore.checkIfUpdating()
-cardStore.loadAllCards()
-statsStore.findGlobalStats()
-sellerRatingsStore.findSellerRatings()
-sellerStore.findFeaturedSellers()
-userStore.loadUserInfo()
-teamStore.findAllTeamNames()
-userMessageStore.checkUnreadMessages()
+const load = async () => {
+    monitoring.initialize()
+    TextConfig.loadFonts()
+    HttpConfig.setupAxios()
+    serverStatusStore.checkIfUpdating()
+    sellerRatingsStore.findSellerRatings()
+    sellerStore.findFeaturedSellers()
+    userStore.loadUserInfo()
+    teamStore.findAllTeamNames()
+    userMessageStore.checkUnreadMessages()
+    await IdbUtils.canUseIdb()
+    cardStore.loadAllCards()
+    statsStore.findGlobalStats()
+}
+
+load()
 
 ReactDOM.render(<App/>, document.getElementById("root"))

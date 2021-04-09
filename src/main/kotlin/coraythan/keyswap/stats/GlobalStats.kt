@@ -1,9 +1,11 @@
 package coraythan.keyswap.stats
 
 import coraythan.keyswap.generatets.GenerateTs
+import java.time.ZonedDateTime
 
 @GenerateTs
 data class GlobalStatsWithExpansion(
+        val completedDate: ZonedDateTime?,
         val expansion: Int?,
         val stats: GlobalStats
 )

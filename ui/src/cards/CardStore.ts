@@ -213,7 +213,7 @@ export class CardStore {
 
         let cardsLoaded: KCard[]
 
-        if (await IdbUtils.canUseIdb()) {
+        if (IdbUtils.idbAvailable) {
             const newVersion = await this.checkCardsVersion()
 
             const msStart = performance.now()
@@ -228,6 +228,7 @@ export class CardStore {
             }
             log.info(`Loaded cards from ${newVersion == null ? "db" : "api"} took ${Math.round(performance.now() - msStart)}ms`)
         } else {
+            log.info("IDB unavailable in card store.")
             const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
             cardsLoaded = cardsData.data.slice()
         }
