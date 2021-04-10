@@ -22,7 +22,7 @@ export class PurchaseStore {
         axios.post(`${PurchaseStore.SECURE_CONTEXT}`, createPurchase)
             .then((response: AxiosResponse<CreatePurchaseResult>) => {
                 deckListingStore.findListingsForUser(true)
-                userDeckStore.findAllForUser()
+                userDeckStore.findOwned()
                 if (response.data.createdOrUpdated) {
                     messageStore.setSuccessMessage(response.data.message)
                 } else {

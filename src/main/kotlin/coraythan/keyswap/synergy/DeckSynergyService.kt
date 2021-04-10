@@ -300,7 +300,7 @@ object DeckSynergyService {
         val cp = synergyCombos.map { it.creatureProtection * it.copies }.sum()
 
         val creatureCount = cards.filter { it.cardType == CardType.Creature }.size
-        val powerValue = p / 10
+        val powerValue = p.toDouble() / 10.0
 
 
         // Remember! When updating this also update Card
@@ -365,7 +365,7 @@ object DeckSynergyService {
         val newSas = (preMetaSas + metaScore + efficiencyBonus).roundToInt()
         val rawAerc = newSas + antisynergy - synergy - metaScore.roundToInt()
 
-        // log.info("a: $a e $e r $r c $c f $f p $powerValue d $d ap $ap hc $hc o $o creature count ${(creatureCount.toDouble() * 0.4)} $newSas")
+        // log.info("a: $a e $e r $r c $c f $f u $u p $powerValue d $d cp $cp o $o creature value ${(creatureCount.toDouble() * 0.4)} meta: $metaScore FB: $efficiencyBonus PreMetaSAS: $preMetaSas SAS: $newSas")
 
         return DeckSynergyInfo(
                 synergyRating = synergy,

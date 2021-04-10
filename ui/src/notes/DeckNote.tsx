@@ -51,11 +51,11 @@ export class InlineDeckNote extends React.Component<InlineDeckNoteProps> {
 
     render() {
 
-        if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.userDecks == null || !keyLocalStorage.genericStorage.viewNotes) {
+        if (userStore.loginInProgress || !userStore.loggedIn() || userDeckStore.deckNotes == null || !keyLocalStorage.genericStorage.viewNotes) {
             return null
         }
 
-        const notesForDeck = userDeckStore.userDecks?.get(this.props.id)?.notes ?? ""
+        const notesForDeck = userDeckStore.deckNotes?.get(this.props.id)?.notes ?? ""
 
         return (
             <div

@@ -25,9 +25,8 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
         if (!deckListingStore.decksForSaleLoaded) {
             return <Loader size={LoaderSize.SMALL}/>
         }
-        const userDeck = userDeckStore.userDeckByDeckId(id)
         const saleInfo = deckListingStore.listingInfoForDeck(id)
-        const owned = userDeck ? !!userDeck.ownedBy : false
+        const owned = userDeckStore.ownedByMe(id)
         const forSale = saleInfo != null
 
         let listButton = null

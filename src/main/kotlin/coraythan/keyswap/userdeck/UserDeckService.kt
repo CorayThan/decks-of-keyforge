@@ -1,5 +1,7 @@
 package coraythan.keyswap.userdeck
 
+import com.querydsl.core.types.Projections
+import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.config.BadRequestException
@@ -18,6 +20,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
+import javax.persistence.EntityManager
 
 @Transactional
 @Service
@@ -32,9 +36,11 @@ class UserDeckService(
         private val ownedDeckRepo: OwnedDeckRepo,
         private val favoritedDeckRepo: FavoritedDeckRepo,
         private val funnyDeckRepo: FunnyDeckRepo,
+        private val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+    private val query = JPAQueryFactory(entityManager)
 
     // Don't want this running regularly
     @Scheduled(fixedDelayString = "PT24H", initialDelayString = SchedulingConfig.correctCountsInitialDelay)
@@ -124,7 +130,7 @@ class UserDeckService(
         // new ownership code
         if (mark) {
             ownedDeckRepo.save(OwnedDeck(
-                    ownerId = user.id,
+                    owner = user,
                     deck = deck,
                     teamId = teamId,
             ))
@@ -172,11 +178,24 @@ class UserDeckService(
         }
     }
 
-    fun findAllForUser(): List<UserDeckDto> {
-        val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        return userDeckRepo.findByUserId(currentUser.id).map {
-            it.toDto()
-        }
+    fun findOwned(): List<Long> {
+        val currentUser = currentUserService.loggedInUser() ?: return listOf()
+        return findOwnedDecks(currentUser.id)
+    }
+
+    fun findNotes(): List<DeckNotesDto> {
+        val currentUser = currentUserService.loggedInUser() ?: return listOf()
+        return findDeckNotes(currentUser.id)
+    }
+
+    fun findFavs(): List<Long> {
+        val currentUser = currentUserService.loggedInUser() ?: return listOf()
+        return findFavDecks(currentUser.id)
+    }
+
+    fun findFunnies(): List<Long> {
+        val currentUser = currentUserService.loggedInUser() ?: return listOf()
+        return findFunnyDecks(currentUser.id)
     }
 
     fun removeAllOwned() {
@@ -193,4 +212,45 @@ class UserDeckService(
 
         log.info("Done removing all owned decks for ${currentUser.username}")
     }
+
+    private fun findDeckNotes(userId: UUID): List<DeckNotesDto> {
+        val userDeckQ = QUserDeck.userDeck
+        return query
+                .select(Projections.constructor(DeckNotesDto::class.java, userDeckQ.deck.id, userDeckQ.notes))
+                .from(userDeckQ)
+                .where(userDeckQ.user.id.eq(userId).and(userDeckQ.notes.isNotNull))
+                .fetch()
+    }
+
+    private fun findOwnedDecks(userId: UUID): List<Long> {
+        val ownedDeckQ = QOwnedDeck.ownedDeck
+        return query
+                .select(Projections.constructor(DeckOwnerDto::class.java, ownedDeckQ.deck.id))
+                .from(ownedDeckQ)
+                .where(ownedDeckQ.owner.id.eq(userId))
+                .fetch()
+                .map { it.deckId }
+    }
+
+    private fun findFavDecks(userId: UUID): List<Long> {
+        val favDeckQ = QFavoritedDeck.favoritedDeck
+        return query
+                .select(Projections.fields(Long::class.java, favDeckQ.deck.id))
+                .from(favDeckQ)
+                .where(favDeckQ.user.id.eq(userId))
+                .fetch()
+    }
+
+    private fun findFunnyDecks(userId: UUID): List<Long> {
+        val funnyDeckQ = QFunnyDeck.funnyDeck
+        return query
+                .select(Projections.fields(Long::class.java, funnyDeckQ.deck.id))
+                .from(funnyDeckQ)
+                .where(funnyDeckQ.user.id.eq(userId))
+                .fetch()
+    }
 }
+
+data class DeckOwnerDto(
+        val deckId: Long
+)

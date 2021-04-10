@@ -4,33 +4,51 @@ import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { deckStore } from "../decks/DeckStore"
-import { UserDeckDto } from "../generated-src/UserDeckDto"
+import { DeckNotesDto } from "../generated-src/DeckNotesDto"
 import { messageStore } from "../ui/MessageStore"
 
 export class UserDeckStore {
     static readonly CONTEXT = HttpConfig.API + "/userdeck/secured"
 
     @observable
-    userDecks?: Map<number, UserDeckDto>
+    ownedDecks?: number[]
 
     @observable
-    loadingDecks = false
+    deckNotes?: Map<number, DeckNotesDto>
 
-    wishlist = (deckName: string, deckId: number, wishlist: boolean) => {
-        this.loadingDecks = true
+    @observable
+    favDecks?: number[]
+
+    @observable
+    funnyDecks?: number[]
+
+    @observable
+    loadingOwned = false
+
+    @observable
+    loadingNotes = false
+
+    @observable
+    loadingFavs = false
+
+    @observable
+    loadingFunnies = false
+
+    favorite = (deckName: string, deckId: number, wishlist: boolean) => {
+        this.loadingFavs = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${wishlist ? "" : "un"}wishlist`)
             .then(() => {
                 messageStore.setSuccessMessage(wishlist ? `Added ${deckName} to your favorites!` : `Removed ${deckName} from your favorites.`)
-                this.findAllForUser()
+                this.findFavsForUser()
             })
     }
 
     funny = (deckName: string, deckId: number, funny: boolean) => {
-        this.loadingDecks = true
+        this.loadingFunnies = true
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${funny ? "" : "un"}funny`)
             .then(() => {
                 messageStore.setSuccessMessage(funny ? `Marked ${deckName} as funny!` : `Unmarked ${deckName} as funny.`)
-                this.findAllForUser()
+                this.findFunniesForUser()
             })
     }
 
@@ -38,7 +56,7 @@ export class UserDeckStore {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${owned ? "" : "un"}owned`)
             .then(() => {
                 messageStore.setSuccessMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
-                this.findAllForUser()
+                this.findOwned()
             })
     }
 
@@ -53,36 +71,66 @@ export class UserDeckStore {
         return axios.post(`${UserDeckStore.CONTEXT}/${deckId}/notes`, {notes})
             .then(() => {
                 messageStore.setSuccessMessage(deckName == null ? "Notes saved." : `Updated notes for ${deckName}.`, 2000)
-                const deck = this.userDecks?.get(deckId)
+                const deck = this.deckNotes?.get(deckId)
                 if (deck != null) {
                     deck.notes = notes
+                } else {
+                    this.deckNotes?.set(deckId, {
+                        deckId,
+                        notes,
+                    })
                 }
             })
     }
 
-    findAllForUser = () => {
+    findOwned = async () => {
         if (keyLocalStorage.hasAuthKey()) {
-            this.loadingDecks = true
-            axios.get(`${UserDeckStore.CONTEXT}/for-user`)
-                .then((response: AxiosResponse) => {
-                    const userDecksList: UserDeckDto[] = response.data
+            this.loadingOwned = true
+            const userDecksList: AxiosResponse<number[]> = await axios.get(`${UserDeckStore.CONTEXT}/owned`)
 
-                    const userDecks = new Map()
-                    userDecksList.forEach((userDeck) => userDecks!.set(userDeck.deckId, userDeck))
-                    log.debug(`User decks loaded`)
-
-                    this.refreshDeckInfo()
-                    this.loadingDecks = false
-                    this.userDecks = userDecks
-                })
+            this.ownedDecks = userDecksList.data
+            this.refreshDeckInfo()
+            this.loadingOwned = false
         }
     }
 
-    userDecksLoaded = () => this.userDecks != null && !this.loadingDecks
+    findNotesForUser = async () => {
+        if (keyLocalStorage.hasAuthKey()) {
+            this.loadingNotes = true
+            const userDecksList: AxiosResponse<DeckNotesDto[]> = await axios.get(`${UserDeckStore.CONTEXT}/notes`)
 
-    userDeckByDeckId = (deckId: number) => this.userDecks ? this.userDecks.get(deckId) : undefined
+            const userDecks = new Map()
+            userDecksList.data.forEach((userDeck) => userDecks.set(userDeck.deckId, userDeck))
+            log.debug(`Deck notes loaded`)
 
-    ownedByMe = (deckId: number) => this.userDeckByDeckId(deckId)?.ownedBy != null
+            this.loadingNotes = false
+            this.deckNotes = userDecks
+        }
+    }
+
+    findFavsForUser = async () => {
+        if (keyLocalStorage.hasAuthKey()) {
+            this.loadingFavs = true
+            const userDecksList: AxiosResponse<number[]> = await axios.get(`${UserDeckStore.CONTEXT}/favs`)
+
+            this.loadingFavs = false
+            this.favDecks = userDecksList.data
+        }
+    }
+
+    findFunniesForUser = async () => {
+        if (keyLocalStorage.hasAuthKey()) {
+            this.loadingFunnies = true
+            const userDecksList: AxiosResponse<number[]> = await axios.get(`${UserDeckStore.CONTEXT}/funnies`)
+
+            this.loadingFunnies = false
+            this.funnyDecks = userDecksList.data
+        }
+    }
+
+    userDecksLoaded = () => this.ownedDecks != null && !this.loadingOwned
+
+    ownedByMe = (deckId: number) => this.ownedDecks?.includes(deckId) ?? false
 
     refreshDeckInfo = () => {
         if (deckStore.deck) {
@@ -93,7 +141,14 @@ export class UserDeckStore {
     }
 
     notesForDeck = (deckId: number): string | undefined => {
-        return this.userDeckByDeckId(deckId)?.notes
+        return this.deckNotes?.get(deckId)?.notes
+    }
+
+    reset = () => {
+        this.ownedDecks = undefined
+        this.favDecks = undefined
+        this.funnyDecks = undefined
+        this.deckNotes = undefined
     }
 
     constructor() {

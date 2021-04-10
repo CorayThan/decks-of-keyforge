@@ -28,7 +28,6 @@ import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
-import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
@@ -234,10 +233,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
     render() {
         const {deck, menuItem} = this.props
-        const userDeck = userDeckStore.userDeckByDeckId(deck.id)
-        if (userDeck == null) {
-            return null
-        }
         const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
         let saleButton
         if (auctionInfo && auctionInfo.status === DeckListingStatus.AUCTION && !auctionInfo.bidsExist) {

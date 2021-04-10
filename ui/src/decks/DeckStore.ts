@@ -173,7 +173,7 @@ export class DeckStore {
                 if (!response.data) {
                     messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
                 } else {
-                    userDeckStore.findAllForUser()
+                    userDeckStore.findOwned()
                 }
 
                 this.importingAndAddingDeck = false

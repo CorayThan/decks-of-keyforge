@@ -33,8 +33,17 @@ class UserDeckEndpoints(
     @PostMapping("/{id}/not-previously-owned")
     fun removePreviuslyOwned(@PathVariable id: Long) = userDeckService.removePreviouslyOwned(id)
 
-    @GetMapping("/for-user")
-    fun findAllForUser() = userDeckService.findAllForUser()
+    @GetMapping("/owned")
+    fun findOwnedDecks() = userDeckService.findOwned()
+
+    @GetMapping("/notes")
+    fun findNotes() = userDeckService.findNotes()
+
+    @GetMapping("/favs")
+    fun findFavDecks() = userDeckService.findFavs()
+
+    @GetMapping("/funnies")
+    fun findFunnyDecks() = userDeckService.findFunnies()
 
     @PostMapping("/{id}/notes")
     fun notes(@PathVariable id: Long, @RequestBody notes: Notes) = userDeckService.updateNotes(id, notes.notes)

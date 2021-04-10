@@ -31,19 +31,7 @@ data class UserDeck(
 
         @Id
         val id: UUID = UUID.randomUUID()
-) {
-
-    fun toDto() = UserDeckDto(
-            wishlist = wishlist,
-            funny = funny,
-            ownedBy = ownedBy,
-            id = id,
-            deckId = deck.id,
-            notes = notes,
-
-            username = user.username
-    )
-}
+)
 
 @GenerateTs
 enum class DeckCondition {
@@ -54,17 +42,7 @@ enum class DeckCondition {
 }
 
 @GenerateTs
-data class UserDeckDto(
-
-        val wishlist: Boolean = false,
-        val funny: Boolean = false,
-        val ownedBy: String? = null,
-
-        val id: UUID = UUID.randomUUID(),
-
+data class DeckNotesDto(
         val deckId: Long,
-
-        val notes: String? = null,
-
-        val username: String
+        val notes: String,
 )

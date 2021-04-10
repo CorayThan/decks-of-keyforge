@@ -35,9 +35,8 @@ export class FunnyDeck extends React.Component<FunnyDeckProps> {
         const {deckId, deckName} = this.props
         let title
         let funny = false
-        if (userDeckStore.userDecksLoaded()) {
-            const deck = userDeckStore.userDeckByDeckId(deckId)
-            funny = deck == null ? false : deck.funny
+        if (userDeckStore.funnyDecks != null) {
+            funny = userDeckStore.funnyDecks.includes(deckId)
             title = (funny ? "Remove as" : "Mark as") + " a funny deck"
         } else {
             title = "Login to mark decks as funny"

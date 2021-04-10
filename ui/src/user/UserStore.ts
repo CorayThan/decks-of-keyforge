@@ -137,7 +137,10 @@ export class UserStore {
     }
 
     loadUserInfo = async () => {
-        userDeckStore.findAllForUser()
+        userDeckStore.findOwned()
+        userDeckStore.findNotesForUser()
+        // userDeckStore.findFavsForUser()
+        // userDeckStore.findFunniesForUser()
         deckListingStore.findListingsForUser(false)
         deckOwnershipStore.findOwnedDecks()
         await this.loadLoggedInUser()
@@ -235,7 +238,7 @@ export class UserStore {
     logout = () => {
         this.loginInProgress = false
         this.setUser(undefined)
-        userDeckStore.userDecks = undefined
+        userDeckStore.reset()
         deckStore.refreshDeckSearch()
         keyLocalStorage.clear()
         HttpConfig.setupAxios()

@@ -36,9 +36,8 @@ export class FavoriteDeck extends React.Component<WishlistDeckProps> {
         let title
         let wishlisted = false
 
-        if (userDeckStore.userDecksLoaded()) {
-            const deck = userDeckStore.userDeckByDeckId(deckId)
-            wishlisted = deck == null ? false : deck.wishlist
+        if (userDeckStore.favDecks != null) {
+            wishlisted = userDeckStore.favDecks?.includes(deckId) ?? false
             title = (wishlisted ? "Remove from" : "Add to") + " my favorites"
         } else {
             title = "Login to add decks to your favorites"
@@ -51,7 +50,7 @@ export class FavoriteDeck extends React.Component<WishlistDeckProps> {
                             onClick={() => {
                                 wishlisted = !wishlisted
                                 this.favoriteCount += (wishlisted ? 1 : -1)
-                                userDeckStore.wishlist(deckName, deckId, wishlisted)
+                                userDeckStore.favorite(deckName, deckId, wishlisted)
                             }}
                             disabled={!userDeckStore.userDecksLoaded()}
                             size={"small"}
