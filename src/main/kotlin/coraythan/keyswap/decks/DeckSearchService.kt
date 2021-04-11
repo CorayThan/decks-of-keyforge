@@ -319,10 +319,6 @@ class DeckSearchService(
                 it.allowUsersToSeeDeckOwnership
             }
 
-            if (visibleUsers.isEmpty()) {
-                throw BadRequestException("None of the specified users have visible deck lists.")
-            }
-
             if (allOwners.size == 1 && allOwners[0].id == userHolder.user?.id) {
                 // it's me
                 predicate.and(deckQ.ownedDecks.any().owner.id.eq(userHolder.user?.id))
@@ -332,7 +328,8 @@ class DeckSearchService(
                 if (myTeamId == null || allOwners.any { it.teamId != myTeamId }) {
                     throw UnauthorizedException("You must be logged in and share teams with the searched user to see their decks.")
                 }
-                predicate.and(deckQ.userDecks.any().ownedBy.eq(filters.owner))
+                predicate.and(deckQ.ownedDecks.any().owner.id.`in`(allOwners.map { it.id }))
+
             } else if (allOwners.size == 1 && !allOwners[0].allowUsersToSeeDeckOwnership) {
                 // One user search and not public, show for sale
 
