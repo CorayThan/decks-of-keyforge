@@ -139,8 +139,8 @@ export class UserStore {
     loadUserInfo = async () => {
         userDeckStore.findOwned()
         userDeckStore.findNotesForUser()
-        // userDeckStore.findFavsForUser()
-        // userDeckStore.findFunniesForUser()
+        userDeckStore.findFavsForUser()
+        userDeckStore.findFunniesForUser()
         deckListingStore.findListingsForUser(false)
         deckOwnershipStore.findOwnedDecks()
         await this.loadLoggedInUser()

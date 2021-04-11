@@ -225,7 +225,7 @@ class UserDeckService(
     private fun findOwnedDecks(userId: UUID): List<Long> {
         val ownedDeckQ = QOwnedDeck.ownedDeck
         return query
-                .select(Projections.constructor(DeckOwnerDto::class.java, ownedDeckQ.deck.id))
+                .select(Projections.constructor(DeckIdDto::class.java, ownedDeckQ.deck.id))
                 .from(ownedDeckQ)
                 .where(ownedDeckQ.owner.id.eq(userId))
                 .fetch()
@@ -235,22 +235,24 @@ class UserDeckService(
     private fun findFavDecks(userId: UUID): List<Long> {
         val favDeckQ = QFavoritedDeck.favoritedDeck
         return query
-                .select(Projections.fields(Long::class.java, favDeckQ.deck.id))
+                .select(Projections.constructor(DeckIdDto::class.java, favDeckQ.deck.id))
                 .from(favDeckQ)
                 .where(favDeckQ.user.id.eq(userId))
                 .fetch()
+                .map { it.deckId }
     }
 
     private fun findFunnyDecks(userId: UUID): List<Long> {
         val funnyDeckQ = QFunnyDeck.funnyDeck
         return query
-                .select(Projections.fields(Long::class.java, funnyDeckQ.deck.id))
+                .select(Projections.constructor(DeckIdDto::class.java, funnyDeckQ.deck.id))
                 .from(funnyDeckQ)
                 .where(funnyDeckQ.user.id.eq(userId))
                 .fetch()
+                .map { it.deckId }
     }
 }
 
-data class DeckOwnerDto(
+data class DeckIdDto(
         val deckId: Long
 )
