@@ -48,14 +48,6 @@ class RunOnStart(
 
         userSearchService.updateSearchResults()
 
-        log.info("Adding missing teams")
-        userRepo.findAllByTeamIdNotNull().forEach {
-            if (it.teamId != null) {
-                ownedDeckRepo.addTeamForUser(it.teamId, it.id)
-            }
-        }
-        log.info("Added teams")
-
         startupComplete = true
 
         log.info("\n" + """
