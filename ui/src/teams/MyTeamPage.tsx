@@ -124,7 +124,6 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                 )}
                 <LinkButton
                     variant={"outlined"}
-                    color={"primary"}
                     href={Routes.deckSearch(teamDeckFilters)}
                     style={{marginLeft: spacing(4)}}
                 >

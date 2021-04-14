@@ -7,6 +7,7 @@ import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.S3Service
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -30,6 +31,7 @@ class TeamService(
         private val userRepo: KeyUserRepo,
         private val userDeckRepo: UserDeckRepo,
         private val s3Service: S3Service,
+        private val ownedDeckRepo: OwnedDeckRepo,
         val entityManager: EntityManager,
 ) {
 
@@ -163,12 +165,14 @@ class TeamService(
     private fun addUserToTeam(toAdd: KeyUser, team: Team) {
         userRepo.save(toAdd.copy(teamId = team.id))
         userDeckRepo.addTeamForUser(team.id, toAdd.username)
+        ownedDeckRepo.addTeamForUser(team.id, toAdd.id)
         teamRepo.save(team.copy(invites = team.invites.minus(toAdd.id), members = team.members.plus(toAdd)))
     }
 
     private fun removeFromTeamAndDecks(toRemove: KeyUser, team: Team) {
         userRepo.removeTeam(toRemove.id)
         userDeckRepo.removeTeamForUser(toRemove.username)
+        ownedDeckRepo.removeTeamForUser(toRemove.id)
 
         teamRepo.save(team.copy(
                 members = team.members.filter { it.id != toRemove.id }

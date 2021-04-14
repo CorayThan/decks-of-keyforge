@@ -347,15 +347,15 @@ class DeckSearchService(
                 // just find the publicly owned ones
                 predicate.and(deckQ.ownedDecks.any().owner.id.`in`(visibleUsers.map { it.id }))
             }
-
         }
 
         if (filters.myFavorites) {
             val favsUserId = userHolder.user?.id
             if (favsUserId != null) {
-                deckQ.favoritedDecks.any().user.id.eq(favsUserId)
+                predicate.and(deckQ.favoritedDecks.any().user.id.eq(favsUserId))
             }
         }
+
         if (filters.completedAuctions) {
             predicate.and(deckQ.completedAuction.isTrue)
         } else if (filters.forSale == false) {
