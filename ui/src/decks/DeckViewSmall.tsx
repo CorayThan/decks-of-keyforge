@@ -16,7 +16,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { roundToTens } from "../config/Utils"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { activeSasExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { DeckListingStatus } from "../generated-src/DeckListingStatus"
 import { DeckSaleInfo } from "../generated-src/DeckSaleInfo"
 import { House } from "../generated-src/House"
@@ -95,7 +95,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                     rightContents={!displaySalesSeparately && saleInfoView}
                     id={deck.keyforgeId}
                 >
-                    {compact && activeExpansions.includes(deck.expansion) && (
+                    {compact && activeSasExpansions.includes(deck.expansion) && (
                         <AercViewForDeck deck={deck} type={AercViewType.MOBILE_DECK}/>
                     )}
                     <div style={{display: "flex"}}>
@@ -143,7 +143,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                 </CardActions>
                             )}
                         </div>
-                        {!compact && activeExpansions.includes(deck.expansion) && <AercViewForDeck deck={deck} type={AercViewType.DECK}/>}
+                        {!compact && <AercViewForDeck deck={deck} type={AercViewType.DECK}/>}
                     </div>
                 </KeyCard>
                 {displaySalesSeparately && saleInfo && (

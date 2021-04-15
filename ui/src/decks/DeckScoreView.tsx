@@ -7,7 +7,7 @@ import { Fragment } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { roundToInt, roundToTens, roundToThousands } from "../config/Utils"
-import { activeExpansions } from "../expansions/Expansions"
+import { activeSasExpansions } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { SasTip } from "../mui-restyled/SasTip"
@@ -63,7 +63,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     const metaScore = roundToInt(DeckUtils.calculateMetaScore(deck))
 
-    if (expansion != null && !activeExpansions.includes(expansion)) {
+    if (expansion != null && !activeSasExpansions.includes(expansion)) {
         return (
             <Typography variant={"h5"} style={{color: "#FFFFFF"}}>Score Pending</Typography>
         )

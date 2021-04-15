@@ -64,6 +64,7 @@ class Routes {
     static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
     static wcCards = "/cards?expansion=WORLDS_COLLIDE"
     static mmCards = "/cards?expansion=MASS_MUTATION"
+    static dtCards = "/cards?expansion=DARK_TIDINGS"
     static extraCardInfo = "/extra-card-infos"
     static about = "/about"
     static decks = "/decks"

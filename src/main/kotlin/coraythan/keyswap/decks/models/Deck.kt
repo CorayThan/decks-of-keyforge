@@ -73,6 +73,7 @@ data class Deck(
         val completedAuction: Boolean = false,
         val wishlistCount: Int = 0,
         val funnyCount: Int = 0,
+        val evilTwin: Boolean? = false,
 
         // Json of card ids for performance loading decks, loading cards from cache
         @Lob
@@ -183,7 +184,8 @@ data class Deck(
                     it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
                             || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
                 }?.size ?: 0).zeroToNull(),
-                cardArchiveCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size ?: 0).zeroToNull(),
+                cardArchiveCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size
+                        ?: 0).zeroToNull(),
                 keyCheatCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size ?: 0).zeroToNull(),
                 rawAmber = rawAmber,
                 totalArmor = totalArmor.zeroToNull(),
@@ -228,7 +230,7 @@ data class Deck(
         )
     }
 
-    fun addGameStats(keyforgeDeck: KeyforgeDeck): Deck? {
+    fun addGameStats(keyforgeDeck: KeyForgeDeck): Deck? {
         if (this.wins == keyforgeDeck.wins && this.losses == keyforgeDeck.losses
                 && this.chains == keyforgeDeck.chains && this.powerLevel == keyforgeDeck.power_level) {
             return null
@@ -291,7 +293,8 @@ data class Deck(
                 anomalyCount = newCardsList.filter { it.anomaly }.size,
                 specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant || it.rarity == Rarity.Special }.size,
                 raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
-                uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size
+                uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size,
+                evilTwin = newCardsList.any { it.cardTitle.contains(" – Evil Twin") }
         )
     }
 

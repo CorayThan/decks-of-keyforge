@@ -1,8 +1,10 @@
+import { Box } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
+import { activeSasExpansions } from "../../expansions/Expansions"
 import { HasAerc } from "../HasAerc"
 import {
     AercCategoryAmber,
@@ -29,6 +31,10 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
     }
     if (!cardStore.cardsLoaded) {
         return null
+    }
+
+    if (!activeSasExpansions.includes(deck.expansion)) {
+        return <Box style={{backgroundColor: themeStore.aercViewBackground}} display={"flex"} width={"100%"}/>
     }
 
     const hasAerc = deck as HasAerc

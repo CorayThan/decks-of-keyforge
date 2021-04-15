@@ -6,7 +6,7 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.decks.models.KeyForgeDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
@@ -78,7 +78,7 @@ class DeckWinsService(
         }
     }
 
-    @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses, initialDelayString = SchedulingConfig.recurringWinLossTaskInitialDelay)
+    // @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses, initialDelayString = SchedulingConfig.recurringWinLossTaskInitialDelay)
     @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastFor = lockUpdatePageOfWinLosses, lockAtMostFor = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 
@@ -162,10 +162,12 @@ class DeckWinsService(
             }
 
             log.info(
-                    "House wins: ${houseWins.map {
-                        val wins = it.value.wins.toDouble()
-                        "${it.key} = ${wins / (wins + it.value.losses.toDouble())} -- "
-                    }}" + "house map: $houseWins")
+                    "House wins: ${
+                        houseWins.map {
+                            val wins = it.value.wins.toDouble()
+                            "${it.key} = ${wins / (wins + it.value.losses.toDouble())} -- "
+                        }
+                    }" + "house map: $houseWins")
 
             saveCardWins(cardWins)
             cardWinsService.saveCardWins(cardWinsWithExpansions)
@@ -176,7 +178,7 @@ class DeckWinsService(
 
     }
 
-    private fun saveDeckWins(deck: KeyforgeDeck) {
+    private fun saveDeckWins(deck: KeyForgeDeck) {
         val preexisting = deckRepo.findByKeyforgeId(deck.id)
         if (preexisting != null) {
             val cards = cardService.cardsForDeck(preexisting)

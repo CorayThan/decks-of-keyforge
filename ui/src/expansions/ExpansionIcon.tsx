@@ -9,6 +9,8 @@ import aoaDark from "./imgs/aoa-dark.svg"
 import aoa from "./imgs/aoa.svg"
 import cotaDark from "./imgs/cota-dark.svg"
 import cota from "./imgs/cota.svg"
+import dtDark from "./imgs/dt-dark.svg"
+import dt from "./imgs/dt.svg"
 import mmDark from "./imgs/mm-dark.svg"
 import mm from "./imgs/mm.svg"
 import wcDark from "./imgs/wc-dark.svg"
@@ -34,6 +36,10 @@ export const ExpansionIcon = observer((props: { expansion: Expansion, size?: num
         case Expansion.MASS_MUTATION:
             lightSrc = mm
             darkSrc = mmDark
+            break
+        case Expansion.DARK_TIDINGS:
+            lightSrc = dt
+            darkSrc = dtDark
             break
         case Expansion.ANOMALY_EXPANSION:
             lightSrc = anomaly

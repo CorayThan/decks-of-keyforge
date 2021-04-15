@@ -1,9 +1,9 @@
 package coraythan.keyswap.thirdpartyservices
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.cards.KeyforgeCard
+import coraythan.keyswap.cards.KeyForgeCard
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.decks.models.KeyforgeDeck
+import coraythan.keyswap.decks.models.KeyForgeDeck
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -19,31 +19,33 @@ data class KeyForgeDeckResponse(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeDecksPageDto(
+data class KeyForgeDecksPageDto(
         val count: Int,
-        val data: List<KeyforgeDeck>
+        val data: List<KeyForgeDeck>,
+        val _linked: KeyForgeDeckLinksFullCards
+
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeDeckLinks(
+data class KeyForgeDeckLinks(
         val houses: List<String>?,
         val cards: List<String>?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeDeckLinksFullCards(
-        val houses: Set<KeyforgeHouse>?,
-        val cards: List<KeyforgeCard>?
+data class KeyForgeDeckLinksFullCards(
+        val houses: Set<KeyForgeHouse>?,
+        val cards: List<KeyForgeCard>?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeDeckDto(
-        val data: KeyforgeDeck,
-        val _linked: KeyforgeDeckLinksFullCards
+        val data: KeyForgeDeck,
+        val _linked: KeyForgeDeckLinksFullCards
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeHouse(
+data class KeyForgeHouse(
         val id: String,
         val name: String,
         val image: String
@@ -63,18 +65,20 @@ class KeyforgeApi(
     /**
      * Null implies no decks available.
      */
-    fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize, expansion: Int? = null, useMasterVault: Boolean = false): KeyforgeDecksPageDto? {
+    fun findDecks(page: Int, ordering: String = "date", pageSize: Int = keyforgeApiDeckPageSize, expansion: Int? = null, useMasterVault: Boolean = false, withCards: Boolean = false): KeyForgeDecksPageDto? {
         return if (useMasterVault || env == Env.dev) {
             keyforgeGetRequest(
-                    KeyforgeDecksPageDto::class.java,
+                    KeyForgeDecksPageDto::class.java,
                     "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering" +
-                            if (expansion == null) "" else "&expansion=$expansion"
+                            (if (expansion == null) "" else "&expansion=$expansion") +
+                            (if (withCards) "&links=cards" else "")
             )
         } else {
-            restTemplate.getForObject(
-                    "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks?page=$page&pageSize=$pageSize&ordering=$ordering" +
-                            if (expansion == null) "" else "&expansion=$expansion",
-                    KeyforgeDecksPageDto::class.java
+            restTemplate.postForObject(
+//                    "http://localhost:5001/api/master-vault/decks",
+                    "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks",
+                    HttpEntity<KeyForgeDeckRequestFilters>(KeyForgeDeckRequestFilters(page, ordering, pageSize, expansion, withCards)),
+                    KeyForgeDecksPageDto::class.java
             )
         }
     }
@@ -117,3 +121,12 @@ class KeyforgeApi(
         }
     }
 }
+
+data class KeyForgeDeckRequestFilters(
+        val page: Int,
+        // "date", "-wins", "-losses"
+        val ordering: String,
+        val pageSize: Int,
+        val expansion: Int?,
+        val withCards: Boolean,
+)

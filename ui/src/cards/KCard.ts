@@ -1,7 +1,7 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
 import { Utils } from "../config/Utils"
-import { activeExpansions } from "../expansions/Expansions"
+import { activeSasExpansions } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
@@ -110,7 +110,7 @@ export class CardUtils {
         const winRates: CardWinRates[] = []
         const expansionWins = card.expansionWins
         if (expansionWins != null && card.houses.length > 0) {
-            activeExpansions.forEach(expansion => {
+            activeSasExpansions.forEach(expansion => {
                 const wins = expansionWins[expansion]
                 if (wins != null && (wins.wins + wins.losses > minCardWinsToDisplay)) {
                     const winRatePercent = CardUtils.calcWinRate(wins.wins, wins.losses)

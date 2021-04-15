@@ -54,11 +54,13 @@ class RestErrorHandler {
     Message: ${ex.message}
     For request url: ${request.requestURI}
     remote user: ${request.remoteUser}
-    headers: ${request.headerNames.toList().filter {
-                    !setOf("authorization", "accept", "accept-encoding", "accept-language", "connection").contains(it)
-                }.map { "$it : " + request.getHeaders(it).toList() }}
-                """
-        )
+    headers: ${
+                    request.headerNames.toList().filter {
+                        !setOf("authorization", "accept", "accept-encoding", "accept-language", "connection").contains(it)
+                    }.map { "$it : " + request.getHeaders(it).toList() }
+                }
+                """,
+                ex)
     }
 
 }

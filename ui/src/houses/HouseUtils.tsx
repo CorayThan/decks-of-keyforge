@@ -9,6 +9,7 @@ import sanctumImg from "./imgs/sanctum.png"
 import saurianRepublicImg from "./imgs/saurian.png"
 import shadowsImg from "./imgs/shadows.png"
 import starAllianceImg from "./imgs/star-alliance.png"
+import unfathomableImg from "./imgs/unfathomable.png"
 import untamedImg from "./imgs/untamed.png"
 
 export interface HouseValue {
@@ -51,6 +52,11 @@ export const houseValuesArray: HouseValue[] = [
         house: House.StarAlliance,
         img: starAllianceImg,
         displayName: "Star Alliance"
+    },
+    {
+        house: House.Unfathomable,
+        img: unfathomableImg,
+        displayName: "Unfathom"
     },
     {
         house: House.Untamed,

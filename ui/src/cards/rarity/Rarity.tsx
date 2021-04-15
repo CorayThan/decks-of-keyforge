@@ -7,6 +7,8 @@ import anomalyDark from "../imgs/anomaly-dark.svg"
 import anomaly from "../imgs/anomaly.svg"
 import commonDark from "../imgs/common-dark.svg"
 import common from "../imgs/common.svg"
+import evilTwinDark from "../imgs/evil-twin-dark.svg"
+import evilTwin from "../imgs/evil-twin.svg"
 import legacyDark from "../imgs/legacy-dark.svg"
 import legacy from "../imgs/legacy.svg"
 import maverickDark from "../imgs/maverick-dark.svg"
@@ -54,6 +56,11 @@ export const rarityValuesArray: RarityValue[] = [
         rarity: Rarity.Special,
         img: special,
         imgDark: specialDark
+    },
+    {
+        rarity: Rarity.EvilTwin,
+        img: evilTwin,
+        imgDark: evilTwinDark
     },
 ]
 

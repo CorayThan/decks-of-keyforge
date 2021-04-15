@@ -1,10 +1,10 @@
 package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.thirdpartyservices.KeyforgeDeckLinks
+import coraythan.keyswap.thirdpartyservices.KeyForgeDeckLinks
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class KeyforgeDeck(
+data class KeyForgeDeck(
         val id: String,
         val name: String,
         val expansion: Int,
@@ -13,7 +13,7 @@ data class KeyforgeDeck(
         val wins: Int = 0,
         val losses: Int = 0,
         val cards: List<String>? = null,
-        val _links: KeyforgeDeckLinks? = null
+        val _links: KeyForgeDeckLinks? = null
 ) {
     fun toDeck() = Deck(
             keyforgeId = id,
@@ -22,6 +22,6 @@ data class KeyforgeDeck(
             powerLevel = power_level,
             chains = chains,
             wins = wins,
-            losses = losses
+            losses = losses,
     )
 }

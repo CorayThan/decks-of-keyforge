@@ -6,12 +6,10 @@ import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.HouseAndCards
-import coraythan.keyswap.decks.models.KeyforgeDeck
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.TraitStrength
-import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -26,8 +24,8 @@ val majorRevision = false
 @Service
 class CardService(
         private val cardRepo: CardRepo,
-        private val keyforgeApi: KeyforgeApi,
         private val extraCardInfoRepo: ExtraCardInfoRepo,
+        private val extraCardInfoService: ExtraCardInfoService,
         private val cardWinsService: CardWinsService,
         private val versionService: CardsVersionService,
         private val objectMapper: ObjectMapper
@@ -114,8 +112,7 @@ class CardService(
             }
             .toMap()
 
-    fun findByExpansionCardName(expansion: Int, cardName: String, enhanced: Boolean = false)
-            = cardRepo.findByExpansionAndCardTitleAndEnhanced(expansion, cardName, enhanced).firstOrNull()
+    fun findByExpansionCardName(expansion: Int, cardName: String, enhanced: Boolean = false) = cardRepo.findByExpansionAndCardTitleAndEnhanced(expansion, cardName, enhanced).firstOrNull()
     fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!![cardName.cleanCardName()]
     fun findByCardUrlName(cardUrlName: String) = nonMaverickCachedCardsWithUrlNames!![cardUrlName]
 
@@ -169,7 +166,7 @@ class CardService(
                             cards
                                     .filter { it.house == house }
                                     .sorted()
-                                    .map { it.toSimpleCard(!(it.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum }?: true) ) }
+                                    .map { it.toSimpleCard(!(it.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum } ?: true)) }
                     )
                 }
                 .sortedBy { it.house }
@@ -214,29 +211,54 @@ class CardService(
         return fullCardsFromCards(cards)
     }
 
-    fun importNewCards(decks: List<KeyforgeDeck>) {
-        decks.forEach { deck ->
-            if (deck.cards == null || deck.cards.isEmpty()) {
-                log.warn("Deck from keyforge api didn't have cards!? ${deck.id}")
-            }
-            if (deck.cards?.any { !cardRepo.existsById(it) } == true) {
-                keyforgeApi.findDeck(deck.id)?._linked?.cards?.forEach {
-                    if (!cardRepo.existsById(it.id)) {
-                        this.saveNewCard(it.toCard(this.extraInfo))
+    @Transactional
+    fun importNewCards(cards: List<KeyForgeCard>): Boolean {
+
+        val cardsToSave = mutableMapOf<String, Card>()
+
+        if (cards.any { !cardRepo.existsById(it.id) } == true) {
+            cards.forEach {
+                if (!cardRepo.existsById(it.id)) {
+                    val cardToSave = it.toCard(this.extraInfo)
+
+                    if (cardToSave != null) {
+                        cardsToSave[it.id] = cardToSave
                     }
                 }
-                reloadCachedCards()
-                versionService.revVersion()
-                log.debug("Loaded cards from deck.")
             }
-        }
-    }
 
-    fun saveNewCard(card: Card): Card {
-        if (card.extraCardInfo == null) {
-            throw IllegalStateException("extra info not found for ${card.cardTitle} id ${card.id} expansion ${card.expansion} num ${card.cardNumber}")
+            log.debug("Loaded cards from deck.")
         }
-        return cardRepo.save(card)
+
+        if (cardsToSave.isNotEmpty()) {
+
+            log.info("Found ${cardsToSave.size} new cards to save!")
+
+            val newExtraCardInfos = cardsToSave.values
+                    .filter { it.extraCardInfo == null }
+                    .groupBy { it.cardTitle }
+                    .map {
+                        log.info("Saving extra info for ${it.key}")
+                        it.key to extraCardInfoService.saveNewExtraCardInfo(it.value.first())
+                    }
+                    .toMap()
+
+            cardsToSave.forEach { _, card ->
+                log.info("Saving card ${card.cardTitle}")
+                if (card.extraCardInfo == null) {
+                    val newExtraInfo = newExtraCardInfos[card.cardTitle]
+                    cardRepo.save(card.copy(extraCardInfo = newExtraInfo))
+                } else {
+                    cardRepo.save(card)
+                }
+            }
+
+            loadExtraInfo()
+            reloadCachedCards()
+            versionService.revVersion()
+        }
+
+        return cardsToSave.isNotEmpty()
     }
 
     fun reloadCachedCards() {

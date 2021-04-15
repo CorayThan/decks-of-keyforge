@@ -1,5 +1,6 @@
 package coraythan.keyswap.cards
 
+import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValueRepo
 import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory
@@ -22,6 +23,24 @@ class ExtraCardInfoService(
 
         val info = extraCardInfoRepo.findByIdOrNull(id) ?: throw IllegalStateException("No extra card info for id $id")
         return findNextOrCurrentInfo(info)
+    }
+
+    fun saveNewExtraCardInfo(card: Card): ExtraCardInfo {
+
+        if (extraCardInfoRepo.existsByCardName(card.cardTitle)) error("There's already extra info for ${card.cardTitle}")
+
+        val currentVersion = publishedAercVersion
+
+        val info = ExtraCardInfo(
+                cardName = card.cardTitle,
+                expectedAmber = card.amber.toDouble(),
+                effectivePower = card.power + card.armor,
+                version = currentVersion,
+                active = true,
+                published = now(),
+        )
+
+        return extraCardInfoRepo.save(info)
     }
 
     fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): UUID {

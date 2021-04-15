@@ -16,6 +16,7 @@ export enum ExpansionNumber {
     WC = 452,
     ANOM = 453,
     MM = 479,
+    DT = 496,
 }
 
 export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
@@ -30,6 +31,14 @@ export const activeExpansions = [
     Expansion.AGE_OF_ASCENSION,
     Expansion.WORLDS_COLLIDE,
     Expansion.MASS_MUTATION,
+    Expansion.DARK_TIDINGS,
+]
+
+export const activeSasExpansions = [
+    Expansion.CALL_OF_THE_ARCHONS,
+    Expansion.AGE_OF_ASCENSION,
+    Expansion.WORLDS_COLLIDE,
+    Expansion.MASS_MUTATION,
 ]
 
 export const expansionInfos: ExpansionInfo[] = [
@@ -38,6 +47,7 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.WC, name: "Worlds Collide", abbreviation: "WC", backendEnum: Expansion.WORLDS_COLLIDE},
     {expansionNumber: ExpansionNumber.ANOM, name: "Anomalies", abbreviation: "ANOM", backendEnum: Expansion.ANOMALY_EXPANSION},
     {expansionNumber: ExpansionNumber.MM, name: "Mass Mutation", abbreviation: "MM", backendEnum: Expansion.MASS_MUTATION},
+    {expansionNumber: ExpansionNumber.DT, name: "Dark Tidings", abbreviation: "DT", backendEnum: Expansion.DARK_TIDINGS},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

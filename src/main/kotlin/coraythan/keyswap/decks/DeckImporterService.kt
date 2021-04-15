@@ -60,6 +60,8 @@ class DeckImporterService(
 
     private val query = JPAQueryFactory(entityManager)
 
+    private var cardImportMode = true
+
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
@@ -74,12 +76,12 @@ class DeckImporterService(
         val importDecksDuration = measureTimeMillis {
             var currentPage = deckPageService.findCurrentPage()
 
-            val maxPageRequests = 100
+            val maxPageRequests = 20
             while (pagesRequested < maxPageRequests) {
                 if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
-                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true)
+                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true, withCards = cardImportMode)
                     if (decks == null) {
                         deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
@@ -92,20 +94,36 @@ class DeckImporterService(
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
                         break
                     } else {
-                        cardService.importNewCards(decks.data)
-                        val decksToSaveCount = decks.data.count()
-                        decksAdded += saveDecks(decks.data, currentPage)
-                        currentPage++
-                        pagesRequested++
 
-                        if (decksToSaveCount < keyforgeApiDeckPageSize) {
-                            deckImportingUpToDate = true
-                            log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
+                        if (cardImportMode) {
+                            // maintain import mode if there were cards imported
+                            cardImportMode = cardService.importNewCards(decks._linked.cards ?: error("No cards in linked cards with card import mode on"))
+                            if (!cardImportMode) log.info("Turned off card import mode, no new cards in most recent batch of decks.")
+                        }
+
+                        val decksToSaveCount = decks.data.count()
+
+                        val results = saveDecks(decks.data, currentPage)
+
+                        if (results.second) {
+                            // there was a new card, switch modes
+                            log.info("A new card was found! Switching deck import to card import mode")
+                            cardImportMode = true
                             break
+                        } else {
+                            decksAdded += results.first
+                            currentPage++
+                            pagesRequested++
+
+                            if (decksToSaveCount < keyforgeApiDeckPageSize) {
+                                deckImportingUpToDate = true
+                                log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
+                                break
+                            }
                         }
                     }
                 } catch (e: HttpClientErrorException.TooManyRequests) {
-                    log.warn("KeyForge API says we made too many requests. Sad day.")
+                    log.warn("KeyForge API says we made too many requests. Sad day.", e)
                     break
                 }
             }
@@ -195,7 +213,7 @@ class DeckImporterService(
             val deck = keyforgeApi.findDeckToImport(deckId)
             if (deck != null) {
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
-                cardService.importNewCards(deckList)
+                cardService.importNewCards(deck._linked.cards ?: error("No linked cards for importing deck"))
                 return try {
                     saveDecks(deckList)
                     deckRepo.findByKeyforgeId(deckId)?.id
@@ -232,24 +250,34 @@ class DeckImporterService(
 
     /**
      * Only set current page if this is auto importing new decks
+     *
+     * returns Pair(count, newCard)
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    fun saveDecks(deck: List<KeyforgeDeck>, currentPage: Int? = null): Int {
+    fun saveDecks(deck: List<KeyForgeDeck>, currentPage: Int? = null): Pair<Int, Boolean> {
         var savedCount = 0
-//        val cardsById: Map<String, Card> = cardsForDecks.associateBy { it.id }
         deck
                 .forEach { keyforgeDeck ->
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
-                        val cardsList = keyforgeDeck.cards?.map {
-                            val dbCard = cardRepo.findByIdOrNull(it) ?: error("No card in repo for $it")
-                            val cardServiceCard = cardService.findByCardName(dbCard.cardTitle) ?: error("No card in card service for ${dbCard.cardTitle}")
-                            dbCard.extraCardInfo = cardServiceCard.extraCardInfo
-                            dbCard
-                        } ?: listOf()
+                        val deckCards = keyforgeDeck.cards ?: keyforgeDeck._links?.cards ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
+                        val cardsList = deckCards
+                                .filter {
+                                    // Skip stupid tide card
+                                    it != "37377d67-2916-4d45-b193-bea6ecd853e3"
+                                }
+                                .map {
+                                    val dbCard = cardRepo.findByIdOrNull(it) ?: return Pair(0, true)
+                                    val cardServiceCard = cardService.findByCardName(dbCard.cardTitle)
+                                            ?: error("No card in card service for ${dbCard.cardTitle}")
+                                    dbCard.extraCardInfo = cardServiceCard.extraCardInfo
+                                    dbCard
+                                }
+
+                        if (cardsList.size != 36) error("Deck ${keyforgeDeck.id} must have 36 cards.")
+
                         val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                                 ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
                         check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
-                        check(cardsList.isNotEmpty()) { "Deck ${keyforgeDeck.id} doesn't have cards!" }
                         val deckToSave = keyforgeDeck.toDeck()
 
                         try {
@@ -271,7 +299,7 @@ class DeckImporterService(
             log.info("Updating next deck page to $nextPage")
             deckPageService.setCurrentPage(nextPage)
         }
-        return savedCount
+        return Pair(savedCount, false)
     }
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {
@@ -295,7 +323,7 @@ class DeckImporterService(
                         cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
                 )
 
-        val ratedDeck =  rateDeck(saveable).first
+        val ratedDeck = rateDeck(saveable).first
 
         check(!ratedDeck.cardIds.isBlank()) { "Can't save a deck without its card ids: $deck" }
 

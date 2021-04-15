@@ -12,6 +12,7 @@ enum class House(val masterVaultValue: String) {
     Saurian("Saurian"),
     Shadows("Shadows"),
     StarAlliance("Star Alliance"),
+    Unfathomable("Unfathomable"),
     Untamed("Untamed");
 
     companion object {

@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.6"
+export const latestVersion = "6.7"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,18 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.7"}
+                    date={"4/14/2021"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Register Dark Tidings!",
+                            note: "I've added Dark Tidings to DoK as a registerable KeyForge set. SAS and AERC scores are being worked on, and I will " +
+                                "release version one of those scores as soon as I feel they provide meaningful value."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.6"}
                     date={"4/1ish/2021"}

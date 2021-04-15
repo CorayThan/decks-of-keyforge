@@ -34,6 +34,8 @@ const wc = new DeckFilters()
 wc.expansions = [ExpansionNumber.WC]
 const mm = new DeckFilters()
 mm.expansions = [ExpansionNumber.MM]
+const dt = new DeckFilters()
+dt.expansions = [ExpansionNumber.DT]
 const topChains = new DeckFilters()
 topChains.sort = DeckSorts.chains
 const topPowerLevel = new DeckFilters()
@@ -81,10 +83,6 @@ export class LandingPage extends React.Component<{}> {
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <DeckSearchLink
-                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={true}/>} filters={mm}
-                                    style={{marginBottom: spacing(2)}}
-                                />
-                                <DeckSearchLink
                                     name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={true}/>} filters={cota}
                                     style={{marginBottom: spacing(2)}}
                                 />
@@ -94,6 +92,14 @@ export class LandingPage extends React.Component<{}> {
                                 />
                                 <DeckSearchLink
                                     name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={true}/>} filters={wc}
+                                    style={{marginBottom: spacing(2)}}
+                                />
+                                <DeckSearchLink
+                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={true}/>} filters={mm}
+                                    style={{marginBottom: spacing(2)}}
+                                />
+                                <DeckSearchLink
+                                    name={<ExpansionIcon expansion={Expansion.DARK_TIDINGS} white={true}/>} filters={dt}
                                     style={{marginBottom: spacing(2)}}
                                 />
                             </div>
@@ -136,10 +142,6 @@ export class LandingPage extends React.Component<{}> {
                                     style={{marginBottom: spacing(2)}}
                                 />
                                 <LandingPageLink
-                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={false}/>} color={"secondary"}
-                                    to={Routes.mmCards} style={{marginBottom: spacing(2)}}
-                                />
-                                <LandingPageLink
                                     name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
                                     to={Routes.cotaCards} style={{marginBottom: spacing(2)}}
                                 />
@@ -150,6 +152,14 @@ export class LandingPage extends React.Component<{}> {
                                 <LandingPageLink
                                     name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={false}/>} color={"secondary"}
                                     to={Routes.wcCards} style={{marginBottom: spacing(2)}}
+                                />
+                                <LandingPageLink
+                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={false}/>} color={"secondary"}
+                                    to={Routes.mmCards} style={{marginBottom: spacing(2)}}
+                                />
+                                <LandingPageLink
+                                    name={<ExpansionIcon expansion={Expansion.DARK_TIDINGS} white={false}/>} color={"secondary"}
+                                    to={Routes.dtCards} style={{marginBottom: spacing(2)}}
                                 />
                             </div>
                             <Divider/>
