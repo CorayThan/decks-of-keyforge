@@ -18,6 +18,7 @@ import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckOrCardSearchSuggest } from "../decks/search/DeckOrCardSearchSuggest"
+import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu, LinkMenuStore } from "../generic/LinkMenu"
@@ -49,10 +50,9 @@ interface KeyTopbarProps extends RouteComponentProps<{}> {
 const myDeckLinks = () => {
     const links = [
         {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-        {to: Routes.usersCota(), text: "My COTA"},
-        {to: Routes.usersAoa(), text: "My AOA"},
-        {to: Routes.usersWc(), text: "My WC"},
-        {to: Routes.usersMm(), text: "My MM"},
+        ...activeExpansions.map(expansion => ({
+            to: Routes.myDecksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber), text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`, mobileActive: false
+        })),
         {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
         {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
         {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
@@ -363,10 +363,9 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.cards, text: "Cards", mobileActive: true},
-                {to: Routes.cotaCards, text: "CotA Cards", mobileActive: false},
-                {to: Routes.aoaCards, text: "AoA Cards", mobileActive: false},
-                {to: Routes.wcCards, text: "WC Cards", mobileActive: false},
-                {to: Routes.mmCards, text: "MM Cards", mobileActive: false},
+                ...activeExpansions.map(expansion => ({
+                    to: Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber), text: `${expansionInfoMap.get(expansion)!.abbreviation} Cards`, mobileActive: false
+                }))
             ]}
             linkMenuStore={cardsMenuStore}
         />

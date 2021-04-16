@@ -34,7 +34,6 @@ import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { EventValue } from "../generic/EventValue"
-import { UnstyledLink } from "../generic/UnstyledLink"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -307,23 +306,18 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             {prevId != null && (
-                                <UnstyledLink
-                                    to={Routes.editExtraCardInfo(prevId)}
-                                    style={{marginLeft: spacing(2)}}
-                                >
-                                    <IconButton>
+                                    <IconButton
+                                        href={Routes.editExtraCardInfo(prevId)}
+                                    >
                                         <ChevronLeft/>
                                     </IconButton>
-                                </UnstyledLink>
                             )}
                             {nextId != null && (
-                                <UnstyledLink
-                                    to={Routes.editExtraCardInfo(nextId)}
-                                    style={{marginLeft: spacing(2)}}>
-                                    <IconButton>
+                                    <IconButton
+                                        href={Routes.editExtraCardInfo(nextId)}
+                                    >
                                         <ChevronRight/>
                                     </IconButton>
-                                </UnstyledLink>
                             )}
                         </div>
                         <Grid

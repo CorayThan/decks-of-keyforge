@@ -78,6 +78,7 @@ enum class SynergyTrait {
     preventsRemoval,
     addsArmor,
     increasesCreaturePower,
+    addsPowerTokens,
 
     // Keywords
     elusive,
@@ -119,6 +120,9 @@ enum class SynergyTrait {
     revealsTopDeck,
     chains,
     forgesKeys,
+    revealsBottomDeck,
+    raisesTide,
+    exhausts,
 
 
     goodReap,

@@ -131,7 +131,7 @@ export class CardUtils {
         }
 
         const totalWinRate = card.winRate
-        if (totalWinRate != null && winRates.length !== 1) {
+        if (totalWinRate != null && winRates.length !== 1 && !isNaN(totalWinRate)) {
             winRates.unshift({
                 winRatePercent: round(totalWinRate * 100, 1),
                 wins: card.wins,

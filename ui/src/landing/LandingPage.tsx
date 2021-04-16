@@ -8,8 +8,7 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { ExpansionNumber } from "../expansions/Expansions"
-import { Expansion } from "../generated-src/Expansion"
+import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -26,16 +25,6 @@ import { uiStore } from "../ui/UiStore"
 import { DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
 
 const topSas = new DeckFilters()
-const cota = new DeckFilters()
-cota.expansions = [ExpansionNumber.COTA]
-const aoa = new DeckFilters()
-aoa.expansions = [ExpansionNumber.AOA]
-const wc = new DeckFilters()
-wc.expansions = [ExpansionNumber.WC]
-const mm = new DeckFilters()
-mm.expansions = [ExpansionNumber.MM]
-const dt = new DeckFilters()
-dt.expansions = [ExpansionNumber.DT]
 const topChains = new DeckFilters()
 topChains.sort = DeckSorts.chains
 const topPowerLevel = new DeckFilters()
@@ -82,26 +71,17 @@ export class LandingPage extends React.Component<{}> {
                                     filters={topSas}
                                     style={{marginBottom: spacing(2)}}
                                 />
-                                <DeckSearchLink
-                                    name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={true}/>} filters={cota}
-                                    style={{marginBottom: spacing(2)}}
-                                />
-                                <DeckSearchLink
-                                    name={<ExpansionIcon expansion={Expansion.AGE_OF_ASCENSION} white={true}/>} filters={aoa}
-                                    style={{marginBottom: spacing(2)}}
-                                />
-                                <DeckSearchLink
-                                    name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={true}/>} filters={wc}
-                                    style={{marginBottom: spacing(2)}}
-                                />
-                                <DeckSearchLink
-                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={true}/>} filters={mm}
-                                    style={{marginBottom: spacing(2)}}
-                                />
-                                <DeckSearchLink
-                                    name={<ExpansionIcon expansion={Expansion.DARK_TIDINGS} white={true}/>} filters={dt}
-                                    style={{marginBottom: spacing(2)}}
-                                />
+                                {activeExpansions.map(expansion => {
+                                    const expansionFilters = new DeckFilters()
+                                    expansionFilters.expansions = [expansionInfoMap.get(expansion)!.expansionNumber]
+                                    return (
+                                        <DeckSearchLink
+                                            key={expansion}
+                                            name={<ExpansionIcon expansion={expansion} white={true}/>}
+                                            filters={expansionFilters} style={{marginBottom: spacing(2)}}
+                                        />
+                                    )
+                                })}
                             </div>
                             <Divider/>
                             <ListSubheader>
@@ -126,11 +106,12 @@ export class LandingPage extends React.Component<{}> {
                             <ListSubheader>
                                 Decks for Sale
                             </ListSubheader>
-                            <DeckSearchLink name={"For Sale"} filters={forSale}/>
-                            {/*<DeckSearchLink name={"Recently Listed"} filters={saleOrTradeRecent} style={{marginTop: spacing(2)}}/>*/}
-                            <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
+                            <Box display={"flex"} flexWrap={"wrap"}>
+                                <DeckSearchLink name={"For Sale"} filters={forSale} style={{marginBottom: spacing(2)}}/>
+                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginBottom: spacing(2)}}/>
+                            </Box>
 
-                            <Divider style={{marginTop: spacing(2)}}/>
+                            <Divider/>
                             <ListSubheader>
                                 Cards
                             </ListSubheader>
@@ -141,33 +122,24 @@ export class LandingPage extends React.Component<{}> {
                                     color={"secondary"}
                                     style={{marginBottom: spacing(2)}}
                                 />
-                                <LandingPageLink
-                                    name={<ExpansionIcon expansion={Expansion.CALL_OF_THE_ARCHONS} white={false}/>} color={"secondary"}
-                                    to={Routes.cotaCards} style={{marginBottom: spacing(2)}}
-                                />
-                                <LandingPageLink
-                                    name={<ExpansionIcon expansion={Expansion.AGE_OF_ASCENSION} white={false}/>} color={"secondary"}
-                                    to={Routes.aoaCards} style={{marginBottom: spacing(2)}}
-                                />
-                                <LandingPageLink
-                                    name={<ExpansionIcon expansion={Expansion.WORLDS_COLLIDE} white={false}/>} color={"secondary"}
-                                    to={Routes.wcCards} style={{marginBottom: spacing(2)}}
-                                />
-                                <LandingPageLink
-                                    name={<ExpansionIcon expansion={Expansion.MASS_MUTATION} white={false}/>} color={"secondary"}
-                                    to={Routes.mmCards} style={{marginBottom: spacing(2)}}
-                                />
-                                <LandingPageLink
-                                    name={<ExpansionIcon expansion={Expansion.DARK_TIDINGS} white={false}/>} color={"secondary"}
-                                    to={Routes.dtCards} style={{marginBottom: spacing(2)}}
-                                />
+                                {activeExpansions.map(expansion => {
+                                    return (
+                                        <LandingPageLink
+                                            key={expansion}
+                                            name={<ExpansionIcon expansion={expansion} white={false}/>} color={"secondary"}
+                                            to={Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber)} style={{marginBottom: spacing(2)}}
+                                        />
+                                    )
+                                })}
                             </div>
                             <Divider/>
                             <ListSubheader>
                                 Fun Searches
                             </ListSubheader>
-                            <DeckSearchLink name={"Reversal"} filters={worstSas}/>
-                            <DeckSearchLink name={"Funny"} filters={topFunny} style={{marginTop: spacing(2)}}/>
+                            <Box display={"flex"} flexWrap={"wrap"}>
+                                <DeckSearchLink name={"Reversal"} filters={worstSas} style={{marginBottom: spacing(2)}}/>
+                                <DeckSearchLink name={"Funny"} filters={topFunny} style={{marginBottom: spacing(2)}}/>
+                            </Box>
                         </List>
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>

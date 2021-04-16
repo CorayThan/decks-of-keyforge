@@ -23,6 +23,7 @@ import { prepareForSaleQueryForQueryString } from "../decks/salenotifications/Fo
 import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
 import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
+import { ExpansionNumber } from "../expansions/Expansions"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
 import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
 import { DokIcon } from "../generic/icons/DokIcon"
@@ -60,11 +61,6 @@ class Routes {
     static messages = "/messages"
     static adminPanel = "/admin-panel"
     static cards = "/cards"
-    static cotaCards = "/cards?expansion=CALL_OF_THE_ARCHONS"
-    static aoaCards = "/cards?expansion=AGE_OF_ASCENSION"
-    static wcCards = "/cards?expansion=WORLDS_COLLIDE"
-    static mmCards = "/cards?expansion=MASS_MUTATION"
-    static dtCards = "/cards?expansion=DARK_TIDINGS"
     static extraCardInfo = "/extra-card-infos"
     static about = "/about"
     static decks = "/decks"
@@ -96,10 +92,6 @@ class Routes {
     static teamDecks = () => `/decks?teamDecks=true`
     static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&forSale=false`
     static usersFavorites = () => `/decks?myFavorites=true`
-    static usersCota = () => `/decks?owner=${userStore.username}&expansions=341`
-    static usersAoa = () => `/decks?owner=${userStore.username}&expansions=435`
-    static usersWc = () => `/decks?owner=${userStore.username}&expansions=452`
-    static usersMm = () => `/decks?owner=${userStore.username}&expansions=479`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
     static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
     static compareDecksWithIds = (ids: string[]) => `${Routes.compareDecks}?${ids.map(id => `decks=${id}`).join("&")}`
@@ -152,6 +144,18 @@ class Routes {
     static decksForSale = () => {
         const filters = new DeckFilters()
         filters.forSale = true
+        return Routes.deckSearch(filters)
+    }
+
+    static cardsForExpansion = (expansion: ExpansionNumber) => {
+        const filters = new CardFilters()
+        filters.expansions = [expansion]
+        return Routes.cardSearch(filters)
+    }
+
+    static myDecksForExpansion = (expansion: ExpansionNumber) => {
+        const filters = new DeckFilters()
+        filters.expansions = [expansion]
         return Routes.deckSearch(filters)
     }
 
