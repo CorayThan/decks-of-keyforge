@@ -60,8 +60,6 @@ class DeckImporterService(
 
     private val query = JPAQueryFactory(entityManager)
 
-    private var cardImportMode = true
-
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     // @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
@@ -81,7 +79,7 @@ class DeckImporterService(
                 if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
-                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true, withCards = cardImportMode)
+                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true, withCards = false)
                     if (decks == null) {
                         deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
@@ -95,31 +93,18 @@ class DeckImporterService(
                         break
                     } else {
 
-                        if (cardImportMode) {
-                            // maintain import mode if there were cards imported
-                            cardImportMode = cardService.importNewCards(decks._linked.cards ?: error("No cards in linked cards with card import mode on"))
-                            if (!cardImportMode) log.info("Turned off card import mode, no new cards in most recent batch of decks.")
-                        }
-
                         val decksToSaveCount = decks.data.count()
 
                         val results = saveDecks(decks.data, currentPage)
 
-                        if (results.second) {
-                            // there was a new card, switch modes
-                            log.info("A new card was found! Switching deck import to card import mode")
-                            cardImportMode = true
-                            break
-                        } else {
-                            decksAdded += results.first
-                            currentPage++
-                            pagesRequested++
+                        decksAdded += results
+                        currentPage++
+                        pagesRequested++
 
-                            if (decksToSaveCount < keyforgeApiDeckPageSize) {
-                                deckImportingUpToDate = true
-                                log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
-                                break
-                            }
+                        if (decksToSaveCount < keyforgeApiDeckPageSize) {
+                            deckImportingUpToDate = true
+                            log.info("Stopped getting decks, decks added $decksToSaveCount < $keyforgeApiDeckPageSize")
+                            break
                         }
                     }
                 } catch (e: HttpClientErrorException.TooManyRequests) {
@@ -254,19 +239,34 @@ class DeckImporterService(
      * returns Pair(count, newCard)
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    fun saveDecks(deck: List<KeyForgeDeck>, currentPage: Int? = null): Pair<Int, Boolean> {
+    fun saveDecks(deck: List<KeyForgeDeck>, currentPage: Int? = null): Int {
         var savedCount = 0
         deck
                 .forEach { keyforgeDeck ->
                     if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
                         val deckCards = keyforgeDeck.cards ?: keyforgeDeck._links?.cards ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
+
                         val cardsList = deckCards
                                 .filter {
                                     // Skip stupid tide card
                                     it != "37377d67-2916-4d45-b193-bea6ecd853e3"
                                 }
                                 .map {
-                                    val dbCard = cardRepo.findByIdOrNull(it) ?: return Pair(0, true)
+                                    var dbCard = cardRepo.findByIdOrNull(it)
+                                    if (dbCard == null) {
+
+                                        try {
+                                            val deckWithCards = keyforgeApi.findDeck(keyforgeDeck.id, true)
+                                                    ?: error("No deck for ${keyforgeDeck.id} in KeyForge API")
+                                            cardService.importNewCards(deckWithCards._linked.cards!!)
+
+                                            dbCard = cardRepo.findByIdOrNull(it) ?: error("No card for $it even after finding and saving deck cards")
+                                        } catch (e: HttpClientErrorException.TooManyRequests) {
+                                            log.warn("KeyForge API says we made too many requests when getting single deck's cards to import.", e)
+                                            return savedCount
+                                        }
+
+                                    }
                                     val cardServiceCard = cardService.findByCardName(dbCard.cardTitle)
                                             ?: error("No card in card service for ${dbCard.cardTitle}")
                                     dbCard.extraCardInfo = cardServiceCard.extraCardInfo
@@ -299,7 +299,7 @@ class DeckImporterService(
             log.info("Updating next deck page to $nextPage")
             deckPageService.setCurrentPage(nextPage)
         }
-        return Pair(savedCount, false)
+        return savedCount
     }
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {

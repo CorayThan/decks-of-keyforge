@@ -57,7 +57,8 @@ class PrivateMessageService(
 
         when (filters.category) {
             MailCategory.INBOX -> {
-                predicate.and(messageQ.recipientHidden.isFalse)
+                predicate.andNot(messageQ.recipientHidden.isTrue.and(messageQ.toId.eq(user.id)))
+                predicate.andNot(messageQ.senderHidden.isTrue.and(messageQ.fromId.eq(user.id)))
                 predicate.andAnyOf(
                         BooleanBuilder().and(messageQ.toId.eq(user.id)),
                         messageQ.replies.any().toId.eq(user.id)

@@ -91,7 +91,6 @@ class Routes {
     static analyzeUsersDecks = () => `/analyze-collection?owner=${userStore.username}`
     static teamDecks = () => `/decks?teamDecks=true`
     static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&forSale=false`
-    static usersFavorites = () => `/decks?myFavorites=true`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
     static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
     static compareDecksWithIds = (ids: string[]) => `${Routes.compareDecks}?${ids.map(id => `decks=${id}`).join("&")}`
@@ -153,9 +152,12 @@ class Routes {
         return Routes.cardSearch(filters)
     }
 
-    static myDecksForExpansion = (expansion: ExpansionNumber) => {
+    static decksForExpansion = (expansion: ExpansionNumber, mine?: boolean) => {
         const filters = new DeckFilters()
         filters.expansions = [expansion]
+        if (mine && userStore.username != null) {
+            filters.owner = userStore.username
+        }
         return Routes.deckSearch(filters)
     }
 

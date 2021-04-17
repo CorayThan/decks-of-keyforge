@@ -51,7 +51,7 @@ const myDeckLinks = () => {
     const links = [
         {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
         ...activeExpansions.map(expansion => ({
-            to: Routes.myDecksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber), text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`, mobileActive: false
+            to: Routes.decksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber, true), text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`, mobileActive: false
         })),
         {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
         {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},

@@ -64,7 +64,7 @@ data class PrivateMessage(
                 ),
                 hidden = if (toId == user.id) recipientHidden else senderHidden,
                 replies = replyDtos,
-                fullyViewed = (viewed != null || toId != user.id) && replies.all { it.viewed != null || toId != user.id }
+                fullyViewed = replies.plus(this).all { it.fromId == user.id || it.viewed != null }
         )
     }
 }
