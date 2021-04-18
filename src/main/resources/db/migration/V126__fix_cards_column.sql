@@ -1,0 +1,2 @@
+ALTER TABLE deck
+    ADD COLUMN cards_verified BOOLEAN DEFAULT TRUE;

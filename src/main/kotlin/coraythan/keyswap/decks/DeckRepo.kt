@@ -22,4 +22,6 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
             nativeQuery = true
     )
     fun estimateRowCount(): Long
+
+    fun findFirst100ByCardsVerifiedIsTrueAndExpansion(expansion: Int): List<Deck>
 }

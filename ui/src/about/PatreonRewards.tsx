@@ -64,6 +64,8 @@ export class PatreonRewards extends React.Component {
                             <Typography>Go to your <Link href={MyDokSubPaths.profile}>profile</Link> to toggle on dark mode.</Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Discord Roles – $3+</Typography>,
                             <Typography>Link your Discord account on your <Link href={"https://www.patreon.com/settings/apps"}>Patreon Profile</Link>.</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Theoretical Decks – $3+</Typography>,
+                            <Typography>Click the button on the "Import Deck" menu.</Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck for sale notifications – $6+</Typography>,
                             <Typography>
                                 Search <Link href={Routes.decksForSale()}>decks for sale</Link> and you will see a "Notify" button appear next to

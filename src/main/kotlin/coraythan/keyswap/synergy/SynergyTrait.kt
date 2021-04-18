@@ -122,6 +122,7 @@ enum class SynergyTrait {
     forgesKeys,
     revealsBottomDeck,
     raisesTide,
+    lowersTide,
     exhausts,
 
 
