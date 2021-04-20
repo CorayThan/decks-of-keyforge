@@ -6,8 +6,8 @@ import * as React from "react"
 import { Fragment } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { roundToInt, roundToTens, roundToThousands } from "../config/Utils"
-import { activeSasExpansions } from "../expansions/Expansions"
+import { log, roundToInt, roundToTens, roundToThousands } from "../config/Utils"
+import { displaySas } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { SasTip } from "../mui-restyled/SasTip"
@@ -63,7 +63,7 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     const metaScore = roundToInt(DeckUtils.calculateMetaScore(deck))
 
-    if (expansion != null && !activeSasExpansions.includes(expansion)) {
+    if (expansion != null && !displaySas(expansion)) {
         return (
             <Typography variant={"h5"} style={{color: "#FFFFFF"}}>Score Pending</Typography>
         )
@@ -138,24 +138,23 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                     {sasInfo}
                 </div>
             </div>
-            {sasPercentile && (
-                <div style={{marginLeft: spacing(2), display: "flex", alignItems: "flex-end"}}>
-                    <SaStars
-                        sasPercentile={sasPercentile}
-                        small={small}
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    />
-                </div>
-            )}
+            <div style={{marginLeft: spacing(2), display: "flex", alignItems: "flex-end"}}>
+                <SaStars
+                    sasPercentile={sasPercentile ?? 0}
+                    small={small}
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                    }}
+                />
+            </div>
         </Box>
     )
 }
 
 export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean, halfAtEnd?: boolean, noPercent?: boolean }) => {
+    log.info("Display sas stars1")
     const {sasPercentile, small, style, gray, halfAtEnd, noPercent} = props
     let includeHalf = false
     let type = StarType.NORMAL
@@ -256,6 +255,9 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     tooltip = `${roundToThousands(sasPercentile)}%. ${tooltip} according to SAS.`
 
     const starStyle = {marginTop: spacing(0.5)}
+
+    log.info("Display sas stars")
+
     return (
         <Tooltip title={tooltip}>
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>

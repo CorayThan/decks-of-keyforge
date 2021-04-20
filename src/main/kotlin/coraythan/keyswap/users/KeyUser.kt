@@ -40,6 +40,7 @@ data class KeyUser(
         val publicContactInfo: String? = null,
         val allowUsersToSeeDeckOwnership: Boolean,
         val allowsMessages: Boolean = true,
+        val viewFutureSas: Boolean = false,
 
         val currencySymbol: String,
 
@@ -141,6 +142,7 @@ data class KeyUser(
             lastVersionSeen = lastVersionSeen,
             searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult() else null,
             allowsMessages = allowsMessages,
+            viewFutureSas = viewFutureSas
     )
 
     fun toDto() = KeyUserDto(
@@ -171,7 +173,8 @@ data class KeyUser(
             teamId = teamId,
             autoRenewListings = autoRenewListings,
             contributedOrManual = contributedOrManual(),
-            agreedToTerms = agreedToTermsOfService
+            agreedToTerms = agreedToTermsOfService,
+            viewFutureSas = viewFutureSas,
     )
 
     fun generateSearchResult(): UserSearchResult {
@@ -238,6 +241,8 @@ data class KeyUser(
                 || lifetimeSupportCents > 99
     }
 
+    fun displayFutureSas() = (this.type == UserType.ADMIN || this.type == UserType.CONTENT_CREATOR) && this.viewFutureSas
+
     override fun equals(other: Any?): Boolean {
         if (other is KeyUser) {
             return id == other.id
@@ -269,6 +274,7 @@ data class KeyUserDto(
         val allowsTrades: Boolean,
         val allowsMessages: Boolean,
         val allowUsersToSeeDeckOwnership: Boolean,
+        val viewFutureSas: Boolean,
 
         val currencySymbol: String = "$",
         val country: Country? = null,
@@ -295,5 +301,5 @@ data class KeyUserDto(
 
         val autoRenewListings: Boolean = false,
 
-        val contributedOrManual: Boolean = false
+        val contributedOrManual: Boolean = false,
 )

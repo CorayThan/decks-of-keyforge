@@ -90,6 +90,8 @@ class DeckSearchService(
 
     fun filterDecks(filters: DeckFilters, timezoneOffsetMinutes: Int): DecksPage {
 
+//        log.info("Filter decks for deck search")
+
         val userHolder = UserHolder(null, currentUserService, userService)
         val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
         val deckQ = QDeck.deck
@@ -125,6 +127,8 @@ class DeckSearchService(
             (sortProperty as ComparableExpressionBase<*>).asc()
         }
 
+//        log.info("Filter decks for deck search 2")
+
         val deckResults = query.selectFrom(deckQ)
                 .where(predicate)
                 .limit(filters.pageSize)
@@ -138,8 +142,18 @@ class DeckSearchService(
                 }
                 .fetch()
 
+//        log.info("Filter decks for deck search 3")
+
         val decks = deckResults.mapNotNull {
-            val cards = cardService.cardsForDeck(it)
+            val cards = if (userHolder.user?.displayFutureSas() == true) {
+                // cardService.cardsForDeck(it)
+                cardService.futureCardsForDeck(it)
+            } else {
+                cardService.cardsForDeck(it)
+            }
+
+//            log.info("Convert ${it.keyforgeId} ${it.name} to search result")
+
             var searchResult = it.toDeckSearchResult(
                     cardService.deckToHouseAndCards(it),
                     cards,
@@ -489,7 +503,11 @@ class DeckSearchService(
 
     fun deckToDeckWithSynergies(deck: Deck): DeckWithSynergyInfo {
         val stats = statsService.findCurrentStats()
-        val cards = cardService.cardsForDeck(deck)
+        val cards = if (currentUserService.loggedInUser()?.displayFutureSas() == true) {
+            cardService.futureCardsForDeck(deck)
+        } else {
+            cardService.cardsForDeck(deck)
+        }
         return DeckWithSynergyInfo(
                 deck = deck.toDeckSearchResult(
                         cardService.deckToHouseAndCards(deck),

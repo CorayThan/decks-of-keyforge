@@ -1,6 +1,7 @@
 import Typography from "@material-ui/core/Typography/Typography"
 import * as React from "react"
 import { Expansion } from "../generated-src/Expansion"
+import { userStore } from "../user/UserStore"
 import { ExpansionIcon } from "./ExpansionIcon"
 
 export interface ExpansionInfo {
@@ -40,6 +41,10 @@ export const activeSasExpansions = [
     Expansion.WORLDS_COLLIDE,
     Expansion.MASS_MUTATION,
 ]
+
+export const displaySas = (expansion: Expansion) => {
+    return userStore.contentCreator || activeSasExpansions.includes(expansion)
+}
 
 export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.COTA, name: "Call of the Archons", abbreviation: "COTA", backendEnum: Expansion.CALL_OF_THE_ARCHONS},

@@ -102,6 +102,7 @@ enum class SynergyTrait {
     drawsCards,
     increasesHandSize,
     playsCards,
+    playsFromOtherHouse,
     revealsHand,
     shufflesDiscard,
 

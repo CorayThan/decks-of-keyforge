@@ -20,6 +20,7 @@ data class UserProfile(
         val lastVersionSeen: String?,
         val searchResult: UserSearchResult?,
         val allowsMessages: Boolean,
+        val viewFutureSas: Boolean,
 )
 
 @GenerateTs
@@ -38,4 +39,5 @@ data class UserProfileUpdate(
         val shippingCost: String? = null,
         val autoRenewListings: Boolean,
         val allowsMessages: Boolean,
+        val viewFutureSas: Boolean,
 )

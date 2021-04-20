@@ -1,0 +1,2 @@
+ALTER TABLE key_user
+    ADD COLUMN view_future_sas BOOLEAN DEFAULT FALSE NOT NULL;

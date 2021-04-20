@@ -155,7 +155,8 @@ class KeyUserService(
                 tcoUsername = update.tcoUsername,
                 storeName = update.storeName,
                 shippingCost = update.shippingCost,
-                autoRenewListings = update.autoRenewListings
+                autoRenewListings = update.autoRenewListings,
+                viewFutureSas = update.viewFutureSas,
         ))
 
         if (userAllowsTrades != update.allowsTrades) {

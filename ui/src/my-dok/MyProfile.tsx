@@ -122,6 +122,9 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
     @observable
     autoRenewListings = false
 
+    @observable
+    viewFutureSas = false
+
     update?: UserProfileUpdate
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,7 +135,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         makeObservable(this)
         const {
             publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
-            sellerEmail, discord, tcoUsername, storeName, currencySymbol, allowsTrades, allowsMessages, autoRenewListings
+            sellerEmail, discord, tcoUsername, storeName, currencySymbol, allowsTrades, allowsMessages, autoRenewListings,
+            viewFutureSas
         } = props.profile
         this.email = email
         this.contactInfo = publicContactInfo ? publicContactInfo : ""
@@ -148,6 +152,7 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         this.storeName = storeName ? storeName : ""
         this.currencySymbol = currencySymbol
         this.autoRenewListings = autoRenewListings
+        this.viewFutureSas = viewFutureSas
         uiStore.setTopbarValues(`My DoK`, "My DoK", "")
 
         forSaleNotificationsStore.queries = undefined
@@ -229,7 +234,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
             allowUsersToSeeDeckOwnership: this.allowUsersToSeeDeckOwnership,
             country: this.country.length === 0 ? undefined : this.country as Country,
             preferredCountries: this.preferredCountries.length === 0 ? undefined : this.preferredCountries,
-            autoRenewListings: this.autoRenewListings
+            autoRenewListings: this.autoRenewListings,
+            viewFutureSas: this.viewFutureSas,
         }
 
         if (email == null) {
@@ -451,6 +457,18 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 }
                                                 label={"Autorenew Deck Sales (Patron only)"}
                                             />
+                                            {userStore.contentCreator && (
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch
+                                                            checked={this.viewFutureSas}
+                                                            onChange={() => this.viewFutureSas = !this.viewFutureSas}
+                                                            tabIndex={10}
+                                                        />
+                                                    }
+                                                    label={"View Future SAS"}
+                                                />
+                                            )}
                                         </Grid>
                                     </Grid>
                                 </Grid>

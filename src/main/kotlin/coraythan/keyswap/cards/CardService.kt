@@ -178,6 +178,19 @@ class CardService(
         return cards
     }
 
+
+    fun futureCardsForDeck(deck: Deck): List<Card> {
+        return cardsForDeck(deck)
+                .map {
+                    val futureInfo = nextExtraInfo[it.cardTitle.cleanCardName()]
+                    if (futureInfo == null) {
+                        it
+                    } else {
+                        it.copy(extraCardInfo = futureInfo)
+                    }
+                }
+    }
+
     fun filterCards(filters: CardFilters): Iterable<Card> {
         val cardQ = QCard.card
         val predicate = BooleanBuilder()

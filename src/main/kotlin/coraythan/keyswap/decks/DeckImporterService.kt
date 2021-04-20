@@ -64,7 +64,7 @@ class DeckImporterService(
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     fun cleanUpBadDTCards() {
 
-        log.info("Cleaning up DT decks")
+        log.info("Cleaning up DT decks ${deckRepo.countByCardsVerifiedIsTrueAndExpansion(496)} left")
 
         var cleanCount = 0
 
@@ -94,7 +94,7 @@ class DeckImporterService(
                         deckWithCards = keyforgeApi.findDeck(deck.keyforgeId, true) ?: error("No deck in keyforge API for ${deck.keyforgeId}")
 
                     } catch (e: HttpClientErrorException) {
-                        log.info("Got http client error finding keyforge deck in clean up bad DT cards. Done for now. Cleaned $cleanCount Bad mav count fixed $badMavCountCount checked count $checkedCount", e)
+                        log.info("Got http client error finding keyforge deck in clean up bad DT cards. Done for now. Cleaned $cleanCount Bad mav count fixed $badMavCountCount checked count $checkedCount " + e.message)
                         return
                     }
 
@@ -169,7 +169,7 @@ class DeckImporterService(
                         }
                     }
                 } catch (e: HttpClientErrorException.TooManyRequests) {
-                    log.warn("KeyForge API says we made too many requests. Sad day.", e)
+                    log.warn("KeyForge API says we made too many requests. Sad day." + e.message)
                     break
                 }
             }
