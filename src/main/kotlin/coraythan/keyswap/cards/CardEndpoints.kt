@@ -35,7 +35,7 @@ class CardEndpoints(
     fun findHistoricalInfo() = cardService.previousInfo()
 
     @GetMapping("/future")
-    fun findFutureInfo() = cardService.nextInfo()
+    fun findFutureInfo() = cardService.findFutureInfo()
 
     @GetMapping("/reload")
     fun reloadCards() {

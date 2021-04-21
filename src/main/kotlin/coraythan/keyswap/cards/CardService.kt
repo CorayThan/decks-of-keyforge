@@ -10,6 +10,7 @@ import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.TraitStrength
+import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -28,6 +29,7 @@ class CardService(
         private val extraCardInfoService: ExtraCardInfoService,
         private val cardWinsService: CardWinsService,
         private val versionService: CardsVersionService,
+        private val currentUserService: CurrentUserService,
         private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -121,6 +123,11 @@ class CardService(
             reloadCachedCards()
         }
         return previousInfoWithNames!!
+    }
+
+    fun findFutureInfo(): Map<String, Card> {
+        currentUserService.contentCreatorOrUnauthorized()
+        return nextInfo()
     }
 
     fun nextInfo(): Map<String, Card> {

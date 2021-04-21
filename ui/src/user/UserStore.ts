@@ -444,6 +444,11 @@ export class UserStore {
     }
 
     @computed
+    get displayFutureSas(): boolean {
+        return this.contentCreator && this.user?.viewFutureSas === true
+    }
+
+    @computed
     get isAdmin(): boolean {
         if (this.user) {
             return this.user.type === UserType.ADMIN

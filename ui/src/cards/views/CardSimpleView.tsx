@@ -77,6 +77,11 @@ export const CardView = observer((props: CardViewProps) => {
         previousCard = cardStore.findPrevExtraInfoForCard(card.cardTitle)
     }
 
+    let futureCard
+    if (userStore.displayFutureSas) {
+        futureCard = cardStore.findNextExtraInfoForCard(card.cardTitle)
+    }
+
     const sidebarProps = screenStore.screenSizeXs() ? {
         vertical: true,
         width: 300,
@@ -115,7 +120,10 @@ export const CardView = observer((props: CardViewProps) => {
                 </div>
                 <Typography color={"textPrimary"} variant={"body2"}>{cardText}</Typography>
                 <CardWinsDisplay card={card}/>
-                <AercAndSynergies card={card} combo={combo} title={previousCard && "Current AERC"}/>
+                {futureCard && (
+                    <AercAndSynergies card={futureCard} combo={combo} title={"Future AERC"}/>
+                )}
+                <AercAndSynergies card={card} combo={combo} title={(previousCard || futureCard) && "Current AERC"}/>
                 {previousCard && (
                     <AercAndSynergies card={previousCard} title={"Previous AERC"}/>
                 )}

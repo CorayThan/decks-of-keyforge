@@ -4,7 +4,7 @@ import { Country } from "../generated-src/Country"
 export const countryToLabel = (country: string) => startCase(country)
 
 export const euCountries: Country[] = [
-    Country.Australia,
+    Country.Austria,
     Country.Belgium,
     Country.Bulgaria,
     Country.Croatia,
