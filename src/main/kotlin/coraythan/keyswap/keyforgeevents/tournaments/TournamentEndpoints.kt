@@ -73,6 +73,9 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/change-pairing-strategy/{strategy}")
     fun changePairingStrategy(@PathVariable id: Long, @PathVariable strategy: PairingStrategy) = tournamentService.changingPairingStrategy(id, strategy)
 
+    @PostMapping("/secured/{id}/extend-by-minutes/{minutes}")
+    fun extendCurrentRound(@PathVariable id: Long, @PathVariable minutes: Int) = tournamentService.extendCurrentRound(id, minutes)
+
     @PostMapping("/secured/{id}/change-tournament-participant/{previousUsername}/{newUsername}")
     fun changeTournamentParticipant(@PathVariable id: Long, @PathVariable previousUsername: String, @PathVariable newUsername: String) =
             tournamentService.changeTournamentParticipant(id, previousUsername, newUsername)

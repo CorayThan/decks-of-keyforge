@@ -1,4 +1,17 @@
-import { Box, Button, Checkbox, FormControlLabel, Grid, Paper, Typography } from "@material-ui/core"
+import {
+    Box,
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    Grid,
+    Paper,
+    TextField,
+    Typography
+} from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
@@ -48,7 +61,8 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
 
     const {
         name, organizerUsernames, rankings, rounds, tourneyId, joined, pairingStrategy, roundEndsAt,
-        privateTournament, stage, tournamentDecks, registrationClosed, deckChoicesLocked, event
+        privateTournament, stage, tournamentDecks, registrationClosed, deckChoicesLocked, event,
+        timeExtendedMinutes
     } = info
 
     useEffect(() => {
@@ -169,7 +183,13 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                 containsDecks={tournamentDecks.length > 0}
                                 username={username}
                             />
-                            <RoundTimer endTime={roundEndsAt} duration={event.minutesPerRound}/>
+                            <RoundTimer
+                                tourneyId={tourneyId}
+                                endTime={roundEndsAt}
+                                duration={event.minutesPerRound}
+                                timeExtendedMinutes={timeExtendedMinutes}
+                                organizer={isOrganizer}
+                            />
                         </>
                     )}
 
@@ -250,8 +270,8 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     )
 })
 
-const RoundTimer = (props: { duration?: number, endTime?: string }) => {
-    const {duration, endTime} = props
+const RoundTimer = (props: { tourneyId: number, duration?: number, endTime?: string, timeExtendedMinutes?: number, organizer?: boolean }) => {
+    const {tourneyId, duration, endTime, timeExtendedMinutes, organizer} = props
     if (endTime == null || duration == null) {
         return null
     }
@@ -276,9 +296,49 @@ const RoundTimer = (props: { duration?: number, endTime?: string }) => {
                     <Box flexGrow={1}/>
                     <Typography variant={"subtitle2"}>{duration} min per round</Typography>
                     <Typography variant={"subtitle2"}>Started at {TimeUtils.countdownStartReadable(endTime, duration)}</Typography>
+                    {timeExtendedMinutes != null && timeExtendedMinutes !== 0 && (
+                        <Typography variant={"subtitle2"}>Time extended by  {timeExtendedMinutes} min</Typography>
+                    )}
                     <Typography variant={"h2"} style={{fontFamily: TextConfig.MONOTYPE, fontWeight: 500}}>{timer}</Typography>
+                    {organizer && (<ExtendTimeButton tourneyId={tourneyId}/>)}
                 </Box>
             </Paper>
         </Grid>
+    )
+}
+
+export const ExtendTimeButton = (props: {tourneyId: number}) => {
+
+    const [open, setOpen] = useState(false)
+    const [minutes, setMinutes] = useState(0)
+
+    return (
+        <>
+            <Button variant={"outlined"} onClick={() => setOpen(true)}>Extend Time</Button>
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Extend Time</DialogTitle>
+
+                <DialogContent>
+                    <TextField
+                        label={"Extend by Minutes"}
+                        value={minutes}
+                        onChange={event => setMinutes(Number(event.target.value))}
+                        type={"number"}
+                    />
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button
+                        onClick={() => {
+                            tournamentStore.extendCurrentRound(props.tourneyId, minutes)
+                            setOpen(false)
+                        }}
+                    >
+                        Extend Time
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     )
 }

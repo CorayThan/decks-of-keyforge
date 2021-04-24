@@ -18,6 +18,7 @@ data class TournamentInfo(
         val verifyParticipants: Boolean,
         val pairingStrategy: PairingStrategy,
         val roundEndsAt: LocalDateTime?,
+        val timeExtendedMinutes: Int?,
         val event: KeyForgeEventDto,
         val rounds: List<TournamentRoundInfo>,
         val rankings: List<TournamentRanking>,

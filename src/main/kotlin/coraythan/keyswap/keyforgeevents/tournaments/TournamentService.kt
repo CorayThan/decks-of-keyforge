@@ -98,8 +98,10 @@ class TournamentService(
 
         val tournamentDecksByUserName = tournamentDeckInfos.groupBy { it.username }
 
-        val currentRoundStart = tourney.rounds.maxByOrNull { it.roundNumber }?.startedOn
-        val roundEnd = if (event.minutesPerRound != null) currentRoundStart?.plusMinutes(event.minutesPerRound.toLong()) else null
+        val currentRound = tourney.rounds.maxByOrNull { it.roundNumber }
+        val currentRoundStart = currentRound?.startedOn
+        val timeExtendedMinutes = currentRound?.timeExtendedMinutes ?: 0
+        val roundEnd = if (event.minutesPerRound != null) currentRoundStart?.plusMinutes(event.minutesPerRound.toLong() + (timeExtendedMinutes)) else null
 
         return TournamentInfo(
                 tourneyId = id,
@@ -113,6 +115,7 @@ class TournamentService(
                 verifyParticipants = tourney.verifyParticipants,
                 pairingStrategy = tourney.pairingStrategy,
                 roundEndsAt = roundEnd,
+                timeExtendedMinutes = timeExtendedMinutes,
                 event = event.toDto(),
                 rounds = tourney.rounds.map { round ->
                     TournamentRoundInfo(
@@ -484,6 +487,17 @@ class TournamentService(
     fun changingPairingStrategy(tourneyId: Long, strategy: PairingStrategy) {
         val tourney = verifyTournamentAdmin(tourneyId)
         tourneyRepo.save(tourney.copy(pairingStrategy = strategy))
+    }
+
+    fun extendCurrentRound(tourneyId: Long, minutes: Int) {
+        val tourney = verifyTournamentAdmin(tourneyId)
+        val currentRound = tournamentRoundRepo.findFirstByTourneyIdOrderByRoundNumberDesc(tourney.id) ?: throw BadRequestException("No rounds.")
+
+        if (!currentRound.active) {
+            throw BadRequestException("Cannot extend time after round is over.")
+        }
+
+        tournamentRoundRepo.save(currentRound.copy(timeExtendedMinutes = minutes))
     }
 
     fun lockRegistration(tourneyId: Long, lock: Boolean) {

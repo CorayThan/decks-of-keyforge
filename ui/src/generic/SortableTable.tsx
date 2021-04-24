@@ -213,6 +213,9 @@ class SortableTableStore<T> {
             this.activeTableSort = property
             this.sortFunction = sortFunction
             this.sortFunctionName = title
+
+            // log.info(`Table sort called. \nNo resort? ${noResort} \nhas sortFunction? ${this.sortFunction != null} \nsortFunctionName? ${this.sortFunctionName} \nactive table sort ${this.activeTableSort} \nsort dir ${this.tableSortDir}`)
+
             if (noResort !== true) {
                 this.resort()
             }

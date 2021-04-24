@@ -93,10 +93,12 @@ const roundPairingsTableHeaders = (
         },
         {
             title: "Score",
-            sortable: false,
             transform: pairing => {
                 if (pairing.playerOneScore == null) return ""
                 return `${pairing.playerOneScore} – ${pairing.playerTwoScore ?? "None"}`
+            },
+            sortFunction: pairing => {
+                return (pairing.playerOneScore ?? 0) + (pairing.playerTwoScore ?? 0)
             }
         },
     ]

@@ -178,6 +178,11 @@ export class TournamentStore {
         await this.findTourneyInfo(id)
     }
 
+    extendCurrentRound = async (id: number, minutes: number) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/extend-by-minutes/${minutes}`)
+        await this.findTourneyInfo(id)
+    }
+
     changeTournamentParticipant = async (id: number, previousUsername: string, newUsername: string) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/change-tournament-participant/${previousUsername}/${newUsername}`)
         await this.findTourneyInfo(id)

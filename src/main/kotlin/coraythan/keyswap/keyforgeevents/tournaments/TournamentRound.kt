@@ -23,6 +23,8 @@ data class TournamentRound(
 
         val startedOn: LocalDateTime? = null,
 
+        val timeExtendedMinutes: Int? = null,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1,
