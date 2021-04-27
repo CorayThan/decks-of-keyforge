@@ -30,7 +30,7 @@ class CurrentUserService(
 
     fun contentCreator(): Boolean {
         val userType = loggedInUser()?.type
-        log.info("User type is $userType")
+//        log.info("User type is $userType")
         return userType == UserType.ADMIN || userType == UserType.CONTENT_CREATOR
     }
 

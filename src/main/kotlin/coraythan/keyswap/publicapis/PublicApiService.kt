@@ -40,7 +40,9 @@ class PublicApiService(
         return ownedDeckRepo.findAllByOwnerId(user.id)
                 .map {
                     PublicMyDeckInfo(
-                            deck = it.deck.toDeckSearchResult(),
+                            deck = it.deck.toDeckSearchResult(
+                                    stats = statsService.cachedStats
+                            ),
                             wishlist = favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
                             funny = funnyDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
                             notes = userDeckRepo.findByUserIdAndDeckId(user.id, it.deck.id)?.notes,

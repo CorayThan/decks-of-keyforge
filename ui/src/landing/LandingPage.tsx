@@ -169,7 +169,7 @@ export class LandingPage extends React.Component<{}> {
                                     <Typography variant={"body1"}>
                                         Many DoK users will not have decks until about May 14th.
                                         Releasing SAS significantly before many secondary market sellers have decks would put those sellers
-                                        at a significant competitive disadvantage.
+                                        at a competitive disadvantage.
                                     </Typography>
                                 </li>
                             </ul>

@@ -110,6 +110,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Up to 25 deck sale notifications: Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
+                            `Search for decks publicly registered with owners, and see those owners on the deck (in "Extra Options",`,
                             "Your KeyForge Events will be displayed on the landing page of DoK",
                             "List up to 1000 decks for sale",
                             "Download deck search result spreadsheets with 1,000 or 5,000 results",

@@ -21,6 +21,10 @@ data class UserDeck(
 
         val notes: String? = null,
 
+        // TODO delete these
+        val wishlist: Boolean = false,
+        val funny: Boolean = false,
+
         @Id
         val id: UUID = UUID.randomUUID()
 )

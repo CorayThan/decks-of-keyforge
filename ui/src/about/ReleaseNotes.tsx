@@ -44,7 +44,7 @@ export class ReleaseNotes extends React.Component {
                 </Paper>
                 <ReleaseNote
                     releaseNumber={"6.8"}
-                    date={"4/26/2021"}
+                    date={"4/27/2021"}
                     expanded={true}
                     releaseNotesWithHighlights={[
                         {
