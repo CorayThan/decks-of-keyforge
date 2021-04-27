@@ -92,7 +92,7 @@ export class ThemeStore {
 
     @computed
     get iconColor() {
-        return this.darkMode ? "#FFFFFF" : undefined
+        return this.darkMode ? "#FFFFFF" : "rgba(0, 0, 0, 0.54)"
     }
 
     @computed

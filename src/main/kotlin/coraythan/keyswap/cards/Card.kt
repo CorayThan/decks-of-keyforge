@@ -169,6 +169,8 @@ data class Card(
         }
     }
 
+    fun isEvilTwin() = this.cardTitle.contains(evilTwinCardName)
+
     private fun printValue(name: String, min: Double, max: Double?) = if (min == 0.0 && (max == 0.0 || max == null)) {
         null
     } else {
@@ -181,6 +183,8 @@ data class Card(
         "\n$name: ${traits.joinToString(" • ") { it.print() }}"
     }
 }
+
+const val evilTwinCardName = " – Evil Twin"
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeCard(
@@ -209,7 +213,7 @@ data class KeyForgeCard(
         val realCardType = theirCardTypeToReasonableOne(card_type) ?: return null
         val realRarity = theirRarityToReasonableOne(rarity) ?: return null
         val cardTitleFixed = if (realRarity == Rarity.EvilTwin) {
-            "$card_title – Evil Twin"
+            "$card_title$evilTwinCardName"
         } else {
             card_title
         }

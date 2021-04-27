@@ -417,7 +417,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 style={{width: 136}}
                                             />
                                         )}
-                                        {userStore.username != null && ["Coraythan", "Zarathustra05"].includes(userStore.username) && (
+                                        {userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION) && (
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox

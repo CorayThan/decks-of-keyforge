@@ -130,6 +130,8 @@ data class Deck(
          */
         val lastUpdate: ZonedDateTime? = now(),
 
+        val twinId: String? = null,
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1
@@ -228,6 +230,8 @@ data class Deck(
                 hasOwnershipVerification = hasOwnershipVerification.falseToNull(),
 
                 dateAdded = dateAdded,
+
+                twinId = twinId,
         )
     }
 
@@ -295,7 +299,7 @@ data class Deck(
                 specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant || it.rarity == Rarity.Special }.size,
                 raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
                 uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size,
-                evilTwin = newCardsList.any { it.cardTitle.contains(" – Evil Twin") }
+                evilTwin = newCardsList.any { it.isEvilTwin() }
         )
     }
 

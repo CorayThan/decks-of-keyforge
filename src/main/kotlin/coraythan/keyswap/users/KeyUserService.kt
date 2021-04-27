@@ -9,6 +9,7 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledException
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.search.UserSearchResult
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
@@ -29,6 +30,7 @@ class KeyUserService(
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
         private val passwordResetCodeService: PasswordResetCodeService,
         private val deckListingRepo: DeckListingRepo,
+        private val ownedDeckRepo: OwnedDeckRepo,
         private val deckRepo: DeckRepo,
         private val keyUserSearchProjectionRepo: KeyUserSearchProjectionRepo,
 ) {
@@ -63,18 +65,8 @@ class KeyUserService(
             "Password is too short."
         }
         validateEmail(userRegInfo.email)
-        check(userRegInfo.username.isNotBlank()) {
-            "Username is blank."
-        }
 
-        check(userRegInfo.username.matches(usernameRegex)) {
-            "Username is malformed: ${userRegInfo.username}"
-        }
-
-        check(userRepo.findByUsernameIgnoreCase(userRegInfo.username) == null) {
-            log.info("${userRegInfo.username} username is already taken.")
-            "This username is already taken."
-        }
+        validateUsername(userRegInfo.username)
 
         return userRepo.save(KeyUser(
                 id = UUID.randomUUID(),
@@ -94,8 +86,11 @@ class KeyUserService(
     fun userFromEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
     fun findByIdOrNull(id: UUID) = userRepo.findByIdOrNull(id)
-    fun findUserProfile(username: String) =
-            userRepo.findByUsernameIgnoreCase(username)?.toProfile(currentUserService.loggedInUser()?.username == username)
+    fun findUserProfile(username: String): UserProfile? {
+        val user = userRepo.findByUsernameIgnoreCase(username) ?: return null
+        val ownedDecks = ownedDeckRepo.findAllByOwnerId(user.id).map { it.deck }
+        return user.toProfile(currentUserService.loggedInUser()?.username == username, ownedDecks)
+    }
 
     fun findUserByUsername(username: String) = userRepo.findByUsernameIgnoreCase(username)
 
@@ -147,7 +142,6 @@ class KeyUserService(
                 currencySymbol = update.currencySymbol,
                 country = update.country,
                 preferredCountries = if (update.preferredCountries.isNullOrEmpty()) null else update.preferredCountries,
-                decks = user.decks,
                 auctions = auctions,
                 sellerEmail = sellerEmail,
                 sellerEmailVerified = sellerEmailVerified,
@@ -179,6 +173,17 @@ class KeyUserService(
         val withPassword = userAccount.copy(password = bCryptPasswordEncoder.encode(newPassword))
         userRepo.save(withPassword)
         passwordResetCodeService.delete(code)
+    }
+
+    fun changeUsername(password: String, username: String) {
+
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        currentUserService.passwordMatches(password)
+
+        val trimmedUsername = username.trim()
+        validateUsername(trimmedUsername)
+
+        userRepo.save(user.copy(username = trimmedUsername))
     }
 
     fun updateLatestUserVersion(version: String) {
@@ -232,6 +237,21 @@ class KeyUserService(
         check(userRepo.findByEmailIgnoreCase(email) == null) {
             log.info("$email email is already taken.")
             "This email is already taken."
+        }
+    }
+
+    private fun validateUsername(username: String) {
+        check(username.isNotBlank()) {
+            "Username is blank."
+        }
+
+        check(username.matches(usernameRegex)) {
+            "Username is malformed: ${username}"
+        }
+
+        check(userRepo.findByUsernameIgnoreCase(username) == null) {
+            log.info("${username} username is already taken.")
+            "This username is already taken."
         }
     }
 

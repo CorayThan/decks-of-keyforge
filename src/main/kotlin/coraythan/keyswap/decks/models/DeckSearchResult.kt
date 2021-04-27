@@ -71,7 +71,8 @@ data class DeckSearchResult(
         val deckSaleInfo: List<DeckSaleInfo>? = null,
         val owners: List<String>? = null,
         val synergyDetails: List<SynergyCombo>? = null,
-        val dateAdded: LocalDate? = null
+        val dateAdded: LocalDate? = null,
+        val twinId: String? = null,
 ) {
 
     fun printDeckSimple(saleInfo: DeckListing? = null): String {
@@ -98,12 +99,6 @@ data class DeckSearchResult(
             ${amberControl.roundToOneSigDig()} A • ${expectedAmber.roundToOneSigDig()} E • ${(artifactControl ?: 0.0).roundToOneSigDig()} R • ${creatureControl.roundToOneSigDig()} C
             ${(efficiency ?: 0.0).roundToOneSigDig()} F • ${(recursion ?: 0.0).roundToOneSigDig()} U • ${(disruption ?: 0.0).roundToOneSigDig()} D
         """.trimIndent()
-
-//            ${if ((powerLevel ?: 0) > 0 || (chains ?: 0) > 0 || (wins ?: 0) > 0 || (losses ?: 0) > 0) "Power Level ${powerLevel ?: 0} • ${chains ?: 0} Chains • ${wins ?: 0} / ${losses ?: 0} OP Wins / Losses\n" else ""}
-//            $actionCount Actions
-//            $creatureCount Creatures
-//            $artifactCount Artifacts
-//            $upgradeCount Upgrades
     }
 
     fun toSimpleResult() = SimpleDeckSearchResult(

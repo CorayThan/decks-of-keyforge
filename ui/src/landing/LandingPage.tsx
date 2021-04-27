@@ -9,6 +9,7 @@ import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { AnnouncementPaper } from "../generic/AnnouncementPaper"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -143,6 +144,37 @@ export class LandingPage extends React.Component<{}> {
                         </List>
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
+
+                        <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
+                            <Typography variant={"h5"} gutterBottom={true}>
+                                Dark Tidings SAS will release on 5/18
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                This was a tough decision, but I've decided to release SAS on this date for the following reasons:
+                            </Typography>
+                            <ul>
+                                <li style={{marginBottom: spacing(1)}}>
+                                    <Typography variant={"body1"} gutterBottom={true}>
+                                        <b>More time to refine scores</b>
+                                    </Typography>
+                                    <Typography variant={"body1"}>
+                                        I believe Mass Mutation SAS scores were released a bit prematurely. I'd like to have more mature ratings
+                                        for Dark Tidings, and this set has many high-value combos that will take a bit more time to fine tune than usual.
+                                    </Typography>
+                                </li>
+                                <li>
+                                    <Typography variant={"body1"} gutterBottom={true}>
+                                        <b>A level playing field</b>
+                                    </Typography>
+                                    <Typography variant={"body1"}>
+                                        Many DoK users will not have decks until about May 14th.
+                                        Releasing SAS significantly before many secondary market sellers have decks would put those sellers
+                                        at a significant competitive disadvantage.
+                                    </Typography>
+                                </li>
+                            </ul>
+                        </AnnouncementPaper>
+
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>

@@ -1,6 +1,5 @@
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
-import { deckStore } from "../decks/DeckStore"
 import { UserLink } from "../user/UserLink"
 
 export const OwnersList = (props: { owners?: string[] }) => {
@@ -9,8 +8,6 @@ export const OwnersList = (props: { owners?: string[] }) => {
     if (!owners || owners.length === 0) {
         return null
     }
-
-    const teamSearch = deckStore.currentFilters?.teamDecks === true
 
     return (
         <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(1)}}>

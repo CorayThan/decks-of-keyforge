@@ -23,11 +23,13 @@ import {
     TextField
 } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
+import { Edit } from "@material-ui/icons"
 import * as History from "history"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
+import { useState } from "react"
 import ReactDOM from "react-dom"
 import { RouteComponentProps } from "react-router"
 import { deckListingStore } from "../auctions/DeckListingStore"
@@ -319,7 +321,10 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                 <form onSubmit={this.updateProfile}>
                     <KeyCard
                         topContents={(
-                            <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
+                            <Box display={"flex"} alignItems={"center"}>
+                                <Typography variant={"h4"} style={{color: "#FFFFFF"}}>{profile.username}</Typography>
+                                <EditUsername/>
+                            </Box>
                         )}
                         style={{maxWidth: 880, margin: 0}}
                     >
@@ -628,5 +633,40 @@ const PatreonSupporter = (props: { profile: KeyUserDto }) => {
                 </LinkButton>
             </div>
         </Grid>
+    )
+}
+
+const EditUsername = () => {
+
+    const [username, setUsername] = useState("")
+
+    return (
+        <SafeKeyButton
+            title={"Change your username?"}
+            description={
+                "This will change your DoK username. If someone else takes your previous username, you will not be able to change back to it. " +
+                "All links to your decks will no longer work, and will need to use your new username."
+            }
+            warning={"All your deck collection links will change!"}
+            onConfirm={async (password) => {
+                await userStore.changeUsername(password, username)
+            }}
+            image={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/cyberclone.png"}
+            confirmButtonName={"Change my username"}
+            icon={true}
+            size={"small"}
+            style={{marginLeft: spacing(1)}}
+            formComponents={(
+                <TextField
+                    label={"New Username"}
+                    value={username}
+                    onChange={event => setUsername(event.target.value)}
+                    style={{marginRight: spacing(2)}}
+                    variant={"outlined"}
+                />
+            )}
+        >
+            <Edit style={{color: "#FFF"}} fontSize={"small"}/>
+        </SafeKeyButton>
     )
 }

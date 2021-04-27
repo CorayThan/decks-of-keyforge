@@ -219,6 +219,10 @@ export class UserStore {
             })
     }
 
+    changeUsername = async (password: string, username: string) => {
+        await axios.post(`${UserStore.CONTEXT}/change-username/`, {password, username})
+    }
+
     verifyEmail = (verificationCode: string) => {
         this.verifyingEmail = true
         axiosWithoutErrors.post(`${UserStore.CONTEXT}/verify-email/${verificationCode}`)

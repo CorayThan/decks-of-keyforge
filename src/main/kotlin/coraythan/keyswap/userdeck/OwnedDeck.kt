@@ -31,8 +31,15 @@ data class OwnedDeck(
 )
 
 interface OwnedDeckRepo : CrudRepository<OwnedDeck, Long> {
+        fun findAllByOwnerId(ownerId: UUID): List<OwnedDeck>
         fun existsByDeckIdAndOwnerId(deckId: Long, ownerId: UUID): Boolean
         fun deleteByDeckIdAndOwnerId(deckId: Long, ownerId: UUID)
+
+        fun findByDeckId(deckId: Long): List<OwnedDeck>
+        fun findByDeckIdAndTeamId(deckId: Long, teamId: UUID): List<OwnedDeck>
+
+        @Query("SELECT ownedDeck FROM OwnedDeck ownedDeck WHERE ownedDeck.deck.id = ?1 AND ownedDeck.owner.username IN ?2")
+        fun findByDeckIdAndOwnedByIn(deckId: Long, ownerUsernames: List<String>): List<OwnedDeck>
 
         @Modifying
         @Query("UPDATE OwnedDeck ownedDeck SET ownedDeck.teamId = ?1 WHERE ownedDeck.owner.id = ?2")

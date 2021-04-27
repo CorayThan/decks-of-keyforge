@@ -36,6 +36,10 @@ export const EnhancementsInDeck = (props: { deck: DeckSearchResult, style?: Reac
         enhancedDraw += card.extraCardInfo.enhancementDraw
     })
 
+    if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw === 0) {
+        return null
+    }
+
     return (
         <LargeValueIconsRow
             values={[

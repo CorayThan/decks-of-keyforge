@@ -14,13 +14,16 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
+import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.patreon.levelAtLeast
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.tags.KTagRepo
 import coraythan.keyswap.tags.PublicityType
 import coraythan.keyswap.tokenize
+import coraythan.keyswap.userdeck.OwnedDeckRepo
+import coraythan.keyswap.userdeck.OwnedDeckService
 import coraythan.keyswap.userdeck.QUserDeck
-import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
@@ -38,9 +41,10 @@ class DeckSearchService(
         private val userService: KeyUserService,
         private val currentUserService: CurrentUserService,
         private val statsService: StatsService,
-        private val userDeckRepo: UserDeckRepo,
         private val tagRepo: KTagRepo,
-        private val entityManager: EntityManager
+        private val entityManager: EntityManager,
+        private val ownedDeckRepo: OwnedDeckRepo,
+        private val ownedDeckService: OwnedDeckService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
@@ -174,8 +178,8 @@ class DeckSearchService(
                 val user = userHolder.user
                 val teamId = user?.teamId ?: throw BadRequestException("You aren't on a team.")
                 if (user.realPatreonTier() == null) throw BadRequestException("You do not have permission to view team decks.")
-                val owners = userDeckRepo.findByDeckIdAndTeamId(it.id, teamId).mapNotNull { userDeck ->
-                    userDeck.ownedBy
+                val owners = ownedDeckRepo.findByDeckIdAndTeamId(it.id, teamId).map { userDeck ->
+                    userDeck.owner.username
                 }
                 if (owners.isNotEmpty()) {
                     searchResult = searchResult.copy(owners = owners)
@@ -191,8 +195,8 @@ class DeckSearchService(
                     }
                 }
 
-                val owners = userDeckRepo.findByDeckIdAndOwnedByIn(it.id, visibleUsers).mapNotNull { userDeck ->
-                    userDeck.ownedBy
+                val owners = ownedDeckRepo.findByDeckIdAndOwnedByIn(it.id, visibleUsers).map { userDeck ->
+                    userDeck.owner.username
                 }
                 if (owners.isNotEmpty()) {
                     searchResult = searchResult.copy(owners = owners)
@@ -200,25 +204,14 @@ class DeckSearchService(
             }
 
             if (filters.withOwners) {
-                if (!specialUsers.contains(userHolder.user?.username?.toLowerCase())) {
-                    throw BadRequestException("You do not have permission to see owners.")
+                if (userHolder.user?.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) != true) {
+                    throw BadRequestException("Please become a $6+ a month patron to view owners.")
                 }
-                val owners = userDeckRepo.findByDeckIdAndOwnedByNotNull(it.id).mapNotNull { userDeck ->
-                    if (userDeck.ownedBy == null) {
-                        null
-                    } else {
-                        if (userDeck.user.allowUsersToSeeDeckOwnership) {
-                            userDeck.ownedBy
-                        } else {
-                            null
-                        }
-                    }
-                }
-                if (owners.isNotEmpty()) {
-                    searchResult = searchResult.copy(owners = owners)
-                    searchResult
-                } else {
+                val deckWithOwners = ownedDeckService.addOwners(searchResult)
+                if (deckWithOwners.owners == null) {
                     null
+                } else {
+                    deckWithOwners
                 }
             } else {
                 searchResult
@@ -502,20 +495,28 @@ class DeckSearchService(
     }
 
     fun deckToDeckWithSynergies(deck: Deck): DeckWithSynergyInfo {
+        val user = currentUserService.loggedInUser()
         val stats = statsService.findCurrentStats()
-        val cards = if (currentUserService.loggedInUser()?.displayFutureSas() == true) {
+        val cards = if (user?.displayFutureSas() == true) {
             cardService.futureCardsForDeck(deck)
         } else {
             cardService.cardsForDeck(deck)
         }
+
+        val searchResult = deck.toDeckSearchResult(
+                cardService.deckToHouseAndCards(deck),
+                cards,
+                stats = stats,
+                synergies = DeckSynergyService.fromDeckWithCards(deck, cards),
+                includeDetails = true
+        )
+
         return DeckWithSynergyInfo(
-                deck = deck.toDeckSearchResult(
-                        cardService.deckToHouseAndCards(deck),
-                        cards,
-                        stats = stats,
-                        synergies = DeckSynergyService.fromDeckWithCards(deck, cards),
-                        includeDetails = true
-                ),
+                deck = if (user?.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) == true) {
+                    ownedDeckService.addOwners(searchResult)
+                } else {
+                    searchResult
+                },
                 synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
                 antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0
         )

@@ -9,6 +9,7 @@ import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.tokenize
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -28,6 +29,7 @@ const val lockUpdateUserSearchStatsFor = "PT1M"
 @Service
 @Transactional
 class UserSearchService(
+        private val ownedDeckRepo: OwnedDeckRepo,
         private val userRepo: KeyUserRepo,
         private val currentUserService: CurrentUserService,
         private val entityManager: EntityManager
@@ -53,7 +55,8 @@ class UserSearchService(
                         .forEach {
                             var dataNullable: UserSearchResult?
                             val singleGenTime = measureTimeMillis {
-                                dataNullable = it.generateSearchResult()
+                                val ownedDecks = ownedDeckRepo.findAllByOwnerId(it.id).map { it.deck }
+                                dataNullable = it.generateSearchResult(ownedDecks)
                             }
                             val data = dataNullable!!
                             generationTime += singleGenTime

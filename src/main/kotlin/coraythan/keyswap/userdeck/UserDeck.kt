@@ -19,15 +19,7 @@ data class UserDeck(
         @ManyToOne
         val deck: Deck,
 
-        val wishlist: Boolean = false,
-        val funny: Boolean = false,
-        val ownedBy: String? = null,
-
-        val teamId: UUID? = null,
-
         val notes: String? = null,
-
-        val migrated: Boolean? = true,
 
         @Id
         val id: UUID = UUID.randomUUID()

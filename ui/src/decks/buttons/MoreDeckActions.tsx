@@ -1,4 +1,4 @@
-import { IconButton } from "@material-ui/core"
+import { IconButton, Link } from "@material-ui/core"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import { MoreVert } from "@material-ui/icons"
@@ -85,6 +85,15 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                         Theoretical Version
                     </MenuItem>
                 )}
+                <MenuItem
+                    component={Link}
+                    href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
+                    target={"_blank"}
+                    rel={"noopener noreferrer"}
+                    style={{color: "inherit", textDecoration: "none"}}
+                >
+                    Master Vault
+                </MenuItem>
             </Menu>
         </>
     )

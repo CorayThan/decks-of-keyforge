@@ -53,22 +53,34 @@ interface SafeButtonProps extends ButtonProps {
     image?: string
     onConfirm: (password: string) => void
     confirmButtonName?: string
+    icon?: boolean
+    formComponents?: React.ReactNode
 }
 
 export const SafeKeyButton = (props: SafeButtonProps) => {
-    const {title, description, warning, image, onConfirm, confirmButtonName, ...rest} = props
+    const {title, description, warning, image, onConfirm, confirmButtonName, icon, formComponents, ...rest} = props
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [confirmed, setConfirmed] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     return (
         <>
-            <Button
-                {...rest}
-                onClick={(event) => {
-                    setOpen(true)
-                }}
-            />
+            {icon ? (
+                // @ts-ignore
+                <IconButton
+                    {...rest}
+                    onClick={(event) => {
+                        setOpen(true)
+                    }}
+                />
+            ) : (
+                <Button
+                    {...rest}
+                    onClick={(event) => {
+                        setOpen(true)
+                    }}
+                />
+            )}
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
@@ -83,29 +95,32 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
                     <DialogContentText style={{marginBottom: spacing(2)}} color={"error"}>
                         {warning} Please enter your password to continue.
                     </DialogContentText>
-                    <FormControl
-                        variant={"outlined"}
-                        style={{marginBottom: spacing(2)}}
-                    >
-                        <InputLabel htmlFor="confirm-password">Confirm Password</InputLabel>
-                        <OutlinedInput
-                            id={"confirm-password"}
-                            type={showPassword ? "text" : "password"}
-                            value={confirmed}
-                            onChange={(event) => setConfirmed(event.target.value)}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        onMouseDown={(event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault()}
-                                    >
-                                        {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            labelWidth={136}
-                        />
-                    </FormControl>
+
+                        {formComponents}
+                        <FormControl
+                            variant={"outlined"}
+                            style={{marginBottom: spacing(2)}}
+                        >
+                            <InputLabel htmlFor="confirm-password">Confirm Password</InputLabel>
+                            <OutlinedInput
+                                id={"confirm-password"}
+                                type={showPassword ? "text" : "password"}
+                                value={confirmed}
+                                onChange={(event) => setConfirmed(event.target.value)}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            onMouseDown={(event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault()}
+                                        >
+                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                labelWidth={136}
+                            />
+                        </FormControl>
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Close</Button>

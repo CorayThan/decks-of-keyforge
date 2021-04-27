@@ -8,7 +8,6 @@ import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.S3Service
 import coraythan.keyswap.userdeck.OwnedDeckRepo
-import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -29,7 +28,6 @@ class TeamService(
         private val teamRepo: TeamRepo,
         private val currentUserService: CurrentUserService,
         private val userRepo: KeyUserRepo,
-        private val userDeckRepo: UserDeckRepo,
         private val s3Service: S3Service,
         private val ownedDeckRepo: OwnedDeckRepo,
         val entityManager: EntityManager,
@@ -117,7 +115,10 @@ class TeamService(
             TeamOrInvites(team = TeamInfo(
                     name = team.name,
                     leader = team.members.find { it.id == team.teamLeaderId }?.username ?: "",
-                    members = team.members.map { it.generateSearchResult() }.sortedBy { it.username },
+                    members = team.members.map {
+                        val decks = ownedDeckRepo.findAllByOwnerId(it.id).map { it.deck }
+                        it.generateSearchResult(decks)
+                    }.sortedBy { it.username },
                     invites = team.invites.map { userRepo.findByIdOrNull(it)!!.username },
                     teamImg = team.teamImg,
                     homepage = team.homepage,
@@ -164,14 +165,12 @@ class TeamService(
 
     private fun addUserToTeam(toAdd: KeyUser, team: Team) {
         userRepo.save(toAdd.copy(teamId = team.id))
-        userDeckRepo.addTeamForUser(team.id, toAdd.username)
         ownedDeckRepo.addTeamForUser(team.id, toAdd.id)
         teamRepo.save(team.copy(invites = team.invites.minus(toAdd.id), members = team.members.plus(toAdd)))
     }
 
     private fun removeFromTeamAndDecks(toRemove: KeyUser, team: Team) {
         userRepo.removeTeam(toRemove.id)
-        userDeckRepo.removeTeamForUser(toRemove.username)
         ownedDeckRepo.removeTeamForUser(toRemove.id)
 
         teamRepo.save(team.copy(

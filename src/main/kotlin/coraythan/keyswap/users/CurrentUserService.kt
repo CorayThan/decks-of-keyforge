@@ -17,7 +17,7 @@ class CurrentUserService(
 
     fun loggedInUser(): KeyUser? {
         val authentication = SecurityContextHolder.getContext().authentication
-        val userEmail = authentication.principal as String? ?: return null
+        val userEmail = authentication?.principal as String? ?: return null
         return userRepo.findByEmail(userEmail)
     }
 

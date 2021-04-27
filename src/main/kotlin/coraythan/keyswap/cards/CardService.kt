@@ -185,7 +185,6 @@ class CardService(
         return cards
     }
 
-
     fun futureCardsForDeck(deck: Deck): List<Card> {
         return cardsForDeck(deck)
                 .map {
@@ -381,6 +380,22 @@ class CardService(
                 card.cardTitle.cleanCardName() to card.copy(extraCardInfo = entry.value)
             }
         }.toMap()
+    }
+
+    fun twinedCardsForDeck(deck: Deck): List<Card> {
+
+        nonMaverickCachedCardsWithNames ?: error("No non maverick cards with names available yet.")
+
+        return cardsForDeck(deck).map {
+            val converted = if (it.cardTitle.contains(evilTwinCardName)) {
+                val goodTwinName = it.cardTitle.dropLast(evilTwinCardName.length)
+                findByCardName(goodTwinName)
+            } else {
+                findByCardName(it.cardTitle + evilTwinCardName)
+            }
+
+            converted?.copy(house = it.house, maverick = it.maverick, enhanced = it.enhanced) ?: it
+        }
     }
 
     private fun fullCardsFromCards(cards: List<Card>) = cards.map {

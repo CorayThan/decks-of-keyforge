@@ -16,7 +16,6 @@ import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.thirdpartyservices.KeyForgeDeckDto
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
 import org.hibernate.exception.ConstraintViolationException
@@ -61,65 +60,65 @@ class DeckImporterService(
 
     private val query = JPAQueryFactory(entityManager)
 
-    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
-    fun cleanUpBadDTCards() {
-
-        log.info("Cleaning up DT decks ${deckRepo.countByCardsVerifiedIsTrueAndExpansion(496)} left")
-
-        var cleanCount = 0
-
-        var badMavCountCount = 0
-
-        var checkedCount = 0
-
-        val millis = measureTimeMillis {
-            val toClean = deckRepo.findFirst100ByCardsVerifiedIsTrueAndExpansion(496)
-            log.info("Got to clean DT decks ${toClean.size}")
-            toClean.forEach { deck ->
-
-                checkedCount++
-                val cards = cardService.cardsForDeck(deck)
-
-                val weirdCard = cards.find { cardRepo.findByCardTitleAndMaverickFalse(it.cardTitle).size > 1 }
-
-                if (weirdCard != null) {
-                    // weirdness
-
-                    cleanCount++
-
-                    log.info("Found card with multiple houses ${weirdCard.cardTitle} in deck: ${deck.keyforgeId}")
-
-                    var deckWithCards: KeyForgeDeckDto? = null
-                    try {
-                        deckWithCards = keyforgeApi.findDeck(deck.keyforgeId, true) ?: error("No deck in keyforge API for ${deck.keyforgeId}")
-
-                    } catch (e: HttpClientErrorException) {
-                        log.info("Got http client error finding keyforge deck in clean up bad DT cards. Done for now. Cleaned $cleanCount Bad mav count fixed $badMavCountCount checked count $checkedCount " + e.message)
-                        return
-                    }
-
-                    cardService.importNewCards(deckWithCards._linked.cards!!)
-
-                    saveDeck(deck, deck.houses, cardService.cardsForDeck(deck))
-                } else {
-
-                    val mavsInDeck = cards.count {
-                        cardRepo.findByCardTitleAndHouse(it.cardTitle, it.house).any { it.maverick }
-                    }
-
-                    if (mavsInDeck != deck.maverickCount) {
-                        badMavCountCount++
-                        log.info("Found mav miscount mavsInDeck by cards $mavsInDeck for deck ${deck.maverickCount} in deck ${deck.keyforgeId}")
-                        saveDeck(deck, deck.houses, cardService.cardsForDeck(deck))
-                    }
-                }
-
-                deckRepo.save(deckRepo.getOne(deck.id).copy(cardsVerified = false))
-            }
-        }
-
-        log.info("Took $millis to clean up 100 DT decks. Cleaned $cleanCount Bad mav count fixed $badMavCountCount")
-    }
+//    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
+//    fun cleanUpBadDTCards() {
+//
+//        log.info("Cleaning up DT decks ${deckRepo.countByCardsVerifiedIsTrueAndExpansion(496)} left")
+//
+//        var cleanCount = 0
+//
+//        var badMavCountCount = 0
+//
+//        var checkedCount = 0
+//
+//        val millis = measureTimeMillis {
+//            val toClean = deckRepo.findFirst100ByCardsVerifiedIsTrueAndExpansion(496)
+//            log.info("Got to clean DT decks ${toClean.size}")
+//            toClean.forEach { deck ->
+//
+//                checkedCount++
+//                val cards = cardService.cardsForDeck(deck)
+//
+//                val weirdCard = cards.find { cardRepo.findByCardTitleAndMaverickFalse(it.cardTitle).size > 1 }
+//
+//                if (weirdCard != null) {
+//                    // weirdness
+//
+//                    cleanCount++
+//
+//                    log.info("Found card with multiple houses ${weirdCard.cardTitle} in deck: ${deck.keyforgeId}")
+//
+//                    var deckWithCards: KeyForgeDeckDto? = null
+//                    try {
+//                        deckWithCards = keyforgeApi.findDeck(deck.keyforgeId, true) ?: error("No deck in keyforge API for ${deck.keyforgeId}")
+//
+//                    } catch (e: HttpClientErrorException) {
+//                        log.info("Got http client error finding keyforge deck in clean up bad DT cards. Done for now. Cleaned $cleanCount Bad mav count fixed $badMavCountCount checked count $checkedCount " + e.message)
+//                        return
+//                    }
+//
+//                    cardService.importNewCards(deckWithCards._linked.cards!!)
+//
+//                    saveDeck(deck, deck.houses, cardService.cardsForDeck(deck))
+//                } else {
+//
+//                    val mavsInDeck = cards.count {
+//                        cardRepo.findByCardTitleAndHouse(it.cardTitle, it.house).any { it.maverick }
+//                    }
+//
+//                    if (mavsInDeck != deck.maverickCount) {
+//                        badMavCountCount++
+//                        log.info("Found mav miscount mavsInDeck by cards $mavsInDeck for deck ${deck.maverickCount} in deck ${deck.keyforgeId}")
+//                        saveDeck(deck, deck.houses, cardService.cardsForDeck(deck))
+//                    }
+//                }
+//
+//                deckRepo.save(deckRepo.getOne(deck.id).copy(cardsVerified = false))
+//            }
+//        }
+//
+//        log.info("Took $millis to clean up 100 DT decks. Cleaned $cleanCount Bad mav count fixed $badMavCountCount")
+//    }
 
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)

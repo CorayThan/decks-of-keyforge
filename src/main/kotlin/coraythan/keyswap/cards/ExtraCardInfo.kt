@@ -167,4 +167,8 @@ data class ExtraCardInfo(
         )
     }
 
+    fun enhancementCount(): Int {
+        return enhancementAmber + enhancementCapture + enhancementDamage + enhancementDraw
+    }
+
 }

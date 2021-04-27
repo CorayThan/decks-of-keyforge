@@ -12,7 +12,7 @@ import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
-import coraythan.keyswap.userdeck.UserDeckRepo
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
@@ -35,7 +35,7 @@ class DeckWinsService(
         private val cardRepo: CardRepo,
         private val deckRepo: DeckRepo,
         private val deckPageService: DeckPageService,
-        private val userDeckRepo: UserDeckRepo,
+        private val ownedDeckRepo: OwnedDeckRepo,
         private val userSearchService: UserSearchService,
         private val cardWinsService: CardWinsService,
         @Value("\${env}")
@@ -187,8 +187,8 @@ class DeckWinsService(
             if (updated != null) {
                 deckRepo.save(updated)
                 if (preexisting.powerLevel != updated.powerLevel || preexisting.chains != updated.chains) {
-                    userDeckRepo.findByDeckIdAndOwnedByNotNull(updated.id)
-                            .forEach { userSearchService.scheduleUserForUpdate(it.user) }
+                    ownedDeckRepo.findByDeckId(updated.id)
+                            .forEach { userSearchService.scheduleUserForUpdate(it.owner) }
                 }
             }
         }

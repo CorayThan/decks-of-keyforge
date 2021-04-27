@@ -78,6 +78,8 @@ export interface DeckSearchResult {
     disruption?: number
     other?: number
 
+    twinId?: string
+
 }
 
 export interface TraitInDeckInfo {

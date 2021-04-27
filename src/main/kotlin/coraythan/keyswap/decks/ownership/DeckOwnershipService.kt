@@ -4,7 +4,7 @@ import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.thirdpartyservices.S3Service
-import coraythan.keyswap.userdeck.UserDeckRepo
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 class DeckOwnershipService(
         private val s3Service: S3Service,
         private val currentUserService: CurrentUserService,
-        private val userDeckRepo: UserDeckRepo,
+        private val ownedDeckRepo: OwnedDeckRepo,
         private val deckOwnershipRepo: DeckOwnershipRepo,
         private val deckRepo: DeckRepo,
         private val deckListingRepo: DeckListingRepo
@@ -26,7 +26,7 @@ class DeckOwnershipService(
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val deck = deckRepo.findByIdOrNull(deckId) ?: throw IllegalStateException("No deck with id $deckId")
 
-        if (!userDeckRepo.existsByUserIdAndDeckId(currentUser.id, deckId)) {
+        if (!ownedDeckRepo.existsByDeckIdAndOwnerId(deckId, currentUser.id)) {
             throw UnauthorizedException("You don't have this deck marked as owned.")
         }
 

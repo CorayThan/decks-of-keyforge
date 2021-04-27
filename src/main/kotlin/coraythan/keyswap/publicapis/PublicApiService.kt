@@ -5,6 +5,9 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.userdeck.FavoritedDeckRepo
+import coraythan.keyswap.userdeck.FunnyDeckRepo
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.userdeck.UserDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -20,25 +23,28 @@ class PublicApiService(
         private val deckRepo: DeckRepo,
         private val cardService: CardService,
         private val statsService: StatsService,
-        private val userDeckRepo: UserDeckRepo
+        private val userDeckRepo: UserDeckRepo,
+        private val ownedDeckRepo: OwnedDeckRepo,
+        private val favoritedDeckRepo: FavoritedDeckRepo,
+        private val funnyDeckRepo: FunnyDeckRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun findMyDeckIds(user: KeyUser): List<String> {
-        return userDeckRepo.findByOwnedBy(user.username)
+        return ownedDeckRepo.findAllByOwnerId(user.id)
                 .map { it.deck.keyforgeId }
     }
 
     fun findMyDecks(user: KeyUser): List<PublicMyDeckInfo> {
-        return userDeckRepo.findByOwnedBy(user.username)
+        return ownedDeckRepo.findAllByOwnerId(user.id)
                 .map {
                     PublicMyDeckInfo(
                             deck = it.deck.toDeckSearchResult(),
-                            wishlist = it.wishlist,
-                            funny = it.funny,
-                            notes = it.notes,
-                            ownedByMe = it.ownedBy == user.username
+                            wishlist = favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
+                            funny = funnyDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
+                            notes = userDeckRepo.findByUserIdAndDeckId(user.id, it.deck.id)?.notes,
+                            ownedByMe = true
                     )
                 }
     }

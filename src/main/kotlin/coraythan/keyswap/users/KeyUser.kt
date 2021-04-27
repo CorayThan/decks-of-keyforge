@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.auctions.purchases.Purchase
+import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.tags.KTag
-import coraythan.keyswap.userdeck.UserDeck
 import coraythan.keyswap.users.search.UserSearchResult
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
@@ -50,10 +50,6 @@ data class KeyUser(
         @ElementCollection
         @Enumerated(EnumType.STRING)
         val preferredCountries: List<Country>? = null,
-
-        @JsonIgnoreProperties("user")
-        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        val decks: List<UserDeck> = listOf(),
 
         @JsonIgnoreProperties("creator")
         @OneToMany(mappedBy = "creator", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -128,7 +124,7 @@ data class KeyUser(
     val primaryEmail: String
         get() = sellerEmail ?: email
 
-    fun toProfile(isUser: Boolean) = UserProfile(
+    fun toProfile(isUser: Boolean, owned: List<Deck>) = UserProfile(
             id = id,
             username = username,
             email = if (isUser) email else null,
@@ -140,7 +136,7 @@ data class KeyUser(
             country = country,
             preferredCountries = preferredCountries,
             lastVersionSeen = lastVersionSeen,
-            searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult() else null,
+            searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult(owned) else null,
             allowsMessages = allowsMessages,
             viewFutureSas = viewFutureSas
     )
@@ -177,8 +173,7 @@ data class KeyUser(
             viewFutureSas = viewFutureSas,
     )
 
-    fun generateSearchResult(): UserSearchResult {
-        val owned = this.decks.filter { userDeck -> userDeck.ownedBy != null }.map { it.deck }
+    fun generateSearchResult(owned: List<Deck>): UserSearchResult {
         val sasRatings = owned.map { deck -> deck.sasRating }.sortedDescending()
         return UserSearchResult(
                 this.id,

@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.7"
+export const latestVersion = "6.8"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,30 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.8"}
+                    date={"4/26/2021"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "DT SAS release date 5/18",
+                            note: "I will be releasing SAS for Dark Tidings on 5/18. Head to the lading page to see the announcement and reasons."
+                        },
+                        {
+                            note: <LinkButton href={Routes.landing} color={"primary"}>Landing Page</LinkButton>
+                        },
+                        {
+                            highlight: "See owners of decks!",
+                            note: `This is a new feature for $6+ a month patrons. Under "Extra Options" on the search screen, you can now select ` +
+                                `"With Owners" to see everyone who has marked a deck as owned, and has their owned decks public. ` +
+                                "Combine this feature with the new on-site messaging and hopefully this will help some folks find their evil twins!"
+                        },
+                        {
+                            highlight: "Change Username",
+                            note: "You can now change your username on your profile page."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.7"}
                     date={"4/14/2021"}

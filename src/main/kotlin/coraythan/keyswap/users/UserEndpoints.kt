@@ -56,6 +56,9 @@ class UserEndpoints(
     @PostMapping("/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
 
+    @PostMapping("/change-username")
+    fun changeUsername(@RequestBody request: UsernameChange) = userService.changeUsername(request.password, request.username)
+
     @PostMapping("/update-tier/{username}/{tier}")
     fun updatePatreonTier(@PathVariable username: String, @PathVariable tier: PatreonRewardsTier, @RequestParam apiKey: String) {
         apiKeys.checkApiKey(apiKey)
@@ -65,3 +68,8 @@ class UserEndpoints(
     @PostMapping("/verify-email/{code}")
     fun verifyEmail(@PathVariable code: String) = userService.verifyEmail(code)
 }
+
+data class UsernameChange(
+        val password: String,
+        val username: String,
+)

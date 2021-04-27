@@ -27,14 +27,15 @@ import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
 import { KeyCard } from "../generic/KeyCard"
 import { HouseBanner } from "../houses/HouseBanner"
 import { HouseLabel } from "../houses/HouseUtils"
-import { KeyButton } from "../mui-restyled/KeyButton"
 import { KeyLink } from "../mui-restyled/KeyLink"
 import { InlineDeckNote } from "../notes/DeckNote"
 import { DeckTagsView } from "../tags/DeckTagsView"
 import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
 import { OwnersList } from "../userdeck/OwnersList"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { CompareDeckButton } from "./buttons/CompareDeckButton"
+import { EvilTwinButton } from "./buttons/EvilTwinButton"
 import { FavoriteDeck } from "./buttons/FavoriteDeck"
 import { FunnyDeck } from "./buttons/FunnyDeck"
 import { MoreDeckActions } from "./buttons/MoreDeckActions"
@@ -65,7 +66,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         }
 
         const {deck, saleInfo, fullVersion, hideActions, style, fake, margin} = this.props
-        const {id, keyforgeId, name, wishlistCount, funnyCount, owners} = deck
+        const {id, keyforgeId, name, wishlistCount, funnyCount, owners, twinId} = deck
 
         const compact = screenStore.smallDeckView()
 
@@ -82,6 +83,11 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes
         const viewTags = !hideActions && keyLocalStorage.genericStorage.viewTags
         const link = fake ? Routes.theoreticalDeckPage(keyforgeId) : Routes.deckPage(keyforgeId)
+
+        let ownersFiltered = owners
+        if (fullVersion) {
+            ownersFiltered = owners?.filter(owner => owner != userStore.username)
+        }
 
         return (
             <div>
@@ -107,11 +113,11 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     noStyle={true}
                                 >
                                     <Box style={{maxWidth: width - spacing(6)}}>
-                                        <Typography variant={"h5"}>{name}</Typography>
+                                        <Typography variant={"h5"} style={{fontSize: name.length > 48 ? 18 : undefined}}>{name}</Typography>
                                     </Box>
                                 </KeyLink>
                                 <DisplayAllCardsByHouse deck={deck} compact={compact}/>
-                                <OwnersList owners={owners}/>
+                                <OwnersList owners={ownersFiltered}/>
                                 <Collapse in={viewTags}>
                                     <DeckTagsView deckId={deck.id}/>
                                 </Collapse>
@@ -121,14 +127,6 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                             </CardContent>
                             {!hideActions && !fake && (
                                 <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                                    {fullVersion && !compact ? (
-                                        <KeyButton
-                                            href={"https://www.keyforgegame.com/deck-details/" + keyforgeId}
-                                            color={"primary"}
-                                        >
-                                            MV
-                                        </KeyButton>
-                                    ) : null}
                                     {compact ? null : (<CompareDeckButton deck={deck}/>)}
                                     {compact ? null : (<MyDecksButton deck={deck}/>)}
                                     <div style={{flexGrow: 1, margin: 0}}/>
@@ -139,6 +137,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount ?? 0}/>
                                     </div>
                                     <DeckOwnershipButton deckName={name} deckId={id} hasVerification={deck.hasOwnershipVerification}/>
+                                    <EvilTwinButton twinId={twinId}/>
                                     <MoreDeckActions deck={deck} compact={compact}/>
                                 </CardActions>
                             )}
