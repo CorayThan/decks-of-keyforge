@@ -90,11 +90,10 @@ export class PatreonRewards extends React.Component {
                             "Dark mode",
                             "Analyze collections of decks up to 1000",
                             "Create tags for decks and search those tags",
-                            "Compare decks side by side",
-                            "List decks for sale or trade for up to 1 year",
+                            "Compare decks",
+                            "List decks for sale or trade for up to 1 year and auto renew listings (profile setting)",
                             "List up to 250 decks for sale. (Free maximum is 100.)",
                             "Create auctions or public offer-based sale listings",
-                            "Automatically renew expired deck for sale listings with a setting in your profile",
                             "Search team decks",
                             "Create Theoretical Decks",
                             "Create KeyForge Events",
@@ -110,7 +109,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Up to 25 deck sale notifications: Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
-                            `Search for decks publicly registered with owners, and see those owners on the deck (in "Extra Options",`,
+                            `Search for decks publicly registered with owners, and see those owners on the deck (in "Extra Options" on search page)`,
                             "Your KeyForge Events will be displayed on the landing page of DoK",
                             "List up to 1000 decks for sale",
                             "Download deck search result spreadsheets with 1,000 or 5,000 results",
@@ -128,10 +127,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "List any number of decks for sale.",
-                            `Get your store listed on the landing page of the site!`,
-                            "Add a name and icon for your store. These will show on your deck listings and landing page store card.",
-                            "Add a banner for your store! This will show across the top of the page when users view your decks for sale.",
-                            "Your listings will show your store icon and name, and they will link to your decks for sale.",
+                            "Create your own store on DoK! Your store will be listed on the landing page, and you can add a name, icon, and banner for it.",
                         ]}
                     />
                     <div style={{marginBottom: spacing(4)}}/>
