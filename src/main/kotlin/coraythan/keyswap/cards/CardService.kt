@@ -19,6 +19,7 @@ import java.time.ZonedDateTime
 
 // Manually update this when publishing a new version of AERC. Also rerates all decks
 val publishedAercVersion = 37
+// val publishedAercVersion = 38
 val majorRevision = false
 
 @Transactional

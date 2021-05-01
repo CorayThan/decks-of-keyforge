@@ -15,7 +15,10 @@ enum class Expansion(val expansionNumber: Int, val readable: String, val houses:
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = values().find { it.expansionNumber == expansionNumber }
                 ?: throw IllegalStateException("No expansion for number $expansionNumber")
+
+        fun realExpansionValues() = values().filter { it != ANOMALY_EXPANSION }
     }
+
 }
 
 val activeExpansions = setOf(

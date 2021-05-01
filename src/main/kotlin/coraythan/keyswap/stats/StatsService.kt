@@ -1,6 +1,5 @@
 package coraythan.keyswap.stats
 
-import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.Env
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityManager
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
@@ -40,10 +38,8 @@ class StatsService(
         private val deckPageService: DeckPageService,
         @Value("\${env}")
         private val env: Env,
-        entityManager: EntityManager
 ) {
 
-    private val query = JPAQueryFactory(entityManager)
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var updateStats = true
@@ -85,7 +81,6 @@ class StatsService(
         }
     }
 
-    //    @Scheduled(fixedDelayString = lockStatsVersionUpdate, initialDelayString = "PT1M")
     @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastFor = lockStatsVersionUpdate, lockAtMostFor = lockStatsVersionUpdate)
     fun startNewDeckStats() {
@@ -114,7 +109,7 @@ class StatsService(
                         DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
                                 .copy(version = mostRecentVersion.version + 1)
                 )
-                Expansion.values().forEach {
+                Expansion.realExpansionValues().forEach {
                     deckStatisticsRepo.save(
                             DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
                                     .copy(version = mostRecentVersion.version + 1, expansion = it)

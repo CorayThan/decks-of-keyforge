@@ -52,6 +52,7 @@ class DeckImporterService(
         private val objectMapper: ObjectMapper,
         private val cardRepo: CardRepo,
         private val pastSasService: PastSasService,
+        private val postProcessDecksService: PostProcessDecksService,
         @Value("\${env}")
         private val env: Env,
         val entityManager: EntityManager
@@ -369,7 +370,10 @@ class DeckImporterService(
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
         val ratedDeck = validateAndRateDeck(deck, houses, cardsList)
-        return deckRepo.save(ratedDeck)
+        val saved = deckRepo.save(ratedDeck)
+
+        postProcessDecksService.addPostProcessDeck(saved)
+        return saved
     }
 
     private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
