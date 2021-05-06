@@ -1,5 +1,4 @@
 import { Box, ButtonBase, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Tooltip, Typography } from "@material-ui/core"
-import { grey } from "@material-ui/core/colors"
 import { Archive, Delete, Inbox, Mail, MarkunreadMailbox, Send, Unarchive } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import { makeObservable, observable } from "mobx"
@@ -13,6 +12,7 @@ import { MailCategory } from "../generated-src/MailCategory"
 import { MessagesSearchFilters } from "../generated-src/MessagesSearchFilters"
 import { MarkEmailReadIcon } from "../generic/icons/MarkEmailReadIcon"
 import { Loader } from "../mui-restyled/Loader"
+import { screenStore } from "../ui/ScreenStore"
 import { UserLink } from "../user/UserLink"
 import { userStore } from "../user/UserStore"
 import { SendMessageButton } from "./SendMessageButton"
@@ -34,7 +34,7 @@ export const MyMessages = observer(() => {
 
     return (
         <TableContainer component={Paper}>
-            <Box m={2}>
+            <Box>
                 <ToggleButtonGroup
                     value={category}
                     exclusive={true}
@@ -58,11 +58,13 @@ export const MyMessages = observer(() => {
                             <MarkunreadMailbox style={{marginRight: spacing(1)}}/> Unread
                         </Box>
                     </ToggleButton>
-                    <ToggleButton value={MailCategory.ALL_MAIL} aria-label="all mail">
-                        <Box display={"flex"} width={buttonWidth}>
-                            <Mail style={{marginRight: spacing(1)}}/> All Mail
-                        </Box>
-                    </ToggleButton>
+                    {!screenStore.screenSizeXs() && (
+                        <ToggleButton value={MailCategory.ALL_MAIL} aria-label="all mail">
+                            <Box display={"flex"} width={buttonWidth}>
+                                <Mail style={{marginRight: spacing(1)}}/> All Mail
+                            </Box>
+                        </ToggleButton>
+                    )}
                     <ToggleButton value={MailCategory.ARCHIVED} aria-label="archived">
                         <Box display={"flex"} width={buttonWidth}>
                             <Delete style={{marginRight: spacing(1)}}/> Archived
@@ -77,7 +79,7 @@ export const MyMessages = observer(() => {
                         <Typography>No messages</Typography>
                     </Box>
                 ) : (
-                    <Table size={"small"}>
+                    <Table size={"small"} padding={screenStore.screenSizeXs() ? "checkbox" : undefined}>
                         <TableBody>
                             {userMessageStore.messages.map(message => {
                                 const toMe = message.toUsername === userStore.username
@@ -106,28 +108,32 @@ export const MyMessages = observer(() => {
                                         <TableCell>
                                             <ButtonBase href={Routes.messagePage(message.id)} disableRipple={true} disableTouchRipple={true}>
                                                 <Box display={"flex"}>
-                                                    <Typography>
-                                                        <Box fontWeight={500}>
+                                                    <Box fontWeight={500} width={screenStore.screenSizeXs() ? 120 : 240}>
+                                                        <Typography>
                                                             {message.subject}
+                                                        </Typography>
+                                                    </Box>
+                                                    {!screenStore.screenSizeMd() && (
+                                                        <Box ml={2} maxWidth={screenStore.screenWidth - 1000}>
+                                                            <Typography noWrap={true} color={"textSecondary"}>
+                                                                {message.replies.length > 0 ? message.replies[message.replies.length - 1].message : message.message}
+                                                            </Typography>
                                                         </Box>
-                                                    </Typography>
-                                                    <Typography noWrap={true} color={"textSecondary"}>
-                                                        <Box ml={2}>
-                                                            {message.message}
-                                                        </Box>
-                                                    </Typography>
+                                                    )}
                                                 </Box>
                                             </ButtonBase>
                                         </TableCell>
+                                        {!screenStore.screenSizeSm() && (
+                                            <TableCell align={"right"}>
+                                                {!toMe && (
+                                                    <>
+                                                        {message.viewed ? `Viewed: ${TimeUtils.formatLocalUTCToShortDate(message.viewed)}` : "Not Yet Viewed"}
+                                                    </>
+                                                )}
+                                            </TableCell>
+                                        )}
                                         <TableCell align={"right"}>
-                                            {!toMe && (
-                                                <>
-                                                    {message.viewed ? `Viewed: ${TimeUtils.formatLocalUTCToReadableDateTime(message.viewed)}` : "Not Yet Viewed"}
-                                                </>
-                                            )}
-                                        </TableCell>
-                                        <TableCell align={"right"}>
-                                            {TimeUtils.formatLocalUTCToReadableDateTime(message.sent)}
+                                            {screenStore.screenSizeSm() ? TimeUtils.formatLocalUTCToShortDate(message.sent) : TimeUtils.formatLocalUTCToReadableDateTime(message.sent)}
                                         </TableCell>
                                         <TableCell align={"right"}>
                                             <Box display={"flex"} justifyContent={"flex-end"}>
@@ -136,40 +142,44 @@ export const MyMessages = observer(() => {
                                                     replyToId={message.id}
                                                     onSent={store.search}
                                                 />
-                                                {message.hidden ? (
-                                                    <Tooltip title={"Unarchive message"}>
-                                                        <IconButton
-                                                            onClick={async () => {
-                                                                await userMessageStore.archiveMessage(message.id, false)
-                                                                store.search()
-                                                            }}
-                                                        >
-                                                            <Unarchive/>
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                ) : (
-                                                    <Tooltip title={"Archive message"}>
-                                                        <IconButton
-                                                            onClick={async () => {
-                                                                await userMessageStore.archiveMessage(message.id, true)
-                                                                store.search()
-                                                            }}
-                                                        >
-                                                            <Archive/>
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                )}
-                                                {!message.fullyViewed && (
-                                                    <Tooltip title={"Mark as read"}>
-                                                        <IconButton
-                                                            onClick={async () => {
-                                                                await userMessageStore.markRead(message.id)
-                                                                store.search()
-                                                            }}
-                                                        >
-                                                            <MarkEmailReadIcon/>
-                                                        </IconButton>
-                                                    </Tooltip>
+                                                {!screenStore.screenSizeXs() && (
+                                                    <>
+                                                        {message.hidden ? (
+                                                            <Tooltip title={"Unarchive message"}>
+                                                                <IconButton
+                                                                    onClick={async () => {
+                                                                        await userMessageStore.archiveMessage(message.id, false)
+                                                                        store.search()
+                                                                    }}
+                                                                >
+                                                                    <Unarchive/>
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        ) : (
+                                                            <Tooltip title={"Archive message"}>
+                                                                <IconButton
+                                                                    onClick={async () => {
+                                                                        await userMessageStore.archiveMessage(message.id, true)
+                                                                        store.search()
+                                                                    }}
+                                                                >
+                                                                    <Archive/>
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        )}
+                                                        {!message.fullyViewed && (
+                                                            <Tooltip title={"Mark as read"}>
+                                                                <IconButton
+                                                                    onClick={async () => {
+                                                                        await userMessageStore.markRead(message.id)
+                                                                        store.search()
+                                                                    }}
+                                                                >
+                                                                    <MarkEmailReadIcon/>
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        )}
+                                                    </>
                                                 )}
                                             </Box>
                                         </TableCell>

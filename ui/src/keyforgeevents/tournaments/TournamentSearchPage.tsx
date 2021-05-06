@@ -3,6 +3,7 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
@@ -27,8 +28,11 @@ import { tournamentStore } from "./TournamentStore"
 
 export const TournamentSearchPage = observer(() => {
 
+    const location = useLocation()
+    const mineOnly = location.search.includes("mineOnly=true")
+
     useEffect(() => {
-        tournamentSearchStore.performSearch()
+        tournamentSearchStore.performSearch(mineOnly)
         uiStore.setTopbarValues("Tournaments of KeyForge", "Tournaments", "Find a game")
     }, [tournamentSearchStore.search])
 
@@ -48,7 +52,7 @@ export const TournamentSearchPage = observer(() => {
                 </Typography>
                 <DiscordButton/>
             </AnnouncementPaper>
-            <TournamentsListView tournaments={tournamentStore.foundTournaments}/>
+            <TournamentsListView tournaments={tournamentStore.foundTournaments} mineOnly={mineOnly}/>
         </>
     )
 
@@ -74,9 +78,11 @@ class TournamentSearchStore {
         promoted: false,
         formats: [],
         withTournaments: true,
+        mineOnly: false,
     }
 
-    performSearch = async () => {
+    performSearch = async (mineOnly: boolean) => {
+        this.search.mineOnly = mineOnly
         await tournamentStore.searchTournaments(this.search)
     }
 
@@ -96,13 +102,19 @@ class TournamentSearchStore {
 
 const tournamentSearchStore = new TournamentSearchStore()
 
-const TournamentsListView = observer((props: { tournaments: TournamentSearchResult[] }) => {
-    const {tournaments} = props
+const TournamentsListView = observer((props: { tournaments: TournamentSearchResult[], mineOnly: boolean }) => {
+
+    const {tournaments, mineOnly} = props
     return (
         <SortableTableContainer
             title={"Tournaments"}
             controls={(
                 <Box display={"flex"} alignItems={"center"}>
+                    {userStore.loggedIn() && (
+                        <LinkButton href={mineOnly ? Routes.tournaments : Routes.myTournaments} style={{marginRight: spacing(2)}}>
+                            {mineOnly ? "All" : "My"} Tournaments
+                        </LinkButton>
+                    )}
                     <CreateKeyForgeEvent tournament={true}/>
                 </Box>
             )}
@@ -110,7 +122,8 @@ const TournamentsListView = observer((props: { tournaments: TournamentSearchResu
             <SortableTable
                 headers={tournamentsTableHeaders(userStore.isAdmin)}
                 data={tournaments}
-                defaultSort={"name"}
+                defaultSort={"Start Date"}
+                defaultSortFunction={tourney => tourney.event.startDateTime}
             />
         </SortableTableContainer>
     )
@@ -146,7 +159,10 @@ const tournamentsTableHeaders = (isAdmin: boolean): SortableTableHeaderInfo<Tour
             sortable: false,
             transform: tournament => (
                 <>
-                    {tournament.organizerUsernames.map(username => <UserLink username={username}/>)}
+                    {tournament.organizerUsernames.map((username, idx) =>
+                        <UserLink key={username} username={username}
+                                  style={{marginRight: idx !== (tournament.organizerUsernames.length - 1) ? spacing(2) : undefined}}/>
+                    )}
                 </>
             )
         },

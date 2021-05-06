@@ -6,7 +6,7 @@ import * as React from "react"
 import { Fragment } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { log, roundToInt, roundToTens, roundToThousands } from "../config/Utils"
+import { roundToInt, roundToTens, roundToThousands } from "../config/Utils"
 import { displaySas } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
@@ -154,7 +154,6 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 }
 
 export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean, halfAtEnd?: boolean, noPercent?: boolean }) => {
-    log.info("Display sas stars1")
     const {sasPercentile, small, style, gray, halfAtEnd, noPercent} = props
     let includeHalf = false
     let type = StarType.NORMAL
@@ -255,8 +254,6 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
     tooltip = `${roundToThousands(sasPercentile)}%. ${tooltip} according to SAS.`
 
     const starStyle = {marginTop: spacing(0.5)}
-
-    log.info("Display sas stars")
 
     return (
         <Tooltip title={tooltip}>

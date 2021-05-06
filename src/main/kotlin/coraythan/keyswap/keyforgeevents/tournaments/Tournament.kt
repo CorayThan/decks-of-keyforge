@@ -3,6 +3,7 @@ package coraythan.keyswap.keyforgeevents.tournaments
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentRound
+import coraythan.keyswap.keyforgeevents.tournamentparticipants.TournamentParticipant
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -33,6 +34,10 @@ data class Tournament(
         @JsonIgnoreProperties("tourney")
         @OneToMany(mappedBy = "tourney", fetch = FetchType.LAZY)
         val organizers: List<TournamentOrganizer> = listOf(),
+
+        @JsonIgnoreProperties("tournament")
+        @OneToMany(mappedBy = "tournament", fetch = FetchType.LAZY)
+        val participants: List<TournamentParticipant> = listOf(),
 
         val started: LocalDateTime? = null,
         val ended: LocalDateTime? = null,

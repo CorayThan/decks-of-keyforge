@@ -1,13 +1,12 @@
 import * as React from "react"
-import { cardStore } from "../cards/CardStore"
-import { KCard } from "../cards/KCard"
+import { EnhancementType } from "../cards/EnhancementType"
 import { ExtendedExpansionUtils } from "../expansions/ExtendedExpansionUtils"
 import EnhancedAmber from "../generic/imgs/enhancements/enhanced-aember.png"
 import EnhancedCapture from "../generic/imgs/enhancements/enhanced-capture.png"
 import EnhancedDamage from "../generic/imgs/enhancements/enhanced-damage.png"
 import EnhancedDraw from "../generic/imgs/enhancements/enhanced-draw.png"
 import { LargeValueIconsRow } from "../generic/LargeValueIcon"
-import { DeckSearchResult } from "./models/DeckSearchResult"
+import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
 
 
 export const EnhancementsInDeck = (props: { deck: DeckSearchResult, style?: React.CSSProperties }) => {
@@ -18,35 +17,19 @@ export const EnhancementsInDeck = (props: { deck: DeckSearchResult, style?: Reac
         return null
     }
 
-    let enhancedAmber = 0
-    let enhancedCapture = 0
-    let enhancedDamage = 0
-    let enhancedDraw = 0
+    const bonusIcons = DeckUtils.calculateBonusIcons(deck)
 
-
-    const cards = deck.housesAndCards
-        .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
-        .filter(card => card != null) as KCard[]
-
-
-    cards.forEach(card => {
-        enhancedAmber += card.extraCardInfo.enhancementAmber
-        enhancedCapture += card.extraCardInfo.enhancementCapture
-        enhancedDamage += card.extraCardInfo.enhancementDamage
-        enhancedDraw += card.extraCardInfo.enhancementDraw
-    })
-
-    if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw === 0) {
+    if (bonusIcons == null) {
         return null
     }
 
     return (
         <LargeValueIconsRow
             values={[
-                {value: enhancedAmber, iconSrc: EnhancedAmber},
-                {value: enhancedCapture, iconSrc: EnhancedCapture},
-                {value: enhancedDamage, iconSrc: EnhancedDamage},
-                {value: enhancedDraw, iconSrc: EnhancedDraw},
+                {value: bonusIcons.get(EnhancementType.AEMBER)!, iconSrc: EnhancedAmber},
+                {value: bonusIcons.get(EnhancementType.CAPTURE)!, iconSrc: EnhancedCapture},
+                {value: bonusIcons.get(EnhancementType.DAMAGE)!, iconSrc: EnhancedDamage},
+                {value: bonusIcons.get(EnhancementType.DRAW)!, iconSrc: EnhancedDraw},
             ]}
             style={style}
         />

@@ -68,8 +68,6 @@ class Routes {
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
     static compareDecks = "/compare-decks"
-    static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
-    static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static stats = "/stats"
     static articles = "/articles"
     static registration = "/registration"
@@ -78,6 +76,9 @@ class Routes {
     static termsOfUse = "/terms-of-use"
     static codeOfConduct = "/code-of-conduct"
     static thirdPartyTools = "/third-party-tools"
+    static myTournaments = `${Routes.tournaments}?mineOnly=true`
+    static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
+    static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static messagePage = (id?: number) => `${Routes.messages}/${id == null ? ":id" : id}`

@@ -1,5 +1,8 @@
 import { cardStore } from "../../cards/CardStore"
+import { EnhancementType } from "../../cards/EnhancementType"
+import { KCard } from "../../cards/KCard"
 import { log, roundToHundreds } from "../../config/Utils"
+import { ExtendedExpansionUtils } from "../../expansions/ExtendedExpansionUtils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
@@ -90,6 +93,42 @@ export interface TraitInDeckInfo {
 }
 
 export class DeckUtils {
+
+    static calculateBonusIcons = (deck: DeckSearchResult): Map<EnhancementType, number> | undefined => {
+        if (ExtendedExpansionUtils.allowsEnhancements(deck.expansion)) {
+
+            let enhancedAmber = 0
+            let enhancedCapture = 0
+            let enhancedDamage = 0
+            let enhancedDraw = 0
+
+            const cards = deck.housesAndCards
+                .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
+                .filter(card => card != null) as KCard[]
+
+
+            cards.forEach(card => {
+                enhancedAmber += card.extraCardInfo.enhancementAmber
+                enhancedCapture += card.extraCardInfo.enhancementCapture
+                enhancedDamage += card.extraCardInfo.enhancementDamage
+                enhancedDraw += card.extraCardInfo.enhancementDraw
+            })
+
+            if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw === 0) {
+                return undefined
+            }
+
+            const enhancements = new Map<EnhancementType, number>()
+            enhancements.set(EnhancementType.AEMBER, enhancedAmber)
+            enhancements.set(EnhancementType.CAPTURE, enhancedCapture)
+            enhancements.set(EnhancementType.DAMAGE, enhancedDamage)
+            enhancements.set(EnhancementType.DRAW, enhancedDraw)
+
+            return enhancements
+        }
+
+        return undefined
+    }
 
     static calculateMetaScore = (deck: DeckSearchResult) => {
         return Object.entries(deck.metaScores ?? {})

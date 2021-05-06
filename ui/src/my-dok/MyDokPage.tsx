@@ -6,6 +6,7 @@ import { BoughtAndSoldView } from "../auctions/purchases/BoughtAndSoldView"
 import { MyDokSubPaths } from "../config/Routes"
 import { MyMessages } from "../messages/MyMessages"
 import { TeamPage } from "../teams/TeamPage"
+import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { MyNotifications } from "./MyNotifications"
 import { MyOffersView } from "./MyOffersView"
@@ -21,7 +22,7 @@ export class MyDokPage extends React.Component<RouteComponentProps<{}>> {
 
     render() {
         return (
-            <Box m={4} mt={10}>
+            <Box mx={screenStore.screenSizeXs() ? 1 : 4} mt={screenStore.screenSizeXs() ? 8 : 10}>
                 <Switch>
                     <Route path={MyDokSubPaths.messages} component={MyMessages}/>
                     <Route path={MyDokSubPaths.profile} component={MyProfile}/>

@@ -18,6 +18,7 @@ import { UpgradeIcon } from "../../generic/icons/card-types/UpgradeIcon"
 import { KeyCheatIcon } from "../../generic/icons/KeyCheatIcon"
 import { MutantIcon } from "../../generic/icons/MutantIcon"
 import { ScalingStealIcon } from "../../generic/icons/ScalingStealIcon"
+import { TideIcon } from "../../generic/icons/TideIcon"
 import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
 import { SynTraitPlayer } from "../../synergy/SynTraitValue"
@@ -63,8 +64,9 @@ export const AercCategoryExtras = (props: AercCatProps) => {
                     (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
                 ) != null,
                 cards,
-                title: "Archives Cards",
-                title2: "Randomly Archives Cards"
+                title: "Archives",
+                subtitle1: "Archives Targetted",
+                subtitle2: "Archives Random"
             }
         },
         {
@@ -206,6 +208,27 @@ export const AercCategoryCounts = (props: AercCatProps) => {
                 matches: card => card.traits?.includes("MUTANT") ?? false,
                 cards,
                 title: "Mutants"
+            }
+        })
+    }
+
+    if (deck.expansion === Expansion.DARK_TIDINGS) {
+
+        const manipulatesTideCheckCard = (card: KCard) => card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.lowersTide || trait.trait === SynergyTrait.raisesTide)
+        const manipulatesTide = (cards: KCard[]) => cards.filter(manipulatesTideCheckCard)
+        const usesTideCheckCard = (card: KCard) => card.extraCardInfo?.synergies?.find(synergy => synergy.trait === SynergyTrait.lowersTide || synergy.trait === SynergyTrait.raisesTide)
+        const usesTide = (cards: KCard[]) => cards.filter(usesTideCheckCard)
+
+        thirdTwo.push({
+            icon: <TideIcon width={width}/>,
+            info: `${manipulatesTide(cards).length}/${usesTide(cards).length}`,
+            cardsTips: {
+                matches: card => manipulatesTideCheckCard(card) != null,
+                matches2: card => usesTideCheckCard(card) != null,
+                cards,
+                title: "Tide",
+                subtitle1: "Manipulates Tide",
+                subtitle2: "Uses Tide"
             }
         })
     }

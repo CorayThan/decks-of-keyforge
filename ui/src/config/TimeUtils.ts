@@ -8,6 +8,7 @@ export class TimeUtils {
     private static readonly readableDateFormat = "MMM d, yyyy"
     private static readonly readableShortDateFormat = "MMM yyyy"
     private static readonly readableDateTimeFormat = "MMM d, yyyy, h:mm a"
+    private static readonly shortDateFormat = "MMM d"
     private static readonly eventTimeFormat = "h:mm a z"
     private static readonly roundStartTime = "h:mm a"
     private static readonly eventDateFormat = "EEE MMM d, yy"
@@ -47,6 +48,16 @@ export class TimeUtils {
         try {
             const parsed = TimeUtils.eventDateTime(dateTimeInUTC)!
             return format(parsed, TimeUtils.readableDateTimeFormat)
+        } catch (e) {
+            log.warn("Couldn't parse date from " + dateTimeInUTC)
+            return "bad date"
+        }
+    }
+
+    static formatLocalUTCToShortDate = (dateTimeInUTC: string) => {
+        try {
+            const parsed = TimeUtils.eventDateTime(dateTimeInUTC)!
+            return format(parsed, TimeUtils.shortDateFormat)
         } catch (e) {
             log.warn("Couldn't parse date from " + dateTimeInUTC)
             return "bad date"

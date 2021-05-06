@@ -1,5 +1,7 @@
 package coraythan.keyswap.keyforgeevents.tournaments
 
+import com.querydsl.core.BooleanBuilder
+import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
@@ -38,27 +41,46 @@ class TournamentService(
         private val keyUserRepo: KeyUserRepo,
         private val deckRepo: DeckRepo,
         private val keyForgeEventService: KeyForgeEventService,
+        private val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+    private val query = JPAQueryFactory(entityManager)
 
     fun searchTournaments(filters: KeyForgeEventFilters): List<TournamentSearchResult> {
-        val tournaments = tourneyRepo.findAll()
 
-        // val events = keyForgeEventService.searchEvents(filters)
-        return tournaments.map { tournament ->
-            val event = eventRepo.findByTourneyId(tournament.id)?.toDto() ?: throw BadRequestException("No event for tournament with id ${tournament.id}")
-            TournamentSearchResult(
-                    id = tournament.id,
-                    name = tournament.name,
-                    private = tournament.privateTourney,
-                    ended = tournament.ended,
-                    event = event,
-                    participants = tournamentParticipantRepo.countByTournamentId(tournament.id).toInt(),
-                    organizerUsernames = tournament.organizers.map { it.organizer.username },
-                    stage = tournament.stage,
+        val tournamentQ = QTournament.tournament
+        val predicate = BooleanBuilder()
+
+        if (filters.mineOnly) {
+            val currentUser = currentUserService.loggedInUserOrUnauthorized()
+
+            predicate.andAnyOf(
+                    tournamentQ.organizers.any().organizer.id.eq(currentUser.id),
+                    tournamentQ.participants.any().userId.eq(currentUser.id),
             )
         }
+
+        val tournaments = query.selectFrom(tournamentQ)
+                .where(predicate)
+                .fetch()
+
+        return tournaments
+                .map { tournament ->
+                    val event = eventRepo.findByTourneyId(tournament.id)?.toDto()
+                            ?: throw BadRequestException("No event for tournament with id ${tournament.id}")
+                    TournamentSearchResult(
+                            id = tournament.id,
+                            name = tournament.name,
+                            private = tournament.privateTourney,
+                            ended = tournament.ended,
+                            event = event,
+                            participants = tournamentParticipantRepo.countByTournamentId(tournament.id).toInt(),
+                            organizerUsernames = tournament.organizers.map { it.organizer.username },
+                            stage = tournament.stage,
+                    )
+                }
+                .sortedBy { it.event.startDateTime }
     }
 
     fun findTourneyInfo(id: Long): TournamentInfo {
@@ -394,7 +416,7 @@ class TournamentService(
         if (tournamentParticipantRepo.existsByTournamentIdAndUserId(tourney.id, participant.id)) throw BadRequestException("$participantUsername is already in this tournament.")
 
         tournamentParticipantRepo.save(TournamentParticipant(
-                tournamentId = tourney.id,
+                tournament = tourney,
                 userId = participant.id,
         ))
     }

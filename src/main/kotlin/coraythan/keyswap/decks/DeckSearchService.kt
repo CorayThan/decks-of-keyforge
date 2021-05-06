@@ -49,7 +49,6 @@ class DeckSearchService(
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
     private val query = JPAQueryFactory(entityManager)
-    private val specialUsers = setOf("coraythan", "zarathustra05").map { it.toLowerCase() }
 
     var deckCount: Long? = null
 

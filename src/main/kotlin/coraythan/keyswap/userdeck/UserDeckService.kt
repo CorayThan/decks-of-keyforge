@@ -106,6 +106,11 @@ class UserDeckService(
 
         val deck = deckRepo.findByIdOrNull(deckId) ?: throw BadRequestException("No deck for id $deckId")
 
+        if (mark && ownedDeckRepo.existsByDeckIdAndOwnerId(deckId, user.id)) {
+            log.info("Skipping adding this deck. Already added.")
+            return
+        }
+
         // new ownership code
         if (mark) {
             ownedDeckRepo.save(OwnedDeck(

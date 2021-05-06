@@ -8,7 +8,8 @@ import { SasTip } from "../mui-restyled/SasTip"
 
 export interface CardsMatchSasTipProps {
     title: string
-    title2?: string
+    subtitle1?: string
+    subtitle2?: string
     matches: (card: KCard) => boolean
     matches2?: (card: KCard) => boolean
     cards: KCard[]
@@ -19,7 +20,7 @@ export interface CardsMatchSasTipProps {
 export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
 
     render() {
-        const {title, title2, cards, matches, matches2, children} = this.props
+        const {title, subtitle1, subtitle2, cards, matches, matches2, children} = this.props
 
         if (!cardStore.cardsLoaded) {
             return null
@@ -33,43 +34,36 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
             .map(card => cardStore.fullCardFromCardName(card.cardTitle))
             .filter(card => card != null && matches2(card as KCard))
 
-        const firstContent = (matchedCards.length > 0 &&
-            <div>
-                {matchedCards.map((card, idx) => (
-                    <Typography variant={"body2"} key={idx}>
-                        {card!.cardTitle}
-                    </Typography>
-                ))}
-            </div>
-        )
-        const firstTitle = title2 == null ? null : (
-            <Typography variant={"overline"} style={{fontWeight: 575}}>
-                {title}
-            </Typography>
-            )
-        const secondContent = (matchedCards2.length > 0 &&
-            <div>
-                {matchedCards2.map((card, idx) => (
-                    <Typography variant={"body2"} key={idx}>
-                        {card!.cardTitle}
-                    </Typography>
-                ))}
-            </div>
-        )
-
         return (
             <SasTip
                 title={<Typography variant={"subtitle1"}>{title}</Typography>}
                 contents={(
                     <div>
-                        {matchedCards2.length > 0 &&  firstTitle}
-                        {firstContent}
-                        {title2 && matchedCards2.length > 0 && (
-                            <Typography variant={"overline"} style={{marginTop: spacing(2)}}>
-                                {title2}
+                        {subtitle1 != null && matchedCards.length > 0 && (
+                            <Typography variant={"overline"} style={{fontWeight: 575}}>
+                                {subtitle1}
                             </Typography>
                         )}
-                        {secondContent}
+                        {matchedCards.length > 0 &&
+                        <div>
+                            {matchedCards.map((card, idx) => (
+                                <Typography variant={"body2"} key={idx}>
+                                    {card!.cardTitle}
+                                </Typography>
+                            ))}
+                        </div>}
+                        {matchedCards2.length > 0 && (
+                            <>
+                                <Typography variant={"overline"} style={{marginTop: spacing(2)}}>
+                                    {subtitle2}
+                                </Typography>
+                                {matchedCards2.map((card, idx) => (
+                                    <Typography variant={"body2"} key={idx}>
+                                        {card!.cardTitle}
+                                    </Typography>
+                                ))}
+                            </>
+                        )}
                     </div>
                 )}
             >

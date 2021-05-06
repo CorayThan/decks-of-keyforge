@@ -1,4 +1,4 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
 import { blue } from "@material-ui/core/colors"
 import Popover from "@material-ui/core/Popover/Popover"
 import Typography from "@material-ui/core/Typography/Typography"
@@ -11,9 +11,11 @@ import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
 import { SimpleCard } from "../../generated-src/SimpleCard"
+import { EnhancementIcon } from "../../generic/icons/EnhancementIcon"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { cardStore } from "../CardStore"
+import { EnhancementType } from "../EnhancementType"
 import { KCard } from "../KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, RarityIcon } from "../rarity/Rarity"
 import { CardSimpleView, CardView } from "./CardSimpleView"
@@ -26,6 +28,7 @@ interface CardAsLineProps {
     marginTop?: number
     hideRarity?: boolean
     deck?: DeckSearchResult
+    enhancements?: Map<EnhancementType, number>
 }
 
 export const CardAsLine = observer((props: CardAsLineProps) => {
@@ -170,7 +173,7 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
 }
 
 const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
-    const {card, fullCard, hideRarity} = props
+    const {card, fullCard, hideRarity, enhancements} = props
 
     return (
         <div
@@ -184,6 +187,22 @@ const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
             >
                 {card.cardTitle}
             </Typography>
+            {enhancements != null && (
+                <Box display={"flex"} ml={1}>
+                    {[...Array(enhancements.get(EnhancementType.AEMBER) ?? 0)].map((n, idx) => (
+                        <EnhancementIcon type={EnhancementType.AEMBER} key={idx}/>
+                    ))}
+                    {[...Array(enhancements.get(EnhancementType.CAPTURE) ?? 0)].map((n, idx) => (
+                        <EnhancementIcon type={EnhancementType.CAPTURE} key={idx}/>
+                    ))}
+                    {[...Array(enhancements.get(EnhancementType.DAMAGE) ?? 0)].map((n, idx) => (
+                        <EnhancementIcon type={EnhancementType.DAMAGE} key={idx}/>
+                    ))}
+                    {[...Array(enhancements.get(EnhancementType.DRAW) ?? 0)].map((n, idx) => (
+                        <EnhancementIcon type={EnhancementType.DRAW} key={idx}/>
+                    ))}
+                </Box>
+            )}
             {card.anomaly ? (
                 <div style={{marginLeft: spacing(1)}}><AnomalyIcon/></div>
             ) : (

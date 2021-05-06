@@ -123,7 +123,8 @@ class KeyForgeEventsSearchStore {
     search: KeyForgeEventFilters = {
         timeRange: EventTimeRange.NEXT_MONTH,
         promoted: false,
-        formats: []
+        formats: [],
+        mineOnly: false,
     }
 
     performSearch = async () => {

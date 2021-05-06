@@ -11,7 +11,8 @@ export const PromotedKeyForgeEvents = observer(() => {
         keyForgeEventStore.searchEvents({
             timeRange: EventTimeRange.NEXT_MONTH,
             promoted: true,
-            formats: []
+            formats: [],
+            mineOnly: false,
         })
     }, [])
 

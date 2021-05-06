@@ -1,16 +1,19 @@
 package coraythan.keyswap.keyforgeevents.tournamentparticipants
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.keyforgeevents.tournaments.Tournament
 import coraythan.keyswap.roundToTwoSigDig
 import org.springframework.data.repository.CrudRepository
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class TournamentParticipant(
-        val tournamentId: Long,
+
+        @JsonIgnoreProperties("participants")
+        @ManyToOne
+        val tournament: Tournament,
+
         val userId: UUID,
 
         val dropped: Boolean = false,
