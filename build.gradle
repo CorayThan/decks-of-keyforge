@@ -97,8 +97,8 @@ dependencies {
     implementation("com.patreon:patreon:0.4.2")
     implementation("com.amazonaws:aws-java-sdk-s3:1.11.1014")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
-    runtime("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
-    runtime("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
     implementation("com.vladmihalcea:hibernate-types-52:2.10.4")
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
@@ -108,8 +108,6 @@ dependencies {
     runtimeOnly('org.postgresql:postgresql')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
-
-    // TODO remove this
 
     testImplementation("org.junit.vintage:junit-vintage-engine") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
