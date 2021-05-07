@@ -19,6 +19,6 @@ export const EnhancementIcon = (props: { type: EnhancementType }) => {
     }
 
     return (
-        <img alt={props.type} src={iconSrc} style={{width: 16}}/>
+        <img alt={props.type} src={iconSrc} style={{width: 16, height: 16}}/>
     )
 }

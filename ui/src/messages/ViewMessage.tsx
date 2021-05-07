@@ -121,7 +121,7 @@ const IndividualMessage = observer((props: { message: PrivateMessageDto, actions
                         Viewed
                     </Typography>
                     <Typography variant={"body2"} color={"textSecondary"}>
-                        {viewedTime == null ? "Not yet viewed" : TimeUtils.formatLocalUTCToReadableDateTime(viewedTime)}
+                        {viewedTime == null ? "Not viewed" : TimeUtils.formatLocalUTCToReadableDateTime(viewedTime)}
                     </Typography>
                 </Box>
                 <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
