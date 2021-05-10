@@ -22,8 +22,6 @@ export const CardTypePie = (props: {
 }) => (
     <DokDeckGraphWrapper name={props.name} style={props.style}>
         <ResponsivePie
-            radialLabelsLinkHorizontalLength={0}
-            radialLabelsLinkDiagonalLength={12}
             innerRadius={0.4}
             padAngle={4}
             cornerRadius={4}
