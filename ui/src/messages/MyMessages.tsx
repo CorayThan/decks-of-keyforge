@@ -28,7 +28,7 @@ export const MyMessages = observer(() => {
         return <Loader/>
     }
 
-    const {category, page, pageSize} = store.filters
+    const {category} = store.filters
 
     const buttonWidth = undefined
 

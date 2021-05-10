@@ -49,7 +49,7 @@ export const CreateTheoreticalDeck = observer(() => {
     }, [])
 
     useEffect(() => {
-        const oldCards: CardsInHouses = deckBuilderStore.currentDeck?.cards!
+        const oldCards: CardsInHouses = deckBuilderStore.currentDeck!.cards!
         const cards: CardsInHouses = {}
         const houses = housesStore.getHousesSelectedTrue()
         houses.forEach(house => {

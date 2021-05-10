@@ -70,7 +70,7 @@ const ViewMessage = observer((props: { message: PrivateMessageDto }) => {
             <Box mr={2}>
                 <IndividualMessage message={message} actions={true}/>
                 {message.replies.map(reply => (
-                    <IndividualMessage message={reply}/>
+                    <IndividualMessage key={reply.id} message={reply}/>
                 ))}
             </Box>
             {deckStore.deck != null && (

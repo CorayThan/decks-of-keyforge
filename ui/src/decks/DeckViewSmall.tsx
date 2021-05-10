@@ -15,7 +15,6 @@ import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
-import { roundToTens } from "../config/Utils"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { displaySas, expansionInfoMap } from "../expansions/Expansions"
 import { DeckListingStatus } from "../generated-src/DeckListingStatus"
@@ -274,24 +273,6 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
         )
     }
 })
-
-const ExtraScore = (props: { name: string, score: number, tooltip?: string }) => {
-    const {name, score, tooltip} = props
-    return (
-        <Box>
-            <Tooltip
-                title={tooltip ?? ""}
-            >
-                <Box display={"flex"} alignItems={"flex-end"} justifyContent={"center"}>
-                    <Typography variant={"h5"} style={{fontSize: 30, marginRight: spacing(1), color: "#FFF"}}>
-                        {roundToTens(score)}
-                    </Typography>
-                    <Typography variant={"h5"} style={{fontSize: 20, marginBottom: 4, color: "#FFF"}} noWrap={true}>{name}</Typography>
-                </Box>
-            </Tooltip>
-        </Box>
-    )
-}
 
 const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props

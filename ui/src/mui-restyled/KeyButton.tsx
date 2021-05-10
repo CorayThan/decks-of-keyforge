@@ -69,14 +69,14 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
                 // @ts-ignore
                 <IconButton
                     {...rest}
-                    onClick={(event) => {
+                    onClick={() => {
                         setOpen(true)
                     }}
                 />
             ) : (
                 <Button
                     {...rest}
-                    onClick={(event) => {
+                    onClick={() => {
                         setOpen(true)
                     }}
                 />
@@ -159,7 +159,7 @@ export const ConfirmKeyButton = (props: ConfirmButtonProps) => {
         <>
             <Button
                 {...rest}
-                onClick={(event) => {
+                onClick={() => {
                     setOpen(true)
                 }}
             />

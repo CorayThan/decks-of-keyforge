@@ -14,7 +14,7 @@ import { DeleteKeyForgeEvent } from "./DeleteKeyForgeEvent"
 
 export const KeyForgeEventCard = observer((props: { event: KeyForgeEventDto, noTournamentLink?: boolean, style?: React.CSSProperties }) => {
     const {event, noTournamentLink, style} = props
-    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername, tourneyId, id} = event
+    const {banner, name, description, startDateTime, format, duration, entryFee, discordServer, signupLink, sealed, createdByUsername, tourneyId} = event
 
     const width = 320
     const mediaHeight = 160

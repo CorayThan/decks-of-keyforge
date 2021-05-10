@@ -13,7 +13,7 @@ export const OwnersList = (props: { owners?: string[] }) => {
         <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(1)}}>
             {owners.map(owner => {
                 return (
-                    <UserLink username={owner} style={{marginRight: spacing(2)}}/>
+                    <UserLink key={owner} username={owner} style={{marginRight: spacing(2)}}/>
                 )
             })}
         </div>

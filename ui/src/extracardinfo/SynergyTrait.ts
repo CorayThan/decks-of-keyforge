@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { startCase } from "lodash"
 import { Utils } from "../config/Utils"
 import { SynergyTrait } from "../generated-src/SynergyTrait"

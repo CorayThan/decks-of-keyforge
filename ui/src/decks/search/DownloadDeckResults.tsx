@@ -108,7 +108,7 @@ export const DownloadDeckResults = observer((props: { filters: DeckFilters }) =>
                             name={"decks"}
                             data={DeckUtils.arrayToCSV(
                                 (deckStore.decksToDownload ?? (deckStore.decksToDisplay ?? [])
-                                    .map(deckId => deckStore.deckIdToDeck?.get(deckId)!)
+                                    .map(deckId => deckStore.deckIdToDeck!.get(deckId)!)
                                     .filter(deck => deck != null))
                             )}
                             button={(

@@ -43,7 +43,7 @@ export const PairPlayersButton = observer((props: {
                             secondPlayerNode = <UserLink username={secondPlayer}/>
                         }
                         return (
-                            <Box display={"flex"} alignItems={"center"} mt={2}>
+                            <Box display={"flex"} alignItems={"center"} mt={2} key={pairing.pairingTable}>
                                 <UserLink username={firstPlayer}/>
                                 <Typography variant={"subtitle2"} style={{marginLeft: spacing(2), marginRight: spacing(2)}}>vs</Typography>
                                 {secondPlayerNode}
