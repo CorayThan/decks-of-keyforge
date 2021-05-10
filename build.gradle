@@ -8,28 +8,24 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
-        // For fixing windows command too long
-        classpath "gradle.plugin.com.github.viswaramamoorthy:gradle-util-plugins:0.1.0-RELEASE"
     }
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'kotlin-spring'
-apply plugin: 'kotlin-jpa'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-// For fixing windows command too long
-apply plugin: "com.github.ManifestClasspath"
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.5.0'
+    id 'org.jetbrains.kotlin.plugin.jpa' version '1.5.0'
+    id 'org.jetbrains.kotlin.kapt' version '1.5.0'
+
+    id "org.springframework.boot"  version "2.4.5"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+}
 
 group = 'coraythan'
 version = '461'
