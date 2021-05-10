@@ -14,5 +14,5 @@ interface OfferRepo : CrudRepository<Offer, UUID> {
 
     fun existsByRecipientIdAndViewedTimeIsNull(id: UUID): Boolean
 
-    fun findByExpiresTimeBeforeAndStatusNot(before: LocalDateTime, notStatus: OfferStatus): List<Offer>
+    fun findByExpiresTimeBeforeAndStatus(before: LocalDateTime, notStatus: OfferStatus): List<Offer>
 }

@@ -375,7 +375,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                     <Typography style={{margin: spacing(2)}} variant={"body2"}>{updatedMessage}</Typography>
                     <div style={{flexGrow: 1}}/>
                     <TablePagination
-                        rowsPerPageOptions={[10, 25, 50, 100, 1000]}
+                        rowsPerPageOptions={[10, 25, 50, 100]}
                         component={"div"}
                         count={sortedUsers.length}
                         rowsPerPage={rowsPerPage}

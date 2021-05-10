@@ -35,7 +35,7 @@ class OfferService(
 
     @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.expireOffersInitialDelay)
     fun expireOffers() {
-        val toExpire = offerRepo.findByExpiresTimeBeforeAndStatusNot(nowLocal(), OfferStatus.EXPIRED)
+        val toExpire = offerRepo.findByExpiresTimeBeforeAndStatus(nowLocal(), OfferStatus.SENT)
         toExpire.forEach { offerRepo.save(it.copy(status = OfferStatus.EXPIRED)) }
     }
 
