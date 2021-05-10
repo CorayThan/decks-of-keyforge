@@ -569,8 +569,8 @@ class TournamentService(
                             byes = byeCount,
                             strengthOfSchedule = 0.0,
                             extendedStrengthOfSchedule = 0.0,
-                            score = games.sumBy { if (it.playerOneId == player.id) it.playerOneScore ?: 0 else it.playerTwoScore ?: 0 },
-                            opponentsScore = games.sumBy { if (it.playerOneId == player.id) it.playerTwoScore ?: 0 else it.playerOneScore ?: 0 },
+                            score = games.sumOf { if (it.playerOneId == player.id) it.playerOneScore ?: 0 else it.playerTwoScore ?: 0 },
+                            opponentsScore = games.sumOf { if (it.playerOneId == player.id) it.playerTwoScore ?: 0 else it.playerOneScore ?: 0 },
                             dropped = player.dropped,
                     )
                 }

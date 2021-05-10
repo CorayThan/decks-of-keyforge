@@ -41,6 +41,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+springBoot {
+    mainClass.set("coraythan.keyswap.KeyswapApplication")
+}
+
 repositories {
     mavenCentral()
 }

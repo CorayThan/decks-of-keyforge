@@ -136,8 +136,8 @@ class DeckWinsService(
         val updateCardAndHouseWinsLossesDuration = measureTimeMillis {
 
             val decksWithScores = deckRepo.findByWinsGreaterThanOrLossesGreaterThan(0, 0)
-            log.info("Found ${decksWithScores.size} decks with a win or loss. total wins ${decksWithScores.sumBy { it.wins }} " +
-                    "losses ${decksWithScores.sumBy { it.losses }}")
+            log.info("Found ${decksWithScores.size} decks with a win or loss. total wins ${decksWithScores.sumOf { it.wins }} " +
+                    "losses ${decksWithScores.sumOf { it.losses }}")
 
             val cardWins = mutableMapOf<String, Wins>()
             val cardWinsWithExpansions = Expansion.values().map { it to mutableMapOf<String, Wins>() }.toMap().toMutableMap()

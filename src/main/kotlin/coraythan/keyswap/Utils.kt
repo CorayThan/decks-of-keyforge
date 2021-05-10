@@ -1,11 +1,10 @@
 package coraythan.keyswap
 
-import org.springframework.web.multipart.MultipartFile
 import java.math.RoundingMode
 
 fun String.tokenize(): List<String> {
     val trimmed = this
-            .toLowerCase()
+            .lowercase()
             .trim()
     val tokenized = trimmed
             .split("\\W+".toRegex())
@@ -19,7 +18,7 @@ fun Double.roundToTwoSigDig() = this.toBigDecimal().setScale(2, RoundingMode.HAL
 val capFinder = "(?=\\p{Upper})".toRegex()
 
 fun String.startCase(): String {
-    return this.split(capFinder).joinToString(" ") { it.capitalize() }
+    return this.split(capFinder).joinToString(" ") { it.replaceFirstChar { cap -> cap.uppercase() } }
 }
 
 fun Int?.zeroToNull(): Int? {

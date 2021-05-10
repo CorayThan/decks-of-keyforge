@@ -153,7 +153,7 @@ class ForSaleNotificationsService(
     fun findAllForUser(): List<SaleNotificationQueryDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return saleNotificationQueryRepo.findByUserId(currentUser.id).map { it.toDto() }
-                .sortedWith(compareBy({it.precedence}, {it.name.toLowerCase()}))
+                .sortedWith(compareBy({it.precedence}, {it.name.lowercase()}))
     }
 
     fun findCountForUser(): Long {

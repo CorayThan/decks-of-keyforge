@@ -85,5 +85,5 @@ fun String.toUrlFriendlyCardTitle(): String {
     return this
             .replace("[^\\d\\w\\s]".toRegex(), "")
             .replace(" ", "-")
-            .toLowerCase()
+            .lowercase()
 }

@@ -422,7 +422,7 @@ class CardService(
         return cardName
                 .replace(cardNameReplacementRegex, "")
                 .replace(spaceRegex, "-")
-                .toLowerCase()
+                .lowercase()
     }
 }
 

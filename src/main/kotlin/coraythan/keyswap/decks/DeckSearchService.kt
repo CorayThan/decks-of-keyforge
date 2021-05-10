@@ -292,7 +292,7 @@ class DeckSearchService(
                 userHolder.user?.username
             } ?: throw IllegalArgumentException("No notes user for notes.")
 
-            val trimmed = filters.notes.toLowerCase().trim()
+            val trimmed = filters.notes.lowercase().trim()
             val userDeckQ = QUserDeck.userDeck
             predicate.and(
                     deckQ.userDecks.any().`in`(
@@ -469,7 +469,7 @@ class DeckSearchService(
                 .fetchFirst()
     }
 
-    fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.toLowerCase())
+    fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.lowercase())
 
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
@@ -541,7 +541,7 @@ class DeckSearchService(
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
         val trimmed = name
-                .toLowerCase()
+                .lowercase()
                 .trim()
         val tokenized = trimmed
                 .split("\\W+".toRegex())

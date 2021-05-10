@@ -263,16 +263,16 @@ class StatsService(
 
                                     aercData.copy(
                                             count = aercData.count + 12,
-                                            amberControl = aercData.amberControl + relevantCombos.sumByDouble { it.amberControl * it.copies },
-                                            expectedAmber = aercData.expectedAmber + relevantCombos.sumByDouble { it.expectedAmber * it.copies },
-                                            artifactControl = aercData.artifactControl + relevantCombos.sumByDouble { it.artifactControl * it.copies },
-                                            creatureControl = aercData.creatureControl + relevantCombos.sumByDouble { it.creatureControl * it.copies },
-                                            effectivePower = aercData.effectivePower + relevantCombos.sumBy { it.effectivePower * it.copies },
-                                            efficiency = aercData.efficiency + relevantCombos.sumByDouble { it.efficiency * it.copies },
-                                            recursion = aercData.recursion + relevantCombos.sumByDouble { it.recursion * it.copies },
-                                            disruption = aercData.disruption + relevantCombos.sumByDouble { it.disruption * it.copies },
-                                            creatureProtection = aercData.creatureProtection + relevantCombos.sumByDouble { it.creatureProtection * it.copies },
-                                            other = aercData.other + relevantCombos.sumByDouble { it.other * it.copies }
+                                            amberControl = aercData.amberControl + relevantCombos.sumOf { it.amberControl * it.copies },
+                                            expectedAmber = aercData.expectedAmber + relevantCombos.sumOf { it.expectedAmber * it.copies },
+                                            artifactControl = aercData.artifactControl + relevantCombos.sumOf { it.artifactControl * it.copies },
+                                            creatureControl = aercData.creatureControl + relevantCombos.sumOf { it.creatureControl * it.copies },
+                                            effectivePower = aercData.effectivePower + relevantCombos.sumOf { it.effectivePower * it.copies },
+                                            efficiency = aercData.efficiency + relevantCombos.sumOf { it.efficiency * it.copies },
+                                            recursion = aercData.recursion + relevantCombos.sumOf { it.recursion * it.copies },
+                                            disruption = aercData.disruption + relevantCombos.sumOf { it.disruption * it.copies },
+                                            creatureProtection = aercData.creatureProtection + relevantCombos.sumOf { it.creatureProtection * it.copies },
+                                            other = aercData.other + relevantCombos.sumOf { it.other * it.copies }
                                     )
                                 } else {
                                     aercData

@@ -71,7 +71,7 @@ class KeyUserService(
         return userRepo.save(KeyUser(
                 id = UUID.randomUUID(),
                 username = userRegInfo.username,
-                email = userRegInfo.email.toLowerCase(),
+                email = userRegInfo.email.lowercase(),
                 password = bCryptPasswordEncoder.encode(userRegInfo.password),
                 type = UserType.USER,
                 publicContactInfo = if (userRegInfo.publicContactInfo.isNullOrBlank()) null else userRegInfo.publicContactInfo,
@@ -120,10 +120,10 @@ class KeyUserService(
 
         if (update.email != null) validateEmail(update.email)
 
-        val email = update.email?.toLowerCase() ?: user.email
-        val sellerEmail = update.sellerEmail?.toLowerCase() ?: user.sellerEmail
-        val alreadyVerifiedEmail = if (user.emailVerified) user.email.toLowerCase() else null
-        val alreadyVerifiedEmail2 = if (user.sellerEmailVerified) user.sellerEmail?.toLowerCase() else null
+        val email = update.email?.lowercase() ?: user.email
+        val sellerEmail = update.sellerEmail?.lowercase() ?: user.sellerEmail
+        val alreadyVerifiedEmail = if (user.emailVerified) user.email.lowercase() else null
+        val alreadyVerifiedEmail2 = if (user.sellerEmailVerified) user.sellerEmail?.lowercase() else null
         val emailVerified = if (email == alreadyVerifiedEmail || email == alreadyVerifiedEmail2) true else if (update.email == null) user.emailVerified else false
         val sellerEmailVerified = if (sellerEmail != null && (sellerEmail == alreadyVerifiedEmail || sellerEmail == alreadyVerifiedEmail2)) {
             true
@@ -219,9 +219,9 @@ class KeyUserService(
             throw BadRequestException("Please use a fresh code.")
         }
         val user = userRepo.findByIdOrNull(codeInfo.userId) ?: throw BadRequestException("No user exists for the given code.")
-        val email = codeInfo.email.toLowerCase()
-        val userEmail = user.email.toLowerCase()
-        val sellerEmail = user.sellerEmail?.toLowerCase()
+        val email = codeInfo.email.lowercase()
+        val userEmail = user.email.lowercase()
+        val sellerEmail = user.sellerEmail?.lowercase()
         val verifyEmail = email == userEmail
         val verifySellerEmail = email == sellerEmail
         if (!verifyEmail && !verifySellerEmail) {
@@ -259,7 +259,7 @@ class KeyUserService(
         return userRepo.findByUsernameContainsIgnoreCase(name.trim()).map {
             it.minimalSearchResult()
         }
-                .sortedBy { it.username.toLowerCase() }
+                .sortedBy { it.username.lowercase() }
                 .take(10)
     }
 }

@@ -210,7 +210,7 @@ data class IndividalDeckTraitStats(
             val percentile40Index = totalCount * 0.4
             val percentile60Index = totalCount * 0.6
 
-            val totalValue = values.entries.sumBy { it.key * it.value }
+            val totalValue = values.entries.sumOf { it.key * it.value }
             val mean: Double = if (totalCount == 0) 0.0 else totalValue.toDouble() / totalCount
 
             var currentIndex = 0

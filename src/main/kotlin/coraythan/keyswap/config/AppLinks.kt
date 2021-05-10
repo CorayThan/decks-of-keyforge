@@ -26,7 +26,7 @@ class AppLinks(
     fun offersLink() = makeLink("/my-dok/offers", "Offers Page")
 
     fun dokImg() = makeImage("dok.png", 48, 48)
-    fun houseImg(house: House) = makeImage("${house.toString().replace(" ", "-").toLowerCase()}.png")
+    fun houseImg(house: House) = makeImage("${house.toString().replace(" ", "-").lowercase()}.png")
 
 
     private final fun makeUrlPath(path: String) = "${env.baseUrl}$path"

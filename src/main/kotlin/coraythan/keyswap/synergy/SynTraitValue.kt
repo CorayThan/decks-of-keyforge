@@ -139,10 +139,10 @@ data class SynTraitValue(
             nameEnhancer += " $powersString Power"
         }
         if (player != SynTraitPlayer.ANY) {
-            nameEnhancer += " ${player.toString().toLowerCase().capitalize()}"
+            nameEnhancer += " ${player.toString().lowercase().replaceFirstChar { cap -> cap.uppercase() }}"
         }
         if (cardTraits.isNotEmpty()) {
-            nameEnhancer += " ${if (notCardTraits) "Non-" else ""}${cardTraits.joinToString(", ") { it.toLowerCase().capitalize() }}"
+            nameEnhancer += " ${if (notCardTraits) "Non-" else ""}${cardTraits.joinToString(", ") { it.lowercase().replaceFirstChar { cap -> cap.uppercase() } }}"
         }
         if (cardTypes.isNotEmpty()) {
             if (cardTypes.size == 1) {

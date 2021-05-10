@@ -222,7 +222,7 @@ data class KeyForgeCard(
                 ?: "", armorNumber, armor ?: "", realRarity, flavor_text,
                 card_number, expansion, expansionEnum, is_maverick, is_anomaly,
                 extraCardInfo = extraInfoMap[cardTitleFixed.cleanCardName()],
-                traits = traits?.toUpperCase()?.split(" • ")?.toSet() ?: setOf(),
+                traits = traits?.uppercase()?.split(" • ")?.toSet() ?: setOf(),
                 big = card_type == "Creature1" || card_type == "Creature2",
                 enhanced = is_enhanced
         )
