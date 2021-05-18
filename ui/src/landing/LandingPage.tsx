@@ -158,7 +158,7 @@ export class LandingPage extends React.Component<{}> {
                                 Rating this set was and continues to be a challenge. More so than any other set it seems to have multi-card combos, which are
                                 much harder for the SAS system to rate properly. It's hard to properly capture the synergy between United Action, triple
                                 Final Analysis, a bunch of creatures, and a Data Forge for example. I do think these ratings are considerably more refined
-                                than the first version of MM ratings tho, so I hope people find them reasonably accurate.
+                                than the first version of MM ratings though, so I hope people find them reasonably accurate.
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
                                 I have a couple future changes planned that I think will further help improve deck scores, and DT scores in particular. One
