@@ -30,7 +30,7 @@ export class ForSaleNotificationsStore {
                     `Created deck notification "${query.name}". See it on your `,
                     "Success",
                     <LinkButton
-                        color={"secondary"}
+                        color={"inherit"}
                         href={MyDokSubPaths.notifications}
                         key={"notifications"}
                     >

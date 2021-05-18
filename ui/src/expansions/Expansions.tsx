@@ -20,13 +20,6 @@ export enum ExpansionNumber {
     DT = 496,
 }
 
-export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
-   return [ExpansionNumber.COTA, ExpansionNumber.AOA, ExpansionNumber.WC, ExpansionNumber.ANOM, ExpansionNumber.MM]
-       .filter(possibleExpansion => (
-           possibleExpansion <= exp || (exp === ExpansionNumber.WC && possibleExpansion === ExpansionNumber.ANOM)
-       ))
-}
-
 export const activeExpansions = [
     Expansion.CALL_OF_THE_ARCHONS,
     Expansion.AGE_OF_ASCENSION,
@@ -42,6 +35,22 @@ export const activeSasExpansions = [
     Expansion.MASS_MUTATION,
     Expansion.DARK_TIDINGS,
 ]
+
+export const activeCardExpansions = [
+    ExpansionNumber.COTA,
+    ExpansionNumber.AOA,
+    ExpansionNumber.WC,
+    ExpansionNumber.ANOM,
+    ExpansionNumber.MM,
+    ExpansionNumber.DT,
+]
+
+export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
+    return activeCardExpansions
+        .filter(possibleExpansion => (
+            possibleExpansion <= exp || (exp === ExpansionNumber.WC && possibleExpansion === ExpansionNumber.ANOM)
+        ))
+}
 
 export const displaySas = (expansion: Expansion) => {
     return userStore.contentCreator || activeSasExpansions.includes(expansion)
