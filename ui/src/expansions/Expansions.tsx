@@ -40,6 +40,7 @@ export const activeSasExpansions = [
     Expansion.AGE_OF_ASCENSION,
     Expansion.WORLDS_COLLIDE,
     Expansion.MASS_MUTATION,
+    Expansion.DARK_TIDINGS,
 ]
 
 export const displaySas = (expansion: Expansion) => {

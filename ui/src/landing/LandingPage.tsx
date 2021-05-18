@@ -23,6 +23,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
+import { UserLink } from "../user/UserLink"
 import { DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
 
 const topSas = new DeckFilters()
@@ -147,32 +148,45 @@ export class LandingPage extends React.Component<{}> {
 
                         <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
                             <Typography variant={"h5"} gutterBottom={true}>
-                                Dark Tidings SAS will release on 5/18
+                                Dark Tidings SAS Released!
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                This was a tough decision, but I've decided to release SAS on this date for the following reasons:
+                                You can now see SAS scores for all Dark Tidings decks! Over the next couple days the site will be updating itself so that
+                                they will properly sort by SAS when searching decks.
                             </Typography>
-                            <ul>
-                                <li style={{marginBottom: spacing(1)}}>
-                                    <Typography variant={"body1"} gutterBottom={true}>
-                                        <b>More time to refine scores</b>
-                                    </Typography>
-                                    <Typography variant={"body1"}>
-                                        I believe Mass Mutation SAS scores were released a bit prematurely. I'd like to have more mature ratings
-                                        for Dark Tidings, and this set has many high-value combos that will take a bit more time to fine tune than usual.
-                                    </Typography>
-                                </li>
-                                <li>
-                                    <Typography variant={"body1"} gutterBottom={true}>
-                                        <b>A level playing field</b>
-                                    </Typography>
-                                    <Typography variant={"body1"}>
-                                        Many DoK users will not have decks until about May 14th.
-                                        Releasing SAS significantly before many secondary market sellers have decks would put those sellers
-                                        at a competitive disadvantage.
-                                    </Typography>
-                                </li>
-                            </ul>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                Rating this set was and continues to be a challenge. More so than any other set it seems to have multi-card combos, which are
+                                much harder for the SAS system to rate properly. It's hard to properly capture the synergy between United Action, triple
+                                Final Analysis, a bunch of creatures, and a Data Forge for example. I do think these ratings are considerably more refined
+                                than the first version of MM ratings tho, so I hope people find them reasonably accurate.
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                I have a couple future changes planned that I think will further help improve deck scores, and DT scores in particular. One
+                                of them is rebalancing how SAS rates creatures and their power. Currently all creatures get a hidden 0.4 SAS bonus, as well
+                                as about 0.1 point per power / armor. I plan to make that more complex, and to rate lower power creatures a little less, and
+                                higher power / armor creatures a little more.
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                The other change I have planned is to further refine the META scores. In particular I expect to increase the negative meta
+                                score for low C decks, but I also plan to re-evaluate META scores in general for the new meta.
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                <b>Thank you to the folks who helped rate and refine the scores for DT SAS!</b>
+                            </Typography>
+                            <Box mt={2} display={"flex"} flexWrap={"wrap"}>
+                                <UserLink username={"Zarathustra05"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"AlexShepelev"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"drsheep"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"Eccoedo"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"PlayerHurp"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"mlvanbie"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"quickdraw3457"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"fakyrr"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"hydrophilic_attack"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"OotTheMonk"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"Gaxeco"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <UserLink username={"PetitBOT"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                            </Box>
                         </AnnouncementPaper>
 
                         {screenStore.screenSizeSm() ? (
