@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 buildscript {
 
@@ -26,23 +27,23 @@ plugins {
 }
 
 group = "coraythan"
-version = "461"
+version = "465"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
     }
+}
 
-    tasks.bootJar {
-        from(".ebextensions") {
-            into(".ebextensions")
-        }
+tasks.getByName<BootJar>("bootJar") {
+    from(".ebextensions") {
+        into(".ebextensions")
     }
 }
 
 springBoot {
-    mainClass.set("coraythan.keyswap.KeyswapApplication")
+    mainClass.set("coraythan.keyswap.KeyswapApplicationKt")
 }
 
 repositories {

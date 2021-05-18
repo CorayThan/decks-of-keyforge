@@ -40,3 +40,12 @@ fun Boolean?.falseToNull(): Boolean? {
     if (this == false) return null
     return this
 }
+
+fun String.htmlEncode(): String {
+    return this
+            .replace("\"", "&quot;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("&", "&amp;")
+            .replace("'", "&#39;")
+}

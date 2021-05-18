@@ -5,6 +5,7 @@ import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.decks.DeckSearchService
+import coraythan.keyswap.htmlEncode
 import coraythan.keyswap.tags.TagService
 import coraythan.keyswap.users.KeyUserService
 import coraythan.keyswap.users.search.UserSearchResult
@@ -245,8 +246,8 @@ class WebConfiguration(
         val bytes = FileCopyUtils.copyToByteArray(page.inputStream)
         val content = String(bytes, StandardCharsets.UTF_8)
         val modified = content
-                .replace("~~title~~", "$title – DoK")
-                .replace("~~description~~", description)
+                .replace("~~title~~", "${title.htmlEncode()} – DoK")
+                .replace("~~description~~", description.htmlEncode())
                 .replace("~~image~~", image)
                 .replace("~~image-width~~", imageWidth.toString())
                 .replace("~~image-height~~", imageHeight.toString())

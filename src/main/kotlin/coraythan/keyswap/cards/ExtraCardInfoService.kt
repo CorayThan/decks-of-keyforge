@@ -44,7 +44,7 @@ class ExtraCardInfoService(
     }
 
     fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): UUID {
-        currentUserService.contentCreatorOrUnauthorized()
+        currentUserService.adminOrUnauthorized()
 
         val info = sourceInfo.nullMaxes()
 
