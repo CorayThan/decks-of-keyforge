@@ -1,9 +1,10 @@
-import { Box, Grid, Link, Typography } from "@material-ui/core"
+import { Box, Grid, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { HelperText } from "../generic/CustomTypographies"
 import { InfoListCard } from "../generic/InfoListCard"
+import { LinkButtonSafe } from "../mui-restyled/LinkButton"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import KeyForgeBurgerInsertsIcon from "./about-images/burger-inserts-icon.png"
 import { AboutGridItem } from "./AboutPage"
@@ -32,9 +33,40 @@ export class ThirdPartyIntegrations extends React.Component {
                 </Box>
                 <Grid container={true} spacing={4} justify={"center"}>
                     <DisplayIntegration
+                        name={"iOS: Import to DoK from MV App"}
+                        description={
+                            [
+                                <Typography key={"first"}>
+                                    <b>How to install:</b>
+                                </Typography>,
+                                <ol key={"second"}>
+                                    <li>Open iPhone Settings</li>
+                                    <li>Search for "Shortcuts"</li>
+                                    <li>Enable "Allow Unstrusted Shortcuts" (this will make it so you can install the shortcut)</li>
+                                    <li>Click the link below</li>
+                                    <li>Scroll down and press the "Add Untrusted Shortcut" button</li>
+                                </ol>,
+                                <Typography key={"third"}>
+                                    <b>How to use:</b>
+                                </Typography>,
+                                <ol key={"fourth"}>
+                                    <li>Scan a deck using the Master Vault application</li>
+                                    <li>Press the "Share" button</li>
+                                    <li>Click on the "Open in DOK" action</li>
+                                    <li>Watch as the deck is imported, and Safari is opened on the DOK page</li>
+                                    <li>Click "My Deck" in DOK to add to your collection (optional)</li>
+                                </ol>,
+                            ]
+                        }
+                        url={"https://www.icloud.com/shortcuts/5a505eae78fb4b70b2d177c59c2460ae"}
+                        urlName={"Install Shortcut"}
+                        discord={"RyanCH#4711"}
+                    />
+                    <DisplayIntegration
                         name={"KeyForge Burger Inserts"}
                         description={"Web application for printing paper inserts with deck information. This is based off the original Excel project."}
                         url={"https://keyforge-burger-inserts.herokuapp.com"}
+                        urlName={"Burger Token Inserts App"}
                         discord={"Drallieiv#4274"}
                         contact={"github.com/drallieiv"}
                         icon={<img src={KeyForgeBurgerInsertsIcon}/>}
@@ -68,12 +100,17 @@ export class ThirdPartyIntegrations extends React.Component {
     }
 }
 
-const DisplayIntegration = (props: { name: string, description: string, icon?: React.ReactNode, url?: string, urlName?: string, discord?: string, contact?: string }) => {
-    const infos: React.ReactNode[] = [
-        props.description
-    ]
+const DisplayIntegration = (props: { name: string, description: React.ReactNode[] | string, icon?: React.ReactNode, url?: string, urlName?: string, discord?: string, contact?: string }) => {
+    let infos: React.ReactNode[] = []
+    if (typeof props.description === "string") {
+        infos.push(props.description)
+    } else {
+        infos = props.description
+    }
     if (props.url) {
-        infos.push(<Link href={props.url} target={"_blank"} rel={"noopener noreferrer"} key={"url"}>{props.urlName ? props.urlName : props.url}</Link>)
+        infos.push(
+            <LinkButtonSafe color={"primary"} variant={"outlined"} href={props.url} key={"url"}>{props.urlName ? props.urlName : props.url}</LinkButtonSafe>
+        )
     }
     if (props.discord) {
         infos.push(<DiscordUser discord={props.discord}/>)
