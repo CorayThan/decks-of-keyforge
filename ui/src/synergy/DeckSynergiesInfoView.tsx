@@ -8,10 +8,10 @@ import { spacing } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
 import { PercentRatingRow } from "../decks/DeckScoreView"
 import { DeckWithSynergyInfo } from "../decks/models/DeckSearchResult"
+import { SynergyCombo } from "../generated-src/SynergyCombo"
 import { KeyCard } from "../generic/KeyCard"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { Loader } from "../mui-restyled/Loader"
-import { SynergyCombo } from "./DeckSynergyInfo"
 import { TraitBubble } from "./TraitBubble"
 
 interface DeckSynergiesInfoViewProps {
@@ -83,7 +83,7 @@ const synergyDetailHeaders: SortableTableHeaderInfo<SynergyCombo>[] = [
         sortable: false,
         width: 320,
         transform: (combo) => {
-            return combo.synergies.map((synergy, idx) => {
+            const syns = combo.synergies.map((synergy, idx) => {
                 return (
                     <div
                         key={idx}
@@ -97,6 +97,19 @@ const synergyDetailHeaders: SortableTableHeaderInfo<SynergyCombo>[] = [
                     </div>
                 )
             })
+
+            if (combo.synStart != null) {
+                syns.push(
+                    <div
+                        style={{display: "flex", alignItems: "center"}}
+                    >
+                        <Typography style={{width: 48}}>{combo.synStart}%</Typography>
+                        <Typography variant={"body2"}>Base Synergy Percent</Typography>
+                    </div>
+                )
+            }
+
+            return syns
         }
     },
     {property: "amberControl", transformProperty: roundToHundreds},

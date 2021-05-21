@@ -72,7 +72,7 @@ class DeckImporterService(
         var checkedCount = 0
 
         val millis = measureTimeMillis {
-            val toClean = deckRepo.findFirst100ByCardsVerifiedIsFalse()
+            val toClean = deckRepo.findFirst100ByCardsVerifiedIsFalseOrderByImportDateTimeAsc()
 
             log.info("Got to clean decks ${toClean.size}")
 
@@ -82,10 +82,10 @@ class DeckImporterService(
 
                 val deckWithCards: KeyForgeDeckDto
                 try {
-                    deckWithCards = keyforgeApi.findDeck(deck.keyforgeId, true) ?: error("No deck in keyforge API for ${deck.keyforgeId}")
+                    deckWithCards = keyforgeApi.findDeckToImport(deck.keyforgeId) ?: error("No deck in keyforge API for ${deck.keyforgeId}")
 
-                } catch (e: HttpClientErrorException) {
-                    log.info("Got http client error finding keyforge deck in clean up bad cards. Done for now. Cleaned $cleanCount checked count $checkedCount " + e.message)
+                } catch (e: Exception) {
+                    log.info("Got error finding keyforge deck in clean up bad cards. Done for now. Cleaned $cleanCount checked count $checkedCount " + e.message)
                     break
                 }
 

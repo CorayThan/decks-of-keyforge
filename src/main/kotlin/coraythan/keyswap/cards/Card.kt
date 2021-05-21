@@ -256,6 +256,7 @@ data class KeyForgeCard(
     }
 }
 
+@GenerateTs
 enum class CardType {
     Action,
     Artifact,

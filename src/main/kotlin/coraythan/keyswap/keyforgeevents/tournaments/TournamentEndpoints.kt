@@ -70,6 +70,12 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/lock-deck-registration/{lock}")
     fun lockDeckRegistration(@PathVariable id: Long, @PathVariable lock: Boolean) = tournamentService.lockDeckRegistration(id, lock)
 
+    @PostMapping("/secured/{id}/organizer-added-decks-only/{only}")
+    fun organizerAddedDecksOnly(@PathVariable id: Long, @PathVariable only: Boolean) = tournamentService.organizerAddedDecksOnly(id, only)
+
+    @PostMapping("/secured/{id}/show-decks-to-all-players/{show}")
+    fun showDecksToAllPlayers(@PathVariable id: Long, @PathVariable show: Boolean) = tournamentService.showDecksToAllPlayers(id, show)
+
     @PostMapping("/secured/{id}/change-pairing-strategy/{strategy}")
     fun changePairingStrategy(@PathVariable id: Long, @PathVariable strategy: PairingStrategy) = tournamentService.changingPairingStrategy(id, strategy)
 

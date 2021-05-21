@@ -288,11 +288,15 @@ class RightMenuStore {
     open = false
 
     @observable
+    communityOpen = false
+
+    @observable
     aboutOpen = false
 
     close = () => {
         this.open = false
         this.aboutOpen = false
+        this.communityOpen = false
     }
 
     constructor() {
@@ -380,19 +384,65 @@ const AppLinks = observer(() => (
             ]}
             linkMenuStore={statsMenuStore}
         />
-        <LinkMenu
-            genericOnClick={rightMenuStore.close}
-            links={[
-                {to: Routes.community, text: "Community", mobileActive: false},
-                {to: Routes.users, text: "Users", mobileActive: true},
-                {to: Routes.tags, text: "Tagged Decks", mobileActive: true},
-                {to: Routes.events, text: "Events", mobileActive: true},
-                {to: Routes.tournaments, text: "Tournaments", mobileActive: true},
-                {to: Routes.articles, text: "Articles", mobileActive: true},
-                {to: Routes.thirdPartyTools, text: "3rd Party Tools", mobileActive: false},
-            ]}
-            linkMenuStore={communityMenuStore}
-        />
+        {screenStore.smallScreenTopBar() ? (
+            <>
+                <ListItem
+                    button={true}
+                    onClick={() => rightMenuStore.communityOpen = !rightMenuStore.communityOpen}
+                >
+                    <ListItemText primary={"Community"}/>
+                    {rightMenuStore.communityOpen ? <ExpandLess/> : <ExpandMore/>}
+                </ListItem>
+                <Collapse in={rightMenuStore.communityOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItemLink
+                            to={Routes.users}
+                            onClick={rightMenuStore.close}
+                            primary={"Users"}
+                        />
+                        <ListItemLink
+                            to={Routes.tags}
+                            onClick={rightMenuStore.close}
+                            primary={"Tagged Decks"}
+                        />
+                        <ListItemLink
+                            to={Routes.events}
+                            onClick={rightMenuStore.close}
+                            primary={"Events"}
+                        />
+                        <ListItemLink
+                            to={Routes.tournaments}
+                            onClick={rightMenuStore.close}
+                            primary={"Tournaments"}
+                        />
+                        <ListItemLink
+                            to={Routes.articles}
+                            onClick={rightMenuStore.close}
+                            primary={"Articles"}
+                        />
+                        <ListItemLink
+                            to={Routes.thirdPartyTools}
+                            onClick={rightMenuStore.close}
+                            primary={"3rd Party Tools"}
+                        />
+                    </List>
+                </Collapse>
+            </>
+        ) : (
+            <LinkMenu
+                genericOnClick={rightMenuStore.close}
+                links={[
+                    {to: Routes.community, text: "Community", mobileActive: false},
+                    {to: Routes.users, text: "Users", mobileActive: true},
+                    {to: Routes.tags, text: "Tagged Decks", mobileActive: true},
+                    {to: Routes.events, text: "Events", mobileActive: true},
+                    {to: Routes.tournaments, text: "Tournaments", mobileActive: true},
+                    {to: Routes.articles, text: "Articles", mobileActive: true},
+                    {to: Routes.thirdPartyTools, text: "3rd Party Tools", mobileActive: false},
+                ]}
+                linkMenuStore={communityMenuStore}
+            />
+        )}
         {screenStore.smallScreenTopBar() ? (
             <>
                 <ListItem

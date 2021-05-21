@@ -1,9 +1,4 @@
-export enum SynTraitHouse {
-    anyHouse = "anyHouse",
-    house = "house",
-    outOfHouse = "outOfHouse",
-    continuous = "continuous",
-}
+import { SynTraitHouse } from "../generated-src/SynTraitHouse"
 
 export const synTraitHouseShortLabel = (house: SynTraitHouse) => {
     switch (house) {

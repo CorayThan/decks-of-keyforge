@@ -61,7 +61,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
 
     const {
         name, organizerUsernames, rankings, rounds, tourneyId, joined, pairingStrategy, roundEndsAt,
-        privateTournament, stage, tournamentDecks, registrationClosed, deckChoicesLocked, event,
+        privateTournament, stage, tournamentDecks, registrationClosed, deckChoicesLocked, organizerAddedDecksOnly, showDecksToAllPlayers, event,
         timeExtendedMinutes
     } = info
 
@@ -143,27 +143,46 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                         </Grid>
                                         {stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
                                             <>
-                                            <Grid item={true}>
-                                                <Box width={280}>
-                                                    <UserSearchSuggest
-                                                        placeholderText={"Add participant with username..."}
-                                                        onClick={(username) => tournamentStore.addParticipant(tourneyId, username)}
-                                                    />
-                                                </Box>
-                                            </Grid>
                                                 <Grid item={true}>
-                                                    <Box width={184}>
-                                                        <FormControlLabel
-                                                            control={
-                                                                <Checkbox
-                                                                    checked={!privateTournament}
-                                                                    onChange={() => tournamentStore.togglePrivate(tourneyId, !privateTournament)}
-                                                                    color="primary"
-                                                                />
-                                                            }
-                                                            label="Public Registration"
+                                                    <Box width={280}>
+                                                        <UserSearchSuggest
+                                                            placeholderText={"Add participant with username..."}
+                                                            onClick={(username) => tournamentStore.addParticipant(tourneyId, username)}
                                                         />
                                                     </Box>
+                                                </Grid>
+                                                <Grid item={true}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={!privateTournament}
+                                                                onChange={() => tournamentStore.togglePrivate(tourneyId, !privateTournament)}
+                                                            />
+                                                        }
+                                                        label="Public Registration"
+                                                    />
+                                                </Grid>
+                                                <Grid item={true}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={!organizerAddedDecksOnly}
+                                                                onChange={() => tournamentStore.organizerAddedDecksOnly(tourneyId, !organizerAddedDecksOnly)}
+                                                            />
+                                                        }
+                                                        label="Organizer Added Decks Only"
+                                                    />
+                                                </Grid>
+                                                <Grid item={true}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={!showDecksToAllPlayers}
+                                                                onChange={() => tournamentStore.showDecksToAllPlayers(tourneyId, !showDecksToAllPlayers)}
+                                                            />
+                                                        }
+                                                        label="Show Decks to All Players"
+                                                    />
                                                 </Grid>
                                             </>
                                         )}
@@ -224,6 +243,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                     stage={stage}
                                     username={username}
                                     deckChoicesLocked={deckChoicesLocked}
+                                    organizerAddedDecksOnly={organizerAddedDecksOnly}
                                 />
                             </Box>
                         </Grid>
@@ -297,7 +317,7 @@ const RoundTimer = (props: { tourneyId: number, duration?: number, endTime?: str
                     <Typography variant={"subtitle2"}>{duration} min per round</Typography>
                     <Typography variant={"subtitle2"}>Started at {TimeUtils.countdownStartReadable(endTime, duration)}</Typography>
                     {timeExtendedMinutes != null && timeExtendedMinutes !== 0 && (
-                        <Typography variant={"subtitle2"}>Time extended by  {timeExtendedMinutes} min</Typography>
+                        <Typography variant={"subtitle2"}>Time extended by {timeExtendedMinutes} min</Typography>
                     )}
                     <Typography variant={"h2"} style={{fontFamily: TextConfig.MONOTYPE, fontWeight: 500}}>{timer}</Typography>
                     {organizer && (<ExtendTimeButton tourneyId={tourneyId}/>)}
@@ -307,7 +327,7 @@ const RoundTimer = (props: { tourneyId: number, duration?: number, endTime?: str
     )
 }
 
-export const ExtendTimeButton = (props: {tourneyId: number}) => {
+export const ExtendTimeButton = (props: { tourneyId: number }) => {
 
     const [open, setOpen] = useState(false)
     const [minutes, setMinutes] = useState(0)

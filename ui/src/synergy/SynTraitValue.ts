@@ -1,29 +1,8 @@
 import { startCase } from "lodash"
-import { CardType } from "../cards/CardType"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
-import { SynTraitHouse } from "./SynTraitHouse"
-
-export interface SynTraitValue {
-    trait: SynergyTrait
-    rating: SynTraitRatingValues
-    house: SynTraitHouse
-    player: SynTraitPlayer
-    cardTypes: CardType[]
-    powersString: string
-    cardTraits: string[]
-    notCardTraits: boolean
-    cardName?: string
-    synergyGroup?: string
-    synergyGroupMax?: number
-    primaryGroup: boolean
-    id?: string
-}
-
-export enum SynTraitPlayer {
-    ANY = "ANY",
-    FRIENDLY = "FRIENDLY",
-    ENEMY = "ENEMY",
-}
+import { SynTraitHouse } from "../generated-src/SynTraitHouse"
+import { SynTraitPlayer } from "../generated-src/SynTraitPlayer"
+import { SynTraitValue } from "../generated-src/SynTraitValue"
 
 export type SynTraitRatingValues = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4
 

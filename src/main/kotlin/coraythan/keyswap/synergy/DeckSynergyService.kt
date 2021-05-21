@@ -283,7 +283,8 @@ object DeckSynergyService {
                             disruption = dValue.value,
                             creatureProtection = apValue.value,
                             other = oValue.value,
-                            copies = count
+                            copies = count,
+                            synStart = cardInfo.baseSynPercent
                     )
                 }
                 .plus(selfEnhancedCombos)

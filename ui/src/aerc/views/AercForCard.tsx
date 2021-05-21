@@ -1,11 +1,11 @@
 import { Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
-import { CardType } from "../../cards/CardType"
 import { KCard } from "../../cards/KCard"
 import { spacing, theme } from "../../config/MuiConfig"
 import { roundToHundreds, roundToTens } from "../../config/Utils"
-import { SynergyCombo } from "../../synergy/DeckSynergyInfo"
+import { CardType } from "../../generated-src/CardType"
+import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { userStore } from "../../user/UserStore"
 
 export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo }) => {

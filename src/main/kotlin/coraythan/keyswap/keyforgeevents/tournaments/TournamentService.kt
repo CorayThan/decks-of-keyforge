@@ -30,18 +30,18 @@ import kotlin.system.measureTimeMillis
 @Transactional
 @Service
 class TournamentService(
-        private val currentUserService: CurrentUserService,
-        private val tournamentDeckRepo: TournamentDeckRepo,
-        private val tournamentPairingRepo: TournamentPairingRepo,
-        private val tournamentParticipantRepo: TournamentParticipantRepo,
-        private val tournamentRoundRepo: TournamentRoundRepo,
-        private val tourneyRepo: TournamentRepo,
-        private val tournamentOrganizerRepo: TournamentOrganizerRepo,
-        private val eventRepo: KeyForgeEventRepo,
-        private val keyUserRepo: KeyUserRepo,
-        private val deckRepo: DeckRepo,
-        private val keyForgeEventService: KeyForgeEventService,
-        private val entityManager: EntityManager,
+    private val currentUserService: CurrentUserService,
+    private val tournamentDeckRepo: TournamentDeckRepo,
+    private val tournamentPairingRepo: TournamentPairingRepo,
+    private val tournamentParticipantRepo: TournamentParticipantRepo,
+    private val tournamentRoundRepo: TournamentRoundRepo,
+    private val tourneyRepo: TournamentRepo,
+    private val tournamentOrganizerRepo: TournamentOrganizerRepo,
+    private val eventRepo: KeyForgeEventRepo,
+    private val keyUserRepo: KeyUserRepo,
+    private val deckRepo: DeckRepo,
+    private val keyForgeEventService: KeyForgeEventService,
+    private val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -56,31 +56,31 @@ class TournamentService(
             val currentUser = currentUserService.loggedInUserOrUnauthorized()
 
             predicate.andAnyOf(
-                    tournamentQ.organizers.any().organizer.id.eq(currentUser.id),
-                    tournamentQ.participants.any().userId.eq(currentUser.id),
+                tournamentQ.organizers.any().organizer.id.eq(currentUser.id),
+                tournamentQ.participants.any().userId.eq(currentUser.id),
             )
         }
 
         val tournaments = query.selectFrom(tournamentQ)
-                .where(predicate)
-                .fetch()
+            .where(predicate)
+            .fetch()
 
         return tournaments
-                .map { tournament ->
-                    val event = eventRepo.findByTourneyId(tournament.id)?.toDto()
-                            ?: throw BadRequestException("No event for tournament with id ${tournament.id}")
-                    TournamentSearchResult(
-                            id = tournament.id,
-                            name = tournament.name,
-                            private = tournament.privateTourney,
-                            ended = tournament.ended,
-                            event = event,
-                            participants = tournamentParticipantRepo.countByTournamentId(tournament.id).toInt(),
-                            organizerUsernames = tournament.organizers.map { it.organizer.username },
-                            stage = tournament.stage,
-                    )
-                }
-                .sortedBy { it.event.startDateTime }
+            .map { tournament ->
+                val event = eventRepo.findByTourneyId(tournament.id)?.toDto()
+                    ?: throw BadRequestException("No event for tournament with id ${tournament.id}")
+                TournamentSearchResult(
+                    id = tournament.id,
+                    name = tournament.name,
+                    private = tournament.privateTourney,
+                    ended = tournament.ended,
+                    event = event,
+                    participants = tournamentParticipantRepo.countByTournamentId(tournament.id).toInt(),
+                    organizerUsernames = tournament.organizers.map { it.organizer.username },
+                    stage = tournament.stage,
+                )
+            }
+            .sortedBy { it.event.startDateTime }
     }
 
     fun findTourneyInfo(id: Long): TournamentInfo {
@@ -91,32 +91,35 @@ class TournamentService(
         val participants = tournamentParticipantRepo.findAllByTournamentId(id)
         val pairings = tournamentPairingRepo.findAllByTournamentId(id)
         val participantNames = participants
-                .map { it.id to keyUserRepo.findByIdOrNull(it.userId) }
-                .toMap()
+            .map { it.id to keyUserRepo.findByIdOrNull(it.userId) }
+            .toMap()
         val participantStats = calculateParticipantStats(participants, pairings)
-                .map { it.participant.id to it }
-                .toMap()
+            .map { it.participant.id to it }
+            .toMap()
+
+        val isOrganizer = tourney.organizers.any { it.organizer.id == user?.id }
+        val tourneyStarted = tourney.stage != TournamentStage.TOURNAMENT_NOT_STARTED
 
         val allDecks = tournamentDeckRepo.findByTourneyId(id)
 
         val tournamentDeckInfos = allDecks.map {
             TournamentDeckInfo(
-                    id = it.deck.id,
-                    keyforgeId = it.deck.keyforgeId,
-                    name = it.deck.name,
-                    sas = it.deck.sasRating,
-                    houses = it.deck.houses,
-                    username = participantNames[it.participantId]!!.username,
-                    hasVerificationImage = it.deck.hasOwnershipVerification == true,
-                    tournamentDeckId = it.id,
+                id = it.deck.id,
+                keyforgeId = it.deck.keyforgeId,
+                name = it.deck.name,
+                sas = it.deck.sasRating,
+                houses = it.deck.houses,
+                username = participantNames[it.participantId]!!.username,
+                hasVerificationImage = it.deck.hasOwnershipVerification == true,
+                tournamentDeckId = it.id,
             )
         }
-                .sortedBy { it.username }
+            .sortedBy { it.username }
 
         val participantToDeckId: Map<String, List<String>> = tournamentDeckInfos
-                .groupBy { it.username }
-                .map { it.key to it.value.map { deck -> deck.keyforgeId } }
-                .toMap()
+            .groupBy { it.username }
+            .map { it.key to it.value.map { deck -> deck.keyforgeId } }
+            .toMap()
 
         val tournamentDecksByUserName = tournamentDeckInfos.groupBy { it.username }
 
@@ -126,89 +129,97 @@ class TournamentService(
         val roundEnd = if (event.minutesPerRound != null) currentRoundStart?.plusMinutes(event.minutesPerRound.toLong() + (timeExtendedMinutes)) else null
 
         return TournamentInfo(
-                tourneyId = id,
-                name = tourney.name,
-                privateTournament = tourney.privateTourney,
-                organizerUsernames = tourney.organizers.map { it.organizer.username },
-                joined = user?.username != null && participantNames.values.any { it?.username == user.username },
-                stage = tourney.stage,
-                registrationClosed = tourney.registrationClosed,
-                deckChoicesLocked = tourney.deckChoicesLocked,
-                verifyParticipants = tourney.verifyParticipants,
-                pairingStrategy = tourney.pairingStrategy,
-                roundEndsAt = roundEnd,
-                timeExtendedMinutes = timeExtendedMinutes,
-                event = event.toDto(),
-                rounds = tourney.rounds.map { round ->
-                    TournamentRoundInfo(
-                            roundNumber = round.roundNumber,
-                            roundId = round.id,
-                            pairingStrategy = round.pairedWithStrategy,
-                            pairings = tournamentPairingRepo.findAllByRoundId(round.id)
-                                    .map {
-                                        val firstUsername = participantNames[it.playerOneId]!!.username
-                                        val secondUsername = participantNames[it.playerTwoId]?.username
-                                        TournamentPairingInfo(
-                                                table = it.pairingTable,
-                                                pairId = it.id,
-                                                playerOneId = it.playerOneId,
-                                                playerOneUsername = firstUsername,
-                                                playerOneWins = it.playerOneWins,
-                                                playerTwoId = it.playerTwoId,
-                                                playerTwoUsername = secondUsername,
-                                                playerTwoWins = if (it.playerTwoId == null) null else it.playerTwoWins,
-                                                playerOneScore = it.playerOneScore,
-                                                playerTwoScore = it.playerTwoScore,
-                                                playerOneWon = it.playerOneWon,
-                                                tcoLink = it.tcoLink,
-                                                deckIds = participantToDeckId[firstUsername]
-                                                        ?.let { deckIds ->
-                                                            if (secondUsername != null) {
-                                                                deckIds.plus(participantToDeckId[secondUsername] ?: listOf())
-                                                            } else {
-                                                                deckIds
-                                                            }
-                                                        }
-                                                        ?: listOf()
-                                        )
+            tourneyId = id,
+            name = tourney.name,
+            privateTournament = tourney.privateTourney,
+            organizerUsernames = tourney.organizers.map { it.organizer.username },
+            joined = user?.username != null && participantNames.values.any { it?.username == user.username },
+            stage = tourney.stage,
+            registrationClosed = tourney.registrationClosed,
+            deckChoicesLocked = tourney.deckChoicesLocked,
+            organizerAddedDecksOnly = tourney.organizerAddedDecksOnly,
+            showDecksToAllPlayers = tourney.showDecksToAllPlayers,
+            verifyParticipants = tourney.verifyParticipants,
+            pairingStrategy = tourney.pairingStrategy,
+            roundEndsAt = roundEnd,
+            timeExtendedMinutes = timeExtendedMinutes,
+            event = event.toDto(),
+            rounds = tourney.rounds.map { round ->
+                TournamentRoundInfo(
+                    roundNumber = round.roundNumber,
+                    roundId = round.id,
+                    pairingStrategy = round.pairedWithStrategy,
+                    pairings = tournamentPairingRepo.findAllByRoundId(round.id)
+                        .map {
+                            val firstUsername = participantNames[it.playerOneId]!!.username
+                            val secondUsername = participantNames[it.playerTwoId]?.username
+                            TournamentPairingInfo(
+                                table = it.pairingTable,
+                                pairId = it.id,
+                                playerOneId = it.playerOneId,
+                                playerOneUsername = firstUsername,
+                                playerOneWins = it.playerOneWins,
+                                playerTwoId = it.playerTwoId,
+                                playerTwoUsername = secondUsername,
+                                playerTwoWins = if (it.playerTwoId == null) null else it.playerTwoWins,
+                                playerOneScore = it.playerOneScore,
+                                playerTwoScore = it.playerTwoScore,
+                                playerOneWon = it.playerOneWon,
+                                tcoLink = it.tcoLink,
+                                deckIds = participantToDeckId[firstUsername]
+                                    ?.let { deckIds ->
+                                        if (secondUsername != null) {
+                                            deckIds.plus(participantToDeckId[secondUsername] ?: listOf())
+                                        } else {
+                                            deckIds
+                                        }
                                     }
-                                    .sortedBy {
-                                        it.table
-                                    }
-                                    .reversed()
-                    )
-                }.sortedBy { it.roundNumber },
-                rankings = participants
-                        .mapNotNull {
-                            val stats = participantStats[it.id]
-                            if (stats == null) {
-                                null
-                            } else {
-                                val rankingUser = participantNames[it.id]
-                                val decks = tournamentDecksByUserName[rankingUser?.username] ?: listOf()
-                                TournamentRanking(
-                                        ranking = 1,
-                                        username = rankingUser?.username ?: "No User",
-                                        participantId = it.id,
-                                        wins = stats.wins,
-                                        losses = stats.losses,
-                                        byes = stats.byes,
-                                        strengthOfSchedule = stats.strengthOfSchedule,
-                                        extendedStrengthOfSchedule = stats.extendedStrengthOfSchedule,
-                                        score = stats.score,
-                                        opponentsScore = stats.opponentsScore,
-                                        dropped = it.dropped,
-                                        verified = it.verified,
-                                        decks = decks,
-                                        discord = rankingUser?.discord,
-                                        tcoUsername = rankingUser?.tcoUsername,
-                                )
-                            }
+                                    ?: listOf()
+                            )
                         }
-                        .sortedBy { it.fullRankValue() - (if (it.dropped) 1000000 else 0) }
+                        .sortedBy {
+                            it.table
+                        }
                         .reversed()
-                        .mapIndexed { index, tournamentRanking -> tournamentRanking.copy(ranking = index + 1) },
-                tournamentDecks = tournamentDeckInfos
+                )
+            }.sortedBy { it.roundNumber },
+            rankings = participants
+                .mapNotNull {
+                    val stats = participantStats[it.id]
+                    if (stats == null) {
+                        null
+                    } else {
+                        val rankingUser = participantNames[it.id]
+                        val decks = tournamentDecksByUserName[rankingUser?.username] ?: listOf()
+                        TournamentRanking(
+                            ranking = 1,
+                            username = rankingUser?.username ?: "No User",
+                            participantId = it.id,
+                            wins = stats.wins,
+                            losses = stats.losses,
+                            byes = stats.byes,
+                            strengthOfSchedule = stats.strengthOfSchedule,
+                            extendedStrengthOfSchedule = stats.extendedStrengthOfSchedule,
+                            score = stats.score,
+                            opponentsScore = stats.opponentsScore,
+                            dropped = it.dropped,
+                            verified = it.verified,
+                            decks = decks,
+                            discord = rankingUser?.discord,
+                            tcoUsername = rankingUser?.tcoUsername,
+                        )
+                    }
+                }
+                .sortedBy { it.fullRankValue() - (if (it.dropped) 1000000 else 0) }
+                .reversed()
+                .mapIndexed { index, tournamentRanking -> tournamentRanking.copy(ranking = index + 1) },
+            tournamentDecks = if (isOrganizer || tourney.showDecksToAllPlayers) {
+                tournamentDeckInfos
+            } else if (tourney.organizerAddedDecksOnly && !tourneyStarted) {
+                listOf()
+            } else {
+                tournamentDeckInfos.filter { it.username == user?.username }
+            }
         )
     }
 
@@ -221,16 +232,20 @@ class TournamentService(
 
         val savedTourney = tourneyRepo.save(Tournament(event.name, privateTourney))
 
-        tournamentRoundRepo.save(TournamentRound(
+        tournamentRoundRepo.save(
+            TournamentRound(
                 tourney = savedTourney,
                 roundNumber = 1,
                 pairedWithStrategy = savedTourney.pairingStrategy,
-        ))
+            )
+        )
 
-        tournamentOrganizerRepo.save(TournamentOrganizer(
+        tournamentOrganizerRepo.save(
+            TournamentOrganizer(
                 tourney = savedTourney,
                 organizer = user
-        ))
+            )
+        )
 
         eventRepo.save(event.copy(tourneyId = savedTourney.id))
 
@@ -271,11 +286,11 @@ class TournamentService(
             tournamentRoundRepo.save(lastRound.copy(active = false))
 
             tournamentRoundRepo.save(
-                    TournamentRound(
-                            tourney = tourney,
-                            roundNumber = nextRoundNumber,
-                            pairedWithStrategy = tourney.pairingStrategy,
-                    )
+                TournamentRound(
+                    tourney = tourney,
+                    roundNumber = nextRoundNumber,
+                    pairedWithStrategy = tourney.pairingStrategy,
+                )
             )
         }
 
@@ -289,27 +304,27 @@ class TournamentService(
         val pastPairings = tournamentPairingRepo.findAllByTournamentId(tourney.id)
 
         val stats = calculateParticipantStats(allParticipants, pastPairings)
-                .filter { !it.dropped }
+            .filter { !it.dropped }
 
         val bestPairing = manualPairings
-                ?.map {
-                    TournamentPairing(
-                            pairingTable = it.pairingTable,
-                            playerOneId = it.playerOneId,
-                            playerTwoId = it.playerTwoId,
-                            tournamentId = tourneyId,
-                            roundId = roundToPair.id,
-                            playerOneWins = stats.find { stats -> stats.participant.id == it.playerOneId }?.wins ?: 0,
-                            playerTwoWins = stats.find { stats -> stats.participant.id == it.playerTwoId }?.wins ?: 0,
-                    )
-                }
-                ?: pairPlayers(tourney.id, roundToPair.id, tourney.pairingStrategy, stats, pastPairings)
+            ?.map {
+                TournamentPairing(
+                    pairingTable = it.pairingTable,
+                    playerOneId = it.playerOneId,
+                    playerTwoId = it.playerTwoId,
+                    tournamentId = tourneyId,
+                    roundId = roundToPair.id,
+                    playerOneWins = stats.find { stats -> stats.participant.id == it.playerOneId }?.wins ?: 0,
+                    playerTwoWins = stats.find { stats -> stats.participant.id == it.playerTwoId }?.wins ?: 0,
+                )
+            }
+            ?: pairPlayers(tourney.id, roundToPair.id, tourney.pairingStrategy, stats, pastPairings)
 
         tournamentPairingRepo.saveAll(bestPairing)
         tourneyRepo.save(
-                tourney
-                        .let { if (it.started == null) it.copy(started = nowLocal()) else it }
-                        .copy(stage = TournamentStage.PAIRING_IN_PROGRESS)
+            tourney
+                .let { if (it.started == null) it.copy(started = nowLocal()) else it }
+                .copy(stage = TournamentStage.PAIRING_IN_PROGRESS)
         )
     }
 
@@ -329,7 +344,7 @@ class TournamentService(
 
         if (bye != null) {
             tournamentPairingRepo.save(
-                    bye.copy(playerOneWon = true, playerOneScore = 3)
+                bye.copy(playerOneWon = true, playerOneScore = 3)
             )
         }
 
@@ -381,17 +396,19 @@ class TournamentService(
 
         val organizer = keyUserRepo.findByUsernameIgnoreCase(toUsername) ?: throw BadRequestException("No user with username $toUsername")
 
-        tournamentOrganizerRepo.save(TournamentOrganizer(
+        tournamentOrganizerRepo.save(
+            TournamentOrganizer(
                 tourney = tourney,
                 organizer = organizer,
-        ))
+            )
+        )
     }
 
     fun removeTo(tourneyId: Long, toUsername: String) {
         val tourney = verifyTournamentAdmin(tourneyId)
 
         val toDelete = tourney.organizers.find { it.organizer.username == toUsername }
-                ?: throw BadRequestException("$toUsername is not a TO for this tournament.")
+            ?: throw BadRequestException("$toUsername is not a TO for this tournament.")
 
         tournamentOrganizerRepo.delete(toDelete)
     }
@@ -413,12 +430,18 @@ class TournamentService(
             throw BadRequestException("Tournament has already started, participant cannot be added.")
         }
 
-        if (tournamentParticipantRepo.existsByTournamentIdAndUserId(tourney.id, participant.id)) throw BadRequestException("$participantUsername is already in this tournament.")
+        if (tournamentParticipantRepo.existsByTournamentIdAndUserId(
+                tourney.id,
+                participant.id
+            )
+        ) throw BadRequestException("$participantUsername is already in this tournament.")
 
-        tournamentParticipantRepo.save(TournamentParticipant(
+        tournamentParticipantRepo.save(
+            TournamentParticipant(
                 tournament = tourney,
                 userId = participant.id,
-        ))
+            )
+        )
     }
 
     fun dropParticipant(tourneyId: Long, participantUsername: String, drop: Boolean) {
@@ -427,7 +450,7 @@ class TournamentService(
         val participant = keyUserRepo.findByUsernameIgnoreCase(participantUsername) ?: throw BadRequestException("No user with username $participantUsername")
 
         val participantRecord = tournamentParticipantRepo.findByTournamentIdAndUserId(tourney.id, participant.id)
-                ?: throw BadRequestException("No participant found.")
+            ?: throw BadRequestException("No participant found.")
 
         if (tourney.stage == TournamentStage.TOURNAMENT_NOT_STARTED) {
             tournamentDeckRepo.deleteByParticipantId(participantRecord.id)
@@ -443,7 +466,7 @@ class TournamentService(
         val participant = keyUserRepo.findByUsernameIgnoreCase(participantUsername) ?: throw BadRequestException("No user with username $participantUsername")
 
         val participantRecord = tournamentParticipantRepo.findByTournamentIdAndUserId(tourney.id, participant.id)
-                ?: throw BadRequestException("No participant found.")
+            ?: throw BadRequestException("No participant found.")
 
         tournamentParticipantRepo.save(participantRecord.copy(verified = verify))
     }
@@ -471,11 +494,13 @@ class TournamentService(
             throw UnauthorizedException("Results for this match have already been reported.")
         }
 
-        tournamentPairingRepo.save(pairing.copy(
+        tournamentPairingRepo.save(
+            pairing.copy(
                 playerOneWon = results.playerOneWon,
                 playerOneScore = results.playerOneScore,
                 playerTwoScore = results.playerTwoScore,
-        ))
+            )
+        )
 
         if (currentRound.id == pairing.roundId && !tournamentPairingRepo.existsByRoundIdAndPlayerOneWonIsNull(pairing.roundId)) {
             tourneyRepo.save(tourney.copy(stage = TournamentStage.VERIFYING_ROUND_RESULTS))
@@ -483,14 +508,21 @@ class TournamentService(
     }
 
     fun addDeck(tourneyId: Long, deckId: String, username: String) {
-        val (currentUser, participant, tourney) = verifyTournamentAdminOrParticipant(username, tourneyId)
-
+        val (currentUser, participant, tourney, isOrganizer) = verifyTournamentAdminOrParticipant(username, tourneyId)
 
         val participantRecord = tournamentParticipantRepo.findByTournamentIdAndUserId(tourneyId, participant.id)
-                ?: throw UnauthorizedException("You must be in the tournament to add a deck.")
+            ?: throw UnauthorizedException("You must be in the tournament to add a deck.")
 
-        if (tourney.deckChoicesLocked && participantRecord.userId == currentUser.id) {
+        if (tourney.deckChoicesLocked && !isOrganizer) {
             throw UnauthorizedException("The tournament organizer has locked deck selection for this event. Please contact the TO.")
+        }
+
+        if (tourney.organizerAddedDecksOnly && !isOrganizer) {
+            throw UnauthorizedException("Only the tournament organizer can add decks to this event.")
+        }
+
+        if (!isOrganizer && currentUser.id != participant.id) {
+            throw UnauthorizedException("You can only add decks for yourself.")
         }
 
         val deck = deckRepo.findByKeyforgeId(deckId) ?: throw BadRequestException("No deck with id $deckId")
@@ -498,12 +530,14 @@ class TournamentService(
         val participantDecks = tournamentDeckRepo.findByParticipantId(participantRecord.id)
         val nextOrder: Int = (participantDecks.map { it.deckOrder }.maxOrNull() ?: 0) + 1
 
-        tournamentDeckRepo.save(TournamentDeck(
+        tournamentDeckRepo.save(
+            TournamentDeck(
                 deck = deck,
                 participantId = participantRecord.id,
                 tourneyId = tourney.id,
                 deckOrder = nextOrder,
-        ))
+            )
+        )
     }
 
     fun changingPairingStrategy(tourneyId: Long, strategy: PairingStrategy) {
@@ -537,6 +571,16 @@ class TournamentService(
         tourneyRepo.save(tourney.copy(deckChoicesLocked = lock))
     }
 
+    fun organizerAddedDecksOnly(tourneyId: Long, only: Boolean) {
+        val tourney = verifyTournamentAdmin(tourneyId)
+        tourneyRepo.save(tourney.copy(organizerAddedDecksOnly = only))
+    }
+
+    fun showDecksToAllPlayers(tourneyId: Long, show: Boolean) {
+        val tourney = verifyTournamentAdmin(tourneyId)
+        tourneyRepo.save(tourney.copy(showDecksToAllPlayers = show))
+    }
+
     fun removeDeck(tourneyId: Long, tournamentDeckId: Long) {
         verifyTournamentAdmin(tourneyId)
         tournamentDeckRepo.deleteById(tournamentDeckId)
@@ -548,77 +592,77 @@ class TournamentService(
             throw BadRequestException("Can't change participants in a tournament that has ended.")
         }
         val previousUser = keyUserRepo.findByUsernameIgnoreCase(previousUsername)
-                ?: throw BadRequestException("No user for previous username $previousUsername")
+            ?: throw BadRequestException("No user for previous username $previousUsername")
         val newUser = keyUserRepo.findByUsernameIgnoreCase(newUsername) ?: throw BadRequestException("Couldn't find a user with the username $newUsername")
         val participant = tournamentParticipantRepo.findByTournamentIdAndUserId(tourneyId, previousUser.id)
-                ?: throw BadRequestException("No tournament participant with the username $previousUsername")
+            ?: throw BadRequestException("No tournament participant with the username $previousUsername")
         tournamentParticipantRepo.save(participant.copy(userId = newUser.id))
     }
 
     private fun calculateParticipantStats(allParticipants: List<TournamentParticipant>, pairings: List<TournamentPairing>): List<ParticipantStats> {
 
         val statsMap: Map<Long, ParticipantStats> = allParticipants
-                .map { player ->
-                    val games = pairings.filter { it.playerOneWon != null && (it.playerOneId == player.id || it.playerTwoId == player.id) }
-                    val winCount = games.count { if (it.playerOneId == player.id) it.playerOneWon!! else !it.playerOneWon!! }
-                    val byeCount = games.count { it.playerTwoId == null }
-                    player.id to ParticipantStats(
-                            participant = player,
-                            wins = winCount,
-                            losses = games.size - winCount,
-                            byes = byeCount,
-                            strengthOfSchedule = 0.0,
-                            extendedStrengthOfSchedule = 0.0,
-                            score = games.sumOf { if (it.playerOneId == player.id) it.playerOneScore ?: 0 else it.playerTwoScore ?: 0 },
-                            opponentsScore = games.sumOf { if (it.playerOneId == player.id) it.playerTwoScore ?: 0 else it.playerOneScore ?: 0 },
-                            dropped = player.dropped,
-                    )
-                }
-                .toMap()
+            .map { player ->
+                val games = pairings.filter { it.playerOneWon != null && (it.playerOneId == player.id || it.playerTwoId == player.id) }
+                val winCount = games.count { if (it.playerOneId == player.id) it.playerOneWon!! else !it.playerOneWon!! }
+                val byeCount = games.count { it.playerTwoId == null }
+                player.id to ParticipantStats(
+                    participant = player,
+                    wins = winCount,
+                    losses = games.size - winCount,
+                    byes = byeCount,
+                    strengthOfSchedule = 0.0,
+                    extendedStrengthOfSchedule = 0.0,
+                    score = games.sumOf { if (it.playerOneId == player.id) it.playerOneScore ?: 0 else it.playerTwoScore ?: 0 },
+                    opponentsScore = games.sumOf { if (it.playerOneId == player.id) it.playerTwoScore ?: 0 else it.playerOneScore ?: 0 },
+                    dropped = player.dropped,
+                )
+            }
+            .toMap()
 
         if (pairings.isEmpty()) {
             return statsMap.values.toList()
         }
 
         val statsMapWithSos: Map<Long, ParticipantStats> = statsMap.values
-                .map { playerStats ->
-                    val player = playerStats.participant
-                    val opponentIds = findOpponentIds(pairings, player)
+            .map { playerStats ->
+                val player = playerStats.participant
+                val opponentIds = findOpponentIds(pairings, player)
 
-                    val sos = if (opponentIds.isEmpty()) 0.0 else opponentIds
-                            .map {
-                                val opponent = statsMap[it]!!
-                                if (opponent.wins == 0) {
-                                    0.0
-                                } else {
-                                    opponent.wins.toDouble() / (opponent.wins.toDouble() + opponent.losses.toDouble())
-                                }
-                            }
-                            .sum() / opponentIds.size
-                    player.id to playerStats.copy(strengthOfSchedule = sos)
-                }
-                .toMap()
+                val sos = if (opponentIds.isEmpty()) 0.0 else opponentIds
+                    .map {
+                        val opponent = statsMap[it]!!
+                        if (opponent.wins == 0) {
+                            0.0
+                        } else {
+                            opponent.wins.toDouble() / (opponent.wins.toDouble() + opponent.losses.toDouble())
+                        }
+                    }
+                    .sum() / opponentIds.size
+                player.id to playerStats.copy(strengthOfSchedule = sos)
+            }
+            .toMap()
 
         return statsMapWithSos.values
-                .map { playerStats ->
-                    val player = playerStats.participant
-                    val opponentIds = findOpponentIds(pairings, player)
-                    val extendedSos = if (opponentIds.isEmpty()) 0.0 else opponentIds
-                            .map {
-                                val opponent = statsMapWithSos[it]!!
-                                opponent.strengthOfSchedule
-                            }
-                            .sum() / opponentIds.size
-                    playerStats.copy(extendedStrengthOfSchedule = extendedSos)
-                }
+            .map { playerStats ->
+                val player = playerStats.participant
+                val opponentIds = findOpponentIds(pairings, player)
+                val extendedSos = if (opponentIds.isEmpty()) 0.0 else opponentIds
+                    .map {
+                        val opponent = statsMapWithSos[it]!!
+                        opponent.strengthOfSchedule
+                    }
+                    .sum() / opponentIds.size
+                playerStats.copy(extendedStrengthOfSchedule = extendedSos)
+            }
     }
 
     private fun pairPlayers(
-            tourneyId: Long,
-            roundId: Long,
-            pairingStrategy: PairingStrategy,
-            participantStats: List<ParticipantStats>,
-            previousPairings: List<TournamentPairing>
+        tourneyId: Long,
+        roundId: Long,
+        pairingStrategy: PairingStrategy,
+        participantStats: List<ParticipantStats>,
+        previousPairings: List<TournamentPairing>
     ): List<TournamentPairing> {
 
         val playerWithBye: ParticipantStats? = if (participantStats.size % 2 == 1) {
@@ -630,20 +674,20 @@ class TournamentService(
         }
 
         val unevenGroupings = participantStats
-                .let { if (playerWithBye == null) it else it.minus(playerWithBye) }
-                .shuffled()
-                .let {
-                    if (pairingStrategy == PairingStrategy.SWISS_SOS) {
-                        it
-                                .sortedWith(participantStatsComparator)
-                                .reversed()
-                    } else {
-                        it
-                    }
+            .let { if (playerWithBye == null) it else it.minus(playerWithBye) }
+            .shuffled()
+            .let {
+                if (pairingStrategy == PairingStrategy.SWISS_SOS) {
+                    it
+                        .sortedWith(participantStatsComparator)
+                        .reversed()
+                } else {
+                    it
                 }
-                .groupBy { it.wins }
-                .toMap()
-                .toSortedMap(Comparator.reverseOrder())
+            }
+            .groupBy { it.wins }
+            .toMap()
+            .toSortedMap(Comparator.reverseOrder())
 
         val groups: List<List<ParticipantStats>> = if (unevenGroupings.size > 1 && unevenGroupings[unevenGroupings.lastKey()]!!.size == 1) {
 
@@ -653,7 +697,7 @@ class TournamentService(
             val lastCombined = Pair(secondToLastGroup.first, lastTwoGroups.flatMap { it.second })
 
             firstGroups.plus(lastCombined)
-                    .map { it.second }
+                .map { it.second }
 
         } else {
             unevenGroupings.map { it.value }
@@ -669,8 +713,8 @@ class TournamentService(
             val fullGroup = if (extraPlayer == null) participants else listOf(extraPlayer!!).plus(participants)
 
             val participantIdToOpponentIds = fullGroup
-                    .map { it.participant.id to findOpponentIds(previousPairings, it.participant) }
-                    .toMap()
+                .map { it.participant.id to findOpponentIds(previousPairings, it.participant) }
+                .toMap()
 
             val groupPairings = if (pairingStrategy == PairingStrategy.SWISS_SOS) {
 
@@ -691,25 +735,27 @@ class TournamentService(
         }
 
         if (playerWithBye != null) {
-            pairings.add(TournamentPairing(
+            pairings.add(
+                TournamentPairing(
                     pairingTable = nextTable,
                     playerOneId = playerWithBye.participant.id,
                     playerTwoId = null,
                     tournamentId = tourneyId,
                     roundId = roundId,
                     playerOneWins = playerWithBye.wins
-            ))
+                )
+            )
         }
 
         return pairings
     }
 
     private fun pairWinGroupByRandom(
-            nextTable: Int,
-            players: List<ParticipantStats>,
-            participantIdToOpponentIds: Map<Long, List<Long>>,
-            tourneyId: Long,
-            roundId: Long,
+        nextTable: Int,
+        players: List<ParticipantStats>,
+        participantIdToOpponentIds: Map<Long, List<Long>>,
+        tourneyId: Long,
+        roundId: Long,
     ): GroupPairingResults {
 
         val timesToRepair = 1000
@@ -717,7 +763,7 @@ class TournamentService(
         val totalPairings = players.size / 2
 
         var bestResults = pairPlayersByRandom(
-                nextTable, players, participantIdToOpponentIds, tourneyId, roundId
+            nextTable, players, participantIdToOpponentIds, tourneyId, roundId
         )
 
         var timesPaired = 0
@@ -728,7 +774,7 @@ class TournamentService(
                 timesPaired++
 
                 val potentialResults = pairPlayersByRandom(
-                        nextTable, players, participantIdToOpponentIds, tourneyId, roundId
+                    nextTable, players, participantIdToOpponentIds, tourneyId, roundId
                 )
 
                 if (potentialResults.rematchPoints < bestResults.rematchPoints) {
@@ -738,7 +784,7 @@ class TournamentService(
         }
 
         log.info(
-                """
+            """
                     Paired group randomly with $totalPairings pairings.
                     Repaired $timesPaired times in $millisTaken ms. 
                     Best rematch points ${bestResults.rematchPoints}. 
@@ -751,11 +797,11 @@ class TournamentService(
 
 
     private fun pairPlayersByRandom(
-            nextTable: Int,
-            players: List<ParticipantStats>,
-            participantIdToOpponentIds: Map<Long, List<Long>>,
-            tourneyId: Long,
-            roundId: Long,
+        nextTable: Int,
+        players: List<ParticipantStats>,
+        participantIdToOpponentIds: Map<Long, List<Long>>,
+        tourneyId: Long,
+        roundId: Long,
     ): GroupPairingResults {
 
         val playersToPair = players.toMutableList()
@@ -781,7 +827,8 @@ class TournamentService(
 
             playersToPair.remove(opponent)
 
-            pairings.add(TournamentPairing(
+            pairings.add(
+                TournamentPairing(
                     pairingTable = nextTable + sequenceIdx,
                     playerOneId = firstPlayer.participant.id,
                     playerTwoId = opponent.participant.id,
@@ -789,7 +836,8 @@ class TournamentService(
                     roundId = roundId,
                     playerOneWins = firstPlayer.wins,
                     playerTwoWins = opponent.wins,
-            ))
+                )
+            )
 
             sequenceIdx++
         }
@@ -798,20 +846,20 @@ class TournamentService(
 
 
         return GroupPairingResults(
-                rematchPoints,
-                0,
-                pairings,
-                pairDown,
+            rematchPoints,
+            0,
+            pairings,
+            pairDown,
         )
     }
 
     private fun pairWinGroupBySos(
-            nextTable: Int,
-            players: List<ParticipantStats>,
-            participantIdToOpponentIds: Map<Long, List<Long>>,
-            tourneyId: Long,
-            roundId: Long,
-            sosValues: List<Double>
+        nextTable: Int,
+        players: List<ParticipantStats>,
+        participantIdToOpponentIds: Map<Long, List<Long>>,
+        tourneyId: Long,
+        roundId: Long,
+        sosValues: List<Double>
     ): GroupPairingResults {
 
         val timesToRepair = 1000
@@ -819,7 +867,7 @@ class TournamentService(
         val totalPairings = players.size / 2
 
         var bestResults = pairPlayersBySosWithRandom(
-                nextTable, players, participantIdToOpponentIds, tourneyId, roundId, sosValues, null
+            nextTable, players, participantIdToOpponentIds, tourneyId, roundId, sosValues, null
         )
 
         val lowestSosPoints = bestResults.sosPoints
@@ -835,11 +883,11 @@ class TournamentService(
                 val randomPairings = 1 + (((totalPairings - 1) * timesPaired) / (timesToRepair * 2))
 
                 val randomPairingSequence = (0..randomPairings).map { true }
-                        .plus((0..(totalPairings - randomPairings)).map { false })
-                        .shuffled()
+                    .plus((0..(totalPairings - randomPairings)).map { false })
+                    .shuffled()
 
                 val potentialResults = pairPlayersBySosWithRandom(
-                        nextTable, players, participantIdToOpponentIds, tourneyId, roundId, sosValues, randomPairingSequence
+                    nextTable, players, participantIdToOpponentIds, tourneyId, roundId, sosValues, randomPairingSequence
                 )
 
                 if (potentialResults.rematchPoints + potentialResults.sosPoints < bestResults.rematchPoints + bestResults.sosPoints) {
@@ -849,7 +897,7 @@ class TournamentService(
         }
 
         log.info(
-                """
+            """
                     Paired group by SOS with $totalPairings pairings.
                     Repaired $timesPaired times in $millisTaken ms. 
                     Best rematch points ${bestResults.rematchPoints}. 
@@ -862,13 +910,13 @@ class TournamentService(
 
 
     private fun pairPlayersBySosWithRandom(
-            nextTable: Int,
-            players: List<ParticipantStats>,
-            participantIdToOpponentIds: Map<Long, List<Long>>,
-            tourneyId: Long,
-            roundId: Long,
-            sosValues: List<Double>,
-            randomPairingsSequence: List<Boolean>?,
+        nextTable: Int,
+        players: List<ParticipantStats>,
+        participantIdToOpponentIds: Map<Long, List<Long>>,
+        tourneyId: Long,
+        roundId: Long,
+        sosValues: List<Double>,
+        randomPairingsSequence: List<Boolean>?,
     ): GroupPairingResults {
 
         val playersToPair = players.toMutableList()
@@ -909,7 +957,8 @@ class TournamentService(
             val idxSecond = sosValues.indexOf(opponent.totalSosScore())
             sosSimilarityPoints += (idxFirst - idxSecond).absoluteValue
 
-            pairings.add(TournamentPairing(
+            pairings.add(
+                TournamentPairing(
                     pairingTable = nextTable + sequenceIdx,
                     playerOneId = firstPlayer.participant.id,
                     playerTwoId = opponent.participant.id,
@@ -917,7 +966,8 @@ class TournamentService(
                     roundId = roundId,
                     playerOneWins = firstPlayer.wins,
                     playerTwoWins = opponent.wins,
-            ))
+                )
+            )
 
             sequenceIdx++
         }
@@ -929,17 +979,17 @@ class TournamentService(
         }
 
         return GroupPairingResults(
-                rematchPoints,
-                sosSimilarityPoints,
-                pairings,
-                pairDown,
+            rematchPoints,
+            sosSimilarityPoints,
+            pairings,
+            pairDown,
         )
     }
 
     private fun findOpponentIds(pairings: List<TournamentPairing>, player: TournamentParticipant): List<Long> {
         return pairings
-                .filter { it.playerOneId == player.id || it.playerTwoId == player.id }
-                .mapNotNull { if (it.playerOneId == player.id) it.playerTwoId else it.playerOneId }
+            .filter { it.playerOneId == player.id || it.playerTwoId == player.id }
+            .mapNotNull { if (it.playerOneId == player.id) it.playerTwoId else it.playerOneId }
     }
 
     private fun verifyTournamentAdmin(tourneyId: Long): Tournament {
@@ -951,22 +1001,35 @@ class TournamentService(
         return tourney
     }
 
-    private fun verifyTournamentAdminOrParticipant(participantUsername: String, tourneyId: Long): Triple<KeyUser, KeyUser, Tournament> {
+    private fun verifyTournamentAdminOrParticipant(participantUsername: String, tourneyId: Long): TourneyAdminOrParticipant {
         val user = currentUserService.loggedInUserOrUnauthorized()
         val participant = keyUserRepo.findByUsernameIgnoreCase(participantUsername) ?: throw BadRequestException("No user with username $participantUsername")
         val tourney = tourneyRepo.findByIdOrNull(tourneyId) ?: throw BadRequestException("No tourney with id $tourneyId")
+        val isOrganizer = tournamentOrganizerRepo.existsByTourneyIdAndOrganizerId(tourneyId, user.id)
 
-        if (user.id != participant.id && !tournamentOrganizerRepo.existsByTourneyIdAndOrganizerId(tourneyId, user.id)) {
+        if (user.id != participant.id && !isOrganizer) {
             throw UnauthorizedException("Must be tournament organizer or participant to add/drop participant.")
         }
-        return Triple(user, participant, tourney)
+        return TourneyAdminOrParticipant(
+            user,
+            participant,
+            tourney,
+            isOrganizer
+        )
     }
 
 }
 
 data class GroupPairingResults(
-        val rematchPoints: Int,
-        val sosPoints: Int,
-        val pairings: List<TournamentPairing>,
-        val pairDown: ParticipantStats?,
+    val rematchPoints: Int,
+    val sosPoints: Int,
+    val pairings: List<TournamentPairing>,
+    val pairDown: ParticipantStats?,
+)
+
+data class TourneyAdminOrParticipant(
+    val currentUser: KeyUser,
+    val participant: KeyUser,
+    val tourney: Tournament,
+    val isOrganizer: Boolean,
 )

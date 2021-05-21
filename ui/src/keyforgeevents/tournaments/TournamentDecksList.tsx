@@ -16,17 +16,18 @@ import { AddTournamentDeckButton } from "./AddTournamentDeckButton"
 import { tournamentStore } from "./TournamentStore"
 
 export const TournamentDecksList = (props: {
-    tourneyId: number, stage: TournamentStage, isOrganizer: boolean, deckChoicesLocked: boolean, decks: TournamentDeckInfo[], username?: string
+    tourneyId: number, stage: TournamentStage, isOrganizer: boolean, deckChoicesLocked: boolean,
+    organizerAddedDecksOnly: boolean, decks: TournamentDeckInfo[], username?: string
 }) => {
 
-    const {tourneyId, stage, isOrganizer, decks, username, deckChoicesLocked} = props
+    const {tourneyId, stage, isOrganizer, decks, username, deckChoicesLocked, organizerAddedDecksOnly} = props
 
     return (
         <SortableTableContainer
             title={`Player Decks`}
             controls={(
                 <>
-                    {!deckChoicesLocked && username != null && !isOrganizer && stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
+                    {!organizerAddedDecksOnly && !deckChoicesLocked && username != null && !isOrganizer && stage === TournamentStage.TOURNAMENT_NOT_STARTED && (
                         <AddTournamentDeckButton eventId={tourneyId} username={username}/>
                     )}
                     <LinkButton href={Routes.tournamentDecksSearch(tourneyId)} newWindow={true} style={{marginLeft: spacing(2)}}>View Decks</LinkButton>

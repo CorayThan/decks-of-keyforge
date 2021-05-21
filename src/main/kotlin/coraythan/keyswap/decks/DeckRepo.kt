@@ -25,5 +25,5 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
 
     fun countByCardsVerifiedIsFalse(): Long
 
-    fun findFirst100ByCardsVerifiedIsFalse(): List<Deck>
+    fun findFirst100ByCardsVerifiedIsFalseOrderByImportDateTimeAsc(): List<Deck>
 }

@@ -57,7 +57,7 @@ class ExtraCardInfoService(
 
         check(nextVersion >= latestPreexistingVersion) { "latest pre existing version can't be more than next version!" }
 
-        if (nextVersion == latestPreexistingVersion) {
+        val id = if (nextVersion == latestPreexistingVersion) {
             // update next version of extra card info
             log.info("Update next version of ${info.id}")
 
@@ -76,7 +76,7 @@ class ExtraCardInfoService(
                 synTraitValueRepo.save(syn.copy(synergyInfo = saved, id = UUID.randomUUID()))
             }
 
-            return saved.id
+            saved.id
         } else {
             log.info("Create next version of ${info.id}")
             // create next version of extra card info
@@ -93,8 +93,10 @@ class ExtraCardInfoService(
                 synTraitValueRepo.save(syn.copy(synergyInfo = saved, id = UUID.randomUUID()))
             }
             log.info("Created id ${saved.id}")
-            return saved.id
+            saved.id
         }
+
+        return id
     }
 
     private fun findNextOrCurrentInfo(info: ExtraCardInfo): ExtraCardInfo {

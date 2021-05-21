@@ -173,6 +173,16 @@ export class TournamentStore {
         await this.findTourneyInfo(id)
     }
 
+    organizerAddedDecksOnly = async (id: number, only: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/organizer-added-decks-only/${only}`)
+        await this.findTourneyInfo(id)
+    }
+
+    showDecksToAllPlayers = async (id: number, show: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/show-decks-to-all-players/${show}`)
+        await this.findTourneyInfo(id)
+    }
+
     changePairingStrategy = async (id: number, strategy: PairingStrategy) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/change-pairing-strategy/${strategy}`)
         await this.findTourneyInfo(id)

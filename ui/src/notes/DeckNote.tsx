@@ -69,6 +69,8 @@ export class InlineDeckNote extends React.Component<InlineDeckNoteProps> {
                     label={"Notes"}
                     style={{marginRight: spacing(2)}}
                     store={new AutoSaveTextFieldStore(notesForDeck, (notes) => userDeckStore.updateNotes(notes.trim(), this.props.id))}
+                    disabled={!userStore.patron}
+                    helperText={userStore.patron ? undefined : "Please become a patron to add and edit notes"}
                 />
                 <div>
                     <IconButton

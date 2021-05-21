@@ -1,7 +1,9 @@
 package coraythan.keyswap.synergy
 
 import coraythan.keyswap.House
+import coraythan.keyswap.generatets.GenerateTs
 
+@GenerateTs
 data class SynergyCombo(
         val house: House,
         val cardName: String,
@@ -23,6 +25,7 @@ data class SynergyCombo(
         val copies: Int = 1,
 
         val notCard: Boolean? = null,
+        val synStart: Int? = null,
 )
 
 data class DeckSynergyInfo(
@@ -49,6 +52,7 @@ data class DeckSynergyInfo(
     fun meta() = metaScores.map { it.value }.sum()
 }
 
+@GenerateTs
 data class SynergyMatch(
         val trait: SynTraitValue,
         val percentSynergized: Int,

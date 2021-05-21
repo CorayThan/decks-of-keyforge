@@ -26,20 +26,23 @@ import { observer } from "mobx-react"
 import React, { ChangeEvent } from "react"
 import { RouteComponentProps } from "react-router-dom"
 import { cardStore } from "../cards/CardStore"
-import { CardType } from "../cards/CardType"
 import { KCard } from "../cards/KCard"
 import { CardView } from "../cards/views/CardSimpleView"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
+import { CardType } from "../generated-src/CardType"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
+import { SynTraitHouse } from "../generated-src/SynTraitHouse"
+import { SynTraitPlayer } from "../generated-src/SynTraitPlayer"
+import { SynTraitValue } from "../generated-src/SynTraitValue"
 import { EventValue } from "../generic/EventValue"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { SelectedOptions } from "../mui-restyled/SelectedOptions"
-import { SynTraitHouse, synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
-import { SynTraitPlayer, SynTraitRatingValues, SynTraitValue } from "../synergy/SynTraitValue"
+import { synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
+import { SynTraitRatingValues } from "../synergy/SynTraitValue"
 import { TraitBubble } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
@@ -600,7 +603,7 @@ class AddTrait extends React.Component<AddTraitProps> {
         this.house = value.house
         this.traitOrSynergy = synergy ? "synergy" : "trait"
         this.cardTypes = value.cardTypes
-        this.rating = value.rating
+        this.rating = value.rating as SynTraitRatingValues
         this.trait = value.trait
         this.cardTraitsStore.update(value.cardTraits)
         this.group = value.synergyGroup as SynGroup

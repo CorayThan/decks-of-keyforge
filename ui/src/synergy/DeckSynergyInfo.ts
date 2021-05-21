@@ -1,5 +1,4 @@
-import { House } from "../generated-src/House"
-import { SynTraitValue } from "./SynTraitValue"
+import { SynergyCombo } from "../generated-src/SynergyCombo"
 
 export interface DeckSynergyInfo {
     rawAerc: number
@@ -20,33 +19,4 @@ export interface DeckSynergyInfo {
     other: number,
 
     metaScores: { [key: string]: number }
-}
-
-export interface SynergyCombo {
-    house: House
-    cardName: string
-    synergies: SynergyMatch[]
-    netSynergy: number
-    aercScore: number
-
-    expectedAmber: number,
-    amberControl: number,
-    creatureControl: number,
-    artifactControl: number,
-    efficiency: number,
-    recursion: number,
-    effectivePower: number,
-    creatureProtection: number,
-    disruption: number,
-    other: number,
-
-    copies: number
-
-    notCard?: boolean
-}
-
-export interface SynergyMatch {
-    trait: SynTraitValue
-    percentSynergized: number
-    traitCards: string[]
 }

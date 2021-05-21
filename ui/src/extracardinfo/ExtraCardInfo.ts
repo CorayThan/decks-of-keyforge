@@ -1,5 +1,5 @@
-import { CardType } from "../cards/CardType"
-import { SynTraitValue } from "../synergy/SynTraitValue"
+import { CardType } from "../generated-src/CardType"
+import { SynTraitValue } from "../generated-src/SynTraitValue"
 
 export interface ExtraCardInfo {
     cardName: string

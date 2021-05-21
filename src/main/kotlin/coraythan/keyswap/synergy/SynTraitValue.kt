@@ -4,10 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
+import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.generatets.TsIgnore
+import coraythan.keyswap.generatets.TsOptional
 import coraythan.keyswap.startCase
 import java.util.*
 import javax.persistence.*
 
+@GenerateTs
 @Entity
 data class SynTraitValue(
         @Enumerated(EnumType.STRING)
@@ -23,6 +27,7 @@ data class SynTraitValue(
         @JsonIgnore
         val cardTypesInitial: List<CardType>? = listOf(),
 
+        @TsIgnore
         var cardTypesString: String = "",
         /**
          * Creature power expression, one of:
@@ -30,13 +35,16 @@ data class SynTraitValue(
          * ['odd','even','2-5','2 or less','3+','3,5,7']
          */
         var powersString: String = "",
+        @TsIgnore
         var cardTraitsString: String = "",
         val notCardTraits: Boolean = false,
 
+        @TsIgnore
         @JsonIgnoreProperties("traits")
         @ManyToOne
         val traitInfo: ExtraCardInfo? = null,
 
+        @TsIgnore
         @JsonIgnoreProperties("synergies")
         @ManyToOne
         val synergyInfo: ExtraCardInfo? = null,
@@ -47,6 +55,7 @@ data class SynTraitValue(
         val synergyGroupMax: Int? = null,
         val primaryGroup: Boolean = false,
 
+        @TsOptional
         @Id
         val id: UUID = UUID.randomUUID()
 ) : Comparable<SynTraitValue> {

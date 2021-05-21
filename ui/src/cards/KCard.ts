@@ -3,6 +3,7 @@ import { HasAerc } from "../aerc/HasAerc"
 import { Utils } from "../config/Utils"
 import { activeSasExpansions } from "../expansions/Expansions"
 import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
+import { CardType } from "../generated-src/CardType"
 import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
@@ -11,7 +12,6 @@ import { Wins } from "../generated-src/Wins"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
-import { CardType } from "./CardType"
 
 export interface KCard {
     id: string

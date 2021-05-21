@@ -30,6 +30,8 @@ export class NotesSearch extends React.Component<NotesAndTagsSearchProps> {
                                 multiline={true}
                                 value={notes}
                                 fullWidth={true}
+                                helperText={userStore.patron ? undefined : "Please become a patron to search notes"}
+                                disabled={!userStore.patron}
                             />
                         ) : (
                             <div>

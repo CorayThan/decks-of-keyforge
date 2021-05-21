@@ -8,7 +8,8 @@ import java.util.*
 @RestController
 @RequestMapping("${Api.base}/extra-card-infos")
 class ExtraCardInfoEndpoints(
-        private val extraCardInfoService: ExtraCardInfoService
+        private val extraCardInfoService: ExtraCardInfoService,
+        private val cardService: CardService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -17,5 +18,12 @@ class ExtraCardInfoEndpoints(
     fun findInfo(@PathVariable infoId: UUID) = extraCardInfoService.findExtraCardInfo(infoId)
 
     @PostMapping("/secured")
-    fun saveInfo(@RequestBody extraCardInfo: ExtraCardInfo) = extraCardInfoService.updateExtraCardInfo(extraCardInfo)
+    fun saveInfo(@RequestBody extraCardInfo: ExtraCardInfo): UUID {
+        val id = extraCardInfoService.updateExtraCardInfo(extraCardInfo)
+
+        cardService.loadExtraInfo()
+        cardService.reloadCachedCards()
+
+        return id
+    }
 }

@@ -3,12 +3,12 @@ import { makeObservable, observable } from "mobx"
 import * as React from "react"
 import { Utils } from "../config/Utils"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
+import { CardType } from "../generated-src/CardType"
 import { Constraint } from "../generated-src/Constraint"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { SortDirection } from "../generic/SortDirection"
-import { CardType } from "./CardType"
 
 export class CardFilters {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

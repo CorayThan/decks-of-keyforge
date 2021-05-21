@@ -3,10 +3,11 @@ import { amber, blue, teal } from "@material-ui/core/colors"
 import Home from "@material-ui/icons/Home"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
+import { SynTraitHouse } from "../generated-src/SynTraitHouse"
+import { SynTraitValue } from "../generated-src/SynTraitValue"
 import { OutOfHouseIcon } from "../generic/icons/OutOfHouseIcon"
 import { SynergyEffectIcon } from "../generic/icons/SynergyEffectIcon"
-import { SynTraitHouse } from "./SynTraitHouse"
-import { synTraitName, SynTraitValue } from "./SynTraitValue"
+import { synTraitName } from "./SynTraitValue"
 
 interface TraitBubbleProps {
     traitValue: SynTraitValue
