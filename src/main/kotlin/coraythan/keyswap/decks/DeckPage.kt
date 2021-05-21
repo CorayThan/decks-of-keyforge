@@ -14,7 +14,7 @@ import javax.persistence.*
 enum class DeckPageType(val quantity: Int) {
     IMPORT(10),
     STATS(10000),
-    RATING(1000),
+    RATING(500),
     WINS(25),
     LOSSES(25)
 }

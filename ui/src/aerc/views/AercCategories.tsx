@@ -48,6 +48,14 @@ export const AercCategoryExtras = (props: AercCatProps) => {
         },
     ]
 
+    if (twoHigh) {
+        const expansionSpecific = expansionSpecificCounts(props, width)
+
+        if (expansionSpecific != null) {
+            firstTwo.push(expansionSpecific)
+        }
+    }
+
     const secondTwo: InfoIconValue[] = [
         {
             icon: <ArchiveIcon width={width}/>,
@@ -200,37 +208,10 @@ export const AercCategoryCounts = (props: AercCatProps) => {
         )
     }
 
-    if (deck.expansion === Expansion.MASS_MUTATION) {
-        thirdTwo.push({
-            icon: <MutantIcon width={width}/>,
-            info: cards.filter(card => card.traits?.includes("MUTANT") ?? false).length,
-            cardsTips: {
-                matches: card => card.traits?.includes("MUTANT") ?? false,
-                cards,
-                title: "Mutants"
-            }
-        })
-    }
+    const expansionSpecific = expansionSpecificCounts(props, width)
 
-    if (deck.expansion === Expansion.DARK_TIDINGS) {
-
-        const manipulatesTideCheckCard = (card: KCard) => card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.lowersTide || trait.trait === SynergyTrait.raisesTide)
-        const manipulatesTide = (cards: KCard[]) => cards.filter(manipulatesTideCheckCard)
-        const usesTideCheckCard = (card: KCard) => card.extraCardInfo?.synergies?.find(synergy => synergy.trait === SynergyTrait.lowersTide || synergy.trait === SynergyTrait.raisesTide)
-        const usesTide = (cards: KCard[]) => cards.filter(usesTideCheckCard)
-
-        thirdTwo.push({
-            icon: <TideIcon width={width}/>,
-            info: `${manipulatesTide(cards).length}/${usesTide(cards).length}`,
-            cardsTips: {
-                matches: card => manipulatesTideCheckCard(card) != null,
-                matches2: card => usesTideCheckCard(card) != null,
-                cards,
-                title: "Tide",
-                subtitle1: "Manipulates Tide",
-                subtitle2: "Uses Tide"
-            }
-        })
+    if (expansionSpecific != null) {
+        thirdTwo.push(expansionSpecific)
     }
 
     return (
@@ -251,6 +232,43 @@ export const AercCategoryCounts = (props: AercCatProps) => {
             )}
         </div>
     )
+}
+
+const expansionSpecificCounts = (props: AercCatProps, width: number | undefined): InfoIconValue | undefined => {
+    const {deck, cards} = props
+    if (deck.expansion === Expansion.MASS_MUTATION) {
+        return {
+            icon: <MutantIcon width={width}/>,
+            info: cards.filter(card => card.traits?.includes("MUTANT") ?? false).length,
+            cardsTips: {
+                matches: card => card.traits?.includes("MUTANT") ?? false,
+                cards,
+                title: "Mutants"
+            }
+        }
+    }
+
+    if (deck.expansion === Expansion.DARK_TIDINGS) {
+
+        const manipulatesTideCheckCard = (card: KCard) => card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.lowersTide || trait.trait === SynergyTrait.raisesTide)
+        const manipulatesTide = (cards: KCard[]) => cards.filter(manipulatesTideCheckCard)
+        const usesTideCheckCard = (card: KCard) => card.extraCardInfo?.synergies?.find(synergy => synergy.trait === SynergyTrait.lowersTide || synergy.trait === SynergyTrait.raisesTide)
+        const usesTide = (cards: KCard[]) => cards.filter(usesTideCheckCard)
+
+        return {
+            icon: <TideIcon width={width}/>,
+            info: `${manipulatesTide(cards).length}/${usesTide(cards).length}`,
+            cardsTips: {
+                matches: card => manipulatesTideCheckCard(card) != null,
+                matches2: card => usesTideCheckCard(card) != null,
+                cards,
+                title: "Tide",
+                subtitle1: "Manipulates Tide",
+                subtitle2: "Uses Tide"
+            }
+        }
+    }
+    return undefined
 }
 
 interface AercScoresCategoryProps {
