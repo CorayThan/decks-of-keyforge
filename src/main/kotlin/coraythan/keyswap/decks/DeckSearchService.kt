@@ -23,7 +23,7 @@ import coraythan.keyswap.tags.PublicityType
 import coraythan.keyswap.tokenize
 import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.userdeck.OwnedDeckService
-import coraythan.keyswap.userdeck.QUserDeck
+import coraythan.keyswap.userdeck.QDeckNote
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
@@ -293,13 +293,13 @@ class DeckSearchService(
             } ?: throw IllegalArgumentException("No notes user for notes.")
 
             val trimmed = filters.notes.lowercase().trim()
-            val userDeckQ = QUserDeck.userDeck
+            val deckNoteQ = QDeckNote.deckNote
             predicate.and(
-                    deckQ.userDecks.any().`in`(
-                            JPAExpressions.selectFrom(userDeckQ)
+                    deckQ.deckNotes.any().`in`(
+                            JPAExpressions.selectFrom(deckNoteQ)
                                     .where(
-                                            userDeckQ.user.username.eq(username),
-                                            userDeckQ.notes.containsIgnoreCase(trimmed)
+                                        deckNoteQ.user.username.eq(username),
+                                        deckNoteQ.notes.containsIgnoreCase(trimmed)
                                     )
                     )
             )

@@ -158,6 +158,8 @@ class TeamService(
         val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No team for team leader ${loggedInUser.email}")
         if (team.members.size > 1) throw BadRequestException("Team too big to disband.")
 
+        log.info("Delete team ${team.name} with id ${team.id}")
+
         removeFromTeamAndDecks(loggedInUser, team)
 
         teamRepo.deleteById(team.id)

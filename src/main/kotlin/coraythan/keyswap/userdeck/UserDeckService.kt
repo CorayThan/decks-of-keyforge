@@ -80,7 +80,7 @@ class UserDeckService(
 
         val originalNotes = userDeckRepo.findByUserIdAndDeckId(user.id, deck.id)
 
-        userDeckRepo.save(originalNotes?.copy(notes = notes) ?: UserDeck(user, deck, notes))
+        userDeckRepo.save(originalNotes?.copy(notes = notes) ?: DeckNote(user, deck, notes))
     }
 
     fun markAsFunny(deckId: Long, mark: Boolean = true) {
@@ -177,11 +177,11 @@ class UserDeckService(
     }
 
     private fun findDeckNotes(userId: UUID): List<DeckNotesDto> {
-        val userDeckQ = QUserDeck.userDeck
+        val deckNoteQ = QDeckNote.deckNote
         return query
-                .select(Projections.constructor(DeckNotesDto::class.java, userDeckQ.deck.id, userDeckQ.notes))
-                .from(userDeckQ)
-                .where(userDeckQ.user.id.eq(userId).and(userDeckQ.notes.isNotNull))
+                .select(Projections.constructor(DeckNotesDto::class.java, deckNoteQ.deck.id, deckNoteQ.notes))
+                .from(deckNoteQ)
+                .where(deckNoteQ.user.id.eq(userId).and(deckNoteQ.notes.isNotNull))
                 .fetch()
     }
 

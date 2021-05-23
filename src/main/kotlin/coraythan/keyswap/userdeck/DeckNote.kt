@@ -10,7 +10,7 @@ import javax.persistence.Id
 import javax.persistence.ManyToOne
 
 @Entity
-data class UserDeck(
+data class DeckNote(
 
         @JsonIgnoreProperties("decks")
         @ManyToOne
@@ -20,10 +20,6 @@ data class UserDeck(
         val deck: Deck,
 
         val notes: String? = null,
-
-        // TODO delete these
-        val wishlist: Boolean = false,
-        val funny: Boolean = false,
 
         @Id
         val id: UUID = UUID.randomUUID()

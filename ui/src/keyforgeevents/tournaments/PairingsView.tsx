@@ -37,6 +37,7 @@ export const PairingsView = (props: {
                         )}
                         data={round.pairings}
                         defaultSort={"table"}
+                        defaultSortDir={"asc"}
                         rowBackgroundColor={(pairing) => {
                             if (stage == TournamentStage.GAMES_IN_PROGRESS && pairing.playerOneWon == null) {
                                 return themeStore.darkMode ? blue["900"] : blue["50"]

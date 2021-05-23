@@ -133,7 +133,7 @@ class DeckImporterService(
                 saveDeck(deck, deck.houses, deckWithCards.data._links!!.cards!!.mapNotNull {
                     deckCards.find { deckCard -> deckCard.id == it }
                 })
-                deckRepo.save(deckRepo.getOne(deck.id).copy(cardsVerified = false))
+                deckRepo.save(deckRepo.getOne(deck.id).copy(cardsVerified = true))
             }
         }
 
