@@ -33,6 +33,34 @@ export class ThirdPartyIntegrations extends React.Component {
                 </Box>
                 <Grid container={true} spacing={4} justify={"center"}>
                     <DisplayIntegration
+                        name={"Android: Import to DoK from MV"}
+                        description={
+                            [
+                                <Typography key={"first"}>
+                                    <b>
+                                        This app is made by Decks of KeyForge itself!
+                                        Unlike other apps, it is safe to use your Decks of KeyForge username and password in it.
+                                    </b>
+                                </Typography>,
+                                <Typography key={"first"}>
+                                    <b>How to use:</b>
+                                </Typography>,
+                                <ol key={"second"}>
+                                    <li>Install the app to your device</li>
+                                    <li>
+                                        Open the app and use your DoK username and password to login
+                                    </li>
+                                    <li>Scan a deck with Master Vault</li>
+                                    <li>Click the "Share" Button in Master Vault</li>
+                                    <li>Select the Decks of KeyForge app to share with. Your deck will be imported to DoK and added to your decks.</li>
+                                </ol>,
+                            ]
+                        }
+                        url={"https://play.google.com/store/apps/details?id=coraythan.decksofkeyforgeutilities"}
+                        urlName={"DoK Utilities App"}
+                        discord={"CorayThan#9734"}
+                    />
+                    <DisplayIntegration
                         name={"iOS: Import to DoK from MV App"}
                         description={
                             [

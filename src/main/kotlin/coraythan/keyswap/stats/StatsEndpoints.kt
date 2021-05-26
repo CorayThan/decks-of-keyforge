@@ -27,8 +27,8 @@ class StatsEndpoints(
     }
 
     @PostMapping("/start-new")
-    fun startNewStats(@RequestParam apiKey: String) {
-        apiKeys.checkApiKey(apiKey)
-        statsService.startNewDeckStats()
-    }
+    fun startNewStats() = statsService.startStatsManually()
+
+    @GetMapping("/info")
+    fun findStatsInfo() = statsService.findStatInfo()
 }

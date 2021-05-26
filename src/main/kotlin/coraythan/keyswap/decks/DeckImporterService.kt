@@ -74,6 +74,8 @@ class DeckImporterService(
         val millis = measureTimeMillis {
             val toClean = deckRepo.findFirst100ByCardsVerifiedIsFalseOrderByImportDateTimeAsc()
 
+            // val toClean = listOf(deckRepo.findByKeyforgeId("9a4821de-04c1-4811-93a7-34379ee613ea")!!)
+
             log.info("Got to clean decks ${toClean.size}")
 
             for (deck in toClean) {

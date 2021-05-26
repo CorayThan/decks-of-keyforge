@@ -110,7 +110,7 @@ export const MyMessages = observer(() => {
                                                 <Box display={"flex"}>
                                                     <Box fontWeight={500} width={screenStore.screenSizeXs() ? 120 : 240}>
                                                         <Typography>
-                                                            {message.subject}
+                                                            {message.subject.trim().length > 0 ? message.subject : "No Subject"}
                                                         </Typography>
                                                     </Box>
                                                     {!screenStore.screenSizeMd() && (
@@ -127,7 +127,7 @@ export const MyMessages = observer(() => {
                                             <TableCell align={"right"}>
                                                 {!toMe && (
                                                     <>
-                                                        {message.viewed ? `Viewed: ${TimeUtils.formatLocalUTCToShortDate(message.viewed)}` : "Not Viewed"}
+                                                        {message.viewed ? `Viewed:\n ${TimeUtils.formatLocalUTCToShortDate(message.viewed)}` : "Not Viewed"}
                                                     </>
                                                 )}
                                             </TableCell>

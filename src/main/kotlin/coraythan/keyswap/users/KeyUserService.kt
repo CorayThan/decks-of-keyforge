@@ -230,6 +230,14 @@ class KeyUserService(
         userRepo.save(user.copy(emailVerified = verifyEmail, sellerEmailVerified = verifySellerEmail))
     }
 
+    fun findUsersByUsername(name: String): List<UserSearchResult> {
+        return userRepo.findByUsernameContainsIgnoreCase(name.trim()).map {
+            it.minimalSearchResult()
+        }
+            .sortedBy { it.username.lowercase() }
+            .take(10)
+    }
+
     private fun validateEmail(email: String) {
         check(email.isNotBlank()) {
             "Email is blank."
@@ -253,13 +261,5 @@ class KeyUserService(
             log.info("${username} username is already taken.")
             "This username is already taken."
         }
-    }
-
-    fun findUsersByUsername(name: String): List<UserSearchResult> {
-        return userRepo.findByUsernameContainsIgnoreCase(name.trim()).map {
-            it.minimalSearchResult()
-        }
-                .sortedBy { it.username.lowercase() }
-                .take(10)
     }
 }

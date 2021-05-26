@@ -89,7 +89,7 @@ class PostProcessDecksService(
                 expansions = listOf(496)
         )
 
-        return deckSearchService.filterDecks(twinFilters, 0).decks.firstOrNull()
+        return deckSearchService.filterDecks(twinFilters, 0).decks.firstOrNull { it.id != deck.id }
     }
 }
 

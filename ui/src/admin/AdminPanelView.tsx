@@ -1,14 +1,17 @@
 import { Box, Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { spacing } from "../config/MuiConfig"
 import { KeyCard } from "../generic/KeyCard"
 import { KeyButton } from "../mui-restyled/KeyButton"
+import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { uiStore } from "../ui/UiStore"
 import { adminStore } from "./AdminStore"
 
-export const AdminPanelView = () => {
+export const AdminPanelView = observer(() => {
 
     useEffect(() => {
+        adminStore.findStatsInfo()
         uiStore.setTopbarValues("Admin Panel", "Admin", "")
     }, [])
 
@@ -17,7 +20,7 @@ export const AdminPanelView = () => {
             <KeyCard
                 topContents={(
                     <Typography style={{color: "#FFFFFF"}} variant={"h4"}>
-                        Admin Controls
+                        Admin Stuff
                     </Typography>
                 )}
                 style={{margin: spacing(2)}}
@@ -32,7 +35,19 @@ export const AdminPanelView = () => {
                         Reload Cards
                     </KeyButton>
                 </Box>
+                <Box pt={0} p={2}>
+                    <KeyButton
+                        variant={"contained"}
+                        color={"secondary"}
+                        onClick={adminStore.startNewStats}
+                    >
+                        Start New Stats
+                    </KeyButton>
+                </Box>
+                <Box pt={0} p={2}>
+                    <WhiteSpaceTypography>{adminStore.info}</WhiteSpaceTypography>
+                </Box>
             </KeyCard>
         </Box>
     )
-}
+})

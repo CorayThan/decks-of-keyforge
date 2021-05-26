@@ -1,5 +1,6 @@
 package coraythan.keyswap.stats
 
+import coraythan.keyswap.*
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.Env
@@ -12,11 +13,8 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
-import coraythan.keyswap.now
-import coraythan.keyswap.scheduledException
-import coraythan.keyswap.scheduledStart
-import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.users.CurrentUserService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -33,6 +31,7 @@ private const val statsUpdateQuantity = 10000L
 @Transactional
 @Service
 class StatsService(
+    private val currentUserService: CurrentUserService,
         private val cardService: CardService,
         private val deckStatisticsRepo: DeckStatisticsRepo,
         private val deckPageService: DeckPageService,
@@ -44,7 +43,7 @@ class StatsService(
 
     private var updateStats = true
 
-    private final val defaultGlobalStats = listOf(GlobalStatsWithExpansion(null, null, GlobalStats()))
+    private val defaultGlobalStats = listOf(GlobalStatsWithExpansion(null, null, GlobalStats()))
     var cachedStats: DeckStatistics? = null
     var cachedGlobalStats: List<GlobalStatsWithExpansion> = defaultGlobalStats
 
@@ -81,13 +80,35 @@ class StatsService(
         }
     }
 
+    fun startStatsManually(): String {
+        currentUserService.adminOrUnauthorized()
+        return this.startNewDeckStats()
+    }
+
+    fun findStatInfo(): String {
+        val mostRecentStats = deckStatisticsRepo.findFirstByOrderByVersionDesc()
+
+        val statsForMostRecentVersion = if (mostRecentStats == null) null else deckStatisticsRepo.findAllByVersion(mostRecentStats.version)
+
+        return """
+            Cached Stats
+            Completion date: ${cachedGlobalStats.firstOrNull { it.completedDate != null }?.completedDate?.toReadableStringWithOffsetMinutes(-420)}
+            Expansion: ${cachedGlobalStats.mapNotNull { it.expansion }}
+            
+            Current Stats
+            Version: ${mostRecentStats?.version}
+            Completion Date: ${mostRecentStats?.completeDateTime?.toReadableStringWithOffsetMinutes(-420)}
+            Expansions: ${statsForMostRecentVersion?.map { it.expansion }}
+        """.trimIndent()
+    }
+
     @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
     @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastFor = lockStatsVersionUpdate, lockAtMostFor = lockStatsVersionUpdate)
-    fun startNewDeckStats() {
+    fun startNewDeckStats(): String {
 
         if (env == Env.qa) {
             log.info("QA environment, skip stats.")
-            return
+            return "QA, no stats updates"
         }
 
         try {
@@ -95,14 +116,15 @@ class StatsService(
             log.info("$scheduledStart start new deck stats.")
             if (!doneRatingDecks) {
                 log.info("Skipping stats update as decks are being rated.")
-                return
+                return "Deck rating in progress, no new stats"
             }
             val mostRecentVersion = deckStatisticsRepo.findFirstByOrderByVersionDesc()
-            if (mostRecentVersion == null) {
+            val message = if (mostRecentVersion == null) {
                 log.info("No stats existed")
                 deckStatisticsRepo.save(DeckStatisticsEntity.fromDeckStatistics(DeckStatistics()))
                 deckPageService.setCurrentPage(0, DeckPageType.STATS)
                 updateStats = true
+                "No Previous Stats"
             } else if (mostRecentVersion.completeDateTime != null) {
                 log.info("Creating deck stats with new version.")
                 deckStatisticsRepo.save(
@@ -117,12 +139,18 @@ class StatsService(
                 }
                 deckPageService.setCurrentPage(0, DeckPageType.STATS)
                 updateStats = true
+                "Kicked off new stats"
+            } else {
+                log.info("There were already deck stats in progress")
+                "No change, stats being updated"
             }
             log.info("$scheduledStop starting new deck stats.")
+
+            return message
         } catch (e: Exception) {
             log.error("$scheduledException starting new deck stats", e)
+            throw e
         }
-
     }
 
     @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
