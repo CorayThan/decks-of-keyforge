@@ -178,7 +178,7 @@ class StatsService(
                         val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
                         val deckResults = deckPageService.decksForPage(currentPage, DeckPageType.STATS)
 
-                        if (deckResults.isEmpty()) {
+                        if (!deckResults.moreResults) {
                             updateStats = false
                             statsWithVersion!!.forEach {
                                 deckStatisticsRepo.save(it.copy(completeDateTime = now()))
@@ -187,7 +187,7 @@ class StatsService(
                             log.info("Done updating deck stats! Final stats are: \n\n$stats\n\n")
                         }
 
-                        updateStats(statsWithVersion!!, deckResults)
+                        updateStats(statsWithVersion!!, deckResults.decks)
                         deckPageService.setCurrentPage(currentPage + 1, DeckPageType.STATS)
                     }
                 }

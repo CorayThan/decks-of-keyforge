@@ -1,13 +1,15 @@
 package coraythan.keyswap.decks
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckBuildingData
+import coraythan.keyswap.decks.models.DeckRatingProgressService
+import coraythan.keyswap.decks.models.KeyForgeDeck
 import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledException
@@ -31,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.EntityManager
 import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
@@ -56,11 +57,8 @@ class DeckImporterService(
     private val postProcessDecksService: PostProcessDecksService,
     @Value("\${env}")
     private val env: Env,
-    val entityManager: EntityManager
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    private val query = JPAQueryFactory(entityManager)
 
     @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     fun cleanUpBadCards() {
@@ -231,18 +229,9 @@ class DeckImporterService(
                     nextDeckPage = deckRatingProgressService.nextPage() ?: break
 
                     val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
-                    quantFound += deckResults.size
+                    quantFound += deckResults.decks.size
 
-                    val deckQ = QDeck.deck
-                    val mostRecentDeck = query.selectFrom(deckQ)
-                        .orderBy(deckQ.id.desc())
-                        .limit(1)
-                        .fetch()
-                        .first()
-
-                    val idEndForPage = deckPageService.idEndForPage(nextDeckPage, DeckPageType.RATING)
-
-                    val rated: List<Pair<Deck, DeckSynergyInfo>> = deckResults.mapNotNull {
+                    val rated: List<Pair<Deck, DeckSynergyInfo>> = deckResults.decks.mapNotNull {
                         val deckSynergiesPair = rateDeck(it, majorRevision)
                         val rated = deckSynergiesPair.first.copy(lastUpdate = ZonedDateTime.now())
                         if (rated.ratingsEqual(it)) {
@@ -258,7 +247,7 @@ class DeckImporterService(
                     }
                     deckRatingProgressService.revPage()
 
-                    if (mostRecentDeck.id < idEndForPage) {
+                    if (!deckResults.moreResults) {
                         deckRatingProgressService.complete()
                         statsService.startNewDeckStats()
                         log.info("Done rating decks!")

@@ -35,6 +35,7 @@ data class DeckPage(
 @Service
 class DeckPageService(
         val deckPageRepo: DeckPageRepo,
+        val deckRepo: DeckRepo,
         entityManager: EntityManager
 ) {
     private val query = JPAQueryFactory(entityManager)
@@ -57,20 +58,25 @@ class DeckPageService(
         deckPageRepo.save(DeckPage(currentPage, type))
     }
 
-    fun decksForPage(currentPage: Int, type: DeckPageType): List<Deck> {
-        val idStart = currentPage * type.quantity
+    fun decksForPage(currentPage: Int, type: DeckPageType): DeckPageResult {
+        val idStart = currentPage.toLong() * type.quantity
         val idEnd = idEndForPage(currentPage, type)
         log.info("Deck $type id start $idStart end $idEnd")
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
                 .and(deckQ.id.between(idStart, idEnd))
-        return query.selectFrom(deckQ)
+        val results =  query.selectFrom(deckQ)
                 .where(predicate)
                 .fetch()
+
+        val hasMore = if (results.isEmpty()) deckRepo.existsByIdGreaterThan(idEnd) else true
+        return DeckPageResult(
+            results, hasMore
+        )
     }
 
-    fun idEndForPage(currentPage: Int, type: DeckPageType): Int {
-        return ((currentPage + 1) * type.quantity) - 1
+    fun idEndForPage(currentPage: Int, type: DeckPageType): Long {
+        return ((currentPage.toLong() + 1) * type.quantity) - 1
     }
 }
 
@@ -78,3 +84,8 @@ interface DeckPageRepo : CrudRepository<DeckPage, UUID> {
     fun findAllByType(type: DeckPageType): List<DeckPage>
     fun deleteAllByType(type: DeckPageType)
 }
+
+data class DeckPageResult(
+    val decks: List<Deck>,
+    val moreResults: Boolean,
+)

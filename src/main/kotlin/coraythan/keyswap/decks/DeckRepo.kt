@@ -26,4 +26,6 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     fun countByCardsVerifiedIsFalse(): Long
 
     fun findFirst100ByCardsVerifiedIsFalseOrderByImportDateTimeAsc(): List<Deck>
+
+    fun existsByIdGreaterThan(idGreaterThan: Long): Boolean
 }
