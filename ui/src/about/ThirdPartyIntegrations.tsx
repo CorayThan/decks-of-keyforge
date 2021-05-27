@@ -37,10 +37,9 @@ export class ThirdPartyIntegrations extends React.Component {
                         description={
                             [
                                 <Typography key={"first"}>
-                                    <b>
-                                        This app is made by Decks of KeyForge itself!
-                                        Unlike other apps, it is safe to use your Decks of KeyForge username and password in it.
-                                    </b>
+                                    <i>
+                                        Made by Decks of KeyForge
+                                    </i>
                                 </Typography>,
                                 <Typography key={"first"}>
                                     <b>How to use:</b>
@@ -48,7 +47,8 @@ export class ThirdPartyIntegrations extends React.Component {
                                 <ol key={"second"}>
                                     <li>Install the app to your device</li>
                                     <li>
-                                        Open the app and use your DoK username and password to login
+                                        Open the app and use your DoK username and password to login. This is safe because this app is made by
+                                        Decks of KeyForge.
                                     </li>
                                     <li>Scan a deck with Master Vault</li>
                                     <li>Click the "Share" Button in Master Vault</li>

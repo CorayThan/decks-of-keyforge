@@ -15,7 +15,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.9"
+export const latestVersion = "6.10"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,6 +43,38 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.10"}
+                    date={"5/26/2021"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Easier Importing to DoK",
+                            note: "I've created an Android app that helps import decks from the Master Vault app to DoK. " +
+                                "Also, a community member has made an iOS shortcut that performs a similar function. Find " +
+                                "them on the third party tools page!",
+                            link: Routes.thirdPartyTools,
+                            linkName: "Third Party Tools"
+                        },
+                        {
+                            highlight: "Fix for bad enhancements + missing mavericks",
+                            note: "Many decks newly imported to the site are not properly displaying all enhanced or maverick cards. " +
+                                "I've started a process that will clean up this problem over the next couple weeks.",
+                        },
+                        {
+                            highlight: "Another Minor SAS Update",
+                            note: "Already did one minor SAS update mid-month due to the new set. I've got another one for today. " +
+                                "Not much changed tho! I'll skip the regular end-of-month SAS update and return to that schedule " +
+                                "for July 1st.",
+                        },
+                        {
+                            highlight: "Deck Notes now a Patron Feature",
+                            note: "I've made adding deck notes and searching them a patron feature. This is the type of " +
+                                "power user function that I believe should have been a Patron feature in the " +
+                                "first place.",
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.9"}
                     date={"5/18/2021"}
@@ -1575,8 +1607,8 @@ export class ReleaseNotes extends React.Component {
 
 export const ReleaseNote = (props: {
     releaseNumber: string,
-    releaseNotes?: React.ReactNode[],
-    releaseNotesWithHighlights?: { note?: React.ReactNode, highlight?: string }[],
+    releaseNotes?: (React.ReactNode | string)[],
+    releaseNotesWithHighlights?: { note?: React.ReactNode | string, highlight?: string, link?: string, linkName?: string }[],
     expanded?: boolean,
     date: string
 }) => (
@@ -1612,6 +1644,16 @@ export const ReleaseNote = (props: {
                                 <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>{noteAndHighlight.highlight}</Typography>
                             }
                             {note}
+                            {noteAndHighlight.link && (
+                                <LinkButton
+                                    href={noteAndHighlight.link}
+                                    variant={"outlined"}
+                                    color={"primary"}
+                                    style={{marginTop: spacing(1)}}
+                                >
+                                    {noteAndHighlight.linkName ? noteAndHighlight.linkName : "Link"}
+                                </LinkButton>
+                            )}
                         </div>
                     )
                 })}
