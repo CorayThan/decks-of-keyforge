@@ -97,7 +97,7 @@ class DeckImporterService(
                         val previous = cardRepo.findByIdOrNull(it.id)
                         val kfcardHouse = House.fromMasterVaultValue(it.house)!!
                         if (previous == null) {
-                            updatePerformed = true
+                            cleanCount++
                             cardService.importNewCards(listOf(it))
                         } else if (
                             it.is_enhanced != previous.enhanced ||
@@ -105,8 +105,7 @@ class DeckImporterService(
                             kfcardHouse != previous.house ||
                             it.is_anomaly != previous.anomaly
                         ) {
-
-                            updatePerformed = true
+                            cleanCount++
                             cardRepo.save(
                                 previous.copy(
                                     enhanced = it.is_enhanced,
@@ -118,16 +117,12 @@ class DeckImporterService(
                         }
                     }
 
-                if (updatePerformed) {
-                    cleanCount++
-                    cardService.loadExtraInfo()
-                    cardService.reloadCachedCards()
-                }
-
                 val deckCards = deckWithCards._linked.cards
                     .filter { it.id != "37377d67-2916-4d45-b193-bea6ecd853e3" }
                     .map {
-                        cardRepo.findByIdOrNull(it.id)!!
+                        val card = cardRepo.findByIdOrNull(it.id)!!
+                        card.extraCardInfo = cardService.extraInfo[card.cardTitle.cleanCardName()]
+                        card
                     }
 
                 saveDeck(deck, deck.houses, deckWithCards.data._links!!.cards!!.mapNotNull {
