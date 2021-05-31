@@ -60,7 +60,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
+    @Scheduled(fixedDelayString = "PT30S", initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     fun cleanUpBadCards() {
 
         log.info("Cleaning up decks ${deckRepo.countByCardsVerifiedIsFalse()} left")
@@ -82,14 +82,11 @@ class DeckImporterService(
 
                 val deckWithCards: KeyForgeDeckDto
                 try {
-                    deckWithCards = keyforgeApi.findDeckToImport(deck.keyforgeId) ?: error("No deck in keyforge API for ${deck.keyforgeId}")
-
+                    deckWithCards = keyforgeApi.findDeckToImport(deck.keyforgeId) ?: error("Error finding keyforge deck ${deck.keyforgeId}")
                 } catch (e: Exception) {
                     log.info("Got error finding keyforge deck in clean up bad cards. Done for now. Cleaned $cleanCount checked count $checkedCount " + e.message)
                     break
                 }
-
-                var updatePerformed = false
 
                 deckWithCards._linked.cards!!
                     .filter { it.id != "37377d67-2916-4d45-b193-bea6ecd853e3" }

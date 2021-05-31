@@ -62,12 +62,10 @@ data class Card(
 ) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int {
-        if (expansion == Expansion.CALL_OF_THE_ARCHONS.expansionNumber && other.expansion == Expansion.CALL_OF_THE_ARCHONS.expansionNumber) {
-            return (cardNumber.toIntOrNull() ?: 0) - (other.cardNumber.toIntOrNull() ?: 0)
-        }
         if (house != other.house) return house.compareTo(other.house)
-        if (cardType != other.cardType) return cardType.compareTo(other.cardType)
-        return cardTitle.compareTo(other.cardTitle)
+        if (expansion != other.expansion) return expansion.compareTo(other.expansion)
+        if (cardNumber != other.cardNumber) return cardNumber.compareTo(other.cardNumber)
+        return id.compareTo(other.id)
     }
 
     fun allTypes() = extraCardInfo?.extraCardTypes?.toSet()?.plus(cardType) ?: setOf(cardType)

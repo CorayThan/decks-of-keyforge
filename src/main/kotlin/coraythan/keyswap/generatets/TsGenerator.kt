@@ -84,6 +84,8 @@ object TsGeneratorObj {
 
         val contents = """
 /* eslint-disable */
+import { sortBy } from "lodash"
+
 
 export enum $name {
     ${constants.joinToString("\n    ") { "$it = \"$it\"," }}
@@ -92,6 +94,7 @@ export enum $name {
 export class ${name}Utils {
     static readonly values = [${constants.joinToString(", ") { "$name.$it" }}]
     static valueOf = (value: string) => ${name}Utils.values.find(enumValue => enumValue === value)
+    static sort = (value: ${name}[]) => sortBy(value, expansion => ${name}Utils.values.indexOf(expansion))
 }
         """.trimIndent()
 

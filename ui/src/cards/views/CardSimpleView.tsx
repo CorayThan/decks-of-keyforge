@@ -7,6 +7,7 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
+import { ExpansionUtils } from "../../generated-src/Expansion"
 import { SimpleCard } from "../../generated-src/SimpleCard"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { SynTraitValue } from "../../generated-src/SynTraitValue"
@@ -144,10 +145,10 @@ export const CardView = observer((props: CardViewProps) => {
 })
 
 export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
-    const sets = props.card.cardNumbers?.map(cardNumber => cardNumber.expansion)
+    const sets = ExpansionUtils.sort(props.card.cardNumbers?.map(cardNumber => cardNumber.expansion) ?? [])
     return (
         <div style={{display: "flex"}}>
-            {sets?.map((backendExpansion) => (
+            {sets.map((backendExpansion) => (
                 <ExpansionIcon size={16} expansion={backendExpansion} key={backendExpansion} style={{marginLeft: spacing(1)}}/>
             ))}
         </div>
