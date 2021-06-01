@@ -97,7 +97,7 @@ export class SoldButton extends React.Component<SoldButtonProps> {
                             color={"secondary"}
                             style={{marginRight: spacing(1)}}
                             onClick={() => {
-                                deckListingStore.cancel(deck.name, deck.id)
+                                deckListingStore.cancel(deck.id, deck.name)
                                 this.handleClose()
                             }}
                         >

@@ -139,14 +139,11 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     </Typography>
                 )
             } else {
-                const sellerView = (filters.forSale || filters.forAuction)
-                    && filters.owner == userStore.username
-                    && keyLocalStorage.deckListViewType === "table"
                 const decks = decksToDisplay
                     .map(deckId => deckStore.deckIdToDeck!.get(deckId)!)
                     .filter(deck => deck != null && (deckSearchFiltersStore.adaptiveScoreFilter == null || DeckUtils.calculateAdaptiveScore(deck) >= deckSearchFiltersStore.adaptiveScoreFilter))
                 decksView = keyLocalStorage.deckListViewType === "table" ?
-                    <DeckTableView decks={decks} sellerView={sellerView}/> :
+                    <DeckTableView decks={decks}/> :
                     <DeckListView decks={decks}/>
             }
         }

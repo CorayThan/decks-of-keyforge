@@ -17,6 +17,9 @@ class DeckListingEndpoints(
     @PostMapping("/secured/list")
     fun list(@RequestBody listingInfo: ListingInfo, @RequestHeader(value = "Timezone") offsetMinutes: Int) = deckListingService.list(listingInfo, offsetMinutes)
 
+    @PostMapping("/secured/bulk-list")
+    fun bulkList(@RequestBody listings: BulkListing, @RequestHeader(value = "Timezone") offsetMinutes: Int) = deckListingService.bulkList(listings, offsetMinutes)
+
     @PostMapping("/secured/cancel/{deckId}")
     fun cancel(@PathVariable deckId: Long) = deckListingService.cancelListing(deckId)
 

@@ -3,6 +3,7 @@ import { computed, makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
+import { BulkListing } from "../generated-src/BulkListing"
 import { DeckListingDto } from "../generated-src/DeckListingDto"
 import { ListingInfo } from "../generated-src/ListingInfo"
 import { UserDeckListingInfo } from "../generated-src/UserDeckListingInfo"
@@ -19,6 +20,9 @@ export class DeckListingStore {
 
     @observable
     decksForSale?: { [key: number]: UserDeckListingInfo }
+
+    @observable
+    performingBulkUpdate = false
 
     findListingsForUser = (refresh?: boolean) => {
         if (keyLocalStorage.hasAuthKey() && (refresh || this.decksForSale == null)) {
@@ -48,6 +52,16 @@ export class DeckListingStore {
                 deckListingStore.findListingsForUser(true)
                 userDeckStore.refreshDeckInfo()
             })
+    }
+
+    bulkListForSale = async (listing: BulkListing) => {
+        this.performingBulkUpdate = true
+        await axios.post(`${DeckListingStore.SECURE_CONTEXT}/bulk-list`, listing)
+
+        await deckListingStore.findListingsForUser(true)
+        await userDeckStore.refreshDeckInfo()
+        messageStore.setSuccessMessage(`You've bulk listed / updated ${listing.decks.length} decks!`)
+        this.performingBulkUpdate = false
     }
 
     bid = (auctionId: string, bid: number) => {
@@ -82,16 +96,32 @@ export class DeckListingStore {
             })
     }
 
-    cancel = (deckName: string, deckId: number) => {
-        axios.post(`${DeckListingStore.SECURE_CONTEXT}/cancel/${deckId}`)
-            .then((response: AxiosResponse<boolean>) => {
-                if (response.data) {
-                    messageStore.setSuccessMessage(`Canceled your listing for ${deckName}.`)
-                } else {
-                    messageStore.setWarningMessage(`Couldn't cancel listing of ${deckName}.`)
-                }
-                this.findListingsForUser(true)
-            })
+    bulkCancel = async (deckIds: number[]) => {
+        this.performingBulkUpdate = true
+
+        for (const deckId in deckIds) {
+            await this.cancel(deckIds[deckId])
+        }
+
+        await this.findListingsForUser(true)
+
+        messageStore.setSuccessMessage(`Canceled your listings for ${deckIds.length} decks.`)
+
+        this.performingBulkUpdate = false
+    }
+
+    cancel = async (deckId: number, deckName?: string) => {
+        const cancelResponse: AxiosResponse<boolean> = await axios.post(`${DeckListingStore.SECURE_CONTEXT}/cancel/${deckId}`)
+
+        if (deckName != null) {
+            if (cancelResponse.data) {
+                messageStore.setSuccessMessage(`Canceled your listing for ${deckName}.`)
+            } else {
+                messageStore.setWarningMessage(`Couldn't cancel listing of ${deckName}.`)
+            }
+            this.findListingsForUser(true)
+        }
+
     }
 
     removeAllDecks = async (password: string) => {

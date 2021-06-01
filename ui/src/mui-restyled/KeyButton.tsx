@@ -26,11 +26,12 @@ interface KeyButtonProps extends ButtonProps {
 }
 
 export const KeyButton = (props: KeyButtonProps) => {
-    const {loading, children, icon, color, style, ...rest} = props
+    const {loading, children, icon, color, style, disabled, ...rest} = props
     return (
         <Button
             color={color}
             size={icon ? "small" : undefined}
+            disabled={disabled || loading}
             style={{width: icon ? 32 : undefined, height: icon ? 32 : undefined, minWidth: icon ? 32 : undefined, minHeight: icon ? 32 : undefined, ...style}}
             {...rest}
         >

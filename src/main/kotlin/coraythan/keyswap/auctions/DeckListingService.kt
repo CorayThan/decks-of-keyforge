@@ -9,6 +9,11 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.ownership.DeckOwnershipRepo
 import coraythan.keyswap.decks.salenotifications.ForSaleNotificationsService
 import coraythan.keyswap.emails.EmailService
+import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.patreon.levelAtLeast
+import coraythan.keyswap.tags.CreateTag
+import coraythan.keyswap.tags.PublicityType
+import coraythan.keyswap.tags.TagService
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
@@ -44,7 +49,8 @@ class DeckListingService(
         private val purchaseService: PurchaseService,
         private val purchaseRepo: PurchaseRepo,
         private val userDeckService: UserDeckService,
-        private val deckOwnershipRepo: DeckOwnershipRepo
+        private val deckOwnershipRepo: DeckOwnershipRepo,
+        private val tagService: TagService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -89,6 +95,34 @@ class DeckListingService(
             log.info("$scheduledStop complete auctions.")
         } catch (e: Throwable) {
             log.error("$scheduledException Couldn't complete auctions", e)
+        }
+    }
+
+    fun bulkList(bulkListing: BulkListing, offsetMinutes: Int) {
+        val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        val tag = if (bulkListing.addTag != null && currentUser.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.NOTICE_BARGAINS) == true) {
+            tagService.createTag(CreateTag(bulkListing.addTag, PublicityType.NOT_SEARCHABLE))
+        } else {
+            null
+        }
+        bulkListing.decks.forEach {
+            val deck = deckRepo.findByIdOrNull(it)!!
+            val listingsForUser = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, it, DeckListingStatus.COMPLETE)
+            if (listingsForUser.size > 1) {
+                throw IllegalStateException("More than one listing for user for deck ${deck.name}")
+            }
+            val listingForUser = listingsForUser.singleOrNull()
+            if (listingForUser?.status == DeckListingStatus.AUCTION) {
+                throw BadRequestException("Cannot perform a bulk listing on decks for auction. Deck being auctioned: ${deck.name}")
+            }
+            if (tag != null) {
+                tagService.tagDeck(it, tag.id)
+            }
+
+            list(bulkListing.listingInfo.copy(
+                deckId = it,
+                editAuctionId = listingForUser?.id
+            ), offsetMinutes)
         }
     }
 

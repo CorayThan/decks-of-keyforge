@@ -1,4 +1,4 @@
-import { Button, IconButton, Paper, TextField, Typography } from "@material-ui/core"
+import { Box, Button, Checkbox, IconButton, Paper, TextField } from "@material-ui/core"
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
@@ -22,10 +22,14 @@ import { MyDecksButton } from "./buttons/MyDecksButton"
 import { DeckListViewProps } from "./DeckListView"
 import { SaStars } from "./DeckScoreView"
 import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
+import { ListForSaleView } from "./sales/ListForSaleView"
 
 class DeckTableViewStore {
     @observable
     priceChanges: UpdatePrice[] = []
+
+    @observable
+    selectedDecks: number[] = []
 
     addPriceChange = (auctionId: string, askingPrice?: number) => {
         log.debug("Add price change for " + auctionId + " change: " + askingPrice)
@@ -33,24 +37,36 @@ class DeckTableViewStore {
         this.priceChanges.push({auctionId, askingPrice})
     }
 
+    toggleDeckSelected = (deckId: number) => {
+        if (!this.selectedDecks.includes(deckId)) {
+            this.selectedDecks.push(deckId)
+        } else {
+            this.selectedDecks = this.selectedDecks.filter(selId => selId !== deckId)
+        }
+    }
+
     constructor() {
         makeObservable(this)
     }
+
+    reset = () => {
+        this.priceChanges = []
+        this.selectedDecks = []
+    }
 }
 
-const deckTableViewStore = new DeckTableViewStore()
+export const deckTableViewStore = new DeckTableViewStore()
 
 @observer
 export class DeckTableView extends React.Component<DeckListViewProps> {
 
     componentDidMount(): void {
-        deckTableViewStore.priceChanges = []
+        deckTableViewStore.reset()
     }
 
     render() {
 
-        log.debug("Seller version by props? " + this.props.sellerView)
-        const {decks, sellerView} = this.props
+        const {decks} = this.props
 
         const firstDeck = decks[0]
 
@@ -59,14 +75,27 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             return null
         }
 
+        const sellerView = !keyLocalStorage.smallTableView && userStore.username != null
         const displayPrices = !!firstDeck.deckSaleInfo
-        if (sellerView && userStore.username == null && !userStore.loginInProgress) {
-            return <Typography>Please login to use the sellers view.</Typography>
-        } else if (sellerView && userStore.username == null) {
+        if (sellerView && userStore.username == null) {
             return <Loader/>
         }
 
         const deckTableHeaders: SortableTableHeaderInfo<DeckSearchResult>[] = [
+            {
+                titleNode: (
+                    <Box display={"flex"} justifyContent={"center"}>
+                        <BulkModificationSelectAll deckIds={decks.map(deck => deck.id)}/>
+                    </Box>
+                ),
+                transform: deck => (
+                    <BulkModificationSelect deckId={deck.id}/>
+                ),
+                sortable: false,
+                hide: !sellerView,
+                padding: "checkbox",
+                key: "Select"
+            },
             {
                 property: "name",
                 width: 240,
@@ -102,7 +131,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 ),
                 sortable: false,
                 width: 184,
-                hide: !sellerView
+                hide: !sellerView,
             },
 
             {
@@ -134,7 +163,8 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             {
                 title: "SAS%",
                 transform: deck => roundToTens(deck.sasPercentile),
-                sortFunction: deck => roundToTens(deck.sasPercentile)
+                sortFunction: deck => roundToTens(deck.sasPercentile),
+                hide: keyLocalStorage.smallTableView
             },
             {
                 title: "Synergy",
@@ -267,18 +297,36 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                     />
                 </Paper>
                 {sellerView ? (
-                    <Button
-                        disabled={deckTableViewStore.priceChanges.length === 0}
-                        variant={"contained"}
-                        color={"primary"}
-                        onClick={() => {
-                            sellerStore.updatePrices(deckTableViewStore.priceChanges)
-                            deckTableViewStore.priceChanges = []
-                        }}
-                        style={{marginLeft: spacing(2)}}
-                    >
-                        Save Prices
-                    </Button>
+                    <Box display={"flex"}>
+                        <Button
+                            disabled={deckTableViewStore.priceChanges.length === 0}
+                            variant={"contained"}
+                            color={"primary"}
+                            onClick={() => {
+                                sellerStore.updatePrices(deckTableViewStore.priceChanges)
+                                deckTableViewStore.priceChanges = []
+                            }}
+                            style={{marginLeft: spacing(2)}}
+                        >
+                            Save All Price Changes
+                        </Button>
+                        <KeyButton
+                            disabled={deckTableViewStore.selectedDecks.length === 0}
+                            variant={"contained"}
+                            color={"primary"}
+                            onClick={async () => {
+                                await deckListingStore.bulkCancel(deckTableViewStore.selectedDecks)
+                                deckTableViewStore.selectedDecks = []
+                            }}
+                            style={{marginLeft: spacing(2)}}
+                            loading={deckListingStore.performingBulkUpdate}
+                        >
+                            Unlist Selected Decks
+                        </KeyButton>
+                        <ListForSaleView
+                            deckIds={deckTableViewStore.selectedDecks}
+                        />
+                    </Box>
                 ) : null}
             </div>
         )
@@ -345,3 +393,32 @@ class DeckPriceCell extends React.Component<SellerViewCellProps> {
         )
     }
 }
+
+const BulkModificationSelect = observer((props: { deckId: number }) => {
+    const {deckId} = props
+    return (
+        <Checkbox
+            checked={deckTableViewStore.selectedDecks.includes(deckId)}
+            onChange={() => deckTableViewStore.toggleDeckSelected(deckId)}
+            inputProps={{"aria-label": "primary checkbox"}}
+        />
+    )
+})
+
+const BulkModificationSelectAll = observer((props: { deckIds: number[] }) => {
+    const {deckIds} = props
+    const checked = deckTableViewStore.selectedDecks.length === deckIds.length
+    return (
+        <Checkbox
+            checked={checked}
+            onChange={() => {
+                if (checked) {
+                    deckTableViewStore.selectedDecks = []
+                } else {
+                    deckTableViewStore.selectedDecks = deckIds.slice()
+                }
+            }}
+            inputProps={{"aria-label": "primary checkbox"}}
+        />
+    )
+})

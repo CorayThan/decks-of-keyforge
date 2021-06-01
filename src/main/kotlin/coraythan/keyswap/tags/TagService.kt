@@ -49,13 +49,13 @@ class TagService(
         }
     }
 
-    fun createTag(createTag: CreateTag) {
+    fun createTag(createTag: CreateTag): KTag {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
         if (createTag.public == PublicityType.PUBLIC) {
             currentUserService.hasContributed()
         }
 
-        tagRepo.save(KTag(
+        return tagRepo.save(KTag(
                 createTag.name,
                 user,
                 createTag.public

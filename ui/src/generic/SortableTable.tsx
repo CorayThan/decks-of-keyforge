@@ -15,10 +15,11 @@ export interface SortableTableHeaderInfo<T> {
     /**
      * Either property or transform must be included. If property is not included and sortable is not false, sortWith must be included.
      *
-     * Property or title must be included and unique.
+     * Property, title or key must be included and unique.
      */
     property?: keyof T
     title?: string
+    key?: string
 
     titleNode?: React.ReactNode
 
@@ -101,7 +102,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                         <TableRow>
                             {usableHeaders.map((header, idx) => (
                                 <TableCell
-                                    key={header.property?.toString() ?? header.title?.toString() ?? idx}
+                                    key={header.property?.toString() ?? header.title?.toString() ?? header.key ?? idx}
                                     style={{width: header.width}}
                                     padding={header.padding}
                                 >
@@ -137,7 +138,7 @@ export class SortableTable<T> extends React.Component<SortableTableProps<T>> {
                                     }
                                     return (
                                         <TableCell
-                                            key={header.property?.toString() ?? header.title?.toString() ?? idx}
+                                            key={header.property?.toString() ?? header.title?.toString() ?? header.key ?? idx}
                                             padding={header.padding}
                                         >
                                             <div style={{width: header.width}}>

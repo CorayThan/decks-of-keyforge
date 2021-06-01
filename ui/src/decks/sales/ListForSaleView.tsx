@@ -17,10 +17,10 @@ import { MyDokSubPaths } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
+import { ExtendedExpansionUtils } from "../../expansions/ExtendedExpansionUtils"
 import { DeckCondition } from "../../generated-src/DeckCondition"
 import { DeckLanguage } from "../../generated-src/DeckLanguage"
 import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
-import { Expansion } from "../../generated-src/Expansion"
 import { ListingInfo } from "../../generated-src/ListingInfo"
 import { HelperText } from "../../generic/CustomTypographies"
 import { KeyButton } from "../../mui-restyled/KeyButton"
@@ -29,12 +29,14 @@ import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
+import { deckTableViewStore } from "../DeckTableView"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { SoldButton } from "./SoldButton"
 
 interface ListForSaleViewProps {
-    deck: DeckSearchResult
+    deck?: DeckSearchResult
+    deckIds?: number[]
     menuItem?: boolean
 }
 
@@ -67,6 +69,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     bidIncrement = ""
     @observable
     startingBid = ""
+
+    @observable
+    newTagName = ""
 
     @observable
     preExistingDays = ""
@@ -104,6 +109,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.startingBid = defaults.startingBid == null ? "" : defaults.startingBid.toString()
         this.buyItNow = defaults.buyItNow == null ? "" : defaults.buyItNow.toString()
         this.expireInDays = defaults.expireInDays == null ? "7" : defaults.expireInDays.toString()
+        this.newTagName = ""
 
         this.editAuctionId = undefined
 
@@ -114,7 +120,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     }
 
     handleOpenForEdit = async () => {
-        const saleInfo = deckListingStore.listingInfoForDeck(this.props.deck.id)
+        const saleInfo = this.props.deck == null ? undefined : deckListingStore.listingInfoForDeck(this.props.deck.id)
         if (saleInfo != null) {
             await deckListingStore.findDeckListingInfo(saleInfo.id)
             const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status, acceptingOffers} = deckListingStore.listingInfo!
@@ -125,6 +131,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             this.listingInfo = listingInfo ?? ""
             this.externalLink = externalLink ?? ""
             this.buyItNow = buyItNow?.toString() ?? ""
+            this.newTagName = ""
             if (acceptingOffers) {
                 this.saleType = SaleType.ACCEPTING_OFFERS
             }
@@ -205,7 +212,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         }
 
         const listingInfoDto: ListingInfo = {
-            deckId: this.props.deck.id,
+            deckId: this.props.deck?.id,
             acceptingOffers: this.saleType === SaleType.ACCEPTING_OFFERS,
             forSaleInCountry,
             language,
@@ -226,20 +233,45 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             delete listingInfoDto.deckId
             keyLocalStorage.setSaleDefaults(listingInfoDto)
         } else {
-            deckListingStore.listForSale(this.props.deck.name, listingInfoDto)
+            if (this.props.deckIds != null) {
+                deckListingStore.bulkListForSale({
+                    listingInfo: listingInfoDto,
+                    decks: this.props.deckIds,
+                    addTag: this.newTagName.trim() === "" ? undefined : this.newTagName
+                })
+            } else {
+                deckListingStore.listForSale(this.props.deck?.name ?? "A Deck", listingInfoDto)
+            }
             this.handleClose()
         }
     }
 
     render() {
-        const {deck, menuItem} = this.props
-        const auctionInfo = deckListingStore.listingInfoForDeck(deck.id)
+        const {deck, deckIds, menuItem} = this.props
+        const auctionInfo = deck?.id == null ? null : deckListingStore.listingInfoForDeck(deck.id)
         let saleButton
-        if (auctionInfo && auctionInfo.status === DeckListingStatus.AUCTION && !auctionInfo.bidsExist) {
+        if (deckIds != null) {
+            saleButton = (
+                <KeyButton
+                    disabled={deckTableViewStore.selectedDecks.length === 0}
+                    variant={"contained"}
+                    color={"primary"}
+                    onClick={this.handleOpen}
+                    style={{marginLeft: spacing(2)}}
+                    loading={deckListingStore.performingBulkUpdate}
+                >
+                    Bulk List / Update Deck Listings
+                </KeyButton>
+            )
+        } else if (auctionInfo && auctionInfo.status === DeckListingStatus.AUCTION && !auctionInfo.bidsExist) {
             saleButton = (
                 <DeckActionClickable
                     menuItem={menuItem}
-                    onClick={() => deckListingStore.cancel(deck.name, deck.id)}
+                    onClick={() => {
+                        if (deck != null) {
+                            deckListingStore.cancel(deck.id, deck.name)
+                        }
+                    }}
                 >
                     Cancel Auction
                 </DeckActionClickable>
@@ -253,7 +285,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     >
                         Edit Sale
                     </DeckActionClickable>
-                    <SoldButton deck={deck} menuItem={menuItem}/>
+                    {deck && (
+                        <SoldButton deck={deck} menuItem={menuItem}/>
+                    )}
                 </>
             )
         } else {
@@ -275,6 +309,13 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
 
         const auction = this.saleType === SaleType.AUCTION
 
+        let title = `Sell "${deck?.name}"`
+        if (this.editAuctionId != null) {
+            title = `Update listing for "${deck?.name}"`
+        } else if (deckIds != null) {
+            title = "Bulk List / Update Decks for Sale"
+        }
+
         return (
             <>
                 {saleButton}
@@ -283,11 +324,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                     onClose={this.handleClose}
                 >
                     <DialogTitle>
-                        {this.editAuctionId != null ? (
-                            `Update listing for "${deck.name}"`
-                        ) : (
-                            `Sell "${deck.name}"`
-                        )}
+                        {title}
                     </DialogTitle>
                     <DialogContent>
                         <SendEmailVerification message={"Please verify your email to list decks for sale or trade."}/>
@@ -484,6 +521,19 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             helperText={"Ebay link, store link, etc."}
                             style={{marginTop: spacing(2)}}
                         />
+                        {deckIds != null && (
+                            <TextField
+                                label={"Create and add tag to decks"}
+                                value={this.newTagName}
+                                onChange={(event) => this.newTagName = event.target.value}
+                                fullWidth={true}
+                                helperText={
+                                    "A new semi-private tag will be created and added to all the decks modified. You can use that tag to share " +
+                                    "these decks with potential buyers."
+                                }
+                                style={{marginTop: spacing(2)}}
+                            />
+                        )}
                         <HelperText style={{marginTop: spacing(2)}}>
                             Add seller info and toggle trades on your <Link href={MyDokSubPaths.profile}>profile</Link>.
                         </HelperText>
@@ -500,7 +550,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 </HelperText>
                             </>
                         ) : null}
-                        {deck.expansion === Expansion.MASS_MUTATION && !deck.hasOwnershipVerification && (
+                        {deck != null && ExtendedExpansionUtils.allowsEnhancements(deck.expansion) && !deck.hasOwnershipVerification && (
                             <Box mt={2}>
                                 <Typography variant={"subtitle2"} color={"error"}>
                                     You can add a deck picture with enhanced cards. Use the image button below!
@@ -516,7 +566,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         >
                             {"Save Default"}
                         </KeyButton>
-                        <DeckOwnershipButton deckName={deck.name} deckId={deck.id} hasVerification={deck.hasOwnershipVerification}/>
+                        {deck && (
+                            <DeckOwnershipButton deckName={deck.name} deckId={deck.id} hasVerification={deck.hasOwnershipVerification}/>
+                        )}
                         <div style={{flexGrow: 1}}/>
                         <KeyButton onClick={this.handleClose}>Cancel</KeyButton>
                         <KeyButton

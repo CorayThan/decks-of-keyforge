@@ -10,7 +10,6 @@ import { DeckSearchResult } from "./models/DeckSearchResult"
 
 export interface DeckListViewProps {
     decks: DeckSearchResult[]
-    sellerView?: boolean
 }
 
 @observer
