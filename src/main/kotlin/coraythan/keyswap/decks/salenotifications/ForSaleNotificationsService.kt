@@ -43,7 +43,7 @@ class ForSaleNotificationsService(
         log.info("$scheduledStop refresh sale notification queries")
     }
 
-    fun sendNotifications(listingInfo: ListingInfo) {
+    fun sendNotifications(listingInfo: ListingInfo, sellerUsername: String) {
         GlobalScope.launch {
             // Delay 30 seconds to make sure DB is finished saving the user deck
             delay(30000)
@@ -63,7 +63,8 @@ class ForSaleNotificationsService(
                             it.userId,
                             listingInfo,
                             deck,
-                            it.name
+                            it.name,
+                        sellerUsername
                     )
                 }
             } catch (e: Exception) {

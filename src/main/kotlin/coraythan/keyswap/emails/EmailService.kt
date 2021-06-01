@@ -91,7 +91,7 @@ class EmailService(
                     "${deck.name} has sold on auction!",
                     """
                     <div>
-                        ${buyer.username} has won the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
+                        ${links.userLink(buyer.username)} has won the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
                     </div>
                     <br>
                     <br>
@@ -147,7 +147,7 @@ class EmailService(
                     "${deck.name} has sold!",
                     """
                     <div>
-                        ${buyer.username} has purchased the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
+                        ${links.userLink(buyer.username)} has purchased the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
                     </div>
                     <br>
                     <br>
@@ -240,7 +240,7 @@ class EmailService(
         )
     }
 
-    fun sendDeckListedNotification(recipientId: UUID, listingInfo: ListingInfo, deck: Deck, queryName: String) {
+    fun sendDeckListedNotification(recipientId: UUID, listingInfo: ListingInfo, deck: Deck, queryName: String, sellerUsername: String) {
 
         val recipient = userRepo.findByIdOrNull(recipientId) ?: throw IllegalStateException("No user with id $recipientId")
 
@@ -262,7 +262,7 @@ class EmailService(
                         </div>
                         <br>
                         <div>
-                            It is available $availableFor.
+                            It is available $availableFor. From the seller ${links.userLink(sellerUsername)}
                         </div>
                         <br>
                         <div>

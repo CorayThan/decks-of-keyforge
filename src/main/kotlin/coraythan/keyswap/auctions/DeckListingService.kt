@@ -174,7 +174,7 @@ class DeckListingService(
             deckRepo.save(deck.copy(forSale = true, forTrade = currentUser.allowsTrades))
         }
         userRepo.save(currentUser.copy(mostRecentDeckListing = listingDate, updateStats = true))
-        if (newListing) forSaleNotificationsService.sendNotifications(listingInfo)
+        if (newListing) forSaleNotificationsService.sendNotifications(listingInfo, currentUser.username)
     }
 
     fun bid(auctionId: UUID, bid: Int): BidPlacementResult {
