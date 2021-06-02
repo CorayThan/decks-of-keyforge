@@ -22,6 +22,7 @@ import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { TimeUtils } from "../config/TimeUtils"
 import { PublicityType } from "../generated-src/PublicityType"
+import { TagDto } from "../generated-src/TagDto"
 import { SortableTable } from "../generic/SortableTable"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -68,7 +69,7 @@ export class ManageTagsButton extends React.Component {
 
     render() {
 
-        const myTags = tagStore.myTags ?? []
+        const myTags: TagDto[] = tagStore.myTags ?? []
         const nameError = myTags.find(tag => tag.name === this.name.trim()) != null
 
         return (
@@ -100,10 +101,14 @@ export class ManageTagsButton extends React.Component {
                                                 <Select
                                                     value={tag.publicityType}
                                                     onChange={event => tagStore.updateTagPublicity(tag.id, event.target.value as PublicityType)}
+                                                    disabled={tag.publicityType === PublicityType.BULK_SALE}
                                                 >
                                                     <MenuItem value={PublicityType.PUBLIC}>Public</MenuItem>
                                                     <MenuItem value={PublicityType.NOT_SEARCHABLE}>Semi-Private</MenuItem>
                                                     <MenuItem value={PublicityType.PRIVATE}>Private</MenuItem>
+                                                    {tag.publicityType === PublicityType.BULK_SALE && (
+                                                        <MenuItem value={PublicityType.BULK_SALE} disabled={true}>Bulk Sale</MenuItem>
+                                                    )}
                                                 </Select>
                                             </FormControl>
                                         )
@@ -115,7 +120,7 @@ export class ManageTagsButton extends React.Component {
                                     {
                                         transform: tag => (
                                             <Box display={"flex"}>
-                                                <ArchiveTagButton tag={tag}/>
+                                                <ArchiveTagButton tag={tag} disabled={tag.publicityType === PublicityType.BULK_SALE}/>
                                                 <DeleteTagButton tag={tag}/>
                                             </Box>
                                         ),

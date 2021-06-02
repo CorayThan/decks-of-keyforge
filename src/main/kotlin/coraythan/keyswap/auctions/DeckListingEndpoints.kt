@@ -23,6 +23,9 @@ class DeckListingEndpoints(
     @PostMapping("/secured/cancel/{deckId}")
     fun cancel(@PathVariable deckId: Long) = deckListingService.cancelListing(deckId)
 
+    @PostMapping("/secured/cancel-and-remove/{deckId}")
+    fun cancelAndRemove(@PathVariable deckId: Long) = deckListingService.cancelAndRemoveListing(deckId)
+
     @PostMapping("/secured/bid/{deckListingId}/{bid}")
     fun bid(@PathVariable deckListingId: UUID, @PathVariable bid: Int) = deckListingService.bid(deckListingId, bid)
 

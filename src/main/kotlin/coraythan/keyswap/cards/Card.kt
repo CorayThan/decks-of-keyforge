@@ -14,58 +14,57 @@ import javax.persistence.*
 
 @Entity
 data class Card(
-        @Id
-        val id: String,
-        val cardTitle: String,
-        @Enumerated(EnumType.STRING)
-        val house: House,
-        @Enumerated(EnumType.STRING)
-        val cardType: CardType,
-        val frontImage: String,
-        val cardText: String,
-        val amber: Int,
-        val power: Int,
-        val powerString: String,
-        val armor: Int,
-        val armorString: String,
-        @Enumerated(EnumType.STRING)
-        val rarity: Rarity,
-        val flavorText: String? = null,
-        val cardNumber: String,
-        val expansion: Int,
-        @Enumerated(EnumType.STRING)
-        val expansionEnum: Expansion,
-        val maverick: Boolean,
-        val anomaly: Boolean,
-        val enhanced: Boolean? = null,
-        val big: Boolean? = null,
+    @Id
+    val id: String,
+    val cardTitle: String,
+    @Enumerated(EnumType.STRING)
+    val house: House,
+    @Enumerated(EnumType.STRING)
+    val cardType: CardType,
+    val frontImage: String,
+    val cardText: String,
+    val amber: Int,
+    val power: Int,
+    val powerString: String,
+    val armor: Int,
+    val armorString: String,
+    @Enumerated(EnumType.STRING)
+    val rarity: Rarity,
+    val flavorText: String? = null,
+    val cardNumber: String,
+    val expansion: Int,
+    @Enumerated(EnumType.STRING)
+    val expansionEnum: Expansion,
+    val maverick: Boolean,
+    val anomaly: Boolean,
+    val enhanced: Boolean? = null,
+    val big: Boolean? = null,
 
-        val wins: Int? = 0,
-        val losses: Int? = 0,
+    val wins: Int? = 0,
+    val losses: Int? = 0,
 
-        val created: ZonedDateTime = now(),
+    val created: ZonedDateTime = now(),
 
-        @ElementCollection
-        val traits: Set<String> = setOf(),
+    @ElementCollection
+    val traits: Set<String> = setOf(),
 
-        @Transient
-        var extraCardInfo: ExtraCardInfo?,
+    @Transient
+    var extraCardInfo: ExtraCardInfo?,
 
-        @Transient
-        var cardNumbers: List<CardNumberSetPair>? = null,
+    @Transient
+    var cardNumbers: List<CardNumberSetPair>? = null,
 
-        @Transient
-        var houses: List<House>? = null,
+    @Transient
+    var houses: List<House>? = null,
 
-        @Transient
-        var expansionWins: Map<Expansion, Wins>? = null
+    @Transient
+    var expansionWins: Map<Expansion, Wins>? = null
 ) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int {
         if (house != other.house) return house.compareTo(other.house)
-        if (expansion != other.expansion) return expansion.compareTo(other.expansion)
-        if (cardNumber != other.cardNumber) return cardNumber.compareTo(other.cardNumber)
-        return id.compareTo(other.id)
+        if (cardType != other.cardType) return cardType.compareTo(other.cardType)
+        return cardTitle.compareTo(other.cardTitle)
     }
 
     fun allTypes() = extraCardInfo?.extraCardTypes?.toSet()?.plus(cardType) ?: setOf(cardType)
@@ -134,12 +133,12 @@ data class Card(
         }
 
     fun toSimpleCard(isLegacy: Boolean) = SimpleCard(
-            cardTitle = cardTitle,
-            rarity = rarity,
-            maverick = maverick,
-            anomaly = anomaly,
-            enhanced = enhanced,
-            legacy = isLegacy
+        cardTitle = cardTitle,
+        rarity = rarity,
+        maverick = maverick,
+        anomaly = anomaly,
+        enhanced = enhanced,
+        legacy = isLegacy
     )
 
     fun printValues(): String {
@@ -148,19 +147,23 @@ data class Card(
             "unknown"
         } else {
             listOfNotNull(
-                    printValue("AERC", aercScore, aercScoreMax),
-                    printValue("A", info.amberControl, info.amberControlMax),
-                    printValue("E", info.expectedAmber, info.expectedAmberMax),
-                    printValue("R", info.artifactControl, info.artifactControlMax),
-                    printValue("C", info.creatureControl, info.creatureControlMax),
-                    printValue("P", this.effectivePower.toDouble() / 10, if (info.effectivePowerMax != null && info.effectivePowerMax != 0.0) info.effectivePowerMax / 10 else null),
-                    printValue("F", info.efficiency, info.efficiencyMax),
-                    printValue("U", info.recursion, info.recursionMax),
-                    printValue("D", info.disruption, info.disruptionMax),
-                    printValue("CP", info.creatureProtection, info.creatureProtectionMax),
-                    printValue("O", info.other, info.otherMax)
+                printValue("AERC", aercScore, aercScoreMax),
+                printValue("A", info.amberControl, info.amberControlMax),
+                printValue("E", info.expectedAmber, info.expectedAmberMax),
+                printValue("R", info.artifactControl, info.artifactControlMax),
+                printValue("C", info.creatureControl, info.creatureControlMax),
+                printValue(
+                    "P",
+                    this.effectivePower.toDouble() / 10,
+                    if (info.effectivePowerMax != null && info.effectivePowerMax != 0.0) info.effectivePowerMax / 10 else null
+                ),
+                printValue("F", info.efficiency, info.efficiencyMax),
+                printValue("U", info.recursion, info.recursionMax),
+                printValue("D", info.disruption, info.disruptionMax),
+                printValue("CP", info.creatureProtection, info.creatureProtectionMax),
+                printValue("O", info.other, info.otherMax)
             )
-                    .joinToString(" • ") +
+                .joinToString(" • ") +
                     printTraits("Traits", info.traits) +
                     printTraits("Syns", info.synergies)
 
@@ -180,29 +183,31 @@ data class Card(
     } else {
         "\n$name: ${traits.joinToString(" • ") { it.print() }}"
     }
+
+
 }
 
 const val evilTwinCardName = " – Evil Twin"
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeCard(
-        val id: String,
-        val card_title: String,
-        val house: String,
-        val card_type: String,
-        val front_image: String,
-        val card_text: String,
-        val amber: Int,
-        val power: String?,
-        val armor: String?,
-        val rarity: String,
-        val flavor_text: String? = null,
-        val card_number: String,
-        val expansion: Int,
-        val is_maverick: Boolean,
-        val is_anomaly: Boolean,
-        val is_enhanced: Boolean,
-        val traits: String? = null
+    val id: String,
+    val card_title: String,
+    val house: String,
+    val card_type: String,
+    val front_image: String,
+    val card_text: String,
+    val amber: Int,
+    val power: String?,
+    val armor: String?,
+    val rarity: String,
+    val flavor_text: String? = null,
+    val card_number: String,
+    val expansion: Int,
+    val is_maverick: Boolean,
+    val is_anomaly: Boolean,
+    val is_enhanced: Boolean,
+    val traits: String? = null
 ) {
     fun toCard(extraInfoMap: Map<String, ExtraCardInfo>): Card? {
         val powerNumber = power?.toIntOrNull() ?: 0
@@ -216,13 +221,13 @@ data class KeyForgeCard(
             card_title
         }
         return Card(
-                id, cardTitleFixed, House.fromMasterVaultValue(house)!!, realCardType, front_image, card_text, amber, powerNumber, power
+            id, cardTitleFixed, House.fromMasterVaultValue(house)!!, realCardType, front_image, card_text, amber, powerNumber, power
                 ?: "", armorNumber, armor ?: "", realRarity, flavor_text,
-                card_number, expansion, expansionEnum, is_maverick, is_anomaly,
-                extraCardInfo = extraInfoMap[cardTitleFixed.cleanCardName()],
-                traits = traits?.uppercase()?.split(" • ")?.toSet() ?: setOf(),
-                big = card_type == "Creature1" || card_type == "Creature2",
-                enhanced = is_enhanced
+            card_number, expansion, expansionEnum, is_maverick, is_anomaly,
+            extraCardInfo = extraInfoMap[cardTitleFixed.cleanCardName()],
+            traits = traits?.uppercase()?.split(" • ")?.toSet() ?: setOf(),
+            big = card_type == "Creature1" || card_type == "Creature2",
+            enhanced = is_enhanced
         )
     }
 

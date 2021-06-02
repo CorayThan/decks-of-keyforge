@@ -1,5 +1,5 @@
 import { Avatar, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from "@material-ui/core"
-import { Archive, Delete, Unarchive } from "@material-ui/icons"
+import { Archive, AttachMoney, Delete, Unarchive } from "@material-ui/icons"
 import * as React from "react"
 import { useState } from "react"
 import { PublicityType } from "../generated-src/PublicityType"
@@ -24,6 +24,8 @@ export const TagPill = (props: { tag: TagDto, active: boolean, deckId: number, s
         avatar = <Avatar>SP</Avatar>
     } else if (tag.publicityType === PublicityType.PUBLIC) {
         avatar = <Avatar>P</Avatar>
+    } else if (tag.publicityType === PublicityType.BULK_SALE) {
+        avatar = <Avatar><AttachMoney/></Avatar>
     }
     return (
         <Chip
@@ -34,6 +36,7 @@ export const TagPill = (props: { tag: TagDto, active: boolean, deckId: number, s
                 active ? tagStore.untagDeck(deckId, tag.id) : tagStore.tagDeck(deckId, tag.id)
             }}
             style={style}
+            disabled={tag.publicityType === PublicityType.BULK_SALE}
         />
 
     )
@@ -78,13 +81,13 @@ export const DeleteTagButton = (props: { tag: TagDto }) => {
     )
 }
 
-export const ArchiveTagButton = (props: { tag: TagDto }) => {
-    const {tag} = props
+export const ArchiveTagButton = (props: { tag: TagDto, disabled: boolean }) => {
+    const {tag, disabled} = props
     return (
         <Tooltip title={tag.archived ? "Unarchive" : "Archive. Archived tags will only show on decks if the deck is tagged with them."}>
             <IconButton
                 onClick={() => tagStore.archiveTag(tag.id)}
-                disabled={tagStore.loadingMyTags}
+                disabled={tagStore.loadingMyTags || disabled}
             >
                 {tag.archived ? (
                     <Unarchive/>

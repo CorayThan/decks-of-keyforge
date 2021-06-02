@@ -15,6 +15,7 @@ import coraythan.keyswap.tags.CreateTag
 import coraythan.keyswap.tags.PublicityType
 import coraythan.keyswap.tags.TagService
 import coraythan.keyswap.userdeck.ListingInfo
+import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -51,6 +52,7 @@ class DeckListingService(
     private val userDeckService: UserDeckService,
     private val deckOwnershipRepo: DeckOwnershipRepo,
     private val tagService: TagService,
+    private val ownedDeckRepo: OwnedDeckRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -101,7 +103,7 @@ class DeckListingService(
     fun bulkList(bulkListing: BulkListing, offsetMinutes: Int): Long? {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         val tag = if (bulkListing.bulkListingTagName != null && currentUser.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.NOTICE_BARGAINS) == true) {
-            tagService.createTag(CreateTag(bulkListing.bulkListingTagName, PublicityType.BULK_SALE))
+            tagService.createTag(CreateTag(bulkListing.bulkListingTagName, PublicityType.BULK_SALE, true))
         } else {
             null
         }
@@ -142,6 +144,8 @@ class DeckListingService(
         if (listingInfo.auction && listingInfo.acceptingOffers) throw BadRequestException("Can't do offers and auction.")
 
         val deck = deckRepo.findByIdOrNull(listingInfo.deckId) ?: throw IllegalStateException("No deck with id ${listingInfo.deckId}")
+
+        if (!ownedDeckRepo.existsByDeckIdAndOwnerId(deck.id, currentUser.id)) throw BadRequestException("You must own ${deck.name} to list it for sale.")
 
         if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
 
@@ -409,6 +413,12 @@ class DeckListingService(
         }
         removeDeckListingStatus(auction)
         deckListingRepo.delete(auction)
+        return true
+    }
+
+    fun cancelAndRemoveListing(deckId: Long): Boolean {
+        this.cancelListing(deckId)
+        userDeckService.markAsOwned(deckId, false)
         return true
     }
 

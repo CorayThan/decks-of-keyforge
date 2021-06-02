@@ -21,12 +21,12 @@ import javax.persistence.EntityManager
 @Transactional
 @Service
 class TagService(
-        private val currentUserService: CurrentUserService,
-        private val tagRepo: KTagRepo,
-        private val deckTagRepo: DeckTagRepo,
-        private val deckRepo: DeckRepo,
-        private val deckListingRepo: DeckListingRepo,
-        private val entityManager: EntityManager
+    private val currentUserService: CurrentUserService,
+    private val tagRepo: KTagRepo,
+    private val deckTagRepo: DeckTagRepo,
+    private val deckRepo: DeckRepo,
+    private val deckListingRepo: DeckListingRepo,
+    private val entityManager: EntityManager
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -57,11 +57,14 @@ class TagService(
             currentUserService.hasContributed()
         }
 
-        return tagRepo.save(KTag(
+        return tagRepo.save(
+            KTag(
                 createTag.name,
                 user,
-                createTag.public
-        ))
+                createTag.public,
+                archived = createTag.archived,
+            )
+        )
     }
 
     fun updateTagPublicityType(id: Long, publicityType: PublicityType) {
@@ -72,16 +75,16 @@ class TagService(
     }
 
     fun findPublicTags() = tagRepo.findByPublicityType(PublicityType.PUBLIC)
-            .map { it.toDto(it.decks.size) }
-            .sortedWith(compareBy({ it.viewsThisMonth }, { it.created }))
+        .map { it.toDto(it.decks.size) }
+        .sortedWith(compareBy({ it.viewsThisMonth }, { it.created }))
 
     fun findTag(id: Long) = tagRepo.findByIdOrNull(id)
 
     fun findMyTags(): List<TagDto> {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
         return tagRepo.findByCreatorId(user.id)
-                .map { it.toDto() }
-                .sortedWith(compareBy({ it.publicityType }, { it.name }))
+            .map { it.toDto() }
+            .sortedWith(compareBy({ it.publicityType }, { it.name }))
     }
 
     fun findMyDeckTags(): List<DeckTagDto> {
@@ -90,14 +93,15 @@ class TagService(
         val predicate = BooleanBuilder().and(deckTagQ.tag.creator.id.eq(user.id))
 
         return query
-                .select(
-                        Projections.constructor(DeckTagDto::class.java,
-                                deckTagQ.tag.id, deckTagQ.deck.id
-                        )
+            .select(
+                Projections.constructor(
+                    DeckTagDto::class.java,
+                    deckTagQ.tag.id, deckTagQ.deck.id
                 )
-                .from(deckTagQ)
-                .where(predicate)
-                .fetch()
+            )
+            .from(deckTagQ)
+            .where(predicate)
+            .fetch()
     }
 
     fun deleteTag(tagId: Long) {

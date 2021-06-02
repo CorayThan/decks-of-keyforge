@@ -23,10 +23,8 @@ import { ComparisonPopover } from "../comparison/ComparisonPopover"
 import { DeckListView } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { DeckTableView } from "../DeckTableView"
-import { DeckUtils } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./decksearchdrawer/DecksSearchDrawer"
-import { deckSearchFiltersStore } from "./DeckSearchFiltersStore"
 
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
@@ -142,10 +140,12 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
             } else {
                 const decks = decksToDisplay
                     .map(deckId => deckStore.deckIdToDeck!.get(deckId)!)
-                    .filter(deck => deck != null && (deckSearchFiltersStore.adaptiveScoreFilter == null || DeckUtils.calculateAdaptiveScore(deck) >= deckSearchFiltersStore.adaptiveScoreFilter))
-                decksView = keyLocalStorage.deckListViewType === "table" ?
-                    <DeckTableView decks={decks}/> :
-                    <DeckListView decks={decks}/>
+                    .filter(deck => deck != null)
+                if (keyLocalStorage.deckListViewType === "table") {
+                    decksView = <DeckTableView decks={decks}/>
+                } else {
+                    decksView = <DeckListView decks={decks}/>
+                }
             }
         }
 

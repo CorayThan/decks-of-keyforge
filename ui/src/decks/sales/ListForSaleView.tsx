@@ -529,7 +529,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 fullWidth={true}
                                 helperText={
                                     "A bulk sale tag will be created for this listing. This will allow buyers to see all decks that are a part of this " +
-                                    "bulk sale."
+                                    "bulk sale. "
                                 }
                                 style={{marginTop: spacing(2)}}
                             />

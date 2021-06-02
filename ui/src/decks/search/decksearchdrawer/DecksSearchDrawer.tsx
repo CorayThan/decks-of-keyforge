@@ -40,7 +40,6 @@ import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../../selects/De
 import { FiltersConstraintsStore } from "../ConstraintDropdowns"
 import { DeckCardSelectStore } from "../DeckCardSelect"
 import { DeckFilters } from "../DeckFilters"
-import { deckSearchFiltersStore } from "../DeckSearchFiltersStore"
 import { DownloadDeckResults } from "../DownloadDeckResults"
 import { DeckSearchDrawerCards } from "./DeckSearchDrawerCards"
 import { DeckSearchDrawerConstraints } from "./DeckSearchDrawerConstraints"
@@ -118,7 +117,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         this.constraintsStore.reset()
         this.selectedExpansions.reset()
         this.deckCardsStore.reset()
-        deckSearchFiltersStore.reset()
     }
 
     updateForSale = (forSale?: boolean) => {

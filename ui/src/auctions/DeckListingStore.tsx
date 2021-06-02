@@ -115,6 +115,21 @@ export class DeckListingStore {
         this.performingBulkUpdate = false
     }
 
+    bulkSold = async (deckIds: number[]) => {
+        this.performingBulkUpdate = true
+
+        for (const deckId in deckIds) {
+            await axios.post(`${DeckListingStore.SECURE_CONTEXT}/cancel-and-remove/${deckIds[deckId]}`)
+        }
+
+        await this.findListingsForUser(true)
+        await userDeckStore.findOwned()
+
+        messageStore.setSuccessMessage(`Canceled your listings for ${deckIds.length} decks.`)
+
+        this.performingBulkUpdate = false
+    }
+
     cancel = async (deckId: number, deckName?: string) => {
         const cancelResponse: AxiosResponse<boolean> = await axios.post(`${DeckListingStore.SECURE_CONTEXT}/cancel/${deckId}`)
 
@@ -155,7 +170,7 @@ export class DeckListingStore {
 
         let link
 
-        if (tagId != null) {
+        if (tagId) {
 
             const filters = new DeckFilters()
             filters.tags = [tagId]

@@ -291,6 +291,19 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                         >
                             Unlist Selected Decks
                         </KeyButton>
+                        <KeyButton
+                            disabled={deckTableViewStore.selectedDecks.length === 0}
+                            variant={"contained"}
+                            color={"primary"}
+                            onClick={async () => {
+                                await deckListingStore.bulkSold(deckTableViewStore.selectedDecks)
+                                deckTableViewStore.selectedDecks = []
+                            }}
+                            style={{marginLeft: spacing(2)}}
+                            loading={deckListingStore.performingBulkUpdate}
+                        >
+                            Unlist and Remove Selected Decks
+                        </KeyButton>
                         <ListForSaleView
                             deckIds={deckTableViewStore.selectedDecks}
                         />
