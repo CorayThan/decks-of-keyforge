@@ -23,6 +23,7 @@ data class ListingInfo(
         val startingBid: Int? = null,
         val buyItNow: Int? = null,
         val endTime: String? = null,
+        val tagId: Long? = null,
 
         val editAuctionId: UUID? = null
 ) {

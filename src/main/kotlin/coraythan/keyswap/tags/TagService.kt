@@ -3,6 +3,7 @@ package coraythan.keyswap.tags
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
+import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.nowLocal
@@ -24,6 +25,7 @@ class TagService(
         private val tagRepo: KTagRepo,
         private val deckTagRepo: DeckTagRepo,
         private val deckRepo: DeckRepo,
+        private val deckListingRepo: DeckListingRepo,
         private val entityManager: EntityManager
 ) {
 
@@ -73,10 +75,6 @@ class TagService(
             .map { it.toDto(it.decks.size) }
             .sortedWith(compareBy({ it.viewsThisMonth }, { it.created }))
 
-    fun findTagInfos(ids: List<Long>) = tagRepo.findAllById(ids)
-            .filter { it.publicityType == PublicityType.PRIVATE }
-            .map { it.toDto() }
-
     fun findTag(id: Long) = tagRepo.findByIdOrNull(id)
 
     fun findMyTags(): List<TagDto> {
@@ -104,7 +102,15 @@ class TagService(
 
     fun deleteTag(tagId: Long) {
         userOwnsTag(tagId)
-        tagRepo.deleteById(tagId)
+
+        val tag = tagRepo.findByIdOrNull(tagId) ?: error("No tag for id $tagId")
+
+        if (tag.publicityType == PublicityType.BULK_SALE) {
+            val toUpdate = deckListingRepo.findByTagId(tagId)
+            deckListingRepo.saveAll(toUpdate.map { it.copy(tag = null) })
+        }
+
+        tagRepo.delete(tag)
     }
 
     fun archiveTag(id: Long) {

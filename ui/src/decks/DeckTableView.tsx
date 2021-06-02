@@ -8,7 +8,6 @@ import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, roundToHundreds, roundToTens } from "../config/Utils"
-import { UpdatePrice } from "../generated-src/UpdatePrice"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { HouseBanner } from "../houses/HouseBanner"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -21,41 +20,10 @@ import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { DeckListViewProps } from "./DeckListView"
 import { SaStars } from "./DeckScoreView"
+import { deckStore } from "./DeckStore"
+import { deckTableViewStore } from "./DeckTableViewStore"
 import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
 import { ListForSaleView } from "./sales/ListForSaleView"
-
-class DeckTableViewStore {
-    @observable
-    priceChanges: UpdatePrice[] = []
-
-    @observable
-    selectedDecks: number[] = []
-
-    addPriceChange = (auctionId: string, askingPrice?: number) => {
-        log.debug("Add price change for " + auctionId + " change: " + askingPrice)
-        this.priceChanges = this.priceChanges.filter(priceChange => priceChange.auctionId !== auctionId)
-        this.priceChanges.push({auctionId, askingPrice})
-    }
-
-    toggleDeckSelected = (deckId: number) => {
-        if (!this.selectedDecks.includes(deckId)) {
-            this.selectedDecks.push(deckId)
-        } else {
-            this.selectedDecks = this.selectedDecks.filter(selId => selId !== deckId)
-        }
-    }
-
-    constructor() {
-        makeObservable(this)
-    }
-
-    reset = () => {
-        this.priceChanges = []
-        this.selectedDecks = []
-    }
-}
-
-export const deckTableViewStore = new DeckTableViewStore()
 
 @observer
 export class DeckTableView extends React.Component<DeckListViewProps> {
@@ -75,7 +43,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
             return null
         }
 
-        const sellerView = !keyLocalStorage.smallTableView && userStore.username != null
+        const sellerView = !keyLocalStorage.smallTableView && userStore.username != null && deckStore.currentFilters?.owner === userStore.username
         const displayPrices = !!firstDeck.deckSaleInfo
         if (sellerView && userStore.username == null) {
             return <Loader/>
@@ -297,7 +265,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                     />
                 </Paper>
                 {sellerView ? (
-                    <Box display={"flex"}>
+                    <Box display={"flex"} mb={2}>
                         <Button
                             disabled={deckTableViewStore.priceChanges.length === 0}
                             variant={"contained"}

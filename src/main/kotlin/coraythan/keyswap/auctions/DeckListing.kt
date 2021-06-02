@@ -8,6 +8,7 @@ import coraythan.keyswap.decks.models.DeckLanguage
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
+import coraythan.keyswap.tags.KTag
 import coraythan.keyswap.userdeck.DeckCondition
 import coraythan.keyswap.users.KeyUser
 import java.time.LocalDate
@@ -61,11 +62,15 @@ data class DeckListing(
         @Enumerated(EnumType.STRING)
         val language: DeckLanguage,
 
+
         val condition: DeckCondition,
         val redeemed: Boolean = true,
         val externalLink: String? = null,
         val listingInfo: String? = null,
         val shippingCost: String? = null,
+
+        @ManyToOne
+        val tag: KTag? = null,
 
         val dateListed: ZonedDateTime = now(),
 

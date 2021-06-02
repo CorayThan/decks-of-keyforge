@@ -29,7 +29,7 @@ import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
-import { deckTableViewStore } from "../DeckTableView"
+import { deckTableViewStore } from "../DeckTableViewStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { SoldButton } from "./SoldButton"
@@ -237,7 +237,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                 deckListingStore.bulkListForSale({
                     listingInfo: listingInfoDto,
                     decks: this.props.deckIds,
-                    addTag: this.newTagName.trim() === "" ? undefined : this.newTagName
+                    bulkListingTagName: this.newTagName.trim() === "" ? undefined : this.newTagName
                 })
             } else {
                 deckListingStore.listForSale(this.props.deck?.name ?? "A Deck", listingInfoDto)
@@ -521,15 +521,15 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             helperText={"Ebay link, store link, etc."}
                             style={{marginTop: spacing(2)}}
                         />
-                        {deckIds != null && (
+                        {deckIds != null && userStore.patron && (
                             <TextField
-                                label={"Create and add tag to decks"}
+                                label={"Bulk Sale Tag Name"}
                                 value={this.newTagName}
                                 onChange={(event) => this.newTagName = event.target.value}
                                 fullWidth={true}
                                 helperText={
-                                    "A new semi-private tag will be created and added to all the decks modified. You can use that tag to share " +
-                                    "these decks with potential buyers."
+                                    "A bulk sale tag will be created for this listing. This will allow buyers to see all decks that are a part of this " +
+                                    "bulk sale."
                                 }
                                 style={{marginTop: spacing(2)}}
                             />

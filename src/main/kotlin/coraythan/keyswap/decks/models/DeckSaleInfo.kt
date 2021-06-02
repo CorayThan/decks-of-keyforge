@@ -48,7 +48,9 @@ data class DeckSaleInfo(
         val sellerId: UUID,
         val username: String,
         val publicContactInfo: String?,
-        val discord: String?
+        val discord: String?,
+
+        val tagId: Long?,
 ) {
     companion object {
         
@@ -86,7 +88,8 @@ data class DeckSaleInfo(
                     deckListingStatus = auction.status,
                     boughtBy = auction.boughtWithBuyItNow?.username ?: if (auction.status == DeckListingStatus.COMPLETE) auction.highestBidder()?.username else null,
                     boughtNowOn = auction.boughtNowOn?.toReadableStringWithOffsetMinutes(offsetMinutes),
-                    hasOwnershipVerification = auction.hasOwnershipVerification
+                    hasOwnershipVerification = auction.hasOwnershipVerification,
+                    tagId = auction.tag?.id,
             )
         }
     }

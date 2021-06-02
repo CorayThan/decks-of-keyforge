@@ -17,4 +17,5 @@ interface DeckListingRepo : CrudRepository<DeckListing, UUID> {
 
     fun findByDeckIdAndStatusNot(deckId: Long, status: DeckListingStatus): List<DeckListing>
 
+    fun findByTagId(tagId: Long): List<DeckListing>
 }

@@ -53,5 +53,6 @@ data class KTag(
 enum class PublicityType {
         PUBLIC,
         NOT_SEARCHABLE,
+        BULK_SALE,
         PRIVATE
 }

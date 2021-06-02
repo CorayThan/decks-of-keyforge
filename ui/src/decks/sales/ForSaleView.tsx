@@ -18,6 +18,7 @@ import { countryToLabel } from "../../generic/CountryUtils"
 import { HelperText } from "../../generic/CustomTypographies"
 import { SendMessageButton } from "../../messages/SendMessageButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { WhiteSpaceTypography } from "../../mui-restyled/WhiteSpaceTypography"
 import { SellerRatingView } from "../../sellerratings/SellerRatingView"
 import { SellerImg } from "../../sellers/imgs/SellerImgs"
@@ -26,6 +27,7 @@ import { DiscordUser } from "../../thirdpartysites/discord/DiscordUser"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
+import { DeckFilters } from "../search/DeckFilters"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
 
 interface ForSaleViewProps {
@@ -89,7 +91,7 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
         const {
             forAuction, forSaleInCountry, condition, dateListed, expiresAt, listingInfo, username, publicContactInfo, externalLink,
             discord, language, currencySymbol, highestBid, buyItNow, bidIncrement, auctionEndDateTime, auctionId, nextBid, youAreHighestBidder, yourMaxBid,
-            startingBid, shippingCost, acceptingOffers, highestOffer, hasOwnershipVerification, sellerId
+            startingBid, shippingCost, acceptingOffers, highestOffer, hasOwnershipVerification, sellerId, tagId,
         } = saleInfo
 
         const yourUsername = userStore.username
@@ -98,6 +100,16 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
         const allowEmail = yourEmail && yourUsername && !forAuction
 
         const sellerDetails = sellerStore.findSellerWithUsername(username)
+
+        let bulkLink
+
+        if (tagId != null) {
+            const tagFilters = new DeckFilters()
+            tagFilters.tags = [tagId]
+            tagFilters.forSale = true
+            tagFilters.owner = username
+            bulkLink = Routes.deckSearch(tagFilters)
+        }
 
         return (
             <div style={{marginTop: spacing(2), marginBottom: spacing(2), maxWidth: 600}}>
@@ -219,6 +231,11 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                     )}
 
                     <InfoBox title={"Listing Details"} info={listingInfo}/>
+                    <InfoBox
+                        info={(
+                            <LinkButton href={bulkLink} newWindow={true}>All decks in bulk sale</LinkButton>
+                        )}
+                    />
                     <InfoBox title={"External listing — Be careful using this link!"} info={externalLink}/>
                     <InfoBox title={"Seller Details"} info={publicContactInfo}/>
                     <InfoBox title={"Shipping Cost"} info={shippingCost}/>
@@ -273,14 +290,16 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
     }
 }
 
-const InfoBox = (props: { title: string, info?: React.ReactNode, link?: string }) => {
+const InfoBox = (props: { title?: string, info?: React.ReactNode, link?: string }) => {
     if (!props.info && !props.link) {
         return null
     }
     return (
         <>
             <div style={{margin: spacing(2, 2, 0)}}>
-                <Typography variant={"subtitle2"} style={{marginBottom: spacing(0.5)}}>{props.title}</Typography>
+                {props.title && (
+                    <Typography variant={"subtitle2"} style={{marginBottom: spacing(0.5)}}>{props.title}</Typography>
+                )}
                 {props.info ? (
                     <WhiteSpaceTypography variant={"body2"}>{props.info}</WhiteSpaceTypography>
                 ) : (

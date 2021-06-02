@@ -1,3 +1,4 @@
+import { Box } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import * as History from "history"
 import { isEqual } from "lodash"
@@ -151,13 +152,15 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
         let showMoreButton = null
         if (moreDecksAvailable()) {
             showMoreButton = (
-                <KeyButton
-                    disabled={addingMoreDecks || countingDecks}
-                    loading={addingMoreDecks || countingDecks}
-                    onClick={showMoreDecks}
-                >
-                    Show more
-                </KeyButton>
+                <Box mx={2} mb={2}>
+                    <KeyButton
+                        disabled={addingMoreDecks || countingDecks}
+                        loading={addingMoreDecks || countingDecks}
+                        onClick={showMoreDecks}
+                    >
+                        Show more
+                    </KeyButton>
+                </Box>
             )
         }
 
@@ -170,7 +173,14 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                         flexGrow: 1,
                     }}
                 >
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: keyLocalStorage.deckListViewType === "table" ? undefined : "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
                         {filters.isForSaleOrTrade && filters.owner != null && <SellerBanner sellerUsername={filters.owner}/>}
                         {decksView}

@@ -2,12 +2,16 @@ import axios, { AxiosResponse } from "axios"
 import { computed, makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { Routes } from "../config/Routes"
 import { log } from "../config/Utils"
+import { DeckFilters } from "../decks/search/DeckFilters"
 import { BulkListing } from "../generated-src/BulkListing"
 import { DeckListingDto } from "../generated-src/DeckListingDto"
 import { ListingInfo } from "../generated-src/ListingInfo"
 import { UserDeckListingInfo } from "../generated-src/UserDeckListingInfo"
+import { LinkButton } from "../mui-restyled/LinkButton"
 import { messageStore } from "../ui/MessageStore"
+import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { BidPlacementResult } from "./BidPlacementResult"
 
@@ -56,11 +60,11 @@ export class DeckListingStore {
 
     bulkListForSale = async (listing: BulkListing) => {
         this.performingBulkUpdate = true
-        await axios.post(`${DeckListingStore.SECURE_CONTEXT}/bulk-list`, listing)
+        const listingResponse: AxiosResponse<number | undefined> = await axios.post(`${DeckListingStore.SECURE_CONTEXT}/bulk-list`, listing)
 
         await deckListingStore.findListingsForUser(true)
         await userDeckStore.refreshDeckInfo()
-        messageStore.setSuccessMessage(`You've bulk listed / updated ${listing.decks.length} decks!`)
+        this.setBulkSaleMessage(listing.decks.length, listingResponse.data)
         this.performingBulkUpdate = false
     }
 
@@ -144,6 +148,32 @@ export class DeckListingStore {
     @computed
     get decksForSaleLoaded(): boolean {
         return this.decksForSale != null
+    }
+
+    private setBulkSaleMessage = (numberListed: number, tagId?: number) => {
+
+        let link
+
+        if (tagId != null) {
+
+            const filters = new DeckFilters()
+            filters.tags = [tagId]
+            filters.forSale = true
+            filters.owner = userStore.username ?? ""
+
+            link = (
+                <LinkButton
+                    color={"inherit"}
+                    href={Routes.deckSearch(filters)}
+                    key={"listed-decks"}
+                    onClick={() => messageStore.open = false}
+                >
+                    Listed Decks
+                </LinkButton>
+            )
+        }
+
+        messageStore.setMessage(`You've bulk listed / updated ${numberListed} decks!`, "Success", link, 20000)
     }
 }
 

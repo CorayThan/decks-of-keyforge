@@ -7,5 +7,5 @@ import coraythan.keyswap.userdeck.ListingInfo
 data class BulkListing(
     val listingInfo: ListingInfo,
     val decks: List<Long>,
-    val addTag: String?,
+    val bulkListingTagName: String?,
 )

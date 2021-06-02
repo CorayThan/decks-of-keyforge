@@ -39,18 +39,18 @@ private const val fourteenMin = "PT14M"
 @Service
 @Transactional
 class DeckListingService(
-        private val deckListingRepo: DeckListingRepo,
-        private val currentUserService: CurrentUserService,
-        private val deckRepo: DeckRepo,
-        private val emailService: EmailService,
-        private val forSaleNotificationsService: ForSaleNotificationsService,
-        private val userRepo: KeyUserRepo,
-        private val userSearchService: UserSearchService,
-        private val purchaseService: PurchaseService,
-        private val purchaseRepo: PurchaseRepo,
-        private val userDeckService: UserDeckService,
-        private val deckOwnershipRepo: DeckOwnershipRepo,
-        private val tagService: TagService,
+    private val deckListingRepo: DeckListingRepo,
+    private val currentUserService: CurrentUserService,
+    private val deckRepo: DeckRepo,
+    private val emailService: EmailService,
+    private val forSaleNotificationsService: ForSaleNotificationsService,
+    private val userRepo: KeyUserRepo,
+    private val userSearchService: UserSearchService,
+    private val purchaseService: PurchaseService,
+    private val purchaseRepo: PurchaseRepo,
+    private val userDeckService: UserDeckService,
+    private val deckOwnershipRepo: DeckOwnershipRepo,
+    private val tagService: TagService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -98,10 +98,10 @@ class DeckListingService(
         }
     }
 
-    fun bulkList(bulkListing: BulkListing, offsetMinutes: Int) {
+    fun bulkList(bulkListing: BulkListing, offsetMinutes: Int): Long? {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
-        val tag = if (bulkListing.addTag != null && currentUser.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.NOTICE_BARGAINS) == true) {
-            tagService.createTag(CreateTag(bulkListing.addTag, PublicityType.NOT_SEARCHABLE))
+        val tag = if (bulkListing.bulkListingTagName != null && currentUser.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.NOTICE_BARGAINS) == true) {
+            tagService.createTag(CreateTag(bulkListing.bulkListingTagName, PublicityType.BULK_SALE))
         } else {
             null
         }
@@ -119,11 +119,15 @@ class DeckListingService(
                 tagService.tagDeck(it, tag.id)
             }
 
-            list(bulkListing.listingInfo.copy(
-                deckId = it,
-                editAuctionId = listingForUser?.id
-            ), offsetMinutes)
+            list(
+                bulkListing.listingInfo.copy(
+                    deckId = it,
+                    editAuctionId = listingForUser?.id,
+                    tagId = tag?.id,
+                ), offsetMinutes
+            )
         }
+        return tag?.id
     }
 
     fun list(listingInfo: ListingInfo, offsetMinutes: Int) {
@@ -144,8 +148,8 @@ class DeckListingService(
         val listingDate = now()
         val endTime = listingInfo.endTimeLocalTime?.withOffsetMinutes(offsetMinutes) ?: LocalTime.now()
         val endDateTime = listingDate.plusDays(listingInfo.expireInDays.toLong())
-                .withHour(endTime.hour)
-                .withMinute(endTime.minute)
+            .withHour(endTime.hour)
+            .withMinute(endTime.minute)
         val endMinutesMod = endDateTime.minute % 15
         val endMinutes = endDateTime.minute - endMinutesMod
         val realEnd = endDateTime.withMinute(endMinutes)
@@ -154,10 +158,35 @@ class DeckListingService(
         val hasOwnershipVerification = deckOwnershipRepo.existsByDeckIdAndUserId(deck.id, currentUser.id)
         val newListing = listingInfo.editAuctionId == null
 
+        val tag = if (listingInfo.tagId == null) null else tagService.findTag(listingInfo.tagId)
+
         val auction = if (newListing) {
             val preexistingListing = deckListingRepo.findBySellerIdAndDeckIdAndStatusNot(currentUser.id, listingInfo.deckId!!, DeckListingStatus.COMPLETE)
             if (preexistingListing.isNotEmpty()) throw BadRequestException("You've already listed this deck for sale.")
             DeckListing(
+                durationDays = listingInfo.expireInDays,
+                endDateTime = realEnd,
+                bidIncrement = listingInfo.bidIncrement,
+                startingBid = listingInfo.startingBid,
+                buyItNow = listingInfo.buyItNow,
+                deck = deck,
+                seller = currentUser,
+                language = listingInfo.language,
+                condition = listingInfo.condition,
+                externalLink = listingInfo.externalLink,
+                listingInfo = listingInfo.listingInfo,
+                forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
+                currencySymbol = currentUser.currencySymbol,
+                status = status,
+                forTrade = currentUser.allowsTrades,
+                shippingCost = currentUser.shippingCost,
+                acceptingOffers = listingInfo.acceptingOffers,
+                hasOwnershipVerification = hasOwnershipVerification,
+                tag = tag,
+            )
+        } else {
+            deckListingRepo.findByIdOrNull(listingInfo.editAuctionId!!)!!
+                .copy(
                     durationDays = listingInfo.expireInDays,
                     endDateTime = realEnd,
                     bidIncrement = listingInfo.bidIncrement,
@@ -175,30 +204,9 @@ class DeckListingService(
                     forTrade = currentUser.allowsTrades,
                     shippingCost = currentUser.shippingCost,
                     acceptingOffers = listingInfo.acceptingOffers,
-                    hasOwnershipVerification = hasOwnershipVerification
-            )
-        } else {
-            deckListingRepo.findByIdOrNull(listingInfo.editAuctionId!!)!!
-                    .copy(
-                            durationDays = listingInfo.expireInDays,
-                            endDateTime = realEnd,
-                            bidIncrement = listingInfo.bidIncrement,
-                            startingBid = listingInfo.startingBid,
-                            buyItNow = listingInfo.buyItNow,
-                            deck = deck,
-                            seller = currentUser,
-                            language = listingInfo.language,
-                            condition = listingInfo.condition,
-                            externalLink = listingInfo.externalLink,
-                            listingInfo = listingInfo.listingInfo,
-                            forSaleInCountry = currentUser.country ?: throw BadRequestException("You must have selected a country to list decks for sale."),
-                            currencySymbol = currentUser.currencySymbol,
-                            status = status,
-                            forTrade = currentUser.allowsTrades,
-                            shippingCost = currentUser.shippingCost,
-                            acceptingOffers = listingInfo.acceptingOffers,
-                            hasOwnershipVerification = hasOwnershipVerification
-                    )
+                    hasOwnershipVerification = hasOwnershipVerification,
+                    tag = tag,
+                )
         }
         deckListingRepo.save(auction)
         if (listingInfo.auction) {
@@ -227,29 +235,31 @@ class DeckListingService(
         }
         if (auction.highestBidderUsername == user.username && bid <= auction.realMaxBid() ?: -1) {
             return BidPlacementResult(
-                    false,
-                    true,
-                    "Your new bid must be greater than your previous bid."
+                false,
+                true,
+                "Your new bid must be greater than your previous bid."
             )
         }
         if (auction.buyItNow != null && bid >= auction.buyItNow) {
             return BidPlacementResult(
-                    false,
-                    false,
-                    "Use buy it now instead of bidding higher than the buy it now."
+                false,
+                false,
+                "Use buy it now instead of bidding higher than the buy it now."
             )
         }
         val previousHighBidder = auction.highestBidder()
         val updateEndDateTime = now.plusMinutes(15) > auction.endDateTime
         val newAuctionEnd = auction.endDateTime.plusMinutes(15)
         val withBid = auction.copy(
-                bids = auction.bids.plus(AuctionBid(
-                        bidder = user,
-                        bid = bid,
-                        bidTime = now,
-                        auction = auction
-                )),
-                endDateTime = if (updateEndDateTime) newAuctionEnd else auction.endDateTime
+            bids = auction.bids.plus(
+                AuctionBid(
+                    bidder = user,
+                    bid = bid,
+                    bidTime = now,
+                    auction = auction
+                )
+            ),
+            endDateTime = if (updateEndDateTime) newAuctionEnd else auction.endDateTime
         )
 
         val saved = deckListingRepo.save(withBid)
@@ -258,19 +268,19 @@ class DeckListingService(
         val highBid = saved.highestBid
 
         return BidPlacementResult(
-                true,
-                newHighBidder == user.username,
-                if (newHighBidder == user.username) {
-                    if (previousHighBidder != null) {
-                        val timeLeft = Duration.between(now(), if (updateEndDateTime) newAuctionEnd else auction.endDateTime)
-                        GlobalScope.launch {
-                            emailService.sendOutBidEmail(previousHighBidder, auction.deck, timeLeft.toReadableString())
-                        }
+            true,
+            newHighBidder == user.username,
+            if (newHighBidder == user.username) {
+                if (previousHighBidder != null) {
+                    val timeLeft = Duration.between(now(), if (updateEndDateTime) newAuctionEnd else auction.endDateTime)
+                    GlobalScope.launch {
+                        emailService.sendOutBidEmail(previousHighBidder, auction.deck, timeLeft.toReadableString())
                     }
-                    "You are now the highest bidder with a current bid of $highBid, and a max bid of $bid."
-                } else {
-                    "Your bid was placed, but you are not the highest bidder."
                 }
+                "You are now the highest bidder with a current bid of $highBid, and a max bid of $bid."
+            } else {
+                "Your bid was placed, but you are not the highest bidder."
+            }
         )
     }
 
@@ -293,17 +303,17 @@ class DeckListingService(
             deckListingRepo.delete(auction)
 
             emailService.sendBoughtNowEmail(
-                    user,
-                    auction.seller,
-                    auction.deck,
-                    auction.buyItNow
+                user,
+                auction.seller,
+                auction.deck,
+                auction.buyItNow
             )
             purchaseService.savePurchase(
-                    saleType = auction.saleType,
-                    saleAmount = auction.buyItNow,
-                    deck = auction.deck,
-                    seller = auction.seller,
-                    buyer = user
+                saleType = auction.saleType,
+                saleAmount = auction.buyItNow,
+                deck = auction.deck,
+                seller = auction.seller,
+                buyer = user
             )
         } else {
             // Auction
@@ -320,9 +330,9 @@ class DeckListingService(
         }
 
         return BidPlacementResult(
-                true,
-                true,
-                "You have purchased the deck with your buy it now."
+            true,
+            true,
+            "You have purchased the deck with your buy it now."
         )
     }
 
@@ -337,11 +347,11 @@ class DeckListingService(
         val currentUser = currentUserService.loggedInUser()
         return dto.copy(bids = dto.bids.map {
             it.copy(
-                    bidderUsername = if (currentUser?.username == it.bidderUsername) {
-                        it.bidderUsername
-                    } else {
-                        "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}"
-                    }
+                bidderUsername = if (currentUser?.username == it.bidderUsername) {
+                    it.bidderUsername
+                } else {
+                    "User ${fakeUsernames.indexOf(it.bidderUsername) + 1}"
+                }
             )
         })
     }
@@ -349,11 +359,13 @@ class DeckListingService(
     private fun endAuction(sold: Boolean, auction: DeckListing, buyItNowUser: KeyUser? = null) {
 
         val end = now()
-        deckListingRepo.save(auction.copy(
+        deckListingRepo.save(
+            auction.copy(
                 status = DeckListingStatus.COMPLETE,
                 boughtWithBuyItNow = buyItNowUser,
                 boughtNowOn = if (buyItNowUser == null) null else end
-        ))
+            )
+        )
 
         removeDeckListingStatus(auction, sold)
 
@@ -363,17 +375,17 @@ class DeckListingService(
                     val saleAmount = if (buyItNowUser != null) auction.buyItNow!! else auction.highestBid!!
                     val buyer = buyItNowUser ?: auction.highestBidder()!!
                     purchaseService.savePurchase(
-                            saleType = SaleType.AUCTION,
-                            saleAmount = saleAmount,
-                            deck = auction.deck,
-                            seller = auction.seller,
-                            buyer = buyer
+                        saleType = SaleType.AUCTION,
+                        saleAmount = saleAmount,
+                        deck = auction.deck,
+                        seller = auction.seller,
+                        buyer = buyer
                     )
                     emailService.sendAuctionPurchaseEmail(
-                            buyer,
-                            auction.seller,
-                            auction.deck,
-                            saleAmount
+                        buyer,
+                        auction.seller,
+                        auction.deck,
+                        saleAmount
                     )
                 } else {
                     emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck)
@@ -403,7 +415,7 @@ class DeckListingService(
     fun findActiveListingsForUser(): List<UserDeckListingInfo> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return deckListingRepo.findAllBySellerIdAndStatusNot(currentUser.id, DeckListingStatus.COMPLETE)
-                .map { it.toUserDeckListingInfo() }
+            .map { it.toUserDeckListingInfo() }
     }
 
     // This being in Purchase Service creates a dependency cycle
@@ -416,22 +428,22 @@ class DeckListingService(
         if (seller?.id != loggedInUser.id && buyer?.id != loggedInUser.id) throw BadRequestException("You must be the buyer or seller! Seller id: ${createPurchase.sellerId} buyer id: ${createPurchase.buyerId}")
 
         if (verifyNoMatchingPurchases && buyer != null && purchaseRepo.existsByDeckIdAndBuyerId(createPurchase.deckId, buyer.id)) {
-            return  CreatePurchaseResult(
-                    createdOrUpdated = false,
-                    message = "You already have a purchase recorded for ${deck.name}."
+            return CreatePurchaseResult(
+                createdOrUpdated = false,
+                message = "You already have a purchase recorded for ${deck.name}."
             )
         }
 
         if (seller == null) {
             // reporting a purchase
             val preexisting = purchaseRepo.findByDeckId(createPurchase.deckId)
-                    .filter { it.buyer == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
-                    .minByOrNull { it.purchasedOn }
+                .filter { it.buyer == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
+                .minByOrNull { it.purchasedOn }
             if (preexisting != null) {
                 purchaseRepo.save(preexisting.copy(buyer = buyer, buyerCountry = buyer?.country))
                 return CreatePurchaseResult(
-                        createdOrUpdated = true,
-                        message = "Added you as the buyer of ${deck.name}."
+                    createdOrUpdated = true,
+                    message = "Added you as the buyer of ${deck.name}."
                 )
             }
         } else if (buyer == null) {
@@ -439,25 +451,25 @@ class DeckListingService(
             this.cancelListing(deck.id)
             userDeckService.markAsOwned(deck.id, false)
             val preexisting = purchaseRepo.findByDeckId(createPurchase.deckId)
-                    .filter { it.seller == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
-                    .minByOrNull { it.purchasedOn }
+                .filter { it.seller == null && it.purchasedOn.isAfter(LocalDateTime.now().minusDays(7)) && it.saleAmount == createPurchase.amount }
+                .minByOrNull { it.purchasedOn }
             if (preexisting != null) {
                 purchaseRepo.save(preexisting.copy(seller = seller, sellerCountry = seller.country, currencySymbol = seller.currencySymbol))
                 return CreatePurchaseResult(
-                        createdOrUpdated = true,
-                        message = "Created sale record and removed ${deck.name} from your decks."
+                    createdOrUpdated = true,
+                    message = "Created sale record and removed ${deck.name} from your decks."
                 )
             }
         }
 
         purchaseService.savePurchase(createPurchase.saleType, createPurchase.amount, deck, seller, buyer)
         return CreatePurchaseResult(
-                createdOrUpdated = true,
-                message = if (buyer == null) {
-                    "Created sale record and removed ${deck.name} from your decks."
-                } else {
-                    "Created purchase record for ${deck.name}."
-                }
+            createdOrUpdated = true,
+            message = if (buyer == null) {
+                "Created sale record and removed ${deck.name} from your decks."
+            } else {
+                "Created purchase record for ${deck.name}."
+            }
         )
     }
 
@@ -484,19 +496,21 @@ class DeckListingService(
     private fun removeDeckListingStatus(listing: DeckListing, soldOnAuction: Boolean = false) {
         val auctionsForDeck = listing.deck.auctions
         val otherListingsForDeck = auctionsForDeck
-                .filter { it.isActive && it.id != listing.id }
+            .filter { it.isActive && it.id != listing.id }
 
         // This might be someone else unlisting the deck for sale while a different person has an active auction for it
         val stillForAuction = otherListingsForDeck.any { it.status == DeckListingStatus.AUCTION }
         val stillForTrade = otherListingsForDeck.any { it.forTrade }
-        deckRepo.save(listing.deck.copy(
+        deckRepo.save(
+            listing.deck.copy(
                 forAuction = stillForAuction,
                 auctionEnd = if (stillForAuction) listing.deck.auctionEnd else null,
                 listedOn = if (stillForAuction) listing.deck.listedOn else null,
                 forSale = otherListingsForDeck.isNotEmpty(),
                 forTrade = stillForTrade,
                 completedAuction = soldOnAuction || listing.deck.completedAuction
-        ))
+            )
+        )
         userSearchService.scheduleUserForUpdate(listing.seller)
     }
 

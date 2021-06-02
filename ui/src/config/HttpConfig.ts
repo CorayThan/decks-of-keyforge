@@ -15,8 +15,7 @@ export class HttpConfig {
     static API = "/api"
 
     static setupAxios = () => {
-        const timezoneOffset = TimeUtils.currentTimeZoneOffset()
-        axios.defaults.headers.common.Timezone = timezoneOffset
+        axios.defaults.headers.common.Timezone = TimeUtils.currentTimeZoneOffset()
 
         const token = keyLocalStorage.findAuthKey()
         if (token) {
