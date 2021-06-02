@@ -194,13 +194,14 @@ class EmailService(
         }
     }
 
-    fun sendAuctionDidNotSellEmail(seller: KeyUser, deck: Deck) {
+    fun sendAuctionDidNotSellEmail(seller: KeyUser, deck: Deck, currency: String, relistedAtPrice: Int?) {
         sendEmail(
                 seller.primaryEmail,
                 "Your deck for auction ${deck.name} did not sell",
                 """
                     <div>
-                        The minimum bid for ${links.deckLink(deck)} was not met before the end of the auction.
+                        The minimum bid for ${links.deckLink(deck)} was not met before the end of the auction. 
+                        ${if (relistedAtPrice == null) "" else "It has been relisted automatically at ${currency}${relistedAtPrice}"}
                     </div>
                 """.trimIndent(),
                 "Auction Did Not Sell"

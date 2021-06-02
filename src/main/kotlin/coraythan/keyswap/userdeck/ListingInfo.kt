@@ -24,8 +24,9 @@ data class ListingInfo(
         val buyItNow: Int? = null,
         val endTime: String? = null,
         val tagId: Long? = null,
+        val relistAtPrice: Int? = null,
 
-        val editAuctionId: UUID? = null
+        val editAuctionId: UUID? = null,
 ) {
     @TsOptional
     val endTimeLocalTime = if (this.endTime.isNullOrBlank()) null else LocalTime.parse(this.endTime)

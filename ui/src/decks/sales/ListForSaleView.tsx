@@ -80,6 +80,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     auctionEndTime = ""
 
     @observable
+    relistAtPrice = ""
+
+    @observable
     editAuctionId?: string
 
     constructor(props: ListForSaleViewProps) {
@@ -110,6 +113,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         this.buyItNow = defaults.buyItNow == null ? "" : defaults.buyItNow.toString()
         this.expireInDays = defaults.expireInDays == null ? "7" : defaults.expireInDays.toString()
         this.newTagName = ""
+        this.relistAtPrice = defaults.relistAtPrice == null ? "" : defaults.relistAtPrice.toString()
 
         this.editAuctionId = undefined
 
@@ -123,7 +127,9 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
         const saleInfo = this.props.deck == null ? undefined : deckListingStore.listingInfoForDeck(this.props.deck.id)
         if (saleInfo != null) {
             await deckListingStore.findDeckListingInfo(saleInfo.id)
-            const {condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status, acceptingOffers} = deckListingStore.listingInfo!
+            const {
+                condition, buyItNow, listingInfo, externalLink, expiresAtLocalDate, language, status, acceptingOffers, relistAtPrice
+            } = deckListingStore.listingInfo!
             this.open = true
             this.editAuctionId = saleInfo.id
             this.language = language ?? DeckLanguage.ENGLISH
@@ -132,6 +138,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             this.externalLink = externalLink ?? ""
             this.buyItNow = buyItNow?.toString() ?? ""
             this.newTagName = ""
+            this.relistAtPrice = relistAtPrice?.toString() ?? ""
             if (acceptingOffers) {
                 this.saleType = SaleType.ACCEPTING_OFFERS
             }
@@ -156,7 +163,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
     list = (saveAsDefault?: boolean) => {
         const {
             saleType, condition, listingInfo, externalLink, expireInDays, language, bidIncrement,
-            startingBid, buyItNow
+            startingBid, buyItNow, relistAtPrice
         } = this
         const auction = saleType === SaleType.AUCTION
         if (listingInfo.length > 2000) {
@@ -168,6 +175,14 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             buyItNowNumber = Number(buyItNow.trim())
             if (isNaN(buyItNowNumber)) {
                 messageStore.setWarningMessage("The buy it now must be a number.")
+                return
+            }
+        }
+        let relistAtPriceNumber
+        if (relistAtPrice.trim().length > 0) {
+            relistAtPriceNumber = Number(relistAtPrice.trim())
+            if (isNaN(relistAtPriceNumber)) {
+                messageStore.setWarningMessage("The relist at price now must be a number.")
                 return
             }
         }
@@ -227,6 +242,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
             listingInfoDto.startingBid = startingBidNumber
             listingInfoDto.bidIncrement = bidIncrementNumber
             listingInfoDto.endTime = this.auctionEndTime
+            listingInfoDto.relistAtPrice = relistAtPriceNumber
         }
 
         if (saveAsDefault) {
@@ -366,6 +382,10 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                         this.startingBid = ""
                                     }
                                     this.auctionEndTime = ""
+
+                                    if (this.saleType !== SaleType.AUCTION) {
+                                        this.relistAtPrice = ""
+                                    }
                                 }}
                             >
                                 <div style={{display: "flex"}}>
@@ -475,19 +495,17 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                 )
                             })}
                         </TextField>
-                        {auction ? (
-                            <TextField
-                                label={"Starting bid"}
-                                type={"number"}
-                                value={this.startingBid}
-                                onChange={(event) => {
-                                    this.startingBid = event.target.value
-                                }}
-                                style={{width: 120, ...marginTopRight}}
-                            />
-                        ) : null}
-                        {auction ? (
+                        {auction && (
                             <>
+                                <TextField
+                                    label={"Starting bid"}
+                                    type={"number"}
+                                    value={this.startingBid}
+                                    onChange={(event) => {
+                                        this.startingBid = event.target.value
+                                    }}
+                                    style={{width: 120, ...marginTopRight}}
+                                />
                                 <TextField
                                     label={"Min Increment"}
                                     type={"number"}
@@ -496,7 +514,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                                     style={{width: 120, ...marginTopRight}}
                                 />
                             </>
-                        ) : null}
+                        )}
                         <TextField
                             label={auction ? "Buy it now" : "Price"}
                             type={"number"}
@@ -504,6 +522,24 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             onChange={(event) => this.buyItNow = event.target.value}
                             style={{width: 120, ...marginTopRight}}
                         />
+                        {auction && (
+                            <Tooltip
+                                title={
+                                    "If you set a price here, this auction will be relisted at that price as " +
+                                    "a normal sale if it does not sell as an auction."
+                                }
+                            >
+                                <TextField
+                                    label={"Relist at Price"}
+                                    type={"number"}
+                                    value={this.relistAtPrice}
+                                    fullWidth={true}
+                                    onChange={(event) => this.relistAtPrice = event.target.value}
+                                    style={{width: 120, ...marginTopRight}}
+
+                                />
+                            </Tooltip>
+                        )}
                         <TextField
                             label={"Listing Info"}
                             value={this.listingInfo}

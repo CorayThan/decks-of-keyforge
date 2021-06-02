@@ -187,6 +187,7 @@ class DeckListingService(
                 acceptingOffers = listingInfo.acceptingOffers,
                 hasOwnershipVerification = hasOwnershipVerification,
                 tag = tag,
+                relistAtPrice = listingInfo.relistAtPrice,
             )
         } else {
             deckListingRepo.findByIdOrNull(listingInfo.editAuctionId!!)!!
@@ -210,6 +211,7 @@ class DeckListingService(
                     acceptingOffers = listingInfo.acceptingOffers,
                     hasOwnershipVerification = hasOwnershipVerification,
                     tag = tag,
+                    relistAtPrice = listingInfo.relistAtPrice,
                 )
         }
         deckListingRepo.save(auction)
@@ -363,15 +365,39 @@ class DeckListingService(
     private fun endAuction(sold: Boolean, auction: DeckListing, buyItNowUser: KeyUser? = null) {
 
         val end = now()
-        deckListingRepo.save(
-            auction.copy(
-                status = DeckListingStatus.COMPLETE,
-                boughtWithBuyItNow = buyItNowUser,
-                boughtNowOn = if (buyItNowUser == null) null else end
+        if (sold || auction.relistAtPrice == null) {
+            deckListingRepo.save(
+                auction.copy(
+                    status = DeckListingStatus.COMPLETE,
+                    boughtWithBuyItNow = buyItNowUser,
+                    boughtNowOn = if (buyItNowUser == null) null else end
+                )
             )
-        )
 
-        removeDeckListingStatus(auction, sold)
+            removeDeckListingStatus(auction, sold)
+        } else {
+            // modify the listing to be relisted at price
+
+            val (stillForAuction, stillForTrade) = this.stillListed(auction)
+
+            deckListingRepo.save(
+                auction.copy(
+                    status = DeckListingStatus.SALE,
+                    buyItNow = auction.relistAtPrice,
+                    endDateTime = end.plusDays(365),
+                    bidIncrement = null,
+                    startingBid = null,
+                    relistAtPrice = null,
+                )
+            )
+
+            deckRepo.save(
+                auction.deck.copy(
+                    forAuction = stillForAuction,
+                    forTrade = stillForTrade,
+                )
+            )
+        }
 
         GlobalScope.launch {
             try {
@@ -392,7 +418,7 @@ class DeckListingService(
                         saleAmount
                     )
                 } else {
-                    emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck)
+                    emailService.sendAuctionDidNotSellEmail(auction.seller, auction.deck, auction.currencySymbol, auction.relistAtPrice)
                 }
             } catch (e: Exception) {
                 log.warn("Couldn't send for sale notification for ${auction.id}", e)
@@ -504,24 +530,33 @@ class DeckListingService(
     }
 
     private fun removeDeckListingStatus(listing: DeckListing, soldOnAuction: Boolean = false) {
-        val auctionsForDeck = listing.deck.auctions
-        val otherListingsForDeck = auctionsForDeck
-            .filter { it.isActive && it.id != listing.id }
 
-        // This might be someone else unlisting the deck for sale while a different person has an active auction for it
-        val stillForAuction = otherListingsForDeck.any { it.status == DeckListingStatus.AUCTION }
-        val stillForTrade = otherListingsForDeck.any { it.forTrade }
+        val (stillForAuction, stillForTrade, stillForSale) = this.stillListed(listing)
+
         deckRepo.save(
             listing.deck.copy(
                 forAuction = stillForAuction,
                 auctionEnd = if (stillForAuction) listing.deck.auctionEnd else null,
                 listedOn = if (stillForAuction) listing.deck.listedOn else null,
-                forSale = otherListingsForDeck.isNotEmpty(),
+                forSale = stillForSale,
                 forTrade = stillForTrade,
                 completedAuction = soldOnAuction || listing.deck.completedAuction
             )
         )
         userSearchService.scheduleUserForUpdate(listing.seller)
+    }
+
+    private fun stillListed(listing: DeckListing): Triple<Boolean, Boolean, Boolean> {
+        val auctionsForDeck = listing.deck.auctions
+        val otherListingsForDeck = auctionsForDeck
+            .filter { it.isActive && it.id != listing.id }
+
+        // This might be someone else unlisting the deck for sale while a different person has an active auction for it
+        return Triple(
+            otherListingsForDeck.any { it.status == DeckListingStatus.AUCTION },
+            otherListingsForDeck.any { it.forTrade },
+            otherListingsForDeck.isNotEmpty()
+        )
     }
 
 }

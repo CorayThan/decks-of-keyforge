@@ -231,11 +231,13 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                     )}
 
                     <InfoBox title={"Listing Details"} info={listingInfo}/>
-                    <InfoBox
-                        info={(
-                            <LinkButton href={bulkLink} newWindow={true}>All decks in bulk sale</LinkButton>
-                        )}
-                    />
+                    {bulkLink && (
+                        <InfoBox
+                            info={(
+                                <LinkButton href={bulkLink} newWindow={true}>All decks in bulk sale</LinkButton>
+                            )}
+                        />
+                    )}
                     <InfoBox title={"External listing — Be careful using this link!"} info={externalLink}/>
                     <InfoBox title={"Seller Details"} info={publicContactInfo}/>
                     <InfoBox title={"Shipping Cost"} info={shippingCost}/>
