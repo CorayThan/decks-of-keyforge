@@ -8,6 +8,8 @@ import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SimpleCard } from "../generated-src/SimpleCard"
+import { SynergyTrait } from "../generated-src/SynergyTrait"
+import { SynTraitPlayer } from "../generated-src/SynTraitPlayer"
 import { Wins } from "../generated-src/Wins"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { statsStore } from "../stats/StatsStore"
@@ -90,6 +92,16 @@ export interface CardWinRates {
 export const minCardWinsToDisplay = 250
 
 export class CardUtils {
+
+    static cardMatchesFriendlyTrait = (card: KCard, trait: SynergyTrait): boolean => {
+        return card.extraCardInfo?.traits?.find(traitValue =>
+            (traitValue.trait === trait && traitValue.player !== SynTraitPlayer.ENEMY)
+        ) != null
+    }
+
+    static findCardsWithFriendlyTrait = (cards: KCard[], trait: SynergyTrait): KCard[] => {
+        return cards.filter(card => CardUtils.cardMatchesFriendlyTrait(card, trait))
+    }
 
     static cardAverageRelativeWinRate = (card: KCard): number => {
 

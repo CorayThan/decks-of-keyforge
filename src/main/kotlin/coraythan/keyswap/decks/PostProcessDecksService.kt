@@ -58,6 +58,8 @@ class PostProcessDecksService(
                         twins++
                         deckRepo.save(deck.copy(twinId = twin.keyforgeId))
                         deckRepo.save(deckRepo.getOne(twin.id).copy(twinId = deck.keyforgeId))
+                    } else if (deck.twinId != null) {
+                        deckRepo.save(deck.copy(twinId = null))
                     }
                 }
             }

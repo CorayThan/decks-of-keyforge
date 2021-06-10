@@ -60,7 +60,7 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = "PT30S", initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
+    // @Scheduled(fixedDelayString = "PT30S", initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
     fun cleanUpBadCards() {
 
         log.info("Cleaning up decks ${deckRepo.countByCardsVerifiedIsFalse()} left")

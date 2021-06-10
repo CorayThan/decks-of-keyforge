@@ -1,6 +1,6 @@
 import { Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
-import { KCard } from "../../cards/KCard"
+import { CardUtils, KCard } from "../../cards/KCard"
 import { spacing } from "../../config/MuiConfig"
 import { TimeUtils } from "../../config/TimeUtils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
@@ -8,7 +8,6 @@ import { CardType } from "../../generated-src/CardType"
 import { Expansion } from "../../generated-src/Expansion"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { SynergyTrait } from "../../generated-src/SynergyTrait"
-import { SynTraitPlayer } from "../../generated-src/SynTraitPlayer"
 import { AercIcon, AercType } from "../../generic/icons/aerc/AercIcon"
 import { AmberIcon } from "../../generic/icons/AmberIcon"
 import { ArchiveIcon } from "../../generic/icons/ArchiveIcon"
@@ -59,18 +58,10 @@ export const AercCategoryExtras = (props: AercCatProps) => {
     const secondTwo: InfoIconValue[] = [
         {
             icon: <ArchiveIcon width={width}/>,
-            info: `${deck.cardArchiveCount ?? 0}/${cards.filter(
-                card => card.extraCardInfo?.traits?.find(traitValue =>
-                    (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
-                ) != null
-            ).length}`,
+            info: `${deck.cardArchiveCount ?? 0}/${CardUtils.findCardsWithFriendlyTrait(cards, SynergyTrait.archivesRandom).length}`,
             cardsTips: {
-                matches: card => card.extraCardInfo?.traits?.find(traitValue =>
-                    (traitValue.trait === SynergyTrait.archives && traitValue.player !== SynTraitPlayer.ENEMY)
-                ) != null,
-                matches2: card => card.extraCardInfo?.traits?.find(traitValue =>
-                    (traitValue.trait === SynergyTrait.archivesRandom && traitValue.player !== SynTraitPlayer.ENEMY)
-                ) != null,
+                matches: card => CardUtils.cardMatchesFriendlyTrait(card, SynergyTrait.archives),
+                matches2: card => CardUtils.cardMatchesFriendlyTrait(card, SynergyTrait.archivesRandom),
                 cards,
                 title: "Archives",
                 subtitle1: "Archives Targetted",
@@ -81,7 +72,7 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             icon: <KeyCheatIcon width={width}/>,
             info: deck.keyCheatCount ?? 0,
             cardsTips: {
-                matches: card => card.extraCardInfo?.traits?.map(traitValue => traitValue.trait)?.includes(SynergyTrait.forgesKeys),
+                matches: card => CardUtils.cardMatchesFriendlyTrait(card, SynergyTrait.forgesKeys),
                 cards,
                 title: "Key Cheat Cards"
             }

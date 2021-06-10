@@ -127,7 +127,7 @@ export const MyMessages = observer(() => {
                                             <TableCell align={"right"}>
                                                 {!toMe && (
                                                     <>
-                                                        {message.viewed ? `Viewed:\n ${TimeUtils.formatLocalUTCToShortDate(message.viewed)}` : "Not Viewed"}
+                                                        {message.viewed ? `Read: ${TimeUtils.formatLocalUTCToShortDate(message.viewed)}` : "Not Viewed"}
                                                     </>
                                                 )}
                                             </TableCell>
