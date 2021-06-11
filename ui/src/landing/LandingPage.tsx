@@ -1,7 +1,6 @@
-import { Box, Divider, List, ListSubheader, Typography } from "@material-ui/core"
+import { Box, Divider, Link, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { Link } from "react-router-dom"
 import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
@@ -9,6 +8,7 @@ import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { AnnouncementPaper } from "../generic/AnnouncementPaper"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -144,15 +144,18 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
 
-                        {/*<AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>*/}
-                        {/*    <Typography variant={"h5"} gutterBottom={true}>*/}
-                        {/*        Dark Tidings SAS Released!*/}
-                        {/*    </Typography>*/}
-                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                        {/*        You can now see SAS scores for all Dark Tidings decks! Over the next couple days the site will be updating itself so that*/}
-                        {/*        they will properly sort by SAS when searching decks.*/}
-                        {/*    </Typography>*/}
-                        {/*</AnnouncementPaper>*/}
+                        <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
+                            <Typography variant={"h5"} gutterBottom={true}>
+                                KEYFORGE LIVE
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                July 23rd to 25th in Milwaukee, WI
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                KEYFORGE LIVE is an in-person KeyForge event at the Four Points by Sheraton in Milwaukee, WI. There will be $3,750 in cash
+                                prizes for the events hosted! See the <Link href={"http://keyforgelive.archonscorner.com"}>website for more info</Link>.
+                            </Typography>
+                        </AnnouncementPaper>
 
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
@@ -205,7 +208,7 @@ export class LandingPage extends React.Component<{}> {
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}}>
                                 DoK is owned and operated by Graylake LLC. For questions or comments check out
-                                the <Link to={AboutSubPaths.contact}>contact me page</Link>!
+                                the <Link href={AboutSubPaths.contact}>contact me page</Link>!
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}}>
                                 When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
