@@ -11,6 +11,7 @@ import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { AnnouncementPaper } from "../generic/AnnouncementPaper"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
+import { LinkNewWindow } from "../mui-restyled/KeyLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
@@ -153,7 +154,8 @@ export class LandingPage extends React.Component<{}> {
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
                                 KEYFORGE LIVE is an in-person KeyForge event at the Four Points by Sheraton in Milwaukee, WI. There will be $3,750 in cash
-                                prizes for the events hosted! See the <Link href={"http://keyforgelive.archonscorner.com"}>website for more info</Link>.
+                                prizes for the events hosted!
+                                See the <LinkNewWindow href={"http://keyforgelive.archonscorner.com"}>website for more info</LinkNewWindow>.
                             </Typography>
                         </AnnouncementPaper>
 

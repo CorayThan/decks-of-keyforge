@@ -1,4 +1,4 @@
-import { Link } from "@material-ui/core"
+import { Link, LinkProps } from "@material-ui/core"
 import * as React from "react"
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom"
 
@@ -16,6 +16,16 @@ export const KeyLink = (props: { disabled?: boolean, noStyle?: boolean, newWindo
             component={RouterLink}
             target={newWindow ? "_blank" : undefined}
             rel={newWindow ? "noopener noreferrer" : undefined}
+        />
+    )
+}
+
+export const LinkNewWindow = (props: LinkProps) => {
+    return (
+        <Link
+            rel={"noopener noreferrer"}
+            target={"_blank"}
+            {...props}
         />
     )
 }

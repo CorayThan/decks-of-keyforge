@@ -50,10 +50,10 @@ class SearchUsernameStore {
         }
 
         const trimmed = this.searchValue.trim()
-        if (trimmed.length > 2) {
+        if (trimmed.length >= UserStore.MIN_USERNAME_LENGTH) {
             this.quietPeriodTimeoutId = window.setTimeout(() => {
                 log.debug(`Delayed search with ${trimmed}`)
-                if (trimmed.length > 3) {
+                if (trimmed.length >= UserStore.MIN_USERNAME_LENGTH) {
                     this.findUsernames(trimmed)
                 }
             }, 500)

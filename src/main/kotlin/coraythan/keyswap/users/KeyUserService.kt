@@ -253,6 +253,10 @@ class KeyUserService(
             "Username is blank."
         }
 
+        if (username.length < 3) {
+            throw BadRequestException("Username must be 3 or more characters.")
+        }
+
         check(username.matches(usernameRegex)) {
             "Username is malformed: ${username}"
         }

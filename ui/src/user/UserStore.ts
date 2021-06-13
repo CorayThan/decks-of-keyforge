@@ -24,6 +24,7 @@ import { userDeckStore } from "../userdeck/UserDeckStore"
 export class UserStore {
     static readonly CONTEXT = HttpConfig.API + "/users"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/users/secured"
+    static readonly MIN_USERNAME_LENGTH = 3
 
     @observable
     user?: KeyUserDto
@@ -107,6 +108,8 @@ export class UserStore {
                     messageStore.setMessage("This email is already in use.", "Error")
                 } else if (message === "This username is already taken.") {
                     messageStore.setMessage("This username is already in use.", "Error")
+                } else if (message !== null) {
+                    messageStore.setErrorMessage(message)
                 } else {
                     messageStore.setRequestErrorMessage()
                 }
