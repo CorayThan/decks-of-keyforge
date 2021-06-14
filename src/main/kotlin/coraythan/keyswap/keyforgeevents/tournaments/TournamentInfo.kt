@@ -39,18 +39,22 @@ data class TournamentRoundInfo(
 data class TournamentPairingInfo(
         val table: Int,
         val pairId: Long,
+        val rematch: Boolean,
         val playerOneId: Long,
         val playerOneUsername: String,
+        val playerOneDokUser: Boolean,
         val playerOneWins: Int,
 
         val playerTwoId: Long?,
         val playerTwoUsername: String?,
+        val playerTwoDokUser: Boolean,
         val playerTwoWins: Int?,
 
         val playerOneScore: Int? = null,
         val playerTwoScore: Int? = null,
 
         val playerOneWon: Boolean? = null,
+
 
         val tcoLink: String? = null,
         val deckIds: List<String> = listOf(),
@@ -60,6 +64,7 @@ data class TournamentPairingInfo(
 data class TournamentRanking(
         val ranking: Int,
         val username: String,
+        val dokUser: Boolean,
         val participantId: Long,
         val wins: Int,
         val losses: Int,
@@ -94,6 +99,7 @@ data class TournamentDeckInfo(
         val sas: Int,
         val houses: List<House>,
         val username: String,
+        val dokUser: Boolean,
         val hasVerificationImage: Boolean,
         val tournamentDeckId: Long,
 )

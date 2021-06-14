@@ -56,7 +56,7 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage:
             title: "Player",
             transform: (data) => {
                 return (
-                    <DisplayTournamentUser isOrganizer={isOrganizer} username={data.username} tourneyId={id}/>
+                    <DisplayTournamentUser isOrganizer={isOrganizer} username={data.username} tourneyId={id} dokUser={data.dokUser}/>
                 )
             },
         },
@@ -121,9 +121,9 @@ const participantResultsTableHeaders = (id: number, isOrganizer: boolean, stage:
     return columns
 }
 
-const DisplayTournamentUser = (props: { isOrganizer: boolean, username: string, tourneyId: number }) => {
-    const {isOrganizer, username, tourneyId} = props
-    const link = <UserLink username={username}/>
+const DisplayTournamentUser = (props: { isOrganizer: boolean, username: string, tourneyId: number, dokUser: boolean }) => {
+    const {isOrganizer, username, tourneyId, dokUser} = props
+    const link = dokUser ? <UserLink username={username}/> : <Typography variant={"body2"}>{username}</Typography>
     if (!isOrganizer) {
         return link
     }
@@ -134,29 +134,30 @@ const DisplayTournamentUser = (props: { isOrganizer: boolean, username: string, 
     return (
         <>
             {edit ? (
-                <Box display={"flex"}>
+                <Box>
                     <TextField
                         label={"Change user to"}
                         value={changeUsernameTo}
                         onChange={event => setChangeUsernameTo(event.target.value)}
                     />
-                    <IconButton
-                        onClick={async () => {
-                            await tournamentStore.changeTournamentParticipant(tourneyId, username, changeUsernameTo.trim())
-                            setEdit(false)
-                        }}
-                        style={{marginLeft: spacing(1)}}
-                    >
-                        <Check/>
-                    </IconButton>
-                    <IconButton
-                        onClick={() => {
-                            setChangeUsernameTo(username)
-                            setEdit(false)
-                        }}
-                    >
-                        <Clear/>
-                    </IconButton>
+                    <Box display={"flex"}>
+                        <IconButton
+                            onClick={async () => {
+                                await tournamentStore.changeTournamentParticipant(tourneyId, username, changeUsernameTo.trim())
+                                setEdit(false)
+                            }}
+                        >
+                            <Check/>
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                setChangeUsernameTo(username)
+                                setEdit(false)
+                            }}
+                        >
+                            <Clear/>
+                        </IconButton>
+                    </Box>
                 </Box>
             ) : (
                 <Box display={"flex"}>

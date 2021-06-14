@@ -148,6 +148,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                                         <UserSearchSuggest
                                                             placeholderText={"Add participant with username..."}
                                                             onClick={(username) => tournamentStore.addParticipant(tourneyId, username)}
+                                                            allowNoResultClick={true}
                                                         />
                                                     </Box>
                                                 </Grid>

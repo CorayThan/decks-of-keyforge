@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@material-ui/core"
-import { blue } from "@material-ui/core/colors"
+import { blue, red } from "@material-ui/core/colors"
 import { Star } from "@material-ui/icons"
 import * as React from "react"
 import { spacing, themeStore } from "../../config/MuiConfig"
@@ -15,7 +15,7 @@ import { ReportResults } from "./ReportResults"
 
 export const PairingsView = (props: {
     round: TournamentRoundInfo, tourneyId: number, stage: TournamentStage,
-    isOrganizer: boolean, containsDecks: boolean, username?: string ,
+    isOrganizer: boolean, containsDecks: boolean, username?: string,
 }) => {
 
     const {round, tourneyId, stage, isOrganizer, containsDecks, username} = props
@@ -41,6 +41,9 @@ export const PairingsView = (props: {
                         rowBackgroundColor={(pairing) => {
                             if (stage == TournamentStage.GAMES_IN_PROGRESS && pairing.playerOneWon == null) {
                                 return themeStore.darkMode ? blue["900"] : blue["50"]
+                            }
+                            if (stage == TournamentStage.PAIRING_IN_PROGRESS && pairing.rematch) {
+                                return themeStore.darkMode ? red["900"] : red["50"]
                             }
                             return undefined
                         }}
@@ -68,7 +71,7 @@ const roundPairingsTableHeaders = (
             sortable: true,
             transform: (data) => {
                 return (
-                    <BoxScore username={data.playerOneUsername} winner={data.playerOneWon === true}/>
+                    <BoxScore username={data.playerOneUsername} winner={data.playerOneWon === true} dokUser={data.playerOneDokUser}/>
                 )
             }
         },
@@ -81,7 +84,7 @@ const roundPairingsTableHeaders = (
                     return "Bye"
                 }
                 return (
-                    <BoxScore username={data.playerTwoUsername} winner={data.playerOneWon === false}/>
+                    <BoxScore username={data.playerTwoUsername} winner={data.playerOneWon === false} dokUser={data.playerTwoDokUser}/>
                 )
             }
         },
@@ -157,10 +160,10 @@ const roundPairingsTableHeaders = (
     return headers
 }
 
-const BoxScore = (props: { username: string, winner?: boolean }) => {
+const BoxScore = (props: { username: string, dokUser: boolean, winner?: boolean }) => {
     return (
         <Box display={"flex"} alignItems={"center"}>
-            <UserLink username={props.username}/>
+            {props.dokUser ? <UserLink username={props.username}/> : <Typography variant={"body2"}>{props.username}</Typography>}
             {props.winner && <Star color={"primary"} style={{marginLeft: spacing(1)}}/>}
         </Box>
     )

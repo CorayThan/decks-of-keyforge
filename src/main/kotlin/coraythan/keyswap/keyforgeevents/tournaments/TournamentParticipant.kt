@@ -14,7 +14,10 @@ data class TournamentParticipant(
         @ManyToOne
         val tournament: Tournament,
 
-        val userId: UUID,
+        // One of userId or tourneyUserName should be non-null
+        val userId: UUID? = null,
+
+        val tourneyUserName: String? = null,
 
         val dropped: Boolean = false,
 
@@ -29,7 +32,9 @@ data class TournamentParticipant(
 
 interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long> {
     fun findByTournamentIdAndUserId(eventId: Long, userId: UUID): TournamentParticipant?
+    fun findByTournamentIdAndTourneyUserName(eventId: Long, tourneyUserName: String): TournamentParticipant?
     fun existsByTournamentIdAndUserId(tournamentId: Long, userId: UUID): Boolean
+    fun existsByTournamentIdAndTourneyUserName(tournamentId: Long, tourneyUserName: String): Boolean
     fun findAllByTournamentId(tournamentId: Long): List<TournamentParticipant>
     fun countByTournamentId(tournamentId: Long): Long
     fun deleteAllByTournamentId(tournamentId: Long)

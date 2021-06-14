@@ -82,10 +82,11 @@ interface UsernameSearchSuggestProps {
     usernames?: string[]
     placeholderText: string
     onClick?: (username: string) => void
+    allowNoResultClick?: boolean
 }
 
 export const UserSearchSuggest = observer((props: UsernameSearchSuggestProps) => {
-    const {usernames, placeholderText, onClick} = props
+    const {usernames, placeholderText, onClick, allowNoResultClick} = props
 
     const [store] = useState(new SearchUsernameStore())
 
@@ -106,6 +107,9 @@ export const UserSearchSuggest = observer((props: UsernameSearchSuggestProps) =>
                         if (onClick != null) {
                             onClick(username)
                         }
+                        store.reset()
+                    } else if (event.key === "Enter" && allowNoResultClick && store.searchValue.trim().length > 2 && onClick != null) {
+                        onClick(store.searchValue.trim())
                         store.reset()
                     }
                 }}
