@@ -20,8 +20,11 @@ data class Tournament(
         val deckChoicesLocked: Boolean = false,
         val organizerAddedDecksOnly: Boolean = false,
         val showDecksToAllPlayers: Boolean = true,
-
         val verifyParticipants: Boolean = false,
+        val allowSelfReporting: Boolean = true,
+
+        @Enumerated(EnumType.STRING)
+        val visibility: TournamentVisibility = TournamentVisibility.PUBLIC,
 
         @Enumerated(EnumType.STRING)
         val pairingStrategy: PairingStrategy = PairingStrategy.SWISS_SOS,

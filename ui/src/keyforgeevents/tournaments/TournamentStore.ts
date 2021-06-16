@@ -9,6 +9,7 @@ import { TournamentInfo } from "../../generated-src/TournamentInfo"
 import { TournamentPairingPlayers } from "../../generated-src/TournamentPairingPlayers"
 import { TournamentResults } from "../../generated-src/TournamentResults"
 import { TournamentSearchResult } from "../../generated-src/TournamentSearchResult"
+import { TournamentVisibility } from "../../generated-src/TournamentVisibility"
 import { messageStore } from "../../ui/MessageStore"
 
 export class TournamentStore {
@@ -165,6 +166,11 @@ export class TournamentStore {
 
     togglePrivate = async (id: number, privateTourney: boolean) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/toggle-private/${privateTourney}`)
+        await this.findTourneyInfo(id)
+    }
+
+    changeVisibility = async (id: number, visibility: TournamentVisibility) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/change-visibility/${visibility}`)
         await this.findTourneyInfo(id)
     }
 

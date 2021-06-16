@@ -6,9 +6,13 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControl,
     FormControlLabel,
     Grid,
+    InputLabel,
+    MenuItem,
     Paper,
+    Select,
     TextField,
     Typography
 } from "@material-ui/core"
@@ -22,6 +26,7 @@ import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
 import { TournamentInfo } from "../../generated-src/TournamentInfo"
 import { TournamentStage } from "../../generated-src/TournamentStage"
+import { TournamentVisibility } from "../../generated-src/TournamentVisibility"
 import { ConfirmKeyButton, KeyButton } from "../../mui-restyled/KeyButton"
 import { LoaderBar } from "../../mui-restyled/Loader"
 import { uiStore } from "../../ui/UiStore"
@@ -62,7 +67,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     const {
         name, organizerUsernames, rankings, rounds, tourneyId, joined, pairingStrategy, roundEndsAt,
         privateTournament, stage, tournamentDecks, registrationClosed, deckChoicesLocked, organizerAddedDecksOnly, showDecksToAllPlayers, event,
-        timeExtendedMinutes
+        timeExtendedMinutes, visibility
     } = info
 
     useEffect(() => {
@@ -162,6 +167,23 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                                         }
                                                         label="Public Registration"
                                                     />
+                                                </Grid>
+                                                <Grid item={true}>
+                                                    <FormControl>
+                                                        <InputLabel id="visibility-select-label">Visibility</InputLabel>
+                                                        <Select
+                                                            labelId="visibility-select-label"
+                                                            value={visibility}
+                                                            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                                                                const visibility = event.target.value as TournamentVisibility
+                                                                tournamentStore.changeVisibility(tourneyId, visibility)
+                                                            }}
+                                                        >
+                                                            <MenuItem value={TournamentVisibility.PUBLIC}>Public</MenuItem>
+                                                            <MenuItem value={TournamentVisibility.PRIVATE}>Participants Only</MenuItem>
+                                                            <MenuItem value={TournamentVisibility.TEAM}>Team Only</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
                                                 </Grid>
                                                 <Grid item={true}>
                                                     <FormControlLabel

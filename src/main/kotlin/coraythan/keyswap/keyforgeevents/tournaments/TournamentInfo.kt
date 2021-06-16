@@ -10,6 +10,7 @@ data class TournamentInfo(
         val tourneyId: Long,
         val name: String,
         val privateTournament: Boolean,
+        val visibility: TournamentVisibility,
         val organizerAddedDecksOnly: Boolean,
         val showDecksToAllPlayers: Boolean,
         val organizerUsernames: List<String>,
@@ -89,6 +90,13 @@ enum class TournamentStage {
     GAMES_IN_PROGRESS,
     VERIFYING_ROUND_RESULTS,
     TOURNAMENT_COMPLETE,
+}
+
+@GenerateTs
+enum class TournamentVisibility {
+        PUBLIC,
+        PRIVATE,
+        TEAM,
 }
 
 @GenerateTs

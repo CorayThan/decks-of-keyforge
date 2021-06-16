@@ -49,16 +49,32 @@ class TournamentService(
 
     fun searchTournaments(filters: KeyForgeEventFilters): List<TournamentSearchResult> {
 
+        val currentUser = currentUserService.loggedInUser()
         val tournamentQ = QTournament.tournament
         val predicate = BooleanBuilder()
 
-        if (filters.mineOnly) {
-            val currentUser = currentUserService.loggedInUserOrUnauthorized()
+        if (currentUser != null) {
 
             predicate.andAnyOf(
-                tournamentQ.organizers.any().organizer.id.eq(currentUser.id),
-                tournamentQ.participants.any().userId.eq(currentUser.id),
+                tournamentQ.visibility.eq(TournamentVisibility.PUBLIC),
+                tournamentQ.visibility.eq(TournamentVisibility.PRIVATE).and(tournamentQ.organizers.any().organizer.id.eq(currentUser.id)),
+                tournamentQ.visibility.eq(TournamentVisibility.PRIVATE).and(tournamentQ.participants.any().userId.eq(currentUser.id)),
+                if (currentUser.teamId != null) {
+                    tournamentQ.visibility.eq(TournamentVisibility.TEAM).and(tournamentQ.organizers.any().organizer.teamId.eq(currentUser.teamId))
+                } else {
+                    null
+                }
             )
+
+            if (filters.mineOnly) {
+
+                predicate.andAnyOf(
+                    tournamentQ.organizers.any().organizer.id.eq(currentUser.id),
+                    tournamentQ.participants.any().userId.eq(currentUser.id),
+                )
+            }
+        } else {
+            predicate.and(tournamentQ.visibility.eq(TournamentVisibility.PUBLIC))
         }
 
         val tournaments = query.selectFrom(tournamentQ)
@@ -89,6 +105,8 @@ class TournamentService(
         val event = eventRepo.findByTourneyId(id)!!
 
         val participants = tournamentParticipantRepo.findAllByTournamentId(id)
+        val isOrganizer = tourney.organizers.any { it.organizer.id == user?.id }
+
         val pairings = tournamentPairingRepo.findAllByTournamentId(id)
         val participantInfo = participants
             .associate {
@@ -109,10 +127,22 @@ class TournamentService(
                     )
                 }
             }
+
+        val isParticipant = user?.username != null && participantInfo.values.any { it.username == user.username && it.dokUser }
+
+        if (tourney.visibility == TournamentVisibility.PRIVATE) {
+            if (!isOrganizer && !isParticipant) throw UnauthorizedException("You must be an organizer or participant to see this tournament.")
+        } else if (tourney.visibility == TournamentVisibility.TEAM) {
+            val myTeam = user?.teamId
+            val organizerTeams = tourney.organizers.mapNotNull { it.organizer.teamId }
+            if (!isOrganizer && !isParticipant && !organizerTeams.contains(myTeam)) {
+                throw UnauthorizedException("You must be on in the tournament or on a team of an organizer to see this tournament.")
+            }
+        }
+
         val participantStats = calculateParticipantStats(participants, pairings)
             .associateBy { it.participant.id }
 
-        val isOrganizer = tourney.organizers.any { it.organizer.id == user?.id }
         val tourneyStarted = tourney.stage != TournamentStage.TOURNAMENT_NOT_STARTED
 
         val allDecks = tournamentDeckRepo.findByTourneyId(id)
@@ -150,8 +180,9 @@ class TournamentService(
             tourneyId = id,
             name = tourney.name,
             privateTournament = tourney.privateTourney,
+            visibility = tourney.visibility,
             organizerUsernames = tourney.organizers.map { it.organizer.username },
-            joined = user?.username != null && participantInfo.values.any { it.username == user.username && it.dokUser },
+            joined = isParticipant,
             stage = tourney.stage,
             registrationClosed = tourney.registrationClosed,
             deckChoicesLocked = tourney.deckChoicesLocked,
@@ -597,6 +628,11 @@ class TournamentService(
     fun togglePrivate(tourneyId: Long, privateTourney: Boolean) {
         val tourney = verifyTournamentAdmin(tourneyId)
         tourneyRepo.save(tourney.copy(privateTourney = privateTourney))
+    }
+
+    fun changeVisibility(tourneyId: Long, visibility: TournamentVisibility) {
+        val tourney = verifyTournamentAdmin(tourneyId)
+        tourneyRepo.save(tourney.copy(visibility = visibility))
     }
 
     fun lockDeckRegistration(tourneyId: Long, lock: Boolean) {
