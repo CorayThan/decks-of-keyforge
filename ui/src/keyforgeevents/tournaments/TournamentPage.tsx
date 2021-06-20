@@ -67,7 +67,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
     const {
         name, organizerUsernames, rankings, rounds, tourneyId, joined, pairingStrategy, roundEndsAt,
         privateTournament, stage, tournamentDecks, registrationClosed, deckChoicesLocked, organizerAddedDecksOnly, showDecksToAllPlayers, event,
-        timeExtendedMinutes, visibility
+        timeExtendedMinutes, visibility, allowSelfReporting
     } = info
 
     useEffect(() => {
@@ -200,6 +200,17 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                                     <FormControlLabel
                                                         control={
                                                             <Checkbox
+                                                                checked={allowSelfReporting}
+                                                                onChange={() => tournamentStore.allowSelfReporting(tourneyId, !allowSelfReporting)}
+                                                            />
+                                                        }
+                                                        label="Allow Self Reporting"
+                                                    />
+                                                </Grid>
+                                                <Grid item={true}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
                                                                 checked={!showDecksToAllPlayers}
                                                                 onChange={() => tournamentStore.showDecksToAllPlayers(tourneyId, !showDecksToAllPlayers)}
                                                             />
@@ -224,6 +235,8 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                 isOrganizer={isOrganizer}
                                 containsDecks={tournamentDecks.length > 0}
                                 username={username}
+                                allowSelfReporting={allowSelfReporting}
+                                firstPairing={true}
                             />
                             <RoundTimer
                                 tourneyId={tourneyId}
@@ -253,6 +266,8 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                             isOrganizer={isOrganizer}
                             containsDecks={tournamentDecks.length > 0}
                             username={username}
+                            allowSelfReporting={allowSelfReporting}
+                            firstPairing={false}
                         />
                     ))}
 
@@ -273,39 +288,43 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                     )}
 
                     <Grid item={true} xs={12}>
-                        <Box display={"flex"}>
-                            <KeyForgeEventCard event={event} style={{marginRight: spacing(2)}} noTournamentLink={true}/>
-                            <Paper>
-                                <Box p={2}>
-                                    <Typography variant={"h5"}>Tournament Organizers</Typography>
-                                    {isOrganizer && (
-                                        <Box width={280} mt={2}>
-                                            <UserSearchSuggest
-                                                placeholderText={"Add TO with username..."}
-                                                onClick={(username) => tournamentStore.addTO(tourneyId, username)}
-                                            />
-                                        </Box>
-                                    )}
-                                    <Box display={"flex"} flexWrap={"wrap"} mt={2}>
-                                        {organizerUsernames.map(username => (
-                                            <Box mr={2} key={username}>
-                                                <UserLink username={username}/>
-                                                {isOrganizer && organizerUsernames.length > 1 && (
-                                                    <ConfirmKeyButton
-                                                        title={"Remove Tournament Organizer"}
-                                                        description={`Do you want to remove ${username} from having admin rights to this tournament?`}
-                                                        onConfirm={() => tournamentStore.removeTo(tourneyId, username)}
-                                                        style={{marginLeft: spacing(2)}}
-                                                    >
-                                                        Remove TO
-                                                    </ConfirmKeyButton>
-                                                )}
+                        <Grid container={true} spacing={2}>
+                            <Grid item={true}>
+                                <KeyForgeEventCard event={event} noTournamentLink={true}/>
+                            </Grid>
+                            <Grid item={true}>
+                                <Paper>
+                                    <Box p={2}>
+                                        <Typography variant={"h5"}>Tournament Organizers</Typography>
+                                        {isOrganizer && (
+                                            <Box width={280} mt={2}>
+                                                <UserSearchSuggest
+                                                    placeholderText={"Add TO with username..."}
+                                                    onClick={(username) => tournamentStore.addTO(tourneyId, username)}
+                                                />
                                             </Box>
-                                        ))}
+                                        )}
+                                        <Box display={"flex"} flexWrap={"wrap"} mt={2}>
+                                            {organizerUsernames.map(username => (
+                                                <Box mr={2} key={username}>
+                                                    <UserLink username={username}/>
+                                                    {isOrganizer && organizerUsernames.length > 1 && (
+                                                        <ConfirmKeyButton
+                                                            title={"Remove Tournament Organizer"}
+                                                            description={`Do you want to remove ${username} from having admin rights to this tournament?`}
+                                                            onConfirm={() => tournamentStore.removeTo(tourneyId, username)}
+                                                            style={{marginLeft: spacing(2)}}
+                                                        >
+                                                            Remove TO
+                                                        </ConfirmKeyButton>
+                                                    )}
+                                                </Box>
+                                            ))}
+                                        </Box>
                                     </Box>
-                                </Box>
-                            </Paper>
-                        </Box>
+                                </Paper>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Box>

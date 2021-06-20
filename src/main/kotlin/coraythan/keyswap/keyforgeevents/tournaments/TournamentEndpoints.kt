@@ -76,6 +76,9 @@ class TournamentEndpoints(
     @PostMapping("/secured/{id}/organizer-added-decks-only/{only}")
     fun organizerAddedDecksOnly(@PathVariable id: Long, @PathVariable only: Boolean) = tournamentService.organizerAddedDecksOnly(id, only)
 
+    @PostMapping("/secured/{id}/allow-self-reporting/{allow}")
+    fun allowSelfReporting(@PathVariable id: Long, @PathVariable allow: Boolean) = tournamentService.allowSelfReporting(id, allow)
+
     @PostMapping("/secured/{id}/show-decks-to-all-players/{show}")
     fun showDecksToAllPlayers(@PathVariable id: Long, @PathVariable show: Boolean) = tournamentService.showDecksToAllPlayers(id, show)
 

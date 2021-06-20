@@ -7,6 +7,8 @@ import coraythan.keyswap.config.RateExceededException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.Nothing
 import coraythan.keyswap.decks.SimpleDeckResponse
+import coraythan.keyswap.keyforgeevents.tournaments.TournamentInfo
+import coraythan.keyswap.keyforgeevents.tournaments.TournamentService
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
@@ -27,6 +29,7 @@ class PublicApiEndpoints(
         private val cardService: CardService,
         private val keyUserRepo: KeyUserRepo,
         private val currentUserService: CurrentUserService,
+        private val tournamentService: TournamentService,
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
@@ -86,6 +89,13 @@ class PublicApiEndpoints(
         val user = publicApiService.userForApiKey(apiKey)
 
         return publicApiService.findMyDecks(user)
+    }
+
+    @CrossOrigin
+    @GetMapping("/v1/tournaments/{id}")
+    fun findTournamentInfo(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: Long): TournamentInfo {
+        this.rateLimit(apiKey)
+        return tournamentService.findTourneyInfo(id)
     }
 
     // Non documented, for library access extension

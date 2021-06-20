@@ -15,13 +15,14 @@ import { ReportResults } from "./ReportResults"
 
 export const PairingsView = (props: {
     round: TournamentRoundInfo, tourneyId: number, stage: TournamentStage,
-    isOrganizer: boolean, containsDecks: boolean, username?: string,
+    isOrganizer: boolean, containsDecks: boolean, allowSelfReporting: boolean,
+    firstPairing: boolean, username?: string,
 }) => {
 
-    const {round, tourneyId, stage, isOrganizer, containsDecks, username} = props
+    const {round, tourneyId, stage, isOrganizer, containsDecks, username, allowSelfReporting, firstPairing} = props
     return (
         <Grid item={true} xs={12} md={9} lg={8} xl={6}>
-            <Box maxWidth={880}>
+            <Box maxWidth={firstPairing ? undefined : 880}>
                 <SortableTableContainer
                     title={`Round ${round.roundNumber} Pairings`}
                     titleTooltip={`Paired with ${Utils.enumNameToReadable(round.pairingStrategy)}`}
@@ -31,7 +32,7 @@ export const PairingsView = (props: {
                             tourneyId,
                             stage,
                             isOrganizer,
-                            stage !== TournamentStage.PAIRING_IN_PROGRESS,
+                            stage !== TournamentStage.PAIRING_IN_PROGRESS && (isOrganizer || allowSelfReporting),
                             containsDecks,
                             username,
                         )}

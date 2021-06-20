@@ -132,6 +132,15 @@ export class SellersAndDevs extends React.Component {
                         `You'll need to include the header "Api-Key: {your-api-key}`
                     ]}/>
                 </AboutGridItem>
+                <AboutGridItem>
+                    <InfoListCard title={"Tournaments API"} infos={[
+                        "Request info about a DoK Tournament by Tournament Id.",
+                        "The JSON returned by this endpoint is subject to change. Do not request this frequently or repeatedly.",
+                        "The url to request a tournament is:",
+                        "https://decksofkeyforge.com/public-api/v1/tournaments/{id}",
+                        `You'll need to include the header "Api-Key: {your-api-key}`
+                    ]}/>
+                </AboutGridItem>
             </>
         )
     }

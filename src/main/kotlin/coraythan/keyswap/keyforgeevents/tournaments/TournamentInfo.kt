@@ -19,6 +19,7 @@ data class TournamentInfo(
         val registrationClosed: Boolean,
         val deckChoicesLocked: Boolean,
         val verifyParticipants: Boolean,
+        val allowSelfReporting: Boolean,
         val pairingStrategy: PairingStrategy,
         val roundEndsAt: LocalDateTime?,
         val timeExtendedMinutes: Int?,

@@ -5,10 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
-import coraythan.keyswap.keyforgeevents.KeyForgeEventDto
-import coraythan.keyswap.keyforgeevents.KeyForgeEventFilters
-import coraythan.keyswap.keyforgeevents.KeyForgeEventRepo
-import coraythan.keyswap.keyforgeevents.KeyForgeEventService
+import coraythan.keyswap.keyforgeevents.*
 import coraythan.keyswap.keyforgeevents.tournamentdecks.*
 import coraythan.keyswap.keyforgeevents.tournamentparticipants.ParticipantStats
 import coraythan.keyswap.keyforgeevents.tournamentparticipants.TournamentParticipant
@@ -189,6 +186,7 @@ class TournamentService(
             organizerAddedDecksOnly = tourney.organizerAddedDecksOnly,
             showDecksToAllPlayers = tourney.showDecksToAllPlayers,
             verifyParticipants = tourney.verifyParticipants,
+            allowSelfReporting = tourney.allowSelfReporting,
             pairingStrategy = tourney.pairingStrategy,
             roundEndsAt = roundEnd,
             timeExtendedMinutes = timeExtendedMinutes,
@@ -287,7 +285,11 @@ class TournamentService(
             throw UnauthorizedException("Must be tournament organizer to perform admin functions.")
         }
 
-        val savedTourney = tourneyRepo.save(Tournament(event.name, privateTourney))
+        val savedTourney = tourneyRepo.save(Tournament(
+            event.name,
+            privateTourney,
+            pairingStrategy = if (event.format == KeyForgeFormat.SURVIVAL) PairingStrategy.SWISS_RANDOM else PairingStrategy.SWISS_SOS
+        ))
 
         tournamentRoundRepo.save(
             TournamentRound(
@@ -553,6 +555,10 @@ class TournamentService(
             throw UnauthorizedException("Results for this match have already been reported.")
         }
 
+        if (!isOrganizer && !tourney.allowSelfReporting) {
+            throw UnauthorizedException("Only the tournament organizer can report results for this event.")
+        }
+
         tournamentPairingRepo.save(
             pairing.copy(
                 playerOneWon = results.playerOneWon,
@@ -643,6 +649,11 @@ class TournamentService(
     fun organizerAddedDecksOnly(tourneyId: Long, only: Boolean) {
         val tourney = verifyTournamentAdmin(tourneyId)
         tourneyRepo.save(tourney.copy(organizerAddedDecksOnly = only))
+    }
+
+    fun allowSelfReporting(tourneyId: Long, allow: Boolean) {
+        val tourney = verifyTournamentAdmin(tourneyId)
+        tourneyRepo.save(tourney.copy(allowSelfReporting = allow))
     }
 
     fun showDecksToAllPlayers(tourneyId: Long, show: Boolean) {
@@ -742,8 +753,13 @@ class TournamentService(
 
         val playerWithBye: ParticipantStats? = if (participantStats.size % 2 == 1) {
             val fewestByes = participantStats.minByOrNull { it.byes }!!.byes
-            val findWithWinCount = participantStats.sortedBy { it.wins }.find { it.byes == fewestByes }!!.wins
-            participantStats.filter { it.wins == findWithWinCount && it.byes == fewestByes }.random()
+            if (pairingStrategy == PairingStrategy.SWISS_RANDOM) {
+                // Bye is random for survival / true random pairings
+                participantStats.filter { it.byes == fewestByes }.random()
+            } else {
+                val findWithWinCount = participantStats.sortedBy { it.wins }.find { it.byes == fewestByes }!!.wins
+                participantStats.filter { it.wins == findWithWinCount && it.byes == fewestByes }.random()
+            }
         } else {
             null
         }

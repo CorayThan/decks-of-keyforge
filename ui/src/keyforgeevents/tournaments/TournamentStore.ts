@@ -184,6 +184,11 @@ export class TournamentStore {
         await this.findTourneyInfo(id)
     }
 
+    allowSelfReporting = async (id: number, allow: boolean) => {
+        await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/allow-self-reporting/${allow}`)
+        await this.findTourneyInfo(id)
+    }
+
     showDecksToAllPlayers = async (id: number, show: boolean) => {
         await axios.post(`${TournamentStore.SECURE_CONTEXT}/${id}/show-decks-to-all-players/${show}`)
         await this.findTourneyInfo(id)

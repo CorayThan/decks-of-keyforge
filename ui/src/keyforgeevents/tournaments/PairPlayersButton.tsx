@@ -5,7 +5,7 @@ import * as React from "react"
 import { useState } from "react"
 import { spacing } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
-import { PairingStrategy, PairingStrategyUtils } from "../../generated-src/PairingStrategy"
+import { PairingStrategy } from "../../generated-src/PairingStrategy"
 import { TournamentPairingPlayers } from "../../generated-src/TournamentPairingPlayers"
 import { TournamentStage } from "../../generated-src/TournamentStage"
 import { UserLink } from "../../user/UserLink"
@@ -139,9 +139,9 @@ export const PairPlayersButton = observer((props: {
                             tournamentStore.changePairingStrategy(tourneyId, newStrat)
                         }}
                     >
-                        {PairingStrategyUtils.values.map(strat =>
-                            <MenuItem key={strat} value={strat}>{Utils.enumNameToReadable(strat)}</MenuItem>
-                        )}
+                        <MenuItem value={PairingStrategy.SWISS_SOS}>Swiss SOS</MenuItem>
+                        <MenuItem value={PairingStrategy.SWISS_RANDOM}>Swiss Survival</MenuItem>
+                        <MenuItem value={PairingStrategy.MANUAL_PAIRING}>Manual Pairing</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>
