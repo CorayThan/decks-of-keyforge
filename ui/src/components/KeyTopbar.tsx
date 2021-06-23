@@ -120,6 +120,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
     render() {
         const {topbarName, topbarShortName, topbarSubheader} = uiStore
 
+        if (this.props.location.pathname.includes("/printables")) {
+            return null
+        }
+
         let subheaderNode
         if (topbarSubheader) {
             subheaderNode = (

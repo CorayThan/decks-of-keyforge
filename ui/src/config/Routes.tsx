@@ -32,6 +32,7 @@ import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreti
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
 import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
 import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
+import { TournamentPrintables } from "../keyforgeevents/tournaments/TournamentPrintables"
 import { TournamentSearchPage } from "../keyforgeevents/tournaments/TournamentSearchPage"
 import { LandingPage } from "../landing/LandingPage"
 import { ViewMessagePage } from "../messages/ViewMessage"
@@ -85,6 +86,7 @@ class Routes {
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
     static tournamentPage = (id?: number) => `${Routes.tournaments}/${id == null ? ":id" : id}`
+    static tournamentPrintables = (id?: number) => `${Routes.tournaments}/printables/${id == null ? ":id" : id}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
     static verifyEmailPage = (verificationCode?: string) => `/verify-email/${verificationCode == null ? ":verificationCode" : verificationCode}`
     static userProfilePage = (username?: string) => `${Routes.users}/${username == null ? ":username" : username}`
@@ -259,6 +261,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.tournamentPage()}
                         component={TournamentPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.tournamentPrintables()}
+                        component={TournamentPrintables}
                     />
                     <Route
                         exact={true}

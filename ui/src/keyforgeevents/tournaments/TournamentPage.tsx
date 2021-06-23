@@ -21,6 +21,7 @@ import * as React from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { spacing, themeStore } from "../../config/MuiConfig"
+import { Routes } from "../../config/Routes"
 import { TextConfig } from "../../config/TextConfig"
 import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
@@ -28,6 +29,7 @@ import { TournamentInfo } from "../../generated-src/TournamentInfo"
 import { TournamentStage } from "../../generated-src/TournamentStage"
 import { TournamentVisibility } from "../../generated-src/TournamentVisibility"
 import { ConfirmKeyButton, KeyButton } from "../../mui-restyled/KeyButton"
+import { LinkButton } from "../../mui-restyled/LinkButton"
 import { LoaderBar } from "../../mui-restyled/Loader"
 import { uiStore } from "../../ui/UiStore"
 import { UserSearchSuggest } from "../../user/search/UserSearchSuggest"
@@ -220,6 +222,9 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                                 </Grid>
                                             </>
                                         )}
+                                        <Grid item={true}>
+                                            <LinkButton newWindow={true} href={Routes.tournamentPrintables(tourneyId)}>Print Info</LinkButton>
+                                        </Grid>
                                     </Grid>
                                 </Paper>
                             </Box>

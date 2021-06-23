@@ -234,7 +234,6 @@ class TournamentService(
                         .sortedBy {
                             it.table
                         }
-                        .reversed()
                 )
             }.sortedBy { it.roundNumber },
             rankings = participants
@@ -508,10 +507,15 @@ class TournamentService(
     fun dropParticipant(tourneyId: Long, participantUsername: String, drop: Boolean) {
         val tourney = verifyTournamentAdmin(tourneyId)
 
-        val participant = keyUserRepo.findByUsernameIgnoreCase(participantUsername) ?: throw BadRequestException("No user with username $participantUsername")
+        val fakeUserParticipant = tournamentParticipantRepo.findByTournamentIdAndTourneyUserName(tourney.id, participantUsername)
 
-        val participantRecord = tournamentParticipantRepo.findByTournamentIdAndUserId(tourney.id, participant.id)
-            ?: throw BadRequestException("No participant found.")
+        val participantRecord = if (fakeUserParticipant != null) {
+            fakeUserParticipant
+        } else {
+            val participant = keyUserRepo.findByUsernameIgnoreCase(participantUsername) ?: throw BadRequestException("No user with username $participantUsername")
+            tournamentParticipantRepo.findByTournamentIdAndUserId(tourney.id, participant.id)
+                ?: throw BadRequestException("No participant found.")
+        }
 
         if (tourney.stage == TournamentStage.TOURNAMENT_NOT_STARTED) {
             tournamentDeckRepo.deleteByParticipantId(participantRecord.id)
