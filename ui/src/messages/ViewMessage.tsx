@@ -9,6 +9,7 @@ import { TimeUtils } from "../config/TimeUtils"
 import { deckStore } from "../decks/DeckStore"
 import { DeckViewSmall } from "../decks/DeckViewSmall"
 import { PrivateMessageDto } from "../generated-src/PrivateMessageDto"
+import { ConvertDokLinksToLinks } from "../generic/ConvertDokLinksToLinks"
 import { Loader } from "../mui-restyled/Loader"
 import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { screenStore } from "../ui/ScreenStore"
@@ -126,7 +127,11 @@ const IndividualMessage = observer((props: { message: PrivateMessageDto, actions
                 </Box>
                 <Divider style={{marginTop: spacing(2), marginBottom: spacing(2)}}/>
                 <Typography variant={"overline"} color={"textSecondary"}>Message</Typography>
-                <WhiteSpaceTypography>{message.message}</WhiteSpaceTypography>
+                <WhiteSpaceTypography>
+                    <ConvertDokLinksToLinks>
+                        {message.message}
+                    </ConvertDokLinksToLinks>
+                </WhiteSpaceTypography>
             </CardContent>
 
             {actions && (
