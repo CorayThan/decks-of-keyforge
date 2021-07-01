@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { aercProperties } from "../aerc/AercUtils"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { activeSasExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { AercData } from "../generated-src/AercData"
 import { Expansion } from "../generated-src/Expansion"
@@ -117,6 +117,9 @@ const AercBySetBar = (props: { name: string, data: AercData[], indexBy: string, 
                     labelSkipWidth={12}
                     labelSkipHeight={12}
                     labelTextColor={{from: "color", modifiers: [["darker", 1.6]]}}
+                    theme={{
+                        textColor: themeStore.graphText
+                    }}
                     legends={[
                         {
                             dataFrom: "keys",

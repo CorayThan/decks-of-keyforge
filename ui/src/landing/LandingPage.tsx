@@ -204,27 +204,27 @@ export class LandingPage extends React.Component<{}> {
                             <LandingPageTitle marginTop={2}>
                                 Disclaimers
                             </LandingPageTitle>
-                            <Typography style={{marginBottom: spacing(1)}}>
-                                DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight Games, the producers of KeyForge, in any
-                                way.
-                            </Typography>
-                            <Typography style={{marginBottom: spacing(1)}}>
-                                DoK is owned and operated by Graylake LLC. For questions or comments check out
-                                the <Link href={AboutSubPaths.contact}>contact me page</Link>!
-                            </Typography>
-                            <Typography style={{marginBottom: spacing(1)}}>
-                                When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
-                                any transactions.
-                            </Typography>
-                            <LinkButton size={"small"} href={Routes.codeOfConduct} newWindow={true} style={{marginRight: spacing(2)}}>
-                                Code of Conduct
-                            </LinkButton>
-                            <LinkButton size={"small"} href={Routes.termsOfUse} newWindow={true} style={{marginRight: spacing(2)}}>
-                                Terms of Use
-                            </LinkButton>
-                            <LinkButton size={"small"} href={Routes.privacyPolicy} newWindow={true}>
-                                Privacy Policy
-                            </LinkButton>
+                                    <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
+                                        DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight Games, the producers of KeyForge, in any
+                                        way.
+                                    </Typography>
+                                    <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
+                                        DoK is owned and operated by Graylake LLC. For questions or comments check out
+                                        the <Link href={AboutSubPaths.contact}>contact me page</Link>!
+                                    </Typography>
+                                    <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
+                                        When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
+                                        any transactions.
+                                    </Typography>
+                                    <LinkButton size={"small"} href={Routes.codeOfConduct} newWindow={true} style={{marginRight: spacing(2)}}>
+                                        Code of Conduct
+                                    </LinkButton>
+                                    <LinkButton size={"small"} href={Routes.termsOfUse} newWindow={true} style={{marginRight: spacing(2)}}>
+                                        Terms of Use
+                                    </LinkButton>
+                                    <LinkButton size={"small"} href={Routes.privacyPolicy} newWindow={true}>
+                                        Privacy Policy
+                                    </LinkButton>
                         </div>
                     </Box>
                 </Box>

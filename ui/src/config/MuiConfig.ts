@@ -42,7 +42,7 @@ export class ThemeStore {
 
     @computed
     get backgroundColor() {
-        return this.darkMode ? "#888888" : "#F5F5F5"
+        return this.darkMode ? "#121212" : "#F5F5F5"
     }
 
     @computed

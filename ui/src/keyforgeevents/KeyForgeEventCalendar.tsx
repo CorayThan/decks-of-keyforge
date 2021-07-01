@@ -11,7 +11,7 @@ export const KeyForgeEventCalendar = (props: { events: KeyForgeEventDto[] }) => 
     const {events} = props
 
     if (events.length === 0) {
-        return <Typography>No events found.</Typography>
+        return <Typography color={"textPrimary"}>No events found.</Typography>
     }
 
     const eventsByWeek: EventsInAWeek[] = []
