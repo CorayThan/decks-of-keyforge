@@ -233,8 +233,10 @@ export class DeckUtils {
 
     static arrayToCSV = (decks: DeckSearchResult[]): CsvData => {
         log.debug("Perform deck array to csv")
+
         const data = decks.map(deck => {
             const synergies = DeckUtils.synergiesRounded(deck)
+            const enhancements = DeckUtils.calculateBonusIcons(deck)
             return [
                 deck.name,
                 deck.housesAndCards.map(houseAndCards => houseAndCards.house),
@@ -266,6 +268,10 @@ export class DeckUtils {
                 deck.upgradeCount,
 
                 deck.rawAmber,
+                enhancements?.get(EnhancementType.CAPTURE) ?? 0,
+                enhancements?.get(EnhancementType.DAMAGE) ?? 0,
+                enhancements?.get(EnhancementType.DRAW) ?? 0,
+
                 deck.keyCheatCount,
                 deck.cardDrawCount,
                 deck.cardArchiveCount,
@@ -323,7 +329,11 @@ export class DeckUtils {
             "Artifact Count",
             "Upgrade Count",
 
-            "Raw Amber",
+            "Bonus Amber",
+            "Bonus Capture",
+            "Bonus Damage",
+            "Bonus Draw",
+
             "Key Cheat Count",
             "Card Draw Count",
             "Card Archive Count",

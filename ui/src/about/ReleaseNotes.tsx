@@ -15,7 +15,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.10"
+export const latestVersion = "6.11"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,6 +43,18 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.11"}
+                    date={"7/1/2021"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Minor SAS Update",
+                            note: "I've taken some multi-set feedback from PetitBot and integrated it into the system. None of the changes are very big, " +
+                                "but there are more than 100 tweaks to various cards to modify their scores!",
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.10"}
                     date={"5/26/2021"}

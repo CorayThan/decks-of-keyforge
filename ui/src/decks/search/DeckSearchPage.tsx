@@ -23,6 +23,7 @@ import { ComparisonPopover } from "../comparison/ComparisonPopover"
 import { DeckListView } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { DeckTableView } from "../DeckTableView"
+import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./decksearchdrawer/DecksSearchDrawer"
 
@@ -138,9 +139,9 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                     </Typography>
                 )
             } else {
-                const decks = decksToDisplay
-                    .map(deckId => deckStore.deckIdToDeck!.get(deckId)!)
-                    .filter(deck => deck != null)
+                const decks: DeckSearchResult[] = decksToDisplay
+                    .map(deckId => deckStore.deckIdToDeck?.get(deckId))
+                    .filter(deck => deck != null) as DeckSearchResult[]
                 if (keyLocalStorage.deckListViewType === "table") {
                     decksView = <DeckTableView decks={decks}/>
                 } else {
