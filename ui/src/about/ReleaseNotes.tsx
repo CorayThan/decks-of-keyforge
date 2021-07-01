@@ -53,6 +53,12 @@ export class ReleaseNotes extends React.Component {
                             note: "I've taken some multi-set feedback from PetitBot and integrated it into the system. None of the changes are very big, " +
                                 "but there are more than 100 tweaks to various cards to modify their scores!",
                         },
+                        {
+                            highlight: "Minor Improvements",
+                            note: "These were already rolled out, but I've made it so when you send on-site messages with DoK DoK links will be clickable " +
+                                "hyperlinks, and I've also made improvements to the tournament system, specifically to better support Survival and " +
+                                "in person tournaments.",
+                        },
                     ]}
                 />
                 <ReleaseNote
