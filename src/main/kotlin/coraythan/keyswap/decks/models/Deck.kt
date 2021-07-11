@@ -168,9 +168,6 @@ data class Deck(
         includeDetails: Boolean = false
     ): DeckSearchResult {
 
-        val archives = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size
-            ?: 0).zeroToNull()
-
         return DeckSearchResult(
             id = id,
             keyforgeId = keyforgeId,

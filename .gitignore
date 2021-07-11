@@ -22,7 +22,7 @@
 /card-imgs/*.png
 
 application-nocommit.yml
-scripts/*
+scripts/
 *.dump
 
 /ui/src/generated-src
