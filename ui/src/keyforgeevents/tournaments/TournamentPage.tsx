@@ -136,7 +136,7 @@ const TournamentView = observer((props: { info: TournamentInfo }) => {
                                             tourneyId={tourneyId}
                                             stage={stage}
                                             pairingStrategy={pairingStrategy}
-                                            pairingOptions={rankings.map(ranking => ({participantId: ranking.participantId, username: ranking.username}))}
+                                            rankings={rankings}
                                         />
                                         <Grid item={true}>
                                             <KeyButton

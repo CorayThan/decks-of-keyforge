@@ -7,14 +7,15 @@ import { spacing } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
 import { PairingStrategy } from "../../generated-src/PairingStrategy"
 import { TournamentPairingPlayers } from "../../generated-src/TournamentPairingPlayers"
+import { TournamentRanking } from "../../generated-src/TournamentRanking"
 import { TournamentStage } from "../../generated-src/TournamentStage"
 import { UserLink } from "../../user/UserLink"
 import { tournamentStore } from "./TournamentStore"
 
 export const PairPlayersButton = observer((props: {
-    tourneyId: number, stage: TournamentStage, pairingStrategy: PairingStrategy, pairingOptions: PairingInfo[]
+    tourneyId: number, stage: TournamentStage, pairingStrategy: PairingStrategy, rankings: TournamentRanking[]
 }) => {
-    const {tourneyId, stage, pairingStrategy, pairingOptions} = props
+    const {tourneyId, stage, pairingStrategy, rankings} = props
 
     let pairMessage = "Pair Next Round"
     if (stage === TournamentStage.TOURNAMENT_NOT_STARTED) {
@@ -23,17 +24,17 @@ export const PairPlayersButton = observer((props: {
         pairMessage = "Redo pairings"
     }
 
-    const [store] = useState(new PairPlayersStore(pairingOptions))
     const [pairingStrat, setPairingStrategy] = useState(pairingStrategy)
 
-    if (store.pairManually) {
+
+    if (pairPlayersStore.pairManually) {
         return (
             <Grid item={true} xs={12}>
                 <Box>
                     <Typography variant={"h6"}>Current pairings</Typography>
-                    {store.manualPairings.map(pairing => {
-                        const firstPlayer = pairingOptions.find(option => option.participantId === pairing.playerOneId)?.username ?? "No first player"
-                        const secondPlayer = pairingOptions.find(option => option.participantId === pairing.playerTwoId)?.username
+                    {pairPlayersStore.manualPairings.map(pairing => {
+                        const firstPlayer = pairPlayersStore.findFirstPlayerName(pairing.playerOneId)
+                        const secondPlayer = pairPlayersStore.findSecondPlayerName(pairing.playerTwoId)
                         let secondPlayerNode
                         if (pairing.bye) {
                             secondPlayerNode = <Typography variant={"subtitle2"}>Bye</Typography>
@@ -54,12 +55,12 @@ export const PairPlayersButton = observer((props: {
 
                     <Typography variant={"h6"}>To be paired</Typography>
                     <Box display={"flex"} flexWrap={"wrap"} pt={2}>
-                        {store.unpaired.map(toPair => (
+                        {pairPlayersStore.unpaired.map(toPair => (
                             <Button
                                 key={toPair.participantId}
                                 variant={"outlined"}
                                 onClick={() => {
-                                    store.pairNext(toPair)
+                                    pairPlayersStore.pairNext(toPair)
                                 }}
                                 style={{marginRight: spacing(2), marginBottom: spacing(2)}}
                             >
@@ -69,8 +70,9 @@ export const PairPlayersButton = observer((props: {
                         <Button
                             variant={"outlined"}
                             onClick={() => {
-                                store.pairNext(undefined)
+                                pairPlayersStore.pairNext(undefined)
                             }}
+                            disabled={!pairPlayersStore.canAddBye()}
                             style={{marginRight: spacing(2), marginBottom: spacing(2)}}
                         >
                             Bye
@@ -80,7 +82,7 @@ export const PairPlayersButton = observer((props: {
                     <Box display={"flex"}>
                         <Button
                             variant={"contained"}
-                            onClick={store.stopPairingManually}
+                            onClick={pairPlayersStore.stopPairingManually}
                             style={{marginRight: spacing(2)}}
                         >
                             Cancel
@@ -89,8 +91,8 @@ export const PairPlayersButton = observer((props: {
                             color={"primary"}
                             variant={"contained"}
                             onClick={async () => {
-                                await tournamentStore.pairNextRound(tourneyId, store.manualPairings)
-                                store.stopPairingManually()
+                                await tournamentStore.pairNextRound(tourneyId, pairPlayersStore.manualPairings)
+                                pairPlayersStore.stopPairingManually()
                             }}
                         >
                             Submit
@@ -106,11 +108,12 @@ export const PairPlayersButton = observer((props: {
             <Grid item={true}>
                 <Button
                     variant={"contained"}
-                    onClick={() => {
+                    onClick={async () => {
                         if (pairingStrategy === PairingStrategy.MANUAL_PAIRING) {
-                            store.pairManually = true
+                            await tournamentStore.findTourneyInfo(tourneyId)
+                            pairPlayersStore.startPairingManually(rankings)
                         } else {
-                            tournamentStore.pairNextRound(tourneyId)
+                            await tournamentStore.pairNextRound(tourneyId)
                         }
                     }}
                     disabled={stage === TournamentStage.GAMES_IN_PROGRESS || stage === TournamentStage.TOURNAMENT_COMPLETE}
@@ -162,6 +165,9 @@ class PairPlayersStore {
     @observable
     paired: PairingInfo[] = []
 
+    @observable
+    pairingOptions: PairingInfo[] = []
+
     pairNext = (info?: PairingInfo) => {
         let addId: number | undefined
         if (info != null) {
@@ -179,11 +185,24 @@ class PairPlayersStore {
             }
             this.manualPairings.push(nextPairing)
         } else {
-            pairing.playerTwoId = addId
             if (addId == null) {
                 pairing.bye = true
             }
+            pairing.playerTwoId = addId
         }
+    }
+
+    findFirstPlayerName = (id: number) => {
+        return this.pairingOptions.find(option => option.participantId === id)?.username ?? "No first player"
+    }
+
+    findSecondPlayerName = (id: number | undefined) => {
+        return this.pairingOptions.find(option => option.participantId === id)?.username
+    }
+
+    canAddBye = () => {
+        const pairing = this.manualPairings[this.manualPairings.length - 1]
+        return pairing != null && pairing.playerTwoId == null && !pairing.bye
     }
 
     stopPairingManually = () => {
@@ -191,13 +210,23 @@ class PairPlayersStore {
         this.manualPairings = []
         this.unpaired.push(...this.paired)
         this.paired = []
+        this.pairingOptions = []
     }
 
-    constructor(pairingOptions: PairingInfo[]) {
+    constructor() {
         makeObservable(this)
-        this.unpaired = pairingOptions
+    }
+
+    startPairingManually = (rankings: TournamentRanking[]) => {
+        this.pairingOptions = rankings.map(ranking => ({participantId: ranking.participantId, username: ranking.username}))
+        this.unpaired = this.pairingOptions.slice()
+        this.paired = []
+        this.manualPairings = []
+        this.pairManually = true
     }
 }
+
+const pairPlayersStore = new PairPlayersStore()
 
 interface PairingInfo {
     participantId: number
