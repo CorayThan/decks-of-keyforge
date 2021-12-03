@@ -15,7 +15,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.11"
+export const latestVersion = "6.12"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,6 +43,20 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.12"}
+                    date={"12/2/2021"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Minor SAS Update",
+                            note: "Hey all, it's been a while! I'm deploying a quick SAS update to a few cards. Nothing big, just changes that have " +
+                                "percolated over the months. I really appreciate everyone's continued support on Patreon in these trying times for KeyForge. " +
+                                "I couldn't keep DoK around without your support! When the next set is about to come out, whenever that is, I'll restart " +
+                                "active development. Until then keep the forges lit folks!"
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.11"}
                     date={"7/1/2021"}

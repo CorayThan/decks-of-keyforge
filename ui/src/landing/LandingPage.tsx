@@ -8,10 +8,8 @@ import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
-import { AnnouncementPaper } from "../generic/AnnouncementPaper"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
-import { LinkNewWindow } from "../mui-restyled/KeyLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
@@ -145,19 +143,19 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
 
-                        <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
-                            <Typography variant={"h5"} gutterBottom={true}>
-                                KEYFORGE LIVE
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                July 23rd to 25th in Milwaukee, WI
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                KEYFORGE LIVE is an in-person KeyForge event at the Four Points by Sheraton in Milwaukee, WI. There will be $3,750 in cash
-                                prizes for the events hosted!
-                                See the <LinkNewWindow href={"http://keyforgelive.archonscorner.com"}>website for more info</LinkNewWindow>.
-                            </Typography>
-                        </AnnouncementPaper>
+                        {/*<AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>*/}
+                        {/*    <Typography variant={"h5"} gutterBottom={true}>*/}
+                        {/*        KEYFORGE LIVE*/}
+                        {/*    </Typography>*/}
+                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                        {/*        July 23rd to 25th in Milwaukee, WI*/}
+                        {/*    </Typography>*/}
+                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                        {/*        KEYFORGE LIVE is an in-person KeyForge event at the Four Points by Sheraton in Milwaukee, WI. There will be $3,750 in cash*/}
+                        {/*        prizes for the events hosted!*/}
+                        {/*        See the <LinkNewWindow href={"http://keyforgelive.archonscorner.com"}>website for more info</LinkNewWindow>.*/}
+                        {/*    </Typography>*/}
+                        {/*</AnnouncementPaper>*/}
 
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
