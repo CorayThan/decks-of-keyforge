@@ -13,7 +13,7 @@
     "@nivo/pie": "^0.69.0",
     "@nivo/radar": "^0.69.0",
     "@sentry/browser": "^6.3.6",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bowser": "^2.11.0",
     "browser-image-compression": "^1.0.14",
     "date-fns": "^2.21.3",
