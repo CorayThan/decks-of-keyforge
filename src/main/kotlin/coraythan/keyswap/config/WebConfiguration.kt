@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
+import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.resource.PathResourceResolver
@@ -35,6 +36,15 @@ class WebConfiguration(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var defaultIndexPage: TransformedResource? = null
+
+    override fun addCorsMappings(registry: CorsRegistry) {
+        val corsConfig = registry.addMapping("/**")
+        corsConfig.allowedOrigins(
+            "https://decksofkeyforge.com",
+            "https://www.decksofkeyforge.com",
+            "https://d3vrfoel8dxoqo.cloudfront.net",
+        )
+    }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
 

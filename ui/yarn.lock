@@ -2188,7 +2188,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:^4.11.4":
+"@material-ui/core@npm:~4.11.4":
   version: 4.11.4
   resolution: "@material-ui/core@npm:4.11.4"
   dependencies:
@@ -2215,9 +2215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/icons@npm:^4.11.2":
-  version: 4.11.2
-  resolution: "@material-ui/icons@npm:4.11.2"
+"@material-ui/icons@npm:~4.11.2":
+  version: 4.11.3
+  resolution: "@material-ui/icons@npm:4.11.3"
   dependencies:
     "@babel/runtime": ^7.4.4
   peerDependencies:
@@ -2228,11 +2228,11 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 0f5f70d10581e50e96dadf4d7cd5ef2acdc135e460a74eb29fdeecd5fd98fb1caae9692979997438a9606c193b52b6e0186cabf57af1352fa92221b7eb71ea83
+  checksum: a9d4b7b902ded48e7035b58a305fbad6601381cd224ce6e663442d73373c93775b0b20187e1e0dbc9ce221be04fadd9a67d9f7952381457ca06f14a0b4400aa7
   languageName: node
   linkType: hard
 
-"@material-ui/lab@npm:^4.0.0-alpha.58":
+"@material-ui/lab@npm:4.0.0-alpha.58":
   version: 4.0.0-alpha.58
   resolution: "@material-ui/lab@npm:4.0.0-alpha.58"
   dependencies:
@@ -2254,13 +2254,13 @@ __metadata:
   linkType: hard
 
 "@material-ui/styles@npm:^4.11.4":
-  version: 4.11.4
-  resolution: "@material-ui/styles@npm:4.11.4"
+  version: 4.11.5
+  resolution: "@material-ui/styles@npm:4.11.5"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@emotion/hash": ^0.8.0
     "@material-ui/types": 5.1.0
-    "@material-ui/utils": ^4.11.2
+    "@material-ui/utils": ^4.11.3
     clsx: ^1.0.4
     csstype: ^2.5.2
     hoist-non-react-statics: ^3.3.2
@@ -2280,16 +2280,16 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: bbca7a43f95b3fae876b656ba163759cd6c26e55ce6c23da8392cbab4ac22cfb32c8c753c8a8e124e3d96cce7d60cb4db188cf2b1437ef6dc53d1c0d28b2fd86
+  checksum: 8d6812d9ca6c25dd4579c7ccb801381433a9408a61033bfc6537b6ef60b0dca3afd5f9ffc0813df80acbf644b72f2551691cb28e46ad96ede1a0235a467db211
   languageName: node
   linkType: hard
 
 "@material-ui/system@npm:^4.11.3":
-  version: 4.11.3
-  resolution: "@material-ui/system@npm:4.11.3"
+  version: 4.12.2
+  resolution: "@material-ui/system@npm:4.12.2"
   dependencies:
     "@babel/runtime": ^7.4.4
-    "@material-ui/utils": ^4.11.2
+    "@material-ui/utils": ^4.11.3
     csstype: ^2.5.2
     prop-types: ^15.7.2
   peerDependencies:
@@ -2299,7 +2299,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: f00f6419820893110b19d9af3ee7f4410d3de321850f4b6933aa9540ca5e27a42e4fc58a1c986cb22bbaa2b7538ce3fb49275d0b2a8285dcfb72b2877be93541
+  checksum: e9c776a364bc566ef712de2189bb2f4f2faa83b074f4ffd14f70e89fa2843b251bf0ca88b40ca96550269d52dfe6d22cd680de56f734ac81750c0d899b4835db
   languageName: node
   linkType: hard
 
@@ -2315,9 +2315,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/utils@npm:^4.11.2":
-  version: 4.11.2
-  resolution: "@material-ui/utils@npm:4.11.2"
+"@material-ui/utils@npm:^4.11.2, @material-ui/utils@npm:^4.11.3":
+  version: 4.11.3
+  resolution: "@material-ui/utils@npm:4.11.3"
   dependencies:
     "@babel/runtime": ^7.4.4
     prop-types: ^15.7.2
@@ -2325,7 +2325,7 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
     react-dom: ^16.8.0 || ^17.0.0
-  checksum: 5bb7e1a27cd0a09ff9d2d2f1b8b5c9004519b635a4cbe546810172f7d32870c26cc1e846f4bcd9e8cb40202721871b55f6355ba7a6b3e9897d1553d8deac734c
+  checksum: 8ca18374d7773ea9c711e2bc40307c9b1465d74f8815140fa11b77ff8329d98f3497fd0e9e5ebb9c8bd81d4c915b2e340871a48d4824dd05b334bd4c6c22c240
   languageName: node
   linkType: hard
 
@@ -16854,9 +16854,9 @@ typescript@^4.2.4:
   resolution: "ui@workspace:."
   dependencies:
     "@craco/craco": ^6.1.2
-    "@material-ui/core": ^4.11.4
-    "@material-ui/icons": ^4.11.2
-    "@material-ui/lab": ^4.0.0-alpha.58
+    "@material-ui/core": ~4.11.4
+    "@material-ui/icons": ~4.11.2
+    "@material-ui/lab": 4.0.0-alpha.58
     "@nivo/bar": ^0.69.1
     "@nivo/core": ^0.69.0
     "@nivo/pie": ^0.69.0

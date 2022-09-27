@@ -28,3 +28,7 @@ scripts/
 /ui/src/generated-src
 /src/main/resources/application-generated.yml
 /ui/src/config/ClientVersion.ts
+/docker/*.jar
+
+version.txt
+/docker/Dockerrun.aws.json

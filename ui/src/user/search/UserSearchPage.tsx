@@ -6,6 +6,7 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Paper,
@@ -23,30 +24,31 @@ import {
     Typography
 } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import { sortBy } from "lodash"
-import { makeObservable, observable } from "mobx"
-import { observer } from "mobx-react"
+import {sortBy} from "lodash"
+import {makeObservable, observable} from "mobx"
+import {observer} from "mobx-react"
 import * as QueryString from "querystring"
 import * as React from "react"
-import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
-import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing } from "../../config/MuiConfig"
-import { log, SortOrder } from "../../config/Utils"
-import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
-import { UserSearchResult } from "../../generated-src/UserSearchResult"
-import { UserType } from "../../generated-src/UserType"
-import { Loader } from "../../mui-restyled/Loader"
-import { SellerRatingView } from "../../sellerratings/SellerRatingView"
-import { TeamBadge } from "../../teams/TeamBadge"
-import { teamStore } from "../../teams/TeamStore"
-import { patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
-import { screenStore } from "../../ui/ScreenStore"
-import { uiStore } from "../../ui/UiStore"
-import { UserLink } from "../UserLink"
-import { userStore } from "../UserStore"
-import { UserFilters } from "./UserFilters"
-import { userSearchStore } from "./UserSearchStore"
+import {useEffect, useState} from "react"
+import {useLocation} from "react-router-dom"
+import {keyLocalStorage} from "../../config/KeyLocalStorage"
+import {spacing} from "../../config/MuiConfig"
+import {log, SortOrder} from "../../config/Utils"
+import {PatreonRewardsTier} from "../../generated-src/PatreonRewardsTier"
+import {UserSearchResult} from "../../generated-src/UserSearchResult"
+import {UserType} from "../../generated-src/UserType"
+import {Loader} from "../../mui-restyled/Loader"
+import {SellerRatingView} from "../../sellerratings/SellerRatingView"
+import {TeamBadge} from "../../teams/TeamBadge"
+import {teamStore} from "../../teams/TeamStore"
+import {patronRewardLevelDescription} from "../../thirdpartysites/patreon/PatreonRewardsTier"
+import {screenStore} from "../../ui/ScreenStore"
+import {uiStore} from "../../ui/UiStore"
+import {UserLink} from "../UserLink"
+import {userStore} from "../UserStore"
+import {UserFilters} from "./UserFilters"
+import {userSearchStore} from "./UserSearchStore"
+import {FilterList} from "@material-ui/icons";
 
 export const UserSearchPage = observer(() => {
 
@@ -89,11 +91,25 @@ export class UserSearchSortStore {
     @observable
     patrons = false
 
+    @observable
+    dialogOpen = false
+
     filters: UserFilters
 
     constructor(filters: UserFilters) {
         makeObservable(this)
         this.filters = filters
+    }
+
+    reset = () => {
+        this.page = 0
+        this.orderBy = "deckCount"
+        this.username = ""
+        this.role = ""
+        this.manualPatreonTier = ""
+        this.withTeams = false
+        this.hasRatings = false
+        this.patrons = false
     }
 
     createSortHandler = (property: keyof UserSearchResultWithTeamName) => () => {
@@ -150,7 +166,18 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
         updatedMessage = "Updated 1 minute ago"
     }
 
-    const {order, orderBy, page, username, role, manualPatreonTier, withTeams, hasRatings, patrons, createSortHandler} = store
+    const {
+        order,
+        orderBy,
+        page,
+        username,
+        role,
+        manualPatreonTier,
+        withTeams,
+        hasRatings,
+        patrons,
+        createSortHandler
+    } = store
 
     let filteredUsers = users
 
@@ -175,6 +202,8 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
 
     const sortedUsers = sortUsers(filteredUsers, orderBy, order)
 
+    const closeDialog = () => store.dialogOpen = false
+
     return (
         <div
             style={{padding: spacing(4), display: "flex", justifyContent: "center"}}
@@ -192,14 +221,6 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         </Typography>
                     )}
                     <div style={{flexGrow: 1}}/>
-                    {userStore.isAdmin && (
-                        <Button
-                            style={{marginRight: spacing(2)}}
-                            onClick={userSearchStore.searchAllUsers}
-                        >
-                            Search All
-                        </Button>
-                    )}
                     <TextField
                         label={"Username"}
                         value={username}
@@ -207,69 +228,52 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         variant={"outlined"}
                         style={{marginRight: spacing(2)}}
                     />
-                    {userStore.isAdmin && (
+                    {screenStore.screenSizeXs() ? (
                         <>
-                            <FormControl style={{width: 120, marginRight: spacing(2)}}>
-                                <InputLabel id={"user-role-label"}>Role</InputLabel>
-                                <Select
-                                    labelId={"user-role-label"}
-                                    value={role}
-                                    onChange={event => {
-                                        store.role = event.target.value as (UserType | "")
-                                    }}
-                                >
-                                    <MenuItem value={""}/>
-                                    <MenuItem value={UserType.USER}>User</MenuItem>
-                                    <MenuItem value={UserType.CONTENT_CREATOR}>Content Creator</MenuItem>
-                                    <MenuItem value={UserType.ADMIN}>Admin</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <FormControl style={{width: 120, marginRight: spacing(2)}}>
-                                <InputLabel id={"manual-patron-label"}>Manual Patreon</InputLabel>
-                                <Select
-                                    labelId={"manual-patron-label"}
-                                    value={manualPatreonTier}
-                                    onChange={event => {
-                                        log.info("Set manual patron tier to " + event.target.value)
-                                        store.manualPatreonTier = event.target.value as (PatreonRewardsTier | "")
-                                    }}
-                                >
-                                    <MenuItem value={""}/>
-                                    <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains</MenuItem>
-                                    <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>Purchases the Paradigm</MenuItem>
-                                    <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>Merchant Aembermaker</MenuItem>
-                                    <MenuItem value={PatreonRewardsTier.ALWAYS_GENEROUS}>Always Generous</MenuItem>
-                                </Select>
-                            </FormControl>
+                            <IconButton
+                                onClick={() => store.dialogOpen = true}
+                            >
+                                <FilterList/>
+                            </IconButton>
+                            <Dialog open={store.dialogOpen} onClose={closeDialog} aria-labelledby="search-users-filter-dialog">
+                                <DialogTitle id="search-users-filter-dialog">Search Users</DialogTitle>
+                                <DialogContent>
+                                    <TextField
+                                        label={"Username"}
+                                        value={username}
+                                        onChange={store.handleUsernameUpdate}
+                                        variant={"outlined"}
+                                        style={{marginRight: spacing(2)}}
+                                    />
+                                    <UserSearchFiltersView
+                                        store={store}
+                                        patrons={patrons}
+                                        withTeams={withTeams}
+                                        hasRatings={hasRatings}
+                                        role={role}
+                                        manualPatreonTier={manualPatreonTier}
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={store.reset}>
+                                        Reset
+                                    </Button>
+                                    <Button onClick={closeDialog}>
+                                        Close
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
                         </>
+                    ) : (
+                        <UserSearchFiltersView
+                            store={store}
+                            patrons={patrons}
+                            withTeams={withTeams}
+                            hasRatings={hasRatings}
+                            role={role}
+                            manualPatreonTier={manualPatreonTier}
+                        />
                     )}
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={hasRatings}
-                                onChange={store.handleHasRatingsUpdate}
-                            />
-                        }
-                        label={"Has Ratings"}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={withTeams}
-                                onChange={store.handleWithTeamsUpdate}
-                            />
-                        }
-                        label={"Teams Only"}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={patrons}
-                                onChange={store.handlePatronsUpdate}
-                            />
-                        }
-                        label={"Patrons"}
-                    />
                 </Toolbar>
                 <TableContainer style={{width: "100%", overflowX: "auto"}}>
                     <Table style={{minWidth: 1000}}>
@@ -313,7 +317,8 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                             <UserLink username={user.username}/>
                                         </TableCell>
                                         <TableCell>
-                                            <SellerRatingView sellerId={user.id} sellerName={user.username} countOnly={true}/>
+                                            <SellerRatingView sellerId={user.id} sellerName={user.username}
+                                                              countOnly={true}/>
                                         </TableCell>
                                         {patrons && (
                                             <TableCell>
@@ -321,7 +326,7 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                             </TableCell>
                                         )}
                                         <TableCell>
-                                            {user.teamId == null ? "" : <TeamBadge teamId={user.teamId} />}
+                                            {user.teamId == null ? "" : <TeamBadge teamId={user.teamId}/>}
                                         </TableCell>
                                         <TableCell align={"right"}>
                                             {user.deckCount}
@@ -359,7 +364,9 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                                                         onChange={event => userStore.setUserRole(user.username, event.target.value as UserType)}
                                                     >
                                                         <MenuItem value={UserType.USER}>User</MenuItem>
-                                                        <MenuItem value={UserType.CONTENT_CREATOR}>Content Creator</MenuItem>
+                                                        <MenuItem value={UserType.CONTENT_CREATOR}>
+                                                            Content Creator
+                                                        </MenuItem>
                                                         <MenuItem value={UserType.ADMIN}>Admin</MenuItem>
                                                     </Select>
                                                 </FormControl>
@@ -371,7 +378,11 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <div style={{display: "flex", alignItems: "center", flexDirection: screenStore.screenSizeXs() ? "column" : undefined}}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: screenStore.screenSizeXs() ? "column" : undefined
+                }}>
                     <Typography style={{margin: spacing(2)}} variant={"body2"}>{updatedMessage}</Typography>
                     <div style={{flexGrow: 1}}/>
                     <TablePagination
@@ -393,6 +404,92 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                 </div>
             </Paper>
         </div>
+    )
+})
+
+const UserSearchFiltersView = observer((props: {
+    store: UserSearchSortStore,
+    role?: UserType | "",
+    manualPatreonTier?: PatreonRewardsTier | "",
+    hasRatings: boolean,
+    withTeams: boolean,
+    patrons: boolean
+}) => {
+    const store = props.store
+    return (
+        <>
+            {userStore.isAdmin && (
+                <>
+                    <Button
+                        style={{marginRight: spacing(2)}}
+                        onClick={userSearchStore.searchAllUsers}
+                    >
+                        Search All
+                    </Button>
+                    <FormControl style={{width: 120, marginRight: spacing(2)}}>
+                        <InputLabel id={"user-role-label"}>Role</InputLabel>
+                        <Select
+                            labelId={"user-role-label"}
+                            value={props.role}
+                            onChange={event => {
+                                store.role = event.target.value as (UserType | "")
+                            }}
+                        >
+                            <MenuItem value={""}/>
+                            <MenuItem value={UserType.USER}>User</MenuItem>
+                            <MenuItem value={UserType.CONTENT_CREATOR}>Content Creator</MenuItem>
+                            <MenuItem value={UserType.ADMIN}>Admin</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl style={{width: 120, marginRight: spacing(2)}}>
+                        <InputLabel id={"manual-patron-label"}>Manual Patreon</InputLabel>
+                        <Select
+                            labelId={"manual-patron-label"}
+                            value={props.manualPatreonTier}
+                            onChange={event => {
+                                log.info("Set manual patron tier to " + event.target.value)
+                                store.manualPatreonTier = event.target.value as (PatreonRewardsTier | "")
+                            }}
+                        >
+                            <MenuItem value={""}/>
+                            <MenuItem value={PatreonRewardsTier.NOTICE_BARGAINS}>Notices Bargains</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.SUPPORT_SOPHISTICATION}>Purchases the
+                                Paradigm</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.MERCHANT_AEMBERMAKER}>Merchant
+                                Aembermaker</MenuItem>
+                            <MenuItem value={PatreonRewardsTier.ALWAYS_GENEROUS}>Always Generous</MenuItem>
+                        </Select>
+                    </FormControl>
+                </>
+            )}
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={props.hasRatings}
+                        onChange={store.handleHasRatingsUpdate}
+                    />
+                }
+                label={"Has Ratings"}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={props.withTeams}
+                        onChange={store.handleWithTeamsUpdate}
+                    />
+                }
+                label={"Teams Only"}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={props.patrons}
+                        onChange={store.handlePatronsUpdate}
+                    />
+                }
+                label={"Patrons"}
+            />
+        </>
     )
 })
 

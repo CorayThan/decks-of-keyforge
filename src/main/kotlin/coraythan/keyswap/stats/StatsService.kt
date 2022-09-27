@@ -32,11 +32,11 @@ private const val statsUpdateQuantity = 10000L
 @Service
 class StatsService(
     private val currentUserService: CurrentUserService,
-        private val cardService: CardService,
-        private val deckStatisticsRepo: DeckStatisticsRepo,
-        private val deckPageService: DeckPageService,
-        @Value("\${env}")
-        private val env: Env,
+    private val cardService: CardService,
+    private val deckStatisticsRepo: DeckStatisticsRepo,
+    private val deckPageService: DeckPageService,
+    @Value("\${env}")
+    private val env: Env,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -70,8 +70,8 @@ class StatsService(
         if (mostRecentVersion?.completeDateTime != null) {
             log.info("Setting deck stats manually.")
             deckStatisticsRepo.save(
-                    DeckStatisticsEntity.fromDeckStatistics(deckStats)
-                            .copy(version = mostRecentVersion.version + 1, completeDateTime = now())
+                DeckStatisticsEntity.fromDeckStatistics(deckStats)
+                    .copy(version = mostRecentVersion.version + 1, completeDateTime = now())
             )
             updateStats = true
             updateCachedStats()
@@ -88,11 +88,16 @@ class StatsService(
     fun findStatInfo(): String {
         val mostRecentStats = deckStatisticsRepo.findFirstByOrderByVersionDesc()
 
-        val statsForMostRecentVersion = if (mostRecentStats == null) null else deckStatisticsRepo.findAllByVersion(mostRecentStats.version)
+        val statsForMostRecentVersion =
+            if (mostRecentStats == null) null else deckStatisticsRepo.findAllByVersion(mostRecentStats.version)
 
         return """
             Cached Stats
-            Completion date: ${cachedGlobalStats.firstOrNull { it.completedDate != null }?.completedDate?.toReadableStringWithOffsetMinutes(-420)}
+            Completion date: ${
+            cachedGlobalStats.firstOrNull { it.completedDate != null }?.completedDate?.toReadableStringWithOffsetMinutes(
+                -420
+            )
+        }
             Expansion: ${cachedGlobalStats.mapNotNull { it.expansion }}
             
             Current Stats
@@ -103,7 +108,11 @@ class StatsService(
     }
 
     @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
-    @SchedulerLock(name = "updateStatisticsVersion", lockAtLeastFor = lockStatsVersionUpdate, lockAtMostFor = lockStatsVersionUpdate)
+    @SchedulerLock(
+        name = "updateStatisticsVersion",
+        lockAtLeastFor = lockStatsVersionUpdate,
+        lockAtMostFor = lockStatsVersionUpdate
+    )
     fun startNewDeckStats(): String {
 
         if (env == Env.qa) {
@@ -128,13 +137,13 @@ class StatsService(
             } else if (mostRecentVersion.completeDateTime != null) {
                 log.info("Creating deck stats with new version.")
                 deckStatisticsRepo.save(
-                        DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
-                                .copy(version = mostRecentVersion.version + 1)
+                    DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
+                        .copy(version = mostRecentVersion.version + 1)
                 )
                 Expansion.realExpansionValues().forEach {
                     deckStatisticsRepo.save(
-                            DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
-                                    .copy(version = mostRecentVersion.version + 1, expansion = it)
+                        DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
+                            .copy(version = mostRecentVersion.version + 1, expansion = it)
                     )
                 }
                 deckPageService.setCurrentPage(0, DeckPageType.STATS)
@@ -206,111 +215,123 @@ class StatsService(
                 val datasToInclude = activeExpansions.map {
                     AercData(0, it)
                 }.plus(
-                        activeExpansions.flatMap { expansion ->
-                            expansion.houses.map {
-                                AercData(0, expansion, it)
-                            }
+                    activeExpansions.flatMap { expansion ->
+                        expansion.houses.map {
+                            AercData(0, expansion, it)
                         }
+                    }
                 ).associateBy { Pair(it.expansion, it.house) }
 
                 stats.aercDatas = datasToInclude
-                        .plus(stats.aercDatas.associateBy { Pair(it.expansion, it.house) })
-                        .values.toList()
+                    .plus(stats.aercDatas.associateBy { Pair(it.expansion, it.house) })
+                    .values.toList()
             }
 
             decks
-                    .filter { statsEntity.expansion == null || statsEntity.expansion.expansionNumber == it.expansion }
-                    .forEach { ratedDeck ->
-                        val cards = cardService.cardsForDeck(ratedDeck)
-                        val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck, cards)
+                .filter { statsEntity.expansion == null || statsEntity.expansion.expansionNumber == it.expansion }
+                .forEach { ratedDeck ->
+                    val cards = cardService.cardsForDeck(ratedDeck)
+                    val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck, cards)
 
-                        stats.armorValues.incrementValue(ratedDeck.totalArmor)
-                        stats.totalCreaturePower.incrementValue(ratedDeck.totalPower)
-                        stats.aerc.incrementValue(ratedDeck.aercScore.roundToInt())
-                        stats.expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
-                        stats.amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
-                        stats.creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
-                        stats.artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
-                        stats.efficiency.incrementValue(ratedDeck.efficiency.roundToInt())
-                        stats.recursion.incrementValue(ratedDeck.recursion?.roundToInt() ?: 0)
-                        stats.disruption.incrementValue(ratedDeck.disruption.roundToInt())
-                        stats.creatureProtection.incrementValue(ratedDeck.creatureProtection?.roundToInt() ?: 0)
-                        stats.other.incrementValue(ratedDeck.other.roundToInt())
-                        stats.effectivePower.incrementValue(ratedDeck.effectivePower)
-                        stats.sas.incrementValue(ratedDeck.sasRating)
-                        stats.meta.incrementValue(deckWithSyns.meta().roundToInt())
-                        stats.synergy.incrementValue(ratedDeck.synergyRating)
-                        stats.antisynergy.incrementValue(ratedDeck.antisynergyRating)
-                        stats.creatureCount.incrementValue(ratedDeck.creatureCount)
-                        stats.actionCount.incrementValue(ratedDeck.actionCount)
-                        stats.artifactCount.incrementValue(ratedDeck.artifactCount)
-                        stats.upgradeCount.incrementValue(ratedDeck.upgradeCount)
+                    stats.armorValues.incrementValue(ratedDeck.totalArmor)
+                    stats.totalCreaturePower.incrementValue(ratedDeck.totalPower)
+                    stats.aerc.incrementValue(ratedDeck.aercScore.roundToInt())
+                    stats.expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
+                    stats.amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
+                    stats.creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
+                    stats.artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
+                    stats.efficiency.incrementValue(ratedDeck.efficiency.roundToInt())
+                    stats.recursion.incrementValue(ratedDeck.recursion?.roundToInt() ?: 0)
+                    stats.disruption.incrementValue(ratedDeck.disruption.roundToInt())
+                    stats.creatureProtection.incrementValue(ratedDeck.creatureProtection?.roundToInt() ?: 0)
+                    stats.other.incrementValue(ratedDeck.other.roundToInt())
+                    stats.effectivePower.incrementValue(ratedDeck.effectivePower)
+                    stats.sas.incrementValue(ratedDeck.sasRating)
+                    stats.meta.incrementValue(deckWithSyns.meta().roundToInt())
+                    stats.synergy.incrementValue(ratedDeck.synergyRating)
+                    stats.antisynergy.incrementValue(ratedDeck.antisynergyRating)
+                    stats.creatureCount.incrementValue(ratedDeck.creatureCount)
+                    stats.actionCount.incrementValue(ratedDeck.actionCount)
+                    stats.artifactCount.incrementValue(ratedDeck.artifactCount)
+                    stats.upgradeCount.incrementValue(ratedDeck.upgradeCount)
 
-                        val creatureCards = cards.filter { card -> card.cardType == CardType.Creature }
-                        stats.power2OrLower.incrementValue(creatureCards.filter { card -> card.power < 3 }.size)
-                        stats.power3OrLower.incrementValue(creatureCards.filter { card -> card.power < 4 }.size)
-                        stats.power3OrHigher.incrementValue(creatureCards.filter { card -> card.power > 2 }.size)
-                        stats.power4OrHigher.incrementValue(creatureCards.filter { card -> card.power > 3 }.size)
-                        stats.power5OrHigher.incrementValue(creatureCards.filter { card -> card.power > 4 }.size)
+                    val creatureCards = cards.filter { card -> card.cardType == CardType.Creature }
+                    stats.power2OrLower.incrementValue(creatureCards.filter { card -> card.power < 3 }.size)
+                    stats.power3OrLower.incrementValue(creatureCards.filter { card -> card.power < 4 }.size)
+                    stats.power3OrHigher.incrementValue(creatureCards.filter { card -> card.power > 2 }.size)
+                    stats.power4OrHigher.incrementValue(creatureCards.filter { card -> card.power > 3 }.size)
+                    stats.power5OrHigher.incrementValue(creatureCards.filter { card -> card.power > 4 }.size)
 
-                        if (ratedDeck.wins != 0 || ratedDeck.losses != 0) {
-                            val wins = Wins(ratedDeck.wins, ratedDeck.losses)
-                            stats.sasToWinsLosses.addWinsLosses(ratedDeck.sasRating, wins)
-                            stats.metaToWinsLosses.addWinsLosses(deckWithSyns.meta().roundToInt(), wins)
-                            stats.synergyToWinsLosses.addWinsLosses(ratedDeck.synergyRating, wins)
-                            stats.antisynergyToWinsLosses.addWinsLosses(ratedDeck.antisynergyRating, wins)
-                            stats.aercToWinsLosses.addWinsLosses(ratedDeck.aercScore.roundToInt(), wins)
-                            stats.amberControlToWinsLosses.addWinsLosses(ratedDeck.amberControl.roundToInt(), wins)
-                            stats.expectedAmberToWinsLosses.addWinsLosses(ratedDeck.expectedAmber.roundToInt(), wins)
-                            stats.artifactControlToWinsLosses.addWinsLosses(ratedDeck.artifactControl.roundToInt(), wins)
-                            stats.creatureControlToWinsLosses.addWinsLosses(ratedDeck.creatureControl.roundToInt(), wins)
-                            stats.efficiencyToWinsLosses.addWinsLosses(ratedDeck.efficiency.roundToInt(), wins)
-                            stats.recursionToWinsLosses.addWinsLosses(ratedDeck.recursion?.roundToInt() ?: 0, wins)
-                            stats.disruptionToWinsLosses.addWinsLosses(ratedDeck.disruption.roundToInt(), wins)
-                            stats.creatureProtectionToWinsLosses.addWinsLosses(ratedDeck.creatureProtection?.roundToInt() ?: 0, wins)
-                            stats.otherToWinsLosses.addWinsLosses(ratedDeck.other.roundToInt(), wins)
-                            stats.effectivePowerToWinsLosses.addWinsLosses((ratedDeck.effectivePower / 5) * 5, wins)
+                    if (ratedDeck.wins != 0 || ratedDeck.losses != 0) {
+                        val wins = Wins(ratedDeck.wins, ratedDeck.losses)
+                        stats.sasToWinsLosses.addWinsLosses(ratedDeck.sasRating, wins)
+                        stats.metaToWinsLosses.addWinsLosses(deckWithSyns.meta().roundToInt(), wins)
+                        stats.synergyToWinsLosses.addWinsLosses(ratedDeck.synergyRating, wins)
+                        stats.antisynergyToWinsLosses.addWinsLosses(ratedDeck.antisynergyRating, wins)
+                        stats.aercToWinsLosses.addWinsLosses(ratedDeck.aercScore.roundToInt(), wins)
+                        stats.amberControlToWinsLosses.addWinsLosses(ratedDeck.amberControl.roundToInt(), wins)
+                        stats.expectedAmberToWinsLosses.addWinsLosses(ratedDeck.expectedAmber.roundToInt(), wins)
+                        stats.artifactControlToWinsLosses.addWinsLosses(ratedDeck.artifactControl.roundToInt(), wins)
+                        stats.creatureControlToWinsLosses.addWinsLosses(ratedDeck.creatureControl.roundToInt(), wins)
+                        stats.efficiencyToWinsLosses.addWinsLosses(ratedDeck.efficiency.roundToInt(), wins)
+                        stats.recursionToWinsLosses.addWinsLosses(ratedDeck.recursion?.roundToInt() ?: 0, wins)
+                        stats.disruptionToWinsLosses.addWinsLosses(ratedDeck.disruption.roundToInt(), wins)
+                        stats.creatureProtectionToWinsLosses.addWinsLosses(
+                            ratedDeck.creatureProtection?.roundToInt() ?: 0, wins
+                        )
+                        stats.otherToWinsLosses.addWinsLosses(ratedDeck.other.roundToInt(), wins)
+                        stats.effectivePowerToWinsLosses.addWinsLosses((ratedDeck.effectivePower / 5) * 5, wins)
 
-                            stats.creatureWins.addWinsLosses(ratedDeck.creatureCount, wins)
-                            stats.actionWins.addWinsLosses(ratedDeck.actionCount, wins)
-                            stats.artifactWins.addWinsLosses(ratedDeck.artifactCount, wins)
-                            stats.upgradeWins.addWinsLosses(ratedDeck.upgradeCount, wins)
+                        stats.creatureWins.addWinsLosses(ratedDeck.creatureCount, wins)
+                        stats.actionWins.addWinsLosses(ratedDeck.actionCount, wins)
+                        stats.artifactWins.addWinsLosses(ratedDeck.artifactCount, wins)
+                        stats.upgradeWins.addWinsLosses(ratedDeck.upgradeCount, wins)
 
-                            stats.raresWins.addWinsLosses(ratedDeck.raresCount, wins)
-                            ratedDeck.houses.forEach { house ->
-                                stats.housesWins.addWinsLosses(house, wins)
-                            }
+                        stats.raresWins.addWinsLosses(ratedDeck.raresCount, wins)
+                        ratedDeck.houses.forEach { house ->
+                            stats.housesWins.addWinsLosses(house, wins)
                         }
-
-                        if (statsEntity.expansion == null) {
-
-                            stats.aercDatas = stats.aercDatas.map { aercData ->
-                                if (ratedDeck.expansionEnum == aercData.expansion && (aercData.house == null || ratedDeck.houses.contains(aercData.house))) {
-
-                                    val relevantCombos = deckWithSyns.synergyCombos.filter { aercData.house == null || aercData.house == it.house }
-
-                                    aercData.copy(
-                                            count = aercData.count + 12,
-                                            amberControl = aercData.amberControl + relevantCombos.sumOf { it.amberControl * it.copies },
-                                            expectedAmber = aercData.expectedAmber + relevantCombos.sumOf { it.expectedAmber * it.copies },
-                                            artifactControl = aercData.artifactControl + relevantCombos.sumOf { it.artifactControl * it.copies },
-                                            creatureControl = aercData.creatureControl + relevantCombos.sumOf { it.creatureControl * it.copies },
-                                            effectivePower = aercData.effectivePower + relevantCombos.sumOf { it.effectivePower * it.copies },
-                                            efficiency = aercData.efficiency + relevantCombos.sumOf { it.efficiency * it.copies },
-                                            recursion = aercData.recursion + relevantCombos.sumOf { it.recursion * it.copies },
-                                            disruption = aercData.disruption + relevantCombos.sumOf { it.disruption * it.copies },
-                                            creatureProtection = aercData.creatureProtection + relevantCombos.sumOf { it.creatureProtection * it.copies },
-                                            other = aercData.other + relevantCombos.sumOf { it.other * it.copies }
-                                    )
-                                } else {
-                                    aercData
-                                }
-                            }
-                        }
-
                     }
 
-            deckStatisticsRepo.save(statsEntity.copy(deckStats = DeckStatisticsEntity.fromDeckStatistics(stats).deckStats))
+                    if (statsEntity.expansion == null) {
+
+                        stats.aercDatas = stats.aercDatas.map { aercData ->
+                            if (ratedDeck.expansionEnum == aercData.expansion && (aercData.house == null || ratedDeck.houses.contains(
+                                    aercData.house
+                                ))
+                            ) {
+
+                                val relevantCombos =
+                                    deckWithSyns.synergyCombos.filter { aercData.house == null || aercData.house == it.house }
+
+                                aercData.copy(
+                                    count = aercData.count + 12,
+                                    amberControl = aercData.amberControl + relevantCombos.sumOf { it.amberControl * it.copies },
+                                    expectedAmber = aercData.expectedAmber + relevantCombos.sumOf { it.expectedAmber * it.copies },
+                                    artifactControl = aercData.artifactControl + relevantCombos.sumOf { it.artifactControl * it.copies },
+                                    creatureControl = aercData.creatureControl + relevantCombos.sumOf { it.creatureControl * it.copies },
+                                    effectivePower = aercData.effectivePower + relevantCombos.sumOf { it.effectivePower * it.copies },
+                                    efficiency = aercData.efficiency + relevantCombos.sumOf { it.efficiency * it.copies },
+                                    recursion = aercData.recursion + relevantCombos.sumOf { it.recursion * it.copies },
+                                    disruption = aercData.disruption + relevantCombos.sumOf { it.disruption * it.copies },
+                                    creatureProtection = aercData.creatureProtection + relevantCombos.sumOf { it.creatureProtection * it.copies },
+                                    other = aercData.other + relevantCombos.sumOf { it.other * it.copies }
+                                )
+                            } else {
+                                aercData
+                            }
+                        }
+                    }
+
+                }
+
+            val deckStats = DeckStatisticsEntity.fromDeckStatistics(stats).deckStats
+            deckStatisticsRepo.save(
+                statsEntity.copy(
+                    deckStats = deckStats,
+                    deckStatsJson = deckStats
+                ),
+            )
         }
     }
 
@@ -320,18 +341,20 @@ class StatsService(
         val statsToCache = stats?.toDeckStatistics() ?: DeckStatistics()
         cachedStats = statsToCache
         cachedGlobalStats = listOf(GlobalStatsWithExpansion(
-                completedTime,
-                null,
-                statsToCache.toGlobalStats()
-                        .let {
-                            it.copy(aercDatas = it.aercDatas.sortedBy { it.house })
-                        }
+            completedTime,
+            null,
+            statsToCache.toGlobalStats()
+                .let {
+                    it.copy(aercDatas = it.aercDatas.sortedBy { it.house })
+                }
         ))
-                .plus(Expansion.values().map {
-                    GlobalStatsWithExpansion(null, it.expansionNumber,
-                            (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)?.toDeckStatistics() ?: DeckStatistics())
-                                    .toGlobalStats()
-                    )
-                })
+            .plus(Expansion.values().map {
+                GlobalStatsWithExpansion(
+                    null, it.expansionNumber,
+                    (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)
+                        ?.toDeckStatistics() ?: DeckStatistics())
+                        .toGlobalStats()
+                )
+            })
     }
 }

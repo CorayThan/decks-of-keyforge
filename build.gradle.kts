@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    val kotlinVersion = "1.5.0"
+    val kotlinVersion = "1.7.10"
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
@@ -27,12 +27,15 @@ plugins {
 }
 
 group = "coraythan"
-version = "484"
+version = "492"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
+        freeCompilerArgs = listOf(
+            "-Xjsr305=strict",
+            "-opt-in=kotlin.ExperimentalStdlibApi"
+        )
+        jvmTarget = "17"
     }
 }
 
@@ -40,6 +43,13 @@ tasks.getByName<BootJar>("bootJar") {
     from(".ebextensions") {
         into(".ebextensions")
     }
+}
+
+tasks.register<Copy>("dockerCopyJar") {
+    from(File("build/libs/keyswap-$version.jar"))
+    rename("keyswap-$version.jar", "keyswap.jar")
+    into(File("./docker"))
+    include("*.jar")
 }
 
 springBoot {
@@ -60,6 +70,12 @@ tasks.register("genSrc") {
     doLast {
         File("$projectDir/src/main/resources", "application-generated.yml").writeText("api-version: $version")
         File("$projectDir/ui/src/config", "ClientVersion.ts").writeText("export const clientVersion = $version")
+        File("$projectDir", "version.txt").writeText("$version")
+        val dockerrunContents = File("$projectDir/docker", "Dockerrun.aws.json.template")
+            .readText()
+            .replace("\$version", "$version")
+        File("$projectDir/docker", "Dockerrun.aws.json")
+            .writeText(dockerrunContents)
     }
 }
 
@@ -91,7 +107,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
     implementation("com.patreon:patreon:0.4.2")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.11.1014")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.296")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")

@@ -10,28 +10,34 @@ import javax.persistence.*
 
 @Entity
 data class DeckStatisticsEntity(
-        @Lob
-        val deckStats: String,
 
-        val version: Int = 0,
+    @Lob
+    val deckStats: String,
 
-        val completeDateTime: ZonedDateTime? = null,
+    val deckStatsJson: String,
 
-        @Enumerated(EnumType.STRING)
-        val expansion: Expansion? = null,
+    val version: Int = 0,
 
-        @Id
-        val id: UUID = UUID.randomUUID()
+    val completeDateTime: ZonedDateTime? = null,
+
+    @Enumerated(EnumType.STRING)
+    val expansion: Expansion? = null,
+
+    @Id
+    val id: UUID = UUID.randomUUID()
 ) {
 
     companion object {
         fun fromDeckStatistics(deckStats: DeckStatistics, expansion: Expansion? = null) = DeckStatisticsEntity(
-                KeyswapApplication.objectMapper.writeValueAsString(deckStats),
-                expansion = expansion
+            KeyswapApplication.objectMapper.writeValueAsString(deckStats),
+            KeyswapApplication.objectMapper.writeValueAsString(deckStats),
+            expansion = expansion
         )
     }
 
-    fun toDeckStatistics() = KeyswapApplication.objectMapper.readValue<DeckStatistics>(deckStats)
+    fun toDeckStatistics(): DeckStatistics {
+        return KeyswapApplication.objectMapper.readValue(deckStatsJson)
+    }
 }
 
 interface DeckStatisticsRepo : CrudRepository<DeckStatisticsEntity, UUID> {
