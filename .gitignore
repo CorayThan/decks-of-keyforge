@@ -18,11 +18,10 @@
 *.ipr
 /out/
 
-/src/main/resources/static/
 /card-imgs/*.png
 
 application-nocommit.yml
-scripts/
+scripts-local/
 *.dump
 
 /ui/src/generated-src
