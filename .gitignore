@@ -24,6 +24,7 @@ application-nocommit.yml
 scripts-local/
 *.dump
 
+/src/main/resources/static/
 /ui/src/generated-src
 /src/main/resources/application-generated.yml
 /ui/src/config/ClientVersion.ts

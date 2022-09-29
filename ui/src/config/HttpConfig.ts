@@ -1,10 +1,10 @@
-import axios, { AxiosError, AxiosResponse } from "axios"
-import { messageStore } from "../ui/MessageStore"
-import { clientVersion } from "./ClientVersion"
-import { keyLocalStorage } from "./KeyLocalStorage"
-import { monitoring } from "./Monitoring"
-import { TimeUtils } from "./TimeUtils"
-import {log, Utils} from "./Utils"
+import axios, {AxiosError, AxiosResponse} from "axios"
+import {messageStore} from "../ui/MessageStore"
+import {clientVersion} from "./ClientVersion"
+import {keyLocalStorage} from "./KeyLocalStorage"
+import {monitoring} from "./Monitoring"
+import {TimeUtils} from "./TimeUtils"
+import {log} from "./Utils"
 
 export let axiosWithoutErrors = axios.create()
 
@@ -16,10 +16,6 @@ export class HttpConfig {
 
     static setupAxios = () => {
         axios.defaults.headers.common.Timezone = TimeUtils.currentTimeZoneOffset()
-
-        if (!Utils.isDev()) {
-            axios.defaults.baseURL = "https://api.decksofkeyforge.com"
-        }
 
         const token = keyLocalStorage.findAuthKey()
         if (token) {

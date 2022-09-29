@@ -1,6 +1,7 @@
 package coraythan.keyswap.cards
 
 import coraythan.keyswap.Api
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -32,12 +33,16 @@ data class CardsVersion (
 
 @Service
 class CardsVersionService(private val repo: CardsVersionRepo) {
-    fun findVersion() = repo.findAll().first().version
+    fun findVersion() = repo.findLatestVersion()
     fun revVersion() {
-        val current = repo.findAll().first()
-        repo.save(current.copy(version = current.version + 1))
+        val current = repo.findLatestVersion()
+        repo.save(CardsVersion(version = current + 1))
     }
 }
 
 @Transactional
-interface CardsVersionRepo : CrudRepository<CardsVersion, Long>
+interface CardsVersionRepo : CrudRepository<CardsVersion, Long> {
+
+    @Query(value = "SELECT max(version) FROM CardsVersion")
+    fun findLatestVersion(): Int
+}
