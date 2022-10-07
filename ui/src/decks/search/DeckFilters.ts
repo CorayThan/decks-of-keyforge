@@ -90,12 +90,14 @@ export class DeckFilters {
                 queryObject.constraints = [queryObject.constraints]
             }
             queryObject.constraints = queryObject.constraints.map((forQuery: string) => {
-                const split = forQuery.split("-")
+                const split = forQuery.split(forQuery.includes("_") ? "_" : "-")
                 let property = split[0]
                 if (property === "askingPrice") {
                     // temp to fix these urls
                     property = "buyItNow"
                 }
+                log.debug("From constraint: " + forQuery)
+                log.debug(`Found ${property} ${split[1]} ${Number(split[2])}`)
                 return {
                     property,
                     cap: split[1],
@@ -288,7 +290,7 @@ export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNoti
 }
 
 export const constraintsAsParam = (constraints: Constraint[]) => (
-    constraints.map(constraint => `${constraint.property}-${constraint.cap}-${constraint.value}`)
+    constraints.map(constraint => `${constraint.property}_${constraint.cap}_${constraint.value}`)
 )
 
 const cardsAsParam = (cards: DeckCardQuantity[]) => (

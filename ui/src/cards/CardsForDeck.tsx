@@ -39,6 +39,8 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
         let maxWidth = 1600
         if (screenStore.screenWidth < 1630) {
             maxWidth = 1288
+        } else if (screenStore.screenWidth > 3160) {
+            maxWidth = 3160
         }
 
         return (
@@ -58,7 +60,7 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
                         <Typography variant={"h5"}>{deckName}</Typography>
                     </DialogTitle>
                     <DialogContent style={{display: "flex", justifyContent: "center"}}>
-                        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", maxWidth}}>
+                        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", alignContent: "center", maxWidth}}>
                             {cards
                                 .flatMap(houseAndCards => houseAndCards.cards)
                                 .map((card, idx) => (
