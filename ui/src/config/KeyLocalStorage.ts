@@ -1,7 +1,9 @@
-import { makeObservable, observable } from "mobx"
-import { DeckNameId } from "../decks/comparison/CompareDecks"
-import { ListingInfo } from "../generated-src/ListingInfo"
-import { log } from "./Utils"
+import {makeObservable, observable} from "mobx"
+import {DeckNameId} from "../decks/comparison/CompareDecks"
+import {ListingInfo} from "../generated-src/ListingInfo"
+import {log} from "./Utils"
+import {AllianceDeckNameId} from "../importdeck/theoretical/TheoreticalDeckStore";
+import {House} from "../generated-src/House";
 
 enum Keys {
     AUTH = "AUTH",
@@ -13,6 +15,7 @@ enum Keys {
     DECK_LIST_VIEW_TYPE = "DECK_LIST_VIEW_TYPE",
     SALE_DEFAULTS = "SALE_DEFAULTS_2",
     DECKS_TO_COMPARE = "DECKS_TO_COMPARE",
+    ALLIANCE_DECKS = "ALLIANCE_DECKS",
     GENERIC_STORAGE = "GENERIC_STORAGE"
 }
 
@@ -31,6 +34,7 @@ interface GenericStorage {
     offersCanceled?: boolean
     includeExpiredOffers?: boolean
     analyzeCount?: number
+    buildAllianceDeck?: boolean
 }
 
 class KeyLocalStorage {
@@ -62,6 +66,9 @@ class KeyLocalStorage {
     @observable
     decksToCompare: DeckNameId[] = []
 
+    @observable
+    allianceDeckHouses: AllianceDeckNameId[] = []
+
     private localStorage = window.localStorage
 
     constructor() {
@@ -74,6 +81,7 @@ class KeyLocalStorage {
         this.loadCardListViewType()
         this.loadSaleDefaults()
         this.loadDecksToCompare()
+        this.loadAllianceDecks()
         this.loadGenericStorage()
     }
 
@@ -155,6 +163,24 @@ class KeyLocalStorage {
         this.decksToCompare = []
     }
 
+    clearAllianceDeck = () => {
+        this.allianceDeckHouses = []
+        this.localStorage.removeItem(Keys.ALLIANCE_DECKS)
+    }
+
+    removeAllianceHouse = (id: string) => {
+        if (this.allianceDeckHouses.find(existingDeck => existingDeck.deckId === id) != null) {
+            this.allianceDeckHouses = this.allianceDeckHouses.filter(deck => deck.deckId !== id)
+            this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckHouses))
+        }
+    }
+
+    addAllianceHouse = (deckId: string, deckName: string, house: House) => {
+        const allianceDeckNameId: AllianceDeckNameId = {deckId, deckName, house}
+        this.allianceDeckHouses.push(allianceDeckNameId)
+        this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckHouses))
+    }
+
     updateGenericStorage = (updates: GenericStorage) => {
         const updated = {
             ...this.genericStorage,
@@ -207,6 +233,18 @@ class KeyLocalStorage {
             } catch (e) {
                 log.error("Couldn't read decks to compare from " + decksToCompare)
                 this.localStorage.removeItem(Keys.DECKS_TO_COMPARE)
+            }
+        }
+    }
+
+    private loadAllianceDecks = () => {
+        const allianceDecks = this.localStorage.getItem(Keys.ALLIANCE_DECKS)
+        if (allianceDecks != null && allianceDecks.length > 0) {
+            try {
+                this.allianceDeckHouses = JSON.parse(allianceDecks) as AllianceDeckNameId[]
+            } catch (e) {
+                log.error("Couldn't read alliances " + allianceDecks)
+                this.localStorage.removeItem(Keys.ALLIANCE_DECKS)
             }
         }
     }

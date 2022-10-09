@@ -1,9 +1,11 @@
-import axios, { AxiosResponse } from "axios"
-import { makeObservable, observable } from "mobx"
-import { HttpConfig } from "../../config/HttpConfig"
-import { log } from "../../config/Utils"
-import { DeckWithSynergyInfo } from "../../decks/models/DeckSearchResult"
-import { DeckBuilderData } from "../DeckBuilderData"
+import axios, {AxiosResponse} from "axios"
+import {makeObservable, observable} from "mobx"
+import {HttpConfig} from "../../config/HttpConfig"
+import {DeckWithSynergyInfo} from "../../decks/models/DeckSearchResult"
+import {DeckBuilderData} from "../DeckBuilderData"
+import {AllianceDeckHouses} from "../../generated-src/AllianceDeckHouses";
+import {House} from "../../generated-src/House";
+import {keyLocalStorage} from "../../config/KeyLocalStorage";
 
 export class TheoreticalDeckStore {
     static readonly CONTEXT = HttpConfig.API + "/theoretical-decks"
@@ -21,6 +23,9 @@ export class TheoreticalDeckStore {
     @observable
     savingDeck = false
 
+    @observable
+    deleting = false
+
     findDeck = (id: string) => {
         axios.get(`${TheoreticalDeckStore.CONTEXT}/${id}`)
             .then((response: AxiosResponse<DeckWithSynergyInfo>) => {
@@ -31,8 +36,16 @@ export class TheoreticalDeckStore {
     findMyTheoreticalDecks = () => {
         this.myTheoryDecks = undefined
 
-        log.info("Find with url: " + `${TheoreticalDeckStore.SECURED_CONTEXT}/mine`)
         axios.get(`${TheoreticalDeckStore.SECURED_CONTEXT}/mine`)
+            .then((response: AxiosResponse<DeckWithSynergyInfo[]>) => {
+                this.myTheoryDecks = response.data
+            })
+    }
+
+    findMyAllianceDecks = () => {
+        this.myTheoryDecks = undefined
+
+        axios.get(`${TheoreticalDeckStore.SECURED_CONTEXT}/alliance/mine`)
             .then((response: AxiosResponse<DeckWithSynergyInfo[]>) => {
                 this.myTheoryDecks = response.data
             })
@@ -47,10 +60,39 @@ export class TheoreticalDeckStore {
             })
     }
 
+    saveAllianceDeck = async () => {
+        this.savingDeck = true
+        const [deckOne, deckTwo, deckThree] = keyLocalStorage.allianceDeckHouses
+        const allianceDeckSaveInfo: AllianceDeckHouses = {
+            houseOne: deckOne!.house,
+            houseOneDeckId: deckOne!.deckId,
+            houseTwo: deckTwo!.house,
+            houseTwoDeckId: deckTwo!.deckId,
+            houseThree: deckThree!.house,
+            houseThreeDeckId: deckThree!.deckId,
+        }
+        const response: AxiosResponse<string> = await axios.post(`${TheoreticalDeckStore.SECURED_CONTEXT}/alliance`, allianceDeckSaveInfo)
+
+        this.savedDeckId = response.data
+        this.savingDeck = false
+        return response.data
+    }
+
+    deleteTheoryDeck = async (id: String) => {
+        this.deleting = true
+        await axios.post(`${TheoreticalDeckStore.SECURED_CONTEXT}/delete/${id}`)
+        this.deleting = false
+    }
 
     constructor() {
         makeObservable(this)
     }
+}
+
+export interface AllianceDeckNameId {
+    deckId: string
+    deckName: string
+    house: House
 }
 
 export const theoreticalDeckStore = new TheoreticalDeckStore()

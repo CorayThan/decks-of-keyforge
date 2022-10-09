@@ -1,20 +1,21 @@
-import { Card } from "@material-ui/core"
-import { observer } from "mobx-react"
+import {Card} from "@material-ui/core"
+import {observer} from "mobx-react"
 import * as React from "react"
-import { RouteComponentProps } from "react-router"
-import { cardStore } from "../cards/CardStore"
-import { spacing } from "../config/MuiConfig"
-import { log } from "../config/Utils"
-import { Loader } from "../mui-restyled/Loader"
-import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
-import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
-import { uiStore } from "../ui/UiStore"
-import { ComparisonPopover } from "./comparison/ComparisonPopover"
-import { deckImportPopStore } from "./DeckImportPop"
-import { deckStore } from "./DeckStore"
-import { DeckViewSmall } from "./DeckViewSmall"
-import { DeckWithSynergyInfo } from "./models/DeckSearchResult"
-import { ForSaleView } from "./sales/ForSaleView"
+import {RouteComponentProps} from "react-router"
+import {cardStore} from "../cards/CardStore"
+import {spacing} from "../config/MuiConfig"
+import {log} from "../config/Utils"
+import {Loader} from "../mui-restyled/Loader"
+import {DeckStatsView, ExtraDeckStatsView} from "../stats/DeckStatsView"
+import {DeckSynergiesInfoView} from "../synergy/DeckSynergiesInfoView"
+import {uiStore} from "../ui/UiStore"
+import {ComparisonPopover} from "./comparison/ComparisonPopover"
+import {deckImportPopStore} from "./DeckImportPop"
+import {deckStore} from "./DeckStore"
+import {DeckViewSmall} from "./DeckViewSmall"
+import {DeckWithSynergyInfo} from "./models/DeckSearchResult"
+import {ForSaleView} from "./sales/ForSaleView"
+import {AllianceDeckPopover} from "../importdeck/theoretical/AllianceDeckPopover";
 
 interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string }> {
 }
@@ -115,24 +116,29 @@ export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
         if (saleInfo) {
             saleInfoComponent = (
                 <Card style={{margin: spacing(2)}}>
-                    <ForSaleView saleInfo={saleInfo} deckName={deck.deck.name} keyforgeId={deck.deck.keyforgeId} deckId={deck.deck.id}/>
+                    <ForSaleView
+                        saleInfo={saleInfo}
+                        deckName={deck.deck.name}
+                        keyforgeId={deck.deck.keyforgeId}
+                        deckId={deck.deck.id}
+                    />
                 </Card>
             )
         } else if (!fake) {
             saleInfoComponent = <Loader/>
         }
 
-
         return (
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                 <ExtraDeckStatsView deck={deck.deck}/>
-                <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake}/>
+                <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake} fake={fake}/>
                 <DeckStatsView deck={deck.deck}/>
                 {saleInfoComponent}
                 <DeckSynergiesInfoView
                     synergies={deck}
                 />
                 <ComparisonPopover/>
+                <AllianceDeckPopover/>
             </div>
         )
 

@@ -18,6 +18,7 @@ export interface DeckWithSynergyInfo {
     cardRatingPercentile: number
     synergyPercentile: number
     antisynergyPercentile: number
+    alliance: boolean
 }
 
 export interface DeckSearchResult {

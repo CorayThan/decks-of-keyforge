@@ -1,55 +1,56 @@
-import { Typography } from "@material-ui/core"
-import { observer } from "mobx-react"
+import {Typography} from "@material-ui/core"
+import {observer} from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
-import { BrowserRouter, Route, Switch } from "react-router-dom"
-import { AboutPage } from "../about/AboutPage"
-import { CommunityPage } from "../about/CommunityPage"
-import { PrivacyPolicy } from "../about/PrivacyPolicy"
-import { ThirdPartyIntegrations } from "../about/ThirdPartyIntegrations"
-import { AdminPanelView } from "../admin/AdminPanelView"
-import { ArticlesPage } from "../articles/ArticlesPage"
-import { CardFilters, prepareCardFiltersForQueryString } from "../cards/CardFilters"
-import { CardSearchPage } from "../cards/CardSearchPage"
-import { cardNameToCardNameKey } from "../cards/KCard"
-import { CardPage } from "../cards/views/CardPage"
-import { ChangePasswordPage } from "../components/ChangePasswordPage"
-import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
-import { KeyTopbar } from "../components/KeyTopbar"
-import { VerifyEmailPage } from "../components/VerifyEmailPage"
-import { DeckComparisonView } from "../decks/comparison/DeckComparisonView"
-import { DeckViewPage } from "../decks/DeckViewFull"
-import { prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleNotificationsStore"
-import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
-import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
-import { DeckSearchPage } from "../decks/search/DeckSearchPage"
-import { ExpansionNumber } from "../expansions/Expansions"
-import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
-import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
-import { DokIcon } from "../generic/icons/DokIcon"
-import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
-import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreticalDecks"
-import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
-import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
-import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
-import { TournamentPrintables } from "../keyforgeevents/tournaments/TournamentPrintables"
-import { TournamentSearchPage } from "../keyforgeevents/tournaments/TournamentSearchPage"
-import { LandingPage } from "../landing/LandingPage"
-import { ViewMessagePage } from "../messages/ViewMessage"
-import { MyDokPage } from "../my-dok/MyDokPage"
-import { StatsPage } from "../stats/StatsPage"
-import { TagSearchPage } from "../tags/TagSearchPage"
-import { SnackMessage } from "../ui/MessageStore"
-import { CodeOfConduct } from "../user/CodeOfConduct"
-import { ProfilePage } from "../user/ProfilePage"
-import { RegistrationPage } from "../user/RegistrationPage"
-import { UserSearchPage } from "../user/search/UserSearchPage"
-import { AgreeToTerms, TermsOfUse } from "../user/TermsOfUse"
-import { userStore } from "../user/UserStore"
-import { KeyLoaderBar } from "./KeyLoaderBar"
-import { LoggedInRoute } from "./LoggedInRoute"
-import { spacing } from "./MuiConfig"
-import { serverStatusStore } from "./ServerStatusStore"
+import {BrowserRouter, Route, Switch} from "react-router-dom"
+import {AboutPage} from "../about/AboutPage"
+import {CommunityPage} from "../about/CommunityPage"
+import {PrivacyPolicy} from "../about/PrivacyPolicy"
+import {ThirdPartyIntegrations} from "../about/ThirdPartyIntegrations"
+import {AdminPanelView} from "../admin/AdminPanelView"
+import {ArticlesPage} from "../articles/ArticlesPage"
+import {CardFilters, prepareCardFiltersForQueryString} from "../cards/CardFilters"
+import {CardSearchPage} from "../cards/CardSearchPage"
+import {cardNameToCardNameKey} from "../cards/KCard"
+import {CardPage} from "../cards/views/CardPage"
+import {ChangePasswordPage} from "../components/ChangePasswordPage"
+import {ForgotPasswordPage} from "../components/ForgotPasswordPage"
+import {KeyTopbar} from "../components/KeyTopbar"
+import {VerifyEmailPage} from "../components/VerifyEmailPage"
+import {DeckComparisonView} from "../decks/comparison/DeckComparisonView"
+import {DeckViewPage} from "../decks/DeckViewFull"
+import {prepareForSaleQueryForQueryString} from "../decks/salenotifications/ForSaleNotificationsStore"
+import {CollectionStatsSearchPage} from "../decks/search/CollectionStatsSearchPage"
+import {DeckFilters, prepareDeckFiltersForQueryString} from "../decks/search/DeckFilters"
+import {DeckSearchPage} from "../decks/search/DeckSearchPage"
+import {ExpansionNumber} from "../expansions/Expansions"
+import {UpdateExtraCardInfoPage} from "../extracardinfo/UpdateExtraCardInfoPage"
+import {SaleNotificationQueryDto} from "../generated-src/SaleNotificationQueryDto"
+import {DokIcon} from "../generic/icons/DokIcon"
+import {CreateTheoreticalDeck} from "../importdeck/theoretical/CreateTheoreticalDeck"
+import {ViewMyTheoreticalDecks} from "../importdeck/theoretical/ViewMyTheoreticalDecks"
+import {ViewTheoreticalDeck} from "../importdeck/theoretical/ViewTheoreticalDeck"
+import {KeyForgeEventsPage} from "../keyforgeevents/KeyForgeEventsPage"
+import {TournamentPage} from "../keyforgeevents/tournaments/TournamentPage"
+import {TournamentPrintables} from "../keyforgeevents/tournaments/TournamentPrintables"
+import {TournamentSearchPage} from "../keyforgeevents/tournaments/TournamentSearchPage"
+import {LandingPage} from "../landing/LandingPage"
+import {ViewMessagePage} from "../messages/ViewMessage"
+import {MyDokPage} from "../my-dok/MyDokPage"
+import {StatsPage} from "../stats/StatsPage"
+import {TagSearchPage} from "../tags/TagSearchPage"
+import {SnackMessage} from "../ui/MessageStore"
+import {CodeOfConduct} from "../user/CodeOfConduct"
+import {ProfilePage} from "../user/ProfilePage"
+import {RegistrationPage} from "../user/RegistrationPage"
+import {UserSearchPage} from "../user/search/UserSearchPage"
+import {AgreeToTerms, TermsOfUse} from "../user/TermsOfUse"
+import {userStore} from "../user/UserStore"
+import {KeyLoaderBar} from "./KeyLoaderBar"
+import {LoggedInRoute} from "./LoggedInRoute"
+import {spacing} from "./MuiConfig"
+import {serverStatusStore} from "./ServerStatusStore"
+import {ViewMyAllianceDecks} from "../importdeck/theoretical/ViewMyAllianceDecks";
 
 class Routes {
 
@@ -68,6 +69,7 @@ class Routes {
     static tags = "/tags"
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
+    static allianceDecks = "/alliances"
     static compareDecks = "/compare-decks"
     static stats = "/stats"
     static articles = "/articles"
@@ -79,9 +81,11 @@ class Routes {
     static thirdPartyTools = "/third-party-tools"
     static myTournaments = `${Routes.tournaments}?mineOnly=true`
     static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
+    static myAllianceDecks = `${Routes.allianceDecks}/mine`
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
+    static allianceDeckPage = (id?: string) => `${Routes.allianceDecks}/${id == null ? ":id" : id}`
     static messagePage = (id?: number) => `${Routes.messages}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
@@ -204,10 +208,17 @@ const KeyRouter = observer(() => {
 
     if (serverStatusStore.siteUpdating) {
         return (
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: spacing(4)}}>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: spacing(4)
+            }}>
                 <DokIcon height={80} style={{}}/>
                 <Typography variant={"h4"} style={{marginTop: spacing(2)}}>Site update in progress</Typography>
-                <Typography style={{marginTop: spacing(2)}}>Refresh this page to check if the update is complete.</Typography>
+                <Typography style={{marginTop: spacing(2)}}>Refresh this page to check if the update is
+                    complete.</Typography>
             </div>
         )
     }
@@ -235,7 +246,17 @@ const KeyRouter = observer(() => {
                     />
                     <Route
                         exact={true}
+                        path={Routes.myAllianceDecks}
+                        component={ViewMyAllianceDecks}
+                    />
+                    <Route
+                        exact={true}
                         path={Routes.theoreticalDeckPage()}
+                        component={ViewTheoreticalDeck}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.allianceDeckPage()}
                         component={ViewTheoreticalDeck}
                     />
                     <Route

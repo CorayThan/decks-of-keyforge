@@ -36,15 +36,15 @@ import javax.persistence.EntityManager
 @Transactional
 @Service
 class DeckSearchService(
-        private val cardService: CardService,
-        private val deckRepo: DeckRepo,
-        private val userService: KeyUserService,
-        private val currentUserService: CurrentUserService,
-        private val statsService: StatsService,
-        private val tagRepo: KTagRepo,
-        private val entityManager: EntityManager,
-        private val ownedDeckRepo: OwnedDeckRepo,
-        private val ownedDeckService: OwnedDeckService,
+    private val cardService: CardService,
+    private val deckRepo: DeckRepo,
+    private val userService: KeyUserService,
+    private val currentUserService: CurrentUserService,
+    private val statsService: StatsService,
+    private val tagRepo: KTagRepo,
+    private val entityManager: EntityManager,
+    private val ownedDeckRepo: OwnedDeckRepo,
+    private val ownedDeckService: OwnedDeckService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
@@ -57,7 +57,8 @@ class DeckSearchService(
         val count: Long
         val preExistingCount = deckCount
         if (preExistingCount != null && filtersAreEqualForCount(filters)
-                && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL) {
+            && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL
+        ) {
             count = preExistingCount
         } else {
 
@@ -73,21 +74,23 @@ class DeckSearchService(
 
                 val deckQ = QDeck.deck
                 count = query
-                        .select(deckQ.id)
-                        .from(deckQ)
-                        .where(predicate)
-                        .limit(if (
-                                filters.forSale == true || filters.forTrade || filters.forAuction
-                        ) 10000 else 1000)
-                        .fetch()
-                        .count()
-                        .toLong()
+                    .select(deckQ.id)
+                    .from(deckQ)
+                    .where(predicate)
+                    .limit(
+                        if (
+                            filters.forSale == true || filters.forTrade || filters.forAuction
+                        ) 10000 else 1000
+                    )
+                    .fetch()
+                    .count()
+                    .toLong()
             }
         }
 
         return DeckCount(
-                pages = (count + filters.pageSize - 1) / filters.pageSize,
-                count = count
+            pages = (count + filters.pageSize - 1) / filters.pageSize,
+            count = count
         )
     }
 
@@ -112,7 +115,7 @@ class DeckSearchService(
         }
 
         val sort = if (
-                filters.sort == DeckSortOptions.ENDING_SOONEST
+            filters.sort == DeckSortOptions.ENDING_SOONEST
         ) {
             if (filters.sortDirection == SortDirection.ASC) {
                 (sortProperty as ComparableExpressionBase<*>).desc()
@@ -120,10 +123,10 @@ class DeckSearchService(
                 (sortProperty as ComparableExpressionBase<*>).asc()
             }
         } else if (
-                filters.sortDirection == SortDirection.DESC
-                || filters.sort == DeckSortOptions.FUNNIEST
-                || filters.sort == DeckSortOptions.MOST_WISHLISTED
-                || filters.sort == DeckSortOptions.RECENTLY_LISTED
+            filters.sortDirection == SortDirection.DESC
+            || filters.sort == DeckSortOptions.FUNNIEST
+            || filters.sort == DeckSortOptions.MOST_WISHLISTED
+            || filters.sort == DeckSortOptions.RECENTLY_LISTED
         ) {
             (sortProperty as ComparableExpressionBase<*>).desc()
         } else {
@@ -133,17 +136,17 @@ class DeckSearchService(
 //        log.info("Filter decks for deck search 2")
 
         val deckResults = query.selectFrom(deckQ)
-                .where(predicate)
-                .limit(filters.pageSize)
-                .offset(filters.page * filters.pageSize)
-                .apply {
-                    if (filters.sort != DeckSortOptions.ADDED_DATE) {
-                        orderBy(sort, deckQ.id.asc())
-                    } else {
-                        orderBy(sort)
-                    }
+            .where(predicate)
+            .limit(filters.pageSize)
+            .offset(filters.page * filters.pageSize)
+            .apply {
+                if (filters.sort != DeckSortOptions.ADDED_DATE) {
+                    orderBy(sort, deckQ.id.asc())
+                } else {
+                    orderBy(sort)
                 }
-                .fetch()
+            }
+            .fetch()
 
 //        log.info("Filter decks for deck search 3")
 
@@ -158,20 +161,22 @@ class DeckSearchService(
 //            log.info("Convert ${it.keyforgeId} ${it.name} to search result")
 
             var searchResult = it.toDeckSearchResult(
-                    cardService.deckToHouseAndCards(it),
-                    cards,
-                    stats = statsService.findCurrentStats(),
-                    synergies = DeckSynergyService.fromDeckWithCards(it, cards)
+                cardService.deckToHouseAndCards(it),
+                cards,
+                stats = statsService.findCurrentStats(),
+                synergies = DeckSynergyService.fromDeckWithCards(it, cards)
             )
 
             if (filters.forSale == true || filters.forTrade || filters.forAuction || filters.completedAuctions) {
-                searchResult = searchResult.copy(deckSaleInfo = saleInfoForDeck(
+                searchResult = searchResult.copy(
+                    deckSaleInfo = saleInfoForDeck(
                         searchResult.keyforgeId,
                         timezoneOffsetMinutes,
                         it,
                         userHolder.user,
                         filters.completedAuctions
-                ))
+                    )
+                )
             }
             if (filters.teamDecks) {
                 val user = userHolder.user
@@ -185,14 +190,15 @@ class DeckSearchService(
                 }
             }
             if (filters.owners.isNotEmpty()) {
-                val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) filters.owners else filters.owners.filter { owner ->
-                    val foundUser = userService.findUserByUsername(owner)
-                    when {
-                        foundUser == null -> false
-                        foundUser.teamId != null && foundUser.teamId == userHolder.user?.teamId -> true
-                        else -> foundUser.allowUsersToSeeDeckOwnership
+                val visibleUsers =
+                    if (filters.forSale == true || filters.forAuction || filters.forTrade) filters.owners else filters.owners.filter { owner ->
+                        val foundUser = userService.findUserByUsername(owner)
+                        when {
+                            foundUser == null -> false
+                            foundUser.teamId != null && foundUser.teamId == userHolder.user?.teamId -> true
+                            else -> foundUser.allowUsersToSeeDeckOwnership
+                        }
                     }
-                }
 
                 val owners = ownedDeckRepo.findByDeckIdAndOwnedByIn(it.id, visibleUsers).map { userDeck ->
                     userDeck.owner.username
@@ -203,7 +209,9 @@ class DeckSearchService(
             }
 
             if (filters.withOwners) {
-                if (userHolder.user?.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) != true) {
+                if (userHolder.user?.realPatreonTier()
+                        ?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) != true
+                ) {
                     throw BadRequestException("Please become a $6+ a month patron to view owners.")
                 }
                 val deckWithOwners = ownedDeckService.addOwners(searchResult)
@@ -219,23 +227,31 @@ class DeckSearchService(
         }
 
         return DecksPage(
-                decks,
-                filters.page
+            decks,
+            filters.page
         )
     }
 
     private fun filtersAreEqualForCount(filters: DeckFilters) = filters.copy(
-            sort = defaultFilters.sort,
-            sortDirection = defaultFilters.sortDirection
+        sort = defaultFilters.sort,
+        sortDirection = defaultFilters.sortDirection
     ) == defaultFilters
 
-    data class UserHolder(private val id: UUID? = null, private val currentUserService: CurrentUserService, private val userService: KeyUserService) {
+    data class UserHolder(
+        private val id: UUID? = null,
+        private val currentUserService: CurrentUserService,
+        private val userService: KeyUserService
+    ) {
         val user: KeyUser? by lazy {
             if (id == null) currentUserService.loggedInUser() else userService.findByIdOrNull(id)
         }
     }
 
-    fun deckFilterPredicate(filters: DeckQuery, userHolder: UserHolder, sortOptions: DeckSortOptions? = null): BooleanBuilder {
+    fun deckFilterPredicate(
+        filters: DeckQuery,
+        userHolder: UserHolder,
+        sortOptions: DeckSortOptions? = null
+    ): BooleanBuilder {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
 
@@ -295,13 +311,13 @@ class DeckSearchService(
             val trimmed = filters.notes.lowercase().trim()
             val deckNoteQ = QDeckNote.deckNote
             predicate.and(
-                    deckQ.deckNotes.any().`in`(
-                            JPAExpressions.selectFrom(deckNoteQ)
-                                    .where(
-                                        deckNoteQ.user.username.eq(username),
-                                        deckNoteQ.notes.containsIgnoreCase(trimmed)
-                                    )
-                    )
+                deckQ.deckNotes.any().`in`(
+                    JPAExpressions.selectFrom(deckNoteQ)
+                        .where(
+                            deckNoteQ.user.username.eq(username),
+                            deckNoteQ.notes.containsIgnoreCase(trimmed)
+                        )
+                )
             )
         }
 
@@ -318,12 +334,13 @@ class DeckSearchService(
         if (filters.owners.isNotEmpty() || filters.owner.isNotBlank()) {
 
             val allOwners = filters.owners.toSet().plus(filters.owner)
-                    .filter { it.isNotBlank() }
-                    .mapNotNull { userService.findIdAndDeckVisibilityByUsername(it) }
+                .filter { it.isNotBlank() }
+                .mapNotNull { userService.findIdAndDeckVisibilityByUsername(it) }
 
-            val visibleUsers = if (filters.forSale == true || filters.forAuction || filters.forTrade) allOwners else allOwners.filter {
-                it.allowUsersToSeeDeckOwnership
-            }
+            val visibleUsers =
+                if (filters.forSale == true || filters.forAuction || filters.forTrade) allOwners else allOwners.filter {
+                    it.allowUsersToSeeDeckOwnership
+                }
 
             if (allOwners.size == 1 && allOwners[0].id == userHolder.user?.id) {
                 // it's me
@@ -341,13 +358,13 @@ class DeckSearchService(
 
                 val deckListingQ = QDeckListing.deckListing
                 predicate.and(
-                        deckQ.auctions.any().`in`(
-                                JPAExpressions.selectFrom(deckListingQ)
-                                        .where(
-                                                deckListingQ.seller.id.eq(allOwners[0].id),
-                                                deckListingQ.status.ne(DeckListingStatus.COMPLETE)
-                                        )
-                        )
+                    deckQ.auctions.any().`in`(
+                        JPAExpressions.selectFrom(deckListingQ)
+                            .where(
+                                deckListingQ.seller.id.eq(allOwners[0].id),
+                                deckListingQ.status.ne(DeckListingStatus.COMPLETE)
+                            )
+                    )
                 )
             } else {
                 // just find the publicly owned ones
@@ -372,18 +389,20 @@ class DeckSearchService(
             if (filters.forSale == true) {
                 predicate.and(deckQ.forSale.isTrue)
             } else if (filters.forTrade || filters.forAuction) {
-                predicate.and(BooleanBuilder().andAnyOf(
+                predicate.and(
+                    BooleanBuilder().andAnyOf(
                         *listOfNotNull(
-                                if (filters.forTrade) deckQ.forTrade.isTrue else null,
-                                if (filters.forAuction) deckQ.forAuction.isTrue else null
+                            if (filters.forTrade) deckQ.forTrade.isTrue else null,
+                            if (filters.forAuction) deckQ.forAuction.isTrue else null
                         ).toTypedArray()
-                ))
+                    )
+                )
             }
             if (filters.forSaleInCountry != null) {
                 val preferredCountries = userHolder.user?.preferredCountries
                 if (preferredCountries.isNullOrEmpty()) {
                     predicate.and(
-                            deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
+                        deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
                     )
                 } else {
                     predicate.andAnyOf(*preferredCountries.map {
@@ -421,36 +440,39 @@ class DeckSearchService(
             when {
                 it.mav == true -> {
                     predicate.andAnyOf(
-                            *it.cardNames.flatMap { cardName ->
-                                House.values().toSet().minus(cardService.findByCardName(cardName)!!.house)
-                                        .map { otherHouse ->
-                                            deckQ.cardNames.like("%~$cardName${otherHouse}~%")
-                                        }
+                        *it.cardNames.flatMap { cardName ->
+                            House.values().toSet().minus(cardService.findByCardName(cardName)!!.house)
+                                .map { otherHouse ->
+                                    deckQ.cardNames.like("%~$cardName${otherHouse}~%")
+                                }
 
-                            }.toTypedArray()
+                        }.toTypedArray()
                     )
                 }
+
                 it.house != null -> predicate.andAnyOf(
-                        *it.cardNames.map { cardName ->
-                            deckQ.cardNames.like("%~$cardName${it.house}~%")
-                        }.toTypedArray()
+                    *it.cardNames.map { cardName ->
+                        deckQ.cardNames.like("%~$cardName${it.house}~%")
+                    }.toTypedArray()
                 )
+
                 it.quantity == 0 -> it.cardNames.forEach { cardName ->
                     predicate.and(deckQ.cardNames.notLike("%~${cardName}1%"))
                 }
+
                 else -> predicate.andAnyOf(
-                        *it.cardNames.map { cardName ->
-                            deckQ.cardNames.like("%~$cardName${(1..it.quantity).joinToString("")}%")
-                        }.toTypedArray()
+                    *it.cardNames.map { cardName ->
+                        deckQ.cardNames.like("%~$cardName${(1..it.quantity).joinToString("")}%")
+                    }.toTypedArray()
                 )
             }
         }
 
         if (filters.tournamentIds.isNotEmpty()) {
             predicate.andAnyOf(
-                    *filters.tournamentIds.map {
-                        deckQ.tournamentDecks.any().tourneyId.eq(it)
-                    }.toTypedArray()
+                *filters.tournamentIds.map {
+                    deckQ.tournamentDecks.any().tourneyId.eq(it)
+                }.toTypedArray()
             )
         }
 
@@ -461,22 +483,20 @@ class DeckSearchService(
         val deckOffset = (0..(deckCount ?: 800000)).random()
         val deckQ = QDeck.deck
         return query
-                .select(deckQ.keyforgeId)
-                .from(deckQ)
-                .where(BooleanBuilder().and(deckQ.id.gt(deckOffset)))
-                .limit(1)
-                .orderBy(deckQ.id.asc())
-                .fetchFirst()
+            .select(deckQ.keyforgeId)
+            .from(deckQ)
+            .where(BooleanBuilder().and(deckQ.id.gt(deckOffset)))
+            .limit(1)
+            .orderBy(deckQ.id.asc())
+            .fetchFirst()
     }
-
-    fun findByNameIgnoreCase(name: String) = deckRepo.findByNameIgnoreCase(name.lowercase())
 
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
         return deck.toDeckSearchResult(
-                cardService.deckToHouseAndCards(deck),
-                cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats()
+            cardService.deckToHouseAndCards(deck),
+            cardService.cardsForDeck(deck),
+            stats = statsService.findCurrentStats()
         )
     }
 
@@ -503,66 +523,72 @@ class DeckSearchService(
         }
 
         val searchResult = deck.toDeckSearchResult(
-                cardService.deckToHouseAndCards(deck),
-                cards,
-                stats = stats,
-                synergies = DeckSynergyService.fromDeckWithCards(deck, cards),
-                includeDetails = true
+            cardService.deckToHouseAndCards(deck),
+            cards,
+            stats = stats,
+            synergies = DeckSynergyService.fromDeckWithCards(deck, cards),
+            includeDetails = true
         )
 
         return DeckWithSynergyInfo(
-                deck = if (user?.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) == true) {
-                    ownedDeckService.addOwners(searchResult)
-                } else {
-                    searchResult
-                },
-                synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
-                antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0
+            deck = if (user?.realPatreonTier()?.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) == true) {
+                ownedDeckService.addOwners(searchResult)
+            } else {
+                searchResult
+            },
+            synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
+            antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0,
         )
     }
 
-    fun saleInfoForDeck(keyforgeId: String, offsetMinutes: Int, deckParam: Deck? = null, userParam: KeyUser? = null, completedAuctionsOnly: Boolean = false): List<DeckSaleInfo> {
+    fun saleInfoForDeck(
+        keyforgeId: String,
+        offsetMinutes: Int,
+        deckParam: Deck? = null,
+        userParam: KeyUser? = null,
+        completedAuctionsOnly: Boolean = false
+    ): List<DeckSaleInfo> {
         val deck = deckParam ?: deckRepo.findByKeyforgeId(keyforgeId) ?: return listOf()
         val currentUser = userParam ?: currentUserService.loggedInUser()
 
         val mapped = if (completedAuctionsOnly) {
             deck.auctions.filter { it.status == DeckListingStatus.COMPLETE }
-                    .map { DeckSaleInfo.fromDeckListing(offsetMinutes, it, currentUser) }
+                .map { DeckSaleInfo.fromDeckListing(offsetMinutes, it, currentUser) }
         } else {
             deck.auctions.filter { it.status != DeckListingStatus.COMPLETE }
-                    .map { DeckSaleInfo.fromDeckListing(offsetMinutes, it, currentUser) }
+                .map { DeckSaleInfo.fromDeckListing(offsetMinutes, it, currentUser) }
         }
 
         return mapped
-                .sortedByDescending { it.dateListed }
+            .sortedByDescending { it.dateListed }
     }
 
     fun findDecksByName(name: String): List<DeckSearchResult> {
         val deckQ = QDeck.deck
         val predicate = BooleanBuilder()
         val trimmed = name
-                .lowercase()
-                .trim()
+            .lowercase()
+            .trim()
         val tokenized = trimmed
-                .split("\\W+".toRegex())
-                .filter { it.length > 2 }
+            .split("\\W+".toRegex())
+            .filter { it.length > 2 }
 
         val toUse = if (tokenized.isEmpty()) listOf(trimmed) else tokenized
         toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
 
         return query.selectFrom(deckQ)
-                .where(predicate)
-                .orderBy(deckQ.sasRating.desc())
-                .limit(5)
-                .fetch()
-                .map {
-                    val cards = cardService.cardsForDeck(it)
-                    it.toDeckSearchResult(
-                            housesAndCards = it.houses.map { house -> HouseAndCards(house, listOf()) },
-                            stats = statsService.findCurrentStats(),
-                            synergies = DeckSynergyService.fromDeckWithCards(it, cards)
-                    )
-                }
+            .where(predicate)
+            .orderBy(deckQ.sasRating.desc())
+            .limit(5)
+            .fetch()
+            .map {
+                val cards = cardService.cardsForDeck(it)
+                it.toDeckSearchResult(
+                    housesAndCards = it.houses.map { house -> HouseAndCards(house, listOf()) },
+                    stats = statsService.findCurrentStats(),
+                    synergies = DeckSynergyService.fromDeckWithCards(it, cards)
+                )
+            }
     }
 
     private fun canAccessTag(tagId: Long, userId: UUID?) {

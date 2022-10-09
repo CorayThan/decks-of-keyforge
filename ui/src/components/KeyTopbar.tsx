@@ -54,7 +54,6 @@ const myDeckLinks = () => {
             to: Routes.decksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber, true), text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`, mobileActive: false
         })),
         {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
-        {to: Routes.usersDecksNotForSale(), text: "Not For Sale"},
         {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
     ]
     if (userStore.hasTeam) {
@@ -65,6 +64,9 @@ const myDeckLinks = () => {
     if (userStore.patron) {
         links.push(
             {to: Routes.analyzeUsersDecks(), text: "Analyze"}
+        )
+        links.push(
+            {to: Routes.myAllianceDecks, text: "Alliance Decks"}
         )
     }
     return links

@@ -49,3 +49,9 @@ fun String.htmlEncode(): String {
             .replace("&", "&amp;")
             .replace("'", "&#39;")
 }
+
+fun String.firstWord(): String {
+    return this
+        .substringBefore(" ")
+        .filter { it.isLetter() }
+}

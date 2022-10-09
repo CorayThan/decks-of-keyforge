@@ -1,4 +1,6 @@
 
+docker --version
+
 ./gradlew genSrc
 
 cd ui

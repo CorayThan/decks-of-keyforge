@@ -8,14 +8,17 @@ import javax.persistence.Lob
 
 @Entity
 data class TheoreticalDeck(
-        val expansion: Int,
+        val expansion: Int? = null,
         @Lob
         @Type(type = "org.hibernate.type.TextType")
         val cardIds: String = "",
 
         val houseNamesString: String = "",
 
-        val creatorId: UUID? = null,
+        val creatorId: UUID,
+        val alliance: Boolean = false,
+
+        val deckName: String? = null,
 
         @Id
         val id: UUID = UUID.randomUUID()

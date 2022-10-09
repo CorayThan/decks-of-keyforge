@@ -15,7 +15,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.12"
+export const latestVersion = "6.13"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,6 +43,24 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.13"}
+                    date={"10/8/2022"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Alliance Decks",
+                            note: "Well, last update I said it had been a while, and now it's really really been a while! " +
+                                "First off all patrons can now easily create Alliance decks! Just toggle on creation " +
+                                "from the bottom of the deck search panel."
+                        },
+                        {
+                            highlight: "Future Plans",
+                            note: "I will be continuing to maintain DoK and SAS. Expect SAS for Winds of Exchange to " +
+                                "release about four weeks after the initial release. Keep forgin' y'all!"
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.12"}
                     date={"12/2/2021"}

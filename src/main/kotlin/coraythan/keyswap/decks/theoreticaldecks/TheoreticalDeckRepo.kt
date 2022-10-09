@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface TheoreticalDeckRepo : CrudRepository<TheoreticalDeck, UUID> {
-    fun findByCreatorId(creatorId: UUID): List<TheoreticalDeck>
+    fun findByCreatorIdAndAlliance(creatorId: UUID, alliance: Boolean): List<TheoreticalDeck>
 }

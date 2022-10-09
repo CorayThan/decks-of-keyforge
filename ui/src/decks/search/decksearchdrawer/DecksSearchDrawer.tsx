@@ -1,49 +1,49 @@
-import { Box, Divider, FormGroup, IconButton, Tooltip } from "@material-ui/core"
+import {Box, Divider, FormGroup, IconButton, Switch, Tooltip} from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
+import {BarChart, Close, Delete, ViewList, ViewModule} from "@material-ui/icons"
+import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import * as History from "history"
-import { computed, makeObservable, observable } from "mobx"
-import { observer } from "mobx-react"
+import {computed, makeObservable, observable} from "mobx"
+import {observer} from "mobx-react"
 import * as React from "react"
-import { cardStore } from "../../../cards/CardStore"
-import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../../../components/KeyDrawer"
-import { SearchDrawerExpansionPanel } from "../../../components/SearchDrawerExpansionPanel"
-import { SortDirectionView } from "../../../components/SortDirectionView"
-import { keyLocalStorage } from "../../../config/KeyLocalStorage"
-import { spacing } from "../../../config/MuiConfig"
-import { MyDokSubPaths, Routes } from "../../../config/Routes"
-import { log, Utils } from "../../../config/Utils"
-import { expansionInfoMapNumbers } from "../../../expansions/Expansions"
-import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../../../expansions/ExpansionSelectOrExclude"
-import { PatreonRewardsTier } from "../../../generated-src/PatreonRewardsTier"
-import { AuctionDeckIcon } from "../../../generic/icons/AuctionDeckIcon"
-import { SellDeckIcon } from "../../../generic/icons/SellDeckIcon"
-import { TradeDeckIcon } from "../../../generic/icons/TradeDeckIcon"
-import { HouseSelectOrExclude, SelectedOrExcludedHouses } from "../../../houses/HouseSelectOrExclude"
-import { KeyButton } from "../../../mui-restyled/KeyButton"
-import { KeyLink } from "../../../mui-restyled/KeyLink"
-import { LinkButton } from "../../../mui-restyled/LinkButton"
-import { messageStore } from "../../../ui/MessageStore"
-import { screenStore } from "../../../ui/ScreenStore"
-import { UserSearchSuggest } from "../../../user/search/UserSearchSuggest"
-import { UserLink } from "../../../user/UserLink"
-import { userStore } from "../../../user/UserStore"
-import { deckStore } from "../../DeckStore"
-import { CreateForSaleQuery } from "../../salenotifications/CreateForSaleQuery"
-import { DeckSorts, DeckSortSelect, DeckSortSelectStore } from "../../selects/DeckSortSelect"
-import { FiltersConstraintsStore } from "../ConstraintDropdowns"
-import { DeckCardSelectStore } from "../DeckCardSelect"
-import { DeckFilters } from "../DeckFilters"
-import { DownloadDeckResults } from "../DownloadDeckResults"
-import { DeckSearchDrawerCards } from "./DeckSearchDrawerCards"
-import { DeckSearchDrawerConstraints } from "./DeckSearchDrawerConstraints"
-import { DeckSearchDrawerTagsAndNotes } from "./DeckSearchDrawerTagsAndNotes"
+import {cardStore} from "../../../cards/CardStore"
+import {KeyDrawer, keyDrawerStore, KeyDrawerVersion} from "../../../components/KeyDrawer"
+import {SearchDrawerExpansionPanel} from "../../../components/SearchDrawerExpansionPanel"
+import {SortDirectionView} from "../../../components/SortDirectionView"
+import {keyLocalStorage} from "../../../config/KeyLocalStorage"
+import {spacing} from "../../../config/MuiConfig"
+import {MyDokSubPaths, Routes} from "../../../config/Routes"
+import {log, Utils} from "../../../config/Utils"
+import {expansionInfoMapNumbers} from "../../../expansions/Expansions"
+import {ExpansionSelectOrExclude, SelectedOrExcludedExpansions} from "../../../expansions/ExpansionSelectOrExclude"
+import {PatreonRewardsTier} from "../../../generated-src/PatreonRewardsTier"
+import {AuctionDeckIcon} from "../../../generic/icons/AuctionDeckIcon"
+import {SellDeckIcon} from "../../../generic/icons/SellDeckIcon"
+import {TradeDeckIcon} from "../../../generic/icons/TradeDeckIcon"
+import {HouseSelectOrExclude, SelectedOrExcludedHouses} from "../../../houses/HouseSelectOrExclude"
+import {KeyButton} from "../../../mui-restyled/KeyButton"
+import {KeyLink} from "../../../mui-restyled/KeyLink"
+import {LinkButton} from "../../../mui-restyled/LinkButton"
+import {messageStore} from "../../../ui/MessageStore"
+import {screenStore} from "../../../ui/ScreenStore"
+import {UserSearchSuggest} from "../../../user/search/UserSearchSuggest"
+import {UserLink} from "../../../user/UserLink"
+import {userStore} from "../../../user/UserStore"
+import {deckStore} from "../../DeckStore"
+import {CreateForSaleQuery} from "../../salenotifications/CreateForSaleQuery"
+import {DeckSorts, DeckSortSelect, DeckSortSelectStore} from "../../selects/DeckSortSelect"
+import {FiltersConstraintsStore} from "../ConstraintDropdowns"
+import {DeckCardSelectStore} from "../DeckCardSelect"
+import {DeckFilters} from "../DeckFilters"
+import {DownloadDeckResults} from "../DownloadDeckResults"
+import {DeckSearchDrawerCards} from "./DeckSearchDrawerCards"
+import {DeckSearchDrawerConstraints} from "./DeckSearchDrawerConstraints"
+import {DeckSearchDrawerTagsAndNotes} from "./DeckSearchDrawerTagsAndNotes"
 
 interface DecksSearchDrawerProps {
     location: History.Location
@@ -193,9 +193,26 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     render() {
         const {
-            title, myFavorites, handleTitleUpdate, handleMyDecksUpdate, handleMyFavoritesUpdate, owner, forSale, forTrade, forAuction,
-            forSaleInCountry, notes, notesUser, completedAuctions, teamDecks, withOwners, handleMyPreviouslyOwnedDecksUpdate,
-            tags, notTags, owners, tournamentIds
+            title,
+            myFavorites,
+            handleTitleUpdate,
+            handleMyDecksUpdate,
+            handleMyFavoritesUpdate,
+            owner,
+            forSale,
+            forTrade,
+            forAuction,
+            forSaleInCountry,
+            notes,
+            notesUser,
+            completedAuctions,
+            teamDecks,
+            withOwners,
+            handleMyPreviouslyOwnedDecksUpdate,
+            tags,
+            notTags,
+            owners,
+            tournamentIds
         } = this.props.filters
 
         const analyze = this.props.location.pathname.includes(Routes.collectionStats)
@@ -258,7 +275,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         label={(
                                             <div style={{display: "flex", alignItems: "center"}}>
                                                 <SellDeckIcon/>
-                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Sale</Typography>
+                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For
+                                                    Sale</Typography>
                                             </div>
                                         )}
                                         style={{width: 136}}
@@ -318,7 +336,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     )}
                                     {showLoginForCountry ? (
                                         <div style={{display: "flex"}}>
-                                            <KeyLink to={userStore.loggedIn() ? MyDokSubPaths.profile : Routes.registration}>
+                                            <KeyLink
+                                                to={userStore.loggedIn() ? MyDokSubPaths.profile : Routes.registration}>
                                                 <Typography variant={"body2"}>
                                                     Select your country
                                                 </Typography>
@@ -331,7 +350,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     {this.props.filters.notForSale ? (
                                         <div style={{display: "flex", alignItems: "center"}}>
                                             <Typography>Not for sale</Typography>
-                                            <IconButton onClick={() => this.props.filters.notForSale = false}><Delete fontSize={"small"}/></IconButton>
+                                            <IconButton onClick={() => this.props.filters.notForSale = false}><Delete
+                                                fontSize={"small"}/></IconButton>
                                         </div>
                                     ) : null}
                                 </FormGroup>
@@ -357,7 +377,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             label={(
                                                 <div style={{display: "flex", alignItems: "center"}}>
                                                     <AuctionDeckIcon style={{minWidth: 18}}/>
-                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>Auctions</Typography>
+                                                    <Typography style={{marginLeft: spacing(1)}}
+                                                                variant={"body2"}>Auctions</Typography>
                                                 </div>
                                             )}
                                             style={{width: 136}}
@@ -372,7 +393,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             label={(
                                                 <div style={{display: "flex", alignItems: "center"}}>
                                                     <TradeDeckIcon style={{minWidth: 18}}/>
-                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For Trade</Typography>
+                                                    <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For
+                                                        Trade</Typography>
                                                 </div>
                                             )}
                                             style={{width: 136}}
@@ -486,7 +508,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     handleNotesUpdate={this.handleNotesUpdate}
                                     removeNotes={this.removeNotes}
                                 />
-                                <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()} title={"Houses"}>
+                                <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()}
+                                                            title={"Houses"}>
                                     <HouseSelectOrExclude selectedHouses={this.selectedHouses} excludeTitle={true}/>
                                 </SearchDrawerExpansionPanel>
                                 <DeckSearchDrawerConstraints
@@ -663,6 +686,23 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 )}
                             </Box>
                         </ListItem>
+                        {userStore.patron && (
+                            <ListItem>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={keyLocalStorage.genericStorage.buildAllianceDeck}
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                keyLocalStorage.updateGenericStorage({
+                                                    buildAllianceDeck: event.target.checked
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    label={"Build Alliance Deck"}
+                                />
+                            </ListItem>
+                        )}
                     </List>
                 </form>
             </KeyDrawer>

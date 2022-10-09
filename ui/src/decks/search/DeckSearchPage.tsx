@@ -26,6 +26,7 @@ import { DeckTableView } from "../DeckTableView"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./decksearchdrawer/DecksSearchDrawer"
+import {AllianceDeckPopover} from "../../importdeck/theoretical/AllianceDeckPopover";
 
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
@@ -169,6 +170,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
             <div style={{display: "flex"}}>
                 <DecksSearchDrawer history={history} filters={filters} location={location}/>
                 <ComparisonPopover/>
+                <AllianceDeckPopover/>
                 <div
                     style={{
                         flexGrow: 1,
