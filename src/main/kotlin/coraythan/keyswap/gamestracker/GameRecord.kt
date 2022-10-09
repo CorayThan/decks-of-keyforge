@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
-//@Entity
+@Entity
 data class GameRecord(
     val playerOne: String,
     val playerOneDeckId: String,
@@ -52,7 +52,7 @@ data class GameRecord(
     }
 }
 
-//@Entity
+@Entity
 data class GameEvent(
 
     val message: String,
@@ -65,6 +65,14 @@ data class GameEvent(
     val id: UUID = UUID.randomUUID()
 )
 
+data class GameReport(
+    val playerOne: String,
+    val playerOneDeckId: String,
+    val playerTwo: String,
+    val playerTwoDeckId: String,
+    val messages: List<String>,
+)
+
 @GenerateTs
 data class GameRecordDto(
     val playerOne: String,
@@ -72,8 +80,8 @@ data class GameRecordDto(
     val playerTwo: String,
     val playerTwoDeckId: String,
     val gameEvents: List<String>,
+    val reportDate: String,
     val winner: String?,
-    val reportDate: String? = null,
     val id: UUID = UUID.randomUUID(),
 )
 

@@ -46,7 +46,7 @@ export const AllianceDeckPopover = observer(() => {
                 <List>
                     {decks.map(deck => (
                         <ListItem key={deck.deckId}>
-                            <Box width={280} display={"flex"} alignItems={"center"}>
+                            <Box width={screenStore.screenSizeXs() ? 144 : 280} display={"flex"} alignItems={"center"}>
                                 <HouseImage house={deck.house} size={24}/>
                                 <Typography
                                     variant={"h5"}
@@ -89,7 +89,7 @@ export const AllianceDeckPopover = observer(() => {
                     }}
                     loading={theoreticalDeckStore.savingDeck}
                 >
-                    Make Alliance
+                    {screenStore.screenSizeXs() ? "Alliance" : "Forge Alliance"}
                 </KeyButton>
             </Paper>
         </Box>

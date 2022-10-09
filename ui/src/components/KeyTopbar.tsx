@@ -648,6 +648,9 @@ const MyDokDropdown = () => {
         {to: MyDokSubPaths.team, text: "My Team", mobileActive: false},
     ]
 
+    if (userStore.isTeamSas) {
+        links.push({to: Routes.searchGames, text: "Search Games", mobileActive: true})
+    }
     if (userStore.isAdmin) {
         links.push({to: Routes.adminPanel, text: "Admin Panel", mobileActive: true})
     }

@@ -51,6 +51,7 @@ import {LoggedInRoute} from "./LoggedInRoute"
 import {spacing} from "./MuiConfig"
 import {serverStatusStore} from "./ServerStatusStore"
 import {ViewMyAllianceDecks} from "../importdeck/theoretical/ViewMyAllianceDecks";
+import {GamesSearchPage} from "../gamestracker/GamesSearchPage";
 
 class Routes {
 
@@ -67,6 +68,7 @@ class Routes {
     static about = "/about"
     static decks = "/decks"
     static tags = "/tags"
+    static gamesTracker = "/games-tracker"
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
     static allianceDecks = "/alliances"
@@ -83,6 +85,7 @@ class Routes {
     static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
     static myAllianceDecks = `${Routes.allianceDecks}/mine`
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
+    static searchGames = `${Routes.gamesTracker}/search`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static allianceDeckPage = (id?: string) => `${Routes.allianceDecks}/${id == null ? ":id" : id}`
@@ -248,6 +251,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.myAllianceDecks}
                         component={ViewMyAllianceDecks}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.searchGames}
+                        component={GamesSearchPage}
                     />
                     <Route
                         exact={true}

@@ -3,6 +3,7 @@ package coraythan.keyswap.gamestracker
 import coraythan.keyswap.decks.models.SimpleDeckSearchResult
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
+import java.time.LocalDateTime
 
 @GenerateTs
 data class GamesSet(
@@ -41,4 +42,6 @@ data class MiniGameRecord(
     val playerTwoDeck: SimpleDeckSearchResult,
     val winner: String,
     val turns: Int,
+    val reportDayTime: String,
+    val logs: List<String>,
 )

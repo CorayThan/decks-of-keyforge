@@ -462,6 +462,14 @@ export class UserStore {
         }
         return false
     }
+
+    @computed
+    get isTeamSas(): boolean {
+        if (this.user) {
+            return this.user.teamId === "f82eaff6-3b42-40b6-87de-05ef34628ae2"
+        }
+        return false
+    }
 }
 
 export const userStore = new UserStore()

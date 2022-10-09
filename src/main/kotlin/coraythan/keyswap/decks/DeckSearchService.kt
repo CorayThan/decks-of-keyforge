@@ -513,6 +513,11 @@ class DeckSearchService(
         return deckToDeckWithSynergies(deck)
     }
 
+    fun findDeckSimple(keyforgeId: String): SimpleDeckSearchResult {
+        val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
+        return deck.toDeckSearchResult().toSimpleResult()
+    }
+
     fun deckToDeckWithSynergies(deck: Deck): DeckWithSynergyInfo {
         val user = currentUserService.loggedInUser()
         val stats = statsService.findCurrentStats()
