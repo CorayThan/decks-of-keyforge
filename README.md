@@ -119,4 +119,4 @@ set PGPASSWORD=postgres
 pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\scripts\full-db.dump
 ```
 
-To update passwords run: `update key_user set password = '$2a$10$tfqUiFMI9ck0DmvWLtL/durPIv5BuLCu.M0ZyyGr2p3WhRqHeIAh2';`
+To update passwords run: `update key_user set password = 'hash-from-db-for-password-to-make-all-passwords';`
