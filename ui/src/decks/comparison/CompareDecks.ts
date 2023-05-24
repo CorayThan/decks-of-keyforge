@@ -1,5 +1,6 @@
 import { DifferenceAmount } from "../../generated-src/DifferenceAmount"
 import { DeckSearchResult } from "../models/DeckSearchResult"
+import { DeckType } from "../../generated-src/DeckType";
 
 export interface DeckCompareResults {
     deck: DeckSearchResult
@@ -15,4 +16,5 @@ export interface DeckCompareValue {
 export interface DeckNameId {
     keyforgeId: string
     name: string
+    type: DeckType
 }

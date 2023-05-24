@@ -13,6 +13,7 @@ import { userStore } from "../../user/UserStore"
 import { deckStore } from "../DeckStore"
 import { DeckViewSmall } from "../DeckViewSmall"
 import { DeckComparisonSummary } from "./DeckComparisonSummary"
+import { log } from "../../config/Utils";
 
 export const DeckComparisonView = observer(() => {
 
@@ -24,10 +25,24 @@ export const DeckComparisonView = observer(() => {
             searchToUse = search.substr(1)
         }
         const queryValues = QueryString.parse(searchToUse)
-        if (queryValues.decks != null && queryValues.decks.constructor === Array) {
-            const decks: string[] = queryValues.decks
-            deckStore.findComparisonDecks(decks)
+        log.info("Searching for comparison decks with values: " + JSON.stringify(queryValues))
+        let deckIds: string[] = []
+        let allianceDeckIds: string[] = []
+        if (queryValues.decks != null) {
+            if (queryValues.decks.constructor === Array) {
+                deckIds = queryValues.decks
+            } else if (queryValues.decks.constructor === String) {
+                deckIds = [queryValues.decks]
+            }
         }
+        if (queryValues.allianceDecks != null) {
+            if (queryValues.allianceDecks.constructor === Array) {
+                allianceDeckIds = queryValues.allianceDecks
+            } else if (queryValues.allianceDecks.constructor === String) {
+                allianceDeckIds = [queryValues.allianceDecks]
+            }
+        }
+        deckStore.findComparisonDecks(deckIds, allianceDeckIds)
     }, [search])
     useEffect(() => {
         uiStore.setTopbarValues("Compare Decks", "Compare", "Evaluate decks side by side")

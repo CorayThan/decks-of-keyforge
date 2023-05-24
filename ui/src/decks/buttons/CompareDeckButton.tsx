@@ -26,7 +26,8 @@ export class CompareDeckButton extends React.Component<CompareDeckButtonProps> {
                 onClick={() => {
                     keyLocalStorage.addDeckToCompare({
                         keyforgeId: deck.keyforgeId,
-                        name: deck.name
+                        name: deck.name,
+                        type: deck.deckType,
                     })
                     if (onClick) {
                         onClick()

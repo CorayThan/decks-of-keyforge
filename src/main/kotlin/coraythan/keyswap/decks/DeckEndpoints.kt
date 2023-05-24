@@ -5,6 +5,7 @@ import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.collectionstats.CollectionStats
 import coraythan.keyswap.decks.compare.DeckCompareService
+import coraythan.keyswap.decks.compare.DecksToCompareDto
 import coraythan.keyswap.decks.models.DeckCount
 import coraythan.keyswap.decks.models.DeckSaleInfo
 import coraythan.keyswap.decks.models.DecksPage
@@ -53,7 +54,7 @@ class DeckEndpoints(
     }
 
     @PostMapping("/compare")
-    fun compareDecks(@RequestBody deckIds: List<String>) = deckCompareService.compareDecks(deckIds)
+    fun compareDecks(@RequestBody decks: DecksToCompareDto) = deckCompareService.compareDecks(decks)
 
     @PostMapping("/filter-count")
     fun decksCount(@RequestBody deckFilters: DeckFilters): DeckCount {

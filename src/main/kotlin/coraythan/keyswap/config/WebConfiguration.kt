@@ -162,6 +162,17 @@ class WebConfiguration(
                         )
                     }
 
+                } else if (uri.contains("/alliance-decks")) {
+
+                    val transformed = transformIndexPage(
+                        resource,
+                        "Alliances of KeyForge",
+                        "Search and evaluate KeyForge Alliance Decks. " +
+                                "Find synergies and antisynergies with the SAS and AERC rating systems."
+                    )
+
+                    transformed
+
                 } else if (uri.contains("/cards/[a-z0-9\\-]+".toRegex())) {
 
                     val questionIdx = uri.indexOf("?")

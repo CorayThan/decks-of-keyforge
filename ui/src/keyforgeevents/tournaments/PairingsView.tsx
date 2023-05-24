@@ -12,6 +12,7 @@ import { SortableTable, SortableTableContainer, SortableTableHeaderInfo } from "
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { UserLink } from "../../user/UserLink"
 import { ReportResults } from "./ReportResults"
+import { DeckType } from "../../generated-src/DeckType";
 
 export const PairingsView = (props: {
     round: TournamentRoundInfo, tourneyId: number, stage: TournamentStage,
@@ -72,7 +73,8 @@ const roundPairingsTableHeaders = (
             sortable: true,
             transform: (data) => {
                 return (
-                    <BoxScore username={data.playerOneUsername} winner={data.playerOneWon === true} dokUser={data.playerOneDokUser}/>
+                    <BoxScore username={data.playerOneUsername} winner={data.playerOneWon === true}
+                              dokUser={data.playerOneDokUser}/>
                 )
             }
         },
@@ -85,7 +87,8 @@ const roundPairingsTableHeaders = (
                     return "Bye"
                 }
                 return (
-                    <BoxScore username={data.playerTwoUsername} winner={data.playerOneWon === false} dokUser={data.playerTwoDokUser}/>
+                    <BoxScore username={data.playerTwoUsername} winner={data.playerOneWon === false}
+                              dokUser={data.playerTwoDokUser}/>
                 )
             }
         },
@@ -120,7 +123,11 @@ const roundPairingsTableHeaders = (
                     }
                     return (
                         <LinkButton
-                            href={Routes.compareDecksWithIds(data.deckIds)}
+                            href={Routes.compareDecksWithIds(data.deckIds.map(id => ({
+                                name: "?",
+                                keyforgeId: id,
+                                type: DeckType.STANDARD,
+                            })))}
                             newWindow={true}
                         >
                             Decks
@@ -164,7 +171,8 @@ const roundPairingsTableHeaders = (
 const BoxScore = (props: { username: string, dokUser: boolean, winner?: boolean }) => {
     return (
         <Box display={"flex"} alignItems={"center"}>
-            {props.dokUser ? <UserLink username={props.username}/> : <Typography variant={"body2"}>{props.username}</Typography>}
+            {props.dokUser ? <UserLink username={props.username}/> :
+                <Typography variant={"body2"}>{props.username}</Typography>}
             {props.winner && <Star color={"primary"} style={{marginLeft: spacing(1)}}/>}
         </Box>
     )

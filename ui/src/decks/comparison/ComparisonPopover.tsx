@@ -57,7 +57,7 @@ export const ComparisonPopover = observer(() => {
                 <LinkButton
                     variant={"contained"}
                     color={"primary"}
-                    href={Routes.compareDecksWithIds(decks.map(deck => deck.keyforgeId))}
+                    href={Routes.compareDecksWithIds(decks)}
                     style={{margin: spacing(2)}}
                     disabled={!patron || decks.length < 2}
                 >

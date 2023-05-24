@@ -14,6 +14,7 @@ import { DeckCompareResults } from "./comparison/CompareDecks"
 import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
 import { DeckFilters } from "./search/DeckFilters"
 import { DeckStoreInterface } from "../alliancedecks/DeckStoreInterface";
+import { DecksToCompareDto } from "../generated-src/DecksToCompareDto";
 
 export class DeckStore implements DeckStoreInterface {
     static readonly DECK_PAGE_SIZE = 20
@@ -100,9 +101,13 @@ export class DeckStore implements DeckStoreInterface {
         this.currentFilters = undefined
     }
 
-    findComparisonDecks = async (deckIds: string[]) => {
+    findComparisonDecks = async (deckIds: string[], allianceDeckIds: string[]) => {
         this.compareDecks = undefined
-        const response: AxiosResponse<DeckCompareResults[]> = await axios.post(`${DeckStore.CONTEXT}/compare`, deckIds)
+        const toSend: DecksToCompareDto = {
+            deckIds,
+            allianceDeckIds
+        }
+        const response: AxiosResponse<DeckCompareResults[]> = await axios.post(`${DeckStore.CONTEXT}/compare`, toSend)
         this.compareDecks = response.data
     }
 

@@ -52,7 +52,7 @@ class AllianceDeckService(
     @Scheduled(fixedDelayString = "PT1M", initialDelayString = "PT2M")
     fun convertTheoryDecks() {
         val convert = theoreticalDeckRepo.findTop25ByAllianceTrueAndConvertedToAllianceFalse()
-        log.info("Going to convert ${convert.size} old alliance decks")
+        log.info("Alliance Deck Conversion: Going to convert ${convert.size} old alliance decks")
         convert.forEach {
             val cards = cardService.cardsFromCardIds(it.cardIds)
             val cardsByHouse = cards.groupBy { card -> card.house }
@@ -79,7 +79,7 @@ class AllianceDeckService(
 
             if (decksForAlliance.all { deckForAlliance -> deckForAlliance != null } && decksForAlliance.map { deckForAlliance -> deckForAlliance!!.second.expansion }
                     .toSet().size == 1) {
-                log.info("Actually Creating Alliance deck")
+                log.info("Alliance Deck Conversion: Actually Creating Alliance deck")
                 saveAllianceDeckWithUser(
                     AllianceDeckHouses(
                         houseOne = decksForAlliance[0]!!.first,
@@ -97,7 +97,7 @@ class AllianceDeckService(
 
             theoreticalDeckRepo.save(it.copy(convertedToAlliance = true))
         }
-        log.info("Done converting ${convert.size} old alliance decks")
+        log.info("Alliance Deck Conversion: Done converting ${convert.size} old alliance decks")
     }
 
     fun saveAllianceDeck(toSave: AllianceDeckHouses): UUID {
@@ -237,22 +237,25 @@ class AllianceDeckService(
         val predicate = deckFilterPredicate(filters, userHolder)
         val deckQ = QAllianceDeck.allianceDeck
 
+        val initialSort = when (filters.sort) {
+            AllianceDeckSortOptions.ADDED_DATE -> if (filters.sortDirection == SortDirection.DESC) deckQ.createdDateTime.desc() else deckQ.createdDateTime.asc()
+            AllianceDeckSortOptions.SAS_RATING -> if (filters.sortDirection == SortDirection.DESC) deckQ.sasRating.desc() else deckQ.sasRating.asc()
+            AllianceDeckSortOptions.NAME -> if (filters.sortDirection == SortDirection.DESC) deckQ.name.asc() else deckQ.name.desc()
+        }
+
         val deckResults = query.selectFrom(deckQ)
             .where(predicate)
             .limit(filters.pageSize)
             .offset(filters.page * filters.pageSize)
-            // .orderBy(deckQ.)
+            .orderBy(initialSort, deckQ.id.asc())
             .fetch()
 
         val decks = deckResults.mapNotNull {
             val cards = if (userHolder.user?.displayFutureSas() == true) {
-                // cardService.cardsForDeck(it)
                 cardService.futureCardsForDeck(it)
             } else {
                 cardService.cardsForDeck(it)
             }
-
-//            log.info("Convert ${it.keyforgeId} ${it.name} to search result")
 
             var searchResult = it.toDeckSearchResult(
                 cardService.deckToHouseAndCards(it),

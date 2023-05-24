@@ -29,7 +29,7 @@ export class DeckListView extends React.Component<DeckListViewProps> {
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                 {decks.map((deck) => {
                     return (
-                        <div key={deck.id} style={{display: "flex", ...addToDeckListHolder}}>
+                        <div key={deck.keyforgeId} style={{display: "flex", ...addToDeckListHolder}}>
                             <DeckViewSmall deck={deck} saleInfo={deck.deckSaleInfo}/>
                             {displayGraphs && (
                                 <div style={{display: screenStore.smallDeckView() ? undefined : "flex", flexWrap: "wrap"}}>

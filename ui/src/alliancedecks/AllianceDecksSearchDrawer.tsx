@@ -88,7 +88,7 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
         const myDecks = allianceFiltersStore.owners.length === 1 && allianceFiltersStore.owners[0] === userStore.username
 
         return (
-            <KeyDrawer version={KeyDrawerVersion.DECK}>
+            <KeyDrawer version={KeyDrawerVersion.ALLIANCE_DECK}>
                 <form onSubmit={this.search}>
                     <List dense={true}>
                         <ListItem>
@@ -100,7 +100,7 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                             />
                             <div style={{flexGrow: 1}}/>
                             {screenStore.screenSizeXs() ? (
-                                <IconButton onClick={() => keyDrawerStore.open = false}>
+                                <IconButton onClick={keyDrawerStore.close}>
                                     <Close/>
                                 </IconButton>
                             ) : null}

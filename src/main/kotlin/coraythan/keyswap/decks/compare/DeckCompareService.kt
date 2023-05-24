@@ -1,16 +1,19 @@
 package coraythan.keyswap.decks.compare
 
+import coraythan.keyswap.alliancedecks.AllianceDeckService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.DeckSearchResult
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 import kotlin.math.absoluteValue
 
 @Transactional
 @Service
 class DeckCompareService(
-        private val deckSearchService: DeckSearchService
+    private val deckSearchService: DeckSearchService,
+    private val allianceDeckService: AllianceDeckService,
 ) {
 
 
@@ -48,54 +51,60 @@ class DeckCompareService(
      * Buffs good on play creatures - Hysteria, Mind Over Matter
      */
 
-    fun compareDecks(deckIds: List<String>): List<DeckCompareResults> {
-        if (deckIds.size < 2) throw BadRequestException("Not enough decks to compare.")
+    fun compareDecks(decks: DecksToCompareDto): List<DeckCompareResults> {
+        if ((decks.deckIds.size + decks.allianceDeckIds.size) < 2) throw BadRequestException("Not enough decks to compare.")
 
-        val decks = deckIds.map { deckSearchService.findDeckWithSynergies(it)!!.deck }
+        val archonDecks = decks.deckIds.map { deckSearchService.findDeckWithSynergies(it)!!.deck }
+        val allianceDecks =
+            decks.allianceDeckIds.map { allianceDeckService.findAllianceDeckWithSynergies(UUID.fromString(it))!!.deck }
 
-        return decks.map {
-            compareDeck(it, decks)
-        }
+        val comparableDecks = archonDecks
+            .plus(allianceDecks)
+
+        return comparableDecks
+            .map {
+                compareDeck(it, comparableDecks)
+            }
     }
 
     private fun compareDeck(deckToCompare: DeckSearchResult, decks: List<DeckSearchResult>): DeckCompareResults {
         return DeckCompareResults(
-                deckToCompare,
-                listOf(
-                        compareStats(deckToCompare, decks, "Aember Control", 5.0) { deck ->
-                            deck.amberControl
-                        },
-                        compareStats(deckToCompare, decks, "Expected Aember", 10.0) { deck ->
-                            deck.expectedAmber
-                        },
-                        compareStats(deckToCompare, decks, "Artifact Control", 1.5) { deck ->
-                            deck.artifactControl ?: 0.0
-                        },
-                        compareStats(deckToCompare, decks, "Creature Control", 5.0) { deck ->
-                            deck.creatureControl
-                        },
-                        compareStats(deckToCompare, decks, "Efficiency", 8.0) { deck ->
-                            deck.efficiency ?: 0.0
-                        },
-                        compareStats(deckToCompare, decks, "Disruption", 5.0) { deck ->
-                            deck.disruption ?: 0.0
-                        },
-                        compareStats(deckToCompare, decks, "Artifact Count", 3.0) { deck ->
-                            deck.artifactCount?.toDouble() ?: 0.0
-                        },
-                        compareStats(deckToCompare, decks, "Creature Count", 5.0) { deck ->
-                            deck.creatureCount?.toDouble() ?: 0.0
-                        },
-                )
+            deckToCompare,
+            listOf(
+                compareStats(deckToCompare, decks, "Aember Control", 5.0) { deck ->
+                    deck.amberControl
+                },
+                compareStats(deckToCompare, decks, "Expected Aember", 10.0) { deck ->
+                    deck.expectedAmber
+                },
+                compareStats(deckToCompare, decks, "Artifact Control", 1.5) { deck ->
+                    deck.artifactControl ?: 0.0
+                },
+                compareStats(deckToCompare, decks, "Creature Control", 5.0) { deck ->
+                    deck.creatureControl
+                },
+                compareStats(deckToCompare, decks, "Efficiency", 8.0) { deck ->
+                    deck.efficiency ?: 0.0
+                },
+                compareStats(deckToCompare, decks, "Disruption", 5.0) { deck ->
+                    deck.disruption ?: 0.0
+                },
+                compareStats(deckToCompare, decks, "Artifact Count", 3.0) { deck ->
+                    deck.artifactCount?.toDouble() ?: 0.0
+                },
+                compareStats(deckToCompare, decks, "Creature Count", 5.0) { deck ->
+                    deck.creatureCount?.toDouble() ?: 0.0
+                },
+            )
         )
     }
 
     private fun compareStats(
-            deck: DeckSearchResult,
-            decks: List<DeckSearchResult>,
-            stat: String,
-            significantDifference: Double,
-            statAccessor: (deck: DeckSearchResult) -> Double
+        deck: DeckSearchResult,
+        decks: List<DeckSearchResult>,
+        stat: String,
+        significantDifference: Double,
+        statAccessor: (deck: DeckSearchResult) -> Double
     ): DeckCompareValue {
         val decksMinusThis = decks.minus(deck)
         val maxStat: Double = decksMinusThis.map(statAccessor).maxOrNull()!!
@@ -111,13 +120,13 @@ class DeckCompareService(
         }
 
         return DeckCompareValue(
-                stat,
-                diff,
-                when {
-                    diff.absoluteValue >= significantDifference -> DifferenceAmount.SIGNIFICANT
-                    diff.absoluteValue >= (significantDifference / 2.0) -> DifferenceAmount.MODERATE
-                    else -> DifferenceAmount.MINIMAL
-                }
+            stat,
+            diff,
+            when {
+                diff.absoluteValue >= significantDifference -> DifferenceAmount.SIGNIFICANT
+                diff.absoluteValue >= (significantDifference / 2.0) -> DifferenceAmount.MODERATE
+                else -> DifferenceAmount.MINIMAL
+            }
         )
     }
 }

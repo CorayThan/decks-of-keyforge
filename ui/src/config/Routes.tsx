@@ -1,61 +1,63 @@
-import {Typography} from "@material-ui/core"
-import {observer} from "mobx-react"
+import { Typography } from "@material-ui/core"
+import { observer } from "mobx-react"
 import * as QueryString from "query-string"
 import * as React from "react"
-import {BrowserRouter, Route, Switch} from "react-router-dom"
-import {AboutPage} from "../about/AboutPage"
-import {CommunityPage} from "../about/CommunityPage"
-import {PrivacyPolicy} from "../about/PrivacyPolicy"
-import {ThirdPartyIntegrations} from "../about/ThirdPartyIntegrations"
-import {AdminPanelView} from "../admin/AdminPanelView"
-import {ArticlesPage} from "../articles/ArticlesPage"
-import {CardFilters, prepareCardFiltersForQueryString} from "../cards/CardFilters"
-import {CardSearchPage} from "../cards/CardSearchPage"
-import {cardNameToCardNameKey} from "../cards/KCard"
-import {CardPage} from "../cards/views/CardPage"
-import {ChangePasswordPage} from "../components/ChangePasswordPage"
-import {ForgotPasswordPage} from "../components/ForgotPasswordPage"
-import {KeyTopbar} from "../components/KeyTopbar"
-import {VerifyEmailPage} from "../components/VerifyEmailPage"
-import {DeckComparisonView} from "../decks/comparison/DeckComparisonView"
-import {DeckViewPage} from "../decks/DeckViewFull"
-import {prepareForSaleQueryForQueryString} from "../decks/salenotifications/ForSaleNotificationsStore"
-import {CollectionStatsSearchPage} from "../decks/search/CollectionStatsSearchPage"
-import {DeckFilters, prepareDeckFiltersForQueryString} from "../decks/search/DeckFilters"
-import {DeckSearchPage} from "../decks/search/DeckSearchPage"
-import {ExpansionNumber} from "../expansions/Expansions"
-import {UpdateExtraCardInfoPage} from "../extracardinfo/UpdateExtraCardInfoPage"
-import {SaleNotificationQueryDto} from "../generated-src/SaleNotificationQueryDto"
-import {DokIcon} from "../generic/icons/DokIcon"
-import {CreateTheoreticalDeck} from "../importdeck/theoretical/CreateTheoreticalDeck"
-import {ViewMyTheoreticalDecks} from "../importdeck/theoretical/ViewMyTheoreticalDecks"
-import {ViewTheoreticalDeck} from "../importdeck/theoretical/ViewTheoreticalDeck"
-import {KeyForgeEventsPage} from "../keyforgeevents/KeyForgeEventsPage"
-import {TournamentPage} from "../keyforgeevents/tournaments/TournamentPage"
-import {TournamentPrintables} from "../keyforgeevents/tournaments/TournamentPrintables"
-import {TournamentSearchPage} from "../keyforgeevents/tournaments/TournamentSearchPage"
-import {LandingPage} from "../landing/LandingPage"
-import {ViewMessagePage} from "../messages/ViewMessage"
-import {MyDokPage} from "../my-dok/MyDokPage"
-import {StatsPage} from "../stats/StatsPage"
-import {TagSearchPage} from "../tags/TagSearchPage"
-import {SnackMessage} from "../ui/MessageStore"
-import {CodeOfConduct} from "../user/CodeOfConduct"
-import {ProfilePage} from "../user/ProfilePage"
-import {RegistrationPage} from "../user/RegistrationPage"
-import {UserSearchPage} from "../user/search/UserSearchPage"
-import {AgreeToTerms, TermsOfUse} from "../user/TermsOfUse"
-import {userStore} from "../user/UserStore"
-import {KeyLoaderBar} from "./KeyLoaderBar"
-import {LoggedInRoute} from "./LoggedInRoute"
-import {spacing} from "./MuiConfig"
-import {serverStatusStore} from "./ServerStatusStore"
-import {ViewMyOldAllianceDecks} from "../importdeck/theoretical/ViewMyOldAllianceDecks";
-import {GamesSearchPage} from "../gamestracker/GamesSearchPage";
-import {AllianceDeckFilters} from "../generated-src/AllianceDeckFilters";
+import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { AboutPage } from "../about/AboutPage"
+import { CommunityPage } from "../about/CommunityPage"
+import { PrivacyPolicy } from "../about/PrivacyPolicy"
+import { ThirdPartyIntegrations } from "../about/ThirdPartyIntegrations"
+import { AdminPanelView } from "../admin/AdminPanelView"
+import { ArticlesPage } from "../articles/ArticlesPage"
+import { CardFilters, prepareCardFiltersForQueryString } from "../cards/CardFilters"
+import { CardSearchPage } from "../cards/CardSearchPage"
+import { cardNameToCardNameKey } from "../cards/KCard"
+import { CardPage } from "../cards/views/CardPage"
+import { ChangePasswordPage } from "../components/ChangePasswordPage"
+import { ForgotPasswordPage } from "../components/ForgotPasswordPage"
+import { KeyTopbar } from "../components/KeyTopbar"
+import { VerifyEmailPage } from "../components/VerifyEmailPage"
+import { DeckComparisonView } from "../decks/comparison/DeckComparisonView"
+import { DeckViewPage } from "../decks/DeckViewFull"
+import { prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleNotificationsStore"
+import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
+import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
+import { DeckSearchPage } from "../decks/search/DeckSearchPage"
+import { ExpansionNumber } from "../expansions/Expansions"
+import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
+import { SaleNotificationQueryDto } from "../generated-src/SaleNotificationQueryDto"
+import { DokIcon } from "../generic/icons/DokIcon"
+import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
+import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreticalDecks"
+import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
+import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
+import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
+import { TournamentPrintables } from "../keyforgeevents/tournaments/TournamentPrintables"
+import { TournamentSearchPage } from "../keyforgeevents/tournaments/TournamentSearchPage"
+import { LandingPage } from "../landing/LandingPage"
+import { ViewMessagePage } from "../messages/ViewMessage"
+import { MyDokPage } from "../my-dok/MyDokPage"
+import { StatsPage } from "../stats/StatsPage"
+import { TagSearchPage } from "../tags/TagSearchPage"
+import { SnackMessage } from "../ui/MessageStore"
+import { CodeOfConduct } from "../user/CodeOfConduct"
+import { ProfilePage } from "../user/ProfilePage"
+import { RegistrationPage } from "../user/RegistrationPage"
+import { UserSearchPage } from "../user/search/UserSearchPage"
+import { AgreeToTerms, TermsOfUse } from "../user/TermsOfUse"
+import { userStore } from "../user/UserStore"
+import { KeyLoaderBar } from "./KeyLoaderBar"
+import { LoggedInRoute } from "./LoggedInRoute"
+import { spacing } from "./MuiConfig"
+import { serverStatusStore } from "./ServerStatusStore"
+import { ViewMyOldAllianceDecks } from "../importdeck/theoretical/ViewMyOldAllianceDecks";
+import { GamesSearchPage } from "../gamestracker/GamesSearchPage";
+import { AllianceDeckFilters } from "../generated-src/AllianceDeckFilters";
 import { AllianceDeckViewPage } from "../alliancedecks/AllianceDeckViewPage";
 import { AllianceDeckSearchPage } from "../alliancedecks/AllianceDeckSearchPage";
 import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils";
+import { DeckNameId } from "../decks/comparison/CompareDecks";
+import { DeckType } from "../generated-src/DeckType";
 
 class Routes {
 
@@ -110,7 +112,16 @@ class Routes {
     static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&forSale=false`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
     static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
-    static compareDecksWithIds = (ids: string[]) => `${Routes.compareDecks}?${ids.map(id => `decks=${id}`).join("&")}`
+    static compareDecksWithIds = (decks: DeckNameId[]) => {
+        const normalDeckIds = decks
+            .filter(deck => deck.type === DeckType.STANDARD)
+            .map(deck => `decks=${deck.keyforgeId}`)
+        const allianceDeckIds = decks
+            .filter(deck => deck.type === DeckType.ALLIANCE)
+            .map(deck => `allianceDecks=${deck.keyforgeId}`)
+        const allIds = normalDeckIds.concat(allianceDeckIds).join("&")
+        return `${Routes.compareDecks}?${allIds}`
+    }
 
     /**
      * Deck filters should be cleaned.

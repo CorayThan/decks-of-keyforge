@@ -259,7 +259,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             )}
                             <div style={{flexGrow: 1}}/>
                             {screenStore.screenSizeXs() ? (
-                                <IconButton onClick={() => keyDrawerStore.open = false}>
+                                <IconButton onClick={keyDrawerStore.close}>
                                     <Close/>
                                 </IconButton>
                             ) : null}

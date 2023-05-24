@@ -8,12 +8,14 @@ import { spacing } from "../config/MuiConfig"
 import { deckStore } from "../decks/DeckStore"
 import { ToolbarSpacer } from "../mui-restyled/ToolbarSpacer"
 import { screenStore } from "../ui/ScreenStore"
+import { allianceDeckStore } from "../alliancedecks/AllianceDeckStore";
 
 const standardPanelWidth = 344
 
 export enum KeyDrawerVersion {
     CARD,
     DECK,
+    ALLIANCE_DECK,
     ANALYSIS,
     OTHER
 }
@@ -26,6 +28,10 @@ class KeyDrawerStoreImpl {
         if (screenStore.screenSizeSm()) {
             this.open = false
         }
+    }
+
+    close = () => {
+        this.open = false
     }
 
     constructor() {
@@ -60,7 +66,11 @@ export class KeyDrawer extends React.Component<{ children: React.ReactNode, widt
                     <Drawer
                         style={{width: panelWidth}}
                         anchor={"left"}
-                        open={keyDrawerStore.open || (version === KeyDrawerVersion.DECK && !deckStore.searchingOrLoaded)}
+                        open={
+                            keyDrawerStore.open ||
+                            (version === KeyDrawerVersion.DECK && !deckStore.searchingOrLoaded) ||
+                            (version === KeyDrawerVersion.ALLIANCE_DECK && !allianceDeckStore.searchingOrLoaded)
+                        }
                         onClose={() => keyDrawerStore.open = false}
                         PaperProps={{style: {width: panelWidth}}}
                     >
