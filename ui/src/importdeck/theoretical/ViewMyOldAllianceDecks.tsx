@@ -10,7 +10,7 @@ import {theoreticalDeckStore} from "./TheoreticalDeckStore"
 import {PatreonRequired} from "../../thirdpartysites/patreon/PatreonRequired";
 import {PatreonRewardsTier} from "../../generated-src/PatreonRewardsTier";
 
-export const ViewMyAllianceDecks = observer(() => {
+export const ViewMyOldAllianceDecks = observer(() => {
 
     useEffect(() => {
         theoreticalDeckStore.findMyAllianceDecks()

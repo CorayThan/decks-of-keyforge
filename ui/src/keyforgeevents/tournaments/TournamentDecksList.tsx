@@ -82,7 +82,7 @@ const playerDecksTableHeaders = (tourneyId: number, isTo: boolean): SortableTabl
         {
             property: "hasVerificationImage",
             title: "Image",
-            transform: deck => (<DeckOwnershipButton deckName={deck.name} deckId={deck.id} hasVerification={deck.hasVerificationImage}/>)
+            transform: deck => (<DeckOwnershipButton deck={deck} hasVerification={deck.hasVerificationImage}/>)
         }
     ]
 

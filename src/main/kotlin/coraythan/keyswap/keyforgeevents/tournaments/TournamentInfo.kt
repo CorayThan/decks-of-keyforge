@@ -1,6 +1,7 @@
 package coraythan.keyswap.keyforgeevents.tournaments
 
 import coraythan.keyswap.House
+import coraythan.keyswap.decks.models.DeckType
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.keyforgeevents.KeyForgeEventDto
 import java.time.LocalDateTime
@@ -111,4 +112,5 @@ data class TournamentDeckInfo(
         val dokUser: Boolean,
         val hasVerificationImage: Boolean,
         val tournamentDeckId: Long,
+        val deckType: DeckType,
 )

@@ -1,11 +1,8 @@
-import axios, {AxiosResponse} from "axios"
-import {makeObservable, observable} from "mobx"
-import {HttpConfig} from "../../config/HttpConfig"
-import {DeckWithSynergyInfo} from "../../decks/models/DeckSearchResult"
-import {DeckBuilderData} from "../DeckBuilderData"
-import {AllianceDeckHouses} from "../../generated-src/AllianceDeckHouses";
-import {House} from "../../generated-src/House";
-import {keyLocalStorage} from "../../config/KeyLocalStorage";
+import axios, { AxiosResponse } from "axios"
+import { makeObservable, observable } from "mobx"
+import { HttpConfig } from "../../config/HttpConfig"
+import { DeckWithSynergyInfo } from "../../decks/models/DeckSearchResult"
+import { DeckBuilderData } from "../DeckBuilderData"
 
 export class TheoreticalDeckStore {
     static readonly CONTEXT = HttpConfig.API + "/theoretical-decks"
@@ -60,24 +57,6 @@ export class TheoreticalDeckStore {
             })
     }
 
-    saveAllianceDeck = async () => {
-        this.savingDeck = true
-        const [deckOne, deckTwo, deckThree] = keyLocalStorage.allianceDeckHouses
-        const allianceDeckSaveInfo: AllianceDeckHouses = {
-            houseOne: deckOne!.house,
-            houseOneDeckId: deckOne!.deckId,
-            houseTwo: deckTwo!.house,
-            houseTwoDeckId: deckTwo!.deckId,
-            houseThree: deckThree!.house,
-            houseThreeDeckId: deckThree!.deckId,
-        }
-        const response: AxiosResponse<string> = await axios.post(`${TheoreticalDeckStore.SECURED_CONTEXT}/alliance`, allianceDeckSaveInfo)
-
-        this.savedDeckId = response.data
-        this.savingDeck = false
-        return response.data
-    }
-
     deleteTheoryDeck = async (id: String) => {
         this.deleting = true
         await axios.post(`${TheoreticalDeckStore.SECURED_CONTEXT}/delete/${id}`)
@@ -87,12 +66,6 @@ export class TheoreticalDeckStore {
     constructor() {
         makeObservable(this)
     }
-}
-
-export interface AllianceDeckNameId {
-    deckId: string
-    deckName: string
-    house: House
 }
 
 export const theoreticalDeckStore = new TheoreticalDeckStore()

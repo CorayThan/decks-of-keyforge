@@ -12,7 +12,7 @@ export class GamesTrackerStore {
     games?: GamesSet
 
     @observable
-    searching: boolean = false
+    searching = false
 
     searchGames = async (filters: GamesSearchFilters) => {
         this.searching = true

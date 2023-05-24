@@ -20,6 +20,8 @@ data class TheoreticalDeck(
 
         val deckName: String? = null,
 
+        val convertedToAlliance: Boolean = false,
+
         @Id
         val id: UUID = UUID.randomUUID()
 )

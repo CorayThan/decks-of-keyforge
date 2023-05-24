@@ -20,5 +20,15 @@ data class SimpleCard(
         val legacy: Boolean? = null,
         val maverick: Boolean? = null,
         val anomaly: Boolean? = null,
-        val enhanced: Boolean? = null
+        val enhanced: Boolean? = null,
+        val bonusIcons: BonusIcons? = null,
+)
+
+@GenerateTs
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class BonusIcons(
+        val bonusAember: Int = 0,
+        val bonusCapture: Int = 0,
+        val bonusDamage: Int = 0,
+        val bonusDraw: Int = 0,
 )

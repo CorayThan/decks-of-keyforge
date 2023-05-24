@@ -4,6 +4,7 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
+import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.patreon.PatreonRewardsTier
@@ -135,7 +136,7 @@ class ForSaleNotificationsService(
 
     private fun queryMatchesDeck(queryEntity: SaleNotificationQueryDto, deckId: Long): Boolean {
         val query = queryEntity.toDeckFilters()
-        val userHolder = DeckSearchService.UserHolder(queryEntity.userId, currentUserService, userService)
+        val userHolder = UserHolder(queryEntity.userId, currentUserService, userService)
         if (queryEntity.name.contains("Test Query")) {
             log.info("For sale query is $query")
         }

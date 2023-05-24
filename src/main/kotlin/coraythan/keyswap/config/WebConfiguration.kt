@@ -1,6 +1,7 @@
 package coraythan.keyswap.config
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.alliancedecks.AllianceDeckService
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.cards.CardService
@@ -20,11 +21,13 @@ import org.springframework.web.servlet.resource.PathResourceResolver
 import org.springframework.web.servlet.resource.TransformedResource
 import java.io.IOException
 import java.nio.charset.StandardCharsets
+import java.util.*
 
 @Configuration
 class WebConfiguration(
     private val userSearchService: UserSearchService,
     private val deckSearchService: DeckSearchService,
+    private val allianceDeckService: AllianceDeckService,
     private val cardService: CardService,
     private val tagService: TagService,
     private val deckListingRepo: DeckListingRepo,
@@ -130,7 +133,7 @@ class WebConfiguration(
                     if (deck == null) {
                         resource
                     } else {
-                        val listing = if (deck.deck.forSale == true) {
+                        val listing = if (deck.deck.forSale == true && deck.deck.id != -1L) {
                             deckListingRepo.findByDeckIdAndStatusNot(deck.deck.id, DeckListingStatus.COMPLETE)
                                 .firstOrNull()
                         } else {
@@ -140,6 +143,22 @@ class WebConfiguration(
                             resource,
                             deck.deck.name,
                             deck.deck.printDeck(listing)
+                        )
+                    }
+
+                } else if (uri.matches("/alliance-decks/[a-z0-9\\-]{36}.*".toRegex())) {
+
+                    val deckId = uri.substring(16, 52)
+
+                    val deck = allianceDeckService.findAllianceDeckWithSynergies(UUID.fromString(deckId))
+
+                    if (deck == null) {
+                        resource
+                    } else {
+                        transformIndexPage(
+                            resource,
+                            "Alliance Deck: " + deck.deck.name,
+                            deck.deck.printDeck()
                         )
                     }
 

@@ -7,7 +7,6 @@ import { deckStore } from "../decks/DeckStore"
 import { BuyingDisclaimer } from "../decks/sales/ForSaleView"
 import { SendEmailVerification } from "../emails/SendEmailVerification"
 import { userStore } from "../user/UserStore"
-import { userDeckStore } from "../userdeck/UserDeckStore"
 import { deckListingStore } from "./DeckListingStore"
 
 interface BuyItNowButtonProps {
@@ -27,7 +26,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
         this.open = false
         deckListingStore.buyItNow(auctionId)
             .then(() => {
-                userDeckStore.refreshDeckInfo()
+                deckStore.refreshDeckInfo()
                 deckStore.refreshDeckSearch()
             })
     }
@@ -56,8 +55,10 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                             Are you sure you want to buy this deck for {currencySymbol}{buyItNow}?
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(2), fontStyle: "italic"}}>
-                            By buying this deck you agree to pay the seller the buy it now price as well as any shipping listed in the description. You and
-                            the seller will be sent an email from Decks of KeyForge. You can also contact the seller separately with their listed contact
+                            By buying this deck you agree to pay the seller the buy it now price as well as any shipping
+                            listed in the description. You and
+                            the seller will be sent an email from Decks of KeyForge. You can also contact the seller
+                            separately with their listed contact
                             information.
                         </Typography>
                         <BuyingDisclaimer/>

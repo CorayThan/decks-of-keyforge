@@ -140,7 +140,8 @@ export class UserStore {
     }
 
     loadUserInfo = async () => {
-        userDeckStore.findOwned()
+        userDeckStore.findOwnedDecks()
+        userDeckStore.findOwnedAlliances()
         userDeckStore.findNotesForUser()
         userDeckStore.findFavsForUser()
         userDeckStore.findFunniesForUser()

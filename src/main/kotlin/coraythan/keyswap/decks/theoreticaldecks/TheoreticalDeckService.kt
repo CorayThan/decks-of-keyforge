@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks.theoreticaldecks
 
 import coraythan.keyswap.House
+import coraythan.keyswap.alliancedecks.AllianceDeckHouses
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException

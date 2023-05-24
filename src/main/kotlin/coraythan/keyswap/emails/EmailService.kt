@@ -536,7 +536,7 @@ class EmailService(
                 </tr>
                 <tr>
                     <td>Recursion (U)</td>
-                    <td>${deck.recursion?.roundToOneSigDig()}</td>
+                    <td>${deck.recursion.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Disruption (D)</td>
@@ -544,7 +544,7 @@ class EmailService(
                 </tr>
                 <tr>
                     <td>Creature Protection (CP)</td>
-                    <td>${deck.creatureProtection?.roundToOneSigDig()}</td>
+                    <td>${deck.creatureProtection.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Other (O)</td>

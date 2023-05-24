@@ -23,10 +23,10 @@ import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { deckOwnershipStore } from "./DeckOwnershipStore"
+import { DeckIdentifyingInfo } from "../models/DeckSearchResult";
 
 interface DeckOwnershipButtonsProps {
-    deckName: string
-    deckId: number
+    deck: DeckIdentifyingInfo
     hasVerification: boolean
     forceVerification?: boolean
     style?: React.CSSProperties
@@ -41,7 +41,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
     handleClose = () => this.open = false
     handleOpen = () => {
         deckOwnershipStore.verificationDetails = undefined
-        deckOwnershipStore.findDetailsForDeck(this.props.deckId)
+        deckOwnershipStore.findDetailsForDeck(this.props.deck.id)
         this.open = true
     }
 
@@ -51,13 +51,13 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
     }
 
     render() {
-        const {deckId, deckName, hasVerification, forceVerification, style, buttonSize} = this.props
+        const {deck, hasVerification, forceVerification, style, buttonSize} = this.props
 
         const details = deckOwnershipStore.verificationDetails
-        const ownedByMe = userDeckStore.ownedByMe(deckId)
+        const ownedByMe = userDeckStore.ownedByMe(deck)
 
         let imageColor: "primary" | "secondary" | undefined
-        if (forceVerification || deckOwnershipStore.ownedDecks.includes(deckId)) {
+        if (forceVerification || deckOwnershipStore.ownedDecks.includes(deck.id)) {
             imageColor = "primary"
         } else if (hasVerification) {
             imageColor = "secondary"
@@ -81,7 +81,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                     style={{zIndex: screenStore.zindexes.cardsDisplay}}
                 >
                     <DialogTitle disableTypography={true} style={{display: "flex", justifyContent: "center"}}>
-                        <Typography variant={"h5"}>{deckName}'s Verified Owners</Typography>
+                        <Typography variant={"h5"}>{deck.name}'s Verified Owners</Typography>
                     </DialogTitle>
                     <DialogContent>
                         {details == null ? (
@@ -94,7 +94,10 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                     </Typography>
                                 )}
                                 {details.map(detail => (
-                                    <Paper key={detail.id} style={{marginBottom: spacing(2), backgroundColor: themeStore.lightBackgroundColor}}>
+                                    <Paper key={detail.id} style={{
+                                        marginBottom: spacing(2),
+                                        backgroundColor: themeStore.lightBackgroundColor
+                                    }}>
                                         <div style={{overflowX: "auto"}}>
                                             <Link href={detail.url} target={"_blank"}>
                                                 <img src={detail.url} style={{width: 552}}/>
@@ -108,12 +111,13 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                             >
                                                 <Typography variant={"subtitle1"}>{detail.username}</Typography>
                                             </KeyLink>
-                                            <Typography variant={"subtitle1"}>{TimeUtils.formatDate(detail.uploadDate)}</Typography>
+                                            <Typography
+                                                variant={"subtitle1"}>{TimeUtils.formatDate(detail.uploadDate)}</Typography>
                                             {detail.username === userStore.username && (
                                                 <IconButton
                                                     size={"small"}
                                                     style={{marginLeft: spacing(2)}}
-                                                    onClick={() => deckOwnershipStore.deleteOwnership(deckId)}
+                                                    onClick={() => deckOwnershipStore.deleteOwnership(deck.id)}
                                                 >
                                                     <Delete fontSize={"small"}/>
                                                 </IconButton>
@@ -124,17 +128,20 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                 {ownedByMe ? (
                                     <>
                                         <HelperText style={{marginBottom: spacing(1)}}>
-                                            Upload a jpg image of a deck's Archon card to verify possession. For Mass Mutation decks you may include enhanced
+                                            Upload a jpg image of a deck's Archon card to verify possession. For Mass
+                                            Mutation decks you may include enhanced
                                             cards in the image.
                                         </HelperText>
                                         <HelperText>
-                                            We recommend you cover the QR code and write your username and the date next to
+                                            We recommend you cover the QR code and write your username and the date next
+                                            to
                                             the deck. The image will be automatically reduced in quality.
                                         </HelperText>
                                     </>
                                 ) : (
                                     <HelperText>
-                                        These images can help provide evidence that a user is in possession of a deck and its contents.
+                                        These images can help provide evidence that a user is in possession of a deck
+                                        and its contents.
                                         Beware they could be falsified and are not proof of ownership!
                                     </HelperText>
                                 )}
@@ -142,10 +149,11 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                         )}
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "flex-end"}}>
-                        <Tooltip title={ownedByMe ? "" : "Mark a deck as owned to add an ownership verification image."}>
+                        <Tooltip
+                            title={ownedByMe ? "" : "Mark a deck as owned to add an ownership verification image."}>
                             <div>
                                 <FileUploadButton
-                                    id={deckId.toString()}
+                                    id={deck.id.toString()}
                                     fileType={FileUploadType.IMAGE}
                                     disabled={deckOwnershipStore.addingDeckVerificationImage || !ownedByMe}
                                     handleUpload={async (event) => {
@@ -160,7 +168,7 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                                     maxWidthOrHeight: 2048,
                                                     useWebWorker: true
                                                 })
-                                                await deckOwnershipStore.saveDeckVerificationImage(compressedImg, deckId, Utils.filenameExtension(imgFile))
+                                                await deckOwnershipStore.saveDeckVerificationImage(compressedImg, deck.id, Utils.filenameExtension(imgFile))
                                             } catch (e) {
                                                 messageStore.setWarningMessage("Couldn't upload image. Please try a different image.")
                                             }
@@ -170,7 +178,8 @@ export class DeckOwnershipButton extends React.Component<DeckOwnershipButtonsPro
                                     }}
                                 >
                                     Add Ownership Image
-                                    {deckOwnershipStore.addingDeckVerificationImage && <Loader size={LoaderSize.SMALL} style={{marginLeft: spacing(2)}}/>}
+                                    {deckOwnershipStore.addingDeckVerificationImage &&
+                                        <Loader size={LoaderSize.SMALL} style={{marginLeft: spacing(2)}}/>}
                                 </FileUploadButton>
                             </div>
                         </Tooltip>

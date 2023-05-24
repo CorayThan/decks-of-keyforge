@@ -237,16 +237,6 @@ class DeckSearchService(
         sortDirection = defaultFilters.sortDirection
     ) == defaultFilters
 
-    data class UserHolder(
-        private val id: UUID? = null,
-        private val currentUserService: CurrentUserService,
-        private val userService: KeyUserService
-    ) {
-        val user: KeyUser? by lazy {
-            if (id == null) currentUserService.loggedInUser() else userService.findByIdOrNull(id)
-        }
-    }
-
     fun deckFilterPredicate(
         filters: DeckQuery,
         userHolder: UserHolder,
@@ -281,7 +271,11 @@ class DeckSearchService(
         }
 
         if (filters.title.isNotBlank()) {
-            filters.title.tokenize().forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
+            if (filters.titleQl) {
+                predicate.and(deckQ.name.like("%${filters.title}%"))
+            } else {
+                filters.title.tokenize().forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
+            }
         }
 
         if (filters.teamDecks) {
@@ -607,4 +601,14 @@ class DeckSearchService(
         }
     }
 
+}
+
+data class UserHolder(
+    private val id: UUID? = null,
+    private val currentUserService: CurrentUserService,
+    private val userService: KeyUserService
+) {
+    val user: KeyUser? by lazy {
+        if (id == null) currentUserService.loggedInUser() else userService.findByIdOrNull(id)
+    }
 }

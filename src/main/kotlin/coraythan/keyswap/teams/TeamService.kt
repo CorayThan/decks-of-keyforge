@@ -1,5 +1,6 @@
 package coraythan.keyswap.teams
 
+import coraythan.keyswap.alliancedecks.OwnedAllianceDeckRepo
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
@@ -30,6 +31,7 @@ class TeamService(
         private val userRepo: KeyUserRepo,
         private val s3Service: S3Service,
         private val ownedDeckRepo: OwnedDeckRepo,
+        private val ownedAllianceDeckRepo: OwnedAllianceDeckRepo,
         val entityManager: EntityManager,
 ) {
 
@@ -168,12 +170,14 @@ class TeamService(
     private fun addUserToTeam(toAdd: KeyUser, team: Team) {
         userRepo.save(toAdd.copy(teamId = team.id))
         ownedDeckRepo.addTeamForUser(team.id, toAdd.id)
+        ownedAllianceDeckRepo.addTeamForUser(team.id, toAdd.id)
         teamRepo.save(team.copy(invites = team.invites.minus(toAdd.id), members = team.members.plus(toAdd)))
     }
 
     private fun removeFromTeamAndDecks(toRemove: KeyUser, team: Team) {
         userRepo.removeTeam(toRemove.id)
         ownedDeckRepo.removeTeamForUser(toRemove.id)
+        ownedAllianceDeckRepo.removeTeamForUser(toRemove.id)
 
         teamRepo.save(team.copy(
                 members = team.members.filter { it.id != toRemove.id }

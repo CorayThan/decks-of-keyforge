@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.models.DeckType
 import coraythan.keyswap.keyforgeevents.*
 import coraythan.keyswap.keyforgeevents.tournamentdecks.*
 import coraythan.keyswap.keyforgeevents.tournamentparticipants.ParticipantStats
@@ -155,6 +156,7 @@ class TournamentService(
                 dokUser = participantInfo[it.participantId]!!.dokUser,
                 hasVerificationImage = it.deck.hasOwnershipVerification == true,
                 tournamentDeckId = it.id,
+                deckType = DeckType.STANDARD,
             )
         }
             .sortedBy { it.username }

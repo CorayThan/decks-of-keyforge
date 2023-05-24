@@ -1,0 +1,13 @@
+
+ALTER TABLE deck
+    ALTER COLUMN aerc_version SET NOT NULL;
+ALTER TABLE deck
+    ALTER COLUMN card_ids SET NOT NULL;
+ALTER TABLE deck
+    ALTER COLUMN card_names SET NOT NULL;
+ALTER TABLE deck
+    ALTER COLUMN creature_protection SET NOT NULL;
+ALTER TABLE deck
+    ALTER COLUMN name SET NOT NULL;
+ALTER TABLE deck
+    ALTER COLUMN house_names_string SET NOT NULL;

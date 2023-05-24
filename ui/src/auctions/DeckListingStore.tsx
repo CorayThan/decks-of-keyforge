@@ -15,6 +15,7 @@ import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 import { BidPlacementResult } from "./BidPlacementResult"
+import { deckStore } from "../decks/DeckStore";
 
 export class DeckListingStore {
     static readonly CONTEXT = HttpConfig.API + "/deck-listings"
@@ -55,7 +56,7 @@ export class DeckListingStore {
                 }
                 messageStore.setSuccessMessage(message)
                 deckListingStore.findListingsForUser(true)
-                userDeckStore.refreshDeckInfo()
+                deckStore.refreshDeckInfo()
             })
     }
 
@@ -64,7 +65,7 @@ export class DeckListingStore {
         const listingResponse: AxiosResponse<number | undefined> = await axios.post(`${DeckListingStore.SECURE_CONTEXT}/bulk-list`, listing)
 
         await deckListingStore.findListingsForUser(true)
-        await userDeckStore.refreshDeckInfo()
+        await deckStore.refreshDeckInfo()
         this.setBulkSaleMessage(listing.decks.length, listingResponse.data)
         this.performingBulkUpdate = false
     }
@@ -123,7 +124,7 @@ export class DeckListingStore {
         }
 
         await this.findListingsForUser(true)
-        await userDeckStore.findOwned()
+        await userDeckStore.findOwnedDecks()
 
         messageStore.setSuccessMessage(`Canceled your listings for ${deckIds.length} decks.`)
 

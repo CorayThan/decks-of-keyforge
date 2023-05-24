@@ -2,8 +2,9 @@ import {makeObservable, observable} from "mobx"
 import {DeckNameId} from "../decks/comparison/CompareDecks"
 import {ListingInfo} from "../generated-src/ListingInfo"
 import {log} from "./Utils"
-import {AllianceDeckNameId} from "../importdeck/theoretical/TheoreticalDeckStore";
 import {House} from "../generated-src/House";
+import { Expansion } from "../generated-src/Expansion";
+import { AllianceDeckNameId } from "../alliancedecks/AllianceDeckPopover";
 
 enum Keys {
     AUTH = "AUTH",
@@ -35,6 +36,7 @@ interface GenericStorage {
     includeExpiredOffers?: boolean
     analyzeCount?: number
     buildAllianceDeck?: boolean
+    addAllianceToMyAlliances?: boolean
 }
 
 class KeyLocalStorage {
@@ -175,8 +177,8 @@ class KeyLocalStorage {
         }
     }
 
-    addAllianceHouse = (deckId: string, deckName: string, house: House) => {
-        const allianceDeckNameId: AllianceDeckNameId = {deckId, deckName, house}
+    addAllianceHouse = (deckId: string, deckName: string, house: House, expansion: Expansion) => {
+        const allianceDeckNameId: AllianceDeckNameId = {deckId, deckName, house, expansion}
         this.allianceDeckHouses.push(allianceDeckNameId)
         this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckHouses))
     }

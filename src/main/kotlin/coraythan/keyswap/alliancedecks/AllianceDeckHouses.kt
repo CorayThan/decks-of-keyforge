@@ -1,4 +1,4 @@
-package coraythan.keyswap.decks.theoreticaldecks
+package coraythan.keyswap.alliancedecks
 
 import coraythan.keyswap.House
 import coraythan.keyswap.generatets.GenerateTs
@@ -10,5 +10,6 @@ data class AllianceDeckHouses(
     val houseTwoDeckId: String,
     val houseTwo: House,
     val houseThreeDeckId: String,
-    val houseThree: House
+    val houseThree: House,
+    val owned: Boolean,
 )

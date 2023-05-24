@@ -7,6 +7,8 @@ import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { ListForSaleView } from "../sales/ListForSaleView"
 import { DeckActionClickable } from "./DeckActionClickable"
+import { DeckType } from "../../generated-src/DeckType";
+import { allianceDeckStore } from "../../alliancedecks/AllianceDeckStore";
 
 interface MyDecksButtonProps {
     deck: DeckSearchResult
@@ -18,19 +20,25 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
 
     render() {
         const {menuItem} = this.props
-        const {id, name} = this.props.deck
+        const {id, keyforgeId, name, deckType} = this.props.deck
+        const alliance = deckType === DeckType.ALLIANCE
         if (!userStore.loggedIn()) {
             return null
         }
+
+        if (alliance && !userStore.patron) {
+            return null
+        }
+
         if (!deckListingStore.decksForSaleLoaded) {
             return <Loader size={LoaderSize.SMALL}/>
         }
         const saleInfo = deckListingStore.listingInfoForDeck(id)
-        const owned = userDeckStore.ownedByMe(id)
+        const owned = userDeckStore.ownedByMe(this.props.deck)
         const forSale = saleInfo != null
 
         let listButton = null
-        if (owned) {
+        if (owned && !alliance) {
             listButton = (
                 <ListForSaleView deck={this.props.deck} menuItem={menuItem}/>
             )
@@ -42,9 +50,18 @@ export class MyDecksButton extends React.Component<MyDecksButtonProps> {
                     (
                         <DeckActionClickable
                             onClick={() => {
-                                userDeckStore.owned(name, id, !owned)
+                                if (alliance) {
+                                    if (owned) {
+                                        allianceDeckStore.markNotOwned(keyforgeId, name)
+                                    } else {
+                                        allianceDeckStore.markOwned(keyforgeId, name)
+                                    }
+                                } else {
+                                    userDeckStore.owned(name, id, !owned)
+                                }
                             }}
                             menuItem={menuItem}
+                            disabled={(alliance ? userDeckStore.loadingOwnedAlliances : userDeckStore.loadingOwned)}
                         >
                             {owned ? "Not mine" : "My Deck"}
                         </DeckActionClickable>

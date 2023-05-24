@@ -6,7 +6,6 @@ import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentDeck
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
@@ -26,8 +25,8 @@ data class Deck(
     @Column(unique = true)
     val keyforgeId: String,
 
-    val name: String,
-    val expansion: Int,
+    override val name: String,
+    override val expansion: Int,
     val powerLevel: Int = 0,
     val chains: Int = 0,
     val wins: Int = 0,
@@ -39,33 +38,33 @@ data class Deck(
     val raresCount: Int = 0,
     val uncommonsCount: Int = 0,
 
-    val rawAmber: Int = 0,
-    val totalPower: Int = 0,
-    val bonusDraw: Int? = 0,
-    val bonusCapture: Int? = 0,
-    val creatureCount: Int = 0,
-    val actionCount: Int = 0,
-    val artifactCount: Int = 0,
-    val upgradeCount: Int = 0,
-    val totalArmor: Int = 0,
+    override val rawAmber: Int = 0,
+    override val totalPower: Int = 0,
+    override val bonusDraw: Int? = 0,
+    override val bonusCapture: Int? = 0,
+    override val creatureCount: Int = 0,
+    override val actionCount: Int = 0,
+    override val artifactCount: Int = 0,
+    override val upgradeCount: Int = 0,
+    override val totalArmor: Int = 0,
 
-    val expectedAmber: Double = 0.0,
-    val amberControl: Double = 0.0,
-    val creatureControl: Double = 0.0,
-    val artifactControl: Double = 0.0,
-    val efficiency: Double = 0.0,
-    val recursion: Double? = 0.0,
-    val effectivePower: Int = 0,
-    val creatureProtection: Double? = 0.0,
-    val disruption: Double = 0.0,
-    val other: Double = 0.0,
-    val aercScore: Double = 0.0,
-    val previousSasRating: Int? = 0,
-    val previousMajorSasRating: Int? = 0,
-    val aercVersion: Int? = 0,
-    val sasRating: Int = 0,
-    val synergyRating: Int = 0,
-    val antisynergyRating: Int = 0,
+    override val expectedAmber: Double = 0.0,
+    override val amberControl: Double = 0.0,
+    override val creatureControl: Double = 0.0,
+    override val artifactControl: Double = 0.0,
+    override val efficiency: Double = 0.0,
+    override val recursion: Double = 0.0,
+    override val effectivePower: Int = 0,
+    override val creatureProtection: Double = 0.0,
+    override val disruption: Double = 0.0,
+    override val other: Double = 0.0,
+    override val aercScore: Double = 0.0,
+    override val previousSasRating: Int? = 0,
+    override val previousMajorSasRating: Int? = 0,
+    override val aercVersion: Int? = 0,
+    override val sasRating: Int = 0,
+    override val synergyRating: Int = 0,
+    override val antisynergyRating: Int = 0,
 
     val forSale: Boolean = false,
     val forTrade: Boolean = false,
@@ -74,16 +73,26 @@ data class Deck(
     val wishlistCount: Int = 0,
     val funnyCount: Int = 0,
     val evilTwin: Boolean? = false,
-    val cardsVerified: Boolean? = false,
+    // val enhancementsAdded: Boolean? = true,
 
     // Json of card ids for performance loading decks, loading cards from cache
     @Lob
     @Type(type = "org.hibernate.type.TextType")
-    val cardIds: String = "",
+    override val cardIds: String = "",
 
-    val cardNames: String = "",
+    override val cardNames: String = "",
 
-    val houseNamesString: String = "",
+    override val houseNamesString: String = "",
+
+    /**
+     * Format: Anger&Brobnar&ACCDM~Cull the Weak&Dis&A
+     *
+     * A = aember
+     * C = capture
+     * D = draw
+     * M = damage
+     */
+    override val bonusIconsString: String? = null,
 
     @JsonIgnoreProperties("deck")
     @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -135,13 +144,20 @@ data class Deck(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = -1
-) {
+) : GenericDeck {
 
-    val expansionEnum: Expansion
-        get() = Expansion.forExpansionNumber(expansion)
-
-    val houses: List<House>
-        get() = this.houseNamesString.split("|").map { House.valueOf(it) }
+    val bonusIcons: List<Triple<House, String, BonusIcons>>?
+        get() = this.bonusIconsString?.split("~")?.map {
+            val values = it.split("&")
+            Triple(
+                House.valueOf(values[1]), values[0], BonusIcons(
+                    bonusAember = values[2].count { icon -> icon == 'A' },
+                    bonusCapture = values[2].count { icon -> icon == 'C' },
+                    bonusDraw = values[2].count { icon -> icon == 'D' },
+                    bonusDamage = values[2].count { icon -> icon == 'M' },
+                )
+            )
+        }
 
     val dateAdded: LocalDate?
         get() = this.importDateTime?.toLocalDate()
@@ -160,15 +176,16 @@ data class Deck(
             this.aercScore == o.aercScore
 
 
-    fun toDeckSearchResult(
-        housesAndCards: List<HouseAndCards>? = null,
-        cards: List<Card>? = null,
-        stats: DeckStatistics? = null,
-        synergies: DeckSynergyInfo? = null,
-        includeDetails: Boolean = false
+    override fun toDeckSearchResult(
+        housesAndCards: List<HouseAndCards>?,
+        cards: List<Card>?,
+        stats: DeckStatistics?,
+        synergies: DeckSynergyInfo?,
+        includeDetails: Boolean
     ): DeckSearchResult {
 
         return DeckSearchResult(
+            deckType = DeckType.STANDARD,
             id = id,
             keyforgeId = keyforgeId,
             expansion = expansionEnum,
@@ -188,9 +205,15 @@ data class Deck(
                 it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
                         || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
             }?.size ?: 0).zeroToNull(),
-            cardArchiveCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.archives, player = SynTraitPlayer.FRIENDLY) == true }?.size
+            cardArchiveCount = (cards?.filter {
+                it.extraCardInfo?.traits?.containsTrait(
+                    SynergyTrait.archives,
+                    player = SynTraitPlayer.FRIENDLY
+                ) == true
+            }?.size
                 ?: 0).zeroToNull(),
-            keyCheatCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size ?: 0).zeroToNull(),
+            keyCheatCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size
+                ?: 0).zeroToNull(),
             rawAmber = rawAmber,
             totalArmor = totalArmor.zeroToNull(),
 
@@ -224,7 +247,11 @@ data class Deck(
             sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
                 ?: if (sasRating < 75) 0.0 else 100.0,
 
-            synergyDetails = if (includeDetails) synergies?.synergyCombos else synergies?.synergyCombos?.map { it.copy(synergies = listOf()) },
+            synergyDetails = if (includeDetails) synergies?.synergyCombos else synergies?.synergyCombos?.map {
+                it.copy(
+                    synergies = listOf()
+                )
+            },
             metaScores = synergies?.metaScores ?: mapOf(),
             efficiencyBonus = synergies?.efficiencyBonus ?: 0.0,
 

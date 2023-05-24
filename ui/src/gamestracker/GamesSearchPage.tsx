@@ -61,8 +61,8 @@ const GameLogDialog = (props: { logs: string[] }) => {
             <Dialog onClose={handleClose} aria-labelledby="game-log-title" open={open}>
                 <DialogTitle id="game-log-title">Game Log</DialogTitle>
                 <DialogContent>
-                    {props.logs.map(log => (
-                        <Typography>{log}</Typography>
+                    {props.logs.map((log, idx) => (
+                        <Typography key={idx}>{log}</Typography>
                     ))}
                 </DialogContent>
             </Dialog>

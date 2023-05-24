@@ -8,7 +8,6 @@ import { BuyingDisclaimer } from "../decks/sales/ForSaleView"
 import { SendEmailVerification } from "../emails/SendEmailVerification"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
-import { userDeckStore } from "../userdeck/UserDeckStore"
 import { deckListingStore } from "./DeckListingStore"
 
 interface BidButtonProps {
@@ -58,13 +57,21 @@ export class BidButton extends React.Component<BidButtonProps> {
 
         deckListingStore.bid(auctionId, currentBidNumber as number)
             .then(() => {
-                userDeckStore.refreshDeckInfo()
+                deckStore.refreshDeckInfo()
                 deckStore.refreshDeckSearch()
             })
     }
 
     render() {
-        const {currentBid, bidIncrement, nextValidBid, currencySymbol, sellerUsername, youAreHighestBidder, style} = this.props
+        const {
+            currentBid,
+            bidIncrement,
+            nextValidBid,
+            currencySymbol,
+            sellerUsername,
+            youAreHighestBidder,
+            style
+        } = this.props
         const disabled = !userStore.loggedIn() || sellerUsername === userStore.username
         return (
             <div style={style}>
@@ -100,12 +107,16 @@ export class BidButton extends React.Component<BidButtonProps> {
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
                             All auctions will automatically
-                            extend their end time by 15 minutes if bid upon in the last 15 minutes. Additionally, we try to keep the servers up as much as
-                            possible, but if there is slowness or downtime at the end of an auction we cannot guarantee you will be able to place a bid. If
-                            server downtime prevents users from bidding on a significant portion of an auction, sellers are permitted to relist the auction.
+                            extend their end time by 15 minutes if bid upon in the last 15 minutes. Additionally, we try
+                            to keep the servers up as much as
+                            possible, but if there is slowness or downtime at the end of an auction we cannot guarantee
+                            you will be able to place a bid. If
+                            server downtime prevents users from bidding on a significant portion of an auction, sellers
+                            are permitted to relist the auction.
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>
-                            By bidding on this deck you agree to pay the seller the final price when the auction is completed if you are the highest bidder.
+                            By bidding on this deck you agree to pay the seller the final price when the auction is
+                            completed if you are the highest bidder.
                             {"That price will be equal to the second highest bidder's highest bid. You also agree to pay any shipping listed in the description."}
                         </Typography>
                         <Typography color={"textSecondary"} style={{marginBottom: spacing(1), fontStyle: "italic"}}>

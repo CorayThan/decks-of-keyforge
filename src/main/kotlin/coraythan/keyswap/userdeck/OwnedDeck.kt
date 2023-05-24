@@ -47,5 +47,5 @@ interface OwnedDeckRepo : CrudRepository<OwnedDeck, Long> {
 
         @Modifying
         @Query("UPDATE OwnedDeck ownedDeck SET ownedDeck.teamId = null WHERE ownedDeck.owner.id = ?1")
-        fun removeTeamForUser(username: UUID)
+        fun removeTeamForUser(userId: UUID)
 }

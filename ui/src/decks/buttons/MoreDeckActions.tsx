@@ -18,9 +18,11 @@ import { DeckSearchResult } from "../models/DeckSearchResult"
 import { CompareDeckButton } from "./CompareDeckButton"
 import { DeckActionClickable } from "./DeckActionClickable"
 import { MyDecksButton } from "./MyDecksButton"
+import { DeckType } from "../../generated-src/DeckType";
 
 export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolean }) => {
     const {deck, compact} = props
+    const alliance = deck.deckType === DeckType.ALLIANCE
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -38,7 +40,8 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
 
     return (
         <>
-            <IconButton aria-controls="more-deck-actions-menu" aria-haspopup="true" onClick={handleClick} style={{margin: 0}}>
+            <IconButton aria-controls="more-deck-actions-menu" aria-haspopup="true" onClick={handleClick}
+                        style={{margin: 0}}>
                 <MoreVert/>
             </IconButton>
             <Menu
@@ -50,10 +53,10 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
             >
                 {compact ? <MyDecksButton deck={deck} menuItem={true}/> : null}
                 {compact ? <CompareDeckButton deck={deck} menuItem={true} onClick={handleClose}/> : null}
-                <ReportPurchaseButton deckId={deck.id} deckName={deck.name} onClick={handleClose}/>
+                {!alliance && <ReportPurchaseButton deck={deck} onClick={handleClose}/>}
                 <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
-                <ToggleDeckNotesMenuItem onClick={handleClose}/>
-                {userStore.loggedIn() && (
+                {!alliance && <ToggleDeckNotesMenuItem onClick={handleClose}/>}
+                {userStore.loggedIn() && !alliance && (
                     <DeckActionClickable
                         onClick={() => {
                             handleClose()
@@ -64,7 +67,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                         Refresh MV Wins
                     </DeckActionClickable>
                 )}
-                {username != null && location.search.includes(`previousOwner=${username}`) && (
+                {username != null && !alliance && location.search.includes(`previousOwner=${username}`) && (
                     <MenuItem
                         onClick={() => {
                             userDeckStore.notPreviouslyOwned(deck.name, deck.id)
@@ -74,7 +77,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                         Not Previously Owned
                     </MenuItem>
                 )}
-                {!screenStore.screenSizeXs() && userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.NOTICE_BARGAINS) && (
+                {!alliance && !screenStore.screenSizeXs() && userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.NOTICE_BARGAINS) && (
                     <MenuItem
                         onClick={() => {
                             deckBuilderStore.buildFromDeck(deck)
@@ -85,15 +88,17 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                         Theoretical Version
                     </MenuItem>
                 )}
-                <MenuItem
-                    component={Link}
-                    href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
-                    target={"_blank"}
-                    rel={"noopener noreferrer"}
-                    style={{color: "inherit", textDecoration: "none"}}
-                >
-                    Master Vault
-                </MenuItem>
+                {!alliance && (
+                    <MenuItem
+                        component={Link}
+                        href={"https://www.keyforgegame.com/deck-details/" + deck.keyforgeId}
+                        target={"_blank"}
+                        rel={"noopener noreferrer"}
+                        style={{color: "inherit", textDecoration: "none"}}
+                    >
+                        Master Vault
+                    </MenuItem>
+                )}
             </Menu>
         </>
     )

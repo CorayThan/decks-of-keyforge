@@ -1,146 +1,92 @@
-import {Card} from "@material-ui/core"
-import {observer} from "mobx-react"
+import { Card } from "@material-ui/core"
+import { observer } from "mobx-react"
 import * as React from "react"
-import {RouteComponentProps} from "react-router"
-import {cardStore} from "../cards/CardStore"
-import {spacing} from "../config/MuiConfig"
-import {log} from "../config/Utils"
-import {Loader} from "../mui-restyled/Loader"
-import {DeckStatsView, ExtraDeckStatsView} from "../stats/DeckStatsView"
-import {DeckSynergiesInfoView} from "../synergy/DeckSynergiesInfoView"
-import {uiStore} from "../ui/UiStore"
-import {ComparisonPopover} from "./comparison/ComparisonPopover"
-import {deckImportPopStore} from "./DeckImportPop"
-import {deckStore} from "./DeckStore"
-import {DeckViewSmall} from "./DeckViewSmall"
-import {DeckWithSynergyInfo} from "./models/DeckSearchResult"
-import {ForSaleView} from "./sales/ForSaleView"
-import {AllianceDeckPopover} from "../importdeck/theoretical/AllianceDeckPopover";
+import { useEffect } from "react"
+import { cardStore } from "../cards/CardStore"
+import { spacing } from "../config/MuiConfig"
+import { Loader } from "../mui-restyled/Loader"
+import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
+import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
+import { uiStore } from "../ui/UiStore"
+import { ComparisonPopover } from "./comparison/ComparisonPopover"
+import { deckImportPopStore } from "./DeckImportPop"
+import { deckStore } from "./DeckStore"
+import { DeckViewSmall } from "./DeckViewSmall"
+import { DeckWithSynergyInfo } from "./models/DeckSearchResult"
+import { ForSaleView } from "./sales/ForSaleView"
+import { AllianceDeckPopover } from "../alliancedecks/AllianceDeckPopover";
+import { useParams } from "react-router-dom";
+import { DeckType } from "../generated-src/DeckType";
 
-interface DeckViewPageProps extends RouteComponentProps<{ keyforgeDeckId: string }> {
-}
+export const DeckViewPage = observer(() => {
+    const {keyforgeDeckId} = useParams<{ keyforgeDeckId: string }>()
 
-export class DeckViewPage extends React.Component<DeckViewPageProps> {
-
-    render() {
-        const deckId = this.props.match.params.keyforgeDeckId
-        log.debug(`Rendering deck view page with deck id: ${deckId}`)
-        return (<DeckViewFullContainer keyforgeDeckId={deckId}/>)
-    }
-}
-
-interface DeckViewFullProps {
-    keyforgeDeckId: string
-}
-
-@observer
-class DeckViewFullContainer extends React.Component<DeckViewFullProps> {
-
-    constructor(props: DeckViewFullProps) {
-        super(props)
+    useEffect(() => {
         deckStore.deck = undefined
         deckStore.saleInfo = undefined
-        uiStore.setTopbarValues("Deck", "Deck", "")
-    }
-
-    componentDidMount(): void {
-        log.debug(`Refresh deck in component did mount.`)
-        this.refreshDeck()
-    }
-
-    componentDidUpdate(prevProps: DeckViewFullProps) {
-        if (this.props.keyforgeDeckId != prevProps.keyforgeDeckId) {
-            log.debug(`Component did update refresh deck because this id is ${this.props.keyforgeDeckId} and prev is ${prevProps.keyforgeDeckId}`)
-            this.refreshDeck()
-        }
-    }
-
-    componentWillUnmount(): void {
-        deckStore.deck = undefined
-    }
-
-    refreshDeck = () => {
-        const deckId = this.props.keyforgeDeckId
         deckStore.randomDeckId = undefined
-        deckStore.findDeck(deckId)
-        deckStore.findDeckSaleInfo(deckId)
         deckStore.importedDeck = undefined
         deckImportPopStore.popOpen = false
-    }
 
-    render() {
-        log.debug("Rendering DeckViewFull")
-        const {deck} = deckStore
-        if (!deck) {
-            return <Loader/>
-        }
-        return <DeckViewFullView deck={deck}/>
+        uiStore.setTopbarValues("Deck", "Deck", "")
+
+        deckStore.findDeck(keyforgeDeckId)
+        deckStore.findDeckSaleInfo(keyforgeDeckId)
+
+    }, [keyforgeDeckId])
+
+    const deck = deckStore.deck
+
+    if (deck == null) {
+        return <Loader/>
     }
-}
+    return <DeckViewFullView deck={deck}/>
+})
 
 interface DeckViewFullViewProps {
     deck: DeckWithSynergyInfo
     fake?: boolean
 }
 
-@observer
-export class DeckViewFullView extends React.Component<DeckViewFullViewProps> {
+export const DeckViewFullView = observer((props: DeckViewFullViewProps) => {
+    const {deck, fake} = props
 
-    constructor(props: DeckViewFullViewProps) {
-        super(props)
-        const deck = props.deck.deck
-        uiStore.setTopbarValues("Deck", "Deck", "")
-        uiStore.setDocTitleAndDescription(deck.name)
+    useEffect(() => {
+        uiStore.setTopbarValues(deck.deck.name, "Deck", "")
+    }, [deck])
+
+    if (!cardStore.cardsLoaded) {
+        return <Loader/>
     }
 
-    componentDidMount(): void {
-        this.setTopBarValues()
-    }
-
-    componentDidUpdate() {
-        log.debug("Component did update set top bar values")
-        this.setTopBarValues()
-    }
-
-    setTopBarValues = () => uiStore.setTopbarValues(this.props.deck.deck.name, "Deck", "")
-
-    render() {
-        const {deck, fake} = this.props
-
-        if (!cardStore.cardsLoaded) {
-            return <Loader/>
-        }
-
-        const {saleInfo} = deckStore
-        let saleInfoComponent = null
-        if (saleInfo) {
-            saleInfoComponent = (
-                <Card style={{margin: spacing(2)}}>
-                    <ForSaleView
-                        saleInfo={saleInfo}
-                        deckName={deck.deck.name}
-                        keyforgeId={deck.deck.keyforgeId}
-                        deckId={deck.deck.id}
-                    />
-                </Card>
-            )
-        } else if (!fake) {
-            saleInfoComponent = <Loader/>
-        }
-
-        return (
-            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                <ExtraDeckStatsView deck={deck.deck}/>
-                <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake} fake={fake}/>
-                <DeckStatsView deck={deck.deck}/>
-                {saleInfoComponent}
-                <DeckSynergiesInfoView
-                    synergies={deck}
+    const {saleInfo} = deckStore
+    let saleInfoComponent = null
+    if (saleInfo) {
+        saleInfoComponent = (
+            <Card style={{margin: spacing(2)}}>
+                <ForSaleView
+                    saleInfo={saleInfo}
+                    deckName={deck.deck.name}
+                    keyforgeId={deck.deck.keyforgeId}
+                    deckId={deck.deck.id}
                 />
-                <ComparisonPopover/>
-                <AllianceDeckPopover/>
-            </div>
+            </Card>
         )
-
+    } else if (!fake && deck.deck.deckType !== DeckType.ALLIANCE) {
+        saleInfoComponent = <Loader/>
     }
-}
+
+    return (
+        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+            <ExtraDeckStatsView deck={deck.deck}/>
+            <DeckViewSmall deck={deck.deck} fullVersion={true} hideActions={fake} fake={fake}/>
+            <DeckStatsView deck={deck.deck}/>
+            {saleInfoComponent}
+            <DeckSynergiesInfoView
+                synergies={deck}
+            />
+            <ComparisonPopover/>
+            <AllianceDeckPopover/>
+        </div>
+    )
+})

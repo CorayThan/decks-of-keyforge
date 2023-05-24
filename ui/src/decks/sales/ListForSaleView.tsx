@@ -603,7 +603,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             {"Save Default"}
                         </KeyButton>
                         {deck && (
-                            <DeckOwnershipButton deckName={deck.name} deckId={deck.id} hasVerification={deck.hasOwnershipVerification}/>
+                            <DeckOwnershipButton deck={deck} hasVerification={deck.hasOwnershipVerification}/>
                         )}
                         <div style={{flexGrow: 1}}/>
                         <KeyButton onClick={this.handleClose}>Cancel</KeyButton>

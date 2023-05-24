@@ -1,52 +1,57 @@
-import {Box, Button, Card, Collapse, Tooltip} from "@material-ui/core"
+import { Box, Button, Card, Collapse, Tooltip } from "@material-ui/core"
 import CardActions from "@material-ui/core/CardActions/CardActions"
 import CardContent from "@material-ui/core/CardContent/CardContent"
 import Divider from "@material-ui/core/Divider/Divider"
 import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
-import {observer} from "mobx-react"
+import { observer } from "mobx-react"
 import * as React from "react"
-import {AercForCombos} from "../aerc/AercForCombos"
-import {AercViewForDeck, AercViewType} from "../aerc/views/AercViews"
-import {deckListingStore} from "../auctions/DeckListingStore"
-import {cardStore} from "../cards/CardStore"
-import {EnhancementType} from "../cards/EnhancementType"
-import {CardAsLine} from "../cards/views/CardAsLine"
-import {keyLocalStorage} from "../config/KeyLocalStorage"
-import {spacing} from "../config/MuiConfig"
-import {Routes} from "../config/Routes"
-import {ExpansionIcon} from "../expansions/ExpansionIcon"
-import {displaySas, expansionInfoMap} from "../expansions/Expansions"
-import {DeckListingStatus} from "../generated-src/DeckListingStatus"
-import {DeckSaleInfo} from "../generated-src/DeckSaleInfo"
-import {House} from "../generated-src/House"
-import {SimpleCard} from "../generated-src/SimpleCard"
-import {AuctionDeckIcon} from "../generic/icons/AuctionDeckIcon"
-import {SellDeckIcon} from "../generic/icons/SellDeckIcon"
-import {TradeDeckIcon} from "../generic/icons/TradeDeckIcon"
-import {KeyCard} from "../generic/KeyCard"
-import {HouseBanner} from "../houses/HouseBanner"
-import {HouseLabel} from "../houses/HouseUtils"
-import {KeyLink} from "../mui-restyled/KeyLink"
-import {InlineDeckNote} from "../notes/DeckNote"
-import {DeckTagsView} from "../tags/DeckTagsView"
-import {screenStore} from "../ui/ScreenStore"
-import {userStore} from "../user/UserStore"
-import {OwnersList} from "../userdeck/OwnersList"
-import {userDeckStore} from "../userdeck/UserDeckStore"
-import {CompareDeckButton} from "./buttons/CompareDeckButton"
-import {EvilTwinButton} from "./buttons/EvilTwinButton"
-import {FavoriteDeck} from "./buttons/FavoriteDeck"
-import {FunnyDeck} from "./buttons/FunnyDeck"
-import {MoreDeckActions} from "./buttons/MoreDeckActions"
-import {MyDecksButton} from "./buttons/MyDecksButton"
-import {DeckScoreView} from "./DeckScoreView"
-import {EnhancementsInDeck} from "./EnhancementsInDeck"
-import {DeckSearchResult, DeckUtils} from "./models/DeckSearchResult"
-import {OrganizedPlayStats} from "./OrganizedPlayStats"
-import {DeckOwnershipButton} from "./ownership/DeckOwnershipButton"
-import {ForSaleView} from "./sales/ForSaleView"
-import {DeleteTheoreticalDeckButton} from "../importdeck/theoretical/DeleteTheoreticalDeckButton";
+import { AercForCombos } from "../aerc/AercForCombos"
+import { AercViewForDeck, AercViewType } from "../aerc/views/AercViews"
+import { deckListingStore } from "../auctions/DeckListingStore"
+import { cardStore } from "../cards/CardStore"
+import { EnhancementType } from "../cards/EnhancementType"
+import { CardAsLine } from "../cards/views/CardAsLine"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { spacing } from "../config/MuiConfig"
+import { Routes } from "../config/Routes"
+import { ExpansionIcon } from "../expansions/ExpansionIcon"
+import { displaySas, expansionInfoMap } from "../expansions/Expansions"
+import { DeckListingStatus } from "../generated-src/DeckListingStatus"
+import { DeckSaleInfo } from "../generated-src/DeckSaleInfo"
+import { House } from "../generated-src/House"
+import { SimpleCard } from "../generated-src/SimpleCard"
+import { AuctionDeckIcon } from "../generic/icons/AuctionDeckIcon"
+import { SellDeckIcon } from "../generic/icons/SellDeckIcon"
+import { TradeDeckIcon } from "../generic/icons/TradeDeckIcon"
+import { KeyCard } from "../generic/KeyCard"
+import { HouseBanner } from "../houses/HouseBanner"
+import { HouseLabel } from "../houses/HouseUtils"
+import { KeyLink } from "../mui-restyled/KeyLink"
+import { InlineDeckNote } from "../notes/DeckNote"
+import { DeckTagsView } from "../tags/DeckTagsView"
+import { screenStore } from "../ui/ScreenStore"
+import { userStore } from "../user/UserStore"
+import { OwnersList } from "../userdeck/OwnersList"
+import { userDeckStore } from "../userdeck/UserDeckStore"
+import { CompareDeckButton } from "./buttons/CompareDeckButton"
+import { EvilTwinButton } from "./buttons/EvilTwinButton"
+import { FavoriteDeck } from "./buttons/FavoriteDeck"
+import { FunnyDeck } from "./buttons/FunnyDeck"
+import { MoreDeckActions } from "./buttons/MoreDeckActions"
+import { MyDecksButton } from "./buttons/MyDecksButton"
+import { DeckScoreView } from "./DeckScoreView"
+import { EnhancementsInDeck } from "./EnhancementsInDeck"
+import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
+import { OrganizedPlayStats } from "./OrganizedPlayStats"
+import { DeckOwnershipButton } from "./ownership/DeckOwnershipButton"
+import { ForSaleView } from "./sales/ForSaleView"
+import { DeleteTheoreticalDeckButton } from "../importdeck/theoretical/DeleteTheoreticalDeckButton";
+import { Expansion } from "../generated-src/Expansion";
+import { DeckType } from "../generated-src/DeckType";
+import { MiniDeckLink } from "./buttons/MiniDeckLink";
+import { AllianceHouseInfo } from "../generated-src/AllianceHouseInfo";
+import { amber } from "@material-ui/core/colors";
 
 interface DeckViewSmallProps {
     deck: DeckSearchResult
@@ -68,6 +73,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
 
         const {deck, saleInfo, fullVersion, hideActions, style, fake, margin} = this.props
         const {id, keyforgeId, name, wishlistCount, funnyCount, owners, twinId} = deck
+        const alliance = deck.deckType === DeckType.ALLIANCE
 
         const compact = screenStore.smallDeckView()
 
@@ -82,9 +88,16 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                              height={displaySalesSeparately ? undefined : height}/>
         }
 
-        const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes
-        const viewTags = !hideActions && keyLocalStorage.genericStorage.viewTags
-        const link = fake ? Routes.theoreticalDeckPage(keyforgeId) : Routes.deckPage(keyforgeId)
+        const viewNotes = !hideActions && keyLocalStorage.genericStorage.viewNotes && !alliance
+        const viewTags = !hideActions && keyLocalStorage.genericStorage.viewTags && !alliance
+        let link
+        if (alliance) {
+            link = Routes.allianceDeckPage(keyforgeId)
+        } else if (fake) {
+            link = Routes.theoreticalDeckPage(keyforgeId)
+        } else {
+            link = Routes.deckPage(keyforgeId)
+        }
 
         let ownersFiltered = owners
         if (fullVersion) {
@@ -137,24 +150,29 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                     {compact ? null : (<CompareDeckButton deck={deck}/>)}
                                     {compact ? null : (<MyDecksButton deck={deck}/>)}
                                     <div style={{flexGrow: 1, margin: 0}}/>
-                                    <div>
-                                        <FavoriteDeck deckName={name} deckId={id} favoriteCount={wishlistCount ?? 0}/>
-                                    </div>
-                                    <div>
-                                        <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount ?? 0}/>
-                                    </div>
-                                    <DeckOwnershipButton
-                                        deckName={name}
-                                        deckId={id}
-                                        hasVerification={deck.hasOwnershipVerification}
-                                    />
-                                    <EvilTwinButton twinId={twinId}/>
+                                    {!alliance && (
+                                        <>
+                                            <div>
+                                                <FavoriteDeck deckName={name} deckId={id}
+                                                              favoriteCount={wishlistCount ?? 0}/>
+                                            </div>
+                                            <div>
+                                                <FunnyDeck deckName={name} deckId={id} funnyCount={funnyCount ?? 0}/>
+                                            </div>
+                                            <DeckOwnershipButton
+                                                deck={deck}
+                                                hasVerification={deck.hasOwnershipVerification}
+                                            />
+                                            <EvilTwinButton twinId={twinId}/>
+                                        </>
+                                    )}
                                     <MoreDeckActions deck={deck} compact={compact}/>
                                 </CardActions>
                             )}
                             {fake && (
                                 <CardActions style={{flexWrap: "wrap", padding: spacing(1)}}>
-                                    {!compact && !fullVersion && (<DeleteTheoreticalDeckButton deckId={deck.keyforgeId} deckName={deck.name}/>)}
+                                    {!compact && !fullVersion && (
+                                        <DeleteTheoreticalDeckButton deckId={deck.keyforgeId} deckName={deck.name}/>)}
                                 </CardActions>
                             )}
                         </div>
@@ -180,6 +198,7 @@ const deckTopClass = "deck-top-contents"
 
 const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: boolean, fake?: boolean }) => {
     const {deck, compact, fake} = props
+    const alliance = deck.deckType === DeckType.ALLIANCE
     const {housesAndCards, id, forAuction, forSale, forTrade, expansion} = deck
     const houses = housesAndCards.map(house => house.house)
 
@@ -187,7 +206,7 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
     let displayForSale = false
     let displayForTrade = false
 
-    if (userDeckStore.ownedByMe(id)) {
+    if (userDeckStore.ownedByMe(deck)) {
         const saleInfo = deckListingStore.listingInfoForDeck(id)
         if (saleInfo != null) {
             displayForAuction = saleInfo.status === DeckListingStatus.AUCTION
@@ -268,22 +287,48 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
             </Box>
         )
     } else {
+        const invalidAlliance = deck.validAlliance === false
         return (
             <Box
                 display={"flex"}
-                alignItems={"center"}
                 className={deckTopClass}
             >
-                <Box
-                    display={"grid"}
-                    gridGap={spacing(1)}
-                    flexGrow={1}
-                    alignItems={"center"}
-                >
-                    <HouseBanner houses={houses} expansion={fake ? undefined : deck.expansion} extras={saleIcons}/>
-                    <OrganizedPlayStats deck={deck}/>
-                    <Box display={"flex"} justifyContent={"center"}>
-                        <EnhancementsInDeck deck={deck} style={{marginLeft: spacing(4)}}/>
+                <Box display={"flex"} flexDirection={"column"} flexGrow={1} justifyContent={"center"}>
+                    {alliance && (
+                        <Box display={"flex"} mb={0.5}>
+                            {deck.validAlliance === false && (
+                                <Typography
+                                    variant={"h5"}
+                                    color={"secondary"}
+                                    style={{fontSize: 18, marginRight: spacing(1), fontStyle: "italic"}}
+                                >
+
+                                </Typography>
+                            )}
+                            <Typography
+                                variant={"h5"}
+                                style={{
+                                    fontSize: 18,
+                                    marginRight: spacing(1),
+                                    fontStyle: "italic",
+                                    color: invalidAlliance ? amber["400"] : "#FFFFFF"
+                                }}
+                            >
+                                {invalidAlliance ? "Invalid " : ""}Alliance Deck
+                            </Typography>
+                        </Box>
+                    )}
+                    <Box
+                        display={"grid"}
+                        gridGap={spacing(1)}
+                        flexGrow={1}
+                        alignItems={"center"}
+                    >
+                        <HouseBanner houses={houses} expansion={fake ? undefined : deck.expansion} extras={saleIcons}/>
+                        <OrganizedPlayStats deck={deck}/>
+                        <Box display={"flex"} justifyContent={"center"}>
+                            <EnhancementsInDeck deck={deck} style={{marginLeft: spacing(4)}}/>
+                        </Box>
                     </Box>
                 </Box>
                 <DeckScoreView deck={deck}/>
@@ -345,7 +390,7 @@ const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compac
 
     return (
         <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-            {deck.housesAndCards.map((cardsForHouse) => (
+            {deck.housesAndCards.map((cardsForHouse, idx) => (
                 <DisplayCardsInHouse
                     key={cardsForHouse.house}
                     {...cardsForHouse}
@@ -354,6 +399,7 @@ const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compac
                     enhancementCount={enhancementCount}
                     enhancementType={enhancementType}
                     fake={fake}
+                    allianceHouse={props.deck.allianceHouses != null ? props.deck.allianceHouses[idx] : undefined}
                 />
             ))}
         </div>
@@ -380,8 +426,19 @@ const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult,
 
 const smallDeckViewCardLineWidth = 144
 
-const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, showEnhancements: boolean, enhancementCount: number, enhancementType: EnhancementType, fake: boolean }) => {
-    const {house, deck, cards, compact, showEnhancements, enhancementCount, enhancementType, fake} = props
+const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, showEnhancements: boolean, enhancementCount: number, enhancementType: EnhancementType, fake: boolean, allianceHouse?: AllianceHouseInfo }) => {
+    const {
+        house,
+        deck,
+        cards,
+        compact,
+        showEnhancements,
+        enhancementCount,
+        enhancementType,
+        fake,
+        allianceHouse
+    } = props
+    const alliance = deck.deckType === DeckType.ALLIANCE
     const deckExpansion = deck.expansion
 
     const enhancementsForCard = (card: SimpleCard) => {
@@ -398,6 +455,11 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
             <AercForCombos combos={deck.synergyDetails?.filter(combo => combo.house === house)}>
                 <HouseLabel house={house} title={true}/>
             </AercForCombos>
+            {allianceHouse && (
+                <Box mt={1}>
+                    <MiniDeckLink deck={allianceHouse} maxHeight={24}/>
+                </Box>
+            )}
             <Divider style={{marginTop: 4}}/>
             {compact ?
                 (
@@ -446,26 +508,28 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
                     />
                 ))
             }
-            {keyLocalStorage.genericStorage.buildAllianceDeck && !fake && (
+            {keyLocalStorage.genericStorage.buildAllianceDeck && !fake && !alliance && (
                 <>
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(0.5)}}/>
-                    <AddHouseToAlliance deckId={deck.keyforgeId} deckName={deck.name} house={house}/>
+                    <AddHouseToAlliance deckId={deck.keyforgeId} deckName={deck.name} house={house}
+                                        expansion={deck.expansion}/>
                 </>
             )}
         </List>
     )
 })
 
-const AddHouseToAlliance = observer((props: { deckId: string, deckName: string, house: House }) => {
-    const {deckId, deckName, house} = props
+const AddHouseToAlliance = observer((props: { deckId: string, deckName: string, house: House, expansion: Expansion }) => {
+    const {deckId, deckName, house, expansion} = props
     return (
         <Button
             onClick={() => {
-                keyLocalStorage.addAllianceHouse(deckId, deckName, house)
+                keyLocalStorage.addAllianceHouse(deckId, deckName, house, expansion)
             }}
             disabled={
                 keyLocalStorage.allianceDeckHouses.length > 2 ||
-                keyLocalStorage.allianceDeckHouses.find(allianceDeck => allianceDeck.house === house) != null
+                keyLocalStorage.allianceDeckHouses.find(allianceDeck => allianceDeck.house === house) != null ||
+                keyLocalStorage.allianceDeckHouses.find(allianceDeck => allianceDeck.expansion !== expansion) != null
             }
         >
             Add to Alliance

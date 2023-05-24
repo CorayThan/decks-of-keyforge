@@ -13,11 +13,12 @@ import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckCompareResults } from "./comparison/CompareDecks"
 import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
 import { DeckFilters } from "./search/DeckFilters"
+import { DeckStoreInterface } from "../alliancedecks/DeckStoreInterface";
 
-export class DeckStore {
+export class DeckStore implements DeckStoreInterface {
     static readonly DECK_PAGE_SIZE = 20
     static readonly CONTEXT = HttpConfig.API + "/decks"
-    static readonly CONTEXT_SECURE = HttpConfig.API + "/decks/secured"
+    static readonly SECURE_CONTEXT = HttpConfig.API + "/decks/secured"
     private static readonly MAX_PAGE_SIZE = 500
 
     @observable
@@ -105,16 +106,17 @@ export class DeckStore {
         this.compareDecks = response.data
     }
 
-    findDeck = (keyforgeId: string) => {
-        axios.get(`${DeckStore.CONTEXT}/with-synergies/${keyforgeId}`)
-            .then((response: AxiosResponse) => {
-                const deck: DeckWithSynergyInfo = response.data
-                if (!deck || !deck.deck) {
-                    messageStore.setWarningMessage(`You might need to import this deck. We couldn't find a deck with the id: ${keyforgeId}`)
-                } else {
-                    this.deck = deck
-                }
-            })
+    findDeck = async (keyforgeId: string) => {
+        const response: AxiosResponse<DeckWithSynergyInfo> = await axios.get(`${DeckStore.CONTEXT}/with-synergies/${keyforgeId}`)
+
+        const deck: DeckWithSynergyInfo = response.data
+        if (!deck || !deck.deck) {
+            messageStore.setWarningMessage(`You might need to import this deck. We couldn't find a deck with the id: ${keyforgeId}`)
+        } else {
+            this.deck = deck
+        }
+
+        return deck
     }
 
     findPastSas = (deckId: number) => {
@@ -144,7 +146,7 @@ export class DeckStore {
     }
 
     refreshDeckScores = (keyforgeId: string) => {
-        axios.post(`${DeckStore.CONTEXT_SECURE}/${keyforgeId}/refresh-deck-scores`)
+        axios.post(`${DeckStore.SECURE_CONTEXT}/${keyforgeId}/refresh-deck-scores`)
             .then(() => {
                 messageStore.setSuccessMessage("Scores refreshed! Reload the page to see them.")
             })
@@ -173,7 +175,7 @@ export class DeckStore {
                 if (!response.data) {
                     messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
                 } else {
-                    userDeckStore.findOwned()
+                    userDeckStore.findOwnedDecks()
                 }
 
                 this.importingAndAddingDeck = false
@@ -213,6 +215,14 @@ export class DeckStore {
         }
     }
 
+    refreshDeckInfo = () => {
+        if (this.deck) {
+            const keyforgeId = this.deck.deck.keyforgeId
+            this.findDeck(keyforgeId)
+            this.findDeckSaleInfo(keyforgeId)
+        }
+    }
+
     calculateCollectionStats = async (filters: DeckFilters) => {
         this.calculatingStats = true
         this.collectionStats = undefined
@@ -231,7 +241,7 @@ export class DeckStore {
         // log.debug(`Searching for first deck page with ${prettyJson(this.currentFilters)}`)
         this.nextDeckPage = undefined
         const decksPromise = this.findDecks(filters)
-        const countPromise = this.findDecksCount(filters)
+        this.findDecksCount(filters)
         const decks = await decksPromise
         if (decks) {
             // log.debug(`Replacing decks page with decks:  ${decks.decks.map((deck, idx) => `\n${idx + 1}. ${deck.name}`)}`)
@@ -240,7 +250,6 @@ export class DeckStore {
             this.addNewDecksToDecks(decks)
         }
         this.searchingForDecks = false
-        await countPromise
         this.findNextDecks()
     }
 
@@ -266,6 +275,15 @@ export class DeckStore {
             this.findNextDecks()
             // log.debug(`Done finding decks. Current decks page ${this.deckPage.page}. Total pages ${this.decksCount.pages}.`)
         }
+    }
+
+    displayDecks = () => {
+        if (this.decksToDisplay == null) {
+            return undefined
+        }
+        return this.decksToDisplay
+            .map(deckId => this.deckIdToDeck?.get(deckId))
+            .filter(deck => deck != null) as DeckSearchResult[]
     }
 
     moreDecksAvailable = () => (this.deckPage && this.decksCount && this.deckPage.page + 1 < this.decksCount.pages)
@@ -320,7 +338,6 @@ export class DeckStore {
         const response: AxiosResponse<DeckPage> = await axios.post(`${DeckStore.CONTEXT}/filter`, filters)
         return response.data
     }
-
 
     private findDecksCount = (filters: DeckFilters) => {
         this.decksCount = undefined

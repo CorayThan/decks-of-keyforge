@@ -1,17 +1,21 @@
-import {Box, Button, IconButton, List, ListItem, Paper, Typography} from "@material-ui/core"
-import {Clear} from "@material-ui/icons"
-import {observer} from "mobx-react"
+import { Box, Button, FormControlLabel, IconButton, List, ListItem, Paper, Switch, Typography } from "@material-ui/core"
+import { Clear } from "@material-ui/icons"
+import { observer } from "mobx-react"
 import React from "react"
-import {spacing, theme, themeStore} from "../../config/MuiConfig"
-import {Routes} from "../../config/Routes"
-import {PatronButton} from "../../thirdpartysites/patreon/PatronButton"
-import {screenStore} from "../../ui/ScreenStore"
-import {userStore} from "../../user/UserStore"
-import {theoreticalDeckStore} from "./TheoreticalDeckStore";
-import {HouseImage} from "../../houses/HouseBanner";
-import {keyLocalStorage} from "../../config/KeyLocalStorage";
-import {KeyButton} from "../../mui-restyled/KeyButton";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { keyLocalStorage } from "../config/KeyLocalStorage";
+import { userStore } from "../user/UserStore";
+import { theme, themeStore } from "../config/MuiConfig";
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton";
+import { HouseImage } from "../houses/HouseBanner";
+import { screenStore } from "../ui/ScreenStore";
+import { KeyButton } from "../mui-restyled/KeyButton";
+import { allianceDeckStore } from "./AllianceDeckStore";
+import { Routes } from "../config/Routes";
+import { House } from "../generated-src/House";
+import { Expansion } from "../generated-src/Expansion";
+import { ExpansionIcon } from "../expansions/ExpansionIcon";
+import { userDeckStore } from "../userdeck/UserDeckStore";
 
 export const AllianceDeckPopover = observer(() => {
 
@@ -36,7 +40,7 @@ export const AllianceDeckPopover = observer(() => {
                 {!patron && (
                     <Box p={2}>
                         <Typography
-                            style={{marginBottom: spacing(2)}}
+                            style={{marginBottom: theme.spacing(2)}}
                         >
                             Please become a patron to build alliance decks!
                         </Typography>
@@ -51,13 +55,13 @@ export const AllianceDeckPopover = observer(() => {
                                 <Typography
                                     variant={"h5"}
                                     noWrap={true}
-                                    style={{fontSize: 16, marginLeft: spacing(1)}}
+                                    style={{fontSize: 16, marginLeft: theme.spacing(1)}}
                                 >
                                     {deck.deckName}
                                 </Typography>
                             </Box>
                             <IconButton
-                                style={{marginLeft: spacing(2)}}
+                                style={{marginLeft: theme.spacing(2)}}
                                 size={"small"}
                                 onClick={() => keyLocalStorage.removeAllianceHouse(deck.deckId)}
                             >
@@ -66,28 +70,50 @@ export const AllianceDeckPopover = observer(() => {
                         </ListItem>
                     ))}
                 </List>
+                <Box>
+                    <Box ml={2} display={"flex"} alignItems={"flex-start"}>
+                        <Box mr={2}><ExpansionIcon expansion={decks[0].expansion} size={32}/></Box>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={keyLocalStorage.genericStorage.addAllianceToMyAlliances !== false}
+                                    onChange={(event) => {
+                                        keyLocalStorage.updateGenericStorage({
+                                            addAllianceToMyAlliances: event.target.checked
+                                        })
+                                    }}
+                                    color="secondary"
+                                />
+                            }
+                            label="Add to my alliances"
+                        />
+                    </Box>
+                </Box>
                 <Button
                     onClick={() => {
                         keyLocalStorage.updateGenericStorage({buildAllianceDeck: false})
                         keyLocalStorage.clearAllianceDeck()
                     }}
                     variant={"outlined"}
-                    style={{margin: spacing(2), marginRight: 0}}
+                    style={{margin: theme.spacing(2), marginRight: 0}}
                 >
                     Clear
                 </Button>
                 <KeyButton
                     variant={"contained"}
                     color={"primary"}
-                    style={{margin: spacing(2)}}
+                    style={{margin: theme.spacing(2)}}
                     disabled={!patron || decks.length !== 3}
                     onClick={async () => {
-                        const newDeckId = await theoreticalDeckStore.saveAllianceDeck()
+                        const newDeckId = await allianceDeckStore.saveAllianceDeck()
+                        if (keyLocalStorage.genericStorage.addAllianceToMyAlliances !== false) {
+                            userDeckStore.addToOwnedAllianceDecks(newDeckId)
+                        }
                         keyLocalStorage.updateGenericStorage({buildAllianceDeck: false})
                         keyLocalStorage.clearAllianceDeck()
                         history.push(Routes.allianceDeckPage(newDeckId))
                     }}
-                    loading={theoreticalDeckStore.savingDeck}
+                    loading={allianceDeckStore.savingDeck}
                 >
                     {screenStore.screenSizeXs() ? "Alliance" : "Forge Alliance"}
                 </KeyButton>
@@ -95,3 +121,10 @@ export const AllianceDeckPopover = observer(() => {
         </Box>
     )
 })
+
+export interface AllianceDeckNameId {
+    deckId: string
+    deckName: string
+    house: House
+    expansion: Expansion
+}

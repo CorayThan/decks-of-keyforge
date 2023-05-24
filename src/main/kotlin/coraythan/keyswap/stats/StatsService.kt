@@ -241,9 +241,9 @@ class StatsService(
                     stats.creatureControl.incrementValue(ratedDeck.creatureControl.roundToInt())
                     stats.artifactControl.incrementValue(ratedDeck.artifactControl.roundToInt())
                     stats.efficiency.incrementValue(ratedDeck.efficiency.roundToInt())
-                    stats.recursion.incrementValue(ratedDeck.recursion?.roundToInt() ?: 0)
+                    stats.recursion.incrementValue(ratedDeck.recursion.roundToInt())
                     stats.disruption.incrementValue(ratedDeck.disruption.roundToInt())
-                    stats.creatureProtection.incrementValue(ratedDeck.creatureProtection?.roundToInt() ?: 0)
+                    stats.creatureProtection.incrementValue(ratedDeck.creatureProtection.roundToInt())
                     stats.other.incrementValue(ratedDeck.other.roundToInt())
                     stats.effectivePower.incrementValue(ratedDeck.effectivePower)
                     stats.sas.incrementValue(ratedDeck.sasRating)
@@ -274,10 +274,10 @@ class StatsService(
                         stats.artifactControlToWinsLosses.addWinsLosses(ratedDeck.artifactControl.roundToInt(), wins)
                         stats.creatureControlToWinsLosses.addWinsLosses(ratedDeck.creatureControl.roundToInt(), wins)
                         stats.efficiencyToWinsLosses.addWinsLosses(ratedDeck.efficiency.roundToInt(), wins)
-                        stats.recursionToWinsLosses.addWinsLosses(ratedDeck.recursion?.roundToInt() ?: 0, wins)
+                        stats.recursionToWinsLosses.addWinsLosses(ratedDeck.recursion.roundToInt(), wins)
                         stats.disruptionToWinsLosses.addWinsLosses(ratedDeck.disruption.roundToInt(), wins)
                         stats.creatureProtectionToWinsLosses.addWinsLosses(
-                            ratedDeck.creatureProtection?.roundToInt() ?: 0, wins
+                            ratedDeck.creatureProtection.roundToInt(), wins
                         )
                         stats.otherToWinsLosses.addWinsLosses(ratedDeck.other.roundToInt(), wins)
                         stats.effectivePowerToWinsLosses.addWinsLosses((ratedDeck.effectivePower / 5) * 5, wins)

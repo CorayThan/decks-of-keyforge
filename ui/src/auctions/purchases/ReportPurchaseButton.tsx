@@ -15,10 +15,10 @@ import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { purchaseStore } from "./PurchaseStore"
 import { SaleType } from "./SaleType"
+import { DeckSearchResult } from "../../decks/models/DeckSearchResult";
 
 interface ReportPurchaseButtonProps {
-    deckId: number
-    deckName: string
+    deck: DeckSearchResult
     onClick: () => void
 }
 
@@ -51,8 +51,8 @@ export class ReportPurchaseButton extends React.Component<ReportPurchaseButtonPr
     }
 
     render() {
-        const {deckId, deckName} = this.props
-        if (!userDeckStore.ownedByMe(deckId)) {
+        const {id, name} = this.props.deck
+        if (!userDeckStore.ownedByMe(this.props.deck)) {
             return null
         }
         return (
@@ -97,8 +97,8 @@ export class ReportPurchaseButton extends React.Component<ReportPurchaseButtonPr
                                 } else if (buyerId == null) {
                                     messageStore.setWarningMessage("Please ensure you're logged in to report a purchase.")
                                 } else {
-                                    purchaseStore.reportPurchase(deckName, {
-                                        deckId,
+                                    purchaseStore.reportPurchase(name, {
+                                        deckId: id,
                                         amount,
                                         saleType: SaleType.STANDARD,
                                         buyerId

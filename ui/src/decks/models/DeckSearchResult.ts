@@ -12,6 +12,8 @@ import { SynergyTrait } from "../../generated-src/SynergyTrait"
 import { CsvData } from "../../generic/CsvDownloadButton"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
+import { DeckType } from "../../generated-src/DeckType";
+import { AllianceHouseInfo } from "../../generated-src/AllianceHouseInfo";
 
 export interface DeckWithSynergyInfo {
     deck: DeckSearchResult
@@ -23,6 +25,7 @@ export interface DeckWithSynergyInfo {
 
 export interface DeckSearchResult {
 
+    deckType: DeckType
     id: number
     keyforgeId: string
     expansion: Expansion
@@ -40,7 +43,7 @@ export interface DeckSearchResult {
     losses?: number
 
     aercScore: number
-    previousSasRating: number
+    previousSasRating?: number
     previousMajorSasRating?: number
     sasRating: number
     synergyRating: number
@@ -61,7 +64,7 @@ export interface DeckSearchResult {
     wishlistCount?: number
     funnyCount?: number
 
-    lastSasUpdate: string
+    lastSasUpdate?: string
     sasPercentile: number
 
     housesAndCards: HouseAndCards[]
@@ -84,6 +87,15 @@ export interface DeckSearchResult {
 
     twinId?: string
 
+    allianceHouses?: AllianceHouseInfo[]
+    validAlliance?: boolean
+}
+
+export interface DeckIdentifyingInfo {
+    id: number
+    keyforgeId: string
+    deckType: DeckType
+    name: string
 }
 
 export interface TraitInDeckInfo {
@@ -297,7 +309,7 @@ export class DeckUtils {
                 `https://www.keyforgegame.com/deck-details/${deck.keyforgeId}`,
                 deck.lastSasUpdate,
 
-                userDeckStore.notesForDeck(deck.id) ?? ""
+                (deck.id != null && userDeckStore.notesForDeck(deck.id)) ?? ""
             ]
         })
         data.unshift([

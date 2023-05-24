@@ -12,67 +12,71 @@ import java.time.LocalDate
 // It takes a long time to load all the crap in hibernate, so avoid that.
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class DeckSearchResult(
-        val id: Long = -1,
-        val keyforgeId: String = "",
-        val expansion: Expansion,
+    val deckType: DeckType,
+    val id: Long = -1,
+    val keyforgeId: String = "",
+    val expansion: Expansion,
 
-        val name: String = "",
+    val name: String = "",
 
-        val creatureCount: Int? = null,
-        val actionCount: Int? = null,
-        val artifactCount: Int? = null,
-        val upgradeCount: Int? = null,
+    val creatureCount: Int? = null,
+    val actionCount: Int? = null,
+    val artifactCount: Int? = null,
+    val upgradeCount: Int? = null,
 
-        val powerLevel: Int? = null,
-        val chains: Int? = null,
-        val wins: Int? = null,
-        val losses: Int? = null,
+    val powerLevel: Int? = null,
+    val chains: Int? = null,
+    val wins: Int? = null,
+    val losses: Int? = null,
 
-        val expectedAmber: Double = 0.0,
-        val amberControl: Double = 0.0,
-        val creatureControl: Double = 0.0,
-        val artifactControl: Double? = null,
-        val efficiency: Double? = null,
-        val recursion: Double? = null,
-        val effectivePower: Int = 0,
-        val creatureProtection: Double? = null,
-        val disruption: Double? = null,
-        val other: Double? = null,
+    val expectedAmber: Double = 0.0,
+    val amberControl: Double = 0.0,
+    val creatureControl: Double = 0.0,
+    val artifactControl: Double? = null,
+    val efficiency: Double? = null,
+    val recursion: Double? = null,
+    val effectivePower: Int = 0,
+    val creatureProtection: Double? = null,
+    val disruption: Double? = null,
+    val other: Double? = null,
 
-        val aercScore: Int = 0,
-        val previousSasRating: Int = 0,
-        val previousMajorSasRating: Int? = null,
-        val aercVersion: Int = 12,
-        val sasRating: Int = 0,
-        val synergyRating: Int = 0,
-        val antisynergyRating: Int = 0,
-        val metaScores: Map<String, Double> = mapOf(),
-        val efficiencyBonus: Double = 0.0,
+    val aercScore: Int = 0,
+    val previousSasRating: Int = 0,
+    val previousMajorSasRating: Int? = null,
+    val aercVersion: Int = 12,
+    val sasRating: Int = 0,
+    val synergyRating: Int = 0,
+    val antisynergyRating: Int = 0,
+    val metaScores: Map<String, Double> = mapOf(),
+    val efficiencyBonus: Double = 0.0,
 
-        val totalPower: Int = 0,
-        val cardDrawCount: Int? = null,
-        val cardArchiveCount: Int? = null,
-        val keyCheatCount: Int? = null,
-        val rawAmber: Int = 0,
-        val totalArmor: Int? = null,
+    val totalPower: Int = 0,
+    val cardDrawCount: Int? = null,
+    val cardArchiveCount: Int? = null,
+    val keyCheatCount: Int? = null,
+    val rawAmber: Int = 0,
+    val totalArmor: Int? = null,
 
-        val forSale: Boolean? = null,
-        val forTrade: Boolean? = null,
-        val forAuction: Boolean? = null,
-        val wishlistCount: Int? = null,
-        val funnyCount: Int? = null,
+    val forSale: Boolean? = null,
+    val forTrade: Boolean? = null,
+    val forAuction: Boolean? = null,
+    val wishlistCount: Int? = null,
+    val funnyCount: Int? = null,
 
-        val lastSasUpdate: String? = null,
-        val sasPercentile: Double = 0.0,
+    val lastSasUpdate: String? = null,
+    val sasPercentile: Double = 0.0,
 
-        val hasOwnershipVerification: Boolean? = null,
+    val hasOwnershipVerification: Boolean? = null,
 
-        val housesAndCards: List<HouseAndCards> = listOf(),
-        val deckSaleInfo: List<DeckSaleInfo>? = null,
-        val owners: List<String>? = null,
-        val synergyDetails: List<SynergyCombo>? = null,
-        val dateAdded: LocalDate? = null,
-        val twinId: String? = null,
+    val housesAndCards: List<HouseAndCards> = listOf(),
+    val deckSaleInfo: List<DeckSaleInfo>? = null,
+    val owners: List<String>? = null,
+    val synergyDetails: List<SynergyCombo>? = null,
+    val dateAdded: LocalDate? = null,
+    val twinId: String? = null,
+
+    val allianceHouses: List<AllianceHouseInfo>? = null,
+    val validAlliance: Boolean? = null,
 ) {
 
     fun printDeckSimple(saleInfo: DeckListing? = null): String {
@@ -89,7 +93,9 @@ data class DeckSearchResult(
             else -> ""
         }
 
-        return "$sasRating SAS • ${expansion.readable} • ${housesAndCards.map { it.house }.joinToString(" – ") { it.masterVaultValue }}" +
+        return "$sasRating SAS • ${expansion.readable} • ${
+            housesAndCards.map { it.house }.joinToString(" – ") { it.masterVaultValue }
+        }" +
                 forSaleMessage
     }
 
@@ -102,17 +108,24 @@ data class DeckSearchResult(
     }
 
     fun toSimpleResult() = SimpleDeckSearchResult(
-            name,
-            keyforgeId,
-            housesAndCards.map { it.house },
-            sasRating
+        name,
+        keyforgeId,
+        housesAndCards.map { it.house },
+        sasRating
     )
 }
 
 @GenerateTs
 data class SimpleDeckSearchResult(
-        val name: String,
-        val keyforgeId: String,
-        val houses: List<House> = listOf(),
-        val sas: Int = 0,
+    val name: String,
+    val keyforgeId: String,
+    val houses: List<House> = listOf(),
+    val sas: Int = 0,
+)
+
+@GenerateTs
+data class AllianceHouseInfo(
+    val keyforgeId: String,
+    val name: String,
+    val house: House,
 )

@@ -34,16 +34,6 @@ export class Utils {
         return Object.keys(enunn).filter(key => isNaN(+key)).map(name => enunn[name]) as T[]
     }
 
-    static arrPlus = <T, O>(array: T[], add: O | O[]): (T | O)[] => {
-        const newArr: (T | O)[] = array.slice()
-        if (Array.isArray(add)) {
-            return newArr.concat(add)
-        } else {
-            newArr.push(add)
-            return newArr
-        }
-    }
-
     static validateEmail = (email: string) => {
         // eslint-disable-next-line
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -168,10 +158,7 @@ export class Utils {
         return splitOnSlash[splitOnSlash.length - 1]
     }
 
-    static removeFromArray = <T>(array: T[], toRemove: T) => {
-        const idx = array.indexOf(toRemove)
-        array.splice(idx, 1)
-    }
+
 }
 
 type EnumType = string | number

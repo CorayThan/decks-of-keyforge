@@ -9,6 +9,7 @@ import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQu
 import { SortDirection } from "../../generic/SortDirection"
 import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
+import {AllianceDeckFilters} from "../../generated-src/AllianceDeckFilters";
 
 export class DeckFilters {
     static forSale = () => {
@@ -108,6 +109,9 @@ export class DeckFilters {
         if (queryObject.page) {
             queryObject.page = Number(queryObject.page)
         }
+        if (queryObject.titleQl != null) {
+            queryObject.titleQl = queryObject.titleQl === "true"
+        }
         if (queryObject.forSale != null) {
             queryObject.forSale = queryObject.forSale === "true"
         }
@@ -155,6 +159,8 @@ export class DeckFilters {
     page = 0
     @observable
     sort: string = defaultSort.value
+    @observable
+    titleQl = false
     @observable
     forSale?: boolean
     @observable
@@ -213,6 +219,7 @@ export class DeckFilters {
         this.withOwners = false
         this.teamDecks = false
         this.tournamentIds = []
+        this.titleQl = false
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
@@ -258,7 +265,7 @@ export class DeckFilters {
     }
 }
 
-export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNotificationQueryDto) => {
+export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNotificationQueryDto | AllianceDeckFilters) => {
     const copied = Utils.jsonCopy(filters)
 
     Object.keys(copied).forEach((key: string) => {

@@ -103,7 +103,7 @@ class CollectionStatsSearchContainer extends React.Component<DeckSearchContainer
 
         return (
             <div style={{display: "flex"}}>
-                <DecksSearchDrawer history={history} filters={filters} location={location}/>
+                <DecksSearchDrawer history={history} filters={filters!} location={location}/>
                 <div
                     style={{
                         flexGrow: 1,

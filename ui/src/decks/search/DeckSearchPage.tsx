@@ -23,10 +23,13 @@ import { ComparisonPopover } from "../comparison/ComparisonPopover"
 import { DeckListView } from "../DeckListView"
 import { deckStore } from "../DeckStore"
 import { DeckTableView } from "../DeckTableView"
-import { DeckSearchResult } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
 import { DecksSearchDrawer } from "./decksearchdrawer/DecksSearchDrawer"
-import {AllianceDeckPopover} from "../../importdeck/theoretical/AllianceDeckPopover";
+import { AllianceDecksSearchDrawer } from "../../alliancedecks/AllianceDecksSearchDrawer";
+import { allianceDeckStore } from "../../alliancedecks/AllianceDeckStore";
+import { AllianceDeckPopover } from "../../alliancedecks/AllianceDeckPopover";
+import { Routes } from "../../config/Routes";
+import { DeckSearchResult } from "../models/DeckSearchResult";
 
 export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 
@@ -74,7 +77,8 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     render() {
         const filters = this.makeFilters(this.props)
         return (
-            <DeckSearchContainer history={this.props.history} location={this.props.location} filters={filters} queryParams={this.props.location.search}/>
+            <DeckSearchContainer history={this.props.history} location={this.props.location} filters={filters}
+                                 queryParams={this.props.location.search}/>
         )
     }
 }
@@ -82,12 +86,12 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
 export interface DeckSearchContainerProps {
     history: History.History
     location: History.Location
-    filters: DeckFilters
+    filters?: DeckFilters
     queryParams: string
 }
 
 @observer
-class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
+export class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
     titleUpdateDisposer?: IReactionDisposer
 
@@ -105,7 +109,7 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
     }
 
     setTitle = () => {
-        const {filters, queryParams} = this.props
+        const {location, filters, queryParams} = this.props
 
         let owner: string | undefined
         let sellerDetails: SellerDetails | undefined
@@ -117,36 +121,47 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
             }
         }
 
+        const decksOrAlliances = location.pathname.includes(Routes.allianceDecks) ? "Alliances" : "Decks"
+
         if (userStore.username != null && owner === userStore.username) {
-            uiStore.setTopbarValues("My Decks", "My Decks", "Manage your collection")
-        } else if (sellerDetails && (filters.forSale || filters.forTrade)) {
+            const mine = `My ${decksOrAlliances}`
+            uiStore.setTopbarValues(mine, mine, "Manage your collection")
+        } else if (sellerDetails && (filters?.forSale || filters?.forTrade)) {
             uiStore.setTopbarValues(sellerDetails.storeName, sellerDetails.storeName, "")
         } else {
-            uiStore.setTopbarValues("Decks of KeyForge", "Decks", "Search, evaluate, buy and sell")
+            uiStore.setTopbarValues(`${decksOrAlliances} of KeyForge`, decksOrAlliances, "Search, evaluate, buy and sell")
         }
     }
 
     render() {
-        const {decksToDisplay, addingMoreDecks, searchingForDecks, moreDecksAvailable, showMoreDecks, countingDecks} = deckStore
         const {filters, history, location} = this.props
+        const alliancePage = location.pathname.includes(Routes.allianceDecks)
+        const {
+            addingMoreDecks,
+            searchingForDecks,
+            moreDecksAvailable,
+            showMoreDecks,
+            countingDecks,
+            displayDecks,
+        } = alliancePage ? allianceDeckStore : deckStore
 
         let decksView
 
-        if (decksToDisplay != null) {
-            if (decksToDisplay.length === 0) {
+        const decks: DeckSearchResult[] | undefined = displayDecks()
+
+        if (decks != null) {
+            if (!searchingForDecks && decks.length === 0) {
                 decksView = (
                     <Typography variant={"h6"} color={"secondary"} style={{marginTop: spacing(4)}}>
                         Sorry, no decks match your search criteria.
                     </Typography>
                 )
             } else {
-                const decks: DeckSearchResult[] = decksToDisplay
-                    .map(deckId => deckStore.deckIdToDeck?.get(deckId))
-                    .filter(deck => deck != null) as DeckSearchResult[]
+                const decks = displayDecks()
                 if (keyLocalStorage.deckListViewType === "table") {
-                    decksView = <DeckTableView decks={decks}/>
+                    decksView = <DeckTableView decks={decks!}/>
                 } else {
-                    decksView = <DeckListView decks={decks}/>
+                    decksView = <DeckListView decks={decks!}/>
                 }
             }
         }
@@ -168,7 +183,11 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
 
         return (
             <div style={{display: "flex"}}>
-                <DecksSearchDrawer history={history} filters={filters} location={location}/>
+                {filters != null ? (
+                    <DecksSearchDrawer history={history} filters={filters} location={location}/>
+                ) : (
+                    <AllianceDecksSearchDrawer location={location} history={history}/>
+                )}
                 <ComparisonPopover/>
                 <AllianceDeckPopover/>
                 <div
@@ -185,7 +204,8 @@ class DeckSearchContainer extends React.Component<DeckSearchContainerProps> {
                         }}
                     >
                         {screenStore.screenSizeXs() ? <Loader show={searchingForDecks}/> : null}
-                        {filters.isForSaleOrTrade && filters.owner != null && <SellerBanner sellerUsername={filters.owner}/>}
+                        {filters?.isForSaleOrTrade && filters.owner != null &&
+                            <SellerBanner sellerUsername={filters.owner}/>}
                         {decksView}
                         {showMoreButton}
                     </div>

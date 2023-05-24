@@ -50,8 +50,11 @@ import {KeyLoaderBar} from "./KeyLoaderBar"
 import {LoggedInRoute} from "./LoggedInRoute"
 import {spacing} from "./MuiConfig"
 import {serverStatusStore} from "./ServerStatusStore"
-import {ViewMyAllianceDecks} from "../importdeck/theoretical/ViewMyAllianceDecks";
+import {ViewMyOldAllianceDecks} from "../importdeck/theoretical/ViewMyOldAllianceDecks";
 import {GamesSearchPage} from "../gamestracker/GamesSearchPage";
+import {AllianceDeckFilters} from "../generated-src/AllianceDeckFilters";
+import { AllianceDeckViewPage } from "../alliancedecks/AllianceDeckViewPage";
+import { AllianceDeckSearchPage } from "../alliancedecks/AllianceDeckSearchPage";
 
 class Routes {
 
@@ -67,11 +70,12 @@ class Routes {
     static extraCardInfo = "/extra-card-infos"
     static about = "/about"
     static decks = "/decks"
+    static allianceDecks = "/alliance-decks"
     static tags = "/tags"
     static gamesTracker = "/games-tracker"
     static collectionStats = `/analyze-collection`
     static theoreticalDecks = "/theoretical-decks"
-    static allianceDecks = "/alliances"
+    static oldAlliancesRoute = "/alliances"
     static compareDecks = "/compare-decks"
     static stats = "/stats"
     static articles = "/articles"
@@ -83,9 +87,10 @@ class Routes {
     static thirdPartyTools = "/third-party-tools"
     static myTournaments = `${Routes.tournaments}?mineOnly=true`
     static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
-    static myAllianceDecks = `${Routes.allianceDecks}/mine`
+    static oldMyAllianceDecks = `${Routes.oldAlliancesRoute}/mine`
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static searchGames = `${Routes.gamesTracker}/search`
+    static myAllianceDecks = () => `${Routes.allianceDecks}?owners=${userStore.username}`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static allianceDeckPage = (id?: string) => `${Routes.allianceDecks}/${id == null ? ":id" : id}`
@@ -129,6 +134,19 @@ class Routes {
             return Routes.decks
         }
         return `${Routes.decks}?${stringified}`
+    }
+
+    /**
+     * Deck filters should be cleaned.
+     * @param filters
+     */
+    static allianceDeckSearch = (filters: AllianceDeckFilters) => {
+        const cleaned = prepareDeckFiltersForQueryString(filters)
+        const stringified = QueryString.stringify(cleaned)
+        if (stringified === "") {
+            return Routes.allianceDecks
+        }
+        return `${Routes.allianceDecks}?${stringified}`
     }
 
     static tournamentDecksSearch = (tournamentId: number) => {
@@ -249,13 +267,18 @@ const KeyRouter = observer(() => {
                     />
                     <Route
                         exact={true}
-                        path={Routes.myAllianceDecks}
-                        component={ViewMyAllianceDecks}
+                        path={Routes.oldMyAllianceDecks}
+                        component={ViewMyOldAllianceDecks}
                     />
                     <Route
                         exact={true}
                         path={Routes.searchGames}
                         component={GamesSearchPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.allianceDeckPage()}
+                        component={AllianceDeckViewPage}
                     />
                     <Route
                         exact={true}
@@ -265,7 +288,7 @@ const KeyRouter = observer(() => {
                     <Route
                         exact={true}
                         path={Routes.allianceDeckPage()}
-                        component={ViewTheoreticalDeck}
+                        component={DeckViewPage}
                     />
                     <Route
                         path={Routes.collectionStats}
@@ -318,6 +341,10 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.cards}
                         component={CardSearchPage}
+                    />
+                    <Route
+                        path={Routes.allianceDecks}
+                        component={AllianceDeckSearchPage}
                     />
                     <Route
                         path={Routes.decks}

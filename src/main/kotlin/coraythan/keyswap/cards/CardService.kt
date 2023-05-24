@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.HouseAndCards
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
@@ -166,7 +167,7 @@ class CardService(
         return cardRepo.findAll()
     }
 
-    fun deckToHouseAndCards(deck: Deck): List<HouseAndCards> {
+    fun deckToHouseAndCards(deck: GenericDeck): List<HouseAndCards> {
         val houses = deck.houses
         val cardIdsString = deck.cardIds
         val cards = cardsFromCardIds(cardIdsString)
@@ -183,13 +184,13 @@ class CardService(
             .sortedBy { it.house }
     }
 
-    fun cardsForDeck(deck: Deck): List<Card> {
-        val cards = cardsFromCardIds(deck.cardIds, deck.keyforgeId)
+    fun cardsForDeck(deck: GenericDeck): List<Card> {
+        val cards = cardsFromCardIds(deck.cardIds, deck.name)
         check(cards.size == 36) { "Why doesn't this deck have cards? $deck" }
         return cards
     }
 
-    fun futureCardsForDeck(deck: Deck): List<Card> {
+    fun futureCardsForDeck(deck: GenericDeck): List<Card> {
         return cardsForDeck(deck)
             .map {
                 val futureInfo = nextExtraInfo[it.cardTitle.cleanCardName()]
@@ -413,8 +414,8 @@ class CardService(
         )
     }
 
-    private fun cardsFromCardIds(cardIdsString: String, deckId: String? = null): List<Card> {
-        require(cardIdsString.isNotBlank()) { "Card id string was blank! deck id: $deckId" }
+    fun cardsFromCardIds(cardIdsString: String, deckName: String? = null): List<Card> {
+        require(cardIdsString.isNotBlank()) { "Card id string was blank! deck name: $deckName" }
         val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->

@@ -3,15 +3,20 @@ import { makeObservable, observable } from "mobx"
 import { HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
-import { deckStore } from "../decks/DeckStore"
 import { DeckNotesDto } from "../generated-src/DeckNotesDto"
 import { messageStore } from "../ui/MessageStore"
+import { AllianceDeckStore } from "../alliancedecks/AllianceDeckStore";
+import { DeckType } from "../generated-src/DeckType";
+import { DeckIdentifyingInfo } from "../decks/models/DeckSearchResult";
 
 export class UserDeckStore {
     static readonly CONTEXT = HttpConfig.API + "/userdeck/secured"
 
     @observable
     ownedDecks?: number[]
+
+    @observable
+    ownedAllianceDecks?: string[]
 
     @observable
     deckNotes?: Map<number, DeckNotesDto>
@@ -24,6 +29,9 @@ export class UserDeckStore {
 
     @observable
     loadingOwned = false
+
+    @observable
+    loadingOwnedAlliances = false
 
     @observable
     loadingNotes = false
@@ -56,7 +64,11 @@ export class UserDeckStore {
         axios.post(`${UserDeckStore.CONTEXT}/${deckId}/${owned ? "" : "un"}owned`)
             .then(() => {
                 messageStore.setSuccessMessage(owned ? `Added ${deckName} to your decks.` : `Removed ${deckName} from your decks.`)
-                this.findOwned()
+                if (owned) {
+                    this.addToOwnedDecks(deckId)
+                } else {
+                    this.removeFromOwnedDecks(deckId)
+                }
             })
     }
 
@@ -83,14 +95,27 @@ export class UserDeckStore {
             })
     }
 
-    findOwned = async () => {
+    findOwnedDecks = async () => {
         if (keyLocalStorage.hasAuthKey()) {
             this.loadingOwned = true
-            const userDecksList: AxiosResponse<number[]> = await axios.get(`${UserDeckStore.CONTEXT}/owned`)
+            const userDecksListPromise = axios.get(`${UserDeckStore.CONTEXT}/owned`)
+            const userDecksList: AxiosResponse<number[]> = await userDecksListPromise
 
             this.ownedDecks = userDecksList.data
-            this.refreshDeckInfo()
+
             this.loadingOwned = false
+        }
+    }
+
+    findOwnedAlliances = async () => {
+        if (keyLocalStorage.hasAuthKey()) {
+            this.loadingOwnedAlliances = true
+            const allianceDecksListPromise = axios.get(`${AllianceDeckStore.CONTEXT}/owned`)
+            const allianceDeckList: AxiosResponse<string[]> = await allianceDecksListPromise
+
+            this.ownedAllianceDecks = allianceDeckList.data
+
+            this.loadingOwnedAlliances = false
         }
     }
 
@@ -130,13 +155,37 @@ export class UserDeckStore {
 
     userDecksLoaded = () => this.ownedDecks != null && !this.loadingOwned
 
-    ownedByMe = (deckId: number) => this.ownedDecks?.includes(deckId) ?? false
+    ownedByMe = (ownedInfo: DeckIdentifyingInfo) => {
+        if (ownedInfo.deckType === DeckType.ALLIANCE) {
+            return this.ownedAllianceDecks?.includes(ownedInfo.keyforgeId) ?? false
+        } else {
+            return this.ownedDecks?.includes(ownedInfo.id) ?? false
+        }
+    }
 
-    refreshDeckInfo = () => {
-        if (deckStore.deck) {
-            const keyforgeId = deckStore.deck.deck.keyforgeId
-            deckStore.findDeck(keyforgeId)
-            deckStore.findDeckSaleInfo(keyforgeId)
+    removeFromOwnedDecks = (toRemove: number) => {
+        this.ownedDecks = this.ownedDecks?.filter(deckId => deckId !== toRemove)
+    }
+    addToOwnedDecks = (toAdd: number) => {
+        if (this.ownedDecks == null) {
+            this.ownedDecks = [toAdd]
+        } else {
+            const ownedNow = this.ownedDecks.slice()
+            ownedNow.push(toAdd)
+            this.ownedDecks = ownedNow
+        }
+    }
+
+    removeFromOwnedAllianceDecks = (toRemove: string) => {
+        this.ownedAllianceDecks = this.ownedAllianceDecks?.filter(deckId => deckId !== toRemove)
+    }
+    addToOwnedAllianceDecks = (toAdd: string) => {
+        if (this.ownedAllianceDecks == null) {
+            this.ownedAllianceDecks = [toAdd]
+        } else {
+            const ownedNow = this.ownedAllianceDecks.slice()
+            ownedNow.push(toAdd)
+            this.ownedAllianceDecks = ownedNow
         }
     }
 

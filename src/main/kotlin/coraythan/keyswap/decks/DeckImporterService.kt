@@ -6,10 +6,7 @@ import coraythan.keyswap.cards.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
-import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.DeckBuildingData
-import coraythan.keyswap.decks.models.DeckRatingProgressService
-import coraythan.keyswap.decks.models.KeyForgeDeck
+import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledException
@@ -18,9 +15,9 @@ import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.thirdpartyservices.KeyForgeDeckDto
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -60,81 +57,16 @@ class DeckImporterService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    // @Scheduled(fixedDelayString = "PT30S", initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
-    fun cleanUpBadCards() {
-
-        log.info("Cleaning up decks ${deckRepo.countByCardsVerifiedIsFalse()} left")
-
-        var cleanCount = 0
-
-        var checkedCount = 0
-
-        val millis = measureTimeMillis {
-            val toClean = deckRepo.findFirst100ByCardsVerifiedIsFalseOrderByImportDateTimeAsc()
-
-            // val toClean = listOf(deckRepo.findByKeyforgeId("9a4821de-04c1-4811-93a7-34379ee613ea")!!)
-
-            log.info("Got to clean decks ${toClean.size}")
-
-            for (deck in toClean) {
-
-                checkedCount++
-
-                val deckWithCards: KeyForgeDeckDto
-                try {
-                    deckWithCards = keyforgeApi.findDeckToImport(deck.keyforgeId) ?: error("Error finding keyforge deck ${deck.keyforgeId}")
-                } catch (e: Exception) {
-                    log.info("Got error finding keyforge deck in clean up bad cards. Done for now. Cleaned $cleanCount checked count $checkedCount " + e.message)
-                    break
-                }
-
-                deckWithCards._linked.cards!!
-                    .filter { it.id != "37377d67-2916-4d45-b193-bea6ecd853e3" }
-                    .forEach {
-                        val previous = cardRepo.findByIdOrNull(it.id)
-                        val kfcardHouse = House.fromMasterVaultValue(it.house)!!
-                        if (previous == null) {
-                            cleanCount++
-                            cardService.importNewCards(listOf(it))
-                        } else if (
-                            it.is_enhanced != previous.enhanced ||
-                            it.is_maverick != previous.maverick ||
-                            kfcardHouse != previous.house ||
-                            it.is_anomaly != previous.anomaly
-                        ) {
-                            cleanCount++
-                            cardRepo.save(
-                                previous.copy(
-                                    enhanced = it.is_enhanced,
-                                    maverick = it.is_maverick,
-                                    anomaly = it.is_anomaly,
-                                    house = kfcardHouse
-                                )
-                            )
-                        }
-                    }
-
-                val deckCards = deckWithCards._linked.cards
-                    .filter { it.id != "37377d67-2916-4d45-b193-bea6ecd853e3" }
-                    .map {
-                        val card = cardRepo.findByIdOrNull(it.id)!!
-                        card.extraCardInfo = cardService.extraInfo[card.cardTitle.cleanCardName()]
-                        card
-                    }
-
-                saveDeck(deck, deck.houses, deckWithCards.data._links!!.cards!!.mapNotNull {
-                    deckCards.find { deckCard -> deckCard.id == it }
-                })
-                deckRepo.save(deckRepo.getOne(deck.id).copy(cardsVerified = true))
-            }
-        }
-
-        log.info("Took ${millis}ms to clean up $checkedCount decks. Cleaned $cleanCount")
-    }
-
     @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(fixedDelayString = lockImportNewDecksFor, initialDelayString = SchedulingConfig.importNewDecksInitialDelay)
-    // @SchedulerLock(name = "importNewDecks", lockAtLeastFor = lockImportNewDecksFor, lockAtMostFor = lockImportNewDecksFor)
+    @Scheduled(
+        fixedDelayString = lockImportNewDecksFor,
+        initialDelayString = SchedulingConfig.importNewDecksInitialDelay
+    )
+    @SchedulerLock(
+        name = "importNewDecks",
+        lockAtLeastFor = lockImportNewDecksFor,
+        lockAtMostFor = lockImportNewDecksFor
+    )
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
@@ -284,9 +216,10 @@ class DeckImporterService(
     private fun makeBasicDeckFromDeckBuilderData(deckBuilderData: DeckBuildingData): Pair<Deck, List<Card>> {
         val cards = deckBuilderData.cards.flatMap { entry ->
             entry.value.map {
-                val card: Card = cardService.findByExpansionCardName(deckBuilderData.expansion.expansionNumber, it.name, it.enhanced)
-                    ?: cardService.findByCardName(it.name)
-                    ?: throw BadRequestException("Couldn't find card with expansion ${deckBuilderData.expansion.expansionNumber} name $it and house ${entry.key}")
+                val card: Card =
+                    cardService.findByExpansionCardName(deckBuilderData.expansion.expansionNumber, it.name, it.enhanced)
+                        ?: cardService.findByCardName(it.name)
+                        ?: throw BadRequestException("Couldn't find card with expansion ${deckBuilderData.expansion.expansionNumber} name $it and house ${entry.key}")
 
                 card.copy(house = entry.key)
             }
@@ -309,7 +242,8 @@ class DeckImporterService(
         deck
             .forEach { keyforgeDeck ->
                 if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
-                    val deckCards = keyforgeDeck.cards ?: keyforgeDeck._links?.cards ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
+                    val deckCards = keyforgeDeck.cards ?: keyforgeDeck._links?.cards
+                    ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
 
                     val cardsList = deckCards
                         .filter {
@@ -325,12 +259,15 @@ class DeckImporterService(
                                         ?: error("No deck for ${keyforgeDeck.id} in KeyForge API")
                                     cardService.importNewCards(deckWithCards._linked.cards!!)
 
-                                    dbCard = cardRepo.findByIdOrNull(it) ?: error("No card for $it even after finding and saving deck cards")
+                                    dbCard = cardRepo.findByIdOrNull(it)
+                                        ?: error("No card for $it even after finding and saving deck cards")
                                 } catch (e: HttpClientErrorException.TooManyRequests) {
-                                    log.warn("KeyForge API says we made too many requests when getting single deck's cards to import.", e)
+                                    log.warn(
+                                        "KeyForge API says we made too many requests when getting single deck's cards to import.",
+                                        e
+                                    )
                                     return savedCount
                                 }
-
                             }
                             val cardServiceCard = cardService.findByCardName(dbCard.cardTitle)
                                 ?: error("No card in card service for ${dbCard.cardTitle}")

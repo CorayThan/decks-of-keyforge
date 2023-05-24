@@ -35,6 +35,7 @@ import { cardStore } from "./CardStore"
 import { CardUtils } from "./KCard"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
 import { PublishDateSelect, SelectedPublishDate } from "./selects/PublishDateSelect"
+import {ArrayUtils} from "../config/ArrayUtils";
 
 interface CardsSearchDrawerProps {
     filters: CardFilters
@@ -184,7 +185,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                     lastPanel={true}
                                 >
                                     <Autocomplete
-                                        options={Utils.arrPlus(validTraits, ["", SynergyTrait.alpha, SynergyTrait.omega]) as (SynergyTrait | "")[]}
+                                        options={ArrayUtils.arrPlus(validTraits, ["", SynergyTrait.alpha, SynergyTrait.omega]) as (SynergyTrait | "")[]}
                                         value={filters.trait ?? ""}
                                         renderInput={(params) => <TextField {...params} label={"Trait"}/>}
                                         renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
@@ -196,7 +197,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                         size={"small"}
                                     />
                                     <Autocomplete
-                                        options={Utils.arrPlus(validSynergies, "") as (SynergyTrait | "")[]}
+                                        options={ArrayUtils.arrPlus(validSynergies, "") as (SynergyTrait | "")[]}
                                         value={filters.synergy ?? ""}
                                         renderInput={(params) => <TextField {...params} label={"Synergy"}/>}
                                         renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}

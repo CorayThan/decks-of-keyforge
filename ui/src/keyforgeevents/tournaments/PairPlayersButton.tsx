@@ -4,13 +4,13 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
 import { spacing } from "../../config/MuiConfig"
-import { Utils } from "../../config/Utils"
 import { PairingStrategy } from "../../generated-src/PairingStrategy"
 import { TournamentPairingPlayers } from "../../generated-src/TournamentPairingPlayers"
 import { TournamentRanking } from "../../generated-src/TournamentRanking"
 import { TournamentStage } from "../../generated-src/TournamentStage"
 import { UserLink } from "../../user/UserLink"
 import { tournamentStore } from "./TournamentStore"
+import { ArrayUtils } from "../../config/ArrayUtils";
 
 export const PairPlayersButton = observer((props: {
     tourneyId: number, stage: TournamentStage, pairingStrategy: PairingStrategy, rankings: TournamentRanking[]
@@ -46,7 +46,8 @@ export const PairPlayersButton = observer((props: {
                         return (
                             <Box display={"flex"} alignItems={"center"} mt={2} key={pairing.pairingTable}>
                                 <UserLink username={firstPlayer}/>
-                                <Typography variant={"subtitle2"} style={{marginLeft: spacing(2), marginRight: spacing(2)}}>vs</Typography>
+                                <Typography variant={"subtitle2"}
+                                            style={{marginLeft: spacing(2), marginRight: spacing(2)}}>vs</Typography>
                                 {secondPlayerNode}
                             </Box>
                         )
@@ -171,7 +172,7 @@ class PairPlayersStore {
     pairNext = (info?: PairingInfo) => {
         let addId: number | undefined
         if (info != null) {
-            Utils.removeFromArray(this.unpaired, info)
+            ArrayUtils.removeFromArray(this.unpaired, info)
             this.paired.push(info)
             addId = info.participantId
         }
@@ -218,7 +219,10 @@ class PairPlayersStore {
     }
 
     startPairingManually = (rankings: TournamentRanking[]) => {
-        this.pairingOptions = rankings.map(ranking => ({participantId: ranking.participantId, username: ranking.username}))
+        this.pairingOptions = rankings.map(ranking => ({
+            participantId: ranking.participantId,
+            username: ranking.username
+        }))
         this.unpaired = this.pairingOptions.slice()
         this.paired = []
         this.manualPairings = []

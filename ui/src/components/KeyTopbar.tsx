@@ -66,7 +66,7 @@ const myDeckLinks = () => {
             {to: Routes.analyzeUsersDecks(), text: "Analyze"}
         )
         links.push(
-            {to: Routes.myAllianceDecks, text: "Alliance Decks"}
+            {to: Routes.myAllianceDecks(), text: "Alliance Decks"}
         )
     }
     return links
@@ -167,6 +167,7 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                 genericOnClick={rightMenuStore.close}
                                 links={[
                                     {to: Routes.decks, text: "Decks", mobileActive: true},
+                                    {to: Routes.allianceDecks, text: "Alliances", mobileActive: true},
                                     {to: Routes.deckSearch(DeckFilters.forSale()), text: "For Sale"},
                                     randomDeckMenuItem,
                                 ]}
@@ -362,6 +363,7 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.decks, text: "Decks", mobileActive: true},
+                {to: Routes.allianceDecks, text: "Alliances", mobileActive: true},
                 {to: Routes.deckSearch(DeckFilters.forSale()), text: "For Sale"},
                 randomDeckMenuItem,
             ]}

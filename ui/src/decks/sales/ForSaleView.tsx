@@ -29,6 +29,7 @@ import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { DeckFilters } from "../search/DeckFilters"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
+import { DeckType } from "../../generated-src/DeckType";
 
 interface ForSaleViewProps {
     saleInfo: DeckSaleInfo[]
@@ -219,8 +220,12 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                             <div style={{display: "flex", margin: spacing(2), alignItems: "center"}}>
                                 <Typography style={{marginRight: spacing(2)}} variant={"subtitle2"}>Archon and Enhanced Cards</Typography>
                                 <DeckOwnershipButton
-                                    deckName={deckName}
-                                    deckId={deckId}
+                                    deck={{
+                                        deckType: DeckType.STANDARD,
+                                        id: deckId,
+                                        name: deckName,
+                                        keyforgeId,
+                                    }}
                                     hasVerification={true}
                                     forceVerification={true}
                                     buttonSize={"small"}

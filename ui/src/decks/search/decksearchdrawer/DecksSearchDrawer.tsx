@@ -18,7 +18,7 @@ import {SortDirectionView} from "../../../components/SortDirectionView"
 import {keyLocalStorage} from "../../../config/KeyLocalStorage"
 import {spacing} from "../../../config/MuiConfig"
 import {MyDokSubPaths, Routes} from "../../../config/Routes"
-import {log, Utils} from "../../../config/Utils"
+import {log} from "../../../config/Utils"
 import {expansionInfoMapNumbers} from "../../../expansions/Expansions"
 import {ExpansionSelectOrExclude, SelectedOrExcludedExpansions} from "../../../expansions/ExpansionSelectOrExclude"
 import {PatreonRewardsTier} from "../../../generated-src/PatreonRewardsTier"
@@ -44,6 +44,7 @@ import {DownloadDeckResults} from "../DownloadDeckResults"
 import {DeckSearchDrawerCards} from "./DeckSearchDrawerCards"
 import {DeckSearchDrawerConstraints} from "./DeckSearchDrawerConstraints"
 import {DeckSearchDrawerTagsAndNotes} from "./DeckSearchDrawerTagsAndNotes"
+import {ArrayUtils} from "../../../config/ArrayUtils";
 
 interface DecksSearchDrawerProps {
     location: History.Location
@@ -194,6 +195,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     render() {
         const {
             title,
+            titleQl,
             myFavorites,
             handleTitleUpdate,
             handleMyDecksUpdate,
@@ -235,11 +237,26 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                     <List dense={true}>
                         <ListItem>
                             <TextField
-                                label={"Deck Name"}
+                                label={titleQl ? 'Exact Match Deck Name' : "Deck Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
                                 fullWidth={!screenStore.screenSizeXs()}
                             />
+                            {userStore.patron && (
+                                <FormControlLabel
+                                    style={{marginLeft: spacing(1)}}
+                                    control={
+                                        <Checkbox
+                                            checked={titleQl}
+                                            onChange={(event) => {
+                                                this.props.filters.titleQl = event.target.checked
+                                            }}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="EM"
+                                />
+                            )}
                             <div style={{flexGrow: 1}}/>
                             {screenStore.screenSizeXs() ? (
                                 <IconButton onClick={() => keyDrawerStore.open = false}>
@@ -325,7 +342,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                         style={{marginLeft: spacing(1)}}
                                                         size={"small"}
                                                         onClick={() => {
-                                                            Utils.removeFromArray(tournamentIds, id)
+                                                            ArrayUtils.removeFromArray(tournamentIds, id)
                                                         }}
                                                     >
                                                         <Close fontSize={"small"}/>
