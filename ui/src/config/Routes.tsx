@@ -55,6 +55,7 @@ import {GamesSearchPage} from "../gamestracker/GamesSearchPage";
 import {AllianceDeckFilters} from "../generated-src/AllianceDeckFilters";
 import { AllianceDeckViewPage } from "../alliancedecks/AllianceDeckViewPage";
 import { AllianceDeckSearchPage } from "../alliancedecks/AllianceDeckSearchPage";
+import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils";
 
 class Routes {
 
@@ -90,7 +91,8 @@ class Routes {
     static oldMyAllianceDecks = `${Routes.oldAlliancesRoute}/mine`
     static createTheoreticalDeck = `${Routes.theoreticalDecks}/create`
     static searchGames = `${Routes.gamesTracker}/search`
-    static myAllianceDecks = () => `${Routes.allianceDecks}?owners=${userStore.username}`
+    static validAlliances = () => `${Routes.allianceDecks}?validOnly=true`
+    static myAllianceDecks = () => `${Routes.allianceDecks}?owners=${userStore.username}&validOnly=true`
     static editExtraCardInfo = (infoId?: string | number) => `${Routes.extraCardInfo}/edit/${infoId == null ? ":infoId" : infoId}`
     static theoreticalDeckPage = (id?: string) => `${Routes.theoreticalDecks}/${id == null ? ":id" : id}`
     static allianceDeckPage = (id?: string) => `${Routes.allianceDecks}/${id == null ? ":id" : id}`
@@ -141,7 +143,7 @@ class Routes {
      * @param filters
      */
     static allianceDeckSearch = (filters: AllianceDeckFilters) => {
-        const cleaned = prepareDeckFiltersForQueryString(filters)
+        const cleaned = AllianceDeckFiltersUtils.prepareDeckFiltersForQueryString(filters)
         const stringified = QueryString.stringify(cleaned)
         if (stringified === "") {
             return Routes.allianceDecks

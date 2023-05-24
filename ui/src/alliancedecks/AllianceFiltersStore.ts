@@ -13,6 +13,10 @@ class AllianceFiltersStore {
     @observable
     teamDecks = false
     @observable
+    validOnly = false
+    @observable
+    invalidOnly = false
+    @observable
     owners: string[] = []
     @observable
     currentPage = 0
@@ -35,6 +39,8 @@ class AllianceFiltersStore {
         this.owners = filters.owners
         this.pageSize = filters.pageSize
         this.sortDirection = filters.sortDirection
+        this.validOnly = filters.validOnly
+        this.invalidOnly = filters.invalidOnly
 
         this.selectedExpansions = new SelectedOrExcludedExpansions(filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
         this.selectedHouses = new SelectedOrExcludedHouses(filters.houses, filters.excludeHouses)
@@ -48,12 +54,15 @@ class AllianceFiltersStore {
         this.currentPage = 0
         this.sortDirection = SortDirection.DESC
 
+        this.validOnly = true
+        this.invalidOnly = true
+
         this.selectedHouses.reset()
         this.selectedSortStore.selectedValue = ""
         this.selectedExpansions.reset()
     }
 
-    makeFilters = () => {
+    makeFilters = (): AllianceDeckFilters => {
         return {
             page: 0,
             pageSize: this.pageSize,
@@ -62,6 +71,8 @@ class AllianceFiltersStore {
             teamDecks: this.teamDecks,
             title: this.title,
             owners: this.owners,
+            validOnly: this.validOnly,
+            invalidOnly: this.invalidOnly,
 
             expansions: this.selectedExpansions.excludedExpansionsAsNumberArray(),
             houses: this.selectedHouses.getHousesSelectedTrue(),

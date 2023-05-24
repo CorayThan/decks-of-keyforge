@@ -330,6 +330,13 @@ class AllianceDeckService(
             filters.title.tokenize().forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
         }
 
+        if (filters.validOnly) {
+            predicate.and(deckQ.validAlliance.isTrue)
+        }
+        if (filters.invalidOnly) {
+            predicate.and(deckQ.validAlliance.isFalse)
+        }
+
         if (filters.teamDecks) {
             val teamId = userHolder.user?.teamId
             if (teamId != null) {

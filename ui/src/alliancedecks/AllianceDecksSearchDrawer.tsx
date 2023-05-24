@@ -37,6 +37,24 @@ interface AllianceDecksSearchDrawerProps {
 @observer
 export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSearchDrawerProps> {
 
+    handleValidUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            allianceFiltersStore.invalidOnly = false
+            allianceFiltersStore.validOnly = true
+        } else {
+            allianceFiltersStore.validOnly = false
+        }
+    }
+
+    handleInvalidUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            allianceFiltersStore.validOnly = false
+            allianceFiltersStore.invalidOnly = true
+        } else {
+            allianceFiltersStore.invalidOnly = false
+        }
+    }
+
     handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         const username = userStore.username
         if (event.target.checked) {
@@ -103,7 +121,26 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                                             />
                                         }
                                         label={<Typography variant={"body2"}>My Alliances</Typography>}
-                                        style={{width: 136}}
+                                    />
+                                </FormGroup>
+                                <FormGroup row={true}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={allianceFiltersStore.validOnly}
+                                                onChange={this.handleValidUpdate}
+                                            />
+                                        }
+                                        label={<Typography variant={"body2"}>Valid Alliances</Typography>}
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={allianceFiltersStore.invalidOnly}
+                                                onChange={this.handleInvalidUpdate}
+                                            />
+                                        }
+                                        label={<Typography variant={"body2"}>Invalid Alliances</Typography>}
                                     />
                                 </FormGroup>
                             </div>

@@ -16,6 +16,9 @@ data class AllianceDeckFilters(
     val teamDecks: Boolean = false,
     val owners: List<String> = listOf(),
 
+    val validOnly: Boolean = false,
+    val invalidOnly: Boolean = false,
+
     val pageSize: Long = 20,
     val sort: AllianceDeckSortOptions = AllianceDeckSortOptions.SAS_RATING,
     val sortDirection: SortDirection = SortDirection.DESC

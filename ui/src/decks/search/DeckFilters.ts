@@ -9,7 +9,6 @@ import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQu
 import { SortDirection } from "../../generic/SortDirection"
 import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
-import {AllianceDeckFilters} from "../../generated-src/AllianceDeckFilters";
 
 export class DeckFilters {
     static forSale = () => {
@@ -135,6 +134,12 @@ export class DeckFilters {
         }
         if (queryObject.teamDecks != null) {
             queryObject.teamDecks = queryObject.teamDecks === "true"
+        }
+        if (queryObject.validOnly != null) {
+            queryObject.validOnly = queryObject.validOnly === "true"
+        }
+        if (queryObject.invalidOnly != null) {
+            queryObject.invalidOnly = queryObject.invalidOnly === "true"
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -265,7 +270,7 @@ export class DeckFilters {
     }
 }
 
-export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNotificationQueryDto | AllianceDeckFilters) => {
+export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNotificationQueryDto) => {
     const copied = Utils.jsonCopy(filters)
 
     Object.keys(copied).forEach((key: string) => {

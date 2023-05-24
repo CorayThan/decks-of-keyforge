@@ -21,7 +21,8 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
-import { DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
+import { AlliancesSearchLink, DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
+import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils";
 
 const topSas = new DeckFilters()
 const topChains = new DeckFilters()
@@ -46,6 +47,10 @@ completedAuctions.sort = DeckSorts.completedRecently
 const worstSas = new DeckFilters()
 worstSas.sortDirection = "ASC"
 
+const validAlliances = AllianceDeckFiltersUtils.createEmpty()
+validAlliances.validOnly = true
+const allAlliances = AllianceDeckFiltersUtils.createEmpty()
+
 export const landingPageDrawerWidth = 280
 
 @observer
@@ -64,7 +69,12 @@ export class LandingPage extends React.Component<{}> {
                 <Box display={"flex"}>
                     <KeyDrawer width={landingPageDrawerWidth} hamburgerMenu={true}>
                         <List>
-                            <div style={{display: "flex", flexWrap: "wrap", marginTop: spacing(2), paddingRight: spacing(1)}}>
+                            <div style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                marginTop: spacing(2),
+                                paddingRight: spacing(1)
+                            }}>
                                 <DeckSearchLink
                                     name={"Search Decks"}
                                     filters={topSas}
@@ -81,6 +91,22 @@ export class LandingPage extends React.Component<{}> {
                                         />
                                     )
                                 })}
+                            </div>
+                            <Divider/>
+                            <ListSubheader>
+                                Alliance Decks
+                            </ListSubheader>
+                            <div style={{display: "flex", flexWrap: "wrap", paddingRight: spacing(1)}}>
+                                <AlliancesSearchLink
+                                    name={"Valid"}
+                                    filters={validAlliances}
+                                    style={{marginBottom: spacing(2)}}
+                                />
+                                <AlliancesSearchLink
+                                    name={"All"}
+                                    filters={allAlliances}
+                                    style={{marginBottom: spacing(2)}}
+                                />
                             </div>
                             <Divider/>
                             <ListSubheader>
@@ -107,7 +133,8 @@ export class LandingPage extends React.Component<{}> {
                             </ListSubheader>
                             <Box display={"flex"} flexWrap={"wrap"}>
                                 <DeckSearchLink name={"For Sale"} filters={forSale} style={{marginBottom: spacing(2)}}/>
-                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginBottom: spacing(2)}}/>
+                                <DeckSearchLink name={"Auctions"} filters={auctions}
+                                                style={{marginBottom: spacing(2)}}/>
                             </Box>
 
                             <Divider/>
@@ -125,8 +152,10 @@ export class LandingPage extends React.Component<{}> {
                                     return (
                                         <LandingPageLink
                                             key={expansion}
-                                            name={<ExpansionIcon expansion={expansion} white={false}/>} color={"secondary"}
-                                            to={Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber)} style={{marginBottom: spacing(2)}}
+                                            name={<ExpansionIcon expansion={expansion} white={false}/>}
+                                            color={"secondary"}
+                                            to={Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber)}
+                                            style={{marginBottom: spacing(2)}}
                                         />
                                     )
                                 })}
@@ -136,7 +165,8 @@ export class LandingPage extends React.Component<{}> {
                                 Fun Searches
                             </ListSubheader>
                             <Box display={"flex"} flexWrap={"wrap"}>
-                                <DeckSearchLink name={"Reversal"} filters={worstSas} style={{marginBottom: spacing(2)}}/>
+                                <DeckSearchLink name={"Reversal"} filters={worstSas}
+                                                style={{marginBottom: spacing(2)}}/>
                                 <DeckSearchLink name={"Funny"} filters={topFunny} style={{marginBottom: spacing(2)}}/>
                             </Box>
                         </List>
@@ -194,7 +224,8 @@ export class LandingPage extends React.Component<{}> {
                                 </LandingPageTitle>
                             </UnstyledLink>
                             <Box display={"flex"} flexWrap={"wrap"}>
-                                <PatronButton size={"large"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                <PatronButton size={"large"}
+                                              style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <DiscordButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <TwitterButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <GithubTicketsButton style={{marginBottom: spacing(2)}}/>
@@ -202,27 +233,31 @@ export class LandingPage extends React.Component<{}> {
                             <LandingPageTitle marginTop={2}>
                                 Disclaimers
                             </LandingPageTitle>
-                                    <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
-                                        DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight Games, the producers of KeyForge, in any
-                                        way.
-                                    </Typography>
-                                    <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
-                                        DoK is owned and operated by Graylake LLC. For questions or comments check out
-                                        the <Link href={AboutSubPaths.contact}>contact me page</Link>!
-                                    </Typography>
-                                    <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
-                                        When using DoK you buy and sell decks entirely at your own risk. We make no guarantees about the safety of
-                                        any transactions.
-                                    </Typography>
-                                    <LinkButton size={"small"} href={Routes.codeOfConduct} newWindow={true} style={{marginRight: spacing(2)}}>
-                                        Code of Conduct
-                                    </LinkButton>
-                                    <LinkButton size={"small"} href={Routes.termsOfUse} newWindow={true} style={{marginRight: spacing(2)}}>
-                                        Terms of Use
-                                    </LinkButton>
-                                    <LinkButton size={"small"} href={Routes.privacyPolicy} newWindow={true}>
-                                        Privacy Policy
-                                    </LinkButton>
+                            <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
+                                DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight
+                                Games, the producers of KeyForge, in any
+                                way.
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
+                                DoK is owned and operated by Graylake LLC. For questions or comments check out
+                                the <Link href={AboutSubPaths.contact}>contact me page</Link>!
+                            </Typography>
+                            <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
+                                When using DoK you buy and sell decks entirely at your own risk. We make no guarantees
+                                about the safety of
+                                any transactions.
+                            </Typography>
+                            <LinkButton size={"small"} href={Routes.codeOfConduct} newWindow={true}
+                                        style={{marginRight: spacing(2)}}>
+                                Code of Conduct
+                            </LinkButton>
+                            <LinkButton size={"small"} href={Routes.termsOfUse} newWindow={true}
+                                        style={{marginRight: spacing(2)}}>
+                                Terms of Use
+                            </LinkButton>
+                            <LinkButton size={"small"} href={Routes.privacyPolicy} newWindow={true}>
+                                Privacy Policy
+                            </LinkButton>
                         </div>
                     </Box>
                 </Box>

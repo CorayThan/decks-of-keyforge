@@ -15,7 +15,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.13"
+export const latestVersion = "6.14"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,6 +43,29 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.14"}
+                    date={"5/24/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Alliance Decks Plus Ultra",
+                            note: "I've converted the alliance deck creator to make real deck versions of alliance " +
+                                "decks, which you can search like standard decks! Whenever you make " +
+                                "an alliance deck it will permanently be added to the alliance decks " +
+                                "in DoK. Do not programmatically create new alliance decks! The quantity is " +
+                                "intentionally limited to human effort to ensure not too many alliance decks are " +
+                                "created in the system." +
+                                "There is a link on the bottom of the alliance decks search page to view all the " +
+                                "past alliance decks you've made, but you can no longer create decks more decks there."
+                        },
+                        {
+                            highlight: "Exact Deck Name Search",
+                            note: "Patrons can now search for decks with an exact search, which will include " +
+                                "capitalization and special characters."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.13"}
                     date={"10/8/2022"}
