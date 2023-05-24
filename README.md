@@ -1,5 +1,19 @@
 
-Running the project:
+## Deploy new version:
+
+Run:
+
+```
+./scripts/build-and-push.ps1
+```
+
+Login to AWS Elastic Beanstalk. Go to Upload and deploy. For file choose: 
+
+```
+/docker/Dockerrun.aws.json
+```
+
+## Running the project:
 
 ```
 ./gradlew bootRun
