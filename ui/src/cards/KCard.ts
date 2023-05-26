@@ -93,6 +93,10 @@ export const minCardWinsToDisplay = 250
 
 export class CardUtils {
 
+    static bonusIconCount = (card: SimpleCard): number => {
+        return (card.bonusAember ?? 0) + (card.bonusDamage ?? 0) + (card.bonusDraw ?? 0) + (card.bonusCapture ?? 0)
+    }
+
     static cardMatchesFriendlyTrait = (card: KCard, trait: SynergyTrait): boolean => {
         return card.extraCardInfo?.traits?.find(traitValue =>
             (traitValue.trait === trait && traitValue.player !== SynTraitPlayer.ENEMY)

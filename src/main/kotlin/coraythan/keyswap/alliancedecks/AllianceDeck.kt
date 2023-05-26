@@ -60,13 +60,13 @@ data class AllianceDeck(
 
     override val houseNamesString: String = "",
 
-    override val bonusIconsString: String = "",
+    override val bonusIconsString: String? = null,
 
     @JsonIgnoreProperties("allianceDeck")
-    @OneToMany(mappedBy = "allianceDeck", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "allianceDeck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val allianceHouses: List<AllianceHouse> = listOf(),
 
-    val allianceHousesUniqueIds: String = "",
+    val housesUniqueId: String = "",
 
     val public: Boolean = false,
 
@@ -75,6 +75,8 @@ data class AllianceDeck(
     val ownedDecks: List<OwnedAllianceDeck> = listOf(),
 
     val discovererId: UUID,
+
+    val checkedUniqueness: Boolean = false,
 
     @Id
     val id: UUID = UUID.randomUUID()
@@ -106,6 +108,12 @@ data class AllianceDeck(
             if (restrictedCards.size > 1) return false
             if (restrictedCards.any { it.second > (restrictedCardsList[it.first] ?: 0) }) return false
             return true
+        }
+
+        fun uniqueHousesId(housesAndDeckIds: List<Pair<House, String>>): String {
+            val sorted = housesAndDeckIds.sortedBy { it.first }
+            val toJoin = sorted.map { "${it.first}::${it.second}" }
+            return toJoin.joinToString("&&")
         }
 
         fun fromDeck(deck: Deck, cards: List<Card>, discovererId: UUID): AllianceDeck {
@@ -142,7 +150,7 @@ data class AllianceDeck(
                 cardIds = deck.cardIds,
                 cardNames = deck.cardNames,
                 houseNamesString = deck.houseNamesString,
-                bonusIconsString = deck.bonusIconsString ?: "",
+                bonusIconsString = deck.bonusIconsString,
                 discovererId = discovererId,
                 validAlliance = determineIfValid(cards),
             )
@@ -203,7 +211,7 @@ data class AllianceDeck(
             synergyRating = synergies?.synergyRating ?: synergyRating,
             antisynergyRating = synergies?.antisynergyRating ?: antisynergyRating,
             totalPower = totalPower,
-            housesAndCards = housesAndCards ?: listOf(),
+            housesAndCards = housesAndCards?.addBonusIcons(bonusIcons()) ?: listOf(),
 
             sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
                 ?: if (sasRating < 75) 0.0 else 100.0,
@@ -221,8 +229,8 @@ data class AllianceDeck(
                     house = it.house,
                     name = it.name,
                 )
-            }
+            },
 
-        )
+            )
     }
 }

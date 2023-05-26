@@ -269,14 +269,29 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                         </ListItem>
                     </List>
                 </form>
-                <Box display={"flex"} m={2} mt={1}>
-                    <LinkButton
-                        href={Routes.oldMyAllianceDecks}
-                        size={"small"}
-                        newWindow={true}>
-                        Old Alliance Decks
-                    </LinkButton>
-                </Box>
+                {userStore.patron && (
+                    <Box display={"flex"} m={2} mt={1}>
+                        <LinkButton
+                            href={Routes.oldMyAllianceDecks}
+                            size={"small"}
+                            newWindow={true}
+                            style={{marginRight: spacing(2)}}
+                        >
+                            Old Alliances
+                        </LinkButton>
+                        <KeyButton
+                            size={"small"}
+                            onClick={() => {
+                                keyLocalStorage.updateGenericStorage({
+                                    buildAllianceDeck: true
+                                })
+                                this.props.history.push(Routes.usersDecks())
+                            }}
+                        >
+                            Build Alliance
+                        </KeyButton>
+                    </Box>
+                )}
             </KeyDrawer>
         )
     }

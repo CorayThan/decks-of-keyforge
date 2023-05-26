@@ -16,7 +16,7 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { cardStore } from "../CardStore"
 import { EnhancementType } from "../EnhancementType"
-import { KCard } from "../KCard"
+import { CardUtils, KCard } from "../KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, RarityIcon } from "../rarity/Rarity"
 import { CardSimpleView, CardView } from "./CardSimpleView"
 
@@ -28,7 +28,6 @@ interface CardAsLineProps {
     marginTop?: number
     hideRarity?: boolean
     deck?: DeckSearchResult
-    enhancements?: Map<EnhancementType, number>
 }
 
 export const CardAsLine = observer((props: CardAsLineProps) => {
@@ -173,7 +172,9 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
 }
 
 const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
-    const {card, fullCard, hideRarity, enhancements} = props
+    const {card, fullCard, hideRarity} = props
+
+    const enhanced = CardUtils.bonusIconCount(card) > 0
 
     return (
         <div
@@ -187,18 +188,19 @@ const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
             >
                 {card.cardTitle}
             </Typography>
-            {enhancements != null && (
+            {}
+            {enhanced && (
                 <Box display={"flex"} ml={1}>
-                    {[...Array(enhancements.get(EnhancementType.AEMBER) ?? 0)].map((n, idx) => (
+                    {[...Array(card.bonusAember ?? 0)].map((n, idx) => (
                         <EnhancementIcon type={EnhancementType.AEMBER} key={idx}/>
                     ))}
-                    {[...Array(enhancements.get(EnhancementType.CAPTURE) ?? 0)].map((n, idx) => (
+                    {[...Array(card.bonusCapture ?? 0)].map((n, idx) => (
                         <EnhancementIcon type={EnhancementType.CAPTURE} key={idx}/>
                     ))}
-                    {[...Array(enhancements.get(EnhancementType.DAMAGE) ?? 0)].map((n, idx) => (
+                    {[...Array(card.bonusDamage ?? 0)].map((n, idx) => (
                         <EnhancementIcon type={EnhancementType.DAMAGE} key={idx}/>
                     ))}
-                    {[...Array(enhancements.get(EnhancementType.DRAW) ?? 0)].map((n, idx) => (
+                    {[...Array(card.bonusDraw ?? 0)].map((n, idx) => (
                         <EnhancementIcon type={EnhancementType.DRAW} key={idx}/>
                     ))}
                 </Box>

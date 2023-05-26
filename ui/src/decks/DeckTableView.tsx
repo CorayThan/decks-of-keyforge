@@ -24,6 +24,7 @@ import { deckStore } from "./DeckStore"
 import { deckTableViewStore } from "./DeckTableViewStore"
 import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
 import { ListForSaleView } from "./sales/ListForSaleView"
+import { DeckType } from "../generated-src/DeckType";
 
 @observer
 export class DeckTableView extends React.Component<DeckListViewProps> {
@@ -68,7 +69,11 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 property: "name",
                 width: 240,
                 transform: deck => (
-                    <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.deckPage(deck.keyforgeId)}>
+                    <KeyLink
+                        style={{color: themeStore.defaultTextColor}}
+                        noStyle={true}
+                        to={deck.deckType === DeckType.STANDARD ? Routes.deckPage(deck.keyforgeId) : Routes.allianceDeckPage(deck.keyforgeId)}
+                    >
                         {deck.name}
                     </KeyLink>
                 )
@@ -77,7 +82,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                 title: "Houses",
                 sortable: false,
                 transform: deck => (
-                    <HouseBanner houses={deck.housesAndCards.map(house => house.house)} size={36}/>
+                    <HouseBanner houses={deck.housesAndCards.map(house => house.house)} size={36} allianceHouses={deck.allianceHouses}/>
                 )
             },
             {

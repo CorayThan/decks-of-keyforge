@@ -21,4 +21,6 @@ interface OwnedAllianceDeckRepo : CrudRepository<OwnedAllianceDeck, Long> {
     @Modifying
     @Query("UPDATE OwnedAllianceDeck ownedAllianceDeck SET ownedAllianceDeck.teamId = null WHERE ownedAllianceDeck.owner.id = ?1")
     fun removeTeamForUser(userId: UUID)
+
+    fun existsByDeckIdAndOwnerId(deckId: UUID, ownerId: UUID): Boolean
 }

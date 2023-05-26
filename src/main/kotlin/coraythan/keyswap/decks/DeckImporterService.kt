@@ -83,7 +83,7 @@ class DeckImporterService(
                 if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
-                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true, withCards = false)
+                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true, withCards = true)
                     if (decks == null) {
                         deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
@@ -280,7 +280,10 @@ class DeckImporterService(
                     val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                         ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
                     check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
-                    val deckToSave = keyforgeDeck.toDeck()
+
+                    val bonusIconSimpleCards = keyforgeDeck.createBonusIconsInfo(houses, cardsList)
+
+                    val deckToSave = keyforgeDeck.toDeck().withBonusIcons(bonusIconSimpleCards)
 
                     try {
                         saveDeck(deckToSave, houses, cardsList)

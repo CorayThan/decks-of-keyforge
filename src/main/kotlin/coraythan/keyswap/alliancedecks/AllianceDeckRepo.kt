@@ -7,5 +7,6 @@ import java.util.*
 
 @Transactional
 interface AllianceDeckRepo : JpaRepository<AllianceDeck, UUID>, QuerydslPredicateExecutor<AllianceDeck> {
-    fun findByAllianceHousesUniqueIds(allianceHousesKey: String): AllianceDeck?
+    fun findFirst1ByHousesUniqueId(allianceHousesKey: String): List<AllianceDeck>
+    fun findFirst1ByCheckedUniquenessFalse(): List<AllianceDeck>
 }

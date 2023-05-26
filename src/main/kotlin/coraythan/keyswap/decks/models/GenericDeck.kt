@@ -1,5 +1,7 @@
 package coraythan.keyswap.decks.models
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.expansions.Expansion
@@ -47,14 +49,6 @@ interface GenericDeck {
 
     val houseNamesString: String
 
-    /**
-     * Format: Anger&Brobnar&ACCDM~Cull the Weak&Dis&A
-     *
-     * A = aember
-     * C = capture
-     * D = draw
-     * M = damage
-     */
     val bonusIconsString: String?
 
     val expansionEnum: Expansion
@@ -63,6 +57,14 @@ interface GenericDeck {
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
+    fun bonusIcons(): DeckBonusIcons? {
+        val toParse = this.bonusIconsString?.trim()
+        if (toParse.isNullOrEmpty()) {
+            return null
+        }
+        return jacksonObjectMapper().readValue<DeckBonusIcons>(toParse)
+    }
+
     fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>? = null,
         cards: List<Card>? = null,
@@ -70,7 +72,6 @@ interface GenericDeck {
         synergies: DeckSynergyInfo? = null,
         includeDetails: Boolean = false
     ): DeckSearchResult
-
 }
 
 @GenerateTs

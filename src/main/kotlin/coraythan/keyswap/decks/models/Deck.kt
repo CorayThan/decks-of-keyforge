@@ -1,6 +1,7 @@
 package coraythan.keyswap.decks.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.Card
@@ -84,14 +85,6 @@ data class Deck(
 
     override val houseNamesString: String = "",
 
-    /**
-     * Format: Anger&Brobnar&ACCDM~Cull the Weak&Dis&A
-     *
-     * A = aember
-     * C = capture
-     * D = draw
-     * M = damage
-     */
     override val bonusIconsString: String? = null,
 
     @JsonIgnoreProperties("deck")
@@ -141,26 +134,20 @@ data class Deck(
 
     val twinId: String? = null,
 
+    val refreshedBonusIcons: Boolean? = true,
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = -1
 ) : GenericDeck {
 
-    val bonusIcons: List<Triple<House, String, BonusIcons>>?
-        get() = this.bonusIconsString?.split("~")?.map {
-            val values = it.split("&")
-            Triple(
-                House.valueOf(values[1]), values[0], BonusIcons(
-                    bonusAember = values[2].count { icon -> icon == 'A' },
-                    bonusCapture = values[2].count { icon -> icon == 'C' },
-                    bonusDraw = values[2].count { icon -> icon == 'D' },
-                    bonusDamage = values[2].count { icon -> icon == 'M' },
-                )
-            )
-        }
-
     val dateAdded: LocalDate?
         get() = this.importDateTime?.toLocalDate()
+
+    fun withBonusIcons(icons: DeckBonusIcons): Deck {
+        return this
+            .copy(bonusIconsString = jacksonObjectMapper().writeValueAsString(icons))
+    }
 
     fun ratingsEqual(o: Deck) = this.amberControl == o.amberControl &&
             this.expectedAmber == o.expectedAmber &&
@@ -240,7 +227,7 @@ data class Deck(
             forAuction = forAuction.falseToNull(),
             wishlistCount = wishlistCount.zeroToNull(),
             funnyCount = funnyCount.zeroToNull(),
-            housesAndCards = housesAndCards ?: listOf(),
+            housesAndCards = housesAndCards?.addBonusIcons(bonusIcons()) ?: listOf(),
 
             lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString().emptyToNull(),
 
@@ -343,4 +330,21 @@ data class DecksPage(
 data class DeckCount(
     val pages: Long,
     val count: Long
+)
+
+data class DeckBonusIcons(
+    val bonusIconHouses: List<BonusIconHouse> = listOf()
+)
+
+data class BonusIconHouse(
+    val house: House,
+    val bonusIconCards: List<BonusIconsCard> = listOf(),
+)
+
+data class BonusIconsCard(
+    val cardTitle: String,
+    val bonusAember: Int = 0,
+    val bonusCapture: Int = 0,
+    val bonusDamage: Int = 0,
+    val bonusDraw: Int = 0,
 )

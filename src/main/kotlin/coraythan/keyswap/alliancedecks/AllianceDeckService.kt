@@ -2,22 +2,23 @@ package coraythan.keyswap.alliancedecks
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Projections
+import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
-import coraythan.keyswap.decks.*
+import coraythan.keyswap.decks.DeckImporterService
+import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.SortDirection
+import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.*
-import coraythan.keyswap.decks.theoreticaldecks.TheoreticalDeckRepo
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyService
 import coraythan.keyswap.tokenize
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
-import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -39,9 +40,6 @@ class AllianceDeckService(
     private val deckRepo: DeckRepo,
     private val deckImporterService: DeckImporterService,
     private val allianceHouseRepo: AllianceHouseRepo,
-    private val theoreticalDeckRepo: TheoreticalDeckRepo,
-    private val deckSearchService: DeckSearchService,
-    private val keyUserRepo: KeyUserRepo,
     private val entityManager: EntityManager,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -49,55 +47,69 @@ class AllianceDeckService(
     private val matchFirstWord = "^\\S+".toRegex()
     private val matchLastWord = "\\S+$".toRegex()
 
-    @Scheduled(fixedDelayString = "PT1M", initialDelayString = "PT2M")
-    fun convertTheoryDecks() {
-        val convert = theoreticalDeckRepo.findTop25ByAllianceTrueAndConvertedToAllianceFalse()
-        log.info("Alliance Deck Conversion: Going to convert ${convert.size} old alliance decks")
-        convert.forEach {
-            val cards = cardService.cardsFromCardIds(it.cardIds)
-            val cardsByHouse = cards.groupBy { card -> card.house }
-            val decksForAlliance: List<Pair<House, DeckSearchResult>?> = cardsByHouse.mapKeys { houseCards ->
-                val house = houseCards.key
-                val cardsByNameInHouse: Map<String, List<Card>> = houseCards.value.groupBy { card -> card.cardTitle }
-                val deckFilters = DeckFilters(
-                    houses = setOf(house),
-                    cards = cardsByNameInHouse.map { cardAndQuantity ->
-                        DeckCardQuantity(
-                            cardNames = listOf(cardAndQuantity.key),
-                            quantity = cardAndQuantity.value.size,
+    private var doneChecking: Boolean = false
+
+    @Scheduled(fixedDelayString = "PT1S", initialDelayString = "PT30S")
+    fun checkAllianceUniqueness() {
+        if (doneChecking) {
+            return
+        }
+        val toCheck = allianceDeckRepo.findFirst1ByCheckedUniquenessFalse().firstOrNull()
+        log.info("Alliance Deck Uniqueness: Start, check ${toCheck?.id}")
+        if (toCheck == null) {
+            this.doneChecking = true
+            log.info("Alliance Deck Uniqueness: Complete")
+            return
+        }
+
+        val compositeDecksKf = toCheck.allianceHouses.map { Pair(it.house, it.keyforgeId) }
+        val compositeDecksKfId = AllianceDeck.uniqueHousesId(compositeDecksKf)
+
+        val name = combineDeckNames(toCheck.allianceHouses.map { Pair(it.house, it.name) })
+
+        val deckQ = QAllianceDeck.allianceDeck
+        val allianceHouseQ = QAllianceHouse.allianceHouse
+        val predicate = BooleanBuilder()
+
+        compositeDecksKf.forEach {
+            predicate.and(
+                deckQ.allianceHouses.any().`in`(
+                    JPAExpressions.selectFrom(allianceHouseQ)
+                        .where(
+                            allianceHouseQ.keyforgeId.eq(it.second),
+                            allianceHouseQ.house.eq(it.first),
                         )
-                    }
                 )
-                val foundDecks = deckSearchService.filterDecks(deckFilters, 0)
+            )
+        }
 
-                if (foundDecks.decks.size == 1) {
-                    house to foundDecks.decks.first()
-                } else {
-                    null
-                }
-            }.keys.toList()
+        val matches: List<AllianceDeck> = query.selectFrom(deckQ)
+            .innerJoin(deckQ.allianceHouses, allianceHouseQ)
+            .where(predicate)
+            .fetch()
+            .filter {
+                val compositeDecksKfMatch = it.allianceHouses.map { house -> Pair(house.house, house.keyforgeId) }
+                val compositeDecksKfIdMatch = AllianceDeck.uniqueHousesId(compositeDecksKfMatch)
+                compositeDecksKfIdMatch == compositeDecksKfId
+            }
+            .associateBy { it.id }
+            .map { it.value }
 
-            if (decksForAlliance.all { deckForAlliance -> deckForAlliance != null } && decksForAlliance.map { deckForAlliance -> deckForAlliance!!.second.expansion }
-                    .toSet().size == 1) {
-                log.info("Alliance Deck Conversion: Actually Creating Alliance deck")
-                saveAllianceDeckWithUser(
-                    AllianceDeckHouses(
-                        houseOne = decksForAlliance[0]!!.first,
-                        houseOneDeckId = decksForAlliance[0]!!.second.keyforgeId,
-                        houseTwo = decksForAlliance[1]!!.first,
-                        houseTwoDeckId = decksForAlliance[1]!!.second.keyforgeId,
-                        houseThree = decksForAlliance[2]!!.first,
-                        houseThreeDeckId = decksForAlliance[2]!!.second.keyforgeId,
-                        owned = false,
-                    ),
-                    keyUserRepo.findByIdOrNull(it.creatorId)
-                        ?: throw IllegalStateException("No key user ${it.creatorId}")
-                )
+        log.info("Alliance Deck Uniqueness: Found ${matches.size} matches for alliance deck composed of ${matches.map { it.allianceHouses.map { it.name + "+" + it.house } }}")
+
+        val goldenMatch = matches.first()
+            .copy(checkedUniqueness = true)
+        if (goldenMatch.housesUniqueId != compositeDecksKfId) {
+            allianceDeckRepo.save(goldenMatch.copy(housesUniqueId = compositeDecksKfId))
+        } else {
+            allianceDeckRepo.save(goldenMatch.copy(name = name))
+        }
+        matches.drop(1)
+            .forEach {
+                allianceDeckRepo.delete(it)
             }
 
-            theoreticalDeckRepo.save(it.copy(convertedToAlliance = true))
-        }
-        log.info("Alliance Deck Conversion: Done converting ${convert.size} old alliance decks")
+        log.info("Alliance Deck Uniqueness: deleted ${matches.size - 1} decks for unique ID $compositeDecksKfId")
     }
 
     fun saveAllianceDeck(toSave: AllianceDeckHouses): UUID {
@@ -114,11 +126,25 @@ class AllianceDeckService(
         val deckThree = deckRepo.findByKeyforgeId(toSave.houseThreeDeckId)
             ?: throw BadRequestException("No deck for ${toSave.houseThreeDeckId}")
 
-        val allianceName = combineDeckNames(deckOne.name, deckTwo.name, deckThree.name)
+        val allianceName = combineDeckNames(
+            listOf(
+                Pair(toSave.houseOne, deckOne.name),
+                Pair(toSave.houseTwo, deckTwo.name),
+                Pair(toSave.houseThree, deckThree.name),
+            )
+        )
 
-        val allianceDeckUniqueKey = deckOne.keyforgeId + deckTwo.keyforgeId + deckThree.keyforgeId
+        val allianceDeckUniqueKey = AllianceDeck.uniqueHousesId(
+            listOf(
+                Pair(toSave.houseOne, toSave.houseOneDeckId),
+                Pair(toSave.houseTwo, toSave.houseTwoDeckId),
+                Pair(toSave.houseThree, toSave.houseThreeDeckId),
+            )
+        )
 
-        var allianceDeck = allianceDeckRepo.findByAllianceHousesUniqueIds(allianceDeckUniqueKey)
+        log.info("Save unique alliance deck houses decks id: $allianceDeckUniqueKey")
+
+        var allianceDeck = allianceDeckRepo.findFirst1ByHousesUniqueId(allianceDeckUniqueKey).firstOrNull()
 
         if (allianceDeck == null) {
             val deckHousePairs = listOf(
@@ -148,7 +174,7 @@ class AllianceDeckService(
 
             val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user.id)
                 .copy(
-                    allianceHousesUniqueIds = deckHousePairs.map { it.first.keyforgeId }.joinToString()
+                    housesUniqueId = allianceDeckUniqueKey
                 )
 
             allianceDeck = allianceDeckRepo.save(tempAllianceDeck)
@@ -166,7 +192,7 @@ class AllianceDeckService(
             allianceHouseRepo.saveAll(allianceHouses)
         }
 
-        if (toSave.owned) {
+        if (toSave.owned && !ownedAllianceDeckRepo.existsByDeckIdAndOwnerId(allianceDeck.id, user.id)) {
             ownedAllianceDeckRepo.save(
                 OwnedAllianceDeck(
                     owner = user,
@@ -401,10 +427,18 @@ class AllianceDeckService(
         )
     }
 
-    private fun combineDeckNames(nameOne: String, nameTwo: String, nameThree: String): String {
-        return nameTwo
-            .replace(matchFirstWord, matchFirstWord.find(nameOne)?.value ?: "The Confusing")
-            .replace(matchLastWord, matchLastWord.find(nameThree)?.value ?: " of Illusions")
+    private fun combineDeckNames(names: List<Pair<House, String>>): String {
+        val namesSorted = names.sortedBy { it.first }
+        val firstWord = matchFirstWord.find(namesSorted[0].second)?.value ?: "The Confusing"
+        val lastWord = matchLastWord.find(namesSorted[2].second)?.value ?: " of Illusions"
+        val possibleName = namesSorted[1].second
+            .replace(matchFirstWord, firstWord)
+            .replace(matchLastWord, lastWord)
+        if (possibleName.length < 37) return possibleName
+        val shortMiddle = namesSorted[1].second
+            .split(" ")
+            .random()
+        return "$firstWord $shortMiddle $lastWord"
     }
 
     fun findOwned(): List<UUID> {

@@ -10,7 +10,6 @@ import { AercForCombos } from "../aerc/AercForCombos"
 import { AercViewForDeck, AercViewType } from "../aerc/views/AercViews"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { cardStore } from "../cards/CardStore"
-import { EnhancementType } from "../cards/EnhancementType"
 import { CardAsLine } from "../cards/views/CardAsLine"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing } from "../config/MuiConfig"
@@ -42,7 +41,7 @@ import { MoreDeckActions } from "./buttons/MoreDeckActions"
 import { MyDecksButton } from "./buttons/MyDecksButton"
 import { DeckScoreView } from "./DeckScoreView"
 import { EnhancementsInDeck } from "./EnhancementsInDeck"
-import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
+import { DeckSearchResult } from "./models/DeckSearchResult"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 import { DeckOwnershipButton } from "./ownership/DeckOwnershipButton"
 import { ForSaleView } from "./sales/ForSaleView"
@@ -340,50 +339,9 @@ const DeckViewTopContents = observer((props: { deck: DeckSearchResult, compact: 
 const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compact: boolean, fake: boolean }) => {
     const {deck, compact, fake} = props
 
-    const bonusIcons = DeckUtils.calculateBonusIcons(deck)
-
-    let showEnhancements = false
-    let enhancementCount = 0
-    let enhancementType = EnhancementType.AEMBER
-
-    if (bonusIcons != null) {
-
-        const cards = deck.housesAndCards.flatMap(houseCards => houseCards.cards)
-
-        const enhancedAmber = bonusIcons.get(EnhancementType.AEMBER)!
-        const enhancedCapture = bonusIcons.get(EnhancementType.CAPTURE)!
-        const enhancedDamage = bonusIcons.get(EnhancementType.DAMAGE)!
-        const enhancedDraw = bonusIcons.get(EnhancementType.DRAW)!
-
-        const typesCount = (enhancedAmber > 0 ? 1 : 0) + (enhancedCapture > 0 ? 1 : 0) + (enhancedDamage > 0 ? 1 : 0) +
-            (enhancedDraw > 0 ? 1 : 0)
-
-        if (typesCount === 1) {
-            const enhancedCardsCount = cards.filter(card => card.enhanced).length
-
-            const totalBonuses = enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw
-
-            if (enhancedCardsCount === 1 || enhancedCardsCount === totalBonuses) {
-                showEnhancements = true
-                enhancementCount = totalBonuses / enhancedCardsCount
-
-                if (enhancedCapture > 0) {
-                    enhancementType = EnhancementType.CAPTURE
-                } else if (enhancedDamage > 0) {
-                    enhancementType = EnhancementType.DAMAGE
-                } else if (enhancedDraw > 0) {
-                    enhancementType = EnhancementType.DRAW
-                }
-            }
-        }
-    }
-
     if (compact) {
         return <DisplayAllCardsByHouseCompact
             deck={deck}
-            showEnhancements={showEnhancements}
-            enhancementCount={enhancementCount}
-            enhancementType={enhancementType}
             fake={fake}
         />
     }
@@ -395,9 +353,6 @@ const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compac
                     key={cardsForHouse.house}
                     {...cardsForHouse}
                     deck={props.deck}
-                    showEnhancements={showEnhancements}
-                    enhancementCount={enhancementCount}
-                    enhancementType={enhancementType}
                     fake={fake}
                     allianceHouse={props.deck.allianceHouses != null ? props.deck.allianceHouses[idx] : undefined}
                 />
@@ -406,7 +361,7 @@ const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compac
     )
 })
 
-const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult, showEnhancements: boolean, enhancementCount: number, enhancementType: EnhancementType, fake: boolean }) => {
+const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult, fake: boolean }) => {
     return (
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
             {props.deck.housesAndCards.map((cardsForHouse) => (
@@ -414,9 +369,6 @@ const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult,
                     key={cardsForHouse.house} {...cardsForHouse}
                     compact={true}
                     deck={props.deck}
-                    showEnhancements={props.showEnhancements}
-                    enhancementCount={props.enhancementCount}
-                    enhancementType={props.enhancementType}
                     fake={props.fake}
                 />
             ))}
@@ -426,29 +378,17 @@ const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult,
 
 const smallDeckViewCardLineWidth = 144
 
-const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, showEnhancements: boolean, enhancementCount: number, enhancementType: EnhancementType, fake: boolean, allianceHouse?: AllianceHouseInfo }) => {
+const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, fake: boolean, allianceHouse?: AllianceHouseInfo }) => {
     const {
         house,
         deck,
         cards,
         compact,
-        showEnhancements,
-        enhancementCount,
-        enhancementType,
         fake,
         allianceHouse
     } = props
     const alliance = deck.deckType === DeckType.ALLIANCE
     const deckExpansion = deck.expansion
-
-    const enhancementsForCard = (card: SimpleCard) => {
-        if (card.enhanced && showEnhancements) {
-            const enhancements = new Map<EnhancementType, number>()
-            enhancements.set(enhancementType, enhancementCount)
-            return enhancements
-        }
-        return undefined
-    }
 
     return (
         <List>
@@ -474,7 +414,6 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
                                     marginTop={4}
                                     deckExpansion={deckExpansion}
                                     deck={deck}
-                                    enhancements={enhancementsForCard(card)}
                                 />
                             ))}
                         </div>
@@ -488,7 +427,6 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
                                     marginTop={4}
                                     deckExpansion={deckExpansion}
                                     deck={deck}
-                                    enhancements={enhancementsForCard(card)}
                                 />
                             ))}
                         </div>
@@ -504,7 +442,6 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
                         marginTop={4}
                         deckExpansion={deckExpansion}
                         deck={deck}
-                        enhancements={enhancementsForCard(card)}
                     />
                 ))
             }
