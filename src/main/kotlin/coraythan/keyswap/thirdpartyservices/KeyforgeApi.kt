@@ -85,16 +85,17 @@ class KeyforgeApi(
     }
 
     fun findDeckToImport(deckId: String): KeyForgeDeckDto? {
-        val deckResponse = restTemplate.getForObject(
+        return if (env == Env.dev) {
+            keyforgeGetRequest(
+                KeyForgeDeckDto::class.java,
+                "decks/$deckId/?links=cards"
+            )
+        } else {
+            restTemplate.getForObject(
                 "$mvProxyBaseUrl/decks/$deckId",
                 KeyForgeDeckResponse::class.java
-        )
-        if (deckResponse == null) {
-            log.warn("Deck response was null for $deckId")
-        } else if (deckResponse.error != null) {
-            log.warn("Deck response error: ${deckResponse.error}")
+            )?.deck
         }
-        return deckResponse?.deck
     }
 
     fun findDeck(deckId: String, withCards: Boolean = true): KeyForgeDeckDto? {

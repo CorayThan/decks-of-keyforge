@@ -26,7 +26,7 @@ data class KeyForgeDeck(
             )
         }
 
-        val iconsMap: Map<String, List<String>> = this.bonus_icons.associate { it.card_id to it.bonus_icons }
+        val icons: MutableList<Pair<String, List<String>>> = this.bonus_icons.map { it.card_id to it.bonus_icons }.toMutableList()
 
         return DeckBonusIcons(
             bonusIconHouses = houses
@@ -35,16 +35,18 @@ data class KeyForgeDeck(
                     BonusIconHouse(
                         house = house,
                         bonusIconCards = cardsForHouse.mapNotNull {
-                            val iconsForCard = iconsMap[it.id]
+                            val iconsForCardIdx = icons.indexOfFirst { iconInfo -> iconInfo.first == it.id }
+                            val iconsForCard = icons.getOrNull(iconsForCardIdx)
                             if (iconsForCard == null) {
                                 null
                             } else {
+                                icons.removeAt(iconsForCardIdx)
                                 BonusIconsCard(
                                     cardTitle = it.cardTitle,
-                                    bonusAember = iconsForCard.count { icon -> icon == "amber" },
-                                    bonusCapture = iconsForCard.count { icon -> icon == "capture" },
-                                    bonusDamage = iconsForCard.count { icon -> icon == "damage" },
-                                    bonusDraw = iconsForCard.count { icon -> icon == "draw" },
+                                    bonusAember = iconsForCard.second.count { icon -> icon == "amber" },
+                                    bonusCapture = iconsForCard.second.count { icon -> icon == "capture" },
+                                    bonusDamage = iconsForCard.second.count { icon -> icon == "damage" },
+                                    bonusDraw = iconsForCard.second.count { icon -> icon == "draw" },
                                 )
                             }
                         }

@@ -107,11 +107,11 @@ class DeckImporterService(
                 if (keyforgeDeck == null) {
                     log.warn("Bonus Icons Refresh: No deck in MV for deck ${it.name}  ${it.keyforgeId}")
                 } else {
-
                     val houses = keyforgeDeck.data._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                         ?: throw java.lang.IllegalStateException("Deck didn't have houses ${it.keyforgeId}.")
 
-                    val deckCards = keyforgeDeck.data._links.cards ?: error("Cards in the deck ${keyforgeDeck.data.id} are null.")
+                    val deckCards =
+                        keyforgeDeck.data._links.cards ?: error("Cards in the deck ${keyforgeDeck.data.id} are null.")
 
                     val cardsList = deckCards
                         .filter {
@@ -138,8 +138,7 @@ class DeckImporterService(
 
             } catch (e: Exception) {
                 log.warn(
-                    "Bonus Icons Refresh: Failed to update a deck's bonus icons due to exception. Deck is ${it.keyforgeId} ${it.name}",
-                    e
+                    "Bonus Icons Refresh: Failed to update a deck's bonus icons due to exception. Deck is ${it.keyforgeId} ${it.name}. Message: ${e.message}"
                 )
             }
         }
