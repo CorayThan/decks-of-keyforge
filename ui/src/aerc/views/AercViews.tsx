@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
@@ -15,6 +15,7 @@ import {
     AercCategoryOther,
     AercCategorySpeed
 } from "./AercCategories"
+import { TimeUtils } from "../../config/TimeUtils";
 
 export enum AercViewType {
     DECK,
@@ -42,7 +43,12 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
     if (type === AercViewType.MINI_DECK) {
         return (
             <div
-                style={{display: "flex", justifyContent: "space-between", backgroundColor: themeStore.aercViewBackground, padding: spacing(1)}}
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    backgroundColor: themeStore.aercViewBackground,
+                    padding: spacing(1)
+                }}
             >
                 <AercCategoryAmber hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryControl hasAerc={hasAerc} combos={combos}/>
@@ -82,6 +88,8 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
         )
     }
 
+    const dateAdded = deck.dateAdded == null ? "" : `on ${TimeUtils.formatShortDate(deck.dateAdded)}`
+
     return (
         <div
             style={{backgroundColor: themeStore.aercViewBackground, padding: spacing(1)}}
@@ -112,6 +120,26 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
                 <AercCategoryExtras deck={deck} cards={cards} hasAerc={hasAerc} combos={combos}/>
                 <AercCategoryCounts deck={deck} cards={cards} hasAerc={hasAerc} combos={combos}/>
             </div>
+            {deck.discoveredBy && (
+                <Box mt={1} justifyContent={"flex-end"}>
+                    <Typography
+                        variant={"body2"}
+                        color={"textSecondary"}
+                        style={{fontSize: "0.75rem"}}
+                        align={"right"}
+                    >
+                        discoverer
+                    </Typography>
+                    <Typography
+                        variant={"body2"}
+                        color={"textSecondary"}
+                        style={{fontSize: "0.75rem"}}
+                        align={"right"}
+                    >
+                        {deck.discoveredBy} {dateAdded}
+                    </Typography>
+                </Box>
+            )}
         </div>
     )
 }

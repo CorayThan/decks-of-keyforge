@@ -1,4 +1,4 @@
-import { Tooltip, Typography } from "@material-ui/core"
+import { Box, Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { CardUtils, KCard } from "../../cards/KCard"
 import { spacing } from "../../config/MuiConfig"
@@ -22,6 +22,7 @@ import { ScalingStealIcon } from "../../generic/icons/ScalingStealIcon"
 import { TideIcon } from "../../generic/icons/TideIcon"
 import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { HasAerc } from "../HasAerc"
+import { DeckType } from "../../generated-src/DeckType";
 
 interface AercCatProps {
     deck: DeckSearchResult
@@ -212,14 +213,19 @@ export const AercCategoryCounts = (props: AercCatProps) => {
                 small={true}
                 infos={firstTwo.concat(secondTwo).concat(thirdTwo)}
             />
-            {!twoHigh && deck.dateAdded != null && (
-                <Tooltip title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}>
-                    <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
-                        <Typography variant={"body2"} color={"textSecondary"} style={{fontSize: "0.75rem"}}>
-                            {TimeUtils.formatShortDate(deck.dateAdded)}
-                        </Typography>
-                    </div>
-                </Tooltip>
+            {!twoHigh && deck.dateAdded != null && deck.deckType === DeckType.STANDARD && (
+                <Box display={"flex"} flexDirection={"column"}>
+                    <Box flexGrow={1}/>
+                    <Tooltip
+                        title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}
+                    >
+                        <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
+                            <Typography variant={"body2"} color={"textSecondary"} style={{fontSize: "0.75rem"}}>
+                                {TimeUtils.formatShortDate(deck.dateAdded)}
+                            </Typography>
+                        </div>
+                    </Tooltip>
+                </Box>
             )}
         </div>
     )

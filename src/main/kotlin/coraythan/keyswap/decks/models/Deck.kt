@@ -74,7 +74,6 @@ data class Deck(
     val wishlistCount: Int = 0,
     val funnyCount: Int = 0,
     val evilTwin: Boolean? = false,
-    // val enhancementsAdded: Boolean? = true,
 
     // Json of card ids for performance loading decks, loading cards from cache
     @Lob

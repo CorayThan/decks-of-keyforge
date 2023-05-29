@@ -74,7 +74,7 @@ class AllianceFiltersStore {
             validOnly: this.validOnly,
             invalidOnly: this.invalidOnly,
 
-            expansions: this.selectedExpansions.excludedExpansionsAsNumberArray(),
+            expansions: this.selectedExpansions.expansionsAsNumberArray(),
             houses: this.selectedHouses.getHousesSelectedTrue(),
             excludeHouses: this.selectedHouses.getHousesExcludedTrue(),
         }

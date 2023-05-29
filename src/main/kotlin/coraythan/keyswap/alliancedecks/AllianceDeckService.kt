@@ -2,7 +2,6 @@ package coraythan.keyswap.alliancedecks
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Projections
-import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardService
@@ -22,7 +21,6 @@ import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -46,71 +44,6 @@ class AllianceDeckService(
     private val query = JPAQueryFactory(entityManager)
     private val matchFirstWord = "^\\S+".toRegex()
     private val matchLastWord = "\\S+$".toRegex()
-
-    private var doneChecking: Boolean = false
-
-    @Scheduled(fixedDelayString = "PT1S", initialDelayString = "PT30S")
-    fun checkAllianceUniqueness() {
-        if (doneChecking) {
-            return
-        }
-        val toCheck = allianceDeckRepo.findFirst1ByCheckedUniquenessFalse().firstOrNull()
-        log.info("Alliance Deck Uniqueness: Start, check ${toCheck?.id}")
-        if (toCheck == null) {
-            this.doneChecking = true
-            log.info("Alliance Deck Uniqueness: Complete")
-            return
-        }
-
-        val compositeDecksKf = toCheck.allianceHouses.map { Pair(it.house, it.keyforgeId) }
-        val compositeDecksKfId = AllianceDeck.uniqueHousesId(compositeDecksKf)
-
-        val name = combineDeckNames(toCheck.allianceHouses.map { Pair(it.house, it.name) })
-
-        val deckQ = QAllianceDeck.allianceDeck
-        val allianceHouseQ = QAllianceHouse.allianceHouse
-        val predicate = BooleanBuilder()
-
-        compositeDecksKf.forEach {
-            predicate.and(
-                deckQ.allianceHouses.any().`in`(
-                    JPAExpressions.selectFrom(allianceHouseQ)
-                        .where(
-                            allianceHouseQ.keyforgeId.eq(it.second),
-                            allianceHouseQ.house.eq(it.first),
-                        )
-                )
-            )
-        }
-
-        val matches: List<AllianceDeck> = query.selectFrom(deckQ)
-            .innerJoin(deckQ.allianceHouses, allianceHouseQ)
-            .where(predicate)
-            .fetch()
-            .filter {
-                val compositeDecksKfMatch = it.allianceHouses.map { house -> Pair(house.house, house.keyforgeId) }
-                val compositeDecksKfIdMatch = AllianceDeck.uniqueHousesId(compositeDecksKfMatch)
-                compositeDecksKfIdMatch == compositeDecksKfId
-            }
-            .associateBy { it.id }
-            .map { it.value }
-
-        log.info("Alliance Deck Uniqueness: Found ${matches.size} matches for alliance deck composed of ${matches.map { it.allianceHouses.map { it.name + "+" + it.house } }}")
-
-        val goldenMatch = matches.first()
-            .copy(checkedUniqueness = true)
-        if (goldenMatch.housesUniqueId != compositeDecksKfId) {
-            allianceDeckRepo.save(goldenMatch.copy(housesUniqueId = compositeDecksKfId))
-        } else {
-            allianceDeckRepo.save(goldenMatch.copy(name = name))
-        }
-        matches.drop(1)
-            .forEach {
-                allianceDeckRepo.delete(it)
-            }
-
-        log.info("Alliance Deck Uniqueness: deleted ${matches.size - 1} decks for unique ID $compositeDecksKfId")
-    }
 
     fun saveAllianceDeck(toSave: AllianceDeckHouses): UUID {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
@@ -172,7 +105,7 @@ class AllianceDeckService(
             val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)
             val cards = cardService.cardsForDeck(deck)
 
-            val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user.id)
+            val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user)
                 .copy(
                     housesUniqueId = allianceDeckUniqueKey
                 )
@@ -431,13 +364,18 @@ class AllianceDeckService(
         val namesSorted = names.sortedBy { it.first }
         val firstWord = matchFirstWord.find(namesSorted[0].second)?.value ?: "The Confusing"
         val lastWord = matchLastWord.find(namesSorted[2].second)?.value ?: " of Illusions"
-        val possibleName = namesSorted[1].second
-            .replace(matchFirstWord, firstWord)
-            .replace(matchLastWord, lastWord)
+        val middleName = namesSorted[1].second
+        val middleSplit = middleName.split(" ")
+        val possibleName = if (middleSplit.size < 3) {
+            "$firstWord ${middleSplit.random()} $lastWord"
+        } else {
+            middleName
+                .replace(matchFirstWord, firstWord)
+                .replace(matchLastWord, lastWord)
+        }
+
         if (possibleName.length < 37) return possibleName
-        val shortMiddle = namesSorted[1].second
-            .split(" ")
-            .random()
+        val shortMiddle = middleSplit.random()
         return "$firstWord $shortMiddle $lastWord"
     }
 

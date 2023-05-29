@@ -49,7 +49,6 @@ import { DeleteTheoreticalDeckButton } from "../importdeck/theoretical/DeleteThe
 import { Expansion } from "../generated-src/Expansion";
 import { DeckType } from "../generated-src/DeckType";
 import { MiniDeckLink } from "./buttons/MiniDeckLink";
-import { AllianceHouseInfo } from "../generated-src/AllianceHouseInfo";
 import { amber } from "@material-ui/core/colors";
 
 interface DeckViewSmallProps {
@@ -348,13 +347,12 @@ const DisplayAllCardsByHouse = observer((props: { deck: DeckSearchResult, compac
 
     return (
         <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-            {deck.housesAndCards.map((cardsForHouse, idx) => (
+            {deck.housesAndCards.map((cardsForHouse) => (
                 <DisplayCardsInHouse
                     key={cardsForHouse.house}
                     {...cardsForHouse}
                     deck={props.deck}
                     fake={fake}
-                    allianceHouse={props.deck.allianceHouses != null ? props.deck.allianceHouses[idx] : undefined}
                 />
             ))}
         </div>
@@ -378,28 +376,35 @@ const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult,
 
 const smallDeckViewCardLineWidth = 144
 
-const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, fake: boolean, allianceHouse?: AllianceHouseInfo }) => {
+const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, fake: boolean }) => {
     const {
         house,
         deck,
         cards,
         compact,
         fake,
-        allianceHouse
     } = props
     const alliance = deck.deckType === DeckType.ALLIANCE
     const deckExpansion = deck.expansion
 
+    let allianceHouse
+    if (deck.allianceHouses != null) {
+        allianceHouse = deck.allianceHouses.find(houseInfo => houseInfo.house === house)
+    }
+
     return (
         <List>
-            <AercForCombos combos={deck.synergyDetails?.filter(combo => combo.house === house)}>
-                <HouseLabel house={house} title={true}/>
-            </AercForCombos>
-            {allianceHouse && (
-                <Box mt={1}>
-                    <MiniDeckLink deck={allianceHouse} maxHeight={24}/>
+            <Box display={"flex"} alignItems={compact ? "center" : undefined}
+                 flexDirection={compact ? undefined : "column"}>
+                <Box flexGrow={1} mb={compact ? undefined : 1}>
+                    <AercForCombos combos={deck.synergyDetails?.filter(combo => combo.house === house)}>
+                        <HouseLabel house={house} title={true}/>
+                    </AercForCombos>
                 </Box>
-            )}
+                {allianceHouse && (
+                    <MiniDeckLink deck={allianceHouse} maxHeight={24}/>
+                )}
+            </Box>
             <Divider style={{marginTop: 4}}/>
             {compact ?
                 (

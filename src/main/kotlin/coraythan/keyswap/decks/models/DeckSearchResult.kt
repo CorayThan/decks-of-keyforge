@@ -77,6 +77,7 @@ data class DeckSearchResult(
 
     val allianceHouses: List<AllianceHouseInfo>? = null,
     val validAlliance: Boolean? = null,
+    val discoveredBy: String? = null,
 ) {
 
     fun printDeckSimple(saleInfo: DeckListing? = null): String {

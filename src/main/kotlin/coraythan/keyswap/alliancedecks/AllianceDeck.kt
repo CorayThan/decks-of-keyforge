@@ -9,7 +9,9 @@ import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
+import coraythan.keyswap.users.KeyUser
 import org.hibernate.annotations.Type
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
@@ -74,7 +76,8 @@ data class AllianceDeck(
     @OneToMany(mappedBy = "deck", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val ownedDecks: List<OwnedAllianceDeck> = listOf(),
 
-    val discovererId: UUID,
+    @ManyToOne()
+    val discoverer: KeyUser,
 
     val checkedUniqueness: Boolean = false,
 
@@ -85,7 +88,7 @@ data class AllianceDeck(
 
     companion object {
 
-        val restrictedCardsList = mapOf<String, Int>(
+        val restrictedCardsList = mapOf(
             "Control the Weak" to 100,
             "Dark Æmber Vault" to 1,
             "Ghostform" to 100,
@@ -116,7 +119,7 @@ data class AllianceDeck(
             return toJoin.joinToString("&&")
         }
 
-        fun fromDeck(deck: Deck, cards: List<Card>, discovererId: UUID): AllianceDeck {
+        fun fromDeck(deck: Deck, cards: List<Card>, discoverer: KeyUser): AllianceDeck {
             return AllianceDeck(
                 name = deck.name,
                 expansion = deck.expansion,
@@ -151,11 +154,14 @@ data class AllianceDeck(
                 cardNames = deck.cardNames,
                 houseNamesString = deck.houseNamesString,
                 bonusIconsString = deck.bonusIconsString,
-                discovererId = discovererId,
+                discoverer = discoverer,
                 validAlliance = determineIfValid(cards),
             )
         }
     }
+
+    val dateAdded: LocalDate?
+        get() = this.createdDateTime?.toLocalDate()
 
     override fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>?,
@@ -230,7 +236,8 @@ data class AllianceDeck(
                     name = it.name,
                 )
             },
-
+            dateAdded = dateAdded,
+            discoveredBy = discoverer.username,
             )
     }
 }

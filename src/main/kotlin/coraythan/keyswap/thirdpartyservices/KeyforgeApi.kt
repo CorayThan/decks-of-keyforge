@@ -61,6 +61,7 @@ class KeyforgeApi(
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+    private val mvProxyBaseUrl = "http://mvproxy.us-west-2.elasticbeanstalk.com/api/master-vault"
 
     /**
      * Null implies no decks available.
@@ -76,7 +77,7 @@ class KeyforgeApi(
         } else {
             restTemplate.postForObject(
 //                    "http://localhost:5001/api/master-vault/decks",
-                    "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks",
+                    "$mvProxyBaseUrl/decks",
                     HttpEntity<KeyForgeDeckRequestFilters>(KeyForgeDeckRequestFilters(page, ordering, pageSize, expansion, withCards)),
                     KeyForgeDecksPageDto::class.java
             )
@@ -85,7 +86,7 @@ class KeyforgeApi(
 
     fun findDeckToImport(deckId: String): KeyForgeDeckDto? {
         val deckResponse = restTemplate.getForObject(
-                "http://mv-proxy-prod.us-west-2.elasticbeanstalk.com/api/master-vault/decks/$deckId",
+                "$mvProxyBaseUrl/decks/$deckId",
                 KeyForgeDeckResponse::class.java
         )
         if (deckResponse == null) {

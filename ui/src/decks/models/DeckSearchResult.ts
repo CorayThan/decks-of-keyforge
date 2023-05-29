@@ -89,6 +89,7 @@ export interface DeckSearchResult {
 
     allianceHouses?: AllianceHouseInfo[]
     validAlliance?: boolean
+    discoveredBy?: string
 }
 
 export interface DeckIdentifyingInfo {

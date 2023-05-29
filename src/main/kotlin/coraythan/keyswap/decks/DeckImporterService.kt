@@ -8,6 +8,7 @@ import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.decks.pastsas.PastSasService
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
@@ -56,6 +57,95 @@ class DeckImporterService(
     private val env: Env,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    private var refreshBonusIcons = true
+
+    @Scheduled(
+        fixedDelayString = "PT5S",
+        initialDelayString = "PT30S",
+    )
+    fun refreshBonusIcons() {
+        if (!refreshBonusIcons) return
+
+        log.info("Bonus Icons Refresh: Start")
+
+        val foundDecks = deckRepo.findTop2ByRefreshedBonusIconsIsNullAndExpansionIn(
+            setOf(
+                Expansion.MASS_MUTATION.expansionNumber,
+                Expansion.DARK_TIDINGS.expansionNumber
+            )
+        )
+
+        if (foundDecks.isEmpty()) {
+            this.refreshBonusIcons = false
+            log.info("Bonus Icons Refresh: All done!")
+            return
+        }
+
+        val decksToEvaluate: Map<Boolean, List<Deck>> = foundDecks
+            .groupBy { deck ->
+                val cards = cardService.cardsForDeck(deck)
+                cards.any {
+                    val card = cardService.findByCardName(it.cardTitle)
+                    (card?.extraCardInfo?.enhancementCount() ?: 0) > 0
+                }
+            }
+
+        val toSkip = decksToEvaluate[false]
+        if (toSkip != null) {
+            log.info("Bonus Icons Refresh: Skip ${toSkip.size} decks which have no bonus icons.")
+            deckRepo.saveAll(toSkip.map { it.copy(refreshedBonusIcons = true) })
+        }
+
+        val savedDeckIds = mutableListOf<String>()
+
+        decksToEvaluate[true]?.forEach {
+            try {
+
+                val keyforgeDeck = keyforgeApi.findDeckToImport(it.keyforgeId)
+
+                if (keyforgeDeck == null) {
+                    log.warn("No deck in MV for deck ${it.name}  ${it.keyforgeId}")
+                } else {
+
+                    val houses = keyforgeDeck.data._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
+                        ?: throw java.lang.IllegalStateException("Deck didn't have houses ${it.keyforgeId}.")
+
+                    val deckCards = keyforgeDeck.data._links.cards ?: error("Cards in the deck ${keyforgeDeck.data.id} are null.")
+
+                    val cardsList = deckCards
+                        .filter {
+                            // Skip stupid tide card
+                            it != "37377d67-2916-4d45-b193-bea6ecd853e3"
+                        }
+                        .map { cardId ->
+                            val dbCard = cardRepo.findByIdOrNull(cardId) ?: error("No card in db for $cardId")
+                            val cardServiceCard = cardService.findByCardName(dbCard.cardTitle)
+                                ?: error("No card in card service for ${dbCard.cardTitle}")
+                            dbCard.extraCardInfo = cardServiceCard.extraCardInfo
+                            dbCard
+                        }
+
+
+                    val bonusIconSimpleCards = keyforgeDeck.data.createBonusIconsInfo(houses, cardsList)
+                    val deckToSave = it
+                        .withBonusIcons(bonusIconSimpleCards)
+                        .copy(refreshedBonusIcons = true)
+
+                    deckRepo.save(deckToSave)
+                    savedDeckIds.add(it.keyforgeId)
+                }
+
+            } catch (e: Exception) {
+                log.warn(
+                    "Failed to update a deck's bonus icons due to exception. Deck is ${it.keyforgeId} ${it.name}",
+                    e
+                )
+            }
+        }
+        log.info("Bonus Icons Refresh: End. Skipped ${toSkip?.size} Updated decks: $savedDeckIds")
+    }
+
 
     @Transactional(propagation = Propagation.NEVER)
     @Scheduled(
