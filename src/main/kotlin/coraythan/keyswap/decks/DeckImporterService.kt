@@ -61,7 +61,7 @@ class DeckImporterService(
     private var refreshBonusIcons = true
 
     @Scheduled(
-        fixedDelayString = "PT5S",
+        fixedDelayString = "PT15S",
         initialDelayString = "PT30S",
     )
     fun refreshBonusIcons() {
@@ -69,7 +69,7 @@ class DeckImporterService(
 
         log.info("Bonus Icons Refresh: Start")
 
-        val foundDecks = deckRepo.findTop2ByRefreshedBonusIconsIsNullAndExpansionIn(
+        val foundDecks = deckRepo.findTop4ByRefreshedBonusIconsIsNullAndExpansionIn(
             setOf(
                 Expansion.MASS_MUTATION.expansionNumber,
                 Expansion.DARK_TIDINGS.expansionNumber
@@ -105,7 +105,7 @@ class DeckImporterService(
                 val keyforgeDeck = keyforgeApi.findDeckToImport(it.keyforgeId)
 
                 if (keyforgeDeck == null) {
-                    log.warn("No deck in MV for deck ${it.name}  ${it.keyforgeId}")
+                    log.warn("Bonus Icons Refresh: No deck in MV for deck ${it.name}  ${it.keyforgeId}")
                 } else {
 
                     val houses = keyforgeDeck.data._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
@@ -138,7 +138,7 @@ class DeckImporterService(
 
             } catch (e: Exception) {
                 log.warn(
-                    "Failed to update a deck's bonus icons due to exception. Deck is ${it.keyforgeId} ${it.name}",
+                    "Bonus Icons Refresh: Failed to update a deck's bonus icons due to exception. Deck is ${it.keyforgeId} ${it.name}",
                     e
                 )
             }

@@ -20,5 +20,5 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
 
     fun existsByIdGreaterThan(idGreaterThan: Long): Boolean
 
-    fun findTop2ByRefreshedBonusIconsIsNullAndExpansionIn(expansions: Set<Int>): List<Deck>
+    fun findTop4ByRefreshedBonusIconsIsNullAndExpansionIn(expansions: Set<Int>): List<Deck>
 }
