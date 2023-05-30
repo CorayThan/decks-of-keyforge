@@ -61,7 +61,7 @@ class DeckImporterService(
     private var refreshBonusIcons = true
 
     @Scheduled(
-        fixedDelayString = "PT15S",
+        fixedDelayString = "PT5S",
         initialDelayString = "PT30S",
     )
     fun refreshBonusIcons() {
