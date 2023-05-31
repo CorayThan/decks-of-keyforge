@@ -84,17 +84,19 @@ class KeyforgeApi(
         }
     }
 
-    fun findDeckToImport(deckId: String): KeyForgeDeckDto? {
+    fun findDeckToImport(deckId: String): KeyForgeDeckResponse? {
         return if (env == Env.dev) {
-            keyforgeGetRequest(
-                KeyForgeDeckDto::class.java,
-                "decks/$deckId/?links=cards"
+            KeyForgeDeckResponse(
+                keyforgeGetRequest(
+                    KeyForgeDeckDto::class.java,
+                    "decks/$deckId/?links=cards"
+                )
             )
         } else {
             restTemplate.getForObject(
                 "$mvProxyBaseUrl/decks/$deckId",
                 KeyForgeDeckResponse::class.java
-            )?.deck
+            )
         }
     }
 

@@ -66,7 +66,14 @@ class DeckOwnershipService(
     }
 
     fun findByDeckId(id: Long): List<DeckOwnershipDto> {
-        return deckOwnershipRepo.findByDeckId(id).sortedByDescending { it.uploadDateTime }.map { it.toDto() }
+        val images = deckOwnershipRepo.findByDeckId(id).sortedByDescending { it.uploadDateTime }
+        if (images.isEmpty()) return listOf()
+
+        val currentUser = currentUserService.loggedInUser()
+
+        val firstImage = images.firstOrNull()
+        val usersDeckImagesNotFirst = images.drop(1).filter { it.user.id == currentUser?.id }
+        return listOf(firstImage).plus(usersDeckImagesNotFirst).mapNotNull { it?.toDto() }
     }
 
     fun findDeckIdsForUser(): List<Long> {

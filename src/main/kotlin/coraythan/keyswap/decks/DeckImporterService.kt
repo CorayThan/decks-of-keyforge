@@ -61,7 +61,7 @@ class DeckImporterService(
     private var refreshBonusIcons = true
 
     @Scheduled(
-        fixedDelayString = "PT5S",
+        fixedDelayString = "PT10S",
         initialDelayString = "PT30S",
     )
     fun refreshBonusIcons() {
@@ -102,10 +102,16 @@ class DeckImporterService(
         decksToEvaluate[true]?.forEach {
             try {
 
-                val keyforgeDeck = keyforgeApi.findDeckToImport(it.keyforgeId)
+                val findDeckResponse = keyforgeApi.findDeckToImport(it.keyforgeId)
+                val keyforgeDeck = findDeckResponse?.deck
+                val errorFound = findDeckResponse?.error
+
+                if (errorFound != null) {
+                    log.warn("Bonus Icons Refresh: Find KF deck ${it.name} ${it.keyforgeId} had error $errorFound")
+                }
 
                 if (keyforgeDeck == null) {
-                    log.warn("Bonus Icons Refresh: No deck in MV for deck ${it.name}  ${it.keyforgeId}")
+                    log.warn("Bonus Icons Refresh: Error retrieving deck ${it.name}  ${it.keyforgeId}")
                 } else {
                     val houses = keyforgeDeck.data._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                         ?: throw java.lang.IllegalStateException("Deck didn't have houses ${it.keyforgeId}.")
@@ -281,7 +287,7 @@ class DeckImporterService(
         if (preExistingDeck != null) {
             return preExistingDeck.id
         } else {
-            val deck = keyforgeApi.findDeckToImport(deckId)
+            val deck = keyforgeApi.findDeckToImport(deckId)?.deck
             if (deck != null) {
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 cardService.importNewCards(deck._linked.cards ?: error("No linked cards for importing deck"))

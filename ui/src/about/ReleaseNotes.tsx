@@ -15,7 +15,7 @@ import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.14"
+export const latestVersion = "6.15"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -43,6 +43,21 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.15"}
+                    date={"5/31/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Ownership Images Update",
+                            note: "When a user views deck images they will now only see the most recently uploaded " +
+                                "image and any images they uploaded themself. If a deck you own " +
+                                "has an image in the owned images you would like to not see on there, please " +
+                                "upload a new image to hide it. Note: if you were to delete your image the previous " +
+                                "image would reappear."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.14"}
                     date={"5/24/2023"}
