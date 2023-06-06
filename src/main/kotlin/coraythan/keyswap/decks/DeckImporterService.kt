@@ -60,10 +60,6 @@ class DeckImporterService(
 
     private var refreshBonusIcons = true
 
-    @Scheduled(
-        fixedDelayString = "PT10S",
-        initialDelayString = "PT30S",
-    )
     fun refreshBonusIcons() {
         if (!refreshBonusIcons) return
 
@@ -93,7 +89,6 @@ class DeckImporterService(
 
         val toSkip = decksToEvaluate[false]
         if (toSkip != null) {
-            log.info("Bonus Icons Refresh: Skip ${toSkip.size} decks which have no bonus icons.")
             deckRepo.saveAll(toSkip.map { it.copy(refreshedBonusIcons = true) })
         }
 
