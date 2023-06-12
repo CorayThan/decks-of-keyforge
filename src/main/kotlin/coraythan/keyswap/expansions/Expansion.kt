@@ -10,7 +10,9 @@ enum class Expansion(val expansionNumber: Int, val readable: String, val houses:
     WORLDS_COLLIDE(452, "WC", setOf(House.Brobnar, House.Dis, House.Logos, House.StarAlliance, House.Saurian, House.Shadows, House.Untamed)),
     ANOMALY_EXPANSION(453, "AE", setOf()),
     MASS_MUTATION(479, "MM", setOf(House.StarAlliance, House.Dis, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed)),
-    DARK_TIDINGS(496, "DT", setOf(House.StarAlliance, House.Unfathomable, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed));
+    DARK_TIDINGS(496, "DT", setOf(House.StarAlliance, House.Unfathomable, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed)),
+    WINDS_OF_EXCHANGE(600, "WoE", setOf(House.Brobnar, House.Ekwidon, House.Mars, House.Saurian, House.Sanctum, House.StarAlliance, House.Unfathomable)),
+    UNCHAINED_2022(601, "UC22", House.values().toSet());
 
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = values().find { it.expansionNumber == expansionNumber }
@@ -27,4 +29,6 @@ val activeExpansions = setOf(
         Expansion.WORLDS_COLLIDE,
         Expansion.MASS_MUTATION,
         Expansion.DARK_TIDINGS,
+        Expansion.WINDS_OF_EXCHANGE,
+        Expansion.UNCHAINED_2022,
 )

@@ -1,9 +1,7 @@
-package coraythan.keyswap.thirdpartyservices
+package coraythan.keyswap.thirdpartyservices.mastervault
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.cards.KeyForgeCard
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.decks.models.KeyForgeDeck
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -14,15 +12,15 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
 data class KeyForgeDeckResponse(
-        val deck: KeyForgeDeckDto? = null,
-        val error: String? = null
+    val deck: KeyForgeDeckDto? = null,
+    val error: String? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeDecksPageDto(
-        val count: Int,
-        val data: List<KeyForgeDeck>,
-        val _linked: KeyForgeDeckLinksFullCards
+    val count: Int,
+    val data: List<KeyForgeDeck>,
+    val _linked: KeyForgeDeckLinksFullCards
 
 )
 
@@ -34,14 +32,14 @@ data class KeyForgeDeckLinks(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeDeckLinksFullCards(
-        val houses: Set<KeyForgeHouse>?,
-        val cards: List<KeyForgeCard>?
+    val houses: Set<KeyForgeHouse>?,
+    val cards: List<KeyForgeCard>?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeDeckDto(
-        val data: KeyForgeDeck,
-        val _linked: KeyForgeDeckLinksFullCards
+    val data: KeyForgeDeck,
+    val _linked: KeyForgeDeckLinksFullCards
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

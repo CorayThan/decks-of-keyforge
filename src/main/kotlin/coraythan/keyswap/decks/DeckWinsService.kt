@@ -5,12 +5,12 @@ import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.decks.models.KeyForgeDeck
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
-import coraythan.keyswap.thirdpartyservices.KeyforgeApi
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory

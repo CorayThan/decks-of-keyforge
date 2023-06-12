@@ -3,6 +3,7 @@ import * as React from "react"
 import { House } from "../generated-src/House"
 import brobnarImg from "./imgs/brobnar.png"
 import disImg from "./imgs/dis.png"
+import ekwidonImg from "./imgs/ekwidon.png"
 import logosImg from "./imgs/logos.png"
 import marsImg from "./imgs/mars.png"
 import sanctumImg from "./imgs/sanctum.png"
@@ -26,6 +27,10 @@ export const houseValuesArray: HouseValue[] = [
     {
         house: House.Dis,
         img: disImg
+    },
+    {
+        house: House.Ekwidon,
+        img: ekwidonImg
     },
     {
         house: House.Logos,

@@ -57,6 +57,7 @@ data class AllianceDeck(
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     override val cardIds: String = "",
+    override val tokenId: String? = null,
 
     override val cardNames: String = "",
 
@@ -168,7 +169,8 @@ data class AllianceDeck(
         cards: List<Card>?,
         stats: DeckStatistics?,
         synergies: DeckSynergyInfo?,
-        includeDetails: Boolean
+        includeDetails: Boolean,
+        token: Card?,
     ): DeckSearchResult {
 
         return DeckSearchResult(
@@ -218,6 +220,7 @@ data class AllianceDeck(
             antisynergyRating = synergies?.antisynergyRating ?: antisynergyRating,
             totalPower = totalPower,
             housesAndCards = housesAndCards?.addBonusIcons(bonusIcons()) ?: listOf(),
+            tokenInfo = if (token == null) null else TokenInfo(token.id, token.cardTitle, token.house),
 
             sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
                 ?: if (sasRating < 75) 0.0 else 100.0,

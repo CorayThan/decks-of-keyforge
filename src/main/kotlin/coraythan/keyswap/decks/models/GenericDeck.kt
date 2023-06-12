@@ -44,6 +44,7 @@ interface GenericDeck {
 
     // Json of card ids for performance loading decks, loading cards from cache
     val cardIds: String
+    val tokenId: String?
 
     val cardNames: String
 
@@ -70,7 +71,8 @@ interface GenericDeck {
         cards: List<Card>? = null,
         stats: DeckStatistics? = null,
         synergies: DeckSynergyInfo? = null,
-        includeDetails: Boolean = false
+        includeDetails: Boolean = false,
+        token: Card? = null,
     ): DeckSearchResult
 }
 

@@ -14,6 +14,7 @@ import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.tags.DeckTag
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.userdeck.*
 import org.hibernate.annotations.Type
 import java.time.LocalDate
@@ -79,6 +80,7 @@ data class Deck(
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     override val cardIds: String = "",
+    override val tokenId: String? = null,
 
     override val cardNames: String = "",
 
@@ -161,13 +163,13 @@ data class Deck(
             this.sasRating == o.sasRating &&
             this.aercScore == o.aercScore
 
-
     override fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>?,
         cards: List<Card>?,
         stats: DeckStatistics?,
         synergies: DeckSynergyInfo?,
-        includeDetails: Boolean
+        includeDetails: Boolean,
+        token: Card?,
     ): DeckSearchResult {
 
         return DeckSearchResult(
@@ -246,6 +248,7 @@ data class Deck(
             dateAdded = dateAdded,
 
             twinId = twinId,
+            tokenInfo = if (token == null) null else TokenInfo(token.id, token.cardTitle, token.house),
         )
     }
 

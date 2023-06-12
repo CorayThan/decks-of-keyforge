@@ -222,8 +222,8 @@ data class KeyUser(
         if (username == "Coraythan") return PatreonRewardsTier.ALWAYS_GENEROUS
         if (patreonTier == null && manualPatreonTier == null) return null
         if (patreonTier != null && manualPatreonTier == null) return patreonTier
-        if (patreonTier == null && manualPatreonTier != null) return manualPatreonTier
-        return if (patreonTier!!.ordinal > manualPatreonTier!!.ordinal) {
+        if (patreonTier == null) return manualPatreonTier
+        return if (patreonTier.ordinal > manualPatreonTier!!.ordinal) {
             patreonTier
         } else {
             manualPatreonTier
@@ -253,7 +253,6 @@ data class KeyUser(
     override fun toString(): String {
         return "KeyUser(id=$id, username='$username', email='$email', emailVerified=$emailVerified, password=$password, type=$type, publicContactInfo=$publicContactInfo, allowUsersToSeeDeckOwnership=$allowUsersToSeeDeckOwnership, allowsMessages=$allowsMessages, viewFutureSas=$viewFutureSas, currencySymbol='$currencySymbol', country=$country, lastVersionSeen=$lastVersionSeen, apiKey=$apiKey, patreonId=$patreonId, patreonTier=$patreonTier, lifetimeSupportCents=$lifetimeSupportCents, manualPatreonTier=$manualPatreonTier, removeManualPatreonTier=$removeManualPatreonTier, mostRecentDeckListing=$mostRecentDeckListing, sellerEmail=$sellerEmail, sellerEmailVerified=$sellerEmailVerified, discord=$discord, tcoUsername=$tcoUsername, storeName=$storeName, shippingCost=$shippingCost, allowsTrades=$allowsTrades, storeIconKey=$storeIconKey, storeBannerKey=$storeBannerKey, teamId=$teamId, updateStats=$updateStats, autoRenewListings=$autoRenewListings, created=$created, agreedToTermsOfService=$agreedToTermsOfService, rating=$rating, deckCount=$deckCount, forSaleCount=$forSaleCount, topSasAverage=$topSasAverage, highSas=$highSas, lowSas=$lowSas, totalPower=$totalPower, totalChains=$totalChains, mavericks=$mavericks, anomalies=$anomalies, primaryEmail='$primaryEmail')"
     }
-
 
 }
 

@@ -8,7 +8,7 @@ import coraythan.keyswap.generatets.GenerateTs
 @GenerateTs
 data class HouseAndCards(
     val house: House,
-    val cards: List<SimpleCard>
+    val cards: List<SimpleCard>,
 )
 
 fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons?): List<HouseAndCards> {

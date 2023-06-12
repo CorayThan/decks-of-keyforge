@@ -18,7 +18,7 @@ import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckOrCardSearchSuggest } from "../decks/search/DeckOrCardSearchSuggest"
-import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { activeCardLinksExpansions, activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu, LinkMenuStore } from "../generic/LinkMenu"
@@ -51,7 +51,9 @@ const myDeckLinks = () => {
     const links = [
         {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
         ...activeExpansions.map(expansion => ({
-            to: Routes.decksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber, true), text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`, mobileActive: false
+            to: Routes.decksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber, true),
+            text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`,
+            mobileActive: false
         })),
         {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
         {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
@@ -145,7 +147,8 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             menuContents = (
                 <>
                     {uiStore.displayBack && (
-                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}} color={"inherit"}>
+                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}}
+                                    color={"inherit"}>
                             <ArrowBack color={"inherit"}/>
                         </IconButton>
                     )}
@@ -200,7 +203,8 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             menuContents = (
                 <>
                     {uiStore.displayBack && (
-                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}} color={"inherit"}>
+                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}}
+                                    color={"inherit"}>
                             <ArrowBack color={"inherit"}/>
                         </IconButton>
                     )}
@@ -229,7 +233,10 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             <div>
                 <AppBar
                     position={"fixed"}
-                    style={{zIndex: screenStore.zindexes.keyTopBar, background: themeStore.darkMode ? blue["800"] : undefined}}
+                    style={{
+                        zIndex: screenStore.zindexes.keyTopBar,
+                        background: themeStore.darkMode ? blue["800"] : undefined
+                    }}
                 >
                     <Toolbar
                         style={{
@@ -248,11 +255,15 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                         value={this.props.location.pathname}
                                         variant={"scrollable"}
                                     >
-                                        <LinkTab label="Messages" to={MyDokSubPaths.messages} value={MyDokSubPaths.messages}/>
-                                        <LinkTab label="Profile" to={MyDokSubPaths.profile} value={MyDokSubPaths.profile}/>
+                                        <LinkTab label="Messages" to={MyDokSubPaths.messages}
+                                                 value={MyDokSubPaths.messages}/>
+                                        <LinkTab label="Profile" to={MyDokSubPaths.profile}
+                                                 value={MyDokSubPaths.profile}/>
                                         <LinkTab label="Offers" to={MyDokSubPaths.offers} value={MyDokSubPaths.offers}/>
-                                        <LinkTab label="Bought / Sold" to={MyDokSubPaths.purchases} value={MyDokSubPaths.purchases}/>
-                                        <LinkTab label="Notifications" to={MyDokSubPaths.notifications} value={MyDokSubPaths.notifications}/>
+                                        <LinkTab label="Bought / Sold" to={MyDokSubPaths.purchases}
+                                                 value={MyDokSubPaths.purchases}/>
+                                        <LinkTab label="Notifications" to={MyDokSubPaths.notifications}
+                                                 value={MyDokSubPaths.notifications}/>
                                         <LinkTab label="My Team" to={MyDokSubPaths.team} value={MyDokSubPaths.team}/>
                                     </Tabs>
                                 )}
@@ -262,11 +273,16 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                         variant={"scrollable"}
                                     >
                                         <LinkTab label="SAS and AERC" to={AboutSubPaths.sas} value={AboutSubPaths.sas}/>
-                                        <LinkTab label="Patron Rewards" to={AboutSubPaths.patreon} value={AboutSubPaths.patreon}/>
-                                        <LinkTab label="Contact Me" to={AboutSubPaths.contact} value={AboutSubPaths.contact}/>
-                                        <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes} value={AboutSubPaths.releaseNotes}/>
-                                        <LinkTab label="API" to={AboutSubPaths.sellersAndDevs} value={AboutSubPaths.sellersAndDevs}/>
-                                        <LinkTab label="Team SAS" to={AboutSubPaths.teamSas} value={AboutSubPaths.teamSas}/>
+                                        <LinkTab label="Patron Rewards" to={AboutSubPaths.patreon}
+                                                 value={AboutSubPaths.patreon}/>
+                                        <LinkTab label="Contact Me" to={AboutSubPaths.contact}
+                                                 value={AboutSubPaths.contact}/>
+                                        <LinkTab label="Release Notes" to={AboutSubPaths.releaseNotes}
+                                                 value={AboutSubPaths.releaseNotes}/>
+                                        <LinkTab label="API" to={AboutSubPaths.sellersAndDevs}
+                                                 value={AboutSubPaths.sellersAndDevs}/>
+                                        <LinkTab label="Team SAS" to={AboutSubPaths.teamSas}
+                                                 value={AboutSubPaths.teamSas}/>
                                     </Tabs>
                                 )}
                                 {onStatsPage && (
@@ -274,10 +290,14 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                         value={this.props.location.pathname}
                                         variant={"scrollable"}
                                     >
-                                        <LinkTab label="Win Rates" to={StatsSubPaths.winRates} value={StatsSubPaths.winRates}/>
-                                        <LinkTab label="Decks" to={StatsSubPaths.deckStats} value={StatsSubPaths.deckStats}/>
-                                        <LinkTab label="AERC" to={StatsSubPaths.aercStats} value={StatsSubPaths.aercStats}/>
-                                        <LinkTab label="Purchases" to={StatsSubPaths.purchaseStats} value={StatsSubPaths.purchaseStats}/>
+                                        <LinkTab label="Win Rates" to={StatsSubPaths.winRates}
+                                                 value={StatsSubPaths.winRates}/>
+                                        <LinkTab label="Decks" to={StatsSubPaths.deckStats}
+                                                 value={StatsSubPaths.deckStats}/>
+                                        <LinkTab label="AERC" to={StatsSubPaths.aercStats}
+                                                 value={StatsSubPaths.aercStats}/>
+                                        <LinkTab label="Purchases" to={StatsSubPaths.purchaseStats}
+                                                 value={StatsSubPaths.purchaseStats}/>
                                     </Tabs>
                                 )}
                             </Toolbar>
@@ -348,7 +368,12 @@ class RightMenu extends React.Component {
             <>
                 <AppLinks/>
                 <div
-                    style={{display: "flex", borderLeft: "1px solid rgb(255, 255, 255, 0.25)", marginLeft: spacing(2), paddingLeft: spacing(2)}}
+                    style={{
+                        display: "flex",
+                        borderLeft: "1px solid rgb(255, 255, 255, 0.25)",
+                        marginLeft: spacing(2),
+                        paddingLeft: spacing(2)
+                    }}
                 >
                     <UserLinksDesktop/>
                 </div>
@@ -375,8 +400,10 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.cards, text: "Cards", mobileActive: true},
-                ...activeExpansions.map(expansion => ({
-                    to: Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber), text: `${expansionInfoMap.get(expansion)!.abbreviation} Cards`, mobileActive: false
+                ...activeCardLinksExpansions.map(expansion => ({
+                    to: Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber),
+                    text: `${expansionInfoMap.get(expansion)!.abbreviation} Cards`,
+                    mobileActive: false
                 }))
             ]}
             linkMenuStore={cardsMenuStore}

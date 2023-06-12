@@ -1,4 +1,4 @@
-package coraythan.keyswap.decks.models
+package coraythan.keyswap.thirdpartyservices.mastervault
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

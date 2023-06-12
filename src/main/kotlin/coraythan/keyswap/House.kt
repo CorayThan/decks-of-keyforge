@@ -6,6 +6,7 @@ import coraythan.keyswap.generatets.GenerateTs
 enum class House(val masterVaultValue: String) {
     Brobnar("Brobnar"),
     Dis("Dis"),
+    Ekwidon("Ekwidon"),
     Logos("Logos"),
     Mars("Mars"),
     Sanctum("Sanctum"),

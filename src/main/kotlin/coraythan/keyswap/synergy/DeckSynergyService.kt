@@ -65,7 +65,7 @@ object DeckSynergyService {
         }
     }
 
-    fun fromDeckWithCards(deck: GenericDeck, inputCards: List<Card>): DeckSynergyInfo {
+    fun fromDeckWithCards(deck: GenericDeck, inputCards: List<Card>, token: Card?): DeckSynergyInfo {
 
         val cards = if (inputCards.any { it.big == true }) {
             inputCards
@@ -583,9 +583,9 @@ object DeckSynergyService {
 
             if (totalCreaturePower > 21) traits.addDeckTrait(
                 SynergyTrait.highTotalCreaturePower, when {
-                    totalCreaturePower > 23 -> 4
+                    totalCreaturePower > 27 -> 4
                     totalCreaturePower > 25 -> 3
-                    totalCreaturePower > 27 -> 2
+                    totalCreaturePower > 23 -> 2
                     else -> 1
                 }, house, SynTraitHouse.house
             )

@@ -64,7 +64,8 @@ class PublicApiService(
         return deck.toDeckSearchResult(
                 housesAndCards = cardService.deckToHouseAndCards(deck),
                 cards = cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats()
+                stats = statsService.findCurrentStats(),
+            token = cardService.tokenForDeck(deck),
         )
     }
 

@@ -18,7 +18,7 @@
 *.ipr
 /out/
 
-/card-imgs/*.png
+/card-imgs/**/*.png
 
 application-nocommit.yml
 scripts-local/

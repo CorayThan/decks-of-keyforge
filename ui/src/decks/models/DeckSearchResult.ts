@@ -12,8 +12,9 @@ import { SynergyTrait } from "../../generated-src/SynergyTrait"
 import { CsvData } from "../../generic/CsvDownloadButton"
 import { userStore } from "../../user/UserStore"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
-import { DeckType } from "../../generated-src/DeckType";
-import { AllianceHouseInfo } from "../../generated-src/AllianceHouseInfo";
+import { DeckType } from "../../generated-src/DeckType"
+import { AllianceHouseInfo } from "../../generated-src/AllianceHouseInfo"
+import { TokenInfo } from "../../generated-src/TokenInfo"
 
 export interface DeckWithSynergyInfo {
     deck: DeckSearchResult
@@ -86,6 +87,7 @@ export interface DeckSearchResult {
     other?: number
 
     twinId?: string
+    tokenInfo?: TokenInfo
 
     allianceHouses?: AllianceHouseInfo[]
     validAlliance?: boolean

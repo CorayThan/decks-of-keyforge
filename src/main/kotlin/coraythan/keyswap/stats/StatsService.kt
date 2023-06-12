@@ -231,7 +231,8 @@ class StatsService(
                 .filter { statsEntity.expansion == null || statsEntity.expansion.expansionNumber == it.expansion }
                 .forEach { ratedDeck ->
                     val cards = cardService.cardsForDeck(ratedDeck)
-                    val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck, cards)
+                    val token = cardService.tokenForDeck(ratedDeck)
+                    val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck, cards, token)
 
                     stats.armorValues.incrementValue(ratedDeck.totalArmor)
                     stats.totalCreaturePower.incrementValue(ratedDeck.totalPower)
